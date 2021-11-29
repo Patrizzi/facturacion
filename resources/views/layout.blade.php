@@ -107,8 +107,9 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                                             </li>
                                         @endcan
                                         @can('transacciones-ventas-facturacion.index')
-                                            <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
+                                            <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
                                         @endcan
+                                            <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
                                         @can('transacciones-ventas-boleta.index')
                                             <li><a href="{{route('boleta.index')}}">Boleta</a></li>
                                         @endcan
