@@ -1,5 +1,5 @@
 @extends('layout')
-
+{{-- rfs --}}
 @section('title', 'Bienvenido : '.auth()->user()->personal->nombres)
 @section('breadcrumb', 'Inicio')
 @section('breadcrumb2', 'Bienvenido')
