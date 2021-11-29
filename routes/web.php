@@ -103,6 +103,10 @@ Route::group(
 
 		Route::get('/nota-credito/create_boleta','NotaCreditoController@create_boleta')->name('nota-credito.create_boleta');
 		Route::resource('/nota-credito','NotaCreditoController');
+
+
+
+		Route::resource('/nota-debito','NotaDebitoController');
 		
 		Route::resource('/debito','DebitoController');
 		Route::resource('/documento','DocumentoController');

@@ -116,7 +116,7 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                                             <li><a href="{{route('guia_remision.index')}}">Guia Remision</a></li>
                                         @endcan
                                             <li><a href="{{route('nota-credito.index')}}">Nota Credito</a></li>
-                                            <li><a href="{{route('nota-credito.index')}}">Nota Debito</a></li>
+                                            <li><a href="{{route('nota-debito.index')}}">Nota Debito</a></li>
                                     </ul>
                                 </li>
                                 @endif

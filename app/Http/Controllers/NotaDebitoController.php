@@ -24,7 +24,8 @@ class NotaDebitoController extends Controller
      */
     public function index()
     {
-        //
+        $notas_debitos=Nota_Debito::get();
+        return view('transaccion.venta.nota_debito.index',compact('notas_debitos'));
     }
 
     /**
