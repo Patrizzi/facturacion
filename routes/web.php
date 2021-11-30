@@ -105,6 +105,10 @@ Route::group(
 		Route::resource('/nota-credito','NotaCreditoController');
 
 
+		Route::post('/nota-debito-create-nc','NotaDebitoController@create_nota_debito')->name('nota-debito.create_nota_nota_debito');
+		Route::post('/nota-debito-create_boleta-nc','NotaDebitoController@create_boleta_nota_debito')->name('nota-debito.create_nota_nota_debito_boleta');
+
+		Route::get('/nota-debito/create_boleta','NotaDebitoController@create_boleta')->name('nota-debito.create_boleta');
 
 		Route::resource('/nota-debito','NotaDebitoController');
 		

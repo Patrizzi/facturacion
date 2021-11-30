@@ -15,14 +15,14 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="row" align="center">
-                        {{-- <!--FACTURA-->
+                        <!--FACTURA-->
                         <div class="col-sm-6">
                             <a href="{{route('nota-debito.create')}}"><button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" >Factura</button></a> 
                         </div>
                         <!--BOLETA-->
                         <div class="col-sm-6">
                             <a href="{{route('nota-debito.create_boleta')}}"><button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" >Boleta</button></a>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                             </thead>
 
                             <tbody>
-                                {{-- @foreach($notas_debitos as $nota_debitos)
+                                @foreach($notas_debitos as $nota_debitos)
                                 <tr class="gradeX">
                                     <td>{{$nota_debitos->id}}</td>
                                     <td>
@@ -62,7 +62,7 @@
                                     <td>{{$nota_debitos->created_at}}</td>
                                     <td><a href="{{route('nota-debito.show',$nota_debitos->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
                                 </tr>
-                                @endforeach  --}}
+                                @endforeach 
                             </tbody>
                         </table>
                     </div>
