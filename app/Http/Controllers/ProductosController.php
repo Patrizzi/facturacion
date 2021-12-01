@@ -217,6 +217,7 @@ class ProductosController extends Controller
     $producto->stock_maximo=$request->get('stock_maximo');
     $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
     $producto->foto=$name;
+    $producto->familia_id = $request->get('familia_id');
     $producto->save();
     return redirect()->route('productos.show',$id);
 }

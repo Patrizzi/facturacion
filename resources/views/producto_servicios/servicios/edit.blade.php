@@ -38,17 +38,19 @@
 
           <label class="col-sm-2 col-form-label">Marca:</label>
           <div class="col-sm-4">
-            <select class="form-control m-b" name="marca_id" required="required">
-             <option value="{{ $servicios->marca->id }}">{{ $servicios->marca->nombre}}</option>
+            <input type="text" class="form-control m-b" disabled="" value="{{$servicios->marca->nombre}}" >
+{{--             <select class="form-control m-b" name="marca_id" required="required">
+             <option value="{{ $servicios->marca->id }}">{{ $servicios->marca}}</option>
              <option disabled="">---------------------</option>
              @foreach($marcas as $marca)
              <option value="{{ $marca->id }}">{{ $marca->nombre}}</option>
              @endforeach
-           </select>
+           </select> --}}
          </div>
 
          <label class="col-sm-2 col-form-label">Familia:</label>
          <div class="col-sm-4">
+
           <select class="form-control m-b" name="familia_id" required="required">
            <option value="{{ $servicios->familia->id }}">{{ $servicios->familia->descripcion}}</option>
            <option disabled="">---------------------</option>
