@@ -15,6 +15,7 @@ use App\Mailbox;
 use App\Pais;
 use App\User;
 use App\Producto;
+use App\Servicios;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Redirect;
 use DB;
@@ -84,11 +85,12 @@ class GarantiaGuiaIngresoController extends Controller
       // Cod-Guia
 
       $productos = Producto::where('estado_anular',1)->where('marca_id',$marca_t->id)->get();
-
+      //SERVIOS ANULAR ESTA AL REVEZ 0 = SIN ANULAR / 1 = ANULADO 
+      $servicios = Servicios::where('estado_anular',0)->where('marca_id',$marca_t->id)->get();
       if(count($productos) == 0){
         return redirect()->route('garantia_guia_ingreso.index')->with('repite', 'La marca escogida no cuenta con productos relacionados');
       }
-      return view('transaccion.garantias.guia_ingreso.create',compact('marca_id','orden_servicio','tiempo_actual','clientes','productos','empresa','marca_t'));
+      return view('transaccion.garantias.guia_ingreso.create',compact('marca_id','orden_servicio','tiempo_actual','clientes','productos','empresa','servicios','marca_t'));
     }
 
     /**
