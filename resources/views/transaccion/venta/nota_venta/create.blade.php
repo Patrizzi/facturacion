@@ -11,10 +11,10 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <form action="{{route('otros.store')}}"  enctype="multipart/form-data" method="post">
-                     @csrf
-                     {{-- Cabecera --}}
-                     <div class="row">
+                    <form action="{{route('nota_venta.store')}}"  enctype="multipart/form-data" method="post">
+                       @csrf
+                       {{-- Cabecera --}}
+                       <div class="row">
                         <div class="col-sm-4 text-left" align="left">
                             <address class="col-sm-4" align="left">
                                 <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
@@ -23,10 +23,10 @@
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
 
-                           <div class="form-control" align="center" style="height: auto;">
+                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                             <h2 style="font-size: 19px">NOTA DE VENTA</h2>
-                            <h5> COTPF 001-0000000<input required="" name="codigo" class="form-control" style="width:  50px;display: inline-block;" type="text" value="185"></h5>
+                            <h5>{{$cod_nota_venta}}</h5>
                         </div>
                     </div>
                 </div>
@@ -37,12 +37,13 @@
                             <td>Cliente</td>
                             <td>:</td>
                             <td>
-                                <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                <datalist id="browsersc1" >
-                                    @foreach($clientes as $cliente)
-                                    <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+
+                                <select class="select2_demo_3 " name="cliente" required=""  autocomplete="off">
+                                    @foreach($clientes as $index => $cliente)
+                                    <option value=""></option>
+                                    <option value="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
                                     @endforeach
-                                </datalist>
+                                </select>
                             </td>
 
                             <td>Forma de pago</td>
@@ -50,29 +51,24 @@
                             <td>
                                 <select class="form-control" name="forma_pago" required="required">
                                     @foreach($forma_pagos as $forma_pago)
-                                    <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
+                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
                                     @endforeach
                                     <select>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Validez</td>
+                                    <td>Almacen</td>
                                     <td>:</td>
-                                    <td><select  class="form-control" name="validez" required="required">
-                                        <option value="5 Días">5 Días</option>
-                                        <option value="4 Días">4 Días</option>
-                                        <option value="3 Días">3 Días</option>
-                                        <option value="2 Días">2 Días</option>
-                                        <option value="1 Día">1 Día</option>
-                                    </select></td>
+                                    <td><input type="text" class="form-control" value="ALM1" disabled></td>
 
                                     <td>Garantia</td>
                                     <td>:</td>
                                     <td><select class="form-control" name="garantia">
-                                        <option value="1 año">1 Año</option>
-                                        <option value="2 años">2 Años</option>
-                                        <option value="3 años">3 Años</option>
-                                        <option value="6 meses">6 Meses</option>
+                                        <option value="0">Sin Garantia</option>
+                                        <option value="6">6 Meses</option>
+                                        <option value="12">12 Meses</option>
+                                        <option value="24">24 Meses</option>
+                                        <option value="36">36 Meses</option>
                                     </select></td>
                                 </tr>
 
@@ -80,7 +76,8 @@
                                     <td>Moneda</td>
                                     <td>:</td>
                                     <td>
-                                     <select name="moneda" class="form-control" >
+                                       <select name="moneda" class="form-control" required >
+                                        <option value="">Seleccione Moneda</option>
                                         @foreach($moneda as $monedas)
                                         <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
                                         @endforeach
@@ -120,7 +117,7 @@
                                 <tr>
                                     <td><input type='checkbox' class="case"></td>
                                     <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-                                       <datalist id="browsers2" >
+                                     <datalist id="browsers2" >
                                         @foreach($productos as $index)
                                         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
                                         @endforeach
@@ -158,6 +155,10 @@
                                 <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
+                            <div class="col-sm-6" align="right">
+                                <button type="submit" class='delete btn btn-info'>Guardar</button>&nbsp;
+
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -170,7 +171,8 @@
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .a{color: red}
-
+    .select2.select2-container.select2-container--default{width:100%!important}
+    .select2-selection.select2-selection--single{border: 1px solid #c5c5c5;height: 33px;}
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -181,6 +183,15 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<!-- Steps -->
+<script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+<script type="text/javascript">
+    $(".select2_demo_3").select2({
+        placeholder: "Seleccionar Cliente",
+    });
+</script>
 
 <script>
     var i = 2;

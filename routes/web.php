@@ -81,7 +81,9 @@ Route::group(
 		Route::post('/boleta_servicio/create','BoletaServicioController@create')->name('boleta_servicio.create');
 		Route::resource('/boleta_servicio','BoletaServicioController')->except(['create']);
 //NOTA VENTA
-		Route::resource('/nota_venta','NotaVentaController')->except(['destroy']);
+		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
+		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
+
 //NOTA VENTA
 
 //FACTURACION ELECTRONICA

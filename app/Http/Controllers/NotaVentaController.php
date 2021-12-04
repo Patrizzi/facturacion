@@ -5,6 +5,7 @@ use App\Cliente;
 use App\Empresa;
 use App\NotaVenta;
 use App\Personal;
+use App\Almacen;
 use App\Producto;
 use App\Servicios;
 use App\Moneda;
@@ -23,7 +24,11 @@ class NotaVentaController extends Controller
     public function index()
     {
         $nota_venta=NotaVenta::all();
-        return view('transaccion.venta.nota_venta.index',compact('nota_venta'));
+        $almacen =Almacen::all();
+        $conteo_almacen=Almacen::where('estado',0)->count();
+        $almacen_primero =Almacen::first();
+        $user_login =auth()->user();
+        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen'));
 
         // // REDIRECCION PARA MOSTRAR EL inventario_inicial
         // $existe_id=Kardex_entrada::where('estado',2)->first();
@@ -46,22 +51,24 @@ class NotaVentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-          // // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        // $existe_id=Kardex_entrada::where('estado',2)->first();
-        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
-        $clientes=Cliente::all();
-        $moneda=Moneda::all();
-        $forma_pagos= Forma_pago::all();
-        $servicios = Servicios::all();
-        $productos=Producto::all();
+       $sucursal_nr = str_pad(12, 3, "0", STR_PAD_LEFT);
+       $correlativo=str_pad(12, 8, "0", STR_PAD_LEFT);
+       $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-        $empresa=Empresa::first();
-        return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios'));
+       $clientes=Cliente::all();
+       $moneda=Moneda::all();
+       $forma_pagos= Forma_pago::all();
+       $servicios = Servicios::all();
+       $productos=Producto::all();
+       $user_login =auth()->user();
 
-    }
+       $empresa=Empresa::first();
+       return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta'));
+
+   }
 
     /**
      * Store a newly created resource in storage.
@@ -71,6 +78,7 @@ class NotaVentaController extends Controller
      */
     public function store(Request $request)
     {
+        return "Llegaste";
     }
 
     /**

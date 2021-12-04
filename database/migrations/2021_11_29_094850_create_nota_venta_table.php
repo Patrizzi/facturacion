@@ -20,7 +20,11 @@ class CreateNotaVentaTable extends Migration
             $table->unsignedBigInteger('cliente_id')->nullable();
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
 
+             $table->unsignedBigInteger('almacen_id')->nullable();
+            $table->foreign('almacen_id')->references('id')->on('almacen')->onDelete('cascade');
+
             $table->string('forma_pago')->nullable();
+            $table->string('garantia')->nullable();
 
             $table->unsignedBigInteger('moneda_id')->nullable();
             $table->foreign('moneda_id')->references('id')->on('monedas')->onDelete('cascade');
