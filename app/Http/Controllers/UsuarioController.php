@@ -14,6 +14,7 @@ use Swift_MailTransport;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_Preferences;
+use Spatie\Permission\Traits\HasRoles;
 use Swift_SmtpTransport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -80,7 +81,7 @@ class UsuarioController extends Controller
 
         $data = $request->all();
         // recibiendo Datos
-        $usuarios=User::all();
+        $usuarios=User::where('id','!=',1)->get();
         $name=$request->get('name');
         $email=$request->get('correo');
         $celular=$request->get('celular');
@@ -104,6 +105,15 @@ class UsuarioController extends Controller
             $apariencia->tamano_letra_perfil= "12px " ;
             $apariencia->save();
 
+            if($request->hasfile('avatar')){
+                $image1 =$request->file('avatar');
+                $avatar =time().$image1->getClientOriginalName();
+                $destinationPath = public_path('/profile/images/');
+                $image1->move($destinationPath,$avatar);
+            }else{
+                $avatar='defecto.jpg';
+            }
+
             /*Creacion del Nuevo Usuario*/
             $user=new User();
             $user->personal_id=$id;
@@ -117,6 +127,10 @@ class UsuarioController extends Controller
             $user->estado_validacion=0;
             $user->estado=0;
             $user->email_creado=0;
+            $user->avatar = $avatar;
+            //asignacion de rol automatico
+                $user->assignRole('Admin');
+            //
             $user->save();
             $empresa= Empresa::first();
             $empresa_name= Empresa::pluck('nombre')->first();
@@ -153,13 +167,15 @@ class UsuarioController extends Controller
                 return "Something went wrong :(";
             }
             /*fin envio*/
+             
             return redirect()->route('usuario.index');
         }
         else{
+            $i = 1;
             $almacen=Almacen::all();
             $errores='Las Contraseñas No Coinciden, Intentelo nuevamente';
             $personales=Personal::where('usuario_registrado',0)->get();
-            return view('configuracion_general.usuario.lista',compact('personales','errores','almacen'));
+            return view('configuracion_general.usuario.lista',compact('personales','errores','almacen','i'));
         }
 
     }
@@ -196,11 +212,10 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $numero_validacion=rand(600000000, 900000000) ;
         $nombre_personal=Personal::where('id',$id)->first();
         $usuario_id=User::where('id',$id)->first();
-        $usuarios=User::all();
+        $usuarios=User::where('id','!=',1)->get();
         $almacen=Almacen::all();
         $celular=$request->get('celular');
         $contrasena_confirmar=$request->get('contrasena_confirmar');
@@ -224,12 +239,23 @@ class UsuarioController extends Controller
                 ]);
 
                 $data = $request->all();
+
+                if($request->hasfile('avatar')){
+                    $image1 =$request->file('avatar');
+                    $avatar =time().$image1->getClientOriginalName();
+                    $destinationPath = public_path('/profile/images/');
+                    $image1->move($destinationPath,$avatar);
+                }else{
+                    $avatar='defecto.jpg';
+                }
+
                 $user=User::find($id);
                 $user->email=$correo_new;
                 $user->estado_validacion='0';
                 $user->estado='0';
                 $user->numero_validacion=$numero_validacion;
                 $user->password=$password;
+                $user->avatar = $avatar;
                 $user->save();
                 $codigo_mensaje=$numero_validacion;
                 $usuario_hora =Carbon::now()->format('Y-m-d');
@@ -262,18 +288,30 @@ class UsuarioController extends Controller
                 return redirect()->route('usuario.index');
             }
             else{
+                if($request->hasfile('avatar')){
+                    $image1 =$request->file('avatar');
+                    $avatar =time().$image1->getClientOriginalName();
+                    $destinationPath = public_path('/profile/images/');
+                    $image1->move($destinationPath,$avatar);
+                }else{
+                    $avatar='defecto.png';
+                }
+
+
                 $user=User::find($id);
                 $user->almacen_id=$almacen_id;
                 $user->celular=$celular;
                 $user->estado=$estado_numero;
                 $user->password=$password;
+                $user->avatar = $avatar;
                 $user->save();
                 return redirect()->route('usuario.index');
             }
         }
         else {
             $errores='Contraseña delAdministrador Erronea - Ningun Cambio Realizado';
-            return view('configuracion_general.usuario.index',compact('usuarios','errores','almacen'));
+            $i = 1;
+            return view('configuracion_general.usuario.index',compact('usuarios','errores','almacen','i'));
         }
 
 
@@ -366,7 +404,7 @@ class UsuarioController extends Controller
                 return redirect()->route('usuario.index');
             }
             else{
-               $usuarios=User::all();
+               $usuarios=User::where('id','!=',1)->get();
                $almacen=Almacen::where('estado',0)->get();
                $errores='Los Códigos son Incorrectos, si no tiene aún los códigos, Presione Reenviar.';
                return view('configuracion_general.usuario.index',compact('usuarios','errores','almacen'));

@@ -103,8 +103,13 @@
                                                             @csrf
                                                             @method('PATCH')
                                                             <fieldset >
-                                                                <legend style="height: 240px;"> <img src="
-                                                                    {{ asset('/profile/images/')}}/{{$usuario->personal->foto}}" style="width: 200px;height: 200px;border-radius: 5px"> <br>{{$usuario->personal->nombres}} {{$usuario->personal->apellidos}}
+                                                                <legend style="height: 240px;"> 
+                                                                   <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()"  />
+                                                                    <div id="visorArchivo">
+                                                                        <img src=" {{ asset('/profile/images/')}}/{{$usuario->avatar}}" style="width: 200px;height: 200px;  border-radius: 5px"> 
+                                                                    </div>
+
+                                                                    {{$usuario->personal->nombres}} {{$usuario->personal->apellidos}}
                                                                     <p style="font-size: 15px">{{$usuario->name}}</p></legend>
                                                                     <div>
                                                                         <div class="panel-body" >
@@ -115,7 +120,7 @@
                                                                                 <label class="col-sm-3 col-form-label">Contraseña:</label>
                                                                                 <div class="col-sm-9"><input type="password" class="form-control" name="password_new" placeholder="******" ></div>
                                                                                 <label class="col-sm-3 col-form-label">Celular:</label>
-                                                                                <div class="col-sm-9"><input type="text" class="form-control" name="celular" value="{{$usuario->celular}}"></div>
+                                                                                <div class="col-sm-9"><input type="number" class="form-control" name="celular"  value="{{$usuario->celular}}"></div>
                                                                                 <label class="col-sm-3 col-form-label">Almacen Asignado:</label>
                                                                                 <div class="col-sm-4">
                                                                                     <select class="form-control" name="almacen_id">
@@ -164,7 +169,7 @@
                                                                                                                     <div class="row">
                                                                                                                         <label class="col-sm-3 col-form-label">Contraseña Usuario:</label>
                                                                                                                         <div class="col-sm-9">
-                                                                                                                            <input required="required" type="password" class="form-control" name="contrasena_confirmar" placeholder="******">
+                                                                                                                            <input required="required" type="password" class="form-control" name="contrasena_confirmar" placeholder="******" autocomplete="off">
                                                                                                                             <input type="text" name="contrasena_adm" value="{{auth()->user()->password}}" hidden="">
                                                                                                                         </div>
                                                                                                                     </div>
@@ -218,7 +223,7 @@
                                                     @csrf
                                                     <fieldset >
                                                         <legend style="height: 240px;"> <img src="
-                                                            {{ asset('/profile/images/')}}/{{$usuario->personal->foto}}" style="width: 200px;height: 200px;border-radius: 5px"> <br>{{$usuario->personal->nombres}} {{$usuario->personal->apellidos}}
+                                                            {{ asset('/profile/images/')}}/{{$usuario->avatar}}" style="width: 200px;height: 200px;border-radius: 5px"> <br>{{$usuario->personal->nombres}} {{$usuario->personal->apellidos}}
                                                             <p style="font-size: 15px">{{$usuario->name}}</p></legend>
                                                             <div>
                                                                 <div class="panel-body" >
@@ -308,6 +313,17 @@
     }
     .switch-button .switch-button__checkbox:checked + .switch-button__label:before {
         transform: translateX(1rem);
+    }
+    input#archivoInput{
+      position:absolute;
+      top:0px;
+      left:0px;
+      right:0px;
+      bottom:0px;
+      width:100%;
+      height:220px;
+      opacity: 0    ;
+    }
     </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -321,7 +337,34 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script type="text/javascript">
+      function validarExt()
+      {
+        var archivoInput = document.getElementById('archivoInput');
+        var archivoRuta = archivoInput.value;
+        var extPermitidas = /(.jpg|.png|.jfif)$/i;
+        if(!extPermitidas.exec(archivoRuta)){
+          alert('Asegurese de haber seleccionado una Imagen');
+          archivoInput.value = '';
+          return false;
+        }
 
+        else
+        {
+            //PRevio del PDF
+            if (archivoInput.files && archivoInput.files[0])
+            {
+              var visor = new FileReader();
+              visor.onload = function(e)
+              {
+                document.getElementById('visorArchivo').innerHTML =
+                '<center><img name="avatar" src="'+e.target.result+'"width="200px" height="200px" /></center>';
+              };
+              visor.readAsDataURL(archivoInput.files[0]);
+            }
+          }
+        }
+  </script>
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function(){
