@@ -8,6 +8,27 @@
 @section('content')
 
 <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+<script language="javascript">
+    function search() {
+        var tableReg = document.getElementById('search-table');
+        var searchText = document.getElementById('buscador').value.toLowerCase();
+        for (var i = 1; i < tableReg.rows.length; i++) {
+            var cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+            var found = false;
+            for (var j = 0; j < cellsOfRow.length && !found; j++) {
+                var compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+                if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)) {
+                    found = true;
+                }
+            }
+            if (found) {
+                tableReg.rows[i].style.display = '';
+            } else {
+                tableReg.rows[i].style.display = 'none';
+            }
+        }
+    }
+</script>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -52,21 +73,27 @@
             </div>
         </div>
     </div>
+    
     <form action="{{ route('kardex-entrada.update',$inventario_inicial->id) }}"  enctype="multipart/form-data" method="post">
       @csrf
       @method('PATCH')
-      <table class="table invoice-table dataTables-example" >
+      <table class="table invoice-table " id="search-table">
         <thead>
             <tr>
                 <th style="width:50px"><button type="button" class='addmore btn btn-success'> <i class="fa fa-plus-square" aria-hidden="true"></i> </button></th>
                 <th>
-                    <div align="right">
-                        <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
-
-                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button">Guardar y Finalizar</button>
-                    <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
-                    </button>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="Buscar..." name="" id="buscador" onkeyup="search();" >
+                        </div>
+                        <div class="col-sm-6" align="right">
+                            <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                            <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button">Guardar y Finalizar</button>
+                            <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
+                            </button>
+                        </div>
                     </div>
+                    
                     
                 </th>
                 <th style="width:150px">Cantidad</th>
@@ -80,10 +107,11 @@
             <tr>
                 <td> <button type="button" class='delete{{$kardex_entradas_registro->id}} borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button></td>
                 <td >
-                    <p  align="left" class="form-control">{{$kardex_entradas_registro->producto->codigo_original}} -  {{$kardex_entradas_registro->producto->nombre}}</p>
-                    <input type='hidden'  name='id_registro[]' id="id_registro" readonly="readonly" value="{{$kardex_entradas_registro->id}}" required hidden="hidden" class="id_registro" />
-                    <input type='hidden'  name='registro_opt[]' id="registro_opt" readonly="readonly" value="{{$kardex_entradas_registro->producto->id}}" required  class="registro_opt" />
+                    <p align="left" class="form-control">{{$kardex_entradas_registro->producto->codigo_original}} - {{$kardex_entradas_registro->producto->nombre}}</p>
+                    
                 </td>
+                <input type='hidden'  name='id_registro[]' id="id_registro" readonly="readonly" value="{{$kardex_entradas_registro->id}}" required hidden="hidden" class="id_registro" />
+                    <input type='hidden'  name='registro_opt[]' id="registro_opt" readonly="readonly" value="{{$kardex_entradas_registro->producto->id}}" required  class="registro_opt" />
                 <td>
                     <input type='text'  name='cantidad[]' class="monto{{$kardex_entradas_registro->id}} form-control" value="{{$kardex_entradas_registro->cantidad_inicial}}"  onkeyup="multi({{$kardex_entradas_registro->id}});"  required/>
                 </td>
@@ -211,10 +239,11 @@ span.select2.select2-container.select2-container--default{
        $("#divmsg").hide(3000);
    }
 </script>
+
 <script>
     {{-- Sumar --}}
     function multi(a){
-        console.log(a);
+        // console.log(a);
         var total = 1;
             var change= false; //
             $(`.monto${a}`).each(function(){
@@ -358,4 +387,5 @@ span.select2.select2-container.select2-container--default{
     });
 </script>
 
+</script>
 @endsection
