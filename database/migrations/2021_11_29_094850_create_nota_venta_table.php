@@ -35,7 +35,7 @@ class CreateNotaVentaTable extends Migration
 
             // $table->string('user_registrado')->auth()->user()->id;
             $table->unsignedBigInteger('user_registrado')->nullable();
-            $table->foreign('user_registrado')->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('user_registrado')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });
