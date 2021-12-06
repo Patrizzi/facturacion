@@ -1,25 +1,53 @@
 @extends('layout')
-
 @section('title', 'Nota Venta')
-
+@section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)
 @section('value_accion', 'Agregar')
 @section('onclick1', 'Enviar_create()')
 @else
-@section('data-toggle', 'modal')
-@section('value_accion', 'Agregar')
-@section('href_accion', '#modal-form')
+
+@section('atributo_1', 'hidden')
+@section('boton_opcional')
+@if($user_login->name=='Administrador')
+<span class="dropdown ">
+  <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
+  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+    @foreach($almacen as $almacens)
+    <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
+    <form action="{{ route('nota_venta.create')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="hidden" class="dropdown-item" name="almacen"  value="{{$almacens->id}}">
+    </form>
+    <script>
+        function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
+    </script>
+    @endforeach
+</ul>
+</span>
+@elseif($user_login->name=='Colaborador')
+<button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
+
+@endif
+
+@endsection
+
 @endif
 
 @section('content')
-<script>
-    function Enviar_create(){document.getElementById('myform').submit();}
-</script>
 <span hidden>
-    <form id="myform" action="{{ route('nota_venta.create')}}" enctype="multipart/form-data" method="post">
+    <script>
+        function Enviar_create(){document.getElementById('myform1').submit();}
+        function Enviar_create2(){document.getElementById('myform2').submit();}
+    </script>
+    <form id="myform1" action="{{ route('nota_venta.create')}}" enctype="multipart/form-data" method="post">
         @csrf
         <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+    </form>
+    <form id="myform2" action="{{ route('nota_venta.create')}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text"  hidden="hidden" name="almacen"  value="{{$user_login->almacen_id}}">
     </form>
 </span>
 <!-- modal -->
@@ -89,14 +117,22 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>N° Cotizacion</th>
+                                    <th>Codigo</th>
+                                    <th>Almacen</th>
+                                    <th>Fecha Emision</th>
+                                    <th>Usuario Registrado</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($nota_venta as $nota_ventas)
                                 <tr class="gradeX">
                                     <td>{{$nota_ventas->id}}</td>
-                                    <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></center></td>
+                                    <td>{{$nota_ventas->cod_nota_venta}}</td>
+                                    <td>{{$nota_ventas->almacen->nombre}}</td>
+                                    <td>{{$nota_ventas->fecha_emision}}</td>
+                                    <td>{{$nota_ventas->user->personal->nombres}}</td>
+                                    <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a></center></td>
                                 </tr>
                                 @endforeach
                             </tbody>

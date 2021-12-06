@@ -8,8 +8,10 @@ use App\Personal;
 use App\Almacen;
 use App\Producto;
 use App\Servicios;
+use App\Banco;
 use App\Moneda;
 use App\Forma_pago;
+use App\NotaVentaRegistro;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -53,22 +55,25 @@ class NotaVentaController extends Controller
      */
     public function create(Request $request)
     {
+      $almacen=Almacen::where('id',$request->almacen)->first();
+      $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+      $count_nota_venta++;
+      $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+      $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
+      $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-       $sucursal_nr = str_pad(12, 3, "0", STR_PAD_LEFT);
-       $correlativo=str_pad(12, 8, "0", STR_PAD_LEFT);
-       $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-       $clientes=Cliente::all();
-       $moneda=Moneda::all();
-       $forma_pagos= Forma_pago::all();
-       $servicios = Servicios::all();
-       $productos=Producto::all();
-       $user_login =auth()->user();
+      $clientes=Cliente::all();
+      $moneda=Moneda::all();
+      $forma_pagos= Forma_pago::all();
+      $servicios = Servicios::all();
+      $productos=Producto::all();
+      $user_login =auth()->user();
 
-       $empresa=Empresa::first();
-       return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta'));
+      $empresa=Empresa::first();
+      return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen'));
 
-   }
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -78,7 +83,41 @@ class NotaVentaController extends Controller
      */
     public function store(Request $request)
     {
-        return "Llegaste";
+            //contador de valores de articulos
+        $articulo = $request->articulo;
+        $count_articulo=count($articulo);
+
+        $almacen=Almacen::where('id',$request->almacen)->first();
+        $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+        $count_nota_venta++;
+        $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+        $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
+        $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
+
+
+        $nota_venta=new NotaVenta;
+        $nota_venta->cod_nota_venta=$cod_nota_venta;
+        $nota_venta->cliente_id=$request->cliente;
+        $nota_venta->almacen_id=$request->almacen;
+        $nota_venta->forma_pago=$request->forma_pago;
+        $nota_venta->garantia=$request->garantia;
+        $nota_venta->moneda_id=$request->moneda;
+        $nota_venta->fecha_emision=$request->fecha_emision;
+        $nota_venta->observacion=$request->observacion;
+        $nota_venta->user_registrado=auth()->user()->id;
+        $nota_venta->save();
+
+        for($i=0;$i<$count_articulo;$i++){
+            $reg_nota_v= new NotaVentaRegistro();
+            $reg_nota_v->nota_venta_id=$nota_venta->id;
+            $reg_nota_v->producto=$request->get('articulo')[$i];
+            $reg_nota_v->cantidad=$request->get('cantidad')[$i];
+            $reg_nota_v->precio_nacional=$request->get('precio')[$i];
+            $reg_nota_v->save();
+        }
+
+     return redirect()->route('nota_venta.show',$nota_venta->id);
+        // return $nota_venta;
     }
 
     /**
@@ -89,6 +128,13 @@ class NotaVentaController extends Controller
      */
     public function show(Request $request, $id)
     {
+        $empresa=Empresa::first();
+        $nota_venta=NotaVenta::where('id',$id)->first();
+        $nota_venta_re=NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+
+      return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
 
     }
 

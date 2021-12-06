@@ -1,10 +1,8 @@
 @extends('layout')
-
-@section('title', 'Cotizacion Manual')
-@section('breadcrumb', 'Cotizacion Manual')
-@section('breadcrumb2', 'Cotizacion Manual')
+@section('title', 'Nota de Venta')
 @section('href_accion', route('nota_venta.index') )
 @section('value_accion', 'Atras')
+@section('atributo_actu', 'hidden')
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -58,8 +56,8 @@
                                 </tr>
                                 <tr>
                                     <td>Almacen</td>
-                                    <td>:</td>
-                                    <td><input type="text" class="form-control" value="ALM1" disabled></td>
+                                    <td>:<input type="text" class="form-control" value="{{$almacen->id}}" name="almacen" hidden></td>
+                                    <td><input type="text" class="form-control" value="{{$almacen->nombre}}" disabled></td>
 
                                     <td>Garantia</td>
                                     <td>:</td>
@@ -84,7 +82,7 @@
                                     </select>
 
                                 </td>
-                                <td>Fecha de cotizacion</td>
+                                <td>Fecha de Emision</td>
                                 <td>:</td>
                                 <td>
                                     <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
@@ -94,7 +92,7 @@
                                 <td>Observacion</td>
                                 <td>:</td>
                                 <td colspan="4">
-                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Nota de Venta a vuestra solicitud</textarea>
                                 </td>
                             </tr>
                         </tbody>
@@ -120,6 +118,9 @@
                                      <datalist id="browsers2" >
                                         @foreach($productos as $index)
                                         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                        @endforeach
+                                        @foreach($servicios as $servicio)
+                                        <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
                                         @endforeach
                                     </td>
                                     <td>
@@ -203,14 +204,6 @@
         </td>";
         <td>
         <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-        <datalist id="browsers2" >
-        @foreach($productos as $index)
-        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-        @endforeach
-        {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
-        {{-- @foreach($servicios as $index)
-        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-        @endforeach --}}
         </td>
         <td>
         <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
