@@ -101,7 +101,22 @@ class NotaDebitoController extends Controller
      */
     public function show($id)
     {
-        //
+        $notas_debito=Nota_Debito::where('id',$id)->first();
+        $notas_debito_registros=Nota_Debito_registro::where('nota_debito_id',$id)->get();
+
+        $empresa=Empresa::first();
+
+        if($notas_debito->boleta_id==NULL){
+            $estado=0;
+        }else{
+            $estado=1;
+        }
+
+        if($notas_debito->tipo=="producto"){
+            return view('transaccion.venta.nota_debito.show',compact('notas_debito','notas_debito_registros','empresa','estado'));
+        }else{
+            return view('transaccion.venta.nota_debito.show_servicio',compact('notas_debito','notas_debito_registros','empresa','estado'));
+        }
     }
 
     /**

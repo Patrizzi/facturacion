@@ -1483,5 +1483,551 @@ class Config_fe extends Model
         return $note;
     }
 
+
+
+    //nota debito - factura
+
+    public static function nota_debito($factura, $factura_registro, $request,$notas_debitos_count,$nota_debito_code,$gravada,$exonerada,$inafecta,$motivo){
+
+        $empresa=Empresa::first();
+        $igv=Igv::first();
+
+        // Cliente
+        $client = (new Client())
+            ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
+            ->setNumDoc($factura->cliente->numero_documento) //ruc del receptor
+            ->setRznSocial($factura->cliente->empresa); //nombre empresa
+
+        // Emisor
+        $address = (new Address())
+            ->setUbigueo('150101')
+            ->setDepartamento($empresa->region_provincia)
+            ->setProvincia($empresa->region_provincia)
+            ->setDistrito($empresa->ciudad)
+            ->setUrbanizacion('-')
+            ->setDireccion($empresa->calle)
+            ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
+
+        $company = (new Company())
+            ->setRuc($empresa->ruc)
+            ->setRazonSocial($empresa->razon_social)
+            ->setNombreComercial($empresa->nombre)
+            ->setAddress($address);
+
+        $contador=count($factura_registro);
+            
+        $cont=0;
+        $igv_f=0;
+        $precio=0;
+        $op_g=0;
+
+        // return $request;
+
+        for($p=0;$p<$contador;$p++){
+            $string=(string)$p;
+            
+            $nombre="input_disabled_".$string;
+            
+            if($request->$nombre==NULL){
+            }else{
+
+                if( in_array($factura_registro[$p]->producto->tipo_afec_i_producto->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                        ->setCodProducto($factura_registro[$p]->producto->codigo_producto)
+                        ->setUnidad('NIU')
+                        ->setCantidad($request->$nombre)
+                        ->setDescripcion($factura_registro[$p]->producto->nombre)
+                        ->setMtoBaseIgv($factura_registro[$p]->precio*$request->$nombre)
+                        ->setPorcentajeIgv($igv->igv_total)
+                        ->setIgv($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
+                        ->setTotalImpuestos($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($factura_registro[$p]->precio*$request->$nombre)
+                        ->setMtoValorUnitario($factura_registro[$p]->precio)
+                        ->setMtoPrecioUnitario($factura_registro[$p]->precio+($factura_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $igv_f=$factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$factura_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }else{
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                        ->setCodProducto($factura_registro[$p]->producto->codigo_producto)
+                        ->setUnidad('NIU')
+                        ->setCantidad($request->$nombre)
+                        ->setDescripcion($factura_registro[$p]->producto->nombre)
+                        ->setMtoBaseIgv($factura_registro[$p]->precio*$request->$nombre)
+                        ->setPorcentajeIgv(0)
+                        ->setIgv(0)
+                        ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
+                        ->setTotalImpuestos($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($factura_registro[$p]->precio*$request->$nombre)
+                        ->setMtoValorUnitario($factura_registro[$p]->precio)
+                        ->setMtoPrecioUnitario($factura_registro[$p]->precio+($factura_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $precio=$factura_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }
+                
+            }
+        }
+
+        $total=$igv_f+$precio;
+
+        //CODIGO NOTA
+        $codigo_nota=$nota_debito_code;
+        $serie=explode("-",$codigo_nota);
+
+        $correlativo=$serie[1];
+        $serie=$serie[0];
+        // $serie;
+        $note = new Note();
+        $note
+            ->setUblVersion('2.1')
+            ->setTipoDoc('08') // nota debito 
+            ->setSerie($serie)
+            ->setCorrelativo($correlativo)
+            ->setFechaEmision($factura->created_at)
+            ->setTipDocAfectado('01') // Tipo Doc: Factura
+            ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
+            ->setCodMotivo('02') // Catalogo. 09 https://www.sunat.gob.pe/legislacion/superin/2014/anexo8-300-2014.pdf pagina5
+            ->setDesMotivo($motivo)
+            ->setTipoMoneda($factura->moneda->codigo)
+            ->setCompany($company)
+            ->setClient($client)
+            ->setMtoOperGravadas($gravada) 
+            ->setMtoOperInafectas($inafecta)
+            ->setMtoOperExoneradas($exonerada)
+            ->setMtoIGV($igv_f)
+            ->setTotalImpuestos($igv_f)
+            ->setMtoImpVenta($total)
+            ;
+
+        $formatter = new NumeroALetras();
+        $valor=$formatter->toInvoice($total, 2, 'soles');
+        
+        $legend = new Legend();
+        $legend->setCode('1000')
+            ->setValue($valor);
+
+        $note->setDetails($item)
+            ->setLegends([$legend]);
+        
+        return $note;
+    }
+
+
+    public static function nota_debito_servicio($factura, $factura_registro, $request,$notas_debitos_count,$nota_debito_code,$gravada,$exonerada,$inafecta,$motivo){
+
+        $empresa=Empresa::first();
+        $igv=Igv::first();
+
+        // Cliente
+        $client = (new Client())
+            ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
+            ->setNumDoc($factura->cliente->numero_documento) //ruc del receptor
+            ->setRznSocial($factura->cliente->empresa); //nombre empresa
+
+        // Emisor
+        $address = (new Address())
+            ->setUbigueo('150101')
+            ->setDepartamento($empresa->region_provincia)
+            ->setProvincia($empresa->region_provincia)
+            ->setDistrito($empresa->ciudad)
+            ->setUrbanizacion('-')
+            ->setDireccion($empresa->calle)
+            ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
+
+        $company = (new Company())
+            ->setRuc($empresa->ruc)
+            ->setRazonSocial($empresa->razon_social)
+            ->setNombreComercial($empresa->nombre)
+            ->setAddress($address);
+
+        $contador=count($factura_registro);
+            
+        $cont=0;
+        $igv_f=0;
+        $precio=0;
+        $op_g=0;
+
+        
+        for($p=0;$p<$contador;$p++){
+            $string=(string)$p;
+            
+            $nombre="input_disabled_".$string;
+            
+            if($request->$nombre==NULL){
+            }else{
+
+
+                if( in_array($factura_registro[$p]->servicio->tipo_afec_i_serv->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                    ->setCodProducto($factura_registro[$p]->servicio->codigo_servicio)
+                    ->setUnidad('ZZ')
+                    ->setCantidad($request->$nombre)
+                    ->setDescripcion($factura_registro[$p]->servicio->nombre)
+                    ->setMtoBaseIgv($factura_registro[$p]->precio*$request->$nombre)
+                    ->setPorcentajeIgv($igv->igv_total)
+                    ->setIgv($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                    ->setTipAfeIgv($factura_registro[$p]->servicio->tipo_afec_i_serv->codigo)
+                    ->setTotalImpuestos($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                    ->setMtoValorVenta($factura_registro[$p]->precio*$request->$nombre)
+                    ->setMtoValorUnitario($factura_registro[$p]->precio)
+                    ->setMtoPrecioUnitario($factura_registro[$p]->precio+($factura_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $igv_f=$factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$factura_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }else{
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                    ->setCodProducto($factura_registro[$p]->servicio->codigo_servicio)
+                    ->setUnidad('ZZ')
+                    ->setCantidad($request->$nombre)
+                    ->setDescripcion($factura_registro[$p]->servicio->nombre)
+                    ->setMtoBaseIgv($factura_registro[$p]->precio*$request->$nombre)
+                    ->setPorcentajeIgv(0)
+                    ->setIgv(0)
+                    ->setTipAfeIgv($factura_registro[$p]->servicio->tipo_afec_i_serv->codigo)
+                    ->setTotalImpuestos($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                    ->setMtoValorVenta($factura_registro[$p]->precio*$request->$nombre)
+                    ->setMtoValorUnitario($factura_registro[$p]->precio)
+                    ->setMtoPrecioUnitario($factura_registro[$p]->precio+($factura_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $precio=$factura_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }
+
+
+                
+            }
+        }
+
+        $total=$igv_f+$precio;
+
+        //CODIGO NOTA
+        $codigo_nota=$nota_debito_code;
+        $serie=explode("-",$codigo_nota);
+
+        $correlativo=$serie[1];
+        $serie=$serie[0];
+
+        $note = new Note();
+        $note
+            ->setUblVersion('2.1')
+            ->setTipoDoc('07')
+            ->setSerie($serie)
+            ->setCorrelativo($correlativo)
+            ->setFechaEmision($factura->created_at)
+            ->setTipDocAfectado('01') // Tipo Doc: Factura
+            ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
+            ->setCodMotivo('02') // Catalogo. 09
+            ->setDesMotivo($motivo)
+            ->setTipoMoneda($factura->moneda->codigo)
+            ->setCompany($company)
+            ->setClient($client)
+            ->setMtoOperGravadas($gravada) 
+            ->setMtoOperInafectas($inafecta)
+            ->setMtoOperExoneradas($exonerada)
+            ->setMtoIGV($igv_f)
+            ->setTotalImpuestos($igv_f)
+            ->setMtoImpVenta($total)
+            ;
+
+        $formatter = new NumeroALetras();
+        $valor=$formatter->toInvoice($total, 2, 'soles');
+        
+        $legend = new Legend();
+        $legend->setCode('1000')
+            ->setValue($valor);
+
+        $note->setDetails($item)
+            ->setLegends([$legend]);
+        
+        return $note;
+    }
+
+
+
+
+
+
+
+
+    //NOTA DE DEBITO - BOLETA
+
+    public static function nota_debito_boleta($boleta,$boleta_registro,$request,$notas_debitos_count,$nota_debito_code,$gravada,$exonerada,$inafecta,$motivo){
+        // return $motivo;
+        
+        $empresa=Empresa::first();
+        $igv=Igv::first();
+
+        // Cliente
+        $client = (new Client())
+            ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
+            ->setNumDoc($boleta->cliente->numero_documento) //ruc del receptor
+            ->setRznSocial($boleta->cliente->empresa); //nombre empresa
+
+        // Emisor
+        $address = (new Address())
+            ->setUbigueo('150101')
+            ->setDepartamento($empresa->region_provincia)
+            ->setProvincia($empresa->region_provincia)
+            ->setDistrito($empresa->ciudad)
+            ->setUrbanizacion('-')
+            ->setDireccion($empresa->calle)
+            ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
+
+        $company = (new Company())
+            ->setRuc($empresa->ruc)
+            ->setRazonSocial($empresa->razon_social)
+            ->setNombreComercial($empresa->nombre)
+            ->setAddress($address);
+
+        $contador=count($boleta_registro);
+            
+        $cont=0;
+        $igv_f=0;
+        $precio=0;
+        $op_g=0;
+
+        for($p=0;$p<$contador;$p++){
+            $string=(string)$p;
+            
+            $nombre="input_disabled_".$string;
+            
+            if($request->$nombre==NULL){
+            }else{
+
+                if( in_array($boleta_registro[$p]->producto->tipo_afec_i_producto->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                        ->setCodProducto($boleta_registro[$p]->producto->codigo_producto)
+                        ->setUnidad('NIU')
+                        ->setCantidad($request->$nombre)
+                        ->setDescripcion($boleta_registro[$p]->producto->nombre)
+                        ->setMtoBaseIgv($boleta_registro[$p]->precio*$request->$nombre)
+                        ->setPorcentajeIgv($igv->igv_total)
+                        ->setIgv($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setTipAfeIgv($boleta_registro[$p]->producto->tipo_afec_i_producto->codigo)
+                        ->setTotalImpuestos($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($boleta_registro[$p]->precio*$request->$nombre)
+                        ->setMtoValorUnitario($boleta_registro[$p]->precio)
+                        ->setMtoPrecioUnitario($boleta_registro[$p]->precio+($boleta_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $igv_f=$boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$boleta_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }else{
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                        ->setCodProducto($boleta_registro[$p]->producto->codigo_producto)
+                        ->setUnidad('NIU')
+                        ->setCantidad($request->$nombre)
+                        ->setDescripcion($boleta_registro[$p]->producto->nombre)
+                        ->setMtoBaseIgv($boleta_registro[$p]->precio*$request->$nombre)
+                        ->setPorcentajeIgv(0)
+                        ->setIgv(0)
+                        ->setTipAfeIgv($boleta_registro[$p]->producto->tipo_afec_i_producto->codigo)
+                        ->setTotalImpuestos($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($boleta_registro[$p]->precio*$request->$nombre)
+                        ->setMtoValorUnitario($boleta_registro[$p]->precio)
+                        ->setMtoPrecioUnitario($boleta_registro[$p]->precio+($boleta_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $igv_f=$boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$boleta_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }
+
+
+                
+            }
+        }
+
+        $total=$igv_f+$precio;
+
+        //CODIGO NOTA
+        $codigo_nota=$nota_debito_code;
+        $serie=explode("-",$codigo_nota);
+
+        $correlativo=$serie[1];
+        $serie=$serie[0];
+
+        $note = new Note();
+        $note
+            ->setUblVersion('2.1')
+            ->setTipoDoc('08')
+            ->setSerie($serie)
+            ->setCorrelativo($correlativo)
+            ->setFechaEmision($boleta->created_at)
+            ->setTipDocAfectado('03') // Tipo Doc: boleta
+            ->setNumDocfectado($boleta->codigo_boleta) // boleta: Serie-Correlativo
+            ->setCodMotivo('02') // Catalogo. 09
+            ->setDesMotivo($motivo)
+            ->setTipoMoneda($boleta->moneda->codigo)
+            ->setCompany($company)
+            ->setClient($client)
+            ->setMtoOperGravadas($gravada) 
+            ->setMtoOperInafectas($inafecta)
+            ->setMtoOperExoneradas($exonerada)
+            ->setMtoIGV($igv_f)
+            ->setTotalImpuestos($igv_f)
+            ->setMtoImpVenta($total)
+            ;
+
+        $formatter = new NumeroALetras();
+        $valor=$formatter->toInvoice($total, 2, 'soles');
+        
+        $legend = new Legend();
+        $legend->setCode('1000')
+            ->setValue($valor);
+
+        $note->setDetails($item)
+            ->setLegends([$legend]);
+        
+        return $note;
+
+    }
+
+    public static function nota_debito_boleta_servicio($boleta,$boleta_registro,$request,$notas_debitos_count,$nota_debito_code,$gravada,$exonerada,$inafecta,$motivo){
+        $empresa=Empresa::first();
+        $igv=Igv::first();
+
+        // Cliente
+        $client = (new Client())
+            ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
+            ->setNumDoc($boleta->cliente->numero_documento) //ruc del receptor
+            ->setRznSocial($boleta->cliente->empresa); //nombre empresa
+
+        // Emisor
+        $address = (new Address())
+            ->setUbigueo('150101')
+            ->setDepartamento($empresa->region_provincia)
+            ->setProvincia($empresa->region_provincia)
+            ->setDistrito($empresa->ciudad)
+            ->setUrbanizacion('-')
+            ->setDireccion($empresa->calle)
+            ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
+
+        $company = (new Company())
+            ->setRuc($empresa->ruc)
+            ->setRazonSocial($empresa->razon_social)
+            ->setNombreComercial($empresa->nombre)
+            ->setAddress($address);
+
+        $contador=count($boleta_registro);
+            
+        $cont=0;
+        $igv_f=0;
+        $precio=0;
+        $op_g=0;
+
+        for($p=0;$p<$contador;$p++){
+            $string=(string)$p;
+            
+            $nombre="input_disabled_".$string;
+            
+            if($request->$nombre==NULL){
+            }else{
+
+                if( in_array($boleta_registro[$p]->servicio->tipo_afec_i_serv->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                    ->setCodProducto($boleta_registro[$p]->servicio->codigo_servicio)
+                    ->setUnidad('ZZ')
+                    ->setCantidad($request->$nombre)
+                    ->setDescripcion($boleta_registro[$p]->servicio->nombre)
+                    ->setMtoBaseIgv($boleta_registro[$p]->precio*$request->$nombre)
+                    ->setPorcentajeIgv($igv->igv_total)
+                    ->setIgv($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                    ->setTipAfeIgv($boleta_registro[$p]->servicio->tipo_afec_i_serv->codigo)
+                    ->setTotalImpuestos($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                    ->setMtoValorVenta($boleta_registro[$p]->precio*$request->$nombre)
+                    ->setMtoValorUnitario($boleta_registro[$p]->precio)
+                    ->setMtoPrecioUnitario($boleta_registro[$p]->precio+($boleta_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $igv_f=$boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$boleta_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }else{
+                    $item[$cont]=new SaleDetail();
+                    $item[$cont]
+                    ->setCodProducto($boleta_registro[$p]->servicio->codigo_servicio)
+                    ->setUnidad('ZZ')
+                    ->setCantidad($request->$nombre)
+                    ->setDescripcion($boleta_registro[$p]->servicio->nombre)
+                    ->setMtoBaseIgv($boleta_registro[$p]->precio*$request->$nombre)
+                    ->setPorcentajeIgv(0)
+                    ->setIgv(0)
+                    ->setTipAfeIgv($boleta_registro[$p]->servicio->tipo_afec_i_serv->codigo)
+                    ->setTotalImpuestos($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                    ->setMtoValorVenta($boleta_registro[$p]->precio*$request->$nombre)
+                    ->setMtoValorUnitario($boleta_registro[$p]->precio)
+                    ->setMtoPrecioUnitario($boleta_registro[$p]->precio+($boleta_registro[$p]->precio*(($igv->igv_total)/100)));
+
+                    $precio=$boleta_registro[$p]->precio*$request->$nombre+$precio;
+
+                    $cont++;
+                }
+
+                
+            }
+        }
+
+        $total=$igv_f+$precio;
+
+        //CODIGO NOTA
+        $codigo_nota=$nota_debito_code;
+        $serie=explode("-",$codigo_nota);
+
+        $correlativo=$serie[1];
+        $serie=$serie[0];
+
+        $note = new Note();
+        $note
+            ->setUblVersion('2.1')
+            ->setTipoDoc('08')
+            ->setSerie($serie)
+            ->setCorrelativo($correlativo)
+            ->setFechaEmision($boleta->created_at)
+            ->setTipDocAfectado('03') // Tipo Doc: boleta
+            ->setNumDocfectado($boleta->codigo_boleta) // boleta: Serie-Correlativo
+            ->setCodMotivo('02') // Catalogo. 09
+            ->setDesMotivo($motivo)
+            ->setTipoMoneda($boleta->moneda->codigo)
+            ->setCompany($company)
+            ->setClient($client)
+            ->setMtoOperGravadas($gravada) 
+            ->setMtoOperInafectas($inafecta)
+            ->setMtoOperExoneradas($exonerada)
+            ->setMtoIGV($igv_f)
+            ->setTotalImpuestos($igv_f)
+            ->setMtoImpVenta($total)
+            ;
+
+        $formatter = new NumeroALetras();
+        $valor=$formatter->toInvoice($total, 2, 'soles');
+        
+        $legend = new Legend();
+        $legend->setCode('1000')
+            ->setValue($valor);
+
+        $note->setDetails($item)
+            ->setLegends([$legend]);
+        
+        return $note;
+    }
+
     
 }
+
