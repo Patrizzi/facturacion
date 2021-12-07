@@ -126,7 +126,7 @@
 									</select>
 								</div>
 								<div class="col-sm-10" id="father_servicio"  style="display: none">
-								 	<select class="select2_demo_2 form-control"  name="invalido" required   id="servicio_t">
+								 	<select class="select2_demo_2 form-control"  name="invalido"    id="servicio_t">
 								 		@foreach($servicios as $servicio)
 								 		<option  value="{{$servicio->nombre}}">{{$servicio->nombre}}</option>
 								 		@endforeach
@@ -250,6 +250,7 @@ span .select2-selection__rendered{color:#000000c7;}
 				//cambio de estado parqa servicios
 				var ser = document.getElementById("servicio_t");
 				ser.setAttribute('name' , 'nombre_equipos');
+				ser.required = true;
 				var father_serv = ser.closest("div");
 				father_serv.style.display = 'block';
 				$(".select2_demo_2").select2();
@@ -257,6 +258,7 @@ span .select2-selection__rendered{color:#000000c7;}
 				//cambio de estado parqa servicio
 				var ser = document.getElementById("servicio_t");
 				ser.setAttribute('name' , 'invalido');
+				ser.required = false;
 				var father_serv = ser.closest("div");
 				father_serv.style.display = 'none';
 
