@@ -71,7 +71,7 @@
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                            <h2 style="font-size: 19px">NOTA DE VENTA</h2>
                             <h5>{{$nota_venta->cod_nota_venta}} </h5>
                         </div>
                     </div>
