@@ -452,8 +452,6 @@ class FacturacionElectronicaController extends Controller
 
         $nota_credito_numero="BB".$sucursal_nr."-".$nota_credito_nr;
 
-        
-
         if($boleta->tipo=="producto"){
 
             $contadores=count($boleta_registro);
@@ -473,7 +471,6 @@ class FacturacionElectronicaController extends Controller
                     }
                 }
             }
-
 
             $nota_credito=new Nota_Credito();
             $nota_credito->codigo_n_c=$nota_credito_numero;
@@ -534,7 +531,6 @@ class FacturacionElectronicaController extends Controller
                 }
             }
 
-
             $nota_credito=new Nota_Credito();
             $nota_credito->codigo_n_c=$nota_credito_numero;
             $nota_credito->boleta_id=$boleta->id;
@@ -583,8 +579,6 @@ class FacturacionElectronicaController extends Controller
 
         return redirect()->route('nota-credito.show',$nota_credito->id);
     }
-
-
 
     // nota de debito
 
@@ -646,7 +640,6 @@ class FacturacionElectronicaController extends Controller
 
         $nota_debito_numero="FF".$sucursal_nr."-".$nota_debito_nr;
 
-
         if($factura->tipo=="producto"){
 
             $contadores=count($factura_registro);
@@ -668,7 +661,6 @@ class FacturacionElectronicaController extends Controller
                 }
             }
 
-            
             $invoice=Config_fe::nota_debito($factura,$factura_registro,$request,$notas_debitos_count,$nota_debito_numero,$gravada,$exonerada,$inafecta,$request->motivo);
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
@@ -735,7 +727,6 @@ class FacturacionElectronicaController extends Controller
             //lectura CDR
             $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
             
-            
             $nota_debito=new Nota_Debito();
             $nota_debito->codigo_n_d=$nota_debito_numero;
             $nota_debito->facturacion_id=$factura->id;
@@ -783,9 +774,6 @@ class FacturacionElectronicaController extends Controller
         return redirect()->route('nota-debito.show',$nota_debito->id);
 
     }
-
-
-
 
     public function nota_debito_boleta(Request $request, $id)
     {   
@@ -844,8 +832,6 @@ class FacturacionElectronicaController extends Controller
         }
 
         $nota_debito_numero="BB".$sucursal_nr."-".$nota_debito_nr;
-
-        
 
         if($boleta->tipo=="producto"){
 
