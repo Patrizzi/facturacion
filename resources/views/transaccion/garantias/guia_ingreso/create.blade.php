@@ -244,6 +244,7 @@ span .select2-selection__rendered{color:#000000c7;}
 				//cambio de estados para productos
 				var prod = document.getElementById("producto");
 				prod.setAttribute('name' , 'invalido');
+				prod.required = false;
 				var father = prod.closest("div");
 				father.style.display = 'none';
 				
@@ -265,6 +266,7 @@ span .select2-selection__rendered{color:#000000c7;}
 				//cambio de estados para productos
 				var prod = document.getElementById("producto");
 				prod.setAttribute('name' , 'nombre_equipos');
+				prod.required = true;
 				var father = prod.closest("div");
 				father.style.display = 'block';
 				$(".select2_demo_2").select2();
