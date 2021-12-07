@@ -119,6 +119,7 @@
                                     <th style="width:30px">Cantidad Nueva</th>
                                     <th>Descripción</th>
                                     <th>Precio unitario</th>
+                                    <th style="width:30px">Precio unitario nuevo</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -134,6 +135,7 @@
                                         <td><input required="required" class="form-control" type="text" id="input_disabled_{{$e}}" name="input_disabled_{{$e}}" value="0" disabled></td>
                                         <td>{{$facturacion_registros->servicio->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
                                         <td>{{$facturacion_registros->precio}}</td>
+                                        <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
                                         <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td>
                                         <td style="display: none">
                                             {{$sub_total=($facturacion_registros->factura_ids->op_gravada)+($facturacion_registros->factura_ids->op_inafecta)+($facturacion_registros->factura_ids->op_exonerada)}}
@@ -177,9 +179,11 @@
     function check(i){
         if(document.getElementById(`inlineCheckbox_${i}`).value == "false"){
             document.getElementById(`input_disabled_${i}`).disabled = true;
+            document.getElementById(`input_disabled_precio_${i}`).disabled = true;
             document.getElementById(`inlineCheckbox_${i}`).value = "true"
         }else{
             document.getElementById(`input_disabled_${i}`).disabled = false;
+            document.getElementById(`input_disabled_precio_${i}`).disabled = false;
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
         }
     }

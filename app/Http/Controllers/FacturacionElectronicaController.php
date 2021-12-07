@@ -653,16 +653,17 @@ class FacturacionElectronicaController extends Controller
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
                 $nombre="input_disabled_".$string;
+                $nombre_precio="input_disabled_precio_".$string;
                 if($request->$nombre==NULL){
                 }else{
                     if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $gravada += round($factura_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $gravada += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $exonerada += round($factura_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $exonerada += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $inafecta += round($factura_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $inafecta += round($request->$nombre_precio*$request->$nombre,2);
                     }
                 }
             }
@@ -696,7 +697,7 @@ class FacturacionElectronicaController extends Controller
                     $nota_debitos_r=new Nota_Debito_registro();
                     $nota_debitos_r->nota_debito_id=$nota_debito->id;
                     $nota_debitos_r->producto_id=$factura_registro[$p]->producto_id;
-                    $nota_debitos_r->precio=$factura_registro[$p]->precio;
+                    $nota_debitos_r->precio=$request->$nombre_precio;
                     $nota_debitos_r->cantidad=$request->$nombre;
                     $nota_debitos_r->save();
                     $contar++;
@@ -711,17 +712,18 @@ class FacturacionElectronicaController extends Controller
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
                 $nombre="input_disabled_".$string;
+                $nombre_precio="input_disabled_precio_".$string;
                 if($request->$nombre==NULL){
                 }else{
 
                     if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $gravada_s += round($factura_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $gravada_s += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $exonerada_s += round($factura_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $exonerada_s += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $inafecta_s += round($factura_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $inafecta_s += round($request->$nombre_precio*$request->$nombre,2);
                     }
                 }
             }
@@ -756,7 +758,7 @@ class FacturacionElectronicaController extends Controller
                     $nota_debitos_r=new Nota_Debito_registro();
                     $nota_debitos_r->nota_debito_id=$nota_debito->id;
                     $nota_debitos_r->servicio_id=$factura_registro[$p]->servicio_id;
-                    $nota_debitos_r->precio=$factura_registro[$p]->precio;
+                    $nota_debitos_r->precio=$request->$nombre_precio;
                     $nota_debitos_r->cantidad=$request->$nombre;
                     $nota_debitos_r->save();
                     $contar++;
@@ -849,16 +851,17 @@ class FacturacionElectronicaController extends Controller
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
                 $nombre="input_disabled_".$string;
+                $nombre_precio="input_disabled_precio_".$string;
                 if($request->$nombre==NULL){
                 }else{
                     if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $gravada += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $exonerada += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $inafecta += round($request->$nombre_precio*$request->$nombre,2);
                     }
                 }
             }
@@ -894,7 +897,7 @@ class FacturacionElectronicaController extends Controller
                     $nota_debitos_r=new Nota_Debito_registro();
                     $nota_debitos_r->nota_debito_id=$nota_debito->id;
                     $nota_debitos_r->producto_id=$boleta_registro[$p]->producto_id;
-                    $nota_debitos_r->precio=$boleta_registro[$p]->precio;
+                    $nota_debitos_r->precio=$request->$nombre_precio;
                     $nota_debitos_r->cantidad=$request->$nombre;
                     $nota_debitos_r->save();
                     $contar++;
@@ -908,16 +911,17 @@ class FacturacionElectronicaController extends Controller
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
                 $nombre="input_disabled_".$string;
+                $nombre_precio="input_disabled_".$string;
                 if($request->$nombre==NULL){
                 }else{
                     if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $gravada_s += round($boleta_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $gravada_s += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $exonerada_s += round($boleta_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $exonerada_s += round($request->$nombre_precio*$request->$nombre,2);
                     }
                     if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $inafecta_s += round($boleta_registro[$a]->precio_unitario_comi*$request->$nombre,2);
+                        $inafecta_s += round($request->$nombre_precio*$request->$nombre,2);
                     }
                 }
             }
@@ -950,7 +954,7 @@ class FacturacionElectronicaController extends Controller
                     $nota_debitos_r=new Nota_Debito_registro();
                     $nota_debitos_r->nota_debito_id=$nota_debito->id;
                     $nota_debitos_r->servicio_id=$boleta_registro[$p]->servicio_id;
-                    $nota_debitos_r->precio=$boleta_registro[$p]->precio;
+                    $nota_debitos_r->precio=$request->$nombre_precio;
                     $nota_debitos_r->cantidad=$request->$nombre;
                     $nota_debitos_r->save();
                     $contar++;
