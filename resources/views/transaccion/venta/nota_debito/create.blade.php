@@ -23,7 +23,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE debito</h2>
+                                <h2>NOTA DE DEBITO</h2>
                                 <h5> {{$facturacion->codigo_fac}}</h5>
                             </center>
                         </div>
@@ -88,14 +88,9 @@
                                     </div>
                                     <div class="col-sm-10" style="padding-left: 0px">
                                         <select class="form-control" name="motivo">
-                                            <option >Devolucion por Item</option>
-                                            <option >Descuento por Item</option>
-                                            <option >Anulacion de la operacion</option>
-                                            <option >Anulacion por error en el RUC</option>
-                                            <option >Descuento Global</option>
-                                            <option >Devolucion Ttotal</option>
-                                            <option >Correcion por error en la descripcion</option>
-                                            <option >Ajustes - montos y/o fechas de pago</option>
+                                            <option >Interes por mora</option>
+                                            <option >Aumentos en el valor</option>
+                                            <option >Penalidades</option>
                                         </select>
                                     </div>
                                 </div>
@@ -119,8 +114,6 @@
                                     <th>ITEM</th>
                                     <th>Codigo Producto</th>
                                     <th style="width:30px">Cantidad</th>
-                                    <th style="width:30px">Cantidad Nueva</th>
-                                    
                                     <th>Descripción</th>
                                     <th>Precio unitario</th>
                                     <th style="width:30px">Precio unitario Nuevo</th>
@@ -136,8 +129,6 @@
                                         <td >{{$u++}}</td>
                                         <td>{{$facturacion_registros->producto->codigo_producto}}</td>
                                         <td>{{$facturacion_registros->cantidad}}</td>
-                                        <td><input required="required" class="form-control" type="text" id="input_disabled_{{$e}}" name="input_disabled_{{$e}}" value="0" disabled></td>
-                                        
                                         <td>{{$facturacion_registros->producto->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
                                         <td>{{$facturacion_registros->precio}}</td>
                                         <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
@@ -185,11 +176,11 @@
     var estado=1;
     function check(i){
         if(document.getElementById(`inlineCheckbox_${i}`).value == "false"){
-            document.getElementById(`input_disabled_${i}`).disabled = true;
+            
             document.getElementById(`input_disabled_precio_${i}`).disabled = true;
             document.getElementById(`inlineCheckbox_${i}`).value = "true"
         }else{
-            document.getElementById(`input_disabled_${i}`).disabled = false;
+            
             document.getElementById(`input_disabled_precio_${i}`).disabled = false;
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
         }
