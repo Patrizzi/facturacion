@@ -1,10 +1,10 @@
 @extends('layout')
-
+{{-- rfs --}}
 @section('title', 'Bienvenido : '.auth()->user()->personal->nombres)
 @section('breadcrumb', 'Inicio')
 @section('breadcrumb2', 'Bienvenido')
 
-@section('foto', auth()->user()->personal->foto)
+@section('foto', auth()->user()->avatar)
 @section('nombre', auth()->user()->personal->nombres)
 @section('area', auth()->user()->name)
 

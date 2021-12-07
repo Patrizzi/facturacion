@@ -318,7 +318,7 @@ class FacturacionController extends Controller
      */
     public function store(Request $request,$id_moneda)
     {
-        // return $request;
+        
         // return $request->get('monto_pago');
         $facturacion_input=$request->get('facturacion');
 
@@ -350,6 +350,7 @@ class FacturacionController extends Controller
 
             }
         }
+        return $request;
         // Comisionista convertir id
 
         $comisionista=$request->get('comisionista');

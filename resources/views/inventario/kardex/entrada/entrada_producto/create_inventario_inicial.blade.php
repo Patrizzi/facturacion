@@ -42,8 +42,17 @@
 					<table cellspacing="0" class="table table-striped " width="100%">
 						<thead>
 							<tr>
-								<th style="width: 10px"></th>
-								<th style="width: 600px">Producto  <a href="{{route('productos.create')}}" class="btn btn-warning" target="blanck" style="padding-top: 0px;padding-bottom: 0px; padding-left: 4px;padding-right: 4px;" ><i class="fa fa-plus-square" aria-hidden="true" ></a></th>
+								<th style="width: 10px"><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button></th>
+								<th style="width: 600px">  
+									<div class="row">
+										{{-- <div class="col-sm-6">
+											Producto
+										</div> --}}
+										<div class="col-sm-12">
+											<button class="btn btn-primary float-left" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+										</div>
+									</div>
+								</th>
 									<th style="width: 100px">Cantidad</th>
 									<th style="width: 100px">Precio</th>
 									<th style="width: 100px">Total</th>
@@ -70,8 +79,8 @@
 
 							</tbody>
 						</table>
-						<button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-						<button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+						
+						
 					</form>
 				</div>
 			</div>
@@ -140,7 +149,7 @@ span.select2.select2-container.select2-container--default{
 		<input type='text' id='total${i}' name='total[]' class="form-control" disabled="disabled" required/>
 		</td>
 		</tr> `;
-		$('#tbody').append(data);
+		$('#tbody').prepend(data);
 		i++;
 		$(".select2_demo_3").select2({
 			placeholder: "Seleccionar Producto",
