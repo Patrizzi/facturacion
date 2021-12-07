@@ -350,7 +350,7 @@ class FacturacionController extends Controller
 
             }
         }
-        return $request;
+        // return $request;
         // Comisionista convertir id
 
         $comisionista=$request->get('comisionista');
