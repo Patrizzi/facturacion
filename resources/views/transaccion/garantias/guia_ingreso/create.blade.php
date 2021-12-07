@@ -82,7 +82,7 @@
 								</div>
 								<label class="col-sm-2 col-form-label">Motivo:</label>
 								<div class="col-sm-4">
-									<select class="form-control for m-b" name="motivo">
+									<select class="form-control for m-b" name="motivo" id="motivo" onchange="change_motivo()">
 										<option value="Garantia">Garantia</option>
 										<option value="Servicio">Servicio</option>
 										<option value="Informativo">Informativo</option>
@@ -118,12 +118,19 @@
 							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
 
 								<label class="col-sm-2 col-form-label">Modelo:</label>
-								<div class="col-sm-10">
-									<select class="select2_demo_3 form-control"  name="nombre_equipos" required  >
+								<div class="col-sm-10" id=father_producto >
+									<select class="select2_demo_2 form-control"  name="nombre_equipos" required id="producto"  >
 										@foreach($productos as $producto)
 										<option  value="{{$producto->nombre}}">{{$producto->nombre}}</option>
 										@endforeach
 									</select>
+								</div>
+								<div class="col-sm-10" id="father_servicio"  style="display: none">
+								 	<select class="select2_demo_2 form-control"  name="invalido" required   id="servicio_t">
+								 		@foreach($servicios as $servicio)
+								 		<option  value="{{$servicio->nombre}}">{{$servicio->nombre}}</option>
+								 		@endforeach
+								 	</select>
 								</div>
 								<label class="col-sm-2 col-form-label">Nr Serie:</label>
 								<div class="col-sm-10">
@@ -229,5 +236,37 @@ span .select2-selection__rendered{color:#000000c7;}
 			allowClear: false
 		});
 	</script>
+	<script type="text/javascript">
+		function change_motivo() {
+			var tipo = document.getElementById("motivo");
+			// console.log(tipo);
+			if(tipo.value == "Servicio"){
+				//cambio de estados para productos
+				var prod = document.getElementById("producto");
+				prod.setAttribute('name' , 'invalido');
+				var father = prod.closest("div");
+				father.style.display = 'none';
+				
+				//cambio de estado parqa servicios
+				var ser = document.getElementById("servicio_t");
+				ser.setAttribute('name' , 'nombre_equipos');
+				var father_serv = ser.closest("div");
+				father_serv.style.display = 'block';
+				$(".select2_demo_2").select2();
+			}else{
+				//cambio de estado parqa servicio
+				var ser = document.getElementById("servicio_t");
+				ser.setAttribute('name' , 'invalido');
+				var father_serv = ser.closest("div");
+				father_serv.style.display = 'none';
 
+				//cambio de estados para productos
+				var prod = document.getElementById("producto");
+				prod.setAttribute('name' , 'nombre_equipos');
+				var father = prod.closest("div");
+				father.style.display = 'block';
+				$(".select2_demo_2").select2();
+			}
+		}
+	</script>
 		@stop

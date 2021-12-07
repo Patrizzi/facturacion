@@ -44,62 +44,62 @@
                             </thead>
                             <tbody>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/2897/2897818.svg" width="13px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/almacen.svg')}}" width="20px" alt=""></td>
                                     <td>Almacen</td>
                                     <td><a class="btn btn-primary" href="{{ route('almacen.index') }}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/852/852890.svg" width="13px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/apariencia.svg')}}" width="20px" alt=""></td>
                                     <td>Apariencia</td>
                                     <td><a class="btn btn-primary" href="{{route('apariencia.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/25/25622.svg" width="13px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/categoria.svg')}}" width="20px" alt=""></td>
                                     <td>Categorias</td>
                                     <td><a class="btn btn-primary" href="{{route('categoria.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                  <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/3076/3076591.svg" width="15px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/familia.svg')}}" width="20px" alt=""></td>
                                     <td>Familias</td>
                                     <td><a class="btn btn-primary" href="{{route('familia.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/25/25345.svg" width="13px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/marca.svg')}}" width="20px" alt=""></td>
                                     <td>Marcas</td>
                                     <td><a class="btn btn-primary" href="{{route('marca.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/25/25605.svg" width="13px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/motivo.svg')}}" width="20px" alt=""></td>
                                     <td>Motivo</td>
                                     <td><a class="btn btn-primary" href="{{route('motivo.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><i class="fa fa-money" aria-hidden="true"></i></td>
+                                    <td><img src="{{asset('img/logos/moneda.svg')}}" width="20px" alt=""></td>
                                     <td>Monedas</td>
                                     <td><a class="btn btn-primary" href="{{route('moneda.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><i class="fa fa-pie-chart"></i></td>
+                                    <td><img src="{{asset('img/logos/igv.svg')}}" width="20px"></td>
                                     <td>IGV</td>
                                     <td><a class="btn btn-primary" href="{{route('igv.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><i class="fa fa-balance-scale"></i></td>
+                                    <td><img src="{{asset('img/logos/unidad_medida.svg')}}" width="20px"></td>
                                     <td>Unidades de Medidas</td>
                                     <td><a class="btn btn-primary" href="{{route('unidad-medida.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/svg/static/icons/svg/929/929493.svg" width="15px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/usuarios.svg')}}" width="20px" alt=""></td>
                                     <td>Usuarios</td>
                                     <td><a class="btn btn-primary" href="{{route('usuario.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="https://www.flaticon.es/premium-icon/icons/svg/2460/2460831.svg" width="16px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/tipo-cambio.svg')}}" width="20px" alt=""></td>
                                     <td>Tipo de Cambio</td>
                                     <td><a class="btn btn-primary" href="{{route('tipo_cambio.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="" width="16px" alt=""></td>
+                                    <td><img src="{{asset('img/logos/backup_mail.svg')}}" width="20px" alt=""></td>
                                     <td>Backup de Email</td>
                                     <td><a class="btn btn-primary" href="{{route('email_backup')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>

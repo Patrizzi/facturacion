@@ -55,7 +55,14 @@
 
        <label class="col-sm-2 col-form-label">Familia:</label>
        <div class="col-sm-10">
-        <input type="text" class="form-control" value="{{$producto->familia_i_producto->descripcion}}" disabled="disabled">
+        {{-- <input type="text" class="form-control" value="{{$producto->familia_i_producto->descripcion}}" disabled="disabled"> --}}
+        <select class="form-control m-b" name="familia_id" required="required">
+           <option value="{{ $producto->familia_i_producto->id }}">{{ $producto->familia_i_producto->descripcion}}</option>
+           <option disabled="">---------------------</option>
+           @foreach($familias as $familia)
+           <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
+           @endforeach
+         </select>
       </div>
 
     </div>

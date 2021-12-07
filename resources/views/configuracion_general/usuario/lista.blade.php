@@ -83,8 +83,12 @@
                                                             <form action="{{ route('usuario.creacion',$personal->id) }}"  enctype="multipart/form-data" method="post">
                                                                 @csrf
                                                                 <fieldset >
-                                                                    <legend style="height: 250px;"> <img src="
-                                                                        {{ asset('/profile/images/')}}/{{$personal->foto}}" style="width: 200px;height: 200px;border-radius: 5px"> <br>{{$personal->nombres}} {{$personal->apellidos}}
+                                                                    <legend style="height: 250px;"> 
+                                                                        <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()"  />
+                                                                        <div id="visorArchivo">
+                                                                            <img src="{{asset('/profile/images/')}}/{{$personal->foto}}" style="width: 200px;height: 200px;border-radius: 5px"> 
+                                                                        </div>
+                                                                        {{$personal->nombres}} {{$personal->apellidos}}
                                                                         <p style="font-size: 15px;width: 200px">
                                                                             <select name="name" class="form-control" required="required">
                                                                                 <option value="Administrador">Administrador</option>
@@ -143,7 +147,18 @@
 </div>
 </div>
 
-
+<style type="text/css">
+    input#archivoInput{
+      position:absolute;
+      top:0px;
+      left:0px;
+      right:0px;
+      bottom:0px;
+      width:100%;
+      height:220px;
+      opacity: 0    ;
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -157,6 +172,34 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<script type="text/javascript">
+  function validarExt()
+  {
+    var archivoInput = document.getElementById('archivoInput');
+    var archivoRuta = archivoInput.value;
+    var extPermitidas = /(.jpg|.png|.jfif)$/i;
+    if(!extPermitidas.exec(archivoRuta)){
+      alert('Asegurese de haber seleccionado una Imagen');
+      archivoInput.value = '';
+      return false;
+    }
+
+    else
+    {
+        //PRevio del PDF
+        if (archivoInput.files && archivoInput.files[0])
+        {
+          var visor = new FileReader();
+          visor.onload = function(e)
+          {
+            document.getElementById('visorArchivo').innerHTML =
+            '<center><img name="avatar" src="'+e.target.result+'"width="200px" height="200px" /></center>';
+          };
+          visor.readAsDataURL(archivoInput.files[0]);
+        }
+      }
+    }
+  </script>
 <!-- Page-Level Scripts -->
 <script>
     $(document).ready(function(){
