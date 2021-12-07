@@ -84,9 +84,6 @@
                                 <strong>Señor(es):</strong> &nbsp;{{$nota_venta->cliente->nombre}}<br>
                                 <strong>{{$nota_venta->cliente->documento_identificacion}} :</strong> &nbsp;{{$nota_venta->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Fecha:</strong> &nbsp;{{$nota_venta->created_at}}<br>
-                                {{-- <strong>Direccion:</strong>&nbsp; {{$nota_venta->cliente->direccion}}<br> --}}
-                                {{-- <strong>Telefono:</strong>&nbsp; {{$nota_venta->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --}}
-                                {{-- <strong>Celular:</strong>&nbsp; {{$nota_venta->cliente->celular}}<br> --}}
                             </div>
                         </div>
                     </div>
@@ -136,15 +133,24 @@
         </tbody>
     </table>
 </div><!-- /table-responsive -->
+<br><br><br><br>
+<h3 align="left">
+    <?php $v=new CifrasEnLetras() ;
+    $letra=($v->convertirEurosEnLetras($sume));
+    $letra_final = strstr($letra, 'soles',true);
+    $end_final=strstr($sume, '.');
+?>
+Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+</h3>
 
-<div class="row"style="padding-top: 120px">
-<div class="col-lg-12" align="right">
-<div style="width:20%">
- <p class="form-control a"> Importe Total</p>
-        <p class="form-control a"> {{$nota_venta->moneda->simbolo}}{{$sume}}</p>
-</div>
+<div class="row">
+    <div class="col-lg-12" align="right">
+        <div style="width:20%">
+         <p class="form-control a"> Importe Total</p>
+         <p class="form-control a"> {{$nota_venta->moneda->simbolo}}{{$sume}}</p>
+     </div>
 
-</div>
+ </div>
 </div>
 
 <br>
