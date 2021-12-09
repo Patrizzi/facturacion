@@ -111,6 +111,19 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/twig" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nelexa/zip" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/yajra/laravel-datatables-oracle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/league/mime-type-detection" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/luecano/numero-a-letras" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mike42/gfx-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mike42/escpos-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-client-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/lite" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-parallel-lint/php-console-highlighter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-parallel-lint/php-console-color" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

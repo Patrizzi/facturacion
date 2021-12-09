@@ -81,6 +81,17 @@ class NotaCreditoController extends Controller
         }
     }
 
+    public function motivo(Request $request){
+        
+        if(isset($request->factura_id)){
+            $facturacion=Facturacion::find($request->factura_id);
+            return view('transaccion.venta.nota_credito.create_motivo',compact('facturacion'));
+        }else{
+            $boleta=Boleta::find($request->boleta_id);
+            return view('transaccion.venta.nota_credito.create_motivo',compact('boleta'));
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
