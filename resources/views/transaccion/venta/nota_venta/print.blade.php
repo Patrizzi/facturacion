@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Cotizacion- Impresion</title>
+    <title>Nota de Venta- Impresion</title>
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -49,8 +49,8 @@
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                                    <h5> COTPF 001-0000000{{$codigo}}</h5>
+                                    <h2 style="font-size: 19px">NOTA DE VENTA</h2>
+                                    <h5>{{$nota_venta->cod_nota_venta}}</h5>
                                 </div>
                             </div>
                         </div><br>
@@ -59,12 +59,9 @@
                                 <div class="form-control">
                                     <h3>Contacto Cliente</h3>
                                     <div align="left">
-                                        <strong>Señor(es):</strong> &nbsp;{{$cliente_id->nombre}}<br>
-                                        <strong>{{$cliente_id->documento_identificacion}} :</strong> &nbsp;{{$cliente_id->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Fecha:</strong> &nbsp;{{$fecha_emision}}<br>
-                                        <strong>Direccion:</strong>&nbsp; {{$cliente_id->direccion}}<br>
-                                        <strong>Telefono:</strong>&nbsp; {{$cliente_id->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Celular:</strong>&nbsp; {{$cliente_id->celular}}<br>
+                                        <strong>Señor(es):</strong> &nbsp;{{$nota_venta->cliente->nombre}}<br>
+                                        <strong>{{$nota_venta->cliente->documento_identificacion}} :</strong> &nbsp;{{$nota_venta->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <strong>Fecha:</strong> &nbsp;{{$nota_venta->created_at}}<br>
                                     </div>
                                 </div>
                             </div>
@@ -72,17 +69,15 @@
                                <div class="form-control" >
                                    <h3>Condiciones Generales</h3>
                                    <div align="left">
-                                    <strong>Forma De Pago:</strong> &nbsp;{{$forma_pago_id }}<br>
-                                    <strong>Validez :</strong> &nbsp;{{$validez}}<br>
-                                    <strong>Garantia:</strong> &nbsp;{{$garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                    <strong>Tipo de Moneda:</strong> &nbsp;{{$moneda_id->nombre}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-12" align="center">
                            <div class="form-control" style="border: none;height: auto" >
                                <div align="left">
-                                <strong>observaciones:</strong> &nbsp;{{$observacion }}<br>
+                                <strong>observaciones:</strong> &nbsp;{{$nota_venta->observacion }}<br>
                             </div>
                         </div>
                     </div>
@@ -96,52 +91,43 @@
                             <th>Descripcion</th>
                             <th>Cantidad</th>
                             <th>P.Unitario</th>
-                            <th>Total<span >{{$moneda_id->simbolo}}</span></th>
+                           <th>Total <span hidden="hidden">{{$simbologia=$nota_venta->moneda->simbolo}}</span></th>
                         </tr>
                     </thead>
-                    <tbody > <span hidden="">{{$i=1}}</span>
-                     @foreach ($producto_id as $index => $producto_ids)
-                     <tr>
-                        <td>{{$i++}}</td>
-                        <td>{{$articulos[$index]}}</td>
-                        <td>{{$cantidad[$index]}}</td>
-                        <td>{{$moneda_id->simbolo}}{{$precio[$index]}}</td>
-                        <td>{{$moneda_id->simbolo}}{{$cantidad[$index] *$precio[$index]}}</td>
-
-                    </tr>
-                    @endforeach
-                </tbody>
+                    <span hidden>{{$i=1}}{{$sume=0}}</span>
+                    <tbody>
+                        @foreach($nota_venta_re as $nota_venta_reg)
+                        <tr>
+                            <td>{{$i++}} </td>
+                            <td>{{$nota_venta_reg->producto}}</td>
+                            <td>{{$nota_venta_reg->cantidad}}</td>
+                            <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
+                            <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
+                            <span hidden>{{$sume=$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional+$sume}}</span>
+                        </tr>
+                        @endforeach
+                    </tbody>
             </table>
         </div><!-- /table-responsive -->
 
         <footer style="padding-top: 120px">
          <h3 align="left">
             <?php $v=new CifrasEnLetras() ;
-            $letra=($v->convertirEurosEnLetras($end));
-            $letra_final = strstr($letra, 'soles',true);
+                $letra=($v->convertirEurosEnLetras($sume));
+                $letra_final = strstr($letra, 'soles',true);
+                $end_final=strstr($sume, '.');
             ?>
-            Son : {{$letra_final}} {{$end_final}}/100 {{$moneda_id->nombre }}
+            Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
         </h3>
 
         <div class="row">
-            <div class="col-sm-3 ">
-                <p class="form-control a"> Sub Total</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}{{$costo_sub_total}}</p>
-            </div>
+            <div class="col-lg-12" align="right">
+                <div style="width:20%">
+                 <p class="form-control a"> Importe Total</p>
+                 <p class="form-control a"> {{$nota_venta->moneda->simbolo}} {{$sume}}</p>
+             </div>
 
-            <div class="col-sm-3 ">
-                <p class="form-control a"> Op. Agravada</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}00.00</p>
-            </div>
-            <div class="col-sm-3 ">
-                <p class="form-control a"> IGV</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}{{$costo_igv}}</p>
-
-            </div>
-            <div class="col-sm-3 ">
-                <p class="form-control a"> Importe Total</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}{{$costo_total}}</p>
-            </div>
+         </div>
         </div>
     </footer>
 
@@ -182,24 +168,22 @@
                           <br>
                           <div class="row">
                             <div class="col-sm-3">
-                                <p><u>centro de Atencion : </u></p>
-                                Telefono : {{$personal->telefono }}<br>
-                                Celular : {{$personal->celular }}<br>
-                                Email : {{$personal->email }}<br>
-                                Web : {{$empresa->pagina_web}} <br>
+                                <p><u>Centro de Atencion : </u></p>
+                                Telefono : {{$nota_venta->user->personal->telefono }}<br>
+                            Celular : {{$nota_venta->user->personal->celular }}<br>
+                            Email : {{$nota_venta->user->personal->email }}<br>
+                            Web : {{$empresa->pagina_web}} <br>
                             </div>
                             <div class="col-sm-3"></div>
                             <div class="col-sm-3"></div>
-                            <div class="col-sm-3"><br><br>
-                                <hr>
-                                <center>{{$personal->nombres }}</center>
+                            <div class="col-sm-3"><br><br>                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {{--  --}}
+        
+        {{-- <!-- </div> -->  --}}
 
         <style>
             .form-control{margin-top: 5px; border-radius: 5px}

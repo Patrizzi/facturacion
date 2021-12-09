@@ -14,45 +14,40 @@
 </form> --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox-title" style="padding-right: 3.1%">
-        <div class="row tooltip-demo">
-           <div class="col-sm-6">
-                {{-- @if ($regla=='factura')
-                    <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Facturar</a>
-                @elseif(($regla=='boleta'))
-                    <a class="btn btn-success" href="{{route('cotizacion.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
-                    @endif --}}
-                </div>
-                <div class="col-sm-6" align="right">
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_cotizacion' ,$nota_venta->id)}}">
-                        <input type="text" name="name" maxlength="50" hidden="" value="Cotizacion_{{$nota_venta->tipo}}"  >
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
-                    </form>
-                    <a class="btn btn-success" href="{{route('cotizacion.print',$nota_venta->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
-                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                        @csrf
-                        <input type="tel" name="numero"  value="{{$nota_venta->cliente->celular}}" hidden="" />
-                        <input type="text" name="mensaje"  hidden="" value="" />
-                        <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$nota_venta->id)}}?archivo=">
-                        <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$nota_venta->tipo}}" />
-                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-whatsapp fa-lg"></i>  </button>
-                    </form>
-                {{-- </a> --}}
-                @if(Auth::user()->email_creado == 0)
+    <div class="row ibox-title" style="padding-right: 3.1%;margin: 0" >
+        <div class="col-sm-12 tooltip-demo "align="right"  > 
+            <!-- PDF -->
+            <a href="{{route('nota_venta_pdf' ,$nota_venta->id)}}"class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i></a>
+            <!-- Impresion -->
+            <a class="btn btn-success" href="{{route('nota_venta.print',$nota_venta->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+            <!-- Email -->
+            @if(Auth::user()->email_creado == 0)
                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#config" ><i class="fa fa-envelope fa-lg " ></i>  </button>
-                @else
+            @else
                 <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
                     @csrf
-                    <input type="text" hidden="hidden"  name="tipo" value="App\Cotizacion"/>
+                    <input type="text" hidden="hidden"  name="tipo" value="App\NotaVenta"/>
                     <input type="text" hidden="hidden"  name="id" value="{{$nota_venta->id}}"/>
-                    <input type="text" hidden="hidden"  name="redict" value="cotizacion_factura"/>
+                    <input type="text" hidden="hidden"  name="redict" value="nota_venta"/>
                     <input type="text" hidden="hidden"  name="cliente" value=" {{$nota_venta->cliente->email}}"/>
                     <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
                 </form>
-                @endif
+            @endif
+            <!-- Whatsapp -->
+            <div id="auto" onclick="divAuto()">
+                <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
+            </div>
+            <div id="div-mostrar">
+                <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
+                    @csrf
+                    <input type="tel" name="numero"  value="{{$nota_venta->cliente->celular}}"  />
+                    <input type="text" name="mensaje"  hidden="" value="" />
+                    <input type="text" hidden="" name="url" value="{{route('nota_venta_pdf' ,$nota_venta->id)}}">
+                    <input type="text" name="name_sin_cambio" hidden="" value="PDF-DOC-{{$nota_venta->cod_nota_venta}}-{{$empresa->ruc}}" />
+                    <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                </form>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -91,8 +86,6 @@
                        <div class="form-control" >
                            <h3>Condiciones Generales</h3>
                            <div align="left">
-                            {{-- <strong>Forma De Pago:</strong> &nbsp;{{$nota_venta->forma_pago->nombre }}<br> --}}
-                            {{-- <strong>Validez :</strong> &nbsp;{{$nota_venta->validez}}<br> --}}
                             <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         </div>
@@ -125,8 +118,8 @@
                 <td>{{$i++}} </td>
                 <td>{{$nota_venta_reg->producto}}</td>
                 <td>{{$nota_venta_reg->cantidad}}</td>
-                <td>{{$simbologia}}{{$nota_venta_reg->precio_nacional}}</td>
-                <td>{{$simbologia}}{{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
+                <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
+                <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
                 <span hidden>{{$sume=$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional+$sume}}</span>
             </tr>
             @endforeach
@@ -225,6 +218,40 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
             opacity: 0  ;
         }
     </style>
+    <style>
+    #auto{
+        /*padding: -100px;*/
+        /*background: orange;*/
+        /*width: 95px;*/
+        cursor: pointer;
+        /*margin-top: 10px;*/
+        /*margin-bottom: 10px;*/
+        box-shadow: 0px 0px 1px #000;
+        display: inline-block;
+    }
+
+    #auto:hover{
+        opacity: .8;
+    }
+
+    #div-mostrar{
+        /*width: 50%;*/
+        margin: auto;
+        height: 0px;
+        /*margin-top: -5px*/
+        /*background: #000;*/
+        /*box-shadow: 10px 10px 3px #D8D8D8;*/
+        transition: height .4s;
+        color:white;
+        text-align: right;
+    }
+    #auto:hover{
+        opacity: .8;
+    }
+    #auto:hover + #div-mostrar{
+        height: 50px;
+    }
+    </style>
     <style type="text/css">
         .form-control{border-radius: 10px; padding: 10px }
         .ibox-tools a{color: white !important}
@@ -232,6 +259,19 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
         .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
 
     </style>
+    <script>
+    var clic = 1;
+    function divAuto(){
+       if(clic==1){
+           document.getElementById("div-mostrar").style.height = "50px";
+           clic = clic + 1;
+       } else{
+        document.getElementById("div-mostrar").style.height = "0px";
+        clic = 1;
+        }
+    }
+    </script>
+
     <script type="text/javascript">
         function mostrarPassword(){
             var cambio = document.getElementById("txtPassword");
@@ -286,6 +326,9 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
 
 
 @endsection

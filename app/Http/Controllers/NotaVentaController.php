@@ -11,9 +11,11 @@ use App\Servicios;
 use App\Banco;
 use App\Moneda;
 use App\Forma_pago;
+use App\kardex_entrada;
 use App\NotaVentaRegistro;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Storage;
 
 class NotaVentaController extends Controller
@@ -137,13 +139,57 @@ class NotaVentaController extends Controller
       return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
 
     }
-
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function print($id)
+    {
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        $existe_id=kardex_entrada::where('estado',2)->first();
+        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=NotaVenta::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+        
+        $empresa=Empresa::first();
+
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+
+        return view('transaccion.venta.nota_venta.print',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pdf($id){
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        $existe_id=kardex_entrada::where('estado',2)->first();
+        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=NotaVenta::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+
+        $empresa=Empresa::first();
+
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+        $archivo = $nota_venta->cod_nota_venta.'-'.$empresa->ruc;
+        // return view('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        return $pdf->download('PDF-DOC-'.$archivo.'.pdf');
+    }
     public function edit($id)
     {
         //

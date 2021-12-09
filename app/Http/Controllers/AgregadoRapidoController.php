@@ -164,7 +164,7 @@ public function send_whatsapp(Request $request){
     $num2 = substr($numero, -6,3);
     $num3 = substr($numero, -11,3);
         //$mensajes_send = str_replace (" ","%20",$mensaje);
-    $send = "https://api.whatsapp.com/send?phone=+51%20".$num3."%20".$num2."%20".$num1."&text=".$url1.$url2;
+    $send = "https://wa.me/51".$num3.$num2.$num1."?text=".$url1.$url2;
     return  Redirect::to($send);
         //return $mensaje;
 }
