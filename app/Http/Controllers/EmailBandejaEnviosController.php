@@ -191,7 +191,8 @@ class EmailBandejaEnviosController extends Controller
       $regla=$cotizacion->tipo;
       $cotizacion_factura = ' ';
         // return $cotizacion;
-      $archivo=$cotizacion->cod_cotizacion.".pdf";
+      // $archivo=$cotizacion->cod_cotizacion.
+      $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
       $pdf=PDF::loadView($rutapdf,compact($redic,'cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma'));
       $content = $pdf->download();
       $especif = $carbon_sp.$archivo;
@@ -231,7 +232,9 @@ class EmailBandejaEnviosController extends Controller
             $array[]=Servicios::where('id',$cotizacion_registros->servicio_id)->first();
         }
       }
-      $archivo=$cotizacion->cod_cotizacion.'.pdf';
+      $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
+
+      // $archivo=$cotizacion->cod_cotizacion.'.pdf';
       $regla=$cotizacion->tipo;
 
       $pdf=PDF::loadView('transaccion.venta.servicios.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','cotizacion_registro2','sum','igv',"array","sub_total","moneda","regla",'banco','facturacion','boleta','i','banco_count'));
@@ -252,7 +255,10 @@ class EmailBandejaEnviosController extends Controller
       $banco=Banco::where('estado','0')->get();
       $empresa=Empresa::first();
       $name = 'Guia_Remision';
-      $archivo=$guia_remision->cod_guia.".pdf";
+
+      // $archivo=$guia_remision->cod_guia.".pdf";
+      $archivo='PDF-DOC-'.$guia_remision->cod_guia.'-'.$empresa->ruc.".pdf";
+
       $pdf=PDF::loadView('transaccion.venta.guia_remision.pdf',compact('guia_remision','guia_registro','banco','empresa','banco_count'));
       $content = $pdf->download();
       $date = $carbon_sp;
@@ -274,7 +280,9 @@ class EmailBandejaEnviosController extends Controller
       $banco_count=Banco::where('estado','0')->count();
       $i = 1;
 
-      $archivo=$facturacion->codigo_fac.".pdf";
+      // $archivo=$facturacion->codigo_fac.".pdf";
+      $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
+
       $pdf=PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
       $content = $pdf->download();
       $date = $carbon_sp;
@@ -297,7 +305,9 @@ class EmailBandejaEnviosController extends Controller
       $boleta=Boleta::find($id);
       $i = 1;
 
-      $archivo=$boleta->codigo_boleta.".pdf";
+      // $archivo=$boleta->codigo_boleta.".pdf";
+      $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
+
       $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
       $content = $pdf->download();
       $date = $carbon_sp;
@@ -332,22 +342,29 @@ class EmailBandejaEnviosController extends Controller
         
         $rutapdf= 'transaccion.garantias.guia_ingreso.show_pdf';
         $garantia_guia_ingreso = $tipo::find($id);
-        $name = 'Guia_Ingreso_';
+
+        $name = 'PDF-DOC-'.$garantia_guia_ingreso->orden_servicio.'-'.$mi_empresa->ruc;
+
+        // $name = 'Guia_Ingreso_';
 
       }elseif($tipo == 'App\GarantiaGuiaEgreso'){
 
         $rutapdf= 'transaccion.garantias.guia_egreso.show_pdf';
         $garantias_guias_egreso = $tipo::find($id);
-        $name = 'Guia_Egreso_';
+        // $name = 'Guia_Egreso_';
+        $name = 'PDF-DOC-'.$garantias_guias_egreso->orden_servicio.'-'.$mi_empresa->ruc;
+
 
       }elseif($tipo == 'App\GarantiaInformeTecnico'){
 
         $rutapdf= 'transaccion.garantias.informe_tecnico.show_pdf';
         $garantias_informe_tecnico = $tipo::find($id);
-        $name = 'Informe_Tecnico_';
+        // $name = 'Informe_Tecnico_';
+        $name = 'PDF-DOC-'.$garantias_informe_tecnico->orden_servicio.'-'.$mi_empresa->ruc;
+        
         $contacto = Contacto::all();
         $archivo_informe_tecnico  = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico',$garantias_informe_tecnico)->get();
-        $archivo=$name.$id.".pdf";
+        $archivo=$name.".pdf";
         $pdf=PDF::loadView($rutapdf,compact($redic,'mi_empresa','contacto','archivo_informe_tecnico'));
         $content=$pdf->download();
 
@@ -360,7 +377,7 @@ class EmailBandejaEnviosController extends Controller
       }
 
       $contacto = Contacto::all();
-      $archivo=$name.$id.".pdf";
+      $archivo=$name.".pdf";
       $pdf=PDF::loadView($rutapdf,compact($redic,'mi_empresa','contacto'));
       $content=$pdf->download();
 
