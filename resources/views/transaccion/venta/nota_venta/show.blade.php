@@ -14,7 +14,7 @@
 </form> --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row ibox-title" style="padding-right: 3.1%;margin: 0" >
+    <div class="row ibox-title" style="padding-right: 3.1%;margin: 0; padding-bottom: 1px" >
         <div class="col-sm-12 tooltip-demo "align="right"  > 
             <!-- PDF -->
             <a href="{{route('nota_venta_pdf' ,$nota_venta->id)}}"class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i></a>
@@ -22,7 +22,7 @@
             <a class="btn btn-success" href="{{route('nota_venta.print',$nota_venta->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
             <!-- Email -->
             @if(Auth::user()->email_creado == 0)
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#config" ><i class="fa fa-envelope fa-lg " ></i>  </button>
+                
             @else
                 <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
                     @csrf
@@ -183,7 +183,7 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
                       <br>
                       <div class="row">
                         <div class="col-sm-3">
-                            <p><u>centro de Atencion : </u></p>
+                            <p><u>Centro de Atencion : </u></p>
                             Telefono : {{$nota_venta->user->personal->telefono }}<br>
                             Celular : {{$nota_venta->user->personal->celular }}<br>
                             Email : {{$nota_venta->user->personal->email }}<br>
