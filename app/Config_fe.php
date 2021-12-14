@@ -950,7 +950,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - FACTURA
 
-    public static function nota_credito($factura, $factura_registro, $request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo){
+    public static function nota_credito($factura, $factura_registro, $request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento){
 
         $empresa=Empresa::first();
         $igv=Igv::first();
@@ -989,9 +989,10 @@ class Config_fe extends Model
         for($p=0;$p<$contador;$p++){
             $string=(string)$p;
             
-            $nombre="input_disabled_".$string;
-            
-            if($request->$nombre==NULL){
+            $cantidad="input_cantidad_".$string;
+            $precio="input_precio_".$string;
+            $descripcion="input_descripcion_".$string;
+            if($request->$cantidad==NULL){
             }else{
 
                 if( in_array($factura_registro[$p]->producto->tipo_afec_i_producto->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
@@ -999,19 +1000,19 @@ class Config_fe extends Model
                     $item[$cont]
                         ->setCodProducto($factura_registro[$p]->producto->codigo_producto)
                         ->setUnidad('NIU')
-                        ->setCantidad($request->$nombre)
+                        ->setCantidad($request->$cantidad)
                         ->setDescripcion($factura_registro[$p]->producto->nombre)
-                        ->setMtoBaseIgv($factura_registro[$p]->precio*$request->$nombre)
+                        ->setMtoBaseIgv($request->$precio*$request->$cantidad)
                         ->setPorcentajeIgv($igv->igv_total)
-                        ->setIgv($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
+                        ->setIgv($request->$precio*$request->$cantidad*(($igv->igv_total)/100))
                         ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
-                        ->setTotalImpuestos($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
-                        ->setMtoValorVenta($factura_registro[$p]->precio*$request->$nombre)
-                        ->setMtoValorUnitario($factura_registro[$p]->precio)
-                        ->setMtoPrecioUnitario($factura_registro[$p]->precio+($factura_registro[$p]->precio*(($igv->igv_total)/100)));
+                        ->setTotalImpuestos($request->$precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($request->$precio*$request->$cantidad)
+                        ->setMtoValorUnitario($request->$precio)
+                        ->setMtoPrecioUnitario($request->$precio+($request->$precio*(($igv->igv_total)/100)));
 
-                    $igv_f=$factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
-                    $precio=$factura_registro[$p]->precio*$request->$nombre+$precio;
+                    $igv_f=$request->$precio*$request->$cantidad*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$request->$precio*$request->$cantidad+$precio;
 
                     $cont++;
                 }else{
@@ -1019,18 +1020,18 @@ class Config_fe extends Model
                     $item[$cont]
                         ->setCodProducto($factura_registro[$p]->producto->codigo_producto)
                         ->setUnidad('NIU')
-                        ->setCantidad($request->$nombre)
+                        ->setCantidad($request->$cantidad)
                         ->setDescripcion($factura_registro[$p]->producto->nombre)
-                        ->setMtoBaseIgv($factura_registro[$p]->precio*$request->$nombre)
+                        ->setMtoBaseIgv($request->$precio*$request->$cantidad)
                         ->setPorcentajeIgv(0)
                         ->setIgv(0)
                         ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
-                        ->setTotalImpuestos($factura_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
-                        ->setMtoValorVenta($factura_registro[$p]->precio*$request->$nombre)
-                        ->setMtoValorUnitario($factura_registro[$p]->precio)
-                        ->setMtoPrecioUnitario($factura_registro[$p]->precio+($factura_registro[$p]->precio*(($igv->igv_total)/100)));
+                        ->setTotalImpuestos($request->$precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($request->$precio*$request->$cantidad)
+                        ->setMtoValorUnitario($request->$precio)
+                        ->setMtoPrecioUnitario($request->$precio+($request->$precio*(($igv->igv_total)/100)));
 
-                    $precio=$factura_registro[$p]->precio*$request->$nombre+$precio;
+                    $precio=$request->$precio*$request->$cantidad+$precio;
 
                     $cont++;
                 }
@@ -1056,8 +1057,8 @@ class Config_fe extends Model
             ->setFechaEmision($factura->created_at)
             ->setTipDocAfectado('01') // Tipo Doc: Factura
             ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
-            ->setCodMotivo('07') // Catalogo. 09
-            ->setDesMotivo($motivo)
+            ->setCodMotivo($motivo) // Catalogo. 09
+            ->setDesMotivo($sustento)
             ->setTipoMoneda($factura->moneda->codigo)
             ->setCompany($company)
             ->setClient($client)

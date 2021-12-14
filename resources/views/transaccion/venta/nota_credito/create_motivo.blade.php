@@ -35,14 +35,15 @@
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Emisión de Nota de credito</h3>
-                            <form role="form">
-                                <div class="form-group"><label>Fecha de emisión</label> <input type="date" placeholder="Ingrese Fecha" class="form-control"></div>
+                            <form method="POST" action="{{route('nota-credito.create_nota_credito')}}">
+                                @csrf
+                                <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision"></div>
                                 <div class="form-group"><label>Tipo de nota de credito</label> 
-                                    <select placeholder="Password" class="form-control" name="motivo" id="motivo" onchange="seleccion_motivo()">
+                                    <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
                                         <option value="0"></option>
                                         <option value="1">Anulacion de la operacion</option>
                                         <option value="2">Anulacion por error en el RUC</option>
-                                        <option value="3">Descuento Global</option>
+                                        <option value="3">Descuent                             o Global</option>
                                         <option value="4">Devolucion Total</option>
                                         <option value="5">Correcion por error en la descripcion</option>
                                         <option value="6">Devolucion por Item</option>
@@ -51,24 +52,25 @@
                                         <option value="9">Ajustes - montos y/o fechas de pago</option>
                                     </select>
                                 </div>
-                                <div class="form-group"><label>Número de FE respecto de la cual se emite la Nota de Crédito	</label> <input type="text" class="form-control" required value="{{$facturacion->codigo_fac}}" disabled></div>
+                                <div class="form-group"><label>Número de FE respecto de la cual se emite la Nota de Crédito	</label> <input type="text" class="form-control" name="factura_id" id="factura_id" required value="{{$facturacion->codigo_fac}}" readonly></div>
                                 
-                                <div>
-                                    <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Enviar</strong></button>
-                                </div>
-                            </form>
+                                
+                            
                         </div>
                         <div class="col-sm-6">
                             <div class="div1">
-                                <div class="form-group"><label>Motivo o sustento por el cual se emitirá la Nota de Crédito </label> <input type="text" class="form-control" required></div>
+                                <div class="form-group"><label>Motivo o sustento por el cual se emitirá la Nota de Crédito </label> <input type="text" class="form-control" name="sustento" id="sustento"></div>
                             </div>
                             <div class="div2">
-                                <div class="form-group"><label>Número de la Nueva Factura Electrónica </label> <input type="text" class="form-control" required></div>
+                                <div class="form-group"><label>Número de la Nueva Factura Electrónica </label> <input type="text" class="form-control" name="nueva_factura" id="nueva_factura"></div>
                             </div>
                             <div class="div3">
-                                <div class="form-group"><label>Motivo o sustento por el cual se emitirá la Nota de Crédito </label> <input type="text" class="form-control" required></div>
-                                <div class="form-group"><label>Descuento Global </label> <input type="text" class="form-control" required></div>
+                                <div class="form-group"><label>Descuento Global </label> <input type="text" class="form-control" name="descuento_global" id="descuento_global"></div>
                             </div>
+                            <div>
+                                <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Enviar</strong></button>
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -81,7 +83,7 @@
     seleccion_motivo();
 
     function seleccion_motivo(){
-        var motivo = $('#motivo').val();
+        var motivo = $('#tipo_nota_credito').val();
         if(motivo=="0"){
             $('.div1').hide();
             $('.div2').hide();
@@ -95,7 +97,7 @@
             $('.div2').show();
             $('.div3').hide();
         }else{
-            $('.div1').hide();
+            $('.div1').show();
             $('.div2').hide();
             $('.div3').show();
         }
