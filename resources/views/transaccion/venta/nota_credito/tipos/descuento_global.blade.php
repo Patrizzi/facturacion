@@ -123,14 +123,30 @@
                                         <td >{{$u++}}</td>
                                         <td>- - -</td>{{--Codigo producto--}}
                                         <td>0</td> {{--Cantidad--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_cantidad_0" name="input_cantidad_0" value="1" readonly></td> {{--Cantidad Nueva--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_descripcion_0" name="input_descripcion_0" value="{{$sustento}}" readonly></td> {{--Descripcion--}}
+                                        <td><input required="required" class="form-control" type="text" id="" name="" value="1" readonly></td> {{--Cantidad Nueva--}}
+                                        <td><input required="required" class="form-control" type="text" id="" name="" value="{{$sustento}}" readonly></td> {{--Descripcion--}}
                                         <td>{{$descuento_global}}</td> {{--Precio Unitario--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_precio_0" name="input_precio_0" value="{{$descuento_global}}" readonly></td> {{--Nuevo Precio--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_descuento_0" name="input_descuento_0" value="0" readonly></td> {{--Nuevo Descuento--}}
+                                        <td><input required="required" class="form-control" type="text" id="" name="" value="{{$descuento_global}}" readonly></td> {{--Nuevo Precio--}}
+                                        <td><input required="required" class="form-control" type="text" id="" name="" value="0" readonly></td> {{--Nuevo Descuento--}}
                                         <td>{{$descuento_global}}</td> {{--Total--}}
                                         
                                     </tr>
+                                    @foreach($facturacion_registro as $e => $facturacion_registros)
+                                    <tr style="display: none">
+                                        <td ></td>
+                                        <td></td>{{--Codigo producto--}}
+                                        <td></td> {{--Cantidad--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_cantidad_{{$e}}" name="input_cantidad_{{$e}}" value="{{$facturacion_registros->cantidad}}" readonly hidden></td> {{--Cantidad Nueva--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$facturacion_registros->producto->nombre}}" readonly hidden></td> {{--Descripcion--}}
+                                        <td></td> {{--Precio Unitario--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$facturacion_registros->precio}}" readonly hidden></td> {{--Nuevo Precio--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_descuento_{{$e}}" name="input_descuento_{{$e}}" value="0" readonly hidden></td> {{--Nuevo Descuento--}}
+                                        <td></td> {{--Total--}}
+                                        <td style="display: none">
+                                            
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                     
                                 </tr>
                                 <tr>

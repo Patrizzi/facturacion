@@ -2,6 +2,8 @@
 namespace App;
 
 use Greenter\Model\Client\Client;
+use Greenter\Model\Sale\Charge;
+
 use Greenter\Model\Company\Company;
 use Greenter\Model\Company\Address;
 use Greenter\Model\Sale\FormaPagos\FormaPagoContado;
@@ -804,7 +806,6 @@ class Config_fe extends Model
         $correlativo=$serie[1];
         $serie_g=$serie[0];
 
-
         $despatch = new Despatch();
         $despatch->setTipoDoc('09')
             ->setSerie($serie_g)      //cambiar codigo de guia
@@ -990,11 +991,10 @@ class Config_fe extends Model
             $string=(string)$p;
             
             $cantidad="input_cantidad_".$string;
-            $precio="input_precio_".$string;
+            $input_precio="input_precio_".$string;
             $descripcion="input_descripcion_".$string;
             if($request->$cantidad==NULL){
             }else{
-
                 if( in_array($factura_registro[$p]->producto->tipo_afec_i_producto->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
                     $item[$cont]=new SaleDetail();
                     $item[$cont]
@@ -1002,17 +1002,17 @@ class Config_fe extends Model
                         ->setUnidad('NIU')
                         ->setCantidad($request->$cantidad)
                         ->setDescripcion($factura_registro[$p]->producto->nombre)
-                        ->setMtoBaseIgv($request->$precio*$request->$cantidad)
+                        ->setMtoBaseIgv($request->$input_precio*$request->$cantidad)
                         ->setPorcentajeIgv($igv->igv_total)
-                        ->setIgv($request->$precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setIgv($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
                         ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
-                        ->setTotalImpuestos($request->$precio*$request->$cantidad*(($igv->igv_total)/100))
-                        ->setMtoValorVenta($request->$precio*$request->$cantidad)
-                        ->setMtoValorUnitario($request->$precio)
-                        ->setMtoPrecioUnitario($request->$precio+($request->$precio*(($igv->igv_total)/100)));
+                        ->setTotalImpuestos($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($request->$input_precio*$request->$cantidad)
+                        ->setMtoValorUnitario($request->$input_precio)
+                        ->setMtoPrecioUnitario($request->$input_precio+($request->$input_precio*(($igv->igv_total)/100)));
 
-                    $igv_f=$request->$precio*$request->$cantidad*(($igv->igv_total)/100)+$igv_f;
-                    $precio=$request->$precio*$request->$cantidad+$precio;
+                    $igv_f=$request->$input_precio*$request->$cantidad*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$request->$input_precio*$request->$cantidad+$precio;
 
                     $cont++;
                 }else{
@@ -1022,20 +1022,19 @@ class Config_fe extends Model
                         ->setUnidad('NIU')
                         ->setCantidad($request->$cantidad)
                         ->setDescripcion($factura_registro[$p]->producto->nombre)
-                        ->setMtoBaseIgv($request->$precio*$request->$cantidad)
+                        ->setMtoBaseIgv($request->$input_precio*$request->$cantidad)
                         ->setPorcentajeIgv(0)
                         ->setIgv(0)
                         ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
-                        ->setTotalImpuestos($request->$precio*$request->$cantidad*(($igv->igv_total)/100))
-                        ->setMtoValorVenta($request->$precio*$request->$cantidad)
-                        ->setMtoValorUnitario($request->$precio)
-                        ->setMtoPrecioUnitario($request->$precio+($request->$precio*(($igv->igv_total)/100)));
+                        ->setTotalImpuestos($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($request->$input_precio*$request->$cantidad)
+                        ->setMtoValorUnitario($request->$input_precio)
+                        ->setMtoPrecioUnitario($request->$input_precio+($request->$input_precio*(($igv->igv_total)/100)));
 
-                    $precio=$request->$precio*$request->$cantidad+$precio;
+                    $precio=$request->$input_precio*$request->$cantidad+$precio;
 
                     $cont++;
                 }
-                
             }
         }
 
@@ -1069,6 +1068,17 @@ class Config_fe extends Model
             ->setTotalImpuestos($igv_f)
             ->setMtoImpVenta($total)
             ;
+
+        if($motivo==3){//Descuento Global
+            $note->setDescuentos([
+                (new Charge())
+                    ->setCodTipo('02') // Catalog. 53
+                    ->setMontoBase($descuento) // cantidad * valor unitario
+                    ->setFactor(1)  // % descuento
+                    ->setMonto($descuento)
+            ])->setMtoOperGravadas($gravada-$descuento) // suma de v. venta (items) - descuento global.
+            ->setValorVenta($gravada-$descuento);
+        }
 
         $formatter = new NumeroALetras();
         $valor=$formatter->toInvoice($total, 2, 'soles');

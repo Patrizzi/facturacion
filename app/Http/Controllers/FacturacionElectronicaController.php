@@ -297,9 +297,9 @@ class FacturacionElectronicaController extends Controller
                     }
                 }
             }
-
+            // return $request->motivo;
             
-            $invoice=Config_fe::nota_credito($factura,$factura_registro,$request,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$request->motivo,$sustento);
+            $invoice=Config_fe::nota_credito($factura,$factura_registro,$request,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$request->motivo,$sustento,$descuento_global);
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
