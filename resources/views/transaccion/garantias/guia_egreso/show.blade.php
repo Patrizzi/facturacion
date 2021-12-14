@@ -155,7 +155,33 @@
       @csrf
       @method('PATCH')
       <div class="row" align="center" style="padding-bottom: 5px" id="form_egreso" hidden="hidden" id="ab">
-        <div class="col-sm-4" align="center">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnostico y Solucion</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-3">Recomendaciones</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema" name="descripcion_problema" maxlength="1230" required >{{$garantias_guias_egreso->descripcion_problema}}</textarea>
+                        </div>
+                    </div>
+                    <div role="tabpanel" id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <textarea class="form-control" rows="10" placeholder="Escribir aqui Diagnostico y Solucion" name="diagnostico_solucion" maxlength="1230" required >{{$garantias_guias_egreso->diagnostico_solucion}}</textarea>
+                        </div>
+                    </div>
+                    <div role="tabpanel" id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <textarea class="form-control" rows="10" placeholder="Escribir aqui las recomendaciones" name="recomendaciones" maxlength="1230" required>{{$garantias_guias_egreso->recomendaciones}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- <div class="col-sm-4" align="center">
             <div class="form-control" style="height: 100%"><h3>Descripcion del Problema:</h3>
                 <div align="left" style="font-size: 13px;" >
                     <textarea rows="5" class="form-control" class="" name="descripcion_problema">{{$garantias_guias_egreso->descripcion_problema}}</textarea>
@@ -175,7 +201,7 @@
                     <textarea rows="5" class="form-control" class="" name="recomendaciones">{{$garantias_guias_egreso->recomendaciones}}</textarea>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="col-sm-12" align="center" style="margin-top:20px">
             <button class="btn btn-info">Guardar</button>
         </div>

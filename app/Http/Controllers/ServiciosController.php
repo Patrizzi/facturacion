@@ -184,6 +184,7 @@ class ServiciosController extends Controller
 
         $servicio= Servicios::find($id);
         $servicio->moneda_id=$moneda_id;
+        $servicio->familia_id=$request->get('familia_id');
         $servicio->nombre=$request->get('nombre');
         $servicio->descripcion=$request->get('descripcion');
         $servicio->descuento=$request->get('descuento');
