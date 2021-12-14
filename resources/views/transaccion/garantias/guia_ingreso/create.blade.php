@@ -126,11 +126,11 @@
 									</select>
 								</div>
 								<div class="col-sm-10" id="father_servicio"  style="display: none">
-								 	<select class="select2_demo_2 form-control"  name="invalido"    id="servicio_t">
-								 		@foreach($servicios as $servicio)
-								 		<option  value="{{$servicio->nombre}}">{{$servicio->nombre}}</option>
-								 		@endforeach
-								 	</select>
+									<select class="select2_demo_2 form-control"  name="invalido"    id="servicio_t">
+										@foreach($servicios as $servicio)
+										<option  value="{{$servicio->nombre}}">{{$servicio->nombre}}</option>
+										@endforeach
+									</select>
 								</div>
 								<label class="col-sm-2 col-form-label">Nr Serie:</label>
 								<div class="col-sm-10">
@@ -151,7 +151,7 @@
 						<div class="form-control for">
 							<center><h3>Informe del Problema</h3></center>
 							<br>
-							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
+							{{-- <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
 								<div class="col-sm-4">
 									<center><h4>Descripcion del Problema</h4></center>
 									<div class="input-group m-b">
@@ -170,8 +170,42 @@
 										<textarea class="form-control for" rows="5" id="comment" name="estetica" maxlength="1230" required style="resize: none;height: 300px;"></textarea>
 									</div>
 								</div>
+							</div> --}}
+
+
+							{{-- Vista --}}
+							<div class="wrapper wrapper-content animated fadeIn">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="tabs-container">
+											<ul class="nav nav-tabs" role="tablist">
+												<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
+												<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+												<li><a class="nav-link" data-toggle="tab" href="#tab-3">Estética</a></li>
+											</ul>
+											<div class="tab-content">
+												<div role="tabpanel" id="tab-1" class="tab-pane active">
+													<div class="panel-body">
+														<textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema" name="descripcion_problema" maxlength="1230" required ></textarea>
+													</div>
+												</div>
+												<div role="tabpanel" id="tab-2" class="tab-pane">
+													<div class="panel-body">
+														<textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganostico" name="revision_diagnostico" maxlength="1230" required ></textarea>
+													</div>
+												</div>
+												<div role="tabpanel" id="tab-3" class="tab-pane">
+													<div class="panel-body">
+														<textarea class="form-control" rows="10" placeholder="Escribir aqui Estética" name="estetica" maxlength="1230" required></textarea>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
+						{{-- Vista --}}
 						{{-- <div align="ibox" align="right"> --}}
 							<button style="align: left" class="btn btn-xl btn-primary float-right m-t-n-xs" type="submit" ><strong>Grabar</strong></button>
 						{{-- </div> --}}
@@ -183,13 +217,13 @@
 
 </div>
 <style>
-.form-control{ margin-top: 5px;}
+	.form-control{ margin-top: 5px;}
 </style>
 
 
 <style>
-span.select2-selection.select2-selection--single{border: 1px solid #5f232326;height: 36px; color: gray}
-span .select2-selection__rendered{color:#000000c7;}
+	span.select2-selection.select2-selection--single{border: 1px solid #5f232326;height: 36px; color: gray}
+	span .select2-selection__rendered{color:#000000c7;}
 </style>
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"><9/script> --}}
 	<script>
@@ -273,4 +307,4 @@ span .select2-selection__rendered{color:#000000c7;}
 			}
 		}
 	</script>
-		@stop
+	@stop

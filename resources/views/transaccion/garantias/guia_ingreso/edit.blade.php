@@ -108,22 +108,30 @@
 							<center><h3>Informe del Problema</h3></center>
 							<br>
 							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-								<div class="col-sm-4">
-									<center><h4>Descripcion del Problema</h4></center>
-									<div class="input-group m-b">
-										<textarea class="form-control for" rows="5" name="descripcion_problema" maxlength="1230" required style="resize: none;height: 300px;">{{$garantia_guia_ingreso->descripcion_problema}}</textarea>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<center><h4>Revisión y diganostico</h4></center>
-									<div class="input-group m-b">
-										<textarea class="form-control for" rows="5"  name="revision_diagnostico" maxlength="1230" required style="resize: none;height: 300px;">{{$garantia_guia_ingreso->revision_diagnostico}}</textarea>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<center><h4>Estética</h4></center>
-									<div class="input-group m-b">
-										<textarea class="form-control for" rows="5" name="estetica" maxlength="1230" required style="resize: none;height: 300px;">{{$garantia_guia_ingreso->estetica}}</textarea>
+								<div class="col-lg-12">
+									<div class="tabs-container">
+										<ul class="nav nav-tabs" role="tablist">
+											<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
+											<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+											<li><a class="nav-link" data-toggle="tab" href="#tab-3">Estética</a></li>
+										</ul>
+										<div class="tab-content">
+											<div role="tabpanel" id="tab-1" class="tab-pane active">
+												<div class="panel-body">
+													<textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema" name="descripcion_problema" maxlength="1230" required >{{$garantia_guia_ingreso->descripcion_problema}}</textarea>
+												</div>
+											</div>
+											<div role="tabpanel" id="tab-2" class="tab-pane">
+												<div class="panel-body">
+													<textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganostico" name="revision_diagnostico" maxlength="1230" required >{{$garantia_guia_ingreso->revision_diagnostico}}</textarea>
+												</div>
+											</div>
+											<div role="tabpanel" id="tab-3" class="tab-pane">
+												<div class="panel-body">
+													<textarea class="form-control" rows="10" placeholder="Escribir aqui Estética" name="estetica" maxlength="1230" required>{{$garantia_guia_ingreso->estetica}}</textarea>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="col-sm-12">
