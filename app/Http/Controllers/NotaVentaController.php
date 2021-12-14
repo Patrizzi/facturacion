@@ -1,23 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Banco;
 use App\Cliente;
 use App\Empresa;
-use App\Forma_pago;
-use App\Igv;
-use App\Kardex_entrada;
-use App\Moneda;
+use App\NotaVenta;
 use App\Personal;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Almacen;
 use App\Producto;
 use App\Servicios;
-use App\TipoCambio;
-use App\Unidad_medida;
+use App\Banco;
+use App\Moneda;
+use App\Forma_pago;
+use App\kardex_entrada;
+use App\NotaVentaRegistro;
 use Carbon\Carbon;
-use App\kardex_entrada_registro;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Storage;
 
 class NotaVentaController extends Controller
@@ -29,19 +27,26 @@ class NotaVentaController extends Controller
      */
     public function index()
     {
-        // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=Kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        $nota_venta=NotaVenta::all();
+        $almacen =Almacen::all();
+        $conteo_almacen=Almacen::where('estado',0)->count();
+        $almacen_primero =Almacen::first();
+        $user_login =auth()->user();
+        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen'));
 
-        $clientes=Cliente::all();
-        $moneda=Moneda::all();
-        $forma_pagos= Forma_pago::all();
-        $igv=Igv::first();
-        $servicios = Servicios::all();
-        $productos=Producto::all();
+        // // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        // $existe_id=Kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
-        $empresa=Empresa::first();
-        return view('transaccion.venta.cotizacion.otros.create',compact('igv','empresa','clientes','forma_pagos','moneda','productos','servicios'));
+        // $clientes=Cliente::all();
+        // $moneda=Moneda::all();
+        // $forma_pagos= Forma_pago::all();
+        // $igv=Igv::first();
+        // $servicios = Servicios::all();
+        // $productos=Producto::all();
+
+        // $empresa=Empresa::first();
+        // return view('transaccion.venta.cotizacion.otros.create',compact('igv','empresa','clientes','forma_pagos','moneda','productos','servicios'));
 
     }
 
@@ -50,10 +55,27 @@ class NotaVentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+      $almacen=Almacen::where('id',$request->almacen)->first();
+      $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+      $count_nota_venta++;
+      $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+      $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
+      $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-    }
+
+      $clientes=Cliente::all();
+      $moneda=Moneda::all();
+      $forma_pagos= Forma_pago::all();
+      $servicios = Servicios::all();
+      $productos=Producto::all();
+      $user_login =auth()->user();
+
+      $empresa=Empresa::first();
+      return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen'));
+
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -63,95 +85,42 @@ class NotaVentaController extends Controller
      */
     public function store(Request $request)
     {
-        /*IMPRENSION*/
-       //  if($print==1){
-        $name = $request->get('name');
-
-        $banco=Banco::where('estado','0')->get();
-        $banco_count=Banco::where('estado','0')->count();
-        $empresa=Empresa::first();
-
-         //Convertir nombre del cliente a id
-        $cliente_id=$request->get('cliente');
-        $nombre = strstr($cliente_id, '-',true);
-        $cliente_id=Cliente::where('numero_documento',$nombre)->first();
-
-        $user_login =auth()->user();
-        $personal=Personal::where('id',$user_login->personal_id)->first();
-
-        $codigo=$request->get('codigo');
-        $fecha_emision=$request->get('fecha_emision');
-        $forma_pago_id=$request->get('forma_pago');
-
-        $moneda=$request->get('moneda');
-        $moneda_id=Moneda::where('id',$moneda)->first();
-
-        $validez=$request->get('validez');
-        $garantia=$request->get('garantia');
-        $observacion=$request->get('observacion');
-        $articulo = $request->input('articulo');
+            //contador de valores de articulos
+        $articulo = $request->articulo;
         $count_articulo=count($articulo);
-        $cantidad_p = $request->input('cantidad');
 
-        $costo_sub_total = $request->input('costo_sub_total');
-        $costo_igv = $request->input('costo_igv');
-        $costo_total = $request->input('costo_total');
-        $count_cantidad_p=count($cantidad_p);
-        $sub_total=0;
-        $igv=Igv::first();
+        $almacen=Almacen::where('id',$request->almacen)->first();
+        $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+        $count_nota_venta++;
+        $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+        $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
+        $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-        if (strpos($costo_total, '.') !== false) { $punto= 'true';}else{ $punto='false'; }
-        if ($punto=='true') {$total = strstr($costo_total, '.',true);$final=strstr($costo_total, '.'); }
-        else{ $total = $costo_total; $final = ' '; }
-        $end=$total;
-        $end_final=$final;
 
-        for($i=0 ; $i<$count_cantidad_p;$i++){
-            $articulos[$i]= $request->input('articulo')[$i];
-            $producto_id[$i]=strstr($articulos[$i], ' ', true);
-            $producto_codigo[$i]=Producto::where('id',$producto_id[$i])->first();
-        }
+        $nota_venta=new NotaVenta;
+        $nota_venta->cod_nota_venta=$cod_nota_venta;
+        $nota_venta->cliente_id=$request->cliente;
+        $nota_venta->almacen_id=$request->almacen;
+        $nota_venta->forma_pago=$request->forma_pago;
+        $nota_venta->garantia=$request->garantia;
+        $nota_venta->moneda_id=$request->moneda;
+        $nota_venta->fecha_emision=$request->fecha_emision;
+        $nota_venta->observacion=$request->observacion;
+        $nota_venta->user_registrado=auth()->user()->id;
+        $nota_venta->save();
 
         for($i=0;$i<$count_articulo;$i++){
-            $cantidad[]=$request->input('cantidad')[$i];
-            $precio[]=$request->input('precio')[$i];
+            $reg_nota_v= new NotaVentaRegistro();
+            $reg_nota_v->nota_venta_id=$nota_venta->id;
+            $reg_nota_v->producto=$request->get('articulo')[$i];
+            $reg_nota_v->cantidad=$request->get('cantidad')[$i];
+            $reg_nota_v->precio_nacional=$request->get('precio')[$i];
+            $reg_nota_v->save();
         }
-        if ($name=='print') {
-           return view('transaccion.venta.cotizacion.otros.print',compact('producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
-       }
-       elseif ($name=='pdf'){
-         $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
-         return $pdf->download('COTPF 001-0000000'.$codigo.'.pdf');
-     }
-     elseif ($name=='correo'){
-        $date_sp = Carbon::now();
-        $data_g = str_replace(' ', '_',$date_sp);
-        $carbon_sp = str_replace(':','-',$data_g);
-        $date = $carbon_sp;
-         $redic='mailbox';
-         $clientes=$cliente_id->email;
-         $rutapdf = 'transaccion.venta.cotizacion.pdf';
-         $name = 'COTPF 001-0000000';
 
-           // return $cotizacion;
-         $archivo=$name.$codigo.".pdf";
-         $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
-          $especif = $carbon_sp.$archivo;
-         $contenido=$pdf->download();
-         Storage::disk($redic)->put($especif,$contenido);
-
-
-       // $archivo=$especif;
-            // \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-
-        // Storage::disk('mailbox')->put($especif,$content);
-        // $date = $carbon_sp;
-
-         return view('mailbox.create',compact('archivo','clientes','redic','date'));
-     }
-
-        // }
- }
+     return redirect()->route('nota_venta.show',$nota_venta->id);
+        // return $nota_venta;
+    }
 
     /**
      * Display the specified resource.
@@ -161,15 +130,66 @@ class NotaVentaController extends Controller
      */
     public function show(Request $request, $id)
     {
+        $empresa=Empresa::first();
+        $nota_venta=NotaVenta::where('id',$id)->first();
+        $nota_venta_re=NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+
+      return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
 
     }
-
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function print($id)
+    {
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        $existe_id=kardex_entrada::where('estado',2)->first();
+        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=NotaVenta::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+        
+        $empresa=Empresa::first();
+
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+
+        return view('transaccion.venta.nota_venta.print',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pdf($id){
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        $existe_id=kardex_entrada::where('estado',2)->first();
+        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=NotaVenta::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+
+        $empresa=Empresa::first();
+
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+        $archivo = $nota_venta->cod_nota_venta.'-'.$empresa->ruc;
+        // return view('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        return $pdf->download('PDF-DOC-'.$archivo.'.pdf');
+    }
     public function edit($id)
     {
         //

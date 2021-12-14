@@ -81,7 +81,11 @@ Route::group(
 		Route::post('/boleta_servicio/create','BoletaServicioController@create')->name('boleta_servicio.create');
 		Route::resource('/boleta_servicio','BoletaServicioController')->except(['create']);
 //NOTA VENTA
-		Route::resource('/nota_venta','NotaVentaController')->except(['destroy']);
+		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
+		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
+		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
+		
+
 //NOTA VENTA
 
 //FACTURACION ELECTRONICA
@@ -315,6 +319,8 @@ Route::get('facturacion/pdf/{id}' , 'FacturacionController@pdf')->name('pdf_fac'
 Route::get('boleta/pdf/{id}' , 'BoletaController@pdf')->name('pdf_bol');
 Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
+Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');
+
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
