@@ -148,12 +148,12 @@ class NotaVentaController extends Controller
     public function print($id)
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
-        $existe_id=NotaVenta::where('id',$id)->first();
-        if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+        // $existe_id=NotaVenta::where('id',$id)->first();
+        // if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
         
         $empresa=Empresa::first();
 
@@ -172,12 +172,12 @@ class NotaVentaController extends Controller
      */
     public function pdf($id){
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
-        $existe_id=NotaVenta::where('id',$id)->first();
-        if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+        // $existe_id=NotaVenta::where('id',$id)->first();
+        // if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
 
         $empresa=Empresa::first();
 
