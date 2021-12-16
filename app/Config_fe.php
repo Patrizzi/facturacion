@@ -951,7 +951,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - FACTURA
 
-    public static function nota_credito($factura, $factura_registro, $request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento){
+    public static function nota_credito($factura, $factura_registro, $request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$descuento){
 
         $empresa=Empresa::first();
         $igv=Igv::first();
@@ -1035,7 +1035,32 @@ class Config_fe extends Model
 
                     $cont++;
                 }
+
+                
             }
+        }
+
+        if($motivo==3){
+            $item=new SaleDetail();
+            $item
+                
+                ->setCantidad(0)
+                ->setDescripcion("des")
+                ->setMtoBaseIgv(0)
+                ->setPorcentajeIgv(0)
+                ->setIgv(0)
+                ->setTipAfeIgv(0)
+                ->setTotalImpuestos(0)
+                ->setMtoValorVenta(0)
+                ->setMtoValorUnitario($descuento)
+                ->setMtoPrecioUnitario($descuento);
+
+            $igv_f=0;
+            $precio=$descuento;
+
+            $gravada=$descuento;
+            
+
         }
 
         $total=$igv_f+$precio;
@@ -1047,29 +1072,54 @@ class Config_fe extends Model
         $correlativo=$serie[1];
         $serie=$serie[0];
         // $serie;
-        $note = new Note();
-        $note
-            ->setUblVersion('2.1')
-            ->setTipoDoc('07')
-            ->setSerie($serie)
-            ->setCorrelativo($correlativo)
-            ->setFechaEmision($factura->created_at)
-            ->setTipDocAfectado('01') // Tipo Doc: Factura
-            ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
-            ->setCodMotivo($motivo) // Catalogo. 09
-            ->setDesMotivo($sustento)
-            ->setTipoMoneda($factura->moneda->codigo)
-            ->setCompany($company)
-            ->setClient($client)
-            ->setMtoOperGravadas($gravada) 
-            ->setMtoOperInafectas($inafecta)
-            ->setMtoOperExoneradas($exonerada)
-            ->setMtoIGV($igv_f)
-            ->setTotalImpuestos($igv_f)
-            ->setMtoImpVenta($total)
-            ;
 
-        if($motivo==3){//Descuento Global
+        if($motivo==3){
+            $note = new Note();
+            $note
+                ->setUblVersion('2.1')
+                ->setTipoDoc('07')
+                ->setSerie($serie)
+                ->setCorrelativo($correlativo)
+                ->setFechaEmision($factura->created_at)
+                ->setTipDocAfectado('01') // Tipo Doc: Factura
+                ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
+                ->setCodMotivo(4) // Catalogo. 09
+                ->setDesMotivo($sustento)
+                ->setTipoMoneda($factura->moneda->codigo)
+                ->setCompany($company)
+                ->setClient($client)
+                ->setMtoOperGravadas($descuento) 
+                ->setMtoIGV(0)
+                ->setTotalImpuestos(0)
+                ->setMtoImpVenta($descuento)
+                ;
+        }else{
+            $note = new Note();
+            $note
+                ->setUblVersion('2.1')
+                ->setTipoDoc('07')
+                ->setSerie($serie)
+                ->setCorrelativo($correlativo)
+                ->setFechaEmision($factura->created_at)
+                ->setTipDocAfectado('01') // Tipo Doc: Factura
+                ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
+                ->setCodMotivo($motivo) // Catalogo. 09
+                ->setDesMotivo($sustento)
+                ->setTipoMoneda($factura->moneda->codigo)
+                ->setCompany($company)
+                ->setClient($client)
+                ->setMtoOperGravadas($gravada) 
+                ->setMtoOperInafectas($inafecta)
+                ->setMtoOperExoneradas($exonerada)
+                ->setMtoIGV($igv_f)
+                ->setTotalImpuestos($igv_f)
+                ->setMtoImpVenta($total)
+                ;
+
+        }
+        
+
+        /* if($motivo==3){//Descuento Global
             $note->setDescuentos([
                 (new Charge())
                     ->setCodTipo('02') // Catalog. 53
@@ -1078,7 +1128,7 @@ class Config_fe extends Model
                     ->setMonto($descuento)
             ])->setMtoOperGravadas($gravada-$descuento) // suma de v. venta (items) - descuento global.
             ->setValorVenta($gravada-$descuento);
-        }
+        } */
 
         $formatter = new NumeroALetras();
         $valor=$formatter->toInvoice($total, 2, 'soles');
@@ -1087,8 +1137,16 @@ class Config_fe extends Model
         $legend->setCode('1000')
             ->setValue($valor);
 
-        $note->setDetails($item)
-            ->setLegends([$legend]);
+        
+
+            if($motivo==3){
+                $note->setDetails([$item])
+                ->setLegends([$legend]);
+            }else{
+                $note->setDetails($item)
+                ->setLegends([$legend]);
+            }
+
         
         return $note;
     }
