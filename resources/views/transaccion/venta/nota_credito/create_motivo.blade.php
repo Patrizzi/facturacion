@@ -41,15 +41,14 @@
                                 <div class="form-group"><label>Tipo de nota de credito</label> 
                                     <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
                                         <option value="0"></option>
-                                        <option value="1">Anulacion de la operacion</option>
-                                        <option value="2">Anulacion por error en el RUC</option>
-                                        <option value="3">Descuent                             o Global</option>
-                                        <option value="4">Devolucion Total</option>
-                                        <option value="5">Correcion por error en la descripcion</option>
-                                        <option value="6">Devolucion por Item</option>
-                                        <option value="7">Descuento por Item</option>
-                                        <option value="8">Otros conceptos</option>
-                                        <option value="9">Ajustes - montos y/o fechas de pago</option>
+                                        <option value="01">Anulacion de la operacion</option>
+                                        <option value="02">Anulacion por error en el RUC</option>
+                                        <option value="03">Correcion por error en la descripcion</option>
+                                        <option value="06">Devolucion Total</option>
+                                        <option value="07">Devolucion por Item</option>
+
+                                        {{-- <option value="8">Otros conceptos</option>
+                                        <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
                                     </select>
                                 </div>
                                 <div class="form-group"><label>Número de FE respecto de la cual se emite la Nota de Crédito	</label> <input type="text" class="form-control" name="factura_id" id="factura_id" required value="{{$facturacion->codigo_fac}}" readonly></div>
@@ -88,18 +87,14 @@
             $('.div1').hide();
             $('.div2').hide();
             $('.div3').hide();
-        }else if(motivo=="1" || motivo=="4" || motivo=="5" || motivo=="6" || motivo=="7" || motivo=="8" || motivo=="9"){
+        }else if(motivo=="01" || motivo=="04" || motivo=="05" || motivo=="06" || motivo=="07" || motivo=="08" || motivo=="03"){
             $('.div1').show();
             $('.div2').hide();
             $('.div3').hide();
-        }else if(motivo=="2"){
+        }else if(motivo=="02"){
             $('.div1').show();
             $('.div2').show();
             $('.div3').hide();
-        }else{
-            $('.div1').show();
-            $('.div2').hide();
-            $('.div3').show();
         }
     }
 </script>

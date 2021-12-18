@@ -75,7 +75,7 @@
 
                                     <strong>Tipo de nota de credito:</strong>
                                     <input required="required" class="form-control" type="text" id="motivo" name="motivo" value="{{$tipo_nota_credito}}" readonly style="display: none">
-                                    Descuento Global <br>
+                                    Devolucion Total <br>
 
                                     <strong>Motivo o Sustento:</strong>
                                     <input required="required" class="form-control" type="text" id="sustento" name="sustento" value="{{$sustento}}" readonly style="display: none">
@@ -119,20 +119,27 @@
                             <tbody>
                                 <span hidden="hidden">{{$u=0}} </span>
                                 <tr>
+                                    @foreach($facturacion_registro as $e => $facturacion_registros)
                                     <tr>
                                         <td >{{$u++}}</td>
-                                        <td>- - -</td>{{--Codigo producto--}}
-                                        <td>0</td> {{--Cantidad--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_cantidad_0" name="input_cantidad_0" value="1" readonly></td> {{--Cantidad Nueva--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_descripcion_0" name="input_descripcion_0" value="{{$sustento}}" readonly></td> {{--Descripcion--}}
-                                        <td>{{$descuento_global}}</td> {{--Precio Unitario--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_precio_0" name="input_precio_0" value="{{$descuento_global}}" readonly></td> {{--Nuevo Precio--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_descuento_0" name="input_descuento_0" value="0" readonly></td> {{--Nuevo Descuento--}}
-                                        <td>{{$descuento_global}}</td> {{--Total--}}
-                                        
+                                        <td>{{$facturacion_registros->producto->codigo_producto}}</td>{{--Codigo producto--}}
+                                        <td>{{$facturacion_registros->cantidad}}</td> {{--Cantidad--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_cantidad_{{$e}}" name="input_cantidad_{{$e}}" value="{{$facturacion_registros->cantidad}}" readonly></td> {{--Cantidad Nueva--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$facturacion_registros->producto->nombre}}" readonly></td> {{--Descripcion--}}
+                                        <td>{{$facturacion_registros->precio}}</td> {{--Precio Unitario--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$facturacion_registros->precio}}" readonly></td> {{--Nuevo Precio--}}
+                                        <td><input required="required" class="form-control" type="text" id="input_descuento_{{$e}}" name="input_descuento_{{$e}}" value="0" readonly></td> {{--Nuevo Descuento--}}
+                                        <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td> {{--Total--}}
+                                        <td style="display: none">
+                                            {{$sub_total=($facturacion_registros->factura_ids->op_gravada)+($facturacion_registros->factura_ids->op_inafecta)+($facturacion_registros->factura_ids->op_exonerada)}}
+                                            {{$sub_total_gravado=($facturacion_registros->factura_ids->op_gravada)}}
+                                            {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
+                                            {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                        </td>
                                     </tr>
-                                    
+                                    @endforeach
                                 </tr>
+                                <tr>
                                 <tr>
                                     <td colspan="13" align="right">
                                         <button type="submit" class="btn btn-w-m btn-primary">Enviar</button>

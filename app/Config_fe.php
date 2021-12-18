@@ -1040,28 +1040,6 @@ class Config_fe extends Model
             }
         }
 
-        if($motivo==3){
-            $item=new SaleDetail();
-            $item
-                
-                ->setCantidad(0)
-                ->setDescripcion("des")
-                ->setMtoBaseIgv(0)
-                ->setPorcentajeIgv(0)
-                ->setIgv(0)
-                ->setTipAfeIgv(0)
-                ->setTotalImpuestos(0)
-                ->setMtoValorVenta(0)
-                ->setMtoValorUnitario($descuento)
-                ->setMtoPrecioUnitario($descuento);
-
-            $igv_f=0;
-            $precio=$descuento;
-
-            $gravada=$descuento;
-            
-
-        }
 
         $total=$igv_f+$precio;
 
@@ -1073,62 +1051,27 @@ class Config_fe extends Model
         $serie=$serie[0];
         // $serie;
 
-        if($motivo==3){
-            $note = new Note();
-            $note
-                ->setUblVersion('2.1')
-                ->setTipoDoc('07')
-                ->setSerie($serie)
-                ->setCorrelativo($correlativo)
-                ->setFechaEmision($factura->created_at)
-                ->setTipDocAfectado('01') // Tipo Doc: Factura
-                ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
-                ->setCodMotivo(4) // Catalogo. 09
-                ->setDesMotivo($sustento)
-                ->setTipoMoneda($factura->moneda->codigo)
-                ->setCompany($company)
-                ->setClient($client)
-                ->setMtoOperGravadas($descuento) 
-                ->setMtoIGV(0)
-                ->setTotalImpuestos(0)
-                ->setMtoImpVenta($descuento)
-                ;
-        }else{
-            $note = new Note();
-            $note
-                ->setUblVersion('2.1')
-                ->setTipoDoc('07')
-                ->setSerie($serie)
-                ->setCorrelativo($correlativo)
-                ->setFechaEmision($factura->created_at)
-                ->setTipDocAfectado('01') // Tipo Doc: Factura
-                ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
-                ->setCodMotivo($motivo) // Catalogo. 09
-                ->setDesMotivo($sustento)
-                ->setTipoMoneda($factura->moneda->codigo)
-                ->setCompany($company)
-                ->setClient($client)
-                ->setMtoOperGravadas($gravada) 
-                ->setMtoOperInafectas($inafecta)
-                ->setMtoOperExoneradas($exonerada)
-                ->setMtoIGV($igv_f)
-                ->setTotalImpuestos($igv_f)
-                ->setMtoImpVenta($total)
-                ;
-
-        }
-        
-
-        /* if($motivo==3){//Descuento Global
-            $note->setDescuentos([
-                (new Charge())
-                    ->setCodTipo('02') // Catalog. 53
-                    ->setMontoBase($descuento) // cantidad * valor unitario
-                    ->setFactor(1)  // % descuento
-                    ->setMonto($descuento)
-            ])->setMtoOperGravadas($gravada-$descuento) // suma de v. venta (items) - descuento global.
-            ->setValorVenta($gravada-$descuento);
-        } */
+        $note = new Note();
+        $note
+            ->setUblVersion('2.1')
+            ->setTipoDoc('07')
+            ->setSerie($serie)
+            ->setCorrelativo($correlativo)
+            ->setFechaEmision($factura->created_at)
+            ->setTipDocAfectado('01') // Tipo Doc: Factura
+            ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
+            ->setCodMotivo($motivo) // Catalogo. 09
+            ->setDesMotivo($sustento)
+            ->setTipoMoneda($factura->moneda->codigo)
+            ->setCompany($company)
+            ->setClient($client)
+            ->setMtoOperGravadas($gravada) 
+            ->setMtoOperInafectas($inafecta)
+            ->setMtoOperExoneradas($exonerada)
+            ->setMtoIGV($igv_f)
+            ->setTotalImpuestos($igv_f)
+            ->setMtoImpVenta($total)
+            ;
 
         $formatter = new NumeroALetras();
         $valor=$formatter->toInvoice($total, 2, 'soles');
@@ -1139,14 +1082,10 @@ class Config_fe extends Model
 
         
 
-            if($motivo==3){
-                $note->setDetails([$item])
-                ->setLegends([$legend]);
-            }else{
-                $note->setDetails($item)
-                ->setLegends([$legend]);
-            }
-
+            
+        $note->setDetails($item)
+        ->setLegends([$legend]);
+    
         
         return $note;
     }
