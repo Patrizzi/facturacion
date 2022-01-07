@@ -253,6 +253,13 @@
                     </div>
                     </div>
                     <br>
+                    <div class="row">
+                <div class="col-sm-12 form-control" style="height:  120px">
+                    <strong>Observaciones:</strong><br>
+                    {{$facturacion->observacion}}
+                </div>
+            </div>
+            <br>
             <div class="row">
                 @foreach($banco as $bancos)
                 <div class="col-sm-3 " align="center">
