@@ -260,7 +260,7 @@ span.select2.select2-container.select2-container--default{
 				}
 			});
 			total = (change)? total:0;
-			document.getElementById(`total${a}`).value = total;
+			document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
 		}
 	</script>
 	<script>

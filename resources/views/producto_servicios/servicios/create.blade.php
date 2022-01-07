@@ -80,7 +80,7 @@
   <div class="panel-body" align="left">
    <div class="row">
     <label class="col-sm-2 col-form-label">Nombre:</label>
-    <div class="col-sm-10"><input type="text" class="form-control" name="nombre" placeholder="Nombre del Producto" required="required"></div>
+    <div class="col-sm-10"><input type="text" class="form-control" name="nombre" placeholder="Nombre del Servicio" required="required"></div>
 
     <label class="col-sm-2 col-form-label">Descripcion:</label>
     <div class="col-sm-10"><textarea type="text" class="form-control" name="descripcion" rows="2" required="required" ></textarea ></div>
