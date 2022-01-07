@@ -254,7 +254,7 @@
     <tr style="border:  0px solid white">
         <td>
             <p><u>centro de Atencion : </u></p>
-            Telefono : {{$boleta->user->personal->nombres }}<br>
+            Usuario : {{$boleta->user->personal->nombres }}<br>
             Telefono : {{$boleta->user->personal->telefono }}<br>
             Celular : {{$boleta->user->personal->celular }}<br>
             Email : {{$boleta->user->personal->email }}<br>

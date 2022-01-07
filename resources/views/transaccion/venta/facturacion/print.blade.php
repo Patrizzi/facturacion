@@ -263,7 +263,7 @@
               <div class="row">
                         <div class="col-sm-3">
                             <p><u>centro de Atencion : </u></p>
-                            Telefono : {{$facturacion->user->personal->nombres }}<br>
+                            Usuario : {{$facturacion->user->personal->nombres }}<br>
                             Telefono : {{$facturacion->user->personal->telefono }}<br>
                             Celular : {{$facturacion->user->personal->celular }}<br>
                             Email : {{$facturacion->user->personal->email }}<br>
