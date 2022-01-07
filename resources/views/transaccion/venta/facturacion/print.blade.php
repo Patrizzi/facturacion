@@ -204,8 +204,17 @@
 
 
             <br><br><br><br>
+
             <div class="row">
                 <div class="col-sm-8 ">
+                    <h3 align="left">
+                <?php $v=new CifrasEnLetras() ;
+                $letra=($v->convertirEurosEnLetras($end));
+                $letra_final = strstr($letra, 'soles',true);
+                $end_final=strstr($end, '.');
+                ?>
+                Son : {{$letra_final}} {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+            </h3>
                 </div>
                 <div class="col-sm-4 form-control" >
                     <span style="display: block;float: left"> Sub Total:</span>

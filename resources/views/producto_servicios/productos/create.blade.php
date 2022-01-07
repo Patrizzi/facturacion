@@ -198,6 +198,7 @@
  <label class="col-sm-2 col-form-label">garantia:</label>
  <div class="col-sm-4">
   <select class="form-control" name="garantia"  >
+    <option value="3 meses">3 meses</option>
     <option value="4 meses">4 meses</option>
     <option value="6 meses">6 meses</option>
     <option value="12 meses">12 meses</option>

@@ -212,7 +212,7 @@ class KardexEntradaController extends Controller
         $factura = $request->get('factura');
         $guia_remision = $request->get('guia_remision');
 
-        $busc_prove_fac = Kardex_entrada::where('provedor_id',$provedor)->where('factura',$factura)->where('motivo_id','!=', '5')->first();
+        $busc_prove_fac = Kardex_entrada::where('provedor_id',$provedor)->where('factura',$factura)->where('estado','!=', 'ANULADO')->where('motivo_id','!=', '5')->first();
         
         if(isset($busc_prove_fac)){
             return redirect()->route('kardex-entrada.create')->with('repite', 'El numero de factura ya está en uso');
@@ -223,7 +223,7 @@ class KardexEntradaController extends Controller
             $factura = $request->get('factura');
         }
 
-        $busc_prove_guia = Kardex_entrada::where('provedor_id',$provedor)->where('guia_remision',$guia_remision)->where('motivo_id','!=', '5')->first();
+        $busc_prove_guia = Kardex_entrada::where('provedor_id',$provedor)->where('guia_remision',$guia_remision)->where('motivo_id','!=', '5')->where('estado','!=', 'ANULADO')->first();
         if(isset($busc_prove_guia)){
             $this->validate($request,[
                 'guia_remision' => ['required','unique:kardex_entrada'],

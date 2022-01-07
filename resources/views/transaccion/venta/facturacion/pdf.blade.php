@@ -170,7 +170,16 @@
 
 <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px">
      <tr>
-         <td style="width: 70%;border: none"></td>
+         <td style="width: 70%;border: none">
+            <h3 align="left">
+                <?php $v=new CifrasEnLetras() ;
+                $letra=($v->convertirEurosEnLetras($end));
+                $letra_final = strstr($letra, 'soles',true);
+                $end_final=strstr($end, '.');
+                ?>
+                Son : {{$letra_final}} {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+            </h3>
+         </td>
          <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
             <span > Sub Total:</span>
             <br>
