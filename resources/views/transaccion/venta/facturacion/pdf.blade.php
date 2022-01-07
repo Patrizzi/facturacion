@@ -32,15 +32,26 @@
 </div> --}}
     <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
         <tr>
-            <td style="width: auto;border-color: white" rowspan="2" valign="top">
+            <td style="width: 30%;border-color: white" rowspan="2" valign="top">
                 <img align="" src="{{asset('img/logos/')}}/{{$empresa->foto}}" style="margin-top: 0px;" width="300px" />
                 <br>
             </td>
+            <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
+                <strong>{{$empresa->nombre}}</strong>
+                     <br>
+                     <strong>{{$empresa->razon_social}}</strong>
+                     <br>
+                     Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                    <br>
+                     {{$empresa->correo}}
+                     <br>
+                      {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+            </td>
             <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
-                    <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
+                    <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
                     <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRONICA</h2><br>
-                    <h5 style="text-align: center;margin-bottom: -5px" >{{$facturacion->codigo_fac}}</h5>
+                    <h5 style="text-align: center;margin-bottom: -1px" >{{$facturacion->codigo_fac}}</h5>
                 </center>
             </td>
         </tr>
@@ -245,7 +256,7 @@
     <tr style="border:  0px solid white">
         <td>
             <p><u>centro de Atencion : </u></p>
-            Telefono : {{$facturacion->user->personal->nombres }}<br>
+            Usuario : {{$facturacion->user->personal->nombres }}<br>
             Telefono : {{$facturacion->user->personal->telefono }}<br>
             Celular : {{$facturacion->user->personal->celular }}<br>
             Email : {{$facturacion->user->personal->email }}<br>
