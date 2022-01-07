@@ -74,11 +74,22 @@
         <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
             <div class="row">
                 <div class="col-sm-4 text-left" align="left">
-                    <address class="col-sm-4" align="left">
+                    <address class="col-sm-12" align="left">
                         <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                     </address>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                     <strong>{{$empresa->nombre}}</strong>
+                     <br>
+                     <strong>{{$empresa->razon_social}}</strong>
+                     <br>
+                     Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                    <br>
+                     {{$empresa->correo}}
+                     <br>
+                      {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+                     
+
                 </div>
                 <div class="col-sm-4 ">
                     <div class="form-control ruc" style="height: 125px">
@@ -260,7 +271,7 @@
               <div class="row">
                         <div class="col-sm-3">
                             <p><u>centro de Atencion : </u></p>
-                            Telefono : {{$facturacion->user->personal->nombres }}<br>
+                            Usuario : {{$facturacion->user->personal->nombres }}<br>
                             Telefono : {{$facturacion->user->personal->telefono }}<br>
                             Celular : {{$facturacion->user->personal->celular }}<br>
                             Email : {{$facturacion->user->personal->email }}<br>

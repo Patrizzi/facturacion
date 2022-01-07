@@ -76,9 +76,19 @@
                         <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                     </address>
                 </div>
-                <div class="col-sm-4">
-                </div>
+                <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                     <strong>{{$empresa->nombre}}</strong>
+                     <br>
+                     <strong>{{$empresa->razon_social}}</strong>
+                     <br>
+                     Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                    <br>
+                     {{$empresa->correo}}
+                     <br>
+                      {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+                     
 
+                </div>
                 <div class="col-sm-4 ">
                     <div class="form-control ruc" style="height: 125px">
                         <center>
