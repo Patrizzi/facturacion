@@ -99,8 +99,6 @@
                         </address>
                     </div>
                     <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                     <strong>{{$empresa->nombre}}</strong>
-                     <br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 

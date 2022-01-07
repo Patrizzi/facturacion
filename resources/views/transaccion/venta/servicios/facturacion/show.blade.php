@@ -77,8 +77,6 @@
                     </address>
                 </div>
                 <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                     <strong>{{$empresa->nombre}}</strong>
-                     <br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
@@ -189,13 +187,14 @@
                                 <td>{{$facturacion_registros->descuento}}%</td>
                                 <td>{{$facturacion_registros->precio_unitario_desc}}</td>
                                 <td>{{$facturacion_registros->comision}}%</td>
-                                <td>{{$facturacion_registros->precio_unitario_comi}}</td>
-                                <td>{{$facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}</td>
+                                <td>{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>
+                                <td>{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                                 <td style="display: none">
                                     {{$sub_total_gravado=($facturacion->op_gravada)}}
                                     {{$sub_total=($facturacion->op_gravada)+($facturacion->op_exonerada)+($facturacion->op_inafecta)}}
                                     {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
                                     {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                 </td>
                             </tr>
                             <span hidden="hidden">{{$i++}}</span>
@@ -227,30 +226,33 @@
                 <div class="col-sm-8">
                         <h3 align="left">
                             <?php $v=new CifrasEnLetras() ;
-                            $letra=($v->convertirEurosEnLetras($end));
-                            $letra_final = strstr($letra, 'soles',true);
-                            $end_final=strstr($end, '.');
+                             $letra=($v->convertirEurosEnLetras($end));
+                            $letra_final = ucfirst(strstr($letra, 'soles',true));
+                            $end_final_point=strstr($end2, '.',false);
+                            $end_final=str_replace('.', '',$end_final_point);
+
                             ?>
-                            Son : {{$letra_final}} {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+                            Son : {{$letra_final}} con {{$end_final}}/100 {{$facturacion->moneda->nombre }}
                         </h3>
                     </div>
 
                     <div class="col-sm-4 form-control" >
                         <span style="display: block;float: left"> Sub Total:</span>
-                        <span style="display: block;float: right;"> {{$simbologia=$facturacion->moneda->simbolo}}. {{number_format($sub_total, 2)}}</span>
+                        <span style="display: block;float: right;"> {{$simbologia=$facturacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
                         <br>
                         <span style="display: block;float: left"> Op. Agravada: </span>
-                        <span style="display: block;float: right">{{$simbologia}}. {{number_format($facturacion->op_gravada,2)}}</span><br>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format($facturacion->op_gravada,2)}}</span><br>
                         <span style="display: block;float: left"> Op. Inafecta: </span>
                         <span style="display: block;float: right">{{$simbologia}} {{ number_format($facturacion->op_inafecta,2)}}</span><br>
                         <span style="display: block;float: left"> Op. Exonerada: </span>
-                        <span style="display: block;float: right">{{$simbologia}}. {{number_format($facturacion->op_exonerada,2)}} </span><br>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format($facturacion->op_exonerada,2)}} </span><br>
                         <span style="display: block;float: left"> I.G.V.: </span>
-                        <span style="display: block;float: right">{{$facturacion->moneda->simbolo}}.{{number_format(round($igv_p, 2),2)}}</span><br>
+                        <span style="display: block;float: right">{{$facturacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
                         <span style="display: block;float: left"> Importe Total: </span>
-                         <span style="display: block;float: right">{{$facturacion->moneda->simbolo}}.{{$end}}</span>
+                         <span style="display: block;float: right">{{$facturacion->moneda->simbolo}} {{number_format($end,2)}}</span>
                     </div>
                     </div>
+                    <br>
             <div class="row">
                 @foreach($banco as $bancos)
                 <div class="col-sm-3 " align="center">
@@ -268,21 +270,21 @@
           </div>
           <br>
 
-              <div class="row">
-                        <div class="col-sm-3">
-                            <p><u>centro de Atencion : </u></p>
-                            Usuario : {{$facturacion->user->personal->nombres }}<br>
-                            Telefono : {{$facturacion->user->personal->telefono }}<br>
-                            Celular : {{$facturacion->user->personal->celular }}<br>
-                            Email : {{$facturacion->user->personal->email }}<br>
-                            Web :
-                            <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
-                        </div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
-
+           {{--    <div class="row">
+                    <div class="col-sm-3">
+                        <p><u>centro de Atencion : </u></p>
+                        Usuario : {{$facturacion->user->personal->nombres }}<br>
+                        Telefono : {{$facturacion->user->personal->telefono }}<br>
+                        Celular : {{$facturacion->user->personal->celular }}<br>
+                        Email : {{$facturacion->user->personal->email }}<br>
+                        Web :
+                        <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
                     </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+
+                </div> --}}
       </div>
   </div>
 

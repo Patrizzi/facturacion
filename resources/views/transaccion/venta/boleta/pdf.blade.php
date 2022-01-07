@@ -37,8 +37,6 @@
                 <br>
             </td>
             <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
-                <strong>{{$empresa->nombre}}</strong>
-                     <br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
@@ -109,8 +107,8 @@
                 <td width="60px">Cantidad</td>
                 <td width="60px">Unid.Medida</td>
                 <td width="200px">Descripción</td>
-                <td width="auto">Valor Unitario</td>
-                <td width="auto">Dscto.%</td>
+                {{-- <td width="auto">Valor Unitario</td>
+                <td width="auto">Dscto.%</td> --}}
                 <td width="auto">Precio Unitario</td>
                 <td width="auto">Valor Venta</td>
             </tr>
@@ -124,10 +122,10 @@
                     <td>{{$boleta_registros->cantidad}}</td>
                     <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td>
                     <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
-                    <td>{{$boleta_registros->precio}}</td>
-                    <td>{{$boleta_registros->descuento}}%</td>
-                    <td>{{$boleta_registros->precio_unitario_desc}}</td>
-                    <td>{{$boleta_registros->precio_unitario_desc * $boleta_registros->cantidad }}</td>
+                {{--     <td>{{$boleta_registros->precio}}</td>
+                    <td>{{$boleta_registros->descuento}}%</td> --}}
+                    <td>{{$boleta_registros->precio_unitario_comi}}</td>
+                    <td>{{$boleta_registros->precio_unitario_comi * $boleta_registros->cantidad }}</td>
                     <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
                             S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                             {{$end=round($sub_total, 2)+round($igv_p, 2)}}
@@ -146,8 +144,8 @@
                 <td width="120px" >Codigo Servicio</td>
                 <td width="auto">Cantidad</td>
                 <td width="200px">Descripcion</td>
-                <td width="auto">Valor Unitario</td>
-                <td width="auto">Dscto.%</td>
+                {{-- <td width="auto">Valor Unitario</td>
+                <td width="auto">Dscto.%</td> --}}
                 <td width="auto">Precio Unitario</td>
                 <td width="80px">Valor Venta</td>
             </tr>
@@ -161,10 +159,10 @@
                     <td>{{$boleta_registros->cantidad}}</td>
 
                     <td>{{$boleta_registros->servicio->nombre}} </td>
-                    <td>{{$boleta_registros->precio}}</td>
+                    {{-- <td>{{$boleta_registros->precio}}</td> --}}
                     <td>{{$boleta_registros->descuento}}%</td>
-                    <td>{{$boleta_registros->precio_unitario_desc}}</td>
-                    <td>{{$boleta_registros->precio_unitario_desc * $boleta_registros->cantidad }}</td>
+                    <td>{{$boleta_registros->precio_unitario_comi}}</td>
+                    <td>{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad,2) }}</td>
                     <td style="display: none">{{$sub_total=($$boleta->op_gravada)}}
                             S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                             {{$end=round($sub_total, 2)+round($igv_p, 2)}}
@@ -198,19 +196,19 @@
     </tr>
     <tr style="border: white 0px solid" >
             <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-                {{-- {{$simbologia=$cotizacion->moneda->simbolo}}. --}}    S/.{{round($sub_total, 2)}}
+                {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
             </td>
         <th style="width: 2%;border-color: white"></th>
             <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-                {{-- {{$simbologia=$cotizacion->moneda->simbolo}} --}}S/.00
+                {{$simbologia}} 00.00
             </td>
         <th style="width: 2%;border-color: white"></th>
             <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-               {{-- {{$simbologia=$cotizacion->moneda->simbolo}} --}} s/ .00
+               {{$simbologia}} 00.00
             </td>
         <th style="width: 2%;border-color: white"></th>
             <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-                {{-- {{$cotizacion->moneda->simbolo}} --}}    s/.{{round($sub_total, 2)}}
+                {{$simbologia}} {{round($sub_total, 2)}}
             </td>
     </tr>
 </table>
@@ -250,7 +248,7 @@
 </table>
 <div class="row">
 <br>
-<table style="border:  0px solid white">
+{{-- <table style="border:  0px solid white">
     <tr style="border:  0px solid white">
         <td>
             <p><u>centro de Atencion : </u></p>
@@ -267,11 +265,11 @@
             <br>
             <br>
             <br>
-            {{-- <hr> --}}
-            {{-- <center>{{$cotizacion->user_personal->personal->nombres }}</center> --}}
+            <hr>
+            <center>{{$cotizacion->user_personal->personal->nombres }}</center>
         </td>
     </tr>
-</table>
+</table> --}}
 </div>
 
 {{--  --}}

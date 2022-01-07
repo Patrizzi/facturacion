@@ -37,8 +37,6 @@
                 <br>
             </td>
             <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
-                <strong>{{$empresa->nombre}}</strong>
-                     <br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
