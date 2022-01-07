@@ -40,8 +40,6 @@
                     </address>
                 </div>
                 <div class="col-sm-4 text-center" style="font-size: 13px">
-                     <strong>{{$empresa->nombre}}</strong>
-                     <br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
@@ -124,15 +122,15 @@
                 <table class="table ">
                     <thead>
                         <tr>
-                            <th>ITEM</th>
-                            <th>Codigo Producto</th>
-                            <th>Cantidad</th>
-                            <th>Unid.Medida</th>
-                            <th>Descripción</th>
-                            <th>Valor Unitario</th>
-                            <th>Dscto.%</th>
-                            <th>Precio Unitario</th>
-                            <th>Valor Venta </th>
+                            <th style="width: 8%">ITEM</th>
+                            <th style="width: 15%">Codigo Producto</th>
+                            <th style="width: 11%">Cantidad</th>
+                            <th  style="width: 10%">Unid.Medida</th>
+                            <th style="width: 29%">Descripción</th>
+                            {{-- <th>Valor Unitario</th>
+                            <th>Dscto.%</th> --}}
+                            <th  style="text-align: center;">Precio Unitario</th>
+                            <th  style="text-align: center;">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,10 +143,10 @@
                                 <td>{{$boleta_registros->cantidad}}</td>
                                 <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td>
                                 <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
-                                <td>{{$boleta_registros->precio}}</td>
-                                <td>{{$boleta_registros->descuento}}%</td>
-                                <td>{{$boleta_registros->precio_unitario_desc}}</td>
-                                <td>{{$boleta_registros->precio_unitario_desc * $boleta_registros->cantidad }}</td>
+                                {{-- <td>{{$boleta_registros->precio}}</td>
+                                <td>{{$boleta_registros->descuento}}%</td> --}}
+                                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
+                                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
                                 <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
                                         S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                                         {{$end=round($sub_total, 2)+round($igv_p, 2)}}
@@ -185,10 +183,10 @@
                                 <td>{{$boleta_registros->cantidad}}</td>
 
                                 <td>{{$boleta_registros->servicio->nombre}} </td>
-                                <td>{{$boleta_registros->precio}}</td>
-                                <td>{{$boleta_registros->descuento}}%</td>
-                                <td>{{$boleta_registros->precio_unitario_desc}}</td>
-                                <td>{{$boleta_registros->precio_unitario_desc * $boleta_registros->cantidad }}</td>
+                                {{-- <td>{{$boleta_registros->precio}}</td> --}}
+                                {{-- <td>{{$boleta_registros->descuento}}%</td> --}}
+                                <td>{{$boleta_registros->precio_unitario_comi}}</td>
+                                <td>{{$boleta_registros->precio_unitario_comi * $boleta_registros->cantidad }}</td>
                                 <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
                                         S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                                         {{$end=round($sub_total, 2)+round($igv_p, 2)}}
@@ -207,19 +205,19 @@
             <div class="row">
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Sub Total</p>
-                    <p class="form-control a"> S/.{{round($sub_total, 2)}}</p>
+                    <p class="form-control a"> {{$simbologia = $boleta->moneda->simbolo}} {{round($sub_total, 2)}}</p>
                 </div>
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Op. Agravada</p>
-                    <p class="form-control a"> S/.00</p>
+                    <p class="form-control a"> {{$simbologia}} 00.00</p>
                 </div>
                 <div class="col-sm-3 ">
                     <p class="form-control a"> IGV</p>
-                    <p class="form-control a"> S/.00</p>
+                    <p class="form-control a"> {{$simbologia}} 00.00</p>
                 </div>
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Importe Total</p>
-                    <p class="form-control a"> S/.{{round($sub_total, 2)}}</p>
+                    <p class="form-control a"> {{$simbologia}} {{round($sub_total, 2)}}</p>
                 </div>
             </div><br>
             <div class="row">
@@ -239,7 +237,7 @@
           </div>
           <br>
 
-              <div class="row">
+              {{-- <div class="row">
                         <div class="col-sm-3">
                             <p><u>centro de Atencion : </u></p>
                             Usuario : {{$boleta->user->personal->nombres }}<br>
@@ -254,7 +252,7 @@
                         <div class="col-sm-3"></div>
 
                     </div>
-
+ --}}
 
 
       </div>
@@ -269,7 +267,7 @@
 
 <style type="text/css">
     .ruc{border-radius: 10px; height: 150px;}
-    .form-control{border-radius: 10px;}
+    .form-control{border-radius: 10px;border-color: #808080}
     .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
 
 </style>

@@ -64,8 +64,6 @@
                     </address>
                 </div>
                 <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                     <strong>{{$empresa->nombre}}</strong>
-                     <br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
@@ -177,8 +175,8 @@
                                 <td>{{$boleta_registros->descuento}}%</td>
                                 <td>{{$boleta_registros->precio_unitario_desc}}</td>
                                 <td>{{$boleta_registros->comision }}</td>
-                                <td>{{$boleta_registros->precio_unitario_comi}}</td>
-                                <td>{{$boleta_registros->precio_unitario_comi * $boleta_registros->cantidad }}</td>
+                                <td>{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
+                                <td>{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
                                 <td style="display: none">
                                     {{$sub_total=($boleta->op_gravada)+($boleta->op_exonerada)+($boleta->op_inafecta)}}
                                     </td>
@@ -192,19 +190,19 @@
             <div class="row">
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Sub Total</p>
-                    <p class="form-control a"> {{$boleta->moneda->simbolo }}.{{round($sub_total, 2)}}</p>
+                    <p class="form-control a"> {{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2))}}</p>
                 </div>
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Op. Agravada</p>
-                    <p class="form-control a">{{$boleta->moneda->simbolo }}.00</p>
+                    <p class="form-control a">{{$boleta->moneda->simbolo }} 00.00</p>
                 </div>
                 <div class="col-sm-3 ">
                     <p class="form-control a"> IGV</p>
-                    <p class="form-control a"> {{$boleta->moneda->simbolo }}.00</p>
+                    <p class="form-control a"> {{$boleta->moneda->simbolo }} 00.00</p>
                 </div>
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Importe Total</p>
-                    <p class="form-control a"> {{$boleta->moneda->simbolo }}.{{round($sub_total, 2)}}</p>
+                    <p class="form-control a"> {{$boleta->moneda->simbolo }} .{{number_format(round($sub_total, 2),2)}}</p>
                 </div>
             </div><br>
             <div class="row">
