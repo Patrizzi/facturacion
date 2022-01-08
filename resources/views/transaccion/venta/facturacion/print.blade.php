@@ -67,7 +67,7 @@
             <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
                         <div class="form-control">
-                            <h3> Datos Generales</h3>
+                            <!-- <h3> Datos Generales</h3> -->
                             <div align="left">
                                 <strong>Cliente:</strong>
                                     @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-sm-6" align="center">
                      <div class="form-control" >
-                         <h3>Condiciones Generales</h3>
+                         <!-- <h3>Condiciones Generales</h3> -->
                          <div align="left">
                             <strong>Orden de Compra:</strong>
                                 {{$facturacion->orden_compra}} <br>
@@ -173,7 +173,7 @@
                             <th style="width: 8%">ITEM</th>
                             <th style="width: 15%">Codigo Producto</th>
                             <th style="width: 11%">Cantidad</th>
-                            <th  style="width: 10%">Unid.Medida</th>
+                            <!-- <th  style="width: 10%">Unid.Medida</th> -->
                             <th style="width: 29%">Descripción</th>
                             {{-- <th>Valor Unitario</th>
                             <th>Dscto.%</th> --}}
@@ -194,7 +194,7 @@
                                 {{-- <td>{{$facturacion_registros->precio}}</td>
                                 <td>{{$facturacion_registros->descuento}}%</td> --}}
                                 <td style="text-align: right;">{{$facturacion_registros->precio_unitario_comi}}</td>
-                                <td style="text-align: right;">{{$facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}</td>
+                                <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                                 <td style="display: none">
                                     {{$sub_total_gravado=($facturacion->op_gravada)}}
                                     {{$sub_total=($facturacion->op_gravada)+($facturacion->op_exonerada)+($facturacion->op_inafecta)}}

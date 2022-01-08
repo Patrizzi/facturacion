@@ -103,7 +103,7 @@
 <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
                         <div class="form-control">
-                            <h3> Datos Generales</h3>
+                            <!-- <h3> Datos Generales</h3> -->
                             <div align="left">
                                 <strong>Cliente:</strong>
                                     @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
@@ -130,7 +130,7 @@
                     </div>
                     <div class="col-sm-6" align="center">
                      <div class="form-control" >
-                         <h3>Condiciones Generales</h3>
+                         <!-- <h3>Condiciones Generales</h3> -->
                          <div align="left">
                             <strong>Orden de Compra:</strong>
                                 {{$facturacion->orden_compra}} <br>

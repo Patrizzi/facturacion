@@ -60,7 +60,7 @@
 <table style="width: 100%;border-collapse:separate;margin-top: -20px">
     <tr >
         <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
-            <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br>
+            <!-- <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br> -->
             <strong>Señor(es)</strong>&nbsp;
                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
                 @else{{$facturacion->cotizacion->cliente->nombre}}
@@ -83,7 +83,7 @@
         </td>
         <th style="width: 5%;border-color: white"></th>
         <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
-            <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
+            <!-- <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center> <br> -->
             <strong>Orden de Compra:</strong>&nbsp;{{$facturacion->orden_compra}}<br>
             <strong>Guia de Remision:</strong> &nbsp;{{$facturacion->guia_remision}}<br>
             <strong>Fecha de Emision:</strong> &nbsp;{{$facturacion->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
