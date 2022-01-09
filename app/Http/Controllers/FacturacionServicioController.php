@@ -499,8 +499,8 @@ class FacturacionServicioController extends Controller
     public function show($id)
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Facturacion::where('id',$id)->first();

@@ -226,7 +226,7 @@ class BoletaServicioController extends Controller
             $boleta_nr=str_pad($boleta_num, 8, "0", STR_PAD_LEFT);
         }
         $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
-        return view('transaccion.venta.servicios.boleta.create_ms',compact('servicios','forma_pagos','clientes','personales','array','igv','moneda','p_venta','almacenes','sucursal','boleta_numero','almacen','empresa','igv_precio'));
+        return view('transaccion.venta.servicios.boleta.create_ms',compact('servicios','forma_pagos','clientes','personales','array','igv','moneda','p_venta','sucursal','boleta_numero','almacen','empresa','igv_precio'));
     }
 
     /**
@@ -521,8 +521,8 @@ class BoletaServicioController extends Controller
     public function show($id)
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Boleta::where('id',$id)->first();

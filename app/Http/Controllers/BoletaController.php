@@ -48,8 +48,8 @@ class BoletaController extends Controller
     public function index()
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         $boletas=Boleta::all();
         $user_login =auth()->user();

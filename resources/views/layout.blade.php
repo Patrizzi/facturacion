@@ -108,73 +108,25 @@ $empresa=Empresa::first(); ?>
                             @if(empty($inventario_inicial))
                                 @if($conteo_almacen==1)
                                     @can('transacciones-ventas-facturacion.index')
-                                    <li>
-                                        <form action="{{ route('facturacion_servicio.create')}}" enctype="multipart/form-data" method="post" style="margin-bottom: 0px;">
-                                            @csrf
-                                            <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
-                                            <input  class="posta_a" type="submit" value="Factura Servicio">
-                                        </form>
-                                    </li>
+                                    <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
                                     @endcan
                                     @can('transacciones-ventas-boleta.index')
-                                    <li>
-                                        <form action="{{ route('boleta_servicio.create')}}" enctype="multipart/form-data" method="post" style="margin-bottom: 0px;">
-                                            @csrf
-                                            <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
-                                            <input  class="posta_a" type="submit" value="Boleta Servicio" >
-                                        </form>
-                                    </li>
+                                    <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                                     @endcan
                                 @else
                                     @can('transacciones-ventas-facturacion.index')
-                                    <li><a href="#" id="dropdownFactura" data-toggle="dropdown" >Factura Servicio</a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownFactura" style="margin-left: 215px;margin-top: -25px;">
-                                            <form action="{{ route('facturacion_servicio.create')}}"enctype="multipart/form-data" method="post">
-                                                @csrf
-                                                @foreach($almacen as $almacens)
-                                                <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
-                                                @endforeach
-                                            </form>
-                                        </div>
-                                    </li>
+                                    <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
                                     @endcan
                                     @can('transacciones-ventas-boleta.index')
-                                    <li><a href="#" id="dropdownBoleta" data-toggle="dropdown" >Boleta Servicio</a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownBoleta" style="margin-left: 215px;margin-top: -25px;">
-                                            <form action="{{ route('boleta_servicio.create')}}"enctype="multipart/form-data" method="post">
-                                                @csrf
-                                                @foreach($almacen as $almacens)
-                                                <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
-                                                @endforeach
-                                            </form>
-                                        </div>
-                                    </li>
+                                    <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                                     @endcan
                                 @endif                                
                             @elseif($inventario_inicial->estado==1)
                                 @can('transacciones-ventas-facturacion.index')
-                                <li><a href="#" id="dropdownFactura" data-toggle="dropdown" >Factura Servicio</a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownFactura" style="margin-left: 215px;margin-top: -25px;">
-                                        <form action="{{ route('facturacion_servicio.create')}}"enctype="multipart/form-data" method="post">
-                                            @csrf
-                                            @foreach($almacen as $almacens)
-                                            <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
-                                            @endforeach
-                                        </form>
-                                    </div>
-                                </li>
+                                <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
                                 @endcan
                                 @can('transacciones-ventas-boleta.index')
-                                <li><a href="#" id="dropdownBoleta" data-toggle="dropdown" >Boleta Servicio</a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownBoleta" style="margin-left: 215px;margin-top: -25px;">
-                                        <form action="{{ route('boleta_servicio.create')}}"enctype="multipart/form-data" method="post">
-                                            @csrf
-                                            @foreach($almacen as $almacens)
-                                            <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
-                                            @endforeach
-                                        </form>
-                                    </div>
-                                </li>
+                                <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                                 @endcan
                             @else
                             <li>

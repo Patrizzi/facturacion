@@ -82,6 +82,11 @@
 </div>
 {{-- fimodal --}}
 <div class="wrapper wrapper-content animated fadeInRight">
+    @if (session('repite'))
+    <div class="alert alert-danger">
+        {{ session('repite') }}
+    </div>
+    @endif
     <div class="row">
 
         <div class="col-lg-12">
