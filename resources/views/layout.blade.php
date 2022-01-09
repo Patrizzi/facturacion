@@ -59,6 +59,19 @@ $empresa=Empresa::first(); ?>
         text-align: left;
     }
     .rounded-circle{width: 120px; height: auto; border:@yield('2', auth()->user()->config->borde_foto) solid @yield('2', auth()->user()->config->color_borde_foto);}
+    .posta_a {
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: #a7b1c2;
+        padding: 7px 10px 7px 10px;
+        padding-left: 52px;
+        font-weight: 600;
+    }
+    .posta_a:hover{
+        color: white;
+    }
 </style>
 <body class="">
     <div id="wrapper">
@@ -77,20 +90,92 @@ $empresa=Empresa::first(); ?>
 
                         </div>
                     </li>
-                    <!-- MENU DESPELEGABLE -->
+                    {{-- MENU DESPELEGABLE --}}
                     @can('inicio')
                     <li><a href="{{route('inicio')}}"><img src="{{ asset('/archivos/imagenes/layout/inicio.svg')}}" class="iconos"> <span class="nav-label">Inicio</span></a></li>
                     @endcan
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL --}}
-                    <?php use App\Kardex_entrada ; ?>
+                    <?php use App\Kardex_entrada ; use App\Almacen; ?>
                     <span hidden="">{{$inventario_inicial=Kardex_entrada::first()}} </span>
+                    <span hidden="">{{$almacen=Almacen::all()}} </span>
+                    <span hidden="">{{$conteo_almacen=Almacen::count()}} </span>
+                    <span hidden="">{{$almacen_primero=Almacen::first()}} </span>
                     @can('transacciones')
                     <li>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/comercializacion.svg')}}" class="iconos"> <span class="nav-label">Comercialización</span></a>
                         <ul class="nav nav-second-level collapse">
-                            @can('transacciones-ventas')
+                            <!-- @can('transacciones-ventas') -->
                             @if(empty($inventario_inicial))
+                                @if($conteo_almacen==1)
+                                    @can('transacciones-ventas-facturacion.index')
+                                    <li>
+                                        <form action="{{ route('facturacion_servicio.create')}}" enctype="multipart/form-data" method="post" style="margin-bottom: 0px;">
+                                            @csrf
+                                            <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+                                            <input  class="posta_a" type="submit" value="Factura Servicio">
+                                        </form>
+                                    </li>
+                                    @endcan
+                                    @can('transacciones-ventas-boleta.index')
+                                    <li>
+                                        <form action="{{ route('boleta_servicio.create')}}" enctype="multipart/form-data" method="post" style="margin-bottom: 0px;">
+                                            @csrf
+                                            <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+                                            <input  class="posta_a" type="submit" value="Boleta Servicio" >
+                                        </form>
+                                    </li>
+                                    @endcan
+                                @else
+                                    @can('transacciones-ventas-facturacion.index')
+                                    <li><a href="#" id="dropdownFactura" data-toggle="dropdown" >Factura Servicio</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownFactura" style="margin-left: 215px;margin-top: -25px;">
+                                            <form action="{{ route('facturacion_servicio.create')}}"enctype="multipart/form-data" method="post">
+                                                @csrf
+                                                @foreach($almacen as $almacens)
+                                                <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
+                                                @endforeach
+                                            </form>
+                                        </div>
+                                    </li>
+                                    @endcan
+                                    @can('transacciones-ventas-boleta.index')
+                                    <li><a href="#" id="dropdownBoleta" data-toggle="dropdown" >Boleta Servicio</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownBoleta" style="margin-left: 215px;margin-top: -25px;">
+                                            <form action="{{ route('boleta_servicio.create')}}"enctype="multipart/form-data" method="post">
+                                                @csrf
+                                                @foreach($almacen as $almacens)
+                                                <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
+                                                @endforeach
+                                            </form>
+                                        </div>
+                                    </li>
+                                    @endcan
+                                @endif                                
                             @elseif($inventario_inicial->estado==1)
+                                @can('transacciones-ventas-facturacion.index')
+                                <li><a href="#" id="dropdownFactura" data-toggle="dropdown" >Factura Servicio</a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownFactura" style="margin-left: 215px;margin-top: -25px;">
+                                        <form action="{{ route('facturacion_servicio.create')}}"enctype="multipart/form-data" method="post">
+                                            @csrf
+                                            @foreach($almacen as $almacens)
+                                            <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
+                                            @endforeach
+                                        </form>
+                                    </div>
+                                </li>
+                                @endcan
+                                @can('transacciones-ventas-boleta.index')
+                                <li><a href="#" id="dropdownBoleta" data-toggle="dropdown" >Boleta Servicio</a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownBoleta" style="margin-left: 215px;margin-top: -25px;">
+                                        <form action="{{ route('boleta_servicio.create')}}"enctype="multipart/form-data" method="post">
+                                            @csrf
+                                            @foreach($almacen as $almacens)
+                                            <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
+                                            @endforeach
+                                        </form>
+                                    </div>
+                                </li>
+                                @endcan
                             @else
                             <li>
                                 <a href="#">Ventas</a>
@@ -121,8 +206,8 @@ $empresa=Empresa::first(); ?>
                                 </ul>
                             </li>
                             @endif
-                            @endcan
 
+                            <!-- @endcan -->
                             {{-- <li><a href="{{route('transaccion-compra.index')}}">Compras</a></li> --}}
                             @can('transacciones-garantias')
                             <li>
@@ -142,9 +227,7 @@ $empresa=Empresa::first(); ?>
                             @endcan
                         </ul>
                     </li>
-                    @endcan
-
-
+                    
                     @if(empty($inventario_inicial))
                     <li>
                         <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
@@ -185,8 +268,9 @@ $empresa=Empresa::first(); ?>
                         @endcan
                         <li><a href="{{route('cierre-periodo.index')}}">Cierre Periodo</a></li>
                         <li><a href="{{route('movimiento-consulta.index')}}">Movimiento Consulta</a></li>
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                    @endif
                 @endcan
                 <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
                 @can('planilla')
@@ -284,7 +368,7 @@ $empresa=Empresa::first(); ?>
 
                 @endcan
 
-                <!-- MENU DESPELEGABLE -->
+                {{-- MENU DESPELEGABLE --}}
             </ul>
         </div>
     </nav>

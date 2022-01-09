@@ -40,12 +40,7 @@ class FacturacionServicioController extends Controller
      */
     public function create(Request $request)
     {
-        $inventario_inicial=Kardex_entrada::first();
-        if (isset($inventario_inicial)) {
-            if ( $inventario_inicial->estado==1) {
-                return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
-            }
-        }
+
 
         $servicios=Servicios::where('estado_anular',0)->get();
 
@@ -53,9 +48,11 @@ class FacturacionServicioController extends Controller
         $sucursal=Almacen::where('id',$sucursal)->first();
 
         if(count($servicios) == 0){
+            return redirect()->route('servicios.index');
+        }
+        if(count($servicios) == 0){
             return back()->withErrors(['No hay Servicios Agregados: '.$sucursal->nombre.'']);
         }
-
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $moneda=Moneda::where('principal','1')->first();
 

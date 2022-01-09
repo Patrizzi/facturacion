@@ -41,6 +41,10 @@ class BoletaServicioController extends Controller
      */
     public function create(Request $request)
     {
+        $servicios=Servicios::where('estado_anular',0)->get();
+        if(count($servicios) == 0){
+            return redirect()->route('servicios.index');
+        }
         $inventario_inicial=Kardex_entrada::first();
         if (isset($inventario_inicial)) {
             if ( $inventario_inicial->estado==1) {
