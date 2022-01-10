@@ -112,12 +112,12 @@
                                     <td>Cliente</td>
                                     <td>:</td>
                                     <td>
-                                        <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                        <datalist id="browsersc1" >
+                                        <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
+                                            <option></option>
                                             @foreach($clientes as $cliente)
-                                            <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                                <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
                                             @endforeach
-                                        </datalist>
+                                        </select>
                                     </td>
                                     <td>Comisionista</td>
                                     <td>:</td>
@@ -432,6 +432,11 @@
                     <script type="text/javascript">
                         $(".select2_demo_3").select2({
                             placeholder: "Seleccionar Producto",
+                        });
+                    </script>
+                    <script type="text/javascript">
+                        $(".select2_demo_client").select2({
+                            placeholder: "Seleccionar Cliente",
                         });
                     </script>
                     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}

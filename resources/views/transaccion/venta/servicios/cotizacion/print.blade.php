@@ -41,7 +41,7 @@
                                 <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                             </address>
                         </div>
-                        <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                        <div class="col-sm-4 text-center" style="font-size: 15px"><br>
                              <strong>{{$empresa->nombre}}</strong>
                              <br>
                              <strong>{{$empresa->razon_social}}</strong>
@@ -148,7 +148,7 @@
                                 <td>{{$i}} </td>
                                         <td>{{$cotizacion_registros->servicio->codigo_servicio}}</td>
                                         {{-- <td>{{$cotizacion_registros->servicio->unidad_i_producto->medida}}</td> --}}
-                                        <td>{{$cotizacion_registros->servicio->nombre}}&nbsp;<span style="font-size: 10px">{{$cotizacion_registros->servicio->descripcion}}</span></td>
+                                        <td>{{$cotizacion_registros->servicio->nombre}}</td>
                                         <td>{{$cotizacion_registros->cantidad}}</td>
                                         <td>{{$cotizacion_registros->precio_unitario_comi}}</td>
 

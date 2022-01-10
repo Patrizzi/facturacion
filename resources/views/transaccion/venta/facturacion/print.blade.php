@@ -39,7 +39,7 @@
                         <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                     </address>
                 </div>
-                <div class="col-sm-4 text-center" style="font-size: 11px"><br>
+                <div class="col-sm-4 text-center" style="font-size: 15px">
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
                      Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
@@ -189,10 +189,12 @@
                                 <td>{{$i}} </td>
                                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                                 <td>{{$facturacion_registros->cantidad}}</td>
-
-                                <td>{{$facturacion_registros->servicio->nombre}}</td>
-                                {{-- <td>{{$facturacion_registros->precio}}</td>
-                                <td>{{$facturacion_registros->descuento}}%</td> --}}
+                                <td style="margin-bottom: 0px;padding-bottom: 0px">{{$facturacion_registros->servicio->nombre}}: &nbsp;
+                                    @if(isset( $facturacion_registros->descripcion_item ))
+                                         <span style="margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</span>
+                                    @else
+                                    @endif
+                                </td>
                                 <td style="text-align: right;">{{$facturacion_registros->precio_unitario_comi}}</td>
                                 <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                                 <td style="display: none">
