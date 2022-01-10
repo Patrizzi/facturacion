@@ -159,9 +159,9 @@
                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                 <td>{{$facturacion_registros->cantidad}}</td>
 
-                <td style="">{{$facturacion_registros->servicio->nombre}}
-                    @if(isset( $facturacion_registros->descripcion_item ))                                        
-                         <p style="padding-left: 2em;padding-bottom: 0px; margin-bottom: 0px">{{$facturacion_registros->descripcion_item}}</p>
+                <td style="">{{$facturacion_registros->servicio->nombre}}: &nbsp;
+                    @if(isset( $facturacion_registros->descripcion_item ))
+                         <span style="margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</span>
                     @else
                     @endif
                 </td>
