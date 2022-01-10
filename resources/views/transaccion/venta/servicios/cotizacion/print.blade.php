@@ -41,7 +41,7 @@
                                 <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                             </address>
                         </div>
-                        <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                        <div class="col-sm-4 text-center" style="font-size: 15px"><br>
                              <strong>{{$empresa->nombre}}</strong>
                              <br>
                              <strong>{{$empresa->razon_social}}</strong>

@@ -185,9 +185,8 @@
                                 <td>{{$facturacion_registros->servicio->nombre}}
                                     @if(isset( $facturacion_registros->descripcion_item ))
                                         <br>
-                                         <p style="padding-left: 2em">{{$facturacion_registros->descripcion_item}}</p>
+                                         <p style="padding-left: 2em; margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</p>
                                     @else
-                                        <p style="padding-left: 2em">{{$facturacion_registros->descripcion_item}}</p>
                                     @endif
                                     </td>
                                 <td>{{$facturacion_registros->precio}}</td>
