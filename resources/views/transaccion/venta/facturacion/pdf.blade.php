@@ -145,7 +145,7 @@
                 <td width="30px">ITEM </td>
                 <td width="120px" >Codigo Servicio</td>
                 <td width="60px">Cantidad</td>
-                <td width="300px">Descripcion</td>
+                <td width="350px">Descripcion</td>
                 {{-- <td width="auto">Valor Unitario</td>
                 <td width="auto">Dscto.%</td> --}}
                 <td width="auto">Precio Unitario</td>
@@ -159,7 +159,12 @@
                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                 <td>{{$facturacion_registros->cantidad}}</td>
 
-                <td>{{$facturacion_registros->servicio->nombre}}</td>
+                <td style="">{{$facturacion_registros->servicio->nombre}}: &nbsp;
+                    @if(isset( $facturacion_registros->descripcion_item ))
+                         <span style="margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</span>
+                    @else
+                    @endif
+                </td>
                 {{-- <td>{{$facturacion_registros->precio}}</td> --}}
                 {{-- <td>{{$facturacion_registros->descuento}}%</td> --}}
                 <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>

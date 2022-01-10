@@ -455,6 +455,7 @@ class FacturacionServicioController extends Controller
                 $facturacion_registro->comision=$comi;
                 $descuento_verificacion=$request->get('check_descuento')[$i];
                 $facturacion_registro->descuento=$descuento_verificacion;
+                $facturacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
 
                 if($descuento_verificacion <> 0){
                 $facturacion_registro->precio_unitario_desc=$array-($precio_prom*$descuento_verificacion/100);

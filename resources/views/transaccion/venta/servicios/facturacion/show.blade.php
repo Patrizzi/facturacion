@@ -160,10 +160,10 @@
                 <table class="table ">
                     <thead>
                         <tr>
-                            <th>ITEM</th>
-                            <th>Codigo Producto</th>
-                            <th>Cantidad</th>
-                            <th>Descripción</th>
+                            <th style="width: 3%">ITEM</th>
+                            <th style="width: 10%">Codigo Producto</th>
+                            <th style="width: 5%">Cantidad</th>
+                            <th style="width: 25%">Descripción</th>
                             <th>Valor Unitario</th>
                             <th>Dscto.%</th>
                             <th>P. Unitario Desc.</th>
@@ -182,7 +182,12 @@
                                 <td>{{$i}} </td>
                                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                                 <td>{{$facturacion_registros->cantidad}}</td>
-                                <td>{{$facturacion_registros->servicio->nombre}}
+                                <td>{{$facturacion_registros->servicio->nombre}}: &nbsp;
+                                    @if(isset( $facturacion_registros->descripcion_item ))
+                                         <span style="margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</span>
+                                    @else
+                                    @endif
+                                    </td>
                                 <td>{{$facturacion_registros->precio}}</td>
                                 <td>{{$facturacion_registros->descuento}}%</td>
                                 <td>{{$facturacion_registros->precio_unitario_desc}}</td>
