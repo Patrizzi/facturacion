@@ -30,6 +30,56 @@ class KardexEntradaController extends Controller
      */
     public function index()
     {
+        /////////////////////weas
+            $productos = Producto::get();
+            $stock_almacen = Stock_almacen::orderby('producto_id','ASC')->get();
+            $stock_producto = Stock_producto::orderby('producto_id','ASC')->get();
+            $kardex_entrada = Kardex_entrada::where('codigo_guia','INVENTARIO INICIAL')->first();
+            $kardex_entrada_registro = kardex_entrada_registro::where('kardex_entrada_id',$kardex_entrada->id)->orderby('producto_id','ASC')->get();
+            // Codigo para poner a 0 TODO stock 
+            foreach($stock_producto as $stock_prod){
+                $st_prod_update = Stock_producto::find($stock_prod->id);
+                $st_prod_update->stock = 0;
+                $st_prod_update->precio_nacional = null;
+                $st_prod_update->precio_extranjero = null;
+                $st_prod_update->save();
+            }
+            foreach($stock_almacen as $stock_alm){
+                $s_almacen_update = Stock_almacen::find($stock_alm->id);
+                $s_almacen_update->stock = 0;
+                $s_almacen_update->save();
+            }
+            return "a 0";
+
+            foreach($kardex_entrada_registro as $k_r){
+                // $producto_kardex = $k_r->producto_id;
+                //stock prodcutos
+                foreach($stock_producto as $s_p){
+                    if($s_p->producto_id == $k_r->producto_id ){
+                        $st_prod_update = Stock_producto::find($s_p->id);
+                        // Si solo se ha hecho inventario inicial solo se debe poner a 0  y luego volver a ejecutar con cantidad, en caso contrario solo se pude hacer cambiando el where del kardex_entrada_id
+                        $st_prod_update->stock = $k_r->cantidad;
+                        // $st_prod_update->stock = 0;
+                        //
+                        $st_prod_update->save();
+                        //Insercion de Precios
+                        kardex_entrada_registro::stock_producto_precio();
+                    }
+                }
+                // stock almacen
+                foreach($stock_almacen as $s_a){
+                    if($s_a->producto_id == $k_r->producto_id ){
+                        $s_almacen_update = Stock_almacen::find($s_a->id);
+                        // Si solo se ha hecho inventario inicial solo se debe poner a 0  y luego volver a ejecutar con cantidad, en caso contrario solo se pude hacer cambiando el where del kardex_entrada_id
+                        $s_almacen_update->stock = $k_r->cantidad;
+                        // $s_almacen_update->stock = 0;
+                        $s_almacen_update->save();
+                    }
+                }
+            }
+
+            return "exito?";
+        //
       $primer_registro=Kardex_entrada::first();
       if(empty($primer_registro)){$primer_registro_kardex=1;}else{ $primer_registro_kardex=$primer_registro->id;}
       $inventario_inicial=Kardex_entrada::where('codigo_guia','INVENTARIO INICIAL')->where('id','!=',$primer_registro_kardex)->get();

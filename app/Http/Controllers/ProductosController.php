@@ -201,15 +201,20 @@ class ProductosController extends Controller
     }
 
     $producto=Producto::find($id);
-    $producto->nombre=$request->get('nombre');
+    if($request->get('nombre') == null){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
     $producto->codigo_original=$codigo_original;
     $producto->descripcion=$request->get('descripcion');
     $producto->estado_id=$request->get('estado_id');
     $producto->origen=$request->get('origen');
-    $producto->descuento1=$request->get('descuento1');
-    $producto->descuento2=$request->get('descuento2');
-    $producto->descuento_maximo=$request->get('descuento_maximo');
-    $producto->utilidad=$request->get('utilidad');
+    if($request->get('descuento1') == null){$producto->descuento1=0;}else{$producto->descuento1=$request->get('descuento1');}
+    if($request->get('descuento2') == null){$producto->descuento2=0;}else{$producto->descuento2=$request->get('descuento2');}
+    if($request->get('descuento_maximo') == null){$producto->descuento_maximo=0;}else{$producto->descuento_maximo=$request->get('descuento_maximo');}
+    if($request->get('utilidad') == null){$producto->utilidad=0;}else{$producto->utilidad=$request->get('utilidad');}
+
+    // $producto->descuento1=$request->get('descuento1');
+    // $producto->descuento2=$request->get('descuento2');
+    // $producto->descuento_maximo=$request->get('descuento_maximo');
+    // $producto->utilidad=$request->get('utilidad');
     $producto->unidad_medida_id=$request->get('unidad_medida_id');
     $producto->garantia=$request->get('garantia');
     $producto->peso=$peso.' '.$simbolo;
