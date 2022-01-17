@@ -1,24 +1,21 @@
 @extends('layout')
-
 @section('title', 'Productos')
-@section('breadcrumb', 'Productos-Editar')
-@section('breadcrumb2', 'Productos-Editar')
 @section('href_accion', route('productos.index') )
 @section('value_accion', 'Atras')
-
 @section('content')
+
 @if($producto->estado_anular == '1')
-  @if($errors->any())
-  <div style="padding-top: 20px;">
-    <div class="alert alert-danger">
-      <a class="alert-link" href="#">
-        @foreach ($errors->all() as $error)
-        <li style="color: red">{{ $error }}</li>
-        @endforeach
-      </a>
-    </div>
+@if($errors->any())
+<div style="padding-top: 20px;">
+  <div class="alert alert-danger">
+    <a class="alert-link" href="#">
+      @foreach ($errors->all() as $error)
+      <li style="color: red">{{ $error }}</li>
+      @endforeach
+    </a>
   </div>
-  @endif
+</div>
+@endif
 <div class="ibox-content" style="margin-top: 5px;margin-bottom:50px" align="center">
 
   <form action="{{ route('productos.update',$producto->id) }}"  enctype="multipart/form-data" method="post">
@@ -57,17 +54,17 @@
        <div class="col-sm-10">
         {{-- <input type="text" class="form-control" value="{{$producto->familia_i_producto->descripcion}}" disabled="disabled"> --}}
         <select class="form-control m-b" name="familia_id" required="required">
-           <option value="{{ $producto->familia_i_producto->id }}">{{ $producto->familia_i_producto->descripcion}}</option>
-           <option disabled="">---------------------</option>
-           @foreach($familias as $familia)
-           <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
-           @endforeach
-         </select>
-      </div>
+         <option value="{{ $producto->familia_i_producto->id }}">{{ $producto->familia_i_producto->descripcion}}</option>
+         <option disabled="">---------------------</option>
+         @foreach($familias as $familia)
+         <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
+         @endforeach
+       </select>
+     </div>
 
-    </div>
-    <br>
-  </div>
+   </div>
+   <br>
+ </div>
 
 </fieldset>
 
@@ -146,15 +143,63 @@
   </div>
 </div>
 
-<label class="col-sm-2 col-form-label">Utilidad:</label>
+<label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#exampleModalCenter"></i></label>
+<style>
+  .fa-question-circle:hover{color: blue;}
+</style>
 <div class="col-sm-4"><div class="input-group m-b">
   <div class="input-group-prepend">
     <span class="input-group-addon">%</span>
   </div>
-  <input type="text" class="form-control" name="utilidad" value="{{$producto->utilidad}}"  >
+  <input type="text" id="sumando" class="form-control" name="utilidad" value="{{$producto->utilidad}}">
+  <p ></p>
 </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
 
+          <label class="col-sm-4 col-form-label">Precio Venta al Publico:</label>
+          <div class="col-sm-8"><div class="input-group m-b">
+            <div class="input-group-prepend">
+              <span class="input-group-addon">S/.</span>
+            </div>
+            <input type="text" class="form-control" id="precio_venta" name="precio_venta"  >
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
+    </div>
+
+    <script>
+     function myFunction() {
+       var x,suma,text;
+       x = document.getElementById("precio_venta").value;
+       if (isNaN(x) ) {
+        alert('ss');
+       } else {
+     suma=parseFloat(x)/1.18;//Sacar IGV
+     suma2=parseFloat(suma)*100;//Porcentaje
+     suma3=parseFloat(suma2)/{{$precio_promedio->precio_nacional}};//precio Promedio
+     text= parseFloat(suma3)-100;
+   document.getElementById("sumando").value = text;
+   }
+ }
+</script>
 </div>
+</div>
+</div>
+<!-- Modal -->
+
 </div>
 <div class="row">
  <label class="col-sm-2 col-form-label">Unida de medida:</label>
@@ -211,15 +256,15 @@
 <div class="col-sm-4"><input type="text" class="form-control" name="stock_maximo"  value="{{$producto->stock_maximo}}"  >
 </div>
 <label class="col-sm-2 col-form-label">Tipo de Afectacion:</label>
- <div class="col-sm-4">
-   <div class="input-group m-b">
-    <select class="form-control m-b" name="tipo_afectacion">
-     <option value="{{$producto->tipo_afec_i_producto->id}}" style="font-weight:bold">{{$producto->tipo_afec_i_producto->informacion}}</option>
-     @foreach($tipo_afectacion as $tipo_afec)
-     <option value="{{ $tipo_afec->id }}">{{ $tipo_afec->informacion}}</option>
-     @endforeach
-   </select>
- </div>
+<div class="col-sm-4">
+ <div class="input-group m-b">
+  <select class="form-control m-b" name="tipo_afectacion">
+   <option value="{{$producto->tipo_afec_i_producto->id}}" style="font-weight:bold">{{$producto->tipo_afec_i_producto->informacion}}</option>
+   @foreach($tipo_afectacion as $tipo_afec)
+   <option value="{{ $tipo_afec->id }}">{{ $tipo_afec->informacion}}</option>
+   @endforeach
+ </select>
+</div>
 </div>
 </div>
 
@@ -240,7 +285,7 @@
      <div id="visorArchivo">
        <!--Aqui se desplegará el fichero-->
        <center >
-              @if(isset($producto->foto))
+        @if(isset($producto->foto))
         <img src="
         {{ asset('/archivos/imagenes/productos/')}}/{{$producto->foto}}" style="width:250px; height: 250px;border-radius: 5px"></center>
         @else
@@ -294,6 +339,22 @@
     padding: 5px 5px 5px 10px;
     background-color: #ffffff;
   }
+  /*img{border-radius: 40px}*/
+  p#texto{
+    text-align: center;
+    color:black;
+  }
+
+  input#archivoInput{
+    position:absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    width:100%;
+    height:100%;
+    opacity: 0  ;
+  }
 </style>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -334,138 +395,4 @@
       }
     }
   </script>
-
-  <script>
-   function readURL(input) {
-     if (input.files && input.files[0]) {
-      var reader = new FileReader();
-
-      reader.onload = function(e) {
-        $('#blah').attr('src', e.target.result);
-      }
-
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  $("#imgInp").change(function() {
-   readURL(this);
- });
-</script>
-<script>
-  function readURL(input) {
-    if (input.files && input.files[0]) {
-     var reader = new FileReader();
-
-     reader.onload = function(e) {
-       $('#blah').attr('src', e.target.result);
-     }
-
-     reader.readAsDataURL(input.files[0]);
-   }
- }
-
- $("#imgInp").change(function() {
-  readURL(this);
-});
-</script>
-
-<script>
-  $(document).ready(function(){
-    $("#wizard").steps();
-    $("#form").steps({
-      bodyTag: "fieldset",
-      onStepChanging: function (event, currentIndex, newIndex)
-      {
-					// ¡Siempre permita retroceder incluso si el paso actual contiene campos no válidos!
-          if (currentIndex > newIndex)
-          {
-            return true;
-          }
-
-                    // Prohibir suprimir el paso "Advertencia" si el usuario es demasiado joven
-                    if (newIndex === 3 && Number($("#age").val()) < 18)
-                    {
-                      return false;
-                    }
-
-                    var form = $(this);
-
-                    // Limpie si el usuario retrocedió antes
-                    if (currentIndex < newIndex)
-                    {
-                        // Para eliminar estilos de error
-                        $(".body:eq(" + newIndex + ") label.error", form).remove();
-                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                      }
-
-                    // Deshabilite la validación en los campos que están deshabilitados u ocultos.
-                    form.validate().settings.ignore = ":disabled,:hidden";
-
-                    // Iniciar validación; Evite avanzar si es falso
-                    return form.valid();
-                  },
-                  onStepChanged: function (event, currentIndex, priorIndex)
-                  {
-                    // Suprima (omita) el paso "Advertencia" si el usuario tiene edad suficiente.
-                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
-                    {
-                      $(this).steps("next");
-                    }
-
-                    // Suprima (omita) el paso "Advertencia" si el usuario tiene la edad suficiente y quiere el paso anterior.
-                    if (currentIndex === 2 && priorIndex === 3)
-                    {
-                      $(this).steps("previous");
-                    }
-                  },
-                  onFinishing: function (event, currentIndex)
-                  {
-                    var form = $(this);
-
-					// Deshabilita la validación en los campos que están deshabilitados.
-                    // En este punto, se recomienda hacer una verificación general (significa ignorar solo los campos deshabilitados)
-                    form.validate().settings.ignore = ":disabled";
-
-                    // Iniciar validación; Evitar el envío del formulario si es falso
-                    return form.valid();
-                  },
-                  onFinished: function (event, currentIndex)
-                  {
-                    var form = $(this);
-
-                    // Enviar entrada de formulario
-                    form.submit();
-                  }
-                }).validate({
-                  errorPlacement: function (error, element)
-                  {
-                    element.before(error);
-                  },
-                  rules: {
-                    confirm: {
-                      equalTo: "#password"
-                    }
-                  }
-                });
-              });
-            </script>
-            <style type="text/css">
-             /*img{border-radius: 40px}*/
-             p#texto{
-              text-align: center;
-              color:black;
-            }
-
-            input#archivoInput{
-              position:absolute;
-              top:0px;
-              left:0px;
-              right:0px;
-              bottom:0px;
-              width:100%;
-              height:100%;
-              opacity: 0	;
-            }
-          </style>
-          @endsection
+  @endsection

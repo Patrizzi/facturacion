@@ -90,8 +90,8 @@ class ProductosController extends Controller
 
         $codigo_original=$request->get('codigo_original');
         if (isset($codigo_original)) {
-         $codigo_original=$request->get('codigo_original');
-     }else{
+           $codigo_original=$request->get('codigo_original');
+       }else{
         $codigo_original=$codigo;
     }
     $categorias=Categoria::where('descripcion','PRODUCTOS')->first();
@@ -150,6 +150,9 @@ class ProductosController extends Controller
      */
     public function edit($id)
     {
+        $precio_promedio=Stock_producto::where('producto_id',$id)->first();
+        // return $precio_promedio->precio_nacional;
+
         $producto=Producto::find($id);
         $pro_peso=$producto->peso;
 
@@ -163,7 +166,7 @@ class ProductosController extends Controller
         $categorias=Categoria::all();
         $unidad_medidas=Unidad_medida::all();
         $tipo_afectacion = Tipo_afectacion::all();
-        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','producto','peso','simbolo','tipo_afectacion'));
+        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
     }
 
     /**
@@ -181,22 +184,22 @@ class ProductosController extends Controller
             'codigo_original.unique' => 'El codigo alternativo ya existe',
         ]);
 
-     if($request->hasfile('foto')){
-        $image1 =$request->file('foto');
-        $name =time().$image1->getClientOriginalName();
-        $destinationPath = public_path('/archivos/imagenes/productos/');
-        $image1->move($destinationPath,$name);
-    }else{
-        $name=$request->get('foto_original');
-    }
+        if($request->hasfile('foto')){
+            $image1 =$request->file('foto');
+            $name =time().$image1->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/productos/');
+            $image1->move($destinationPath,$name);
+        }else{
+            $name=$request->get('foto_original');
+        }
 
-    $peso=$request->get('peso');
-    $simbolo=$request->get('simbolo');
+        $peso=$request->get('peso');
+        $simbolo=$request->get('simbolo');
 
-    $codigo_original=$request->get('codigo_original');
-    if (isset($codigo_original)) {
-         $codigo_original=$request->get('codigo_original');
-     }else{
+        $codigo_original=$request->get('codigo_original');
+        if (isset($codigo_original)) {
+           $codigo_original=$request->get('codigo_original');
+       }else{
         $codigo_original=$request->get('codigo');
     }
 
