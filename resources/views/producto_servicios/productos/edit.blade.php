@@ -186,12 +186,12 @@
        x = document.getElementById("precio_venta").value;
        if (isNaN(x) ) {
         alert('ss');
-       } else {
+      } else {
      suma=parseFloat(x)/1.18;//Sacar IGV
      suma2=parseFloat(suma)*100;//Porcentaje
      suma3=parseFloat(suma2)/{{$precio_promedio->precio_nacional}};//precio Promedio
      text= parseFloat(suma3)-100;
-   document.getElementById("sumando").value = text;
+     document.getElementById("sumando").value = text;
    }
  }
 </script>
