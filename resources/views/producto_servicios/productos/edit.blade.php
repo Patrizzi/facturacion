@@ -143,7 +143,7 @@
   </div>
 </div>
 
-<label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#exampleModalCenter"></i></label>
+<label class="col-sm-2 col-form-label">Utilidad: @if(isset($precio_promedio->precio_nacional)) <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#exampleModalCenter"></i>@endif</label>
 <style>
   .fa-question-circle:hover{color: blue;}
 </style>
