@@ -159,14 +159,14 @@ class ProductosController extends Controller
         $simbolo = strstr($pro_peso, ' ',false);
         $peso = strstr($pro_peso, ' ',true);
 
-        $monedas=Moneda::all();
+        $moneda_principal=Moneda::where('principal',1)->first();
         $familias=Familia::all();
         $marcas=Marca::all();
         $estados=Estado::all();
         $categorias=Categoria::all();
         $unidad_medidas=Unidad_medida::all();
         $tipo_afectacion = Tipo_afectacion::all();
-        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
+        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
     }
 
     /**
@@ -213,6 +213,8 @@ class ProductosController extends Controller
     $producto->descuento2=$request->get('descuento2');
     $producto->descuento_maximo=$request->get('descuento_maximo');
     $producto->utilidad=$request->get('utilidad');
+    $producto->precio_venta=$request->get('precio_venta');
+    $producto->precio_impuesto='1';
     $producto->unidad_medida_id=$request->get('unidad_medida_id');
     $producto->garantia=$request->get('garantia');
     $producto->peso=$peso.' '.$simbolo;

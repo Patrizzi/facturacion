@@ -75,7 +75,7 @@
   <div class="panel-body" align="left">
    <div class="row">
     <label class="col-sm-2 col-form-label">Nombre:</label>
-    <div class="col-sm-10"><input type="text" class="form-control" name="nombre" value="{{$producto->nombre}}"></div>
+    <div class="col-sm-10"><input type="text" onkeypress="return (event.charCode != 34 )" class="form-control" name="nombre" value="{{$producto->nombre}}"></div>
 
     <label class="col-sm-2 col-form-label">Descripcion:</label>
     <div class="col-sm-10"><textarea type="text" class="form-control" name="descripcion" rows="2" required="required">{{$producto->descripcion}}</textarea ></div>
@@ -168,9 +168,9 @@
           <label class="col-sm-4 col-form-label">Precio Venta al Publico:</label>
           <div class="col-sm-8"><div class="input-group m-b">
             <div class="input-group-prepend">
-              <span class="input-group-addon">S/.</span>
+              <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
             </div>
-            <input type="text" class="form-control" id="precio_venta" name="precio_venta"  >
+            <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="{{$producto->precio_venta}}" >
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "barryvdh/laravel-dompdf": "^0.8.5",
+        "doctrine/dbal": "^2.13",
         "dompdf/dompdf": "^0.8.3",
         "fideloper/proxy": "^4.0",
         "greenter/lite": "^4.3",
@@ -17,9 +18,9 @@
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.0",
         "luecano/numero-a-letras": "^2.2",
+        "mike42/escpos-php": "~3.0",
         "spatie/laravel-permission": "^3.13",
-        "yajra/laravel-datatables-oracle": "~9.0",
-        "mike42/escpos-php": "~3.0"
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
