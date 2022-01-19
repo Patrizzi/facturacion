@@ -90,8 +90,8 @@ class ProductosController extends Controller
 
         $codigo_original=$request->get('codigo_original');
         if (isset($codigo_original)) {
-           $codigo_original=$request->get('codigo_original');
-       }else{
+         $codigo_original=$request->get('codigo_original');
+     }else{
         $codigo_original=$codigo;
     }
     $categorias=Categoria::where('descripcion','PRODUCTOS')->first();
@@ -204,15 +204,17 @@ class ProductosController extends Controller
     }
 
     $producto=Producto::find($id);
-    $producto->nombre=$request->get('nombre');
+    if($request->get('nombre') == null){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
     $producto->codigo_original=$codigo_original;
     $producto->descripcion=$request->get('descripcion');
     $producto->estado_id=$request->get('estado_id');
     $producto->origen=$request->get('origen');
-    $producto->descuento1=$request->get('descuento1');
-    $producto->descuento2=$request->get('descuento2');
-    $producto->descuento_maximo=$request->get('descuento_maximo');
-    $producto->utilidad=$request->get('utilidad');
+
+    if($request->get('descuento1') == null){$producto->descuento1=0;}else{$producto->descuento1=$request->get('descuento1');}
+    if($request->get('descuento2') == null){$producto->descuento2=0;}else{$producto->descuento2=$request->get('descuento2');}
+    if($request->get('descuento_maximo') == null){$producto->descuento_maximo=0;}else{$producto->descuento_maximo=$request->get('descuento_maximo');}
+    if($request->get('utilidad') == null){$producto->utilidad=0;}else{$producto->utilidad=$request->get('utilidad');}
+
     $producto->precio_venta=$request->get('precio_venta');
     $producto->precio_impuesto='1';
     $producto->unidad_medida_id=$request->get('unidad_medida_id');

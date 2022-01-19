@@ -30,6 +30,7 @@ class KardexEntradaController extends Controller
      */
     public function index()
     {
+
       $primer_registro=Kardex_entrada::first();
       if(empty($primer_registro)){$primer_registro_kardex=1;}else{ $primer_registro_kardex=$primer_registro->id;}
       $inventario_inicial=Kardex_entrada::where('codigo_guia','INVENTARIO INICIAL')->where('id','!=',$primer_registro_kardex)->get();
