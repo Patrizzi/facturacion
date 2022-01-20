@@ -821,6 +821,8 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
+            return view('transaccion.venta.facturacion.show2', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+
         if ($facturacion->id_cotizador_servicio==NULL) {
             return view('transaccion.venta.facturacion.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
         }else{
@@ -846,7 +848,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-        return view('transaccion.venta.facturacion.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        return view('transaccion.venta.facturacion.print2', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }
 
     public function pdf(Request $request,$id){
@@ -865,7 +867,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $archivo=$name.'_'.$id;
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
         
-        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf2',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
         return $pdf->download('Facturacion - '.$archivo.'.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
