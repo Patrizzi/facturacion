@@ -132,7 +132,7 @@ class BoletaController extends Controller
         }
 
         $forma_pagos=Forma_pago::all();
-        $clientes=Cliente::all();
+        $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
         $moneda=Moneda::where('principal','1')->first();
         $personales=Personal::all();
         $p_venta=Personal_venta::where('estado','0')->get();
@@ -239,7 +239,7 @@ class BoletaController extends Controller
         }
 
         $forma_pagos=Forma_pago::all();
-        $clientes=Cliente::all();
+        $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
 
         $personales=Personal::all();
         $p_venta=Personal_venta::where('estado','0')->get();

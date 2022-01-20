@@ -91,7 +91,7 @@ class BoletaServicioController extends Controller
         }
 
         $forma_pagos=Forma_pago::all();
-        $clientes=Cliente::where('documento_identificacion','ruc')->get();
+        $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
         $empresa=Empresa::first();
         $personales=Personal::all();
         $p_venta=Personal_venta::where('estado','0')->get();
@@ -153,20 +153,6 @@ class BoletaServicioController extends Controller
         $igv_proceso=Igv::first();
         $igv_total=$igv_proceso->igv_total;
 
-        // if($moneda->tipo =='extranjera'){
-        //     foreach ($servicios as $index => $servicio) {
-        //         $utilidad[]=$servicio->precio*($servicio->utilidad)/100;
-        //         $igv[]=$servicio->precio*$igv_total/100;
-        //         $array[]=($servicio->precio+$utilidad[$index]+$igv[$index])/$tipo_cambio->paralelo;
-        //     }
-        // }else{
-        //     foreach ($servicios as $index => $servicio) {
-        //         $utilidad[]=$servicio->precio*($servicio->utilidad)/100;
-        //         $igv[]=$servicio->precio*$igv_total/100;
-        //         $array[]=$servicio->precio+$utilidad[$index]+$igv[$index];
-        //     }
-        // }
-
         if($moneda->tipo =='extranjera'){
             foreach ($servicios as $index => $servicio) {
                 $utilidad[]=$servicio->precio_nacional*($servicio->utilidad)/100;
@@ -186,7 +172,7 @@ class BoletaServicioController extends Controller
         }
         $almacen = $request->get('almacen');
         $forma_pagos=Forma_pago::all();
-        $clientes=Cliente::where('documento_identificacion','ruc')->get();
+        $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
         $empresa =Empresa::first();
         $personales=Personal::all();
         $p_venta=Personal_venta::where('estado','0')->get();
@@ -458,59 +444,59 @@ class BoletaServicioController extends Controller
 
                     }
                 }
-            $boleta_registro->cantidad=$request->get('cantidad')[$i];
-            $boleta_registro->descuento=$request->get('check_descuento')[$i];
-            $boleta_registro->comision=$comi;
+                $boleta_registro->cantidad=$request->get('cantidad')[$i];
+                $boleta_registro->descuento=$request->get('check_descuento')[$i];
+                $boleta_registro->comision=$comi;
                 //precio unitario descuento ----------------------------------------
-            $desc_comprobacion=$request->get('check_descuento')[$i];
+                $desc_comprobacion=$request->get('check_descuento')[$i];
 
-            if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                $igv=Igv::first();
-                $igv_ac = $igv->igv_total;
-            }else{
-                $igv_ac = 0;
-            }
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                    $igv=Igv::first();
+                    $igv_ac = $igv->igv_total;
+                }else{
+                    $igv_ac = 0;
+                }
                 
-            if($desc_comprobacion <> 0){
-                $precio_uni = $array - ($pre_prome*$desc_comprobacion/100);
-                $boleta_registro->precio_unitario_desc=$precio_uni+($precio_uni*($igv_ac/100));
+                if($desc_comprobacion <> 0){
+                    $precio_uni = $array - ($pre_prome*$desc_comprobacion/100);
+                    $boleta_registro->precio_unitario_desc=$precio_uni+($precio_uni*($igv_ac/100));
                 // return $array*($igv->igv_total/100);
-            }else{
-                $precio_uni = $array + ($array*($igv_ac/100));
-                $boleta_registro->precio_unitario_desc=$precio_uni;
+                }else{
+                    $precio_uni = $array + ($array*($igv_ac/100));
+                    $boleta_registro->precio_unitario_desc=$precio_uni;
                 // return $array_pre_prom;
-            }
+                }
             // return $precio_uni;
                 //precio unitario comision ----------------------------------------
-            if($desc_comprobacion <> 0){
-                 $precio_uni = $array - ($pre_prome*$desc_comprobacion/100);
-                 $precio_comi = $precio_uni+($precio_uni*($comi/100));
-                 $boleta_registro->precio_unitario_comi=$precio_comi+($precio_comi*($igv_ac/100));
-            }else{
+                if($desc_comprobacion <> 0){
+                   $precio_uni = $array - ($pre_prome*$desc_comprobacion/100);
+                   $precio_comi = $precio_uni+($precio_uni*($comi/100));
+                   $boleta_registro->precio_unitario_comi=$precio_comi+($precio_comi*($igv_ac/100));
+               }else{
                 $precio_comi = $array+($array*($comi/100));
                 $boleta_registro->precio_unitario_comi=($precio_comi)+($precio_comi*($igv_ac/100));
             }
                  //TIPO DE AFECTACION
-                $cotizacion_2=Boleta::find($boleta->id);
-                if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                    $cotizacion_2->op_gravada += round($boleta_registro->precio_unitario_comi*$boleta_registro->cantidad,2);
-                }
-                if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                    $cotizacion_2->op_exonerada += round($boleta_registro->precio_unitario_comi*$boleta_registro->cantidad,2);
-                }
-                if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                    $cotizacion_2->op_inafecta += round($boleta_registro->precio_unitario_comi*$boleta_registro->cantidad,2);
-                }
-                $cotizacion_2->save();
-
-                $boleta_registro->save();
+            $cotizacion_2=Boleta::find($boleta->id);
+            if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                $cotizacion_2->op_gravada += round($boleta_registro->precio_unitario_comi*$boleta_registro->cantidad,2);
             }
-        }else {
-            return redirect()->route('boleta_servicio.create')->with('campo', 'Falto introducir un campo de la tabla productos');
-        }
-        return redirect()->route('boleta_servicio.show',$boleta->id);
+            if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                $cotizacion_2->op_exonerada += round($boleta_registro->precio_unitario_comi*$boleta_registro->cantidad,2);
+            }
+            if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                $cotizacion_2->op_inafecta += round($boleta_registro->precio_unitario_comi*$boleta_registro->cantidad,2);
+            }
+            $cotizacion_2->save();
 
+            $boleta_registro->save();
+        }
+    }else {
+        return redirect()->route('boleta_servicio.create')->with('campo', 'Falto introducir un campo de la tabla productos');
     }
+    return redirect()->route('boleta_servicio.show',$boleta->id);
+
+}
 
     /**
      * Display the specified resource.
