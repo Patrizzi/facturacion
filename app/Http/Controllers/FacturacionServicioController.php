@@ -514,8 +514,8 @@ class FacturacionServicioController extends Controller
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
-
-        return view('transaccion.venta.servicios.facturacion.show', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        $j = 1;
+        return view('transaccion.venta.servicios.facturacion.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }
 
     /**

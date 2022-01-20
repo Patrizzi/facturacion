@@ -820,8 +820,9 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
+        $j = 1;
         if ($facturacion->id_cotizador_servicio==NULL) {
-            return view('transaccion.venta.facturacion.show', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+            return view('transaccion.venta.facturacion.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
         }else{
             return view('transaccion.venta.facturacion.show_servicio', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
         }
@@ -844,8 +845,8 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
-
-        return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        $j = 1;
+        return view('transaccion.venta.facturacion.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }
 
     public function pdf(Request $request,$id){

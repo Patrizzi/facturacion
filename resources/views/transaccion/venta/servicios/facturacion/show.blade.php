@@ -177,9 +177,9 @@
 
                         <tr>
                             @foreach($facturacion_registro as $facturacion_registros)
-                            <span hidden="hidden">{{$i=1}} </span>
+                            <!-- <span hidden="hidden">{{$i=1}} </span> -->
                             <tr>
-                                <td>{{$i}} </td>
+                                <td>{{$j++}} </td>
                                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                                 <td>{{$facturacion_registros->cantidad}}</td>
                                 <td>{{$facturacion_registros->servicio->nombre}}: &nbsp;
