@@ -3,32 +3,32 @@
 @section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)
-    @section('value_accion', 'Agregar')
-    @section('onclick1', 'Enviar_create()')
+@section('value_accion', 'Agregar')
+@section('onclick1', 'Enviar_create()')
 @else
-    @section('atributo_1', 'hidden')
-    @section('boton_opcional')
-    @if($user_login->name=='Administrador')
-        <span class="dropdown ">
-          <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
-          <ul class="dropdown-menu animated fadeInRight m-t-xs">
-            <span style="margin-left:12px;"><b>Almacenes:</b></span>
-            @foreach($almacen as $almacens)
-            <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
-            <form action="{{ route('facturacion.create')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
-                @csrf
-                <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
-            </form>
-            <script>
-                function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
-            </script>
-            @endforeach
-        </ul>
-        </span>
-    @elseif($user_login->name=='Colaborador')
-        <button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
-    @endif
-    @endsection
+@section('atributo_1', 'hidden')
+@section('boton_opcional')
+@if($user_login->name=='Administrador')
+<span class="dropdown ">
+  <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
+  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+    @foreach($almacen as $almacens)
+    <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
+    <form action="{{ route('facturacion.create')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+    </form>
+    <script>
+        function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
+    </script>
+    @endforeach
+</ul>
+</span>
+@elseif($user_login->name=='Colaborador')
+<button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
+@endif
+@endsection
 @endif
 
 @section('content')
@@ -82,7 +82,8 @@
                                     <th>Cliente</th>
                                     <th>Ruc/DNI</th>
                                     <th>Fecha Vencimiento</th>
-                                    <th>Ver</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,44 +91,32 @@
                                 <tr class="gradeX">
                                     <td>{{$facturacions->id}}</td>
                                     <td>{{$facturacions->codigo_fac}}</td>
-
-
                                     @if(isset($facturacions->cliente_id)) <!-- Nombre del cliente -->
                                     <td>{{$facturacions->cliente->nombre}}</td>
-                                    @else
-                                    <td>{{$facturacions->cotizacion->cliente->nombre}}</td>
-                                    @endif
-
-                                    @if(isset($facturacions->cliente_id))<!-- documento del cliente -->
                                     <td>{{$facturacions->cliente->numero_documento}}</td>
                                     @else
+                                    <td>{{$facturacions->cotizacion->cliente->nombre}}</td>
                                     <td>{{$facturacions->cotizacion->cliente->numero_documento}}</td>
                                     @endif
-
                                     <td>{{$facturacions->fecha_vencimiento }}</td>
-                                    <td>
-                                        @if($facturacions->tipo=='servicio')
+                                    <td align="center">
                                         <a href="{{route('facturacion_servicio.show',$facturacions->id)}}">
                                           <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                       </a>
-                                      @elseif($facturacions->tipo=='producto')
-                                      <a href="{{route('facturacion.show',$facturacions->id)}}">
-                                        <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
-                                    </a>
-                                    @endif
-
-                                </center>
-                            </td>
+                                  </td>
+                                  <td>
+                                    <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                </td>
 
 
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 </div>
 
