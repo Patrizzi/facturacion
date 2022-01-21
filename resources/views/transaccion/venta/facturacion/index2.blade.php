@@ -83,7 +83,7 @@
                                     <th>Ruc/DNI</th>
                                     <th>Fecha Vencimiento</th>
                                     <th></th>
-                                    <th></th>
+                                    <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,12 +100,16 @@
                                     @endif
                                     <td>{{$facturacions->fecha_vencimiento }}</td>
                                     <td align="center">
-                                        <a href="{{route('facturacion_servicio.show',$facturacions->id)}}">
+                                        <a href="{{route('facturacion.show',$facturacions->id)}}">
                                           <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                       </a>
                                   </td>
-                                  <td>
+                                  <td style="text-align:center;">
+                                    @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
                                     <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                    @else
+                                    <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
+                                    @endif
                                 </td>
 
 
@@ -142,7 +146,7 @@
 <script>
     $(document).ready(function(){
         $('.dataTables-example').DataTable({
-            pageLength: 25,
+            pageLength: 15,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
