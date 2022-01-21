@@ -222,119 +222,12 @@
 
           </div>
           <br>
-
-{{--               <div class="row">
-                <div class="col-sm-3">
-                    <p><u>centro de Atencion : </u></p>
-                    Telefono : {{$boleta->user->personal->nombres }}<br>
-                    Telefono : {{$boleta->user->personal->telefono }}<br>
-                    Celular : {{$boleta->user->personal->celular }}<br>
-                    Email : {{$boleta->user->personal->email }}<br>
-                    Web :
-                    <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
-                </div>
-                <div class="col-sm-3"></div>
-                <div class="col-sm-3"></div>
-                <div class="col-sm-3"></div>
-
-            </div>
- --}}
-
-
       </div>
   </div>
 
 </div>
 </div>
-{{-- Modal Configuracion --}}
-<div class="modal fade" id="config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
 
-            </div>
-            <div style="padding-left: 15px;padding-right: 15px;">
-                {{-- ccccccccccccccccc --}}
-                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
-                    <form action="{{route('email.config')}}"  enctype="multipart/form-data" method="post">
-                        @csrf
-                        <div class="row">
-                            <fieldset >
-                                <legend> Agregar Configuracion </legend>
-                                {{-- <div> --}}
-                                    <div class="panel-body" align="left">
-                                        <div class="row">
-                                            <label class="col-sm-2 col-form-label">Email:</label>
-                                            <div class="col-sm-10"><input type="text" class="form-control" name="email" style="height: 75%;border-radius: 2px ">
-                                            </div>
-
-                                            <label class="col-sm-2 col-form-label">Contraseña:</label>
-                                            <div class="col-sm-10">
-                                                <div class="input-group m-b">
-                                                    <input type="password" class="form-control" name="password" id="txtPassword" required="" style="height: 35.2px;border-radius: 2px ">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
-                                                            <i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <label class="col-sm-2 col-form-label">SMPT:</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" required="" style="border-radius: 2px">
-                                            </div>
-
-                                            <label class="col-sm-2 col-form-label">PORT:</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="port" value="110 " style="border-radius: 2px">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <label class="col-sm-2 col-form-label">Encryption:</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" name="encryp" required="" style="height: 85%;border-radius: 2px;padding-top: 4px">
-                                                    <option value="">Ninguno</option>
-                                                    <option value="SSL">SSL</option>
-                                                    <option value="TLS">TLS</option>
-                                                </select>
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <label class="col-sm-2 col-form-label">Firma (opcional):</label>
-                                            <div class="col-sm-10">
-                                                <input type="file" id="archivoInput" name="firma" onchange="return validarExt()" style="border-radius: 2px" />
-                                                <span id="visorArchivo">
-                                                    <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma"  src="" width="390px" height="200px" />
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <label class="col-sm-2 col-form-label">Ancho(px)</label>
-                                                <div class="col-sm-4">
-                                                    <input type="number" class="form-control" name="ancho_firma">
-                                                </div>
-                                            <label class="col-sm-2 col-form-label" >Alto(px)</label>
-                                                <div class="col-sm-4">
-                                                    <input type="number" class="form-control" name="alto_firma">
-                                                </div>
-                                        </div>
-                                        <br>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <button class="btn btn-primary" type="submit">Grabar</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{{-- Fin de modal configuracion --}}
 <style>
 
 #auto{
@@ -371,7 +264,7 @@
 }
 </style>
 
-<style>
+{{-- <style>
     .form-control{margin-top: 5px; border-radius: 5px}
     p#texto{
         text-align: center;
@@ -388,9 +281,9 @@
         height:100%;
         opacity: 0  ;
     }
-</style>
+</style> --}}
 
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     function mostrarPassword(){
         var cambio = document.getElementById("txtPassword");
         if(cambio.type == "password"){
@@ -402,9 +295,8 @@
         }
     }
 
-</script>
-<script type="text/javascript">
-    {{-- Fotooos --}}
+</script> --}}
+{{-- <script type="text/javascript">
     function validarExt()
     {
         var archivoInput = document.getElementById('archivoInput');
@@ -431,8 +323,8 @@
         }
     }
 }
-</script>
-<script>
+</script> --}}
+{{-- <script>
     var clic = 1;
     function divAuto(){
        if(clic==1){
@@ -443,7 +335,7 @@
         clic = 1;
        }
     }
-</script>
+</script> --}}
 <style type="text/css">
     .ruc{border-radius: 10px; height: 125px;}
     .form-control{border-radius: 10px;}

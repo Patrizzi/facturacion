@@ -123,30 +123,30 @@
                     <thead>
                         <tr>
                             <th style="width: 8%">ITEM</th>
-                            <th style="width: 15%">Codigo Producto</th>
+                            <th style="width: 15%">Cod.Producto</th>
                             <th style="width: 11%">Cantidad</th>
-                            <th  style="width: 10%">Unid.Medida</th>
-                            <th style="width: 29%">Descripción</th>
+                            {{-- <th  style="width: 10%">Unid.Medida</th> --}}
+                            <th >Descripción</th>
                             {{-- <th>Valor Unitario</th>
                             <th>Dscto.%</th> --}}
-                            <th  style="text-align: center;">Precio Unitario</th>
-                            <th  style="text-align: center;">Total</th>
+                            <th  style="text-align: center;width: 8%">P.Unit.</th>
+                            <th  style="text-align: center;width: 8%">Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            @foreach($boleta_registro as $boleta_registros)
                             <span hidden="hidden">{{$i=1}} </span>
+                            @foreach($boleta_registro as $boleta_registros)
                             <tr>
                                 <td>{{$i}} </td>
                                 <td>{{$boleta_registros->producto->codigo_producto}}</td>
                                 <td>{{$boleta_registros->cantidad}}</td>
-                                <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td>
+                                {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
                                 <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
                                 {{-- <td>{{$boleta_registros->precio}}</td>
                                 <td>{{$boleta_registros->descuento}}%</td> --}}
-                                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
-                                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
+                                <td style="text-align: center;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
+                                <td style="text-align: center;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
                                 <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
                                         S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                                         {{$end=round($sub_total, 2)+round($igv_p, 2)}}
@@ -164,19 +164,19 @@
                     <thead>
                         <tr>
                             <th>ITEM</th>
-                            <th>Codigo Servicio</th>
+                            <th>Cod.Servicio</th>
                             <th>Cantidad</th>
                             <th>Descripción</th>
-                            <th>Valor Unitario</th>
-                            <th>Dscto.%</th>
-                            <th>Precio Unitario</th>
-                            <th>Valor Venta </th>
+                            {{-- <th>Valor Unitario</th> --}}
+                            {{-- <th>Dscto.%</th> --}}
+                            <th>P.Unit.</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            @foreach($boleta_registro as $boleta_registros)
                             <span hidden="hidden">{{$i=1}} </span>
+                            @foreach($boleta_registro as $boleta_registros)
                             <tr>
                                 <td>{{$i}} </td>
                                 <td>{{$boleta_registros->servicio->codigo_servicio}}</td>
