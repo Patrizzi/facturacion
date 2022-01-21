@@ -1181,6 +1181,7 @@ public function pdf(Request $request,$id){
     //envio hacia facturar cambiar en caso incluya algo
 public function facturar(Request $request,$id)
 {
+    
     // REDIRECCION PARA MOSTRAR EL inventario_inicial
     $existe_id=kardex_entrada::where('estado',2)->first();
     if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
@@ -1278,6 +1279,8 @@ public function facturar(Request $request,$id)
     $empresa=Empresa::first();
     $personal_contador= Facturacion::all()->count();
     $suma=$personal_contador+1;
+
+    $banco = Banco::all();
     $categoria='producto';
 
     $cotizacion=Cotizacion::find($id);
@@ -1325,7 +1328,7 @@ public function facturar(Request $request,$id)
 
 
     if ($cotizacion->estado==0) {
-        return view('transaccion.venta.cotizacion.facturar', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','productos','array_cantidad','validor','comi','array_promedio'));
+        return view('transaccion.venta.cotizacion.facturar', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','productos','array_cantidad','validor','comi','array_promedio','forma_pagos','banco'));
     }
     elseif ($cotizacion->estado==1) {
         return redirect()->route('cotizacion.show',$cotizacion->id);
@@ -1406,7 +1409,7 @@ public function facturar_store(Request $request)
     $facturar->guia_remision=$request->get('guia_remision');
     $facturar->cliente_id=$cotizacion->cliente_id;
     $facturar->moneda_id=$cotizacion->moneda_id;
-    $facturar->forma_pago_id=$cotizacion->forma_pago_id;
+    $facturar->forma_pago_id=$request->get('forma_pago');
     $facturar->fecha_emision=$request->get('fecha_emision');
     $facturar->fecha_vencimiento=$request->get('fecha_vencimiento');
     $facturar->cambio=$cambio->paralelo;
@@ -1519,6 +1522,7 @@ public function facturar_store(Request $request)
             $facturacion_registro->facturacion_id=$facturar->id;
             $facturacion_registro->producto_id=$p[$index];
             $facturacion_registro->numero_serie=$request->get('numero_serie')[$index];
+            $facturacion_registro->descripcion_item=$request->get('descripcion_item')[$index];
 
             $producto=Producto::where('id',$p[$index])->where('estado_id',1)->first();
                 //stock --------------------------------------------------------

@@ -24,6 +24,17 @@
 
         });
     </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            if({{$cotizacion->forma_pago_id}} == 1){
+                document.getElementById('credito_pago').style.display = "none";
+                document.getElementById('colum-col').className = "col-sm-5";
+            }else{
+                document.getElementById('credito_pago').style.display = "block";
+            }
+
+        }); 
+    </script>
 </head>
 <div class="wrapper wrapper-content animated fadeInRight">
    <form action="{{route('cotizacion.facturar_store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
@@ -34,10 +45,19 @@
                 <div class="row">
                     <div class="col-sm-4 text-left" align="left">
                         <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/logo.png')}}" alt="" width="300px">
+                            <img src="{{asset('img/logos')}}/{{$empresa->foto}}" alt="" width="300px">
                         </address>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                         <strong>{{$empresa->razon_social}}</strong>
+                         <br>
+                         Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                        <br>
+                         {{$empresa->correo}}
+                         <br>
+                          {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+                         
+
                     </div>
                     <div class="col-sm-4 ">
                         <div class="form-control ruc" style="height: 125px">
@@ -51,111 +71,133 @@
                         </div>
                     </div>
                 </div><br>
-                <table class="table ">
-                    <thead>
-                        <tr>
-                            <td style="width: 170px"><b>Razon Social</b></td>
-                            <td style="width: 3px">:</td>
-                            <td style="width: 200px" colspan="4">
-                                <input type="text" class="form-control" value="{{$cotizacion->cliente->nombre}}" readonly="readonly" >
-                            </td>
-                            <td style="width: 140px"><b>RUC</b></td>
-                            <td style="width: 3px">:</td>
-                            <td>
-                                <input type="text" class="form-control" value="{{$cotizacion->cliente->numero_documento}}"  readonly="readonly">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>Direccion</b></td>
-                            <td style="width: 3px">:</td>
-                            <td colspan="4"><input type="text" class="form-control" value="{{$cotizacion->cliente->direccion}}" readonly="readonly">
-                                <td><b>Orden de Compra</b></td>
-                                <td>:</td>
-                                <td><input type="text" class="form-control" value="0" name="orden_compra"></td>
-                            </tr>
-                            <tr>
-                                <td><b>Condiciones de Pago</b></td>
-                                <td style="width: 3px">:</td>
-                                @if($cotizacion->forma_pago_id == 1)
-                                    <td colspan="4"><input type="text" class="form-control" value="{{$cotizacion->forma_pago->nombre }}" readonly="readonly"></td>
-                                @else
-                                    <td colspan="2"><input type="text" class="form-control" value="{{$cotizacion->forma_pago->nombre }}" readonly="readonly"></td>
-                                    <td colspan="2"><button  type="button" class='cuota_modal btn btn-info' id="cuota_modal" onclick="most_tot()"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button></td>
-                                    <!-- Modal -->
-                                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                                      <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                          <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                              </button>
-                                          </div>
-                                          <div class="modal-body">
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
-                                              <strong style="font-size:11px">Rellenar todos los campos</strong>
-                                              <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
-                                                <span aria-hidden="true">&times;</span>
-                                              </button>
-                                            </div>
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                              <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
-                                              <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
-                                                <span aria-hidden="true">&times;</span>
-                                              </button>
-                                            </div>
-                                            <div class="row_number">
-                                                <div class="pago_modal row">
-                                                    <div class="col-sm-1"><label>Fecha:</label></div>
-                                                    <div class="col-sm-4">
-                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
-                                                    </div>
-                                                    <div class="col-sm-1"><label>Monto:</label></div>
-                                                    <div class="col-sm-4">
-                                                        <div class="input-group mb-3" style="padding-right:15px">
-                                                          <div class="input-group-prepend">
-                                                            <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
-                                                          </div>
-                                                          <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                <!-- Body -->
+                <div class="row">
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control">
+                            <div align="left">
+                                <div class="row ">
+                                    <div class="col-sm-2"><strong>Cliente:</strong></div>
+                                    <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->nombre}}" readonly></div>
+                                    <br>
+                                    <div class="col-sm-2"><strong>R.U.C:</strong></div>
+                                    <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->numero_documento}}" readonly></div>
+                                    <br>
+                                    <div class="col-sm-2"><strong>Direccion:</strong></div>
+                                    <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->direccion}}" readonly></div>
+                                    <br>
+                                    <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
+                                        <div class="col-sm-3" id="colum-col">
+                                            <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                <option value="{{$cotizacion->forma_pago->id}}">{{$cotizacion->forma_pago->nombre}}</option>
+                                                <option disabled>--------------------</option>
+                                                @foreach($forma_pagos as $forma_pago)
+                                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2" id="credito_pago" style="display: none;">
+                                            <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                                          <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+                                                  <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                                  <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+                                                  <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                  <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="row_number">
+                                                    <div class="pago_modal row">
+                                                        <div class="col-sm-1"><label>Fecha:</label></div>
+                                                        <div class="col-sm-4">
+                                                            <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
                                                         </div>
+                                                        <div class="col-sm-1"><label>Monto:</label></div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group mb-3" style="padding-right:15px">
+                                                              <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
+                                                              </div>
+                                                              <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
                                                     </div>
-                                                    <div class="col-sm-2">
-                                                        <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+                                                    </div>
                                                 </div>
-                                                </div>
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                @endif
-                                <td><b>Guia Remision</b></td>
-                                <td style="width: 3px">:</td>
-                                <td><input type="text" class="form-control" value="0" name="guia_remision"></td>
-                            </tr>
-                            <tr>
-                                <td><b>Fecha Emision</b></td>
-                                <td style="width: 3px">:</td>
-                                <td><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></td>
-                                <td style="width: 180px"><b>Fecha de Vencimiento</b></td>
-                                <td style="width: 3px">:</td>
-                                <td style="width: 200px"><input type="text" class="form-control"  name="fecha_vencimiento" value="{{$cotizacion->fecha_vencimiento }}" readonly="readonly"></td>
-                                <td><b>Tipo Moneda</b></td>
-                                <td style="width: 3px">:</td><td><input type="text" class="form-control" value="{{$cotizacion->moneda->nombre }}" readonly="readonly" ><input type="text" name="tipo_moneda" value="{{$cotizacion->moneda->id }}" hidden="hidden"></td>
-                            </tr>
-                        </thead>
-                    </table>
+                                        <div class="col-sm-2">
+                                            <strong>Tipo de Moneda:</strong>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control" value="{{$cotizacion->moneda->nombre}}" name="" readonly>
+                                            <input type="text" name="tipo_moneda" value="{{$cotizacion->moneda->id }}" hidden="hidden">
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control" >
+                            <div align="left">
+                                <div class="row">
+                                    <div class="col-sm-2"><strong>Orden de Compra:</strong></div>
+                                    <div class="col-sm-10"><input type="text" class="form-control" value="0" name="orden_compra"></div>
+                                    <br>
+                                    <div class="col-sm-2"><strong>Guia de Remision:</strong></div>
+                                    <div class="col-sm-10"><input type="text" class="form-control" name="" value="0" name="guia_remision" ></div>
+                                    <br>
+                                    <div class="col-sm-2"><strong>Fecha de Emision:</strong></div>
+                                    <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
+                                    <div class="col-sm-2"><strong>Fecha de Vencimiento:</strong></div>
+                                    <div class="col-sm-10"><input type="text" class="form-control"  name="fecha_vencimiento" value="{{$cotizacion->fecha_vencimiento }}" readonly="readonly"></div>
+                                    <br>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row"> -->
+                    <div class="col-sm-12 " style="height:  120px">
+                        <div class="form-control">
+                            <strong>Observaciones:</strong><br>
+                            <textarea class="form-control" >{{$cotizacion->observacion}}</textarea>
+                        </div>
+                    </div>
+            <!-- </div> -->
+                </div>
+
                     <br>
                     <div class="table-responsive">
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th>Codigo Producto</th>
-                                    <th>Cantidad</th>
+                                    <th style="width:10%">Codigo Producto</th>
+                                    <th style="width:10%">Cantidad</th>
                                     <th>Descripción</th>
                                     <th>Stock</th>
                                     <th>Valor Unitario</th>
-                                    <th>Valor Venta </th>
+                                    <th style="width: 10%">Valor Venta </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,7 +208,8 @@
                                     <td>{{$cotizacion_registros->cantidad}}</td>
                                     <td>
                                         {{$cotizacion_registros->producto->nombre}}
-                                        <span style="font-size: 10px">{{$cotizacion_registros->producto->descripcion}}</span>
+                                        <!-- <span style="font-size: 10px">{{$cotizacion_registros->producto->descripcion}}</span> -->
+                                        <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2"></textarea>
                                         <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° Serie">
                                     </td>
                                     <td>{{$array_cantidad[$index]}}</td>
@@ -183,26 +226,31 @@
                                         {{$sub_total_gravado=($cotizacion_registros->cotizacion->op_gravada)}}
                                         S/.{{$igv_p=round($sub_total_gravado, 2)*($igv->igv_total/100)}}
                                         {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                     </td>
                                 </tr>
                                 {{-- @endif --}}
                                 @endforeach
                                 <tr>
-                                    <td colspan="3" rowspan="6">
-                                        <div class="row">
-                                            <div class="col-lg-2" align="center">
-                                                <img src="https://www.codigos-qr.com/qr/php/qr_img.php?d=https%3A%2F%2Fwww.jypsac.com%2F&s=6&e=m" alt="Generador de Códigos QR Codes" height="150px" />
-                                            </div>
-                                            <div class="col-lg-10" align="center">
-                                                <h3>
+                                    <td rowspan="6" colspan="2">
+                                        <h3 align="left">
                                                     <?php $v=new CifrasEnLetras() ;
                                                     $letra=($v->convertirEurosEnLetras($end));
-                                                    $letra_final = strstr($letra, 'soles',true);
-                                                    $end_final=strstr($end, '.');
+                                                    $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                                    $end_final_point=strstr($end2, '.',false);
+                                                    $end_final=str_replace('.', '',$end_final_point);
                                                     ?>
-                                                    {{$letra_final}} {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
+                                                    Son: {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre}}
+                                                    {{-- {{$end2}} --}}
                                                 </h3>
-                                                Representacion impresa de la Factura electrónica Puede ser <br>consultada en https://cloud.horizontcpe.com/ConsultaComprobanteE/<br> Autorizado mediante la Resolución de intendencia N° <br>0340050001931/SUNAT/SUNAT
+                                    </td>
+                                    <td colspan="" rowspan="6">
+                                        <div class="row">
+                                            <!-- <div class="col-lg-2" align="center"> -->
+                                                <!-- <img src="https://www.codigos-qr.com/qr/php/qr_img.php?d=https%3A%2F%2Fwww.jypsac.com%2F&s=6&e=m" alt="Generador de Códigos QR Codes" height="150px" /> -->
+                                            <!-- </div> -->
+                                            <div class="col-lg-12" align="left">
+
                                             </div>
                                         </div>
                                     </td>
@@ -254,23 +302,42 @@
                     <input type="text" name="id" maxlength="50" hidden="" value="{{$cotizacion->id}}"  >
                     <input type="text" name="remitente" hidden=""  value="{{$cotizacion->cliente->email}}"  >
                     <div class="row" align="center" >
+
                         <div class="col-sm-4">
                         </div>
-                        @if(auth()->user()->email_creado == 1)
+                        <div class="col-sm-4">
+                        </div>
+                        <!-- @if(auth()->user()->email_creado == 1)
                         <div class="  col-sm-6 alert alert-info" >
                             <input type="hidden" name="verificacion" value="1" id="">
                             <p style="margin-bottom: 0px">!Al momento de Facturar se le enviará una copia al correo del cliente!</p>
                         </div>
-                        @else
-                        <div class="  col-sm-6 alert alert-info" >
+                        @else -->
+                        <!-- <div class="  col-sm-6 alert alert-info" > -->
                             <input type="hidden" name="verificacion" value="0" id="">
-                            <p style="margin-bottom: 0px">!Solo se guardará la factura!</p>
-                        </div>
-                        @endif
-                        <div class="col-sm-2" align="center" >
+                            <!-- <p style="margin-bottom: 0px">!Solo se guardará la factura!</p> -->
+                        <!-- </div> -->
+                        <!-- @endif -->
+                        <div class="col-sm-4" align="center" >
                             <button class="btn btn-primary " style="margin-top: 5px" type="submit"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
                         </div>
                     </div>
+                    <br>
+                    <div class="row">
+                        @foreach($banco as $bancos)
+                        <div class="col-sm-3 " align="center">
+                            <p class="form-control" style="height: 100px">
+                              <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 100px;height: 30px;">
+                              <br>
+                              N° S/. : {{$bancos->numero_soles}}
+                              <br>
+                              N° $ : {{$bancos->numero_dolares}}<br>
+
+                          </p>
+                      </div>
+                      @endforeach
+
+                  </div>
                 </div>
             </div>
         </div>
@@ -280,7 +347,7 @@
 
 <style type="text/css">
     .ruc{border-radius: 10px; height: 150px;}
-    .form-control{border-radius: 10px;}
+    .form-control{border-radius: 10px;margin-bottom: 1em;}
 </style>
 
 <!-- Mainly scripts -->
@@ -452,5 +519,26 @@
         function cerrar_but_mt(){
             document.getElementById('suma_campos').style.display = "none";
         }
+    </script>
+    <script type="text/javascript">
+        function seleccionado_fp(){
+            var opt = $('#forma_pago').val();
+                if(opt=="1"){
+                    // $('#consulta_p_input').prop('disabled', false);
+
+                    document.getElementById('credito_pago').style.display = "none";
+                    document.getElementById('colum-col').className = "col-sm-5";
+                }else{
+                    document.getElementById('credito_pago').style.display = "block";
+                    document.getElementById('colum-col').className = "col-sm-3";
+                }
+        }
+    </script>
+    <script type="text/javascript">
+       $(document).ready(function() {             
+            var total = document.getElementById('total').value;
+            document.getElementById("monto_pago0").value = total
+
+        }); 
     </script>
 @endsection
