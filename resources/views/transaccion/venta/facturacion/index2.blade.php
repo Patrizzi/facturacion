@@ -91,7 +91,7 @@
                                 <tr class="gradeX">
                                     <td>{{$facturacions->id}}</td>
                                     <td>{{$facturacions->codigo_fac}}</td>
-                                    @if(isset($facturacions->cliente_id)) <!-- Nombre del cliente -->
+                                    @if(empty($facturacions->id_cotizador)) <!-- Nombre del cliente -->
                                     <td>{{$facturacions->cliente->nombre}}</td>
                                     <td>{{$facturacions->cliente->numero_documento}}</td>
                                     @else

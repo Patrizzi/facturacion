@@ -237,7 +237,7 @@
 
                         </td>
                         <td>
-                            <select class="monto0 select2_demo_3 select_change" name="articulo[]" required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
+                            <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
                                 <option></option>
 
                                 @foreach($productos as $index => $producto)
@@ -425,13 +425,13 @@
         <button type="button" class='delete e borrar btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
         </td>";
         <td>
-        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});ajax(${i});seleccion_options(${i})"  autocomplete="off">
+        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
         <option></option>
         @foreach($productos as $index => $producto)
         <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}" >{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}</option>
         @endforeach
-        @foreach($servicios as $index => $servicio)
-        <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($servicio->tipo_afec_i_serv->informacion," ")}} {{$precio_prom[$index]}} 10 {{$servicio->descuento}} {{$array2[$index]}}">
+        @foreach($servicios as $index2 => $servicio)
+        <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index2] = strtok($servicio->tipo_afec_i_serv->informacion," ")}} {{$precio_prom[$index2]}} 10 {{$servicio->descuento}} {{$array2[$index2]}}">
         {{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}
         </option>
         @endforeach
@@ -485,7 +485,13 @@
         var number_tot = document.getElementsByName('articulo[]').length;
         for( j = 0; j < number_tot; j++){
             input_ds[j]  = document.getElementsByName('articulo[]')[j].value;
-            $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
+            if(input_ds[j].indexOf("SERV-") == 4){
+                $('option[value="'+input_ds[j]+'"]').prop("disabled", false);
+            }else{
+                $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
+            }
+            
+            
         };
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",
@@ -495,7 +501,7 @@
 
     });
 </script>
-<script>
+{{-- <script>
     $('#articulo').change(function(e){
         e.preventDefault();
 
@@ -533,7 +539,7 @@
                                 }
                             });
     }
-</script>
+</script> --}}
 <script>
     function comision(){
             //comision
@@ -805,13 +811,13 @@
             // ELIMINAR TR
            // fila.remove();
            if (e>1) {
-            fila.closest('tr').remove();
-            $(".borrar").prop("disabled", true);
-            $(".addmore").prop("disabled", false);
-        }else{
-            $(".borrar").prop("disabled", false);
-            $(".addmore").prop("disabled", false);
-        }
+                fila.closest('tr').remove();
+                $(".borrar").prop("disabled", false);
+                $(".addmore").prop("disabled", false);
+            }else{
+                $(".borrar").prop("disabled", true);
+                $(".addmore").prop("disabled", false);
+            }
             //SUMA SUBTOTAL SIN IGV
             var totalInp = $('[name="total"]');
 
@@ -1049,24 +1055,26 @@
         function seleccion_options(b){
             var cant_opt = document.getElementById(`articulo${b}`).length;
             var count_input = document.getElementsByClassName('celda').length;
-
             var option = document.getElementById(`articulo${b}`);
             var valor_select = option.value;
-            if(valor_select == ""){
-                document.getElementById(`input_prod${b}`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-            }else{
-                var ant_val = document.getElementById(`input_prod${b}`).value;
-                $('option[value="'+ant_val+'"]').prop( "disabled", false);
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`input_prod${b}`).value = valor_select;
+            var ant_val = document.getElementById(`input_prod${b}`).value;
+            $('option[value="'+ant_val+'"]').prop( "disabled", false);
 
+            if(valor_select.indexOf("SERV-") == 4){
                 $(".addmore").prop("disabled", false);
-            }
-            if(cant_opt-1 == count_input ){
-                $(".addmore").prop("disabled", true);
+                document.getElementById(`input_prod${b}`).value = valor_select;
+                $('option[value="'+valor_select+'"]').prop( "disabled", false);
+
             }else{
-                $(".addmore").prop("disabled", false);
+                if(valor_select == ""){
+                    document.getElementById(`input_prod${b}`).value = valor_select;
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                }else{
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                    document.getElementById(`input_prod${b}`).value = valor_select;
+
+                    $(".addmore").prop("disabled", false);
+                }
             }
             $(".select2_demo_3").select2({
                 placeholder: "Seleccionar Producto",
@@ -1082,21 +1090,21 @@
             var count_input = document.getElementsByClassName('celda').length;
             var option = document.getElementById(`articulo`);
             var valor_select = option.value;
-            if(valor_select == ""){
-                document.getElementById(`input_prod1`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-            }else{
-                var ant_val = document.getElementById(`input_prod1`).value;
-                $('option[value="'+ant_val+'"]').prop( "disabled", false);
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`input_prod1`).value = valor_select;
+            var ant_val = document.getElementById(`input_prod1`).value;
+            $('option[value="'+ant_val+'"]').prop( "disabled", false);
+            if(valor_select.indexOf("SERV-") == 4){
                 $(".addmore").prop("disabled", false);
-                if(cant_opt-1 == count_input ){
-                    $(".addmore").prop("disabled", true);
-                }else{
+                document.getElementById(`input_prod1`).value = valor_select;
+                $('option[value="'+valor_select+'"]').prop( "disabled", false);
+            }else{
+                if(valor_select == ""){
+                    document.getElementById(`input_prod1`).value = valor_select;
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                }else{                    
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                    document.getElementById(`input_prod1`).value = valor_select;
                     $(".addmore").prop("disabled", false);
                 }
-
             }
             $(".select2_demo_3").select2({
                 placeholder: "Seleccionar Producto",
