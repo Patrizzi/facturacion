@@ -172,7 +172,7 @@ class BoletaController extends Controller
         }
         $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
 
-        return view('transaccion.venta.boleta.create',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','sucursal','boleta_numero','tipo_operacion'));
+        return view('transaccion.venta.boleta.create2',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','sucursal','boleta_numero','tipo_operacion'));
 
     }
 
