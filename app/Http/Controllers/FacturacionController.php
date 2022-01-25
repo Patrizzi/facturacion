@@ -440,13 +440,24 @@ public function create_ms(Request $request){
 
         $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
 
+        // FORMA DE PAGO
         $forma_pago_id=$request->get('forma_pago');
-        $formapago= Forma_pago::find($forma_pago_id);
-        $dias= $formapago->dias;
-        /*Fecha vencimiento --------------------------------------------------- */
-        $fecha =date("d-m-Y");
-        $nuevafecha = strtotime ( '+'.$dias.' day' , strtotime ( $fecha ) ) ;
-        $nuevafechas = date("d-m-Y", $nuevafecha );
+        // $formapago= Forma_pago::find($forma_pago_id);
+        if($forma_pago_id == 1){
+            $val = $request->get('fecha_vencimiento');
+            
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+
+
+        }else{
+            $fecha_pago_forma = $request->input('fecha_pago');
+            $contador_for_1 = count($fecha_pago_forma);
+            for($c = 0; $c<$contador_for_1;$c++ ){
+                $val = $fecha_pago_forma[$c];
+            }
+            
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }
 
 
 

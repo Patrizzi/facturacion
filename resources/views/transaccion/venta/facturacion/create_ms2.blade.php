@@ -137,69 +137,9 @@
                                     <td>
                                         <input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0">
                                     </td>
-                                    <td>Forma de pago</td>
+                                    <td>Guia remision</td>
                                     <td>:</td>
-                                    <td>
-                                         <div class="row">
-                                            <div class="col-sm-5">
-                                                <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
-                                                    @foreach($forma_pagos as $forma_pago)
-                                                        <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
-                                                    @endforeach
-                                                <select>
-                                            </div>
-                                            <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
-                                                <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                            </div>
-                                            <!-- Modal -->
-                                            <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                                              <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                  <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                      <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                  </div>
-                                                  <div class="modal-body">
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
-                                                      <strong style="font-size:11px">Rellenar todos los campos</strong>
-                                                      <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
-                                                        <span aria-hidden="true">&times;</span>
-                                                      </button>
-                                                    </div>
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                                      <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
-                                                      <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
-                                                        <span aria-hidden="true">&times;</span>
-                                                      </button>
-                                                    </div>
-                                                    <div class="row_number">
-                                                        <div class="pago_modal row">
-                                                            <div class="col-sm-1"><label>Fecha:</label></div>
-                                                            <div class="col-sm-4">
-                                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
-                                                            </div>
-                                                            <div class="col-sm-1"><label>Monto:</label></div>
-                                                            <div class="col-sm-4">
-                                                                <div class="input-group mb-3" style="padding-right:15px">
-                                                                  <div class="input-group-prepend">
-                                                                    <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
-                                                                  </div>
-                                                                  <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-2">
-                                                                <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><input type="text" class="form-control" value="0" name="guia_r"></td>
                                 </tr>
                                         <tr>
                                             <td>Vendedor</td>
@@ -207,9 +147,70 @@
                                             <td>
                                                 <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
                                             </td>
-                                            <td>Guia remision</td>
+                                            
+                                            <td>Forma de pago</td>
                                             <td>:</td>
-                                            <td><input type="text" class="form-control" value="0" name="guia_r"></td>
+                                            <td>
+                                                 <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                            @foreach($forma_pagos as $forma_pago)
+                                                                <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                            @endforeach
+                                                        <select>
+                                                    </div>
+                                                    <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
+                                                        <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                                    </div>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                                                      <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                          <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+                                                              <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                                              <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+                                                              <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                              <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="row_number">
+                                                                <div class="pago_modal row">
+                                                                    <div class="col-sm-1"><label>Fecha:</label></div>
+                                                                    <div class="col-sm-4">
+                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                                    </div>
+                                                                    <div class="col-sm-1"><label>Monto:</label></div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group mb-3" style="padding-right:15px">
+                                                                          <div class="input-group-prepend">
+                                                                            <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
+                                                                          </div>
+                                                                          <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Moneda</td>
@@ -241,6 +242,8 @@
                                                 @endforeach
                                                 </select>
                                             </td>
+                                             <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
+                                            <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" ></td>
                                             {{-- <td>Fecha de cotizacion</td>
                                             <td>:</td>
                                             <td>
@@ -897,17 +900,22 @@
     <script type="text/javascript">
         function seleccionado_fp(){
             var opt = $('#forma_pago').val();
-                if(opt=="1"){
-                    // $('#consulta_p_input').prop('disabled', false);
-                    
-                    document.getElementById('credito_pago').style.visibility = "hidden";
-                    // $('#consulta_s').hide();
-                }else{
-                    // $('#consulta_p_input').prop('disabled', 'disabled');
-                    document.getElementById('credito_pago').style.visibility = "initial";
-                    // $('#consulta_s_input').prop('disabled', false);
-                    // $('#consulta_s').show();
-                }
+            if(opt=="1"){
+                document.getElementById('credito_pago').style.visibility = "hidden";
+                document.getElementById('ven_1p').style.visibility = "initial";
+                document.getElementById('ven_2p').style.visibility = "initial";
+                document.getElementById('ven_3p').style.visibility = "initial";
+                document.getElementById('fecha_vencimiento').removeAttribute('disabled');
+                // $('#consulta_s').hide();
+            }else{
+                // $('#consulta_p_input').prop('disabled', 'disabled');
+                document.getElementById('credito_pago').style.visibility = "initial";
+                document.getElementById('ven_1p').style.visibility = "hidden";
+                document.getElementById('ven_2p').style.visibility = "hidden";
+                document.getElementById('ven_3p').style.visibility = "hidden";
+                document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
+                // $('#consulta_s').show();
+            }
         }
     </script>
     <script>
@@ -1007,13 +1015,14 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 if(f_p == "2" ){
-                    var sum = 0;
+                    var sum2 = 0;
                     for(g = 0; g<inp_mont;g++){
                         var monto1 = monto_c[g].id;
                         var input_text_2 = document.getElementById(`${monto1}`).value;
-                        var sum = parseFloat(sum) + parseFloat(input_text_2);
+                        var sum2 = parseFloat(sum2) + parseFloat(input_text_2);
                     }
-                    console.log(sum);
+                    // console.log(sum);
+                    var sum = Math.round(sum2 * 100)/100;
                     if(sum != total){
                         document.getElementById('cuota_modal').click();
                         document.getElementById('suma_campos').style.display = "flex";

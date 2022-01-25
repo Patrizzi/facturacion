@@ -106,8 +106,14 @@
                                 <tr>
                                     <td>Orden de compra</td><td>:</td>
                                     <td><input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0"></td>
-
-                                    <td>Forma de pago</td><td>:</td>
+                                    <td>Guia remision</td><td>:</td>
+                                    <td><input type="text" class="form-control" value="0" name="guia_r"></td>
+                                    
+            </tr>
+            <tr>
+                <td>Vendedor</td><td>:</td>
+                <td><input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"></td>
+                <td>Forma de pago</td><td>:</td>
                                     <td>
                                        <div class="row">
                                         <div class="col-sm-6">
@@ -168,13 +174,7 @@
                     </div>
                 </div>
                 <!-- Modal de Cuotas -->
-            </tr>
-            <tr>
-                <td>Vendedor</td><td>:</td>
-                <td><input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"></td>
-
-                <td>Guia remision</td><td>:</td>
-                <td><input type="text" class="form-control" value="0" name="guia_r"></td>
+                
             </tr>
             <tr>
                 <td>Moneda</td><td>:</td>
@@ -201,10 +201,13 @@
                             @endforeach
                         </select>
                     </td>
-                    <td>Observacion</td><td>:</td>
-                    <td><textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea></td>
+                    <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
+                    <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" ></td>
                 </tr>
-
+                <tr>
+                    <td>Observacion</td><td>:</td>
+                    <td  colspan="4"><textarea class="form-control" name="observacion" id="observacion"   >Emitimos la siguiente Factura a vuestra solicitud</textarea></td>
+                </tr>
             </tbody>
         </table>
         <!--Tabla de Datos Cabecera Factura-->
@@ -905,14 +908,19 @@
         function seleccionado_fp(){
             var opt = $('#forma_pago').val();
             if(opt=="1"){
-                    // $('#consulta_p_input').prop('disabled', false);
-
                     document.getElementById('credito_pago').style.visibility = "hidden";
+                    document.getElementById('ven_1p').style.visibility = "initial";
+                    document.getElementById('ven_2p').style.visibility = "initial";
+                    document.getElementById('ven_3p').style.visibility = "initial";
+                    document.getElementById('fecha_vencimiento').removeAttribute('disabled');
                     // $('#consulta_s').hide();
                 }else{
                     // $('#consulta_p_input').prop('disabled', 'disabled');
                     document.getElementById('credito_pago').style.visibility = "initial";
-                    // $('#consulta_s_input').prop('disabled', false);
+                    document.getElementById('ven_1p').style.visibility = "hidden";
+                    document.getElementById('ven_2p').style.visibility = "hidden";
+                    document.getElementById('ven_3p').style.visibility = "hidden";
+                    document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
                     // $('#consulta_s').show();
                 }
             }
@@ -959,14 +967,14 @@
         var fin = (total/inp_mont)
         document.getElementById("monto_pago0").value = '';
                 // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
-            }
-            var inp_mont = document.getElementsByClassName('monto_pago').length;
-            if(inp_mont>5){
-                document.getElementById('add_pago').setAttribute('disabled', "true");
-            }else{
-                document.getElementById('add_pago').removeAttribute('disabled');
-            }
-        });
+    }
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        if(inp_mont>5){
+            document.getElementById('add_pago').setAttribute('disabled', "true");
+        }else{
+            document.getElementById('add_pago').removeAttribute('disabled');
+        }
+    });
 
     </script>
     <style type="text/css">
@@ -1003,17 +1011,21 @@
            // if(cliente.length != 0){
             var f_p = $('#forma_pago').val();
             var total = document.getElementById('total_final').value;
+            // console.log(total);
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');
             if(f_p == "2" ){
-                var sum = 0;
+                var sum2 = 0.00;
                 for(g = 0; g<inp_mont;g++){
                     var monto1 = monto_c[g].id;
                     var input_text_2 = document.getElementById(`${monto1}`).value;
-                    var sum = parseFloat(sum) + parseFloat(input_text_2);
+                    console.log("text2 = "+input_text_2);
+                    var sum2 = ( Number.parseFloat(sum2) + Number.parseFloat(input_text_2));
+                    console.log("sum-b-for = "+sum2);
+
                 }
-                console.log(sum);
+                var sum = Math.round(sum2 * 100) / 100;
                 if(sum != total){
                     document.getElementById('cuota_modal').click();
                     document.getElementById('suma_campos').style.display = "flex";
