@@ -34,7 +34,7 @@
                  <div class="row">
                      <div class="col-sm-4 text-left" align="left">
                          <address class="col-sm-4" align="left">
-                             <img src="{{asset('img/logos/logo.png')}}" alt="" width="300px">
+                             <img src="{{asset('img/logos')}}/{{$empresa->foto}}" alt="" width="300px">
                          </address>
                      </div>
                      <div class="col-sm-4">

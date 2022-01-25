@@ -132,7 +132,7 @@ class BoletaController extends Controller
         }
 
         $forma_pagos=Forma_pago::all();
-        $clientes=Cliente::all();
+        $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
         $moneda=Moneda::where('principal','1')->first();
         $personales=Personal::all();
         $p_venta=Personal_venta::where('estado','0')->get();
@@ -239,7 +239,7 @@ class BoletaController extends Controller
         }
 
         $forma_pagos=Forma_pago::all();
-        $clientes=Cliente::all();
+        $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
 
         $personales=Personal::all();
         $p_venta=Personal_venta::where('estado','0')->get();
@@ -688,7 +688,7 @@ class BoletaController extends Controller
 
         $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
         $igv=Igv::first();
-        $banco=Banco::all();
+        $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
         $boleta=Boleta::find($id);
@@ -706,7 +706,7 @@ class BoletaController extends Controller
 
         $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
         $igv=Igv::first();
-        $banco=Banco::all();
+        $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
         $boleta=Boleta::find($id);
@@ -717,7 +717,7 @@ class BoletaController extends Controller
         // $regla=$cotizacion->tipo;
         $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
         $igv=Igv::first();
-        $banco=Banco::all();
+        $banco=Banco::where('estado',0)->get();
         $banco_count=Banco::where('estado','0')->count();
         $empresa=Empresa::first();
         $sub_total=0;
