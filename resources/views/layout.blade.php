@@ -267,7 +267,7 @@ $empresa=Empresa::first(); ?>
                 </li>
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/facturacion_electronica.svg')}}" class="iconos"> <span class="nav-label">Fac.Electronica </span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}">Facturas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
