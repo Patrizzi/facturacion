@@ -57,9 +57,8 @@
          @endif</div>
      </div>
 
-     <button class="btn btn-primary" type="submit">Guardar</button>
-     <input id='myajax' type="button" class="btn btn-info" value="Automatico por Sunat">
-
+     <button class="btn" style="background:#0073c1;color:white;margin-right: 10px;" type="submit">Guardar</button>
+     <button type="button" class="btn" id='myajax' style="color: #0073c1;font-weight:bold"><img src="{{ asset('logo_sunat.png') }}" width="20px">SUNAT</button>
  </form>
 </div>
 </div>
