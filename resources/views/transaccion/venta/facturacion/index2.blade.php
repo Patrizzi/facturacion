@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturacion2')
+@section('title', 'Facturacion')
 @section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)

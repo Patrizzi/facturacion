@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturacion 2')
+@section('title', 'Facturacion')
 @section('href_accion', route('facturacion.index'))
 @section('value_accion', 'Atras')
 @extends('layout_agregado_rapido')
