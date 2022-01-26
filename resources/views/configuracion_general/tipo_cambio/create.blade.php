@@ -91,9 +91,7 @@
       $('#paralelo').val(datos[2]);
   },
   statusCode: {
-     404: function() {
-      alert('web not found');
-  }
+     404: function() {alert('web not found');}
 },
 error:function(x,xs,xt){
     window.open(JSON.stringify(x));

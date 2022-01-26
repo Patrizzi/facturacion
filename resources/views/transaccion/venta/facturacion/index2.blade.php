@@ -17,9 +17,10 @@
     <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
     <form action="{{ route('facturacion.create')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
         @csrf
-        <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+        <input type="text" value="{{$almacens->id}}" hidden="hidden" name="almacen">
     </form>
     <script>
+        console.log({{$almacens->id}});
         function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
     </script>
     @endforeach
@@ -147,6 +148,7 @@
     $(document).ready(function(){
         $('.dataTables-example').DataTable({
             pageLength: 15,
+            order: [[0, "desc"]],
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
