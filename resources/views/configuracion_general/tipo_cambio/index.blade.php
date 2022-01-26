@@ -1,15 +1,16 @@
 @extends('layout')
 @section('title', 'Tipo de cambio')
-@section('atributo_1', 'hidden')
-@section('atributo_actu', 'hidden')
+
 
 @if($consulta)
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
 @else
+@section('atributo_actu', 'hidden')
 @section('href_accion', route('tipo_cambio.create'))
-@section('value_accion', 'Agregar Cambio Diario')
+@section('value_accion', 'Agregar')
 @endif
-@section('button2', 'Inicio')
-@section('config',route('Configuracion'))
+
 
 @section('content')
 
@@ -39,10 +40,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <span hidden>{{$tipo_cambios->id}}</span>
+                            <span hidden>{{$i=1}}</span>
                             @foreach($tipo_cambio as $tipo_cambios)
                             <tr class="gradeX">
-                                <td>{{$tipo_cambios->id}}</td>
+                                <td>{{$i++}}</td>
                                 <td>{{$tipo_cambios->compra}}</td>
                                 <td>{{$tipo_cambios->venta}}</td>
                                 <td>{{$tipo_cambios->paralelo}}</td>
