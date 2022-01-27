@@ -17,7 +17,6 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Por Enviar</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#tab-3">Anulados</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
@@ -25,20 +24,72 @@
 
                              <div class="table-responsive">
                                  <table class="table table-striped table-bordered table-hover dataTables-example" >
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Codigo de Factura</th>
-                                    <th>Cliente</th>
-                                    <th>Ruc/DNI</th>
-                                    <th>Fecha Vencimiento</th>
-                                    <th>Guia Remision</th>
-                                    <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($facturacion as $facturaciones)
-                                <tr class="gradeX">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Codigo de Factura</th>
+                                            <th>Cliente</th>
+                                            <th>Ruc/DNI</th>
+                                            <th>Fecha Vencimiento</th>
+                                            <th>Guia Remision</th>
+                                            <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($facturacion as $facturaciones)
+                                        <tr class="gradeX">
+                                            <td>{{$facturaciones->id}}</td>
+                                            <td>{{$facturaciones->codigo_fac}}</td>
+                                            @if(isset($facturaciones->cliente_id)) <!-- Nombre del cliente -->
+                                            <td>{{$facturaciones->cliente->nombre}}</td>
+                                            @else
+                                            <td>{{$facturaciones->cotizacion->cliente->nombre}}</td>
+                                            @endif
+                                            @if(isset($facturaciones->cliente_id))<!-- documento del cliente -->
+                                            <td>{{$facturaciones->cliente->numero_documento}}</td>
+                                            @else
+                                            <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
+                                            @endif
+                                            <td>{{$facturaciones->fecha_vencimiento }}</td>
+                                            @if($facturaciones->guia_remision=="0")
+                                            <td>Sin guia</td>
+                                            @else
+                                            <td>{{$facturaciones->guia_remision}}</td>
+                                            @endif
+                                            <td>
+                                                <center>
+                                                    <form action="{{route('facturacion_electronica.factura_sunat')}}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="factura_id" value="{{$facturaciones->id}}">
+                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div role="tabpanel" id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                         <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Codigo de Factura</th>
+                                        <th>Cliente</th>
+                                        <th>Ruc/DNI</th>
+                                        <th>Fecha Vencimiento</th>
+                                        <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  @foreach($facturacion_enviada as $facturaciones)
+                                  <tr class="gradeX">
                                     <td>{{$facturaciones->id}}</td>
                                     <td>{{$facturaciones->codigo_fac}}</td>
                                     @if(isset($facturaciones->cliente_id)) <!-- Nombre del cliente -->
@@ -52,74 +103,22 @@
                                     <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
                                     @endif
                                     <td>{{$facturaciones->fecha_vencimiento }}</td>
-                                    @if($facturaciones->guia_remision=="0")
-                                    <td>Sin guia</td>
-                                    @else
-                                    <td>{{$facturaciones->guia_remision}}</td>
-                                    @endif
-                                    <td>
-                                        <center>
-                                            <form action="{{route('facturacion_electronica.factura_sunat')}}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="factura_id" value="{{$facturaciones->id}}">
-                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                            </form>
-                                        </center>
+                                    <td align="center">
+                                        <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                     </td>
                                 </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div role="tabpanel" id="tab-2" class="tab-pane">
-                        <div class="panel-body">
-                         <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover dataTables-example" >
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Codigo de Guia</th>
-                                            <th>Fecha emision</th>
-                                            <th>Fecha entrega</th>
-                                            <th>Tipo Transporte</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div role="tabpanel" id="tab-3" class="tab-pane">
-                        <div class="panel-body">
-                           <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover dataTables-example" >
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Codigo de Guia</th>
-                                            <th>Fecha emision</th>
-                                            <th>Fecha entrega</th>
-                                            <th>Tipo Transporte</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-            </div>
         </div>
     </div>
+</div>
+</div>
+</div>
 </div>
 <!-- scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
