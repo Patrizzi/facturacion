@@ -1,16 +1,16 @@
 @extends('layout')
-
 @section('title', 'Tipo de cambio')
-@section('breadcrumb', 'Cambio')
-@section('breadcrumb2', 'Cambio')
+
 
 @if($consulta)
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
 @else
+@section('atributo_actu', 'hidden')
 @section('href_accion', route('tipo_cambio.create'))
-@section('value_accion', 'Agregar Cambio Diario')
+@section('value_accion', 'Agregar')
 @endif
-@section('button2', 'Inicio')
-@section('config',route('Configuracion'))
+
 
 @section('content')
 
@@ -27,32 +27,12 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="ibox ">
-            <div class="ibox-title">
-                <h5>Moneda Principa: {{$moneda1->nombre}} - Moneda Secundaria: {{$moneda2->nombre}}</h5>
-                <div class="ibox-tools">
-                    <a class="collapse-link">
-                        <i class="fa fa-chevron-up"></i>
-                    </a>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-wrench"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#" class="dropdown-item">Config option 1</a>
-                        </li>
-                        <li><a href="#" class="dropdown-item">Config option 2</a>
-                        </li>
-                    </ul>
-                    <a class="close-link">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </div>
-            </div>
             <div class="ibox-content">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                         <thead>
                             <tr>
-                                <th>Nr</th>
+                                <th>Item</th>
                                 <th>Compra</th>
                                 <th>Venta</th>
                                 <th>Paralelo</th>
@@ -60,9 +40,10 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <span hidden>{{$i=1}}</span>
                             @foreach($tipo_cambio as $tipo_cambios)
                             <tr class="gradeX">
-                                <td>{{$tipo_cambios->id}}</td>
+                                <td>{{$i++}}</td>
                                 <td>{{$tipo_cambios->compra}}</td>
                                 <td>{{$tipo_cambios->venta}}</td>
                                 <td>{{$tipo_cambios->paralelo}}</td>
@@ -77,7 +58,6 @@
     </div>
 </div>
 </div>
-
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -99,27 +79,8 @@
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }
-        ]
-
+            buttons: [  ]
     });
-
     });
-
 </script>
 @endsection

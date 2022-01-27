@@ -28,6 +28,7 @@
 
 <?php use App\Empresa;
 $empresa=Empresa::first(); ?>
+                <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
     body {font:@yield('tamano_letra', auth()->user()->config->tamano_letra) @yield('Letra', auth()->user()->config->letra);}
     .spans{color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
@@ -224,7 +225,6 @@ $empresa=Empresa::first(); ?>
                     </li>
                     @endif
                 @endcan
-                <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
                 @can('planilla')
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/planilla.svg')}}" class="iconos"> <span class="nav-label">Planilla</span></a>
@@ -267,7 +267,7 @@ $empresa=Empresa::first(); ?>
                 </li>
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/facturacion_electronica.svg')}}" class="iconos"> <span class="nav-label">Fac.Electronica </span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}">Facturas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
@@ -397,7 +397,7 @@ $empresa=Empresa::first(); ?>
                             <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20" target="_blank" ><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
                         </div>
                         <div>
-                            <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Perifericos</a>&nbsp;  &copy; 2019-2020
+                            <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Perifericos</a>&nbsp;  &copy; 2019-2022
                         </div>
 
                     </div>
