@@ -145,23 +145,23 @@
             <td style="width: 90%;border-color: white">
                 
             </td>
-            <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:none;border-bottom: none">
+            {{-- <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:none;border-bottom: none">
                 Subtotal <br style="height: 2px;">
             </td>
-            {{-- <th style="width: 2%;border-color: white"></th> --}}
+            <th style="width: 2%;border-color: white"></th>
             <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;border-bottom: none">
              {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
-         </td>
+         </td> --}}
     </tr>
 
     <tr style="border: white 0px solid" >
         <td style="width: 80%;border-color: white"></td>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:  none;border-top: none">
-             Importe Total
+        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:  none;">
+            <strong> Importe Total</strong>
         </td>
         {{-- <th style="width: 2%;border-color: white"></th> --}}
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;border-top:none">
-            {{$simbologia}} {{round($sub_total, 2)}}
+        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;">
+             {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
         </td>
         
     </td>

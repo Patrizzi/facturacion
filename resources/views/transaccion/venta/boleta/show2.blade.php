@@ -190,10 +190,10 @@
  <div class="col-sm-8"></div>
  <div class="col-sm-4 form-control">
     {{-- <div class="col-sm-4 form-control" > --}}
-        <span style="display: block;float: left"> Sub Total:</span>
-        <span style="display: block;float: right;">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}} </span>
-        <br>
-        <span style="display: block;float: left"> Importe Total: </span>
+        {{-- <span style="display: block;float: left"> Sub Total:</span>
+        <span style="display: block;float: right;">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}} </span> --}}
+        {{-- <br> --}}
+        <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
         <span style="display: block;float: right">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}}</span>
 
     </div>

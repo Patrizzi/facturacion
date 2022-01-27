@@ -17,7 +17,7 @@
     <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
     <form action="{{ route('boleta.create')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
         @csrf
-        <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+        <input type="text" value="{{$almacens->id}}" hidden="hidden" name="almacen">
     </form>
     <script>
         function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
