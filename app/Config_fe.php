@@ -477,15 +477,15 @@ class Config_fe extends Model
         $precio=0;
 
         foreach($boletas_registros as $cont => $boleta_registro){
-                if(isset($boletas_registros->producto->codigo_producto)){
-                    $item_nombre = $boletas_registros->producto->codigo_producto;
-                    $desc_nombre = $boletas_registros->producto->nombre;
-                    $afec = $boletas_registros->producto->tipo_afec_i_producto->codigo;
+                if(isset($boleta_registro->producto->codigo_producto)){
+                    $item_nombre = $boleta_registro->producto->codigo_producto;
+                    $desc_nombre = $boleta_registro->producto->nombre;
+                    $afec = $boleta_registro->producto->tipo_afec_i_producto->codigo;
                     $codigo_item = 'NIU';
                 }else{
-                    $item_nombre = $boletas_registros->servicio->codigo_servicio;
-                    $desc_nombre = $boletas_registros->servicio->nombre;
-                    $afec = $boletas_registros->servicio->tipo_afec_i_serv->codigo;
+                    $item_nombre = $boleta_registro->servicio->codigo_servicio;
+                    $desc_nombre = $boleta_registro->servicio->nombre;
+                    $afec = $boleta_registro->servicio->tipo_afec_i_serv->codigo;
                     $codigo_item = 'ZZ';
                 }
                 //gravada
