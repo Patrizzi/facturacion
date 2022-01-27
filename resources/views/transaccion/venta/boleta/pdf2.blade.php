@@ -65,7 +65,7 @@
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
                 @else{{$boleta->cotizacion->cliente->nombre}}
                 @endif<br>
-                <strong>R.U.C :</strong>&nbsp;
+                <strong>N° de Documento:</strong>&nbsp;
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                 @else{{$boleta->cotizacion->cliente->numero_documento}}
                 @endif&nbsp;&nbsp;<br>

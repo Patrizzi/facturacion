@@ -80,15 +80,15 @@ class FacturacionElectronicaController extends Controller
         //configuracion de conexion
         $see=config_acceso_sunat::facturacion_electronica();
 
-        if($factura->tipo=="producto"){
+        // if($factura->tipo=="producto"){
             //factura
             $invoice=Config_fe::factura($factura, $factura_registro,$guia);
             
-        }elseif($factura->tipo=="servicio"){
-            //factura
-            $invoice=Config_fe::factura_servicio($factura, $factura_registro,$guia);
+        // }elseif($factura->tipo=="servicio"){
+        //     //factura
+        //     $invoice=Config_fe::factura_servicio($factura, $factura_registro,$guia);
             
-        }
+        // }
         
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
@@ -115,17 +115,17 @@ class FacturacionElectronicaController extends Controller
 
         //boleta
         
-        if($boleta->tipo=="producto"){
+        // if($boleta->tipo=="producto"){
             //boleta
             
             $invoice=Config_fe::boleta($boleta, $boleta_registro);
             
-        }elseif($boleta->tipo=="servicio"){
-            //boleta
+        // }elseif($boleta->tipo=="servicio"){
+        //     //boleta
             
-            $invoice=Config_fe::boleta_servicio($boleta, $boleta_registro);
+        //     $invoice=Config_fe::boleta_servicio($boleta, $boleta_registro);
             
-        }
+        // }
         
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
