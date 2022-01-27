@@ -171,22 +171,22 @@
               <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
             </div>
             <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="{{$producto->precio_venta}}" >
+            </div>
           </div>
         </div>
+
       </div>
-
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
-    </div>
-
-    <script>
-     function myFunction() {
-       var x,suma,text;
-       x = document.getElementById("precio_venta").value;
-       if (isNaN(x) ) {
-        alert('ss');
-      } else {
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
+      </div>
+      @if(isset($precio_promedio->precio_nacional))
+      <script>
+       function myFunction() {
+         var x,suma,text;
+         x = document.getElementById("precio_venta").value;
+         if (isNaN(x) ) {
+          alert('ss');
+        } else {
      suma=parseFloat(x)/1.18;//Sacar IGV
      suma2=parseFloat(suma)*100;//Porcentaje
      suma3=parseFloat(suma2)/{{$precio_promedio->precio_nacional}};//precio Promedio
@@ -195,6 +195,7 @@
    }
  }
 </script>
+@endif
 </div>
 </div>
 </div>
