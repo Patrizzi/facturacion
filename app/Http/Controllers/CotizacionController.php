@@ -27,6 +27,7 @@ use App\Moneda;
 use App\Personal;
 use App\Personal_venta;
 use App\Producto;
+use App\Servicios;
 use App\TipoCambio;
 use App\Tipo_operacion_f;
 use App\Unidad_medida;
@@ -62,7 +63,7 @@ class CotizacionController extends Controller
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
-        return view('transaccion.venta.cotizacion.index',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero'));
+        return view('transaccion.venta.cotizacion.index2',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero'));
     }
     /**
      * Show the form for creating a new resource.
@@ -175,7 +176,31 @@ class CotizacionController extends Controller
         $suma=$personal_contador+1;
         $categoria='producto';
 
-        return view('transaccion.venta.cotizacion.factura.create',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion'));
+        // Servicios
+
+        $servicios=Servicios::where('estado_anular',0)->get();
+        $tipo_cambio=TipoCambio::latest('created_at')->first();
+        // return $servicios;
+        if(count($servicios) == 0){
+            return back()->withErrors(['No hay Servicios Agregados: '.$sucursal->nombre.'']);
+        }
+
+        if($moneda->tipo =='nacional'){
+            foreach ($servicios as $index2 => $servicio) {
+                $utilidad_serv[]=$servicio->precio_nacional*($servicio->utilidad)/100;
+                $array2[]=round($servicio->precio_nacional+$utilidad_serv[$index2],2);
+                $array_promedio_serv[]=($servicio->precio_nacional);
+            }
+        }else{
+            foreach ($servicios as $index2 => $servicio) {
+                $utilidad_serv[]=$servicio->precio_extranjero*($servicio->utilidad)/100;
+                $array2[]=round($servicio->precio_extranjero+$utilidad_serv[$index2],2);
+                $array_promedio_serv[]=($servicio->precio_extranjero);
+            }
+        }
+        // r
+
+        return view('transaccion.venta.cotizacion.factura.create2',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','array2','array_promedio_serv'));
     }
 
     public function create_factura_ms(Request $request)
