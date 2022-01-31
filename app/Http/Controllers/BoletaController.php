@@ -53,11 +53,12 @@ class BoletaController extends Controller
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         $boletas=Boleta::all();
+        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
         $user_login =auth()->user();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
-        return view('transaccion.venta.boleta.index2', compact('boletas','user_login','conteo_almacen','almacen','almacen_primero'));
+        return view('transaccion.venta.boleta.index2', compact('boletas','boletas_enviadas','user_login','conteo_almacen','almacen','almacen_primero'));
     }
 
     /**
