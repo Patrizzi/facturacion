@@ -84,22 +84,21 @@ class NotaCreditoController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
 
-        if($facturacion->tipo=="producto"){
 
-            if($tipo_nota_credito == 01){//anulacion de la operacion
+
+            if($tipo_nota_credito == 01){//anulación de la operación
                 return view('transaccion.venta.nota_credito.tipos.anulacion_operacion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
-            }else if($tipo_nota_credito == 02){//anulacion por el error en el RUC
+            }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
                 return view('transaccion.venta.nota_credito.tipos.anulacion_error_ruc',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
-            }else if($tipo_nota_credito == 03){//Coreccion por errpr en la descripcion
+            }else if($tipo_nota_credito == 03){//Corrección por error en la descripcion
                 return view('transaccion.venta.nota_credito.tipos.correccion_error_descripcion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
             }else if($tipo_nota_credito == 06){//devolucion total
+                // dd($facturacion);
                 return view('transaccion.venta.nota_credito.tipos.devolucion_total',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
             }else if($tipo_nota_credito == 07){//devolucion por el item
                 return view('transaccion.venta.nota_credito.tipos.devolucion_item',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
             }
-            //example
-            //  return view('transaccion.venta.nota_credito.create',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco'));
-        }else{
+
             if($tipo_nota_credito == 1){
                 view('transaccion.venta.nota_credito.create_servicio',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco'));
             }else if($tipo_nota_credito == 2){
@@ -121,7 +120,7 @@ class NotaCreditoController extends Controller
             }
             //example
             //return view('transaccion.venta.nota_credito.create_servicio',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco'));
-        }
+        
         
     }
 
