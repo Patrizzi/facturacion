@@ -14,10 +14,10 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row ibox-title" style="padding-right: 3.1%;margin: 0;" >
         <div class="col-sm-6">
-           <a href="#punto" onclick="Formulario_edit()"  id="click" class="btn btn-info"><i class="fa fa-edit"></i></a>
-       </div>
-       <div class="col-sm-6">
-           <div class="tooltip-demo" align="right">
+         <a href="#punto" onclick="Formulario_edit()"  id="click" class="btn btn-info"><i class="fa fa-edit"></i></a>
+     </div>
+     <div class="col-sm-6">
+         <div class="tooltip-demo" align="right">
             <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}">
                 <input type="text" name="archivo" maxlength="50" value="{{$garantias_informe_tecnico->orden_servicio}}" oninput="actualizatext()" id="texto2">
                 <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
@@ -95,9 +95,9 @@
                     </div>
                 </div>
                 <div class="col-sm-6" align="center">
-                 <div class="form-control" style="height: 90%" >
-                     <h3>Condiciones Generales</h3>
-                     <div align="left">
+                   <div class="form-control" style="height: 90%" >
+                       <h3>Condiciones Generales</h3>
+                       <div align="left">
                         <strong>Ing. Asignado:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->nombres}} {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->apellidos}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{-- {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->personal_l->nombres}} {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->personal_l->apellidos}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --}}<br>
                         <strong>Motivo:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->motivo}}<br>
                         <strong>Marca :</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre}} &nbsp;<br>
@@ -109,9 +109,9 @@
             <br>
             <div class="col-sm-12" align="center" style="padding-top: 15px;" id="punto">
                 <div class="form-control" style="height: 100%">
-                 <h3>Datos del Equipo</h3>
-                 <div class="row" style="padding-bottom: 1px">
-                     <div align="left" class="col-sm-6">
+                   <h3>Datos del Equipo</h3>
+                   <div class="row" style="padding-bottom: 1px">
+                       <div align="left" class="col-sm-6">
                         <strong>Modelo:</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->nombre_equipo}}<br>
                         <strong>Número de serie:</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->numero_serie}}<br>
                         <strong>Descripcion del Problema:&nbsp;</strong><br>
@@ -170,39 +170,39 @@
           @csrf
           @method('PATCH')
           <div class="row" align="center" style="padding-bottom: 5px">
-            <div class="col-sm-6" align="center">
-                <div class="form-control" style="height: 100%" ><h3>Estética</h3>
-                    <div align="left" style="font-size: 13px">
-                        <textarea name="estetica" class="form-control">{{$garantias_informe_tecnico->estetica}}</textarea>
-                    </div>
+           <div class="col-sm-12">
+            <div class="tabs-container">
+              <ul class="nav nav-tabs" role="tablist">
+                <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Estética</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-3">Causas del problema</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-4">Solucion</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" id="tab-1" class="tab-pane active">
+                  <div class="panel-body">
+                    <textarea class="form-control" rows="10" placeholder="Escribir aqui estetica" name="estetica" maxlength="1230" required  >{{$garantias_informe_tecnico->estetica}}</textarea>
                 </div>
             </div>
-            <div class="col-sm-6" align="center">
-                <div class="form-control" style="height: 100%"><h3>Revision y diagnóstico:</h3>
-                    <div align="left" style="font-size: 13px;" >
-                       <textarea name="revision_diagnostico" class="form-control">{{$garantias_informe_tecnico->revision_diagnostico}}</textarea>
-                   </div>
-               </div>
-           </div>
-
-       </div>
-       <br>
-       <div class="row" align="center" style="padding-bottom: 5px">
-        <div class="col-sm-6" align="center">
-            <div class="form-control" style="height: 100%" ><h3>Causas del Problema</h3>
-                <div align="left" style="font-size: 13px;">
-                   <textarea name="causas_del_problema" class="form-control">{{$garantias_informe_tecnico->causas_del_problema}}</textarea>
-               </div>
-           </div>
-       </div>
-       <div class="col-sm-6" align="center">
-        <div class="form-control" style="height: 100%" ><h3>Solución</h3>
-            <div align="left" style="font-size: 13px">
-             <textarea name="solucion" class="form-control">{{$garantias_informe_tecnico->solucion}}</textarea>
-         </div>
-     </div>
- </div>
- <div class="col-sm-12" align="center" style="margin-top:20px">
+            <div role="tabpanel" id="tab-2" class="tab-pane">
+              <div class="panel-body">
+                <textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganostico" name="revision_diagnostico" maxlength="1230" required >{{$garantias_informe_tecnico->revision_diagnostico}}</textarea>
+            </div>
+        </div>
+        <div role="tabpanel" id="tab-3" class="tab-pane">
+          <div class="panel-body">
+            <textarea class="form-control" rows="10" placeholder="Escribir aqui Causas del Problema" name="causas_del_problema" maxlength="1230" required>{{$garantias_informe_tecnico->causas_del_problema}}</textarea>
+        </div>
+    </div>
+    <div role="tabpanel" id="tab-4" class="tab-pane">
+      <div class="panel-body">
+        <textarea class="form-control" rows="10" placeholder="Escribir aqui la Solucion" name="solucion" maxlength="1230" required>{{$garantias_informe_tecnico->solucion}}</textarea>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-sm-12" align="center" style="margin-top:20px">
     <button class="btn btn-info">Guardar</button>
 </div>
 </div>
@@ -232,18 +232,18 @@
 <footer style="padding-top: 10px">
   <br>
   <div class="row">
-   <div class="col-sm-4">
-    <strong><p><u>Centro de Atencion : </strong></u></p>
-    <strong>Direccion:</strong> {{$usuario->almacen->direccion}}<br>
-    <strong>Telefonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
-    <strong>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre_empresa}}:</strong> {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->telefono}}<br>
-    <strong>Email:</strong> {{$usuario->email}}<br>
-    <strong>Web:</strong> {{$empresa->pagina_web}}<br>
-</div>
-<div class="col-sm-2"></div>
-<div class="col-sm-3"></div>
-<div class="col-sm-3"><br><br>
-</div>
+     <div class="col-sm-4">
+        <strong><p><u>Centro de Atencion : </strong></u></p>
+        <strong>Direccion:</strong> {{$usuario->almacen->direccion}}<br>
+        <strong>Telefonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
+        <strong>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre_empresa}}:</strong> {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->telefono}}<br>
+        <strong>Email:</strong> {{$usuario->email}}<br>
+        <strong>Web:</strong> {{$empresa->pagina_web}}<br>
+    </div>
+    <div class="col-sm-2"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"><br><br>
+    </div>
 
 </div>
 </footer>
@@ -254,29 +254,29 @@
 </div>
 <style>
 
-#auto{
-    cursor: pointer;
-    box-shadow: 0px 0px 1px #000;
-    display: inline-block;
-}
+    #auto{
+        cursor: pointer;
+        box-shadow: 0px 0px 1px #000;
+        display: inline-block;
+    }
 
-#auto:hover{
-    opacity: .8;
-}
+    #auto:hover{
+        opacity: .8;
+    }
 
-#div-mostrar{
-    margin: auto;
-    height: 0px;
-    transition: height .4s;
-    color:white;
-    text-align: right;
-}
-#auto:hover{
-    opacity: .8;
-}
-#auto:hover + #div-mostrar{
-    height: 50px;
-}
+    #div-mostrar{
+        margin: auto;
+        height: 0px;
+        transition: height .4s;
+        color:white;
+        text-align: right;
+    }
+    #auto:hover{
+        opacity: .8;
+    }
+    #auto:hover + #div-mostrar{
+        height: 50px;
+    }
 </style>
 <script type="text/javascript">
     {{-- Fotooos --}}
@@ -325,10 +325,10 @@
 <script>
     var clic = 1;
     function divAuto(){
-       if(clic==1){
-           document.getElementById("div-mostrar").style.height = "50px";
-           clic = clic + 1;
-       } else{
+     if(clic==1){
+         document.getElementById("div-mostrar").style.height = "50px";
+         clic = clic + 1;
+     } else{
         document.getElementById("div-mostrar").style.height = "0px";
         clic = 1;
     }

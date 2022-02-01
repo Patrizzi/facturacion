@@ -85,7 +85,7 @@
               <div class="panel-body" align="left">
                <div class="row">
                 <label class="col-sm-2 col-form-label">Nombre:</label>
-                <div class="col-sm-10"><input type="text" class="form-control" name="nombre" placeholder="Nombre del Producto" required="required" autocomplete="off"></div>
+                <div class="col-sm-10"><input type="text" class="form-control" onkeypress="return (event.charCode != 34 )"  name="nombre" placeholder="Nombre del Producto" required="required" autocomplete="off"></div>
 
                 <label class="col-sm-2 col-form-label">Descripcion:</label>
                 <div class="col-sm-10"><textarea type="text" class="form-control" name="descripcion" rows="2" required="required" ></textarea ></div>
@@ -198,6 +198,7 @@
  <label class="col-sm-2 col-form-label">garantia:</label>
  <div class="col-sm-4">
   <select class="form-control" name="garantia"  >
+    <option value="3 meses">3 meses</option>
     <option value="4 meses">4 meses</option>
     <option value="6 meses">6 meses</option>
     <option value="12 meses">12 meses</option>

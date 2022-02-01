@@ -13,7 +13,7 @@
     .form-control, .single-line {
     background-color: #FFFFFF;
     background-image: none;
-    border: 1px solid #e5e6e7;
+    border: 1px solid #808080;
     border-radius: 1px;
     color: inherit;
     display: block;
@@ -32,15 +32,24 @@
 </div> --}}
     <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
         <tr>
-            <td style="width: auto;border-color: white" rowspan="2" valign="top">
+            <td style="width: 30%;border-color: white" rowspan="2" valign="top">
                 <img align="" src="{{asset('img/logos/')}}/{{$empresa->foto}}" style="margin-top: 0px;" width="300px" />
                 <br>
             </td>
-            <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
+            <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
+                     <strong>{{$empresa->razon_social}}</strong>
+                     <br>
+                     Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                    <br>
+                     {{$empresa->correo}}
+                     <br>
+                      {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+            </td>
+            <td style="width: 30%; ;border: 1px #808080 solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
-                    <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
+                    <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
                     <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRONICA</h2><br>
-                    <h5 style="text-align: center;margin-bottom: -5px" >{{$facturacion->codigo_fac}}</h5>
+                    <h5 style="text-align: center;margin-bottom: -1px" >{{$facturacion->codigo_fac}}</h5>
                 </center>
             </td>
         </tr>
@@ -50,8 +59,8 @@
 
 <table style="width: 100%;border-collapse:separate;margin-top: -20px">
     <tr >
-        <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto" >
-            <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br>
+        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+            <!-- <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br> -->
             <strong>Señor(es)</strong>&nbsp;
                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
                 @else{{$facturacion->cotizacion->cliente->nombre}}
@@ -73,8 +82,8 @@
                 @endif<br>
         </td>
         <th style="width: 5%;border-color: white"></th>
-        <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
-            <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
+        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+            <!-- <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center> <br> -->
             <strong>Orden de Compra:</strong>&nbsp;{{$facturacion->orden_compra}}<br>
             <strong>Guia de Remision:</strong> &nbsp;{{$facturacion->guia_remision}}<br>
             <strong>Fecha de Emision:</strong> &nbsp;{{$facturacion->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -90,18 +99,18 @@
 <br>
 @if($facturacion->tipo=="producto")
 <div class="table-responsive">
-    <table class="table " style="border-top: 0px" >
-        <thead style="">
-            <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
+    <table class="table " style="border-top: 0px;border-color: #808080" >
+        <thead style="border-color: #808080">
+            <tr style="text-align: left;font-weight: bold;border-top-width:  0px;border-color: #808080">
                 <td width="10px">ITEM </td>
                 <td width="120px" >Codigo Producto</td>
                 <td width="60px">Cantidad</td>
                 <td width="60px">Unid.Medida</td>
-                <td width="auto">Descripción</td>
-                <td width="auto">Valor Unitario</td>
-                <td width="auto">Dscto.%</td>
+                <td width="300px">Descripción</td>
+                {{-- <td width="auto">Valor Unitario</td>
+                <td width="auto">Dscto.%</td> --}}
                 <td width="auto">Precio Unitario</td>
-                <td width="auto">Valor Venta</td>
+                <td width="auto" style="text-align: center;">Valor Venta</td>
             </tr>
         </thead>
         <tbody>
@@ -112,15 +121,16 @@
                 <td>{{$facturacion_registros->cantidad}}</td>
                 <td>{{$facturacion_registros->producto->unidad_i_producto->medida}}</td>
                 <td>{{$facturacion_registros->producto->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
-                <td>{{$facturacion_registros->precio}}</td>
-                <td>{{$facturacion_registros->descuento}}%</td>
-                <td>{{$facturacion_registros->precio_unitario_comi}}</td>
-                <td>{{$facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}</td>
+                {{-- <td>{{$facturacion_registros->precio}}</td>
+                <td>{{$facturacion_registros->descuento}}%</td> --}}
+                <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>
+                <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                 <td style="display: none">
                     {{$sub_total=($facturacion->op_gravada)}}
                     {{$sub_total_gravado=($facturacion->op_gravada)+($facturacion->op_inafecta)+($facturacion->op_exonerada)}}
                     {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
                     {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                 </td>
             </tr>
             @endforeach
@@ -129,17 +139,17 @@
 </div>
 @else
 <div class="table-responsive">
-    <table class="table " style="border-top: 0px" >
+    <table class="table " style="border-top: 0px;border-color: #808080" >
         <thead style="">
-           <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
+           <tr style="text-align: ce;font-weight: bold;border-top-width:  0px;border-color: #808080 ">
                 <td width="30px">ITEM </td>
                 <td width="120px" >Codigo Servicio</td>
-                <td width="auto">Cantidad</td>
-                <td width="auto">Descripcion</td>
-                <td width="auto">Valor Unitario</td>
-                <td width="auto">Dscto.%</td>
+                <td width="60px">Cantidad</td>
+                <td width="350px">Descripcion</td>
+                {{-- <td width="auto">Valor Unitario</td>
+                <td width="auto">Dscto.%</td> --}}
                 <td width="auto">Precio Unitario</td>
-                <td width="80px">Valor Venta</td>
+                <td width="auto">Valor Venta</td>
             </tr>
         </thead>
         <tbody>
@@ -149,16 +159,22 @@
                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                 <td>{{$facturacion_registros->cantidad}}</td>
 
-                <td>{{$facturacion_registros->servicio->nombre}}</td>
-                <td>{{$facturacion_registros->precio}}</td>
-                <td>{{$facturacion_registros->descuento}}%</td>
-                <td>{{$facturacion_registros->precio_unitario_comi}}</td>
-                <td>{{$facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}</td>
+                <td style="">{{$facturacion_registros->servicio->nombre}}: &nbsp;
+                    @if(isset( $facturacion_registros->descripcion_item ))
+                         <span style="margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</span>
+                    @else
+                    @endif
+                </td>
+                {{-- <td>{{$facturacion_registros->precio}}</td> --}}
+                {{-- <td>{{$facturacion_registros->descuento}}%</td> --}}
+                <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>
+                <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                 <td style="display: none">
                     {{$sub_total_gravado=($facturacion->op_gravada)}}
                     {{$sub_total=($facturacion->op_gravada)+($facturacion->op_exonerada)+($facturacion->op_inafecta)}}
                     {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
                     {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                 </td>
             </tr>
             @endforeach
@@ -168,31 +184,34 @@
 @endif
 <footer style="padding-top: 120px">
 
-<table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px">
+<table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
      <tr>
-         <td style="width: 70%;border: none"></td>
-         <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
-            <span > Sub Total:</span>
-            <br>
-            <span > Op. Agravada:</span> <br>
-            <span > Op. Inafecta:</span> <br>
-            <span > Op. Exonerada:</span> <br>
+         <td style="width: 70%;border: none">
+            <h3 align="left">
+                <?php $v=new CifrasEnLetras() ;
+                $letra=($v->convertirEurosEnLetras($end));
+                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                $end_final_point=strstr($end2, '.',false);
+                $end_final=str_replace('.', '',$end_final_point);
+                ?>
+                Son : {{$letra_final}} con {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+            </h3>
+         </td>
+         <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
+            <span > Sub Total:</span><br>
+            <span > Op. Agravada:</span><br>
+            <span > Op. Inafecta:</span><br>
+            <span > Op. Exonerada:</span><br>
             <span > I.G.V.:</span> <br>
-            <span > Importe Total:</span> <br>
+            <span > Importe Total:</span><br>
         </td>
-        <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
-            <span>{{$simbologia=$facturacion->moneda->simbolo}}. {{number_format($sub_total, 2)}}</span><br>
-            <span>{{$simbologia}}. {{number_format($facturacion->op_gravada,2)}}</span><br>
-            <span>{{$simbologia}}. {{number_format($facturacion->op_inafecta,2)}}</span><br>
-            <span>{{$simbologia}}. {{number_format($facturacion->op_exonerada,2)}}</span><br>
-            <span>
-                {{$simbologia}}. {{number_format(round($igv_p, 2),2)}}
-                
-            </span><br>
-            <span>
-                {{$simbologia}}. {{$end}}
-            
-        </span>
+        <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
+            <span>{{$simbologia=$facturacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
+            <span>{{$simbologia}} {{number_format($facturacion->op_gravada,2)}}</span><br>
+            <span>{{$simbologia}} {{number_format($facturacion->op_inafecta,2)}}</span><br>
+            <span>{{$simbologia}} {{number_format($facturacion->op_exonerada,2)}}</span><br>
+            <span>{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
+            <span>{{$simbologia}} {{number_format($end,2)}}</span>
         </td>
      </tr>
 </table>
@@ -200,6 +219,17 @@
 
 
 <br>
+<table style="width: 100%;height: 120px;border-collapse:separate;margin-bottom: -10px">
+    <tr>
+        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+            <strong>Observaciones:</strong><br>
+            {{$facturacion->observacion}}
+        </td>
+            
+    </tr>
+
+
+</table>
 
 <!-- Fin Totales de Productos -->
 <br>
@@ -208,13 +238,13 @@
          <th style="width: 2%;border-color: white"></th>
         @foreach($banco as $bancos)
         @if($banco_count==3)
-        <th width="33%" style="border: 1px #e5e6e7 solid;border-radius: 8px;">
+        <th width="33%" style="border: 1px #808080 solid;border-radius: 8px;">
         @elseif($banco_count==2)
-        <th width="50%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
+        <th width="50%"style="border: 1px #808080 solid;border-radius: 8px;">
         @elseif($banco_count==1)
-        <th width="100%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
+        <th width="100%"style="border: 1px #808080 solid;border-radius: 8px;">
         @else
-        <th width="20%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
+        <th width="20%"style="border: 1px #808080 solid;border-radius: 8px;">
         @endif
         <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
           <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
@@ -232,11 +262,11 @@
 </table>
 <div class="row">
 <br>
-<table style="border:  0px solid white">
+{{-- <table style="border:  0px solid white">
     <tr style="border:  0px solid white">
         <td>
             <p><u>centro de Atencion : </u></p>
-            Telefono : {{$facturacion->user->personal->nombres }}<br>
+            Usuario : {{$facturacion->user->personal->nombres }}<br>
             Telefono : {{$facturacion->user->personal->telefono }}<br>
             Celular : {{$facturacion->user->personal->celular }}<br>
             Email : {{$facturacion->user->personal->email }}<br>
@@ -249,11 +279,11 @@
             <br>
             <br>
             <br>
-            {{-- <hr> --}}
-            {{-- <center>{{$cotizacion->user_personal->personal->nombres }}</center> --}}
+            <hr>
+            <center>{{$cotizacion->user_personal->personal->nombres }}</center>
         </td>
     </tr>
-</table>
+</table> --}}
 </div>
 
 {{--  --}}
@@ -268,10 +298,10 @@
     border: none;
 }
     .blanco{border: none;
-        border: medium transparent;
+        border: border-color: #808080 ;
         }
     .border {
-        border-color: #aaaaaa;
+        border-color: #808080;
         border-width: 1px;
         border-style: solid;
     }

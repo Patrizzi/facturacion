@@ -60,8 +60,7 @@
                             <div class="col-sm-4 text-left" align="left">
 
                                 <address class="col-sm-4" align="left">
-
-                                    <img src="{{asset('img/logos/logo.png')}}" alt="" width="300px">
+                                     <img src="{{asset('img/logos/')}}//{{$empresa->foto}}" alt="" width="300px">
                                 </address>
                             </div>
                             <div class="col-sm-4">
@@ -94,12 +93,14 @@
                                 <tr>
                                     <td>Cliente</td>
                                     <td>:</td>
-                                    <td><input list="browsersc1" class="form-control m-b" name="cliente" id="cliente"  required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                        <datalist id="browsersc1" >
+                                    <td>
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
+                                            <option></option>
                                             @foreach($clientes as $cliente)
-                                            <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                                <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
                                             @endforeach
-                                        </datalist></td>
+                                        </select>
+                                    </td>
 
                                         <td>Comisionista</td>
                                         <td>:</td>
@@ -389,6 +390,11 @@
     <script type="text/javascript">
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",
+        });
+    </script>
+    <script type="text/javascript">
+        $(".select2_demo_client").select2({
+            placeholder: "Seleccionar Cliente",
         });
     </script>
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}

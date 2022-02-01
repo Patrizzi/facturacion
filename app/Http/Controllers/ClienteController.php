@@ -16,6 +16,13 @@ class ClienteController extends Controller
     {
       $clientes=Cliente::all();
       $contactos=Contacto::all();
+      foreach ($clientes as  $cliente) {
+        if($cliente->empresa == null){
+            $cliente = Cliente::find($cliente->id);
+            $cliente->empresa = $cliente->nombre;
+            $cliente->save();
+        }
+      }
       return view('auxiliar.cliente.index',compact('clientes','contactos'));
     }
 

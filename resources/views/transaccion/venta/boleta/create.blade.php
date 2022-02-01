@@ -65,26 +65,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Agregar </h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
                 <div class="ibox-content">
                     <form action="{{route('boleta.store',$moneda->id)}}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
                         @csrf
@@ -94,8 +74,7 @@
                             <div class="col-sm-4 text-left" align="left">
 
                                 <address class="col-sm-4" align="left">
-
-                                    <img src="{{asset('img/logos/logo.png')}}" alt="" width="300px">
+                                     <img src="{{asset('img/logos/')}}//{{$empresa->foto}}" alt="" width="300px">
                                 </address>
                             </div>
                             <div class="col-sm-4">
@@ -128,12 +107,14 @@
                                 <tr>
                                     <td>Cliente</td>
                                     <td>:</td>
-                                    <td><input list="browsersc1" class="form-control m-b" name="cliente" id="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                        <datalist id="browsersc1" >
+                                    <td>
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
+                                            <option></option>
                                             @foreach($clientes as $cliente)
-                                            <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                                <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
                                             @endforeach
-                                        </datalist></td>
+                                        </select>
+                                    </td>
 
                                         <td>Comisionista</td>
                                         <td>:</td>
@@ -429,6 +410,11 @@
                     <script type="text/javascript">
                         $(".select2_demo_3").select2({
                             placeholder: "Seleccionar Producto",
+                        });
+                    </script>
+                     <script type="text/javascript">
+                        $(".select2_demo_client").select2({
+                            placeholder: "Seleccionar Cliente",
                         });
                     </script>
                     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}

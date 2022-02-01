@@ -30,16 +30,17 @@ class KardexEntradaController extends Controller
      */
     public function index()
     {
+
       $primer_registro=Kardex_entrada::first();
       if(empty($primer_registro)){$primer_registro_kardex=1;}else{ $primer_registro_kardex=$primer_registro->id;}
-      $inventario_inicial=Kardex_entrada::where('id',1)->where('id','!=',$primer_registro_kardex)->get();
+      $inventario_inicial=Kardex_entrada::where('codigo_guia','INVENTARIO INICIAL')->where('id','!=',$primer_registro_kardex)->get();
       $user_login =auth()->user();
       $almacenes=Almacen::all();
       $clasificaciones=Categoria::all();
       if ($user_login->name== 'Administrador') {
-        $kardex_entradas=Kardex_entrada::where('tipo_registro_id',1)->where('id','!=',1)->get();
+        $kardex_entradas=Kardex_entrada::where('tipo_registro_id',1)->where('codigo_guia','!=','INVENTARIO INICIAL')->get();
         /* numero '1' es igual a Entrada de productos*/
-      }else{ $kardex_entradas=Kardex_entrada::where('almacen_id',$user_login->almacen_id)->where('id','!=',1)->get();}
+      }else{ $kardex_entradas=Kardex_entrada::where('almacen_id',$user_login->almacen_id)->where('codigo_guia','!=','INVENTARIO INICIAL')->get();}
 
       foreach ($kardex_entradas as $value => $kardex_entrada) {
         $kardex_entrada_registros=kardex_entrada_registro::where('kardex_entrada_id',$kardex_entrada->id)->get();
@@ -212,7 +213,7 @@ class KardexEntradaController extends Controller
         $factura = $request->get('factura');
         $guia_remision = $request->get('guia_remision');
 
-        $busc_prove_fac = Kardex_entrada::where('provedor_id',$provedor)->where('factura',$factura)->where('motivo_id','!=', '5')->first();
+        $busc_prove_fac = Kardex_entrada::where('provedor_id',$provedor)->where('factura',$factura)->where('estado','!=', 'ANULADO')->where('motivo_id','!=', '5')->first();
         
         if(isset($busc_prove_fac)){
             return redirect()->route('kardex-entrada.create')->with('repite', 'El numero de factura ya está en uso');
@@ -223,7 +224,7 @@ class KardexEntradaController extends Controller
             $factura = $request->get('factura');
         }
 
-        $busc_prove_guia = Kardex_entrada::where('provedor_id',$provedor)->where('guia_remision',$guia_remision)->where('motivo_id','!=', '5')->first();
+        $busc_prove_guia = Kardex_entrada::where('provedor_id',$provedor)->where('guia_remision',$guia_remision)->where('motivo_id','!=', '5')->where('estado','!=', 'ANULADO')->first();
         if(isset($busc_prove_guia)){
             $this->validate($request,[
                 'guia_remision' => ['required','unique:kardex_entrada'],

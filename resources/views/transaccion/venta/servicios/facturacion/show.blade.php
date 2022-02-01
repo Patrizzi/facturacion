@@ -76,9 +76,17 @@
                         <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                     </address>
                 </div>
-                <div class="col-sm-4">
-                </div>
+                <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                     <strong>{{$empresa->razon_social}}</strong>
+                     <br>
+                     Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                    <br>
+                     {{$empresa->correo}}
+                     <br>
+                      {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+                     
 
+                </div>
                 <div class="col-sm-4 ">
                     <div class="form-control ruc" style="height: 125px">
                         <center>
@@ -95,7 +103,7 @@
 <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
                         <div class="form-control">
-                            <h3> Datos Generales</h3>
+                            <!-- <h3> Datos Generales</h3> -->
                             <div align="left">
                                 <strong>Cliente:</strong>
                                     @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
@@ -122,7 +130,7 @@
                     </div>
                     <div class="col-sm-6" align="center">
                      <div class="form-control" >
-                         <h3>Condiciones Generales</h3>
+                         <!-- <h3>Condiciones Generales</h3> -->
                          <div align="left">
                             <strong>Orden de Compra:</strong>
                                 {{$facturacion->orden_compra}} <br>
@@ -152,10 +160,10 @@
                 <table class="table ">
                     <thead>
                         <tr>
-                            <th>ITEM</th>
-                            <th>Codigo Producto</th>
-                            <th>Cantidad</th>
-                            <th>Descripción</th>
+                            <th style="width: 3%">ITEM</th>
+                            <th style="width: 10%">Codigo Producto</th>
+                            <th style="width: 5%">Cantidad</th>
+                            <th style="width: 25%">Descripción</th>
                             <th>Valor Unitario</th>
                             <th>Dscto.%</th>
                             <th>P. Unitario Desc.</th>
@@ -169,23 +177,29 @@
 
                         <tr>
                             @foreach($facturacion_registro as $facturacion_registros)
-                            <span hidden="hidden">{{$i=1}} </span>
+                            <!-- <span hidden="hidden">{{$i=1}} </span> -->
                             <tr>
-                                <td>{{$i}} </td>
+                                <td>{{$j++}} </td>
                                 <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
                                 <td>{{$facturacion_registros->cantidad}}</td>
-                                <td>{{$facturacion_registros->servicio->nombre}}
+                                <td>{{$facturacion_registros->servicio->nombre}}: &nbsp;
+                                    @if(isset( $facturacion_registros->descripcion_item ))
+                                         <span style="margin-bottom: 0px; padding-bottom: 0px;">{{$facturacion_registros->descripcion_item}}</span>
+                                    @else
+                                    @endif
+                                    </td>
                                 <td>{{$facturacion_registros->precio}}</td>
                                 <td>{{$facturacion_registros->descuento}}%</td>
                                 <td>{{$facturacion_registros->precio_unitario_desc}}</td>
                                 <td>{{$facturacion_registros->comision}}%</td>
-                                <td>{{$facturacion_registros->precio_unitario_comi}}</td>
-                                <td>{{$facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}</td>
+                                <td>{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>
+                                <td>{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                                 <td style="display: none">
                                     {{$sub_total_gravado=($facturacion->op_gravada)}}
                                     {{$sub_total=($facturacion->op_gravada)+($facturacion->op_exonerada)+($facturacion->op_inafecta)}}
                                     {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
                                     {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                 </td>
                             </tr>
                             <span hidden="hidden">{{$i++}}</span>
@@ -194,6 +208,7 @@
                     </tbody>
                 </table>
             </div><br><br><br><br>
+            
             <!-- <div class="row">
                 <div class="col-sm-3 ">
                     <p class="form-control a"> Sub Total</p>
@@ -213,26 +228,43 @@
                 </div>
             </div><br> -->
             <div class="row">
-                        <div class="col-sm-8">
+                <div class="col-sm-8">
+                        <h3 align="left">
+                            <?php $v=new CifrasEnLetras() ;
+                             $letra=($v->convertirEurosEnLetras($end));
+                            $letra_final = ucfirst(strstr($letra, 'soles',true));
+                            $end_final_point=strstr($end2, '.',false);
+                            $end_final=str_replace('.', '',$end_final_point);
 
+                            ?>
+                            Son : {{$letra_final}} con {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+                        </h3>
                     </div>
 
                     <div class="col-sm-4 form-control" >
                         <span style="display: block;float: left"> Sub Total:</span>
-                        <span style="display: block;float: right;"> {{$simbologia=$facturacion->moneda->simbolo}}. {{number_format($sub_total, 2)}}</span>
+                        <span style="display: block;float: right;"> {{$simbologia=$facturacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
                         <br>
                         <span style="display: block;float: left"> Op. Agravada: </span>
-                        <span style="display: block;float: right">{{$simbologia}}. {{number_format($facturacion->op_gravada,2)}}</span><br>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format($facturacion->op_gravada,2)}}</span><br>
                         <span style="display: block;float: left"> Op. Inafecta: </span>
                         <span style="display: block;float: right">{{$simbologia}} {{ number_format($facturacion->op_inafecta,2)}}</span><br>
                         <span style="display: block;float: left"> Op. Exonerada: </span>
-                        <span style="display: block;float: right">{{$simbologia}}. {{number_format($facturacion->op_exonerada,2)}} </span><br>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format($facturacion->op_exonerada,2)}} </span><br>
                         <span style="display: block;float: left"> I.G.V.: </span>
-                        <span style="display: block;float: right">{{$facturacion->moneda->simbolo}}.{{number_format(round($igv_p, 2),2)}}</span><br>
+                        <span style="display: block;float: right">{{$facturacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
                         <span style="display: block;float: left"> Importe Total: </span>
-                         <span style="display: block;float: right">{{$facturacion->moneda->simbolo}}.{{$end}}</span>
+                         <span style="display: block;float: right">{{$facturacion->moneda->simbolo}} {{number_format($end,2)}}</span>
                     </div>
                     </div>
+                    <br>
+                    <div class="row">
+                <div class="col-sm-12 form-control" style="height:  120px">
+                    <strong>Observaciones:</strong><br>
+                    {{$facturacion->observacion}}
+                </div>
+            </div>
+            <br>
             <div class="row">
                 @foreach($banco as $bancos)
                 <div class="col-sm-3 " align="center">
@@ -250,21 +282,21 @@
           </div>
           <br>
 
-              <div class="row">
-                        <div class="col-sm-3">
-                            <p><u>centro de Atencion : </u></p>
-                            Telefono : {{$facturacion->user->personal->nombres }}<br>
-                            Telefono : {{$facturacion->user->personal->telefono }}<br>
-                            Celular : {{$facturacion->user->personal->celular }}<br>
-                            Email : {{$facturacion->user->personal->email }}<br>
-                            Web :
-                            <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
-                        </div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
-
+           {{--    <div class="row">
+                    <div class="col-sm-3">
+                        <p><u>centro de Atencion : </u></p>
+                        Usuario : {{$facturacion->user->personal->nombres }}<br>
+                        Telefono : {{$facturacion->user->personal->telefono }}<br>
+                        Celular : {{$facturacion->user->personal->celular }}<br>
+                        Email : {{$facturacion->user->personal->email }}<br>
+                        Web :
+                        <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
                     </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+
+                </div> --}}
       </div>
   </div>
 

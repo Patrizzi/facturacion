@@ -8,6 +8,7 @@
 @section('value_accion', 'Agregar')
 @section('button2', 'Inicio')
 @section('config',route('cliente.index'))
+@extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 @section('content')
@@ -187,7 +188,7 @@
                   <ul>
                     <li>{{$cliente_show->documento_identificacion}}: {{$cliente_show->numero_documento}}</li>
                     <li>{{$cliente_show->tipo_cliente}}</li>
-                    <li>Fecha Rigistrada: {{$cliente_show->fecha_registro}}</li>
+                    <li>Fecha Registrada: {{$cliente_show->fecha_registro}}</li>
                   </ul>
                 </div>
                 <div class="col-lg-12">
@@ -217,7 +218,7 @@
               </div>
             </div>
             <div class="client-detail">
-              <div class="full-height-scroll">
+              <div class="full-height-scroll tooltip-demo" >
 
                 <table class="table table-striped table-hover" style="font-size: 13px" id="table_clientes" >
                   <tbody>
@@ -239,11 +240,11 @@
                     </tr>
                     <tr>
                       <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/telefono.svg')}}"> </td>
-                      <td><input type="text" value="{{$cliente_show->telefono}} " readonly="" disabled="" class="form-control"></td>
+                      <td><input type="text" value="{{$cliente_show->telefono}}" readonly="" disabled="" class="form-control"></td>
                     </tr>
                     <tr>
                       <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/llamadas.svg')}}"> </td>
-                      <td> <input type="text" value=" {{$cliente_show->celular}}" readonly="" disabled="" class="form-control"></td>
+                      <td><input type="text" value="{{$cliente_show->celular}}" readonly="" disabled="" class="form-control"></td>
                     </tr>
                   </tbody>
                 </table>
@@ -286,17 +287,17 @@
                     <tr>
                       <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
                       <td><input type="text" placeholder="Ciudad" name="ciudad" value="{{$cliente_show->ciudad}}" class="form-control">
-                        <td><input type="number" placeholder="" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
+                        <td><input type="number" placeholder="Codigo Postal" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
                       </tr>
                       <tr>
                         <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/telefono.svg')}}"> </td>
-                        <td><input type="text" placeholder="Telefono"  name="telefono" value="{{$cliente_show->telefono}} " class="form-control"></td>
+                        <td><input type="text" placeholder="Telefono"  name="telefono" value="{{$cliente_show->telefono}}" class="form-control"></td>
                         <td><input type="text"  placeholder="Celular" name="celular" value="{{$cliente_show->celular}}" class="form-control"></td>
                       </tr>
                       <tr>
                         <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/aniversario.svg')}}"> </td>
-                        <td><input type="date" placeholder="Aniversario" name="aniversario" value="{{$cliente_show->aniversario}}" class="form-control"></td>
-                        <td><input type="date" placeholder="" placeholder="Fecha de Registro" name="fecha_registro" value="{{$cliente_show->fecha_registro}}" class="form-control"></td>
+                        <td><input type="date" name="aniversario" value="{{$cliente_show->aniversario}}" class="form-control" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Aniversario"></td>
+                        <td><input type="date" placeholder="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Registro" name="fecha_registro" value="{{$cliente_show->fecha_registro}}" class="form-control"></td>
 
                       </tr>
                       <tr>

@@ -10,143 +10,137 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Agregar</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
+               <div class="ibox-content">
+                <form action="{{route('otros.store')}}"  enctype="multipart/form-data" method="post">
+                 @csrf
+                 {{-- Cabecera --}}
+                 <div class="row">
+                    <div class="col-sm-4 text-left" align="left">
+                        <address class="col-sm-4" align="left">
+                            <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
+                        </address>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+
+                       <div class="form-control" align="center" style="height: auto;">
+                        <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                        <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                        <h5> CO001-0000000<input required="" name="codigo" class="form-control" style="width:  50px;display: inline-block;" type="text" value="185"></h5>
                     </div>
                 </div>
-                <div class="ibox-content">
-                    <form action="{{route('otros.store')}}"  enctype="multipart/form-data" method="post">
-                     @csrf
-                     {{-- Cabecera --}}
-                     <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-4" align="left">
-                                <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
+            </div>
+            <br>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Cliente</td>
+                        <td>:</td>
+                        <td>
+                            <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
+                            <datalist id="browsersc1" >
+                                @foreach($clientes as $cliente)
+                                <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                @endforeach
+                            </datalist>
+                        </td>
 
-                           <div class="form-control" align="center" style="height: auto;">
-                            <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                            <h5> COTPF 001-0000000<input required="" name="codigo" class="form-control" style="width:  50px;display: inline-block;" type="text" value="185"></h5>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>Cliente</td>
-                            <td>:</td>
-                            <td>
-                                <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                <datalist id="browsersc1" >
-                                    @foreach($clientes as $cliente)
-                                    <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
-                                    @endforeach
-                                </datalist>
-                            </td>
-
-                            <td>Forma de pago</td>
-                            <td>:</td>
-                            <td>
-                                <select class="form-control" name="forma_pago" required="required">
-                                    @foreach($forma_pagos as $forma_pago)
-                                    <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
-                                    @endforeach
-                                    <select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Validez</td>
-                                    <td>:</td>
-                                    <td><select  class="form-control" name="validez" required="required">
-                                        <option value="5 Días">5 Días</option>
-                                        <option value="4 Días">4 Días</option>
-                                        <option value="3 Días">3 Días</option>
-                                        <option value="2 Días">2 Días</option>
-                                        <option value="1 Día">1 Día</option>
-                                    </select></td>
-
-                                    <td>Garantia</td>
-                                    <td>:</td>
-                                    <td><select class="form-control" name="garantia">
-                                        <option value="1 año">1 Año</option>
-                                        <option value="2 años">2 Años</option>
-                                        <option value="3 años">3 Años</option>
-                                        <option value="6 meses">6 Meses</option>
-                                    </select></td>
-                                </tr>
-
-                                <tr>
-                                    <td>Moneda</td>
-                                    <td>:</td>
-                                    <td>
-                                     <select name="moneda" class="form-control" >
-                                        @foreach($moneda as $monedas)
-                                        <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                        @endforeach
-                                    </select>
-
-                                </td>
-                                <td>Fecha de cotizacion</td>
-                                <td>:</td>
-                                <td>
-                                    <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                        <td>Forma de pago</td>
+                        <td>:</td>
+                        <td>
+                            <select class="form-control" name="forma_pago" required="required">
+                                @foreach($forma_pagos as $forma_pago)
+                                <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
+                                @endforeach
+                                <select>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Observacion</td>
+                                <td>Validez</td>
                                 <td>:</td>
-                                <td colspan="4">
-                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
-                                </td>
+                                <td><select  class="form-control" name="validez" required="required">
+                                    <option value="5 Días">5 Días</option>
+                                    <option value="4 Días">4 Días</option>
+                                    <option value="3 Días">3 Días</option>
+                                    <option value="2 Días">2 Días</option>
+                                    <option value="1 Día">1 Día</option>
+                                </select></td>
+
+                                <td>Garantia</td>
+                                <td>:</td>
+                                <td><select class="form-control" name="garantia">
+                                    <option value="1 año">1 Año</option>
+                                    <option value="2 años">2 Años</option>
+                                    <option value="3 años">3 Años</option>
+                                    <option value="6 meses">6 Meses</option>
+                                </select></td>
                             </tr>
-                        </tbody>
-                    </table>
 
-                    <div id="resultado_moneda"></div>
+                            <tr>
+                                <td>Moneda</td>
+                                <td>:</td>
+                                <td>
+                                 <select name="moneda" class="form-control" >
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
 
-                    <div class="table-responsive">
-                        <table cellspacing="0" class="table tables  " >
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-                                    <th >Articulo</th>
-                                    <th style="width:100px">Cantidad</th>
-                                    <th style="width:100px">Precio</th>
-                                    <th style="width:100px">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type='checkbox' class="case">
-                                    </td>
-                                    <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-                                       <datalist id="browsers2" >
-                                        @foreach($productos as $index)
-                                        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-                                        @endforeach
-                                        {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
+                            </td>
+                            <td>Fecha de cotizacion</td>
+                            <td>:</td>
+                            <td>
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Observacion</td>
+                            <td>:</td>
+                            <td >
+                                <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                            </td>
+                            <td>Fecha de cotizacion</td>
+                            <td>:</td>
+                            <td>
+                                <div class="radio">
+                                    <input type="radio" name="tipo_coti" id="radio1" value="1" checked="">
+                                    <label style="padding-right: 5px;" for="radio1">
+                                        Factura
+                                    </label>
+                                    <input type="radio" name="tipo_coti" id="radio2" value="0">
+                                    <label for="radio2">
+                                        Boleta
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="resultado_moneda"></div>
+
+                <div class="table-responsive">
+                    <table cellspacing="0" class="table tables  " >
+                        <thead>
+                            <tr>
+                                <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+                                <th >Articulo</th>
+                                <th style="width:100px">Cantidad</th>
+                                <th style="width:100px">Precio</th>
+                                <th style="width:100px">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type='checkbox' class="case">
+                                </td>
+                                <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
+                                   <datalist id="browsers2" >
+                                    @foreach($productos as $index)
+                                    <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                    @endforeach
+                                    {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
                                         {{-- @foreach($servicios as $index)
                                         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
                                         @endforeach --}}

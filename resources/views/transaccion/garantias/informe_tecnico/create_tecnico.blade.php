@@ -96,64 +96,69 @@
             {{-- <br> --}}
           </div>
         </div>
-        <form action="{{route('garantia_informe_tecnico.store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-          @csrf
-          <div class="row">
-            <div class="col-sm-12" align="center">
-              <div class="form-control">
-                <h3>Informe del Problema</h3>
-                <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-                  <div class="col-sm-6">
-                    <center><h4>Estética</h4></center>
-                    <div class="input-group m-b">
-                      <input type="hidden" value="{{$id}}" name="id_egreso" hidden="">
-                      <textarea class="form-control" rows="5" id="comment" name="estetica" maxlength="1230" required style="resize: none;height: 200px;"></textarea>
-                    </div>
+      </div>
+      <form action="{{route('garantia_informe_tecnico.store')}}"  enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="hidden" value="{{$id}}" name="id_egreso" hidden="">
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="tabs-container">
+              <ul class="nav nav-tabs" role="tablist">
+                <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Estética</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-3">Causas del problema</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-4">Solucion</a></li>
+              </ul>
+              <div class="tab-content">
+                <div role="tabpanel" id="tab-1" class="tab-pane active">
+                  <div class="panel-body">
+                    <textarea class="form-control" rows="10" placeholder="Escribir aqui estetica" name="estetica" maxlength="1230" required  ></textarea>
                   </div>
-                  <div class="col-sm-6">
-                    <center><h4>Revision y Diagnostico</h4></center>
-                    <div class="input-group m-b">
-                      <textarea class="form-control" rows="5" id="comment" name="revision_diagnostico"  maxlength="1230" required style="resize: none;height: 200px;"></textarea>
-                    </div>
+                </div>
+                <div role="tabpanel" id="tab-2" class="tab-pane">
+                  <div class="panel-body">
+                    <textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganostico" name="revision_diagnostico" maxlength="1230" required ></textarea>
                   </div>
-                  <div class="col-sm-6">
-                    <center><h4>Causas del problema</h4></center>
-                    <div class="input-group m-b">
-                      <textarea class="form-control" rows="5" id="comment" name="causas_del_problema"  maxlength="1230" required style="resize: none;height: 200px;"></textarea>
-                    </div>
+                </div>
+                <div role="tabpanel" id="tab-3" class="tab-pane">
+                  <div class="panel-body">
+                    <textarea class="form-control" rows="10" placeholder="Escribir aqui Causas del Problema" name="causas_del_problema" maxlength="1230" required></textarea>
                   </div>
-                  <div class="col-sm-6">
-                    <center><h4>Solucion</h4></center>
-                    <div class="input-group m-b">
-                      <textarea class="form-control" rows="5" id="comment" name="solucion"  maxlength="1230" required style="resize: none;height: 200px;"></textarea>
-                    </div>
+                </div>
+                <div role="tabpanel" id="tab-4" class="tab-pane">
+                  <div class="panel-body">
+                    <textarea class="form-control" rows="10" placeholder="Escribir aqui la Solucion" name="solucion" maxlength="1230" required></textarea>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-12">
-              <div class="form-control">
-                <h4>Imagenes</h4>
-                {{-- <div class="panel panel-default"> --}}
-                  <div class="panel-body" align="left">
-                    <div class="field" align="left">
-                     <input  type="file" name="files[]" id="files"  multiple=""  accept="image/jpeg/svg/png/jpg" />
-                   </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-control">
+              <h4>Imagenes</h4>
+              <div class="panel panel-default">
+                <div class="panel-body" align="left">
+                  <div class="field" align="left">
+                   <input  type="file" name="files[]" id="files"  multiple=""  accept="image/jpeg/svg/png/jpg" />
                  </div>
                </div>
              </div>
-             <div class="col-sm-12">
-              <button class="btn btn-xl btn-primary float-right m-t-n-xs" type="submit" id="boton"><strong>Grabar</strong></button>
-            </div>
-          </form>
+           </div>
+         </div>
+         <div class="col-sm-12">
+          <button class="btn btn-xl btn-primary float-right m-t-n-xs" type="submit" id="boton"><strong>Grabar</strong></button>
         </div>
-        <br>
       </div>
-    </div>
-  {{-- </div> --}}
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    </form>
 
-  <style>
+  </div>
+  <br>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<style>
   .form-control{margin-top: 5px; border-radius: 5px}
   fieldset
   {
@@ -181,31 +186,31 @@
   }
 </style>
 <style type="text/css">
-input[type="file"] {
- display: block;
-}
-.imageThumb {
- max-height: 75px;
- border: 2px solid;
- padding: 1px;
- cursor: pointer;
-}
-.pip {
- display: inline-block;
- margin: 10px 10px 0 0;
-}
-.remove {
- display: block;
- background: #444;
- border: 1px solid black;
- color: white;
- text-align: center;
- cursor: pointer;
-}
-.remove:hover {
- background: white;
- color: black;
-}
+  input[type="file"] {
+   display: block;
+ }
+ .imageThumb {
+   max-height: 75px;
+   border: 2px solid;
+   padding: 1px;
+   cursor: pointer;
+ }
+ .pip {
+   display: inline-block;
+   margin: 10px 10px 0 0;
+ }
+ .remove {
+   display: block;
+   background: #444;
+   border: 1px solid black;
+   color: white;
+   text-align: center;
+   cursor: pointer;
+ }
+ .remove:hover {
+   background: white;
+   color: black;
+ }
 </style>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -247,21 +252,21 @@ input[type="file"] {
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <style>
-p#texto{
-	text-align: center;
-	color:black;
-}
-input.archivoInput{
-	position:absolute;
-	top:0px;
-	left:60px;
-	right:0px;
-	bottom:0px;
-	width:55%;
-	height:100%;
-	opacity: 0	;
-}
-.form-control{
+  p#texto{
+   text-align: center;
+   color:black;
+ }
+ input.archivoInput{
+   position:absolute;
+   top:0px;
+   left:60px;
+   right:0px;
+   bottom:0px;
+   width:55%;
+   height:100%;
+   opacity: 0	;
+ }
+ .form-control{
   margin-bottom: 15px;
 }
 fieldset{

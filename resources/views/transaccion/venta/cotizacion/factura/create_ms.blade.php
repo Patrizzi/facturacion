@@ -90,12 +90,12 @@
                                     <td>Cliente</td>
                                     <td>:</td>
                                     <td>
-                                        <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                        <datalist id="browsersc1" >
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
+                                            <option></option>
                                             @foreach($clientes as $cliente)
-                                            <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                                <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
                                             @endforeach
-                                        </datalist>
+                                        </select>
                                     </td>
                                     <input type="hidden" value="0" name="print" id="prints">
                                     <td>Comisionista</td>
@@ -211,7 +211,7 @@
                                                     <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                                 </td>
                                                 <td>
-                                                    <select class="monto0 select2_demo_3 select_change" name="articulo[]" required id='articulo' onchange="calcular(this,0);multi(0)"  autocomplete="off">
+                                                    <select class="monto0 select2_demo_3 select_change" name="articulo[]" required id='articulo' onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
                                                         <option></option>
                                                         @foreach($productos as $index => $producto)
                                                             <option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
@@ -364,6 +364,11 @@
                 <script type="text/javascript">
                     $(".select2_demo_3").select2({
                         placeholder: "Seleccionar Producto",
+                    });
+                </script>
+                <script type="text/javascript">
+                    $(".select2_demo_client").select2({
+                        placeholder: "Seleccionar Cliente",
                     });
                 </script>
                 {{-- scritp de modal agregar --}}

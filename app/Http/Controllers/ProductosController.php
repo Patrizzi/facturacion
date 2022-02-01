@@ -150,20 +150,23 @@ class ProductosController extends Controller
      */
     public function edit($id)
     {
+        $precio_promedio=Stock_producto::where('producto_id',$id)->first();
+        // return $precio_promedio->precio_nacional;
+
         $producto=Producto::find($id);
         $pro_peso=$producto->peso;
 
         $simbolo = strstr($pro_peso, ' ',false);
         $peso = strstr($pro_peso, ' ',true);
 
-        $monedas=Moneda::all();
+        $moneda_principal=Moneda::where('principal',1)->first();
         $familias=Familia::all();
         $marcas=Marca::all();
         $estados=Estado::all();
         $categorias=Categoria::all();
         $unidad_medidas=Unidad_medida::all();
         $tipo_afectacion = Tipo_afectacion::all();
-        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','producto','peso','simbolo','tipo_afectacion'));
+        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
     }
 
     /**
@@ -181,35 +184,39 @@ class ProductosController extends Controller
             'codigo_original.unique' => 'El codigo alternativo ya existe',
         ]);
 
-     if($request->hasfile('foto')){
-        $image1 =$request->file('foto');
-        $name =time().$image1->getClientOriginalName();
-        $destinationPath = public_path('/archivos/imagenes/productos/');
-        $image1->move($destinationPath,$name);
-    }else{
-        $name=$request->get('foto_original');
-    }
+        if($request->hasfile('foto')){
+            $image1 =$request->file('foto');
+            $name =time().$image1->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/productos/');
+            $image1->move($destinationPath,$name);
+        }else{
+            $name=$request->get('foto_original');
+        }
 
-    $peso=$request->get('peso');
-    $simbolo=$request->get('simbolo');
+        $peso=$request->get('peso');
+        $simbolo=$request->get('simbolo');
 
-    $codigo_original=$request->get('codigo_original');
-    if (isset($codigo_original)) {
-         $codigo_original=$request->get('codigo_original');
-     }else{
+        $codigo_original=$request->get('codigo_original');
+        if (isset($codigo_original)) {
+           $codigo_original=$request->get('codigo_original');
+       }else{
         $codigo_original=$request->get('codigo');
     }
 
     $producto=Producto::find($id);
-    $producto->nombre=$request->get('nombre');
+    if($request->get('nombre') == null){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
     $producto->codigo_original=$codigo_original;
     $producto->descripcion=$request->get('descripcion');
     $producto->estado_id=$request->get('estado_id');
     $producto->origen=$request->get('origen');
-    $producto->descuento1=$request->get('descuento1');
-    $producto->descuento2=$request->get('descuento2');
-    $producto->descuento_maximo=$request->get('descuento_maximo');
-    $producto->utilidad=$request->get('utilidad');
+
+    if($request->get('descuento1') == null){$producto->descuento1=0;}else{$producto->descuento1=$request->get('descuento1');}
+    if($request->get('descuento2') == null){$producto->descuento2=0;}else{$producto->descuento2=$request->get('descuento2');}
+    if($request->get('descuento_maximo') == null){$producto->descuento_maximo=0;}else{$producto->descuento_maximo=$request->get('descuento_maximo');}
+    if($request->get('utilidad') == null){$producto->utilidad=0;}else{$producto->utilidad=$request->get('utilidad');}
+
+    $producto->precio_venta=$request->get('precio_venta');
+    $producto->precio_impuesto='1';
     $producto->unidad_medida_id=$request->get('unidad_medida_id');
     $producto->garantia=$request->get('garantia');
     $producto->peso=$peso.' '.$simbolo;
@@ -217,6 +224,7 @@ class ProductosController extends Controller
     $producto->stock_maximo=$request->get('stock_maximo');
     $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
     $producto->foto=$name;
+    $producto->familia_id = $request->get('familia_id');
     $producto->save();
     return redirect()->route('productos.show',$id);
 }

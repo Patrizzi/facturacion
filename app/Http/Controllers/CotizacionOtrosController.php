@@ -63,6 +63,8 @@ class CotizacionOtrosController extends Controller
      */
     public function store(Request $request)
     {
+        $tipo_coti = $request->get('tipo_coti');
+        // return $tipo_coti;
         /*IMPRENSION*/
        //  if($print==1){
         $name = $request->get('name');

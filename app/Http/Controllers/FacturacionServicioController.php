@@ -40,12 +40,7 @@ class FacturacionServicioController extends Controller
      */
     public function create(Request $request)
     {
-        $inventario_inicial=Kardex_entrada::first();
-        if (isset($inventario_inicial)) {
-            if ( $inventario_inicial->estado==1) {
-                return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
-            }
-        }
+
 
         $servicios=Servicios::where('estado_anular',0)->get();
 
@@ -53,9 +48,11 @@ class FacturacionServicioController extends Controller
         $sucursal=Almacen::where('id',$sucursal)->first();
 
         if(count($servicios) == 0){
+            return redirect()->route('servicios.index');
+        }
+        if(count($servicios) == 0){
             return back()->withErrors(['No hay Servicios Agregados: '.$sucursal->nombre.'']);
         }
-
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $moneda=Moneda::where('principal','1')->first();
 
@@ -458,6 +455,7 @@ class FacturacionServicioController extends Controller
                 $facturacion_registro->comision=$comi;
                 $descuento_verificacion=$request->get('check_descuento')[$i];
                 $facturacion_registro->descuento=$descuento_verificacion;
+                $facturacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
 
                 if($descuento_verificacion <> 0){
                 $facturacion_registro->precio_unitario_desc=$array-($precio_prom*$descuento_verificacion/100);
@@ -502,8 +500,8 @@ class FacturacionServicioController extends Controller
     public function show($id)
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Facturacion::where('id',$id)->first();
@@ -516,8 +514,8 @@ class FacturacionServicioController extends Controller
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
-
-        return view('transaccion.venta.servicios.facturacion.show', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        $j = 1;
+        return view('transaccion.venta.servicios.facturacion.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }
 
     /**
