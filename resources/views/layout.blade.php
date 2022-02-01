@@ -26,39 +26,53 @@
 
 </head>
 
- <?php use App\Empresa;
+<?php use App\Empresa;
 $empresa=Empresa::first(); ?>
+                <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
-body {font:@yield('tamano_letra', auth()->user()->config->tamano_letra) @yield('Letra', auth()->user()->config->letra);}
-.spans{color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
-font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
-text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);}
+    body {font:@yield('tamano_letra', auth()->user()->config->tamano_letra) @yield('Letra', auth()->user()->config->letra);}
+    .spans{color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
+        font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
+        text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);}
 
-.nav-header {
-  background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");
-}
+        .nav-header {
+          background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");
+      }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1a5eb3;
-    border-color: #1a3bb3;
-}
-.btn-primary:hover {
-    color: #fff;
-    background-color: #1a3bb3;
-    border-color: #1a5eb3;
-}
-.page-item.active .page-link {
-    background-color: #1a5eb3;
-    border-color: #1a3bb3;
-}
-.dataTables_filter{
-    text-align: right;
-}
-.dataTables_filter > label{
-    text-align: left;
-}
-.rounded-circle{width: 120px; height: auto; border:@yield('2', auth()->user()->config->borde_foto) solid @yield('2', auth()->user()->config->color_borde_foto);}
+      .btn-primary {
+        color: #fff;
+        background-color: #1a5eb3;
+        border-color: #1a3bb3;
+    }
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #1a3bb3;
+        border-color: #1a5eb3;
+    }
+    .page-item.active .page-link {
+        background-color: #1a5eb3;
+        border-color: #1a3bb3;
+    }
+    .dataTables_filter{
+        text-align: right;
+    }
+    .dataTables_filter > label{
+        text-align: left;
+    }
+    .rounded-circle{width: 120px; height: auto; border:@yield('2', auth()->user()->config->borde_foto) solid @yield('2', auth()->user()->config->color_borde_foto);}
+    .posta_a {
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: #a7b1c2;
+        padding: 7px 10px 7px 10px;
+        padding-left: 52px;
+        font-weight: 600;
+    }
+    .posta_a:hover{
+        color: white;
+    }
 </style>
 <body class="">
     <div id="wrapper">
@@ -67,7 +81,7 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element" style="left: 10% ">
-                            <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->personal->foto)" style="width: 150px;height: 150px" />
+                            <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->personal->nombres)</span>
                                 <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
@@ -77,105 +91,128 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
 
                         </div>
                     </li>
-                    <!-- MENU DESPELEGABLE -->
+                    {{-- MENU DESPELEGABLE --}}
                     @can('inicio')
                     <li><a href="{{route('inicio')}}"><img src="{{ asset('/archivos/imagenes/layout/inicio.svg')}}" class="iconos"> <span class="nav-label">Inicio</span></a></li>
                     @endcan
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL --}}
-                    <?php use App\Kardex_entrada ; ?>
+                    <?php use App\Kardex_entrada ; use App\Almacen; ?>
                     <span hidden="">{{$inventario_inicial=Kardex_entrada::first()}} </span>
+                    <span hidden="">{{$almacen=Almacen::all()}} </span>
+                    <span hidden="">{{$conteo_almacen=Almacen::count()}} </span>
+                    <span hidden="">{{$almacen_primero=Almacen::first()}} </span>
                     @can('transacciones')
                     <li>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/comercializacion.svg')}}" class="iconos"> <span class="nav-label">Comercialización</span></a>
                         <ul class="nav nav-second-level collapse">
-                            @can('transacciones-ventas')
-                                @if(empty($inventario_inicial))
-                                @elseif($inventario_inicial->estado==1)
+                            <!-- @can('transacciones-ventas') -->
+                            @if(empty($inventario_inicial))
+                                @if($conteo_almacen==1)
+                                    @can('transacciones-ventas-facturacion.index')
+                                    <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
+                                    @endcan
+                                    @can('transacciones-ventas-boleta.index')
+                                    <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
+                                    @endcan
                                 @else
-                                <li>
-                                    <a href="#">Ventas</a>
-                                    <ul class="nav nav-third-level">
-                                        @can('transacciones-ventas-cotizaciones.index')
-                                        {{-- <li><a href="{{route('cotizacion.index')}}">Cotizaciones</a></li> --}}
-                                            <li>
-                                                <a href="#"><span  class="nav-label">Cotizaciones</span></a>
-                                                <ul class="nav nav-second-level collapse">
-                                                    <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li>
-                                                    <li><a href="{{route('cotizacion_servicio.index')}}"  style="padding-left: 80px;">C.Servicios</a></li>
-                                                    <li><a href="{{route('otros.index')}}"  style="padding-left: 80px;">C.Manual</a></li>
-                                                </ul>
-                                            </li>
-                                        @endcan
-                                        @can('transacciones-ventas-facturacion.index')
-                                            <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
-                                        @endcan
-                                        @can('transacciones-ventas-boleta.index')
-                                            <li><a href="{{route('boleta.index')}}">Boleta</a></li>
-                                        @endcan
-                                        @can('transacciones-ventas-guia_remision.index')
-                                            <li><a href="{{route('guia_remision.index')}}">Guia Remision</a></li>
-                                        @endcan
-                                            <li><a href="{{route('nota-credito.index')}}">Nota Credito</a></li>
-                                            <li><a href="{{route('nota-debito.index')}}">Nota Debito</a></li>
-                                    </ul>
-                                </li>
-                                @endif
-                            @endcan
-
-                                {{-- <li><a href="{{route('transaccion-compra.index')}}">Compras</a></li> --}}
-                                @can('transacciones-garantias')
-                                <li>
-                                    <a href="#">Garantias</a>
-                                    <ul class="nav nav-third-level">
-                                        @can('transacciones-garantias-guias_ingreso.index')
-                                        <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
-                                        @endcan
-                                        @can('transacciones-garantias-guias_egreso.index')
-                                        <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
-                                        @endcan
-                                        @can('transacciones-garantias-informe_tecnico.index')
-                                        <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
-                                        @endcan
-                                    </ul>
-                                </li>
-                                @endcan
-                            </ul>
-                        </li>
-                        @endcan
-
-
-                        @if(empty($inventario_inicial))
-                        <li>
-                            <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
+                                    @can('transacciones-ventas-facturacion.index')
+                                    <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
+                                    @endcan
+                                    @can('transacciones-ventas-boleta.index')
+                                    <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
+                                    @endcan
+                                @endif                                
                             @elseif($inventario_inicial->estado==1)
+                                @can('transacciones-ventas-facturacion.index')
+                                <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
+                                @endcan
+                                @can('transacciones-ventas-boleta.index')
+                                <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
+                                @endcan
+                            @else
                             <li>
-                                <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
-                                @else
+                                <a href="#">Ventas</a>
+                                <ul class="nav nav-third-level">
+                                    @can('transacciones-ventas-cotizaciones.index')
+                                    {{-- <li><a href="{{route('cotizacion.index')}}">Cotizaciones</a></li> --}}
+                                    <li>
+                                        <a href="#"><span  class="nav-label">Cotizaciones</span></a>
+                                        <ul class="nav nav-second-level collapse">
+                                            <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li>
+                                            <li><a href="{{route('cotizacion_servicio.index')}}"  style="padding-left: 80px;">C.Servicios</a></li>
+                                            <li><a href="{{route('otros.index')}}"  style="padding-left: 80px;">C.Manual</a></li>
+                                        </ul>
+                                    </li>
+                                    @endcan
+                                    @can('transacciones-ventas-facturacion.index')
+                                    <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
+                                    @endcan
+                                    <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
+                                    @can('transacciones-ventas-boleta.index')
+                                    <li><a href="{{route('boleta.index')}}">Boleta</a></li>
+                                    @endcan
+                                    @can('transacciones-ventas-guia_remision.index')
+                                    <li><a href="{{route('guia_remision.index')}}">Guia Remision</a></li>
+                                    @endcan
+                                    <li><a href="{{route('nota-credito.index')}}">Nota Credito</a></li>
+                                    <li><a href="{{route('nota-credito.index')}}">Nota Debito</a></li>
+                                </ul>
+                            </li>
+                            @endif
+
+                            <!-- @endcan -->
+                            {{-- <li><a href="{{route('transaccion-compra.index')}}">Compras</a></li> --}}
+                            @can('transacciones-garantias')
+                            <li>
+                                <a href="#">Garantias</a>
+                                <ul class="nav nav-third-level">
+                                    @can('transacciones-garantias-guias_ingreso.index')
+                                    <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
+                                    @endcan
+                                    @can('transacciones-garantias-guias_egreso.index')
+                                    <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
+                                    @endcan
+                                    @can('transacciones-garantias-informe_tecnico.index')
+                                    <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
+                                    @endcan
+                                </ul>
+                            </li>
+                            @endcan
+                        </ul>
+                    </li>
+                    
+                    @if(empty($inventario_inicial))
+                    <li>
+                        <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
+                        @elseif($inventario_inicial->estado==1)
+                        <li>
+                            <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
+                            @else
 
 
-                                @can('inventario')
-                                <li>
-                                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
-                                    <ul class="nav nav-second-level collapse">
-                                        @can('inventario-productos_kardex')
-                                        <li>
-                                            <a href="#">Kardex-Producto</a>
-                                            <ul class="nav nav-third-level">
-                                                @can('inventario-productos_kardex-entrada_producto.index')
-                                                <li><a href="{{route('kardex-entrada.index')}}">Entrada Producto</a></li>
-                                                @endcan
-                                                <li><a href="{{route('kardex-entrada-Distribucion.index')}}">Distribucion Producto</a></li>
-                                                <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}">Transalado de Almacen </a></li>
-                                                @can('inventario-productos_kardex-salida_producto.index')
-                                                <li><a href="{{route('kardex-salida.index')}}">Salida Producto</a></li>
-                                                @endcan
+                            @can('inventario')
+                            <li>
+                                <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
+                                <ul class="nav nav-second-level collapse">
+                                    @can('inventario-productos_kardex')
+                                    <li>
+                                        <a href="#">Kardex-Producto</a>
+                                        <ul class="nav nav-third-level">
+                                            @can('inventario-productos_kardex-entrada_producto.index')
+                                            <li><a href="{{route('kardex-entrada.index')}}">Entrada Producto</a></li>
+                                            @endcan
+                                            <li><a href="{{route('kardex-entrada-Distribucion.index')}}">Distribucion Producto</a></li>
+                                            <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}">Transalado de Almacen </a></li>
+                                            @can('inventario-productos_kardex-salida_producto.index')
+                                            <li><a href="{{route('kardex-salida.index')}}">Salida Producto</a></li>
+                                            @endcan
 
-                                            </ul>
-                                        </li>
-                                        @endcan
-                                        @endif
+                                        </ul>
+                                    </li>
+                                    @endcan
+                                    @endif
 
-                                        {{-- <li><a href="{{route('pagados.index')}}">Pagados</a></li> --}}
+                                    {{-- <li><a href="{{route('pagados.index')}}">Pagados</a></li> --}}
                         {{-- @can('inventario-productos-inventario_inicial.index')
                         <li><a href="{{route('inventario-inicial.index')}}">Inventario Inicial</a></li>
                         @endcan --}}
@@ -184,10 +221,10 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                         @endcan
                         <li><a href="{{route('cierre-periodo.index')}}">Cierre Periodo</a></li>
                         <li><a href="{{route('movimiento-consulta.index')}}">Movimiento Consulta</a></li>
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                    @endif
                 @endcan
-                <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
                 @can('planilla')
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/planilla.svg')}}" class="iconos"> <span class="nav-label">Planilla</span></a>
@@ -230,7 +267,7 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                 </li>
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/facturacion_electronica.svg')}}" class="iconos"> <span class="nav-label">Fac.Electronica </span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}">Facturas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
@@ -283,7 +320,7 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
 
                 @endcan
 
-                <!-- MENU DESPELEGABLE -->
+                {{-- MENU DESPELEGABLE --}}
             </ul>
         </div>
     </nav>
@@ -335,7 +372,9 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                     <div class="title-action">
                         <a style="visibility:@yield('visibility', 'hidden')" {{-- data-toggle="@yield('a', '')" --}}  href="@yield('ruta', '')" class="btn btn-primary">@yield('name', '')</a>
 
-                        <a data-toggle="@yield('data-toggle', '')"  href="@yield('href_accion', '#')" class="btn btn-primary">@yield('value_accion', '#')</a>
+                        @yield('boton_opcional')
+
+                        <a data-toggle="@yield('data-toggle', '')" onclick="@yield('onclick1', '')" href="@yield('href_accion', '#')" class="btn btn-primary" @yield('atributo_1', '')>@yield('value_accion', '#')</a>
 
                         <a id="actualizar" data-toggle="@yield('data-config', '')" onclick="@yield('onclick', '')"   href="@yield('config', '')"  class="@yield('class', 'btn btn-primary')" @yield('atributo_actu', '') >@yield('button2', 'Actualizar')</a>
                         </div><!--
@@ -358,7 +397,7 @@ text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_s
                             <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20" target="_blank" ><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
                         </div>
                         <div>
-                            <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Perifericos</a>&nbsp;  &copy; 2019-2020
+                            <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Perifericos</a>&nbsp;  &copy; 2019-2022
                         </div>
 
                     </div>
