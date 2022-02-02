@@ -111,8 +111,8 @@
                                     <th style="width:30px">Cantidad Nueva</th>
                                     <th>Descripción</th>
                                     <th>Precio unitario</th>
-                                    <th >Nuevo Precio</th>
-                                    <th >Nuevo Descuento</th>
+                                    <th>Nuevo Precio</th>
+                                    <th>Nuevo Descuento</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -129,10 +129,7 @@
                                         <td><input required="required" class="form-control" type="text" id="input_precio_1" name="input_precio_1" value="{{$descuento_global}}" readonly></td> {{--Nuevo Precio--}}
                                         <td><input required="required" class="form-control" type="text" id="input_descuento_1" name="input_descuento_1" value="0" readonly></td> {{--Nuevo Descuento--}}
                                         <td>{{$descuento_global}}</td> {{--Total--}}
-                                        
                                     </tr>
-                                   
-                                    
                                 </tr>
                                 <tr>
                                     <td colspan="13" align="right">

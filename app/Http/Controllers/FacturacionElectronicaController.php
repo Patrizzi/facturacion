@@ -205,7 +205,7 @@ class FacturacionElectronicaController extends Controller
 
     public function nota_credito(Request $request, $id)
     {   
-
+        
         if($request->motivo==2){
             $sustento=$request->sustento;
             $nueva_factura=$request->nueva_factura;
@@ -220,7 +220,7 @@ class FacturacionElectronicaController extends Controller
             $descuento_global=NULL;
         }
 
-        //contador nota de creditos
+        //Contador Nota de Creditos
         $notas_creditos_count=Nota_Credito_registro::count();
         $notas_creditos_count++;
         $factura=Facturacion::where('id',$id)->first();

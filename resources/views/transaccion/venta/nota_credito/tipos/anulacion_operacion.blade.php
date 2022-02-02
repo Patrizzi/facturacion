@@ -122,10 +122,20 @@
                                     @foreach($facturacion_registro as $e => $facturacion_registros)
                                     <tr>
                                         <td >{{$u++}}</td>
-                                        <td>{{$facturacion_registros->producto->codigo_producto}}</td>{{--Codigo producto--}}
+                                        @if(isset($facturacion_registros->producto_id))
+                                            <td>{{$facturacion_registros->producto->codigo_producto}}</td>
+                                        @elseif(isset($facturacion_registros->servicio_id))
+                                            <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
+                                        @endif
                                         <td>{{$facturacion_registros->cantidad}}</td> {{--Cantidad--}}
                                         <td><input required="required" class="form-control" type="text" id="input_cantidad_{{$e}}" name="input_cantidad_{{$e}}" value="{{$facturacion_registros->cantidad}}" readonly></td> {{--Cantidad Nueva--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$facturacion_registros->producto->nombre}}" readonly></td> {{--Descripcion--}}
+                                        <td>
+                                            @if(isset($facturacion_registros->producto_id))
+                                                <input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$facturacion_registros->producto->nombre}}" readonly>
+                                            @elseif(isset($facturacion_registros->servicio_id))
+                                                <input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$facturacion_registros->servicio->nombre}}" readonly>
+                                            @endif
+                                        </td>
                                         <td>{{$facturacion_registros->precio}}</td> {{--Precio Unitario--}}
                                         <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$facturacion_registros->precio}}" readonly></td> {{--Nuevo Precio--}}
                                         <td><input required="required" class="form-control" type="text" id="input_descuento_{{$e}}" name="input_descuento_{{$e}}" value="0" readonly></td> {{--Nuevo Descuento--}}
