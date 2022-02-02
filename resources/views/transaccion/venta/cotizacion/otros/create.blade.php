@@ -114,7 +114,7 @@
                             <td >
                                 <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
                             </td>
-                            <td>Fecha de cotizacion</td>
+                            <td>Tipo de Cotizacion</td>
                             <td>:</td>
                             <td>
                                 <div class="radio">
