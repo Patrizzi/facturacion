@@ -43,200 +43,190 @@
                                     <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                                 </address>
                             </div>
-                            <div class="col-sm-4">
-                            </div>
+                            <div class="col-sm-4 text-center" style="font-size: 13px"><br>
+                             <strong>{{$empresa->razon_social}}</strong>
+                             <br>
+                             Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+                             <br>
+                             {{$empresa->correo}}
+                             <br>
+                             {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
 
-                            <div class="col-sm-4">
-                                <div class="form-control" align="center" style="height: auto;">
-                                    <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                                    <h5> COTPF 001-0000000{{$codigo}}</h5>
-                                </div>
+
+                         </div>
+
+                         <div class="col-sm-4">
+                            <div class="form-control" align="center" style="height: auto;">
+                                <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                                <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                <h5> CO001-0000000{{$codigo}}</h5>
                             </div>
-                        </div><br>
-                        <div class="row" align="center" style="padding-bottom: 5px">
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <h3>Contacto Cliente</h3>
-                                    <div align="left">
-                                        <strong>Señor(es):</strong> &nbsp;{{$cliente_id->nombre}}<br>
-                                        <strong>{{$cliente_id->documento_identificacion}} :</strong> &nbsp;{{$cliente_id->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Fecha:</strong> &nbsp;{{$fecha_emision}}<br>
-                                        <strong>Direccion:</strong>&nbsp; {{$cliente_id->direccion}}<br>
-                                        <strong>Telefono:</strong>&nbsp; {{$cliente_id->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Celular:</strong>&nbsp; {{$cliente_id->celular}}<br>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6" align="center">
-                               <div class="form-control" >
-                                   <h3>Condiciones Generales</h3>
-                                   <div align="left">
-                                    <strong>Forma De Pago:</strong> &nbsp;{{$forma_pago_id }}<br>
-                                    <strong>Validez :</strong> &nbsp;{{$validez}}<br>
-                                    <strong>Garantia:</strong> &nbsp;{{$garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                    <strong>Tipo de Moneda:</strong> &nbsp;{{$moneda_id->nombre}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        </div>
+                    </div><br>
+                    <div class="row" align="center" style="padding-bottom: 5px">
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <h3>Contacto Cliente</h3>
+                                <div align="left">
+                                    <strong>Señor(es):</strong> &nbsp;{{$cliente_id->nombre}}<br>
+                                    <strong>{{$cliente_id->documento_identificacion}} :</strong> &nbsp;{{$cliente_id->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Fecha:</strong> &nbsp;{{$fecha_emision}}<br>
+                                    <strong>Direccion:</strong>&nbsp; {{$cliente_id->direccion}}<br>
+                                    <strong>Telefono:</strong>&nbsp; {{$cliente_id->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Celular:</strong>&nbsp; {{$cliente_id->celular}}<br>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12" align="center">
-                           <div class="form-control" style="border: none;height: auto" >
-                               <div align="left">
-                                <strong>observaciones:</strong> &nbsp;{{$observacion }}<br>
+                        <div class="col-sm-6" align="center">
+                         <div class="form-control" >
+                             <h3>Condiciones Generales</h3>
+                             <div align="left">
+                                <strong>Forma De Pago:</strong> &nbsp;{{$forma_pago_id }}<br>
+                                <strong>Validez :</strong> &nbsp;{{$validez}}<br>
+                                <strong>Garantia:</strong> &nbsp;{{$garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Tipo de Moneda:</strong> &nbsp;{{$moneda_id->nombre}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             </div>
                         </div>
                     </div>
-
-                </div><br>
-                <div class="table-responsive">
-                    <table class="table " >
-                        <thead >
-                           <tr >
-                            <th>ITEM </th>
-                            <th>Descripcion</th>
-                            <th>Cantidad</th>
-                            <th>P.Unitario</th>
-                            <th>Total<span >{{$moneda_id->simbolo}}</span></th>
-                        </tr>
-                    </thead>
-                    <tbody > <span hidden="">{{$i=1}}</span>
-                     @foreach ($producto_id as $index => $producto_ids)
-                     <tr>
-                        <td>{{$i++}}</td>
-                        <td>{{$articulos[$index]}}</td>
-                        <td>{{$cantidad[$index]}}</td>
-                        <td>{{$moneda_id->simbolo}}{{$precio[$index]}}</td>
-                        <td>{{$moneda_id->simbolo}}{{$cantidad[$index] *$precio[$index]}}</td>
-
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div><!-- /table-responsive -->
-
-        <footer style="padding-top: 120px">
-         <h3 align="left">
-            <?php $v=new CifrasEnLetras() ;
-            $letra=($v->convertirEurosEnLetras($end));
-            $letra_final = strstr($letra, 'soles',true);
-            ?>
-            Son : {{$letra_final}} {{$end_final}}/100 {{$moneda_id->nombre }}
-        </h3>
-
-        <div class="row">
-            <div class="col-sm-3 ">
-                <p class="form-control a"> Sub Total</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}{{$costo_sub_total}}</p>
-            </div>
-
-            <div class="col-sm-3 ">
-                <p class="form-control a"> Op. Agravada</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}00.00</p>
-            </div>
-            <div class="col-sm-3 ">
-                <p class="form-control a"> IGV</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}{{$costo_igv}}</p>
-
-            </div>
-            <div class="col-sm-3 ">
-                <p class="form-control a"> Importe Total</p>
-                <p class="form-control a">{{$moneda_id->simbolo}}{{$costo_total}}</p>
-            </div>
-        </div>
-    </footer>
-
-    <br>
-    <!-- Fin Totales de Productos -->
-    <div class="row">
-        @foreach($banco as $bancos)
-
-        @if($banco_count==3)
-        <div class="col-sm-4 " align="center">
-            <p class="form-control" >
-
-                @elseif($banco_count==2)
-                <div class="col-sm-6" align="center">
-                    <p class="form-control">
-
-                        @elseif($banco_count==1)
-                        <div class="col-sm-12" align="center" style="width: 100px">
-                            <p class="form-control" style="width: 426px;">
-
-                                @else
-                                <div class="col-sm-3 " align="center">
-                                    <p class="form-control" >
-                                        @endif
-
-                                        <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-                                        <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-                                        <br>
-                                        <span style="font-size: 12px">
-                                          S/: {{$bancos->numero_soles}}
-                                          <br>
-                                          $: {{$bancos->numero_dolares}}<br>
-                                      </span>
-                                  </p>
-                              </div>
-                              @endforeach
-                          </div>
-                          <br>
-                          <div class="row">
-                            <div class="col-sm-3">
-                                <p><u>centro de Atencion : </u></p>
-                                Telefono : {{$personal->telefono }}<br>
-                                Celular : {{$personal->celular }}<br>
-                                Email : {{$personal->email }}<br>
-                                Web : {{$empresa->pagina_web}} <br>
-                            </div>
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-3"><br><br>
-                                <hr>
-                                <center>{{$personal->nombres }}</center>
-                            </div>
+                    <div class="col-sm-12" align="center">
+                     <div class="form-control" style="border: none;height: auto" >
+                         <div align="left">
+                            <strong>observaciones:</strong> &nbsp;{{$observacion }}<br>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        {{--  --}}
 
-        <style>
-            .form-control{margin-top: 5px; border-radius: 5px}
-            p#texto{
-                text-align: center;
-                color:black;
-            }
+            </div><br>
+            <div class="table-responsive">
+                <table class="table " >
+                    <thead >
+                     <tr >
+                        <th style="text-align:center;">ITEM </th>
+                        <th>Descripcion</th>
+                        <th style="text-align:center;">Cantidad</th>
+                        <th style="text-align:center;">P.Unitario</th>
+                        <th style="text-align:center;">Total<span >{{$moneda_id->simbolo}}</span></th>
+                    </tr>
+                </thead>
+                <tbody > <span hidden="">{{$i=1}}</span>
+                   @foreach ($producto_id as $index => $producto_ids)
+                   <tr>
+                    <td  style="text-align:center;">{{$i++}}</td>
+                    <td >{{$articulos[$index]}}</td>
+                    <td  style="text-align:center;">{{$cantidad[$index]}}</td>
+                    @if($tipo_coti==1)
+                    <td  style="text-align:center;">{{$moneda_id->simbolo}} {{round($igv_del_precio=$precio[$index]/1.18,2)}}</td>
+                    <td  style="text-align:center;">{{$moneda_id->simbolo}}{{$sub_total=round($cantidad[$index] *$igv_del_precio,2)}}</td>
+                    @else
+                    <td  style="text-align:center;">{{$moneda_id->simbolo}}{{$precio[$index]}}</td>
+                    <td  style="text-align:center;">{{$moneda_id->simbolo}}{{$cantidad[$index] *$precio[$index]}}</td>
+                    @endif
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div><!-- /table-responsive -->
 
-            input#archivoInput{
-                position:absolute;
-                top:0px;
-                left:0px;
-                right:0px;
-                bottom:0px;
-                width:100%;
-                height:100%;
-                opacity: 0  ;
-            }
-        </style>
-        <style type="text/css">
-            .form-control{border-radius: 10px; padding: 10px }
-            .ibox-tools a{color: white !important}
-            .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
-            .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
+    <div class="row" style="margin-top:10px">
+      <div class="col-sm-8">
+        <h3 align="left">
+          <?php $v=new CifrasEnLetras() ;
+          $letra=($v->convertirEurosEnLetras($end));
+          $letra_final = strstr($letra, 'soles',true);
+      ?>
+      Son : {{$letra_final}} {{$end_final}}/100 {{$moneda_id->nombre }}
+  </h3>
+</div>
+<div class="col-sm-4 form-control">
+  @if($tipo_coti==1)
+  <span style="display: block;float: left"> Sub Total:</span>
+  <span style="display: block;float: right;"> {{$simbologia=$moneda_id->simbolo}}{{$sub_total=round($costo_total/1.18,2)}} </span>
+  <br>
+  <span style="display: block;float: left"> I.G.V.: </span>
+  <span style="display: block;float: right">{{$simbologia}}{{round($sub_total*0.18,2)}} </span><br>
+  @endif
+  <span style="display: block;float: left"><b> Total:</b> </span>
+  <span style="display: block;float: right">{{$moneda_id->simbolo}} {{$costo_total}}</span>
 
-        </style>
+</div>
+</div>
+<br>
+<!-- Fin Totales de Productos -->
+<div class="row">
+    @foreach($banco as $bancos)
 
-        <!-- Mainly scripts -->
-        <script src="js/jquery-3.1.1.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.js"></script>
-        <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    @if($banco_count==3)
+    <div class="col-sm-4 " align="center">
+        <p class="form-control" >
 
-        <!-- Custom and plugin javascript -->
-        <script src="js/inspinia.js"></script>
+            @elseif($banco_count==2)
+            <div class="col-sm-6" align="center">
+                <p class="form-control">
 
-        {{-- IMPRIMIR --}}
-        <script type="text/javascript">
-            window.print();
-        </script>
+                    @elseif($banco_count==1)
+                    <div class="col-sm-12" align="center" style="width: 100px">
+                        <p class="form-control" style="width: 426px;">
+
+                            @else
+                            <div class="col-sm-3 " align="center">
+                                <p class="form-control" >
+                                    @endif
+
+                                    <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
+                                    <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
+                                    <br>
+                                    <span style="font-size: 12px">
+                                      S/: {{$bancos->numero_soles}}
+                                      <br>
+                                      $: {{$bancos->numero_dolares}}<br>
+                                  </span>
+                              </p>
+                          </div>
+                          @endforeach
+                      </div>
+                      <br>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {{--  --}}
+
+      <style>
+        .form-control{margin-top: 5px; border-radius: 5px}
+        p#texto{
+            text-align: center;
+            color:black;
+        }
+
+        input#archivoInput{
+            position:absolute;
+            top:0px;
+            left:0px;
+            right:0px;
+            bottom:0px;
+            width:100%;
+            height:100%;
+            opacity: 0  ;
+        }
+    </style>
+    <style type="text/css">
+        .form-control{border-radius: 10px; padding: 10px }
+        .ibox-tools a{color: white !important}
+        .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
+
+    </style>
+
+    <!-- Mainly scripts -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="js/inspinia.js"></script>
+
+    {{-- IMPRIMIR --}}
+    <script type="text/javascript">
+        window.print();
+    </script>
