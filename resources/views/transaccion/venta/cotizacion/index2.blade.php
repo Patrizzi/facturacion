@@ -1,14 +1,53 @@
 @extends('layout')
 
-@section('title', 'Cotizacion')
-@section('breadcrumb', 'Cotizacion')
-@section('breadcrumb2', 'Cotizacions')
-@section('data-toggle', 'modal')
-@section('href_accion', '#modal-form')
-@section('value_accion', 'Agregar')
-@section('content')
+@section('title', 'Cotizacion 2')
+@section('atributo_actu', 'hidden')
 
-<!-- modal -->
+@if($conteo_almacen==1)
+@section('value_accion', 'Agregar')
+@section('onclick1', 'Enviar_create()')
+@else
+@section('atributo_1', 'hidden')
+@section('boton_opcional')
+@if($user_login->name=='Administrador')
+<span class="dropdown ">
+  <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
+  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+    @foreach($almacen as $almacens)
+    <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
+    <form action="{{ route('cotizacion.create_factura')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text" value="{{$almacens->id}}" hidden="hidden" name="almacen">
+    </form>
+    <script>
+        console.log({{$almacens->id}});
+        function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
+    </script>
+    @endforeach
+</ul>
+</span>
+@elseif($user_login->name=='Colaborador')
+<button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
+@endif
+@endsection
+@endif
+
+@section('content')
+<span hidden>
+    <script>
+        function Enviar_create(){document.getElementById('myform1').submit();}
+        function Enviar_create2(){document.getElementById('myform2').submit();}
+    </script>
+    <form id="myform1" action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+    </form>
+    <form id="myform2" action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text"  hidden="hidden" name="almacen"  value="{{$user_login->almacen_id}}">
+    </form>
+</span>
 @if($errors->any())
 <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
     <a class="alert-link" href="#">
@@ -18,86 +57,8 @@
     </a>
 </div>
 @endif
-<div class="row">
-    <div class="col-lg-12">
-        <div id="modal-form" class="modal fade" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row" align="center">
-                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Cotizacion</h3>
-                            </div>
-                            <!--FACTURA-->
-                            <div class="col-sm-6">
-                                @if($conteo_almacen==1)
-                                <form action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" method="post">
-                                    @csrf
-                                    <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
-                                    <input class="btn btn-sm btn-info"  type="submit" value="Crear una cotizacion factura" >
-                                </form>
-                                @else
-                                @if($user_login->name=='Administrador')
-                                <div class="dropdown ">
-                                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Factura</button>
-                                  <div class="dropdown-menu"  aria-labelledby="dropdownMenuButton">
-                                    @foreach($almacen as $almacens)
-                                    <form action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" method="post">
-                                        @csrf
-                                        <input type="hidden" class="dropdown-item" name="almacen"  value="{{$almacens->id}}">
-                                        <input type="submit" class="dropdown-item" value="{{$almacens->nombre}}">
-                                    </form>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @elseif($user_login->name=='Colaborador')
-                            <form action="{{ route('cotizacion.create_factura')}}"enctype="multipart/form-data" method="post">
-                                @csrf
-                                <input type="text"  hidden="hidden" name="almacen"  value="{{$user_login->almacen_id}}">
-                                <input type="submit" class="btn btn-sm btn-info"  value="Crear una cotizacion factura">
-                            </form>
-                            @endif
-                            @endif
-                        </div>
-                        <!--BOLETA-->
-                        <div class="col-sm-6">
-                            @if($conteo_almacen==1)
-                            <form action="{{ route('cotizacion.create_boleta')}}" enctype="multipart/form-data"  method="post">
-                                @csrf
-                                <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
-                                <input class="btn btn-sm btn-info"  type="submit" value="Crear cotizacion boleta" >
-                            </form>
-                            @else
-                            @if($user_login->name=='Administrador')
-                            <div class="dropdown">
-                              <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Boleta</button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <form action="{{ route('cotizacion.create_boleta')}}"enctype="multipart/form-data" method="post">
-                                    @csrf
-                                    @foreach($almacen as $almacens)
-                                    <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
-                                    @endforeach
-                                </form>
-                            </div>
-                        </div>
-                        @elseif($user_login->name=='Colaborador')
-                        <form action="{{ route('cotizacion.create_boleta')}}"enctype="multipart/form-data" method="post">
-                            @csrf
-                            <input type="text"  hidden="hidden" name="almacen"  value="{{$user_login->almacen_id}}">
-                            <input type="submit" class="btn btn-sm btn-info"  value="Crear cotizacion boleta">
-                        </form>
-                        @endif
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
-</div>
-{{-- fimodal --}}
 <style> .dropdown-menu{left: 70px; padding: 20px 0;}</style>
+
 
 <div class="wrapper wrapper-content animated fadeInRight">
 

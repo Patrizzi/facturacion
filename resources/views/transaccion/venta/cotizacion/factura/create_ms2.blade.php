@@ -1,7 +1,8 @@
 @extends('layout')
-@section('title', 'Cotizacion 2 - Factura M.Principal')
-@section('breadcrumb', 'Cotizacion - Factura M.Principal')
-@section('breadcrumb2', 'Cotizacion - Factura M.Principal')
+
+@section('title', 'Cotizacion 2 - Factura M.secundaria')
+@section('breadcrumb', 'Cotizacion - Factura M.secundaria')
+@section('breadcrumb2', 'Cotizacion - Factura M.secundaria')
 @section('href_accion', route('cotizacion.index') )
 @section('value_accion', 'Atras')
 @extends('layout_agregado_rapido')
@@ -9,14 +10,17 @@
 <head>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("form").keypress(function(e)
-               {  if (e.which == 13) {setTimeout(function()
-                   { e.target.value += ' | '; }, 4);
-               e.preventDefault(); }
-           });
-            // $('#chek_factura').prop("checked", true);
-             document.getElementById("n_boleta").style.display = "none";
 
+            $("form").keypress(function(e) {
+                if (e.which == 13) {
+                    setTimeout(function() {
+                        e.target.value += ' | ';
+                    }, 4);
+                    e.preventDefault();
+                }
+            });
+             $('#chek_factura').prop("checked", true);
+             document.getElementById("n_boleta").style.display = "none";
         });
     </script>
 </head>
@@ -27,13 +31,11 @@
     {{ session('repite') }}
 </div>
 @endif
-
 @if (session('campo'))
 <div class="alert alert-success">
     {{ session('campo') }}
 </div>
 @endif
-
 @if($errors->any())
 <div style="padding-top: 20px;">
     <div class="alert alert-danger">
@@ -45,7 +47,6 @@
     </div>
 </div>
 @endif
-
 {{-- Boton para modal de Clientes --}}
 @section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
 @section('ruta_retorno', 'cotizacion')
@@ -53,15 +54,13 @@
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
 {{--Fin Boton para modal de Clientes --}}
-
 {{-- Formulario para ir a Moneda Secundaria --}}
-<form action="{{ route('cotizacion.create_factura_ms')}}" enctype="multipart/form-data" id="almacen-form" method="POST">
+<form action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" id="almacen-form" method="POST">
     @csrf
     <input type="text" value="{{$sucursal->id}}" hidden="hidden" name="almacen">
     <input class="btn btn-sm btn-info" hidden="hidden" type="submit" value="cambiar" >
 </form>
 {{-- fin Formulario para ir a Moneda Secundaria --}}
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -84,7 +83,6 @@
                                     <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
                                     <h5 id="n_factura">{{$cotizacion_numero}}</h5>
                                     <h5 id="n_boleta">{{$cotizacion_numero_boleta}}</h5>
-
                                 </div>
                             </div>
                         </div>
@@ -106,7 +104,7 @@
                                     <td>Comisionista</td>
                                     <td>:</td>
                                     <td>
-                                        <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
+                                        <input list="browsersc2" class="form-control m-b" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
                                         <datalist id="browsersc2" >
                                             <option id="">Sin comision - 0 </option>
                                             @foreach($p_venta as $p_ventas)
@@ -155,7 +153,7 @@
                                             <td>Moneda</td>
                                             <td>:</td>
                                             <td>
-                                               <div class="row">
+                                             <div class="row">
                                                 <input type="hidden" name="almacen" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
                                                 <div class=" col-sm-5">
                                                     <input type="text" name="moneda" class="form-control " value=" {{$moneda->nombre}}" readonly="readonly">
@@ -173,7 +171,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Tipo de Operacion</td>
+                                             <td>Tipo de Operacion</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="tipo_operacion" >
                                                 @foreach($tipo_operacion as $t_op)
@@ -184,11 +182,11 @@
                                             <td>Tipo de Cotizacion</td>
                                             <td>:</td>
                                             <td><div class="radio">
-                                                <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
+                                                <input type="radio" name="tipo_coti" id="radio1" value="1" checked="">
                                                 <label style="padding-right: 5px;" for="radio1">
                                                     Factura
                                                 </label>
-                                                <input type="radio" name="tipo_coti" id="radio2" value="0" class="radio_boleta" onchange="click_radio_boleta()">
+                                                <input type="radio" name="tipo_coti" id="radio2" value="0">
                                                 <label for="radio2">
                                                     Boleta
                                                 </label>
@@ -199,7 +197,7 @@
                                         <tr>
                                             <td>Observacion</td>
                                             <td>:</td>
-                                            <td colspan="4">
+                                            <td colspan="6">
                                                 <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
                                             </td>
                                         </tr>
@@ -232,7 +230,7 @@
                                                     <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                                 </td>
                                                 <td>
-                                                    <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
+                                                    <select class="monto0 select2_demo_3 select_change"  required id='articulo' onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
                                                         <option></option>
                                                         @foreach($productos as $index => $producto)
                                                             <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
@@ -244,10 +242,11 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
+                                                    <textarea  type='text' {{-- id='descripcion0' --}} placeholder="Descripcion de Item"  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                    {{-- Afectacion de producto --}}
                                                     <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
-                                                    </td>   
+                                                    </td>
 
                                                     <td>
                                                         <input  style="width: 76px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
@@ -342,13 +341,11 @@
                     .check{-webkit-appearance: none;height: 34px;background-color: #ffffff00;-moz-appearance: none;border: none;appearance: none;width: 80px;border-radius: 10px;}
                     .div_check{position: relative;top: -33px;left: 0px;background-color: #ffffff00;  top: -35;}
                     .check:checked {background: #0375bd6b;}
-
                     input[type=number]::-webkit-inner-spin-button,
                     input[type=number]::-webkit-outer-spin-button {
                     -webkit-appearance: none;
                     margin: 0;
                     }
-
                     input[type=number] { -moz-appearance:textfield; }
                     label.col-form-label::marker{
                         list-style:none;
@@ -400,11 +397,9 @@
                         placeholder: "Seleccionar Cliente",
                     });
                 </script>
-
                 {{-- scritp de modal agregar --}}
 
     {{-- / --}}
-
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
     <script>
         function valida(f) {
@@ -412,18 +407,18 @@
             var completo = true;
             var incompleto = false;
             if( f.elements[0].value == "" )
-               { alert(incompleto); }
-           else{boton.type = 'button';}
-       }
-   </script>
-   {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-   <script>
+             { alert(incompleto); }
+         else{boton.type = 'button';}
+     }
+ </script>
+ {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+ <script>
     var i = 2;
     $(".addmore").on('click', function () {
         var data = `[
         <tr>
         <td>
-        <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+         <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
         </td>";
         <td>
         <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
@@ -439,12 +434,11 @@
             @endforeach
         </select>
 
+        <textarea type='text' placeholder="Descripcion de Item"  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
 
-        <textarea type='text'   name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
         <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
         <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
         </td>
-
         <td>
         <input type="" style="width: 76px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control"  required  autocomplete="off"/>
         </td>
@@ -466,9 +460,8 @@
         </td>
 
         <td>
-        <input type='text' id='precio_unitario_descuento${i}'  style="width: 76px"  name='precio_unitario_descuento[]' readonly="readonly" class=" form-control"  required  autocomplete="off" />
+        <input type='text' id='precio_unitario_descuento${i}'  style="width: 76px"  name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento${i} form-control"  required  autocomplete="off" />
         </td>
-
 
         <input type='hidden' name="comision[]" id='comision${i}'  style="width: 76px"  readonly="readonly" class="form-control"  required  autocomplete="off" />
 
@@ -511,6 +504,7 @@
 <script>
     $('#articulo').change(function(e){
         e.preventDefault();
+
         var articulo = $('[id="articulo"]').val();
         // var data={articulo:articulo,_token:token};
         $.ajax({
@@ -521,8 +515,9 @@
                 'articulo': articulo
             },
             success: function (msg) {
-                const msg2 = msg.slice(2);
-                $('#descripcion0').val(msg2);
+            // console.log(msg);
+            const msg2 = msg.slice(2);
+            $('#descripcion0').val(msg2);
             }
         });
     });
@@ -538,22 +533,20 @@
                 'articulo': articulo2
             },
             success: function (msg) {
-                // console.log(msg);
-                const msg2 = msg.slice(2);
-                $(`#descripcion${a}`).val(msg2);
+            // console.log(msg);
+            const msg2 = msg.slice(2);
+            $(`#descripcion${a}`).val(msg2);
             }
         });
     }
 </script> --}}
 <script>
     function comision(){
-
             //comision
             var comision=document.querySelector(`#comisionista`).value;
             var separador=" ";
             //revirtiendo la cadena
             var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
-            console.log(reverse9);
             //para comision
             var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
             var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
@@ -599,11 +592,12 @@
             var checkBox = document.getElementById(`check${a}`);
             var cantidad = document.querySelector(`#cantidad${a}`).value;
             var promedio_origina_descuento1=document.querySelector(`#precio_unitario_descuento${a}`).value;
+
             var promedio_original2=document.querySelector(`#promedio_original${a}`).value;
-            var cantidad_desc = document.getElementById(`check_descuento0${a}`)
+
             var descuento = document.querySelector(`#descuento${a}`).value;
             var afec = document.querySelector(`#tipo_afec${a}`).value;
-            if (checkBox.checked == true && descuento > 0 ){
+            if (checkBox.checked == true && descuento > 0){
 
                 var precio = document.querySelector(`#precio${a}`).value;
                 var promedio_original=document.querySelector(`#promedio_original${a}`).value;
@@ -629,12 +623,12 @@
                 if(afec.toString() == "Gravado"){
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = final_decimal;
-                    document.getElementById(`precio_unitario_igv${a}`).value = final_decimal+igv_decimal;
+                   document.getElementById(`precio_unitario_igv${a}`).value = Math.round((final_decimal+igv_decimal) * multiplier ) / multiplier;
                }else{
                     document.getElementById(`total${a}`).value = final_decimal;
                    document.getElementById(`afectacion${a}`).value = 0;
                    document.getElementById(`precio_unitario_igv${a}`).value = final_decimal;
-                   
+
                }
             } else {
                 var multiplier = 100;
@@ -654,21 +648,23 @@
                 console.log("la end es:"+  end);
 
                 document.getElementById(`check_descuento${a}`).value = 0;
+
                 document.getElementById(`precio_unitario_descuento${a}`).value = precio;
                 document.getElementById(`precio_unitario_comision${a}`).value = end;
                 var igv_valor={{$igv->renta}};
                 var igv=final_decimal*igv_valor/100;
                 var igv_decimal = Math.round(igv * multiplier) / multiplier;  
+
                 if(afec.toString() == "Gravado"){
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = final_decimal;
-                    document.getElementById(`precio_unitario_igv${a}`).value = final_decimal+igv_decimal;
+                    document.getElementById(`precio_unitario_igv${a}`).value =  Math.round((final_decimal+igv_decimal) * multiplier ) / multiplier;
+
                }else{
                     document.getElementById(`total${a}`).value = final_decimal;
                    document.getElementById(`afectacion${a}`).value = 0;
                    document.getElementById(`precio_unitario_igv${a}`).value = final_decimal;
                }
-
             }
             var totalInp = $('[name="total"]');
 
@@ -721,7 +717,6 @@
 
         function calcular(input,a)
         {
-           console.log(input.id);
             var id = input.id;
             var caracteres = input.value;
             var caracteres_reverse=reverseString(caracteres);
@@ -763,6 +758,7 @@
             var afec_prec_tot=reverse5.split(separador,1);
             var afec_pre_r=afec_prec_tot[0];
             var afec_pre_v =reverseString(afec_prec_tot[0]);
+            var afec_pre_v =reverseString(afec_prec_tot[0]);
             document.getElementById(`tipo_afec${a}`).value =  afec_pre_v;
             console.log("el promedio original es: "+prom_v);
             console.log("el strock es: "+stock_v+"-------------")
@@ -773,15 +769,13 @@
             document.getElementById(`promedio_original${a}`).value = prom_v;
             document.getElementById(`stock${a}`).value = stock_v;
             document.getElementById(`descuento${a}`).value = descuento_v;
-            document.getElementById(`check_descuento${a}`).value = 0;
+            document.getElementById(`check_descuento${a}`).value =0;
             var msg2 = parseInt(stock_v) ;
             $(`#cantidad${a}`).attr('max', stock_v );
-            $(`#cantidad`).attr('max', stock_v );
             //comision
             var comision=document.querySelector(`#comisionista`).value;
             //revirtiendo la cadena
             var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
-            console.log(reverse9);
             //para comision
             var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
             var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
@@ -839,10 +833,10 @@
             var igv_valor={{$igv->renta}};
             var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
             var subtotal = document.querySelector(`#sub_total`).value;
-            var igv_va=parseFloat(subtotal_gravado)*igv_valor/100;
+            var igv_val=parseFloat(subtotal_gravado)*igv_valor/100;
             var igv = Math.round(igv_val * multiplier) / multiplier;
-            var end_2=parseFloat(igv)+parseFloat(subtotal);
-            var end = Math.round(end_2 * multiplier) / multiplier;
+            var end_1=parseFloat(igv)+parseFloat(subtotal);
+            var end = Math.round(end_1 * multiplier) / multiplier;
 
             // console.log(typeof igv);
             // console.log(typeof end);
@@ -850,8 +844,8 @@
             document.getElementById("total_final").value = end;
         });
     </script>
-
-    {{-- <script>
+{{-- 
+    <script>
         function select_all() {
             $('input[class=case]:checkbox').each(function () {
                 if ($('input[class=check_all]:checkbox:checked').length == 0) {
@@ -936,23 +930,27 @@
         }
 
     </script>
-    <script type="text/javascript">
-        function click_radio_boleta(){
-            if ($('input[class=n_boleta]:radio:checked').length == 0) {
-                document.getElementById("n_factura").style.display = "none";
-                document.getElementById("n_boleta").style.display = "block";
-            }
-            
-        }
-         function click_radio_factura(){
-            
-            if ($('input[class=n_factura]:radio:checked').length == 0) {
-                document.getElementById("n_boleta").style.display = "none";
-                document.getElementById("n_factura").style.display = "block";
-            } 
-        }   
-    </script>
     <style type="text/css">
         .a{color: red}
     </style>
+    <script >
+        $('#chek_factura').on('change', function() {
+             if ($(this).is(':checked') ) {
+                $('#chek_boleta').prop("checked", false);
+                document.getElementById("n_factura").style.display = "block";
+                document.getElementById("n_boleta").style.display = "none";
+             }
+        });
+        $('#chek_boleta').on('change', function() {
+             if ($(this).is(':checked') ) {
+                $('#chek_factura').prop("checked", false);
+                document.getElementById("n_factura").style.display = "none";
+                document.getElementById("n_boleta").style.display = "block";
+             }
+        });
+    </script>
+
+
+
+
     @stop

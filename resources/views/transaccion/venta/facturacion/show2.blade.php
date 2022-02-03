@@ -2,6 +2,7 @@
 
  @section('title', 'Facturacion Ver')
 
+
  @section('href_accion', route('facturacion.index'))
  @section('value_accion', 'Atras')
 

@@ -14,6 +14,8 @@ class AddColumnCotizacionFacturaRegistros extends Migration
     public function up()
     {
         Schema::table('cotizacion_factura_registro', function (Blueprint $table) {
+            $table->unsignedBigInteger('producto_id')->nullable()->change();            
+            $table->unsignedBigInteger('stock')->nullable()->change();            
             $table->unsignedBigInteger('servicio_id')->nullable()->after('producto_id');
             $table->foreign('servicio_id')->references('id')->on('servicios')->onDelete('cascade');
             $table->string('descripcion_item')->after('servicio_id')->nullable();
