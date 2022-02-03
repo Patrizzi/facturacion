@@ -136,9 +136,23 @@
                                     @foreach($notas_credito_registros as $e => $notas_credito_registro)
                                         <tr>
                                             <td>{{$u++}}</td>
-                                            <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
+                                            @if(isset($notas_credito_registro->producto_id))
+                                                <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
+                                            @else
+                                                <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
+                                            @endif
                                             <td>{{$notas_credito_registro->cantidad}}</td>
-                                            <td>{{$notas_credito_registro->producto->nombre}} <br><strong>N/S:</strong>{{$notas_credito_registro->numero_serie}}</td>
+
+                                            <td>
+                                                @if(isset($notas_credito_registro->producto_id))
+                                                    {{$notas_credito_registro->producto->nombre}} 
+                                                @else
+                                                    {{$notas_credito_registro->servicio->nombre}} 
+                                                @endif
+                                                <br><strong>N/S:</strong>
+                                                {{$notas_credito_registro->numero_serie}}
+                                            </td>
+
                                             <td>{{$notas_credito_registro->precio}}</td>
                                             <td>{{$notas_credito_registro->precio_unitario_comi* $notas_credito_registro->cantidad }}</td>
                                             <td style="display: none">

@@ -1038,19 +1038,32 @@ class Config_fe extends Model
             $cantidad="input_cantidad_".$string;
             $input_precio="input_precio_".$string;
             $descripcion="input_descripcion_".$string;
+
+            if(isset($factura_registro[$p]->producto->codigo_producto)){
+                $item_nombre = $factura_registro[$p]->producto->codigo_producto;
+                $desc_nombre = $factura_registro[$p]->producto->nombre;
+                $afec = $factura_registro[$p]->producto->tipo_afec_i_producto->codigo;
+                $codigo_item = 'NIU';
+            }else{
+                $item_nombre = $factura_registro[$p]->servicio->codigo_servicio;
+                $desc_nombre = $factura_registro[$p]->servicio->nombre;
+                $afec = $factura_registro[$p]->servicio->tipo_afec_i_serv->codigo;
+                $codigo_item = 'ZZ';
+            }
+
             if($request->$cantidad==NULL){
             }else{
-                if( in_array($factura_registro[$p]->producto->tipo_afec_i_producto->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
+                if( in_array($afec, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
                     $item[$cont]=new SaleDetail();
                     $item[$cont]
-                        ->setCodProducto($factura_registro[$p]->producto->codigo_producto)
-                        ->setUnidad('NIU')
+                        ->setCodProducto($item_nombre)
+                        ->setUnidad($codigo_item)
                         ->setCantidad($request->$cantidad)
-                        ->setDescripcion($factura_registro[$p]->producto->nombre)
+                        ->setDescripcion($desc_nombre)
                         ->setMtoBaseIgv($request->$input_precio*$request->$cantidad)
                         ->setPorcentajeIgv($igv->igv_total)
                         ->setIgv($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
-                        ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
+                        ->setTipAfeIgv($afec)
                         ->setTotalImpuestos($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
                         ->setMtoValorVenta($request->$input_precio*$request->$cantidad)
                         ->setMtoValorUnitario($request->$input_precio)
@@ -1063,14 +1076,14 @@ class Config_fe extends Model
                 }else{
                     $item[$cont]=new SaleDetail();
                     $item[$cont]
-                        ->setCodProducto($factura_registro[$p]->producto->codigo_producto)
-                        ->setUnidad('NIU')
+                        ->setCodProducto($item_nombre)
+                        ->setUnidad($codigo_item)
                         ->setCantidad($request->$cantidad)
-                        ->setDescripcion($factura_registro[$p]->producto->nombre)
+                        ->setDescripcion($desc_nombre)
                         ->setMtoBaseIgv($request->$input_precio*$request->$cantidad)
                         ->setPorcentajeIgv(0)
                         ->setIgv(0)
-                        ->setTipAfeIgv($factura_registro[$p]->producto->tipo_afec_i_producto->codigo)
+                        ->setTipAfeIgv($afec)
                         ->setTotalImpuestos($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
                         ->setMtoValorVenta($request->$input_precio*$request->$cantidad)
                         ->setMtoValorUnitario($request->$input_precio)
@@ -1271,7 +1284,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - BOLETA
 
-    public static function nota_credito_boleta($boleta,$boleta_registro,$request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo){
+    public static function nota_credito_boleta($boleta,$boleta_registro,$request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$descuento){
         // return $motivo;
         
         $empresa=Empresa::first();
@@ -1279,7 +1292,7 @@ class Config_fe extends Model
 
         // Cliente
         $client = (new Client())
-            ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
+            ->setTipoDoc('1')   //pagina 42 del pdf sunat 2.1
             ->setNumDoc($boleta->cliente->numero_documento) //ruc del receptor
             ->setRznSocial($boleta->cliente->empresa); //nombre empresa
 
@@ -1309,54 +1322,69 @@ class Config_fe extends Model
         for($p=0;$p<$contador;$p++){
             $string=(string)$p;
             
-            $nombre="input_disabled_".$string;
+            $cantidad="input_cantidad_".$string;
+            $input_precio="input_precio_".$string;
+            $descripcion="input_descripcion_".$string;
+
+            if(isset($boleta_registro[$p]->producto->codigo_producto)){
+                $item_nombre = $boleta_registro[$p]->producto->codigo_producto;
+                $desc_nombre = $boleta_registro[$p]->producto->nombre;
+                $afec = $boleta_registro[$p]->producto->tipo_afec_i_producto->codigo;
+                $codigo_item = 'NIU';
+            }else{
+                $item_nombre = $boleta_registro[$p]->servicio->codigo_servicio;
+                $desc_nombre = $boleta_registro[$p]->servicio->nombre;
+                $afec = $boleta_registro[$p]->servicio->tipo_afec_i_serv->codigo;
+                $codigo_item = 'ZZ';
+            }
             
-            if($request->$nombre==NULL){
+            if($request->$cantidad==NULL){
             }else{
 
-                if( in_array($boleta_registro[$p]->producto->tipo_afec_i_producto->codigo, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
+                if( in_array($afec, array("10", "11", "12", "13", "14", "15", "16", "17")) ){
                     $item[$cont]=new SaleDetail();
                     $item[$cont]
-                        ->setCodProducto($boleta_registro[$p]->producto->codigo_producto)
-                        ->setUnidad('NIU')
-                        ->setCantidad($request->$nombre)
-                        ->setDescripcion($boleta_registro[$p]->producto->nombre)
-                        ->setMtoBaseIgv($boleta_registro[$p]->precio*$request->$nombre)
+                        ->setCodProducto($item_nombre)
+                        ->setUnidad($codigo_item)
+                        ->setCantidad($request->$cantidad)
+                        ->setDescripcion($desc_nombre)
+                        ->setMtoBaseIgv($request->$input_precio*$request->$cantidad)
                         ->setPorcentajeIgv($igv->igv_total)
-                        ->setIgv($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
-                        ->setTipAfeIgv($boleta_registro[$p]->producto->tipo_afec_i_producto->codigo)
-                        ->setTotalImpuestos($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
-                        ->setMtoValorVenta($boleta_registro[$p]->precio*$request->$nombre)
-                        ->setMtoValorUnitario($boleta_registro[$p]->precio)
-                        ->setMtoPrecioUnitario($boleta_registro[$p]->precio+($boleta_registro[$p]->precio*(($igv->igv_total)/100)));
+                        ->setIgv($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setTipAfeIgv($afec)
+                        ->setTotalImpuestos($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($request->$input_precio*$request->$cantidad)
+                        ->setMtoValorUnitario($request->$input_precio)
+                        ->setMtoPrecioUnitario($request->$input_precio+($request->$input_precio*(($igv->igv_total)/100)));
 
-                    $igv_f=$boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
-                    $precio=$boleta_registro[$p]->precio*$request->$nombre+$precio;
+                    $igv_f=$request->$input_precio*$request->$cantidad*(($igv->igv_total)/100)+$igv_f;
+                    $precio=$request->$input_precio*$request->$cantidad+$precio;
 
                     $cont++;
                 }else{
                     $item[$cont]=new SaleDetail();
                     $item[$cont]
-                        ->setCodProducto($boleta_registro[$p]->producto->codigo_producto)
-                        ->setUnidad('NIU')
-                        ->setCantidad($request->$nombre)
-                        ->setDescripcion($boleta_registro[$p]->producto->nombre)
-                        ->setMtoBaseIgv($boleta_registro[$p]->precio*$request->$nombre)
-                        ->setPorcentajeIgv(0)
-                        ->setIgv(0)
-                        ->setTipAfeIgv($boleta_registro[$p]->producto->tipo_afec_i_producto->codigo)
-                        ->setTotalImpuestos($boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100))
-                        ->setMtoValorVenta($boleta_registro[$p]->precio*$request->$nombre)
-                        ->setMtoValorUnitario($boleta_registro[$p]->precio)
-                        ->setMtoPrecioUnitario($boleta_registro[$p]->precio+($boleta_registro[$p]->precio*(($igv->igv_total)/100)));
+                        ->setCodProducto($item_nombre)
+                        ->setUnidad($codigo_item)
+                        ->setCantidad($request->$cantidad)
+                        ->setDescripcion($desc_nombre)
+                        ->setMtoBaseIgv($request->$input_precio*$request->$cantidad)
+                        ->setPorcentajeIgv($igv->igv_total)
+                        ->setIgv($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setTipAfeIgv($afec)
+                        ->setTotalImpuestos($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100))
+                        ->setMtoValorVenta($request->$input_precio*$request->$cantidad)
+                        ->setMtoValorUnitario($request->$input_precio)
+                        ->setMtoPrecioUnitario($request->$input_precio+($request->$input_precio*(($igv->igv_total)/100)));
 
-                    $igv_f=$boleta_registro[$p]->precio*$request->$nombre*(($igv->igv_total)/100)+$igv_f;
-                    $precio=$boleta_registro[$p]->precio*$request->$nombre+$precio;
+                    $precio=$request->$input_precio*$request->$cantidad+$precio;
 
                     $cont++;
                 }
 
-
+                if($request->$input_precio*$request->$cantidad*(($igv->igv_total)/100) != 0){
+                    $gravada=$gravada+$request->$input_precio*$request->$cantidad;
+                }
                 
             }
         }

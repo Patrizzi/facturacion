@@ -99,30 +99,75 @@ class NotaCreditoController extends Controller
     }
 
     public function create_boleta_nota_credito(Request $request){
-
-        $boleta=Boleta::find($request->boleta_id);
-        $boleta_registro=Boleta_registro::where('boleta_id',$request->boleta_id)->get();
         
+        
+        //return $request;
+        $fecha_emision=$request->fecha_emision;
+        $tipo_nota_credito=$request->tipo_nota_credito;
+
+        if($tipo_nota_credito == 2 ){
+            $sustento=$request->sustento;
+            $nueva_boleta=$request->nueva_boleta;
+            $descuento_global="- - -";
+            //envia la factura - sin modificación
+        }else if($tipo_nota_credito == 3){
+            $sustento=$request->sustento;
+            $nueva_boleta="- - -";
+            $descuento_global=$request->descuento_global;
+            //envia la factura con modificación para valor unitario - osea llena el valor unitario por si solo a desceuto global - con una cantidad cero y una breve descripcion solo uno
+        }else{
+            //1 - anulacion de la operacion = envia la factura - sin modificacion
+            //4 - abula la operacion = sin modificación
+            //5 - envia pero con diferente descipción
+            //6 - devuelve pero por cantidad y valor unitario del item
+            //7 - devuelve pero con descuento por item
+            //8 - casi nunca se utliza por requerieminto de retencion
+            //9 - facturas emitidas a credito - no se sabe
+            $sustento=$request->sustento;
+            $nueva_boleta="- - -";
+            $descuento_global="- - -";
+        }
+
+        $boleta=Boleta::where('codigo_boleta',$request->boleta_id)->first();
+        $boleta_registro=Boleta_registro::where('boleta_id',$boleta->id)->get();
+
         $empresa=Empresa::first();
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
-        if($boleta->tipo=="producto"){
-            return view('transaccion.venta.nota_credito.create_boleta',compact('boleta','boleta_registro','empresa','igv','sub_total','banco'));
+
+        $boleta_buscada=Boleta::where('codigo_boleta',$request->nueva_boleta)->first();
+        //validacion por boleta no encontrada
+        if(isset($boleta_buscada)){
+            
         }else{
-            return view('transaccion.venta.nota_credito.create_servicio_boleta',compact('boleta','boleta_registro','empresa','igv','sub_total','banco'));
+            return "escribe bien";
         }
+        
+        if($tipo_nota_credito == 01){//anulación de la operación
+            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+        }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
+            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_error_ruc',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+        }else if($tipo_nota_credito == 03){//Corrección por error en la descripcion
+            return view('transaccion.venta.nota_credito.tipos_boleta.correccion_error_descripcion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+        }else if($tipo_nota_credito == 06){//devolucion total
+            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_total',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+        }else if($tipo_nota_credito == 07){//devolucion por el item
+            //return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_item',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+        }
+
+        return view('transaccion.venta.nota_credito.create_boleta',compact('boleta','boleta_registro','empresa','igv','sub_total','banco'));
+        
     }
 
     public function motivo(Request $request){
-        
         if(isset($request->factura_id)){
             $facturacion=Facturacion::find($request->factura_id);
             return view('transaccion.venta.nota_credito.create_motivo',compact('facturacion'));
         }else{
             $boleta=Boleta::find($request->boleta_id);
-            return view('transaccion.venta.nota_credito.create_motivo',compact('boleta'));
+            return view('transaccion.venta.nota_credito.create_motivo_boleta',compact('boleta'));
         }
     }
 
@@ -156,11 +201,7 @@ class NotaCreditoController extends Controller
             $estado=1;
         }
 
-        if($notas_credito->tipo=="producto"){
-            return view('transaccion.venta.nota_credito.show',compact('notas_credito','notas_credito_registros','empresa','estado'));
-        }else{
-            return view('transaccion.venta.nota_credito.show_servicio',compact('notas_credito','notas_credito_registros','empresa','estado'));
-        }
+        return view('transaccion.venta.nota_credito.show',compact('notas_credito','notas_credito_registros','empresa','estado'));
 
     }
 
