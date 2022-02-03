@@ -65,7 +65,7 @@
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
                 @else{{$boleta->cotizacion->cliente->nombre}}
                 @endif<br>
-                <strong>R.U.C :</strong>&nbsp;
+                <strong>N° de Documento:</strong>&nbsp;
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                 @else{{$boleta->cotizacion->cliente->numero_documento}}
                 @endif&nbsp;&nbsp;<br>
@@ -97,31 +97,35 @@
         </div>
     </div>
     <br>
-    @if($boleta->tipo=="producto")
    <div class="table-responsive">
     <table class="table " style="border-top: 0px" >
         <thead style="">
            <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
             <td width="30px">ITEM </td>
-            <td width="50px" >Cod.Producto</td>
+            <td width="110px" >Cod de Item</td>
             <td >Descripcion</td>
-            <td width="30px">Cantidad</td>
-            <td width="30px">P.Unit.</td>
-            <td width="30px">Total</td>
+            <td width="50px">Cantidad</td>
+            <td width="50px">P.Unit.</td>
+            <td width="50px">Total</td>
         </tr>
     </thead>
         <tbody>
             @foreach($boleta_registro as $boleta_registros)
 
-            <tr style="border-bottom-width:   0px white ">
+            <tr style="border-bottom-width:   0px white ;font-size: 10px">
                 <td>{{$i++}} </td>
-                <td>{{$boleta_registros->producto->codigo_producto}}</td>
-                <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
+               @if(isset($boleta_registros->producto))
+                    <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                    {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
+                    <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
+                @else
+                    <td>{{$boleta_registros->servicio->codigo_servicio}}</td>
+                    {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
+                    <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
+                @endif
                 <td>{{$boleta_registros->cantidad}}</td>
-                {{--     <td>{{$boleta_registros->precio}}</td>
-                <td>{{$boleta_registros->descuento}}%</td> --}}
-                <td>{{$boleta_registros->precio_unitario_comi}}</td>
-                <td>{{$boleta_registros->precio_unitario_comi * $boleta_registros->cantidad }}</td>
+                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
+                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
                 <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
                     S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                     {{$end=round($sub_total, 2)+round($igv_p, 2)}}
@@ -131,78 +135,35 @@
         </tbody>
     </table>
 </div>
-@else
-<div class="table-responsive">
-    <table class="table " style="border-top: 0px" >
-        <thead style="">
-           <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
-            <td width="30px">ITEM </td>
-            <td width="50px" >Cod.Servicio</td>
-            <td >Descripcion</td>
-            <td width="30px">Cantidad</td>
-            <td width="30px">P.Unit.</td>
-            <td width="30px">Total</td>
-        </tr>
-    </thead>
-    <tbody>
-       @foreach($boleta_registro as $boleta_registros)
-
-       <tr style="border-bottom-width:   0px white ">
-        <td width="30px" style="">{{$i++}} </td>
-        <td  width="120px" style="">{{$boleta_registros->servicio->codigo_servicio}}</td>
-        <td>{{$boleta_registros->servicio->nombre}} </td>
-        <td>{{$boleta_registros->cantidad}}</td>
-
-        {{-- <td>{{$boleta_registros->precio}}</td> --}}
-        {{-- <td>{{$boleta_registros->descuento}}%</td> --}}
-        <td>{{$boleta_registros->precio_unitario_comi}}</td>
-        <td>{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad,2) }}</td>
-        <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
-            S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
-            {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-        </td>
-    </tr>
-
-    @endforeach
 </tbody>
 </table>
 </div><!-- /table-responsive -->
-@endif
 <footer style="padding-top: 120px">
 
-    <table style="border: white 0px solid;text-align: center;" >
-        <tr style="border: white 0px solid" >
-            <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
+    <table style="border: white 0px solid;text-align: center;border-radius: 4px;" >
+        <tr style="border: white 0px solid;border-radius: 4px;" >
+            <td style="width: 90%;border-color: white">
+                
+            </td>
+            {{-- <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:none;border-bottom: none">
                 Subtotal <br style="height: 2px;">
             </td>
             <th style="width: 2%;border-color: white"></th>
-            <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-             Op. Agravada <br style="height: 2px;">
-         </td>
-         <th style="width: 2%;border-color: white"></th>
-         <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-            IGV  <br style="height: 2px;">
-        </td>
-        <th style="width: 2%;border-color: white"></th>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-            Importe Total <br style="height: 2px;">
-        </td>
+            <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;border-bottom: none">
+             {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
+         </td> --}}
     </tr>
+
     <tr style="border: white 0px solid" >
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-            {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
+        <td style="width: 80%;border-color: white"></td>
+        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:  none;">
+            <strong> Importe Total</strong>
         </td>
-        <th style="width: 2%;border-color: white"></th>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-            {{$simbologia}} 00.00
+        {{-- <th style="width: 2%;border-color: white"></th> --}}
+        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;">
+             {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
         </td>
-        <th style="width: 2%;border-color: white"></th>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-           {{$simbologia}} 00.00
-       </td>
-       <th style="width: 2%;border-color: white"></th>
-       <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
-        {{$simbologia}} {{round($sub_total, 2)}}
+        
     </td>
 </tr>
 </table>
@@ -269,7 +230,7 @@
 {{--  --}}
 <style>
 
-    *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    *{font-size: 13px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
     .cero{
         margin-bottom: 0px;
 
