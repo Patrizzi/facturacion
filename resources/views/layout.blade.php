@@ -285,48 +285,45 @@ $empresa=Empresa::first(); ?>
                         @endcan
                     </ul>
                 </li>
-
-                @endcan
-
-                {{-- MENU DESPELEGABLE --}}
-            </ul>
-        </div>
-    </nav>
-    {{-- Menu Superior --}}
-    <div id="page-wrapper" class="gray-bg">
-        <div class="row border-bottom">
-            <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
-                <div class="navbar-header">
-                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                        {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
-                        <div class="form-group">
-                        <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
-                        </div>
-                    </form> --}}
-                </div>
-                <ul class="nav navbar-top-links navbar-right">
-                    <li>
-                        <span class="m-r-sm text-muted welcome-message">Empresa: {{$empresa->nombre}} </span>
-                    </li>
-                    <li>
-                        {{-- <a href="{{route('home')}}">
-                        <i class="fa fa-barsign-out"></i> Cerrar Secciónes
-                    </a> --}}
-                    <a href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
+                <li>
+                  <a href="{{ route('logout') }}"
+                  onclick="event.preventDefault();
+                  document.getElementById('logout-form').submit();"><img src="{{ asset('/archivos/imagenes/layout/logout.png')}}" class="iconos"><span class="nav-label">
                     Cerrar Seccion
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </a>
             </li>
+
+            @endcan
+
+            {{-- MENU DESPELEGABLE --}}
         </ul>
-    </nav>
-</div>
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-sm-4">
-        <h2>@yield('title', 'Inicio')</h2>
+    </div>
+</nav>
+{{-- Menu Superior --}}
+<div id="page-wrapper" class="gray-bg">
+    <div class="row border-bottom">
+        <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
+                        <div class="form-group">
+                        <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
+                        </div>
+                    </form> --}}
+                </div>
+                <ul class="nav navbar-top-links navbar-right" style="padding: 10px 0">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-sm-4">
+                <h2>@yield('title', 'Inicio')</h2>
                         <!-- <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                         <a>@yield('breadcrumb', '')</a>
