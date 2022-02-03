@@ -53,11 +53,12 @@ class BoletaController extends Controller
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         $boletas=Boleta::all();
+        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
         $user_login =auth()->user();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
-        return view('transaccion.venta.boleta.index2', compact('boletas','user_login','conteo_almacen','almacen','almacen_primero'));
+        return view('transaccion.venta.boleta.index', compact('boletas','boletas_enviadas','user_login','conteo_almacen','almacen','almacen_primero'));
     }
 
     /**
@@ -193,7 +194,7 @@ class BoletaController extends Controller
         }
         $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
 
-        return view('transaccion.venta.boleta.create2',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','sucursal','boleta_numero','tipo_operacion','servicios','array2','igv_precio'));
+        return view('transaccion.venta.boleta.create',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','sucursal','boleta_numero','tipo_operacion','servicios','array2','igv_precio'));
 
     }
 
@@ -323,7 +324,7 @@ class BoletaController extends Controller
         }
         $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
 
-        return view('transaccion.venta.boleta.create_ms2',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','boleta_numero','sucursal','tipo_operacion','servicios','array2','igv_precio'));
+        return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','boleta_numero','sucursal','tipo_operacion','servicios','array2','igv_precio'));
 
     }
 
@@ -861,7 +862,7 @@ class BoletaController extends Controller
         $empresa=Empresa::first();
         $sub_total=0;
         $boleta=Boleta::find($id);
-        return view('transaccion.venta.boleta.show2', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
+        return view('transaccion.venta.boleta.show', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
     }
 
     public function print($id){
@@ -879,7 +880,7 @@ class BoletaController extends Controller
         $empresa=Empresa::first();
         $sub_total=0;
         $boleta=Boleta::find($id);
-        return view('transaccion.venta.boleta.print2', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
+        return view('transaccion.venta.boleta.print', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
     }
     public function pdf(Request $request,$id){
         $name = $request->get('name');
@@ -893,7 +894,7 @@ class BoletaController extends Controller
         $boleta=Boleta::find($id);
         $i=1;
         $archivo=$name.'_'.$id;
-        $pdf=PDF::loadView('transaccion.venta.boleta.pdf2', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
         return $pdf->download('Boleta - '.$archivo.'.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));

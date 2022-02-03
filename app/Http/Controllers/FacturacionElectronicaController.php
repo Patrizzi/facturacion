@@ -47,8 +47,9 @@ class FacturacionElectronicaController extends Controller
 
     public function index_boleta(){
 
+        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
         $boletas=Boleta::where('b_electronica',0)->get();
-        return view('facturacion_electronica.boleta.index',compact('boletas'));
+        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas'));
     }
 
     public function index_guia_remision(){

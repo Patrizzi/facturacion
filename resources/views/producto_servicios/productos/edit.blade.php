@@ -189,7 +189,11 @@
         } else {
      suma=parseFloat(x)/1.18;//Sacar IGV
      suma2=parseFloat(suma)*100;//Porcentaje
+     @if($moneda_principal->tipo=='nacional')
      suma3=parseFloat(suma2)/{{$precio_promedio->precio_nacional}};//precio Promedio
+     @else
+     suma3=parseFloat(suma2)/{{$precio_promedio->precio_extranjero}};//precio Promedio
+     @endif
      text= parseFloat(suma3)-100;
      document.getElementById("sumando").value = text;
    }

@@ -57,7 +57,7 @@ class FacturacionController extends Controller
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
         // return $facturacion;
-        return view('transaccion.venta.facturacion.index2', compact('facturacion','user_login','conteo_almacen','almacen','almacen_primero'));
+        return view('transaccion.venta.facturacion.index', compact('facturacion','user_login','conteo_almacen','almacen','almacen_primero'));
     }
 
     /**
@@ -223,7 +223,7 @@ class FacturacionController extends Controller
     /*Servicio*/
 
     // return $array2;
-    return view('transaccion.venta.facturacion.create2',compact('productos','servicios','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ,'precio_prom','array2'));
+    return view('transaccion.venta.facturacion.create',compact('productos','servicios','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ,'precio_prom','array2'));
 }
 
 public function create_ms(Request $request){
@@ -365,7 +365,7 @@ public function create_ms(Request $request){
             $array2[]=round(($servicio->precio_extranjero+$utilidad_Serv[$index2])*$tipo_cambio->paralelo,2);
         }
     }
-    return view('transaccion.venta.facturacion.create_ms2',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','factura_numero','sucursal','tipo_operacion','servicios','precio_prom','array2'));
+    return view('transaccion.venta.facturacion.create_ms',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','factura_numero','sucursal','tipo_operacion','servicios','precio_prom','array2'));
 }
 
     /**
@@ -872,7 +872,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-            return view('transaccion.venta.facturacion.show2', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+            return view('transaccion.venta.facturacion.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
 
         if ($facturacion->id_cotizador_servicio==NULL) {
             return view('transaccion.venta.facturacion.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
@@ -899,7 +899,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-        return view('transaccion.venta.facturacion.print2', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        return view('transaccion.venta.facturacion.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }
 
     public function pdf(Request $request,$id){
@@ -918,7 +918,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $archivo=$name.'_'.$id;
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
         
-        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf2',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
         return $pdf->download('Facturacion - '.$archivo.'.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));

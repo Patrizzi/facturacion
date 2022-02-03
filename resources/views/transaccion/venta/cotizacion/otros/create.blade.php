@@ -1,155 +1,164 @@
 @extends('layout')
-
 @section('title', 'Cotizacion Manual')
-@section('breadcrumb', 'Cotizacion Manual')
-@section('breadcrumb2', 'Cotizacion Manual')
-@section('href_accion', route('cotizacion.index') )
-@section('value_accion', 'Atras')
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
+@extends('layout_agregado_rapido')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
+@if($errors->any())
+<div style="padding-top: 20px;">
+    <div class="alert alert-danger">
+        <a class="alert-link" href="#">
+            @foreach ($errors->all() as $error)
+            <li style="color: red">{{ $error }}</li>
+            @endforeach
+        </a>
+    </div>
+</div>
+@endif
+@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
+@section('ruta_retorno', 'otros')
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Agregar</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
+             <div class="ibox-content">
+                <form action="{{route('otros.store')}}"  enctype="multipart/form-data" method="post">
+                   @csrf
+                   {{-- Cabecera --}}
+                   <div class="row">
+                    <div class="col-sm-4 text-left" align="left">
+                        <address class="col-sm-4" align="left">
+                            <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
+                        </address>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+
+                     <div class="form-control" align="center" style="height: auto;">
+                        <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                        <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                        <h5> CO001-0000000<input required="" name="codigo" class="form-control" style="width:  50px;display: inline-block;" type="text" value="185"></h5>
                     </div>
                 </div>
-                <div class="ibox-content">
-                    <form action="{{route('otros.store')}}"  enctype="multipart/form-data" method="post">
-                     @csrf
-                     {{-- Cabecera --}}
-                     <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-4" align="left">
-                                <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
+            </div>
+            <br>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Cliente</td>
+                        <td>:</td>
+                        <td>
+                            <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
+                                <option></option>
+                                @foreach($clientes as $cliente)
+                                <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                @endforeach
+                            </select>
+                        </td>
 
-                           <div class="form-control" align="center" style="height: auto;">
-                            <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                            <h5> COTPF 001-0000000<input required="" name="codigo" class="form-control" style="width:  50px;display: inline-block;" type="text" value="185"></h5>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>Cliente</td>
-                            <td>:</td>
-                            <td>
-                                <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                                <datalist id="browsersc1" >
-                                    @foreach($clientes as $cliente)
-                                    <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
-                                    @endforeach
-                                </datalist>
-                            </td>
-
-                            <td>Forma de pago</td>
-                            <td>:</td>
-                            <td>
-                                <select class="form-control" name="forma_pago" required="required">
-                                    @foreach($forma_pagos as $forma_pago)
-                                    <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
-                                    @endforeach
-                                    <select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Validez</td>
-                                    <td>:</td>
-                                    <td><select  class="form-control" name="validez" required="required">
-                                        <option value="5 Días">5 Días</option>
-                                        <option value="4 Días">4 Días</option>
-                                        <option value="3 Días">3 Días</option>
-                                        <option value="2 Días">2 Días</option>
-                                        <option value="1 Día">1 Día</option>
-                                    </select></td>
-
-                                    <td>Garantia</td>
-                                    <td>:</td>
-                                    <td><select class="form-control" name="garantia">
-                                        <option value="1 año">1 Año</option>
-                                        <option value="2 años">2 Años</option>
-                                        <option value="3 años">3 Años</option>
-                                        <option value="6 meses">6 Meses</option>
-                                    </select></td>
-                                </tr>
-
-                                <tr>
-                                    <td>Moneda</td>
-                                    <td>:</td>
-                                    <td>
-                                     <select name="moneda" class="form-control" >
-                                        @foreach($moneda as $monedas)
-                                        <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                        @endforeach
-                                    </select>
-
-                                </td>
-                                <td>Fecha de cotizacion</td>
-                                <td>:</td>
-                                <td>
-                                    <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                        <td>Forma de pago</td>
+                        <td>:</td>
+                        <td>
+                            <select class="form-control" name="forma_pago" required="required">
+                                @foreach($forma_pagos as $forma_pago)
+                                <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
+                                @endforeach
+                                <select>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Observacion</td>
+                                <td>Validez</td>
                                 <td>:</td>
-                                <td colspan="4">
-                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
-                                </td>
+                                <td><select  class="form-control" name="validez" required="required">
+                                    <option value="5 Días">5 Días</option>
+                                    <option value="4 Días">4 Días</option>
+                                    <option value="3 Días">3 Días</option>
+                                    <option value="2 Días">2 Días</option>
+                                    <option value="1 Día">1 Día</option>
+                                </select></td>
+
+                                <td>Garantia</td>
+                                <td>:</td>
+                                <td><select class="form-control" name="garantia">
+                                    <option value="1 año">1 Año</option>
+                                    <option value="2 años">2 Años</option>
+                                    <option value="3 años">3 Años</option>
+                                    <option value="6 meses">6 Meses</option>
+                                </select></td>
                             </tr>
-                        </tbody>
-                    </table>
 
-                    <div id="resultado_moneda"></div>
+                            <tr>
+                                <td>Moneda</td>
+                                <td>:</td>
+                                <td>
+                                   <select name="moneda" class="form-control" >
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
 
-                    <div class="table-responsive">
-                        <table cellspacing="0" class="table tables  " >
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-                                    <th >Articulo</th>
-                                    <th style="width:100px">Cantidad</th>
-                                    <th style="width:100px">Precio</th>
-                                    <th style="width:100px">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type='checkbox' class="case">
-                                    </td>
-                                    <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-                                       <datalist id="browsers2" >
-                                        @foreach($productos as $index)
+                            </td>
+                            <td>Fecha de cotizacion</td>
+                            <td>:</td>
+                            <td>
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Observacion</td>
+                            <td>:</td>
+                            <td >
+                                <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
+                            </td>
+                            <td>Tipo de Cotizacion</td>
+                            <td>:</td>
+                            <td>
+                                <div class="radio">
+                                    <input type="radio" name="tipo_coti" id="radio1" value="1" checked="">
+                                    <label style="padding-right: 5px;" for="radio1">
+                                        Factura
+                                    </label>
+                                    <input type="radio" name="tipo_coti" id="radio2" value="0">
+                                    <label for="radio2">
+                                        Boleta
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="resultado_moneda"></div>
+
+                <div class="table-responsive">
+                    <table cellspacing="0" class="table tables  " >
+                        <thead>
+                            <tr>
+                                <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+                                <th >Articulo</th>
+                                <th style="width:100px">Cantidad</th>
+                                <th style="width:100px">Precio</th>
+                                <th style="width:100px">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type='checkbox' class="case">
+                                </td>
+                                <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" >
+                                 <datalist id="browsers2" >
+                                    @foreach($productos as $index)
+                                    <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                    @endforeach
+                                    {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
+                                        @foreach($servicios as $index)
                                         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
                                         @endforeach
-                                        {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
-                                        {{-- @foreach($servicios as $index)
-                                        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-                                        @endforeach --}}
                                     </td>
                                     <td>
                                         <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
@@ -166,138 +175,56 @@
 
                             </tbody>
                             <tbody>
-                                <tr style="background-color: #f5f5f500;" align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>Subtotal :</td>
-                                    <td colspan="2"><input id='sub_total' name="costo_sub_total"  readonly="readonly" class="form-control" required /></td>
-                                </tr>
-                                <tr style="background-color: #f5f5f500;" align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>IGV :</td>
-                                    <td colspan="2"><input id='igv'  name="costo_igv"  readonly="readonly" class="form-control" required /></td>
-                                </tr>
-                                <tr  align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total :</td>
-                                    <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
-                            <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                        </div>
-                        <div class="col-sm-6 ">
-                            {{-- <input type="submit" name="pdf" class="btn btn-primary float-right" value="" > --}}
-
-                            @if(Auth::user()->email_creado == 0)
-                            @else
-                            <button type="submit" name="name" value="correo" formtarget="_blank"  class="btn btn-secondary float-right"><i class="fa fa-envelope fa-lg " ></i>  </button>
-                            @endif
-
-                            <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button>
-                            <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button>
-
-                        </div>
-
-                    </div>
-
-                </form>
-                {{-- Modal Configuracion --}}
-                <div class="modal fade" id="config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-
-                            </div>
-                            <div style="padding-left: 15px;padding-right: 15px;">
-                                {{-- ccccccccccccccccc --}}
-                                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
-                                    <form action="{{route('email.config')}}"  enctype="multipart/form-data" method="post">
-                                        @csrf
-                                        <div class="row">
-                                            <fieldset >
-                                                <legend> Agregar Configuracion </legend>
-                                                {{-- <div> --}}
-                                                    <div class="panel-body" align="left">
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">Email:</label>
-                                                            <div class="col-sm-10"><input type="text" class="form-control" name="email" style="height: 75%;border-radius: 2px ">
-                                                            </div>
-
-                                                            <label class="col-sm-2 col-form-label">Contraseña:</label>
-                                                            <div class="col-sm-10">
-                                                                <div class="input-group m-b">
-                                                                    <input type="password" class="form-control" name="password" id="txtPassword" required="" style="height: 35.2px;border-radius: 2px ">
-                                                                    <div class="input-group-prepend">
-                                                                        <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
-                                                                            <i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">SMPT:</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" required="" style="border-radius: 2px">
-                                                            </div>
-
-                                                            <label class="col-sm-2 col-form-label">PORT:</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="port" value="110 " style="border-radius: 2px">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">Encryption:</label>
-                                                            <div class="col-sm-4">
-                                                                <select class="form-control" name="encryp" required="" style="height: 85%;border-radius: 2px;padding-top: 4px">
-                                                                    <option value="">Ninguno</option>
-                                                                    <option value="SSL">SSL</option>
-                                                                    <option value="TLS">TLS</option>
-                                                                </select>
-                                                            </div>
-                                                        </div><br>
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">Firma (opcional):</label>
-                                                            <div class="col-sm-10">
-                                                                <input type="file" id="archivoInput" name="firma" onchange="return validarExt()" style="border-radius: 2px" />
-                                                                <span id="visorArchivo">
-                                                                    <!--Aqui se desplegará el fichero-->
-                                                                    <img name="firma"  src="" width="390px" height="200px" />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                            <button class="btn btn-primary" type="submit">Grabar</button>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- Fin de modal configuracion --}}
+                              <input id='sub_total' hidden /></td>
+                              <tr  align="center">
+                                <td></td>
+                                <td></td>
+                                <td>Total :</td>
+                                <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
+                        <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                    </div>
+                    <div class="col-sm-6 ">
+                        <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button>
+                        <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .a{color: red}
-
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 12px;
+    }
+    .select2-container--default .select2-selection--single {
+        border: none;
+    }
+    span.select2.select2-container.select2-container--default{
+        width: 100%!important;
+        background-color: #FFFFFF;
+        background-image: none;
+        border-radius: 1px;
+        display: block;
+        padding: 3px 12px;
+        border: 1px solid #e5e6e7;
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -309,6 +236,18 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<!-- Jquery Validate -->
+<script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+
+<!-- Steps -->
+<script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+<script type="text/javascript">
+    $(".select2_demo_client").select2({
+        placeholder: "Seleccionar Cliente",
+    });
+</script>
 <script>
     var i = 2;
     $(".addmore").on('click', function () {
@@ -324,9 +263,9 @@
         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
         @endforeach
         {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
-        {{-- @foreach($servicios as $index)
+       @foreach($servicios as $index)
         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-        @endforeach --}}
+        @endforeach
         </td>
         <td>
         <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
@@ -380,17 +319,17 @@
 
             $('#sub_total').val(total_tt);
 
-            var igv_valor={{$igv->renta}};
+            {{-- var igv_valor={{$igv->renta}}; --}}
             var subtotal = document.querySelector(`#sub_total`).value;
-            var igv=subtotal*igv_valor/100;
+            // var igv=subtotal*igv_valor/100;
 
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-            var end=igv_decimal+parseFloat(subtotal);
+            // var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            // var end=igv_decimal+parseFloat(subtotal);
 
-            var end2 = Math.round(end * multiplier2) / multiplier2;
+            // var end2 = Math.round(end * multiplier2) / multiplier2;
 
-            document.getElementById("igv").value = igv_decimal;
-            document.getElementById("total_final").value = end2;
+            // document.getElementById("igv").value = igv_decimal;
+            document.getElementById("total_final").value = subtotal;
 
         }
     </script>
