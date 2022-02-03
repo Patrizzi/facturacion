@@ -1,20 +1,35 @@
 @extends('layout')
-
 @section('title', 'Cotizacion Manual')
-@section('breadcrumb', 'Cotizacion Manual')
-@section('breadcrumb2', 'Cotizacion Manual')
-@section('href_accion', route('cotizacion.index') )
-@section('value_accion', 'Atras')
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
+@extends('layout_agregado_rapido')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
+@if($errors->any())
+<div style="padding-top: 20px;">
+    <div class="alert alert-danger">
+        <a class="alert-link" href="#">
+            @foreach ($errors->all() as $error)
+            <li style="color: red">{{ $error }}</li>
+            @endforeach
+        </a>
+    </div>
+</div>
+@endif
+@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
+@section('ruta_retorno', 'otros')
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-               <div class="ibox-content">
+             <div class="ibox-content">
                 <form action="{{route('otros.store')}}"  enctype="multipart/form-data" method="post">
-                 @csrf
-                 {{-- Cabecera --}}
-                 <div class="row">
+                   @csrf
+                   {{-- Cabecera --}}
+                   <div class="row">
                     <div class="col-sm-4 text-left" align="left">
                         <address class="col-sm-4" align="left">
                             <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
@@ -23,7 +38,7 @@
                     <div class="col-sm-4"></div>
                     <div class="col-sm-4">
 
-                       <div class="form-control" align="center" style="height: auto;">
+                     <div class="form-control" align="center" style="height: auto;">
                         <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                         <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
                         <h5> CO001-0000000<input required="" name="codigo" class="form-control" style="width:  50px;display: inline-block;" type="text" value="185"></h5>
@@ -37,12 +52,12 @@
                         <td>Cliente</td>
                         <td>:</td>
                         <td>
-                            <input list="browsersc1" class="form-control m-b" name="cliente" required="required" value="{{ old('nombre')}}" autocomplete="off">
-                            <datalist id="browsersc1" >
+                            <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
+                                <option></option>
                                 @foreach($clientes as $cliente)
                                 <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
                                 @endforeach
-                            </datalist>
+                            </select>
                         </td>
 
                         <td>Forma de pago</td>
@@ -80,7 +95,7 @@
                                 <td>Moneda</td>
                                 <td>:</td>
                                 <td>
-                                 <select name="moneda" class="form-control" >
+                                   <select name="moneda" class="form-control" >
                                     @foreach($moneda as $monedas)
                                     <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
                                     @endforeach
@@ -97,9 +112,9 @@
                             <td>Observacion</td>
                             <td>:</td>
                             <td >
-                                <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                                <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
                             </td>
-                            <td>Fecha de cotizacion</td>
+                            <td>Tipo de Cotizacion</td>
                             <td>:</td>
                             <td>
                                 <div class="radio">
@@ -135,15 +150,15 @@
                                 <td>
                                     <input type='checkbox' class="case">
                                 </td>
-                                <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-                                   <datalist id="browsers2" >
+                                <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" >
+                                 <datalist id="browsers2" >
                                     @foreach($productos as $index)
                                     <option>{{$index->nombre}} / {{$index->descripcion}}</option>
                                     @endforeach
                                     {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
-                                        {{-- @foreach($servicios as $index)
+                                        @foreach($servicios as $index)
                                         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-                                        @endforeach --}}
+                                        @endforeach
                                     </td>
                                     <td>
                                         <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
@@ -160,138 +175,56 @@
 
                             </tbody>
                             <tbody>
-                                <tr style="background-color: #f5f5f500;" align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>Subtotal :</td>
-                                    <td colspan="2"><input id='sub_total' name="costo_sub_total"  readonly="readonly" class="form-control" required /></td>
-                                </tr>
-                                <tr style="background-color: #f5f5f500;" align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>IGV :</td>
-                                    <td colspan="2"><input id='igv'  name="costo_igv"  readonly="readonly" class="form-control" required /></td>
-                                </tr>
-                                <tr  align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total :</td>
-                                    <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
-                            <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                        </div>
-                        <div class="col-sm-6 ">
-                            {{-- <input type="submit" name="pdf" class="btn btn-primary float-right" value="" > --}}
-
-                            @if(Auth::user()->email_creado == 0)
-                            @else
-                            <button type="submit" name="name" value="correo" formtarget="_blank"  class="btn btn-secondary float-right"><i class="fa fa-envelope fa-lg " ></i>  </button>
-                            @endif
-
-                            <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button>
-                            <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button>
-
-                        </div>
-
-                    </div>
-
-                </form>
-                {{-- Modal Configuracion --}}
-                <div class="modal fade" id="config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-
-                            </div>
-                            <div style="padding-left: 15px;padding-right: 15px;">
-                                {{-- ccccccccccccccccc --}}
-                                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
-                                    <form action="{{route('email.config')}}"  enctype="multipart/form-data" method="post">
-                                        @csrf
-                                        <div class="row">
-                                            <fieldset >
-                                                <legend> Agregar Configuracion </legend>
-                                                {{-- <div> --}}
-                                                    <div class="panel-body" align="left">
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">Email:</label>
-                                                            <div class="col-sm-10"><input type="text" class="form-control" name="email" style="height: 75%;border-radius: 2px ">
-                                                            </div>
-
-                                                            <label class="col-sm-2 col-form-label">Contraseña:</label>
-                                                            <div class="col-sm-10">
-                                                                <div class="input-group m-b">
-                                                                    <input type="password" class="form-control" name="password" id="txtPassword" required="" style="height: 35.2px;border-radius: 2px ">
-                                                                    <div class="input-group-prepend">
-                                                                        <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
-                                                                            <i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">SMPT:</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" required="" style="border-radius: 2px">
-                                                            </div>
-
-                                                            <label class="col-sm-2 col-form-label">PORT:</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="port" value="110 " style="border-radius: 2px">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">Encryption:</label>
-                                                            <div class="col-sm-4">
-                                                                <select class="form-control" name="encryp" required="" style="height: 85%;border-radius: 2px;padding-top: 4px">
-                                                                    <option value="">Ninguno</option>
-                                                                    <option value="SSL">SSL</option>
-                                                                    <option value="TLS">TLS</option>
-                                                                </select>
-                                                            </div>
-                                                        </div><br>
-                                                        <div class="row">
-                                                            <label class="col-sm-2 col-form-label">Firma (opcional):</label>
-                                                            <div class="col-sm-10">
-                                                                <input type="file" id="archivoInput" name="firma" onchange="return validarExt()" style="border-radius: 2px" />
-                                                                <span id="visorArchivo">
-                                                                    <!--Aqui se desplegará el fichero-->
-                                                                    <img name="firma"  src="" width="390px" height="200px" />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                            <button class="btn btn-primary" type="submit">Grabar</button>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- Fin de modal configuracion --}}
+                              <input id='sub_total' hidden /></td>
+                              <tr  align="center">
+                                <td></td>
+                                <td></td>
+                                <td>Total :</td>
+                                <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
+                        <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                    </div>
+                    <div class="col-sm-6 ">
+                        <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button>
+                        <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .a{color: red}
-
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 12px;
+    }
+    .select2-container--default .select2-selection--single {
+        border: none;
+    }
+    span.select2.select2-container.select2-container--default{
+        width: 100%!important;
+        background-color: #FFFFFF;
+        background-image: none;
+        border-radius: 1px;
+        display: block;
+        padding: 3px 12px;
+        border: 1px solid #e5e6e7;
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -303,6 +236,18 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<!-- Jquery Validate -->
+<script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+
+<!-- Steps -->
+<script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+<script type="text/javascript">
+    $(".select2_demo_client").select2({
+        placeholder: "Seleccionar Cliente",
+    });
+</script>
 <script>
     var i = 2;
     $(".addmore").on('click', function () {
@@ -318,9 +263,9 @@
         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
         @endforeach
         {{-- Cotizacion de Servicios si es que se agrega en el mismo listado --}}
-        {{-- @foreach($servicios as $index)
+       @foreach($servicios as $index)
         <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-        @endforeach --}}
+        @endforeach
         </td>
         <td>
         <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
@@ -374,17 +319,17 @@
 
             $('#sub_total').val(total_tt);
 
-            var igv_valor={{$igv->renta}};
+            {{-- var igv_valor={{$igv->renta}}; --}}
             var subtotal = document.querySelector(`#sub_total`).value;
-            var igv=subtotal*igv_valor/100;
+            // var igv=subtotal*igv_valor/100;
 
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-            var end=igv_decimal+parseFloat(subtotal);
+            // var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            // var end=igv_decimal+parseFloat(subtotal);
 
-            var end2 = Math.round(end * multiplier2) / multiplier2;
+            // var end2 = Math.round(end * multiplier2) / multiplier2;
 
-            document.getElementById("igv").value = igv_decimal;
-            document.getElementById("total_final").value = end2;
+            // document.getElementById("igv").value = igv_decimal;
+            document.getElementById("total_final").value = subtotal;
 
         }
     </script>

@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturacion Productos M.Secundaria')
+@section('title', 'Facturacion M.Secundaria')
 @section('breadcrumb', 'Facturacion M.Secundaria')
 @section('breadcrumb2', 'Facturacion M.Secundaria')
 @section('href_accion', route('facturacion.index'))
@@ -137,69 +137,9 @@
                                     <td>
                                         <input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0">
                                     </td>
-                                    <td>Forma de pago</td>
+                                    <td>Guia remision</td>
                                     <td>:</td>
-                                    <td>
-                                         <div class="row">
-                                            <div class="col-sm-5">
-                                                <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
-                                                    @foreach($forma_pagos as $forma_pago)
-                                                        <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
-                                                    @endforeach
-                                                <select>
-                                            </div>
-                                            <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
-                                                <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                            </div>
-                                            <!-- Modal -->
-                                            <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                                              <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                  <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                      <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                  </div>
-                                                  <div class="modal-body">
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
-                                                      <strong style="font-size:11px">Rellenar todos los campos</strong>
-                                                      <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
-                                                        <span aria-hidden="true">&times;</span>
-                                                      </button>
-                                                    </div>
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                                      <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
-                                                      <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
-                                                        <span aria-hidden="true">&times;</span>
-                                                      </button>
-                                                    </div>
-                                                    <div class="row_number">
-                                                        <div class="pago_modal row">
-                                                            <div class="col-sm-1"><label>Fecha:</label></div>
-                                                            <div class="col-sm-4">
-                                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
-                                                            </div>
-                                                            <div class="col-sm-1"><label>Monto:</label></div>
-                                                            <div class="col-sm-4">
-                                                                <div class="input-group mb-3" style="padding-right:15px">
-                                                                  <div class="input-group-prepend">
-                                                                    <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
-                                                                  </div>
-                                                                  <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-2">
-                                                                <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><input type="text" class="form-control" value="0" name="guia_r"></td>
                                 </tr>
                                         <tr>
                                             <td>Vendedor</td>
@@ -207,9 +147,70 @@
                                             <td>
                                                 <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
                                             </td>
-                                            <td>Guia remision</td>
+                                            
+                                            <td>Forma de pago</td>
                                             <td>:</td>
-                                            <td><input type="text" class="form-control" value="0" name="guia_r"></td>
+                                            <td>
+                                                 <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                            @foreach($forma_pagos as $forma_pago)
+                                                                <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                            @endforeach
+                                                        <select>
+                                                    </div>
+                                                    <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
+                                                        <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                                    </div>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                                                      <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                          <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+                                                              <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                                              <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+                                                              <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                              <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="row_number">
+                                                                <div class="pago_modal row">
+                                                                    <div class="col-sm-1"><label>Fecha:</label></div>
+                                                                    <div class="col-sm-4">
+                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                                    </div>
+                                                                    <div class="col-sm-1"><label>Monto:</label></div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group mb-3" style="padding-right:15px">
+                                                                          <div class="input-group-prepend">
+                                                                            <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
+                                                                          </div>
+                                                                          <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Moneda</td>
@@ -241,6 +242,8 @@
                                                 @endforeach
                                                 </select>
                                             </td>
+                                             <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
+                                            <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}" ></td>
                                             {{-- <td>Fecha de cotizacion</td>
                                             <td>:</td>
                                             <td>
@@ -282,22 +285,21 @@
                                                         <button type="button" class='delete e borrar btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                                     </td>
                                                     <td>
-                                                        <select class="monto0 select2_demo_3 select_change" name="articulo[]" required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
+                                                        <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
                                                             <option></option>
                                                             @foreach($productos as $index => $producto)
                                                             <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}</option>
                                                             @endforeach
+                                                            @foreach($servicios as $index2 => $servicio)
+                                                            <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index2] = strtok($servicio->tipo_afec_i_serv->informacion," ")}} {{$precio_prom[$index2]}} 10 {{$servicio->descuento}} {{$array2[$index2]}}">{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}
+                                                            </option>
+                                                            @endforeach
                                                         </select>
-                                                   {{--      <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0);multi(0)"  autocomplete="off">
-                                                        <datalist id="browsers2" >
-                                                            @foreach($productos as $index => $producto)
-                                                            <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
-                                                                @endforeach
-                                                            </datalist> --}}
-                                                            <textarea  type='text' id='descripcion0'  name='descripcion[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                                                            <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                            <textarea  type='text' {{-- id='descripcion0' --}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                            <textarea type='text' id='numero_serie0' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                                                             <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                                             <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
+                                                            {{-- <input type="text" class="celda2"  name="articulo2[]" id="input_prod2" > --}}
                                                         </td>
 
                                                         <td>
@@ -431,7 +433,7 @@
                     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
                     <script type="text/javascript">
                         $(".select2_demo_3").select2({
-                            placeholder: "Seleccionar Producto",
+                            placeholder: "Seleccionar",
                         });
                     </script>
                     <script type="text/javascript">
@@ -463,15 +465,18 @@
                             <button type="button" class='delete e borrar btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                             </td>";
                             <td>
-                            <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});ajax(${i});seleccion_options(${i})"  autocomplete="off">
+                            <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
                             <option></option>
                             @foreach($productos as $index => $producto)
                             <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}" >{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}</option>
                             @endforeach
+                            @foreach($servicios as $index2 => $servicio)
+                            <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index2] = strtok($servicio->tipo_afec_i_serv->informacion," ")}} {{$precio_prom[$index2]}} 10 {{$servicio->descuento}} {{$array2[$index2]}}">{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}</option>
+                            @endforeach
                             </select>
                             <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
-                            <textarea type='text' id='descripcion${i}'  name='descripcion[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                            <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                            <textarea type='text'     name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                            <textarea type='text' id='numero_serie0' placeholder="N° de Serie"  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                             <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
 
                             </td>
@@ -518,16 +523,20 @@
                             var number_tot = document.getElementsByName('articulo[]').length;
                             for( j = 0; j < number_tot; j++){
                                 input_ds[j]  = document.getElementsByName('articulo[]')[j].value;
-                                $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
+                                if(input_ds[j].indexOf("SERV-") == 4){
+                                    $('option[value="'+input_ds[j]+'"]').prop("disabled", false);
+                                }else{
+                                    $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
+                                }
                             };
                             $(".select2_demo_3").select2({
-                                placeholder: "Seleccionar Producto",
+                                placeholder: "Seleccionar ",
                             });
                             $(".addmore").prop("disabled", true);
                             $(".borrar").prop("disabled", false);
                         });
                     </script>
-                    <script>
+                    {{-- <script>
                         $('#articulo').change(function(e){
                             e.preventDefault();
 
@@ -565,7 +574,7 @@
                                         }
                                     });
                         }
-                    </script>
+                    </script> --}}
                     <script>
                         function comision(){
             //comision
@@ -816,21 +825,22 @@
         $(document).on('click', '.borrar', function (event) {
             event.preventDefault();
             var e = document.getElementsByClassName("e").length;
+            console.log(e);
             // DESACTIVAR OPTIONS
             var fila = $(this).parents("tr");
             var input_text_opt = fila.find('input[class="celda"]').val();
             $('option[value="'+input_text_opt+'"]').prop("disabled", false);
             $(".addmore").prop("disabled", false);
             $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Producto",
+                placeholder: "Seleccionar ",
             });
             // ELIMINAR TR
            if (e>1) {
                 fila.closest('tr').remove();
-                $(".borrar").prop("disabled", true);
+                $(".borrar").prop("disabled", false);
                 $(".addmore").prop("disabled", false);
             }else{
-                $(".borrar").prop("disabled", false);
+                $(".borrar").prop("disabled", true);
                 $(".addmore").prop("disabled", false);
             }
             var multiplier2 = 100;
@@ -890,17 +900,22 @@
     <script type="text/javascript">
         function seleccionado_fp(){
             var opt = $('#forma_pago').val();
-                if(opt=="1"){
-                    // $('#consulta_p_input').prop('disabled', false);
-                    
-                    document.getElementById('credito_pago').style.visibility = "hidden";
-                    // $('#consulta_s').hide();
-                }else{
-                    // $('#consulta_p_input').prop('disabled', 'disabled');
-                    document.getElementById('credito_pago').style.visibility = "initial";
-                    // $('#consulta_s_input').prop('disabled', false);
-                    // $('#consulta_s').show();
-                }
+            if(opt=="1"){
+                document.getElementById('credito_pago').style.visibility = "hidden";
+                document.getElementById('ven_1p').style.visibility = "initial";
+                document.getElementById('ven_2p').style.visibility = "initial";
+                document.getElementById('ven_3p').style.visibility = "initial";
+                document.getElementById('fecha_vencimiento').removeAttribute('disabled');
+                // $('#consulta_s').hide();
+            }else{
+                // $('#consulta_p_input').prop('disabled', 'disabled');
+                document.getElementById('credito_pago').style.visibility = "initial";
+                document.getElementById('ven_1p').style.visibility = "hidden";
+                document.getElementById('ven_2p').style.visibility = "hidden";
+                document.getElementById('ven_3p').style.visibility = "hidden";
+                document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
+                // $('#consulta_s').show();
+            }
         }
     </script>
     <script>
@@ -1000,13 +1015,14 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 if(f_p == "2" ){
-                    var sum = 0;
+                    var sum2 = 0;
                     for(g = 0; g<inp_mont;g++){
                         var monto1 = monto_c[g].id;
                         var input_text_2 = document.getElementById(`${monto1}`).value;
-                        var sum = parseFloat(sum) + parseFloat(input_text_2);
+                        var sum2 = parseFloat(sum2) + parseFloat(input_text_2);
                     }
-                    console.log(sum);
+                    // console.log(sum);
+                    var sum = Math.round(sum2 * 100)/100;
                     if(sum != total){
                         document.getElementById('cuota_modal').click();
                         document.getElementById('suma_campos').style.display = "flex";
@@ -1047,27 +1063,28 @@
         function seleccion_options(b){
             var cant_opt = document.getElementById(`articulo${b}`).length;
             var count_input = document.getElementsByClassName('celda').length;
-
             var option = document.getElementById(`articulo${b}`);
             var valor_select = option.value;
-            if(valor_select == ""){
-                document.getElementById(`input_prod${b}`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-            }else{
-                var ant_val = document.getElementById(`input_prod${b}`).value;
-                $('option[value="'+ant_val+'"]').prop( "disabled", false);
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`input_prod${b}`).value = valor_select;
+            var ant_val = document.getElementById(`input_prod${b}`).value;
+            $('option[value="'+ant_val+'"]').prop( "disabled", false);
 
+            if(valor_select.indexOf("SERV-") == 4){
                 $(".addmore").prop("disabled", false);
-            }
-            if(cant_opt-1 == count_input ){
-                    $(".addmore").prop("disabled", true);
+                document.getElementById(`input_prod${b}`).value = valor_select;
+                $('option[value="'+valor_select+'"]').prop( "disabled", false);
+
+            }else{
+                if(valor_select == ""){
+                    document.getElementById(`input_prod${b}`).value = valor_select;
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
                 }else{
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                    document.getElementById(`input_prod${b}`).value = valor_select;
                     $(".addmore").prop("disabled", false);
                 }
+            }
             $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Producto",
+                placeholder: "Seleccionar ",
             });
         }
   </script>
@@ -1080,24 +1097,26 @@
             var count_input = document.getElementsByClassName('celda').length;
             var option = document.getElementById(`articulo`);
             var valor_select = option.value;
-            if(valor_select == ""){
-                document.getElementById(`input_prod1`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-            }else{
-                var ant_val = document.getElementById(`input_prod1`).value;
-                $('option[value="'+ant_val+'"]').prop( "disabled", false);
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`input_prod1`).value = valor_select;
-                $(".addmore").prop("disabled", false);
-                if(cant_opt-1 == count_input ){
-                    $(".addmore").prop("disabled", true);
-                }else{
-                    $(".addmore").prop("disabled", false);
-                }
+            var ant_val = document.getElementById(`input_prod1`).value;
+            $('option[value="'+ant_val+'"]').prop( "disabled", false);
 
+           if(valor_select.indexOf("SERV-") == 4){
+                $(".addmore").prop("disabled", false);
+                    document.getElementById(`input_prod1`).value = valor_select;
+                    $('option[value="'+valor_select+'"]').prop( "disabled", false);
+            }else{
+                if(valor_select == ""){
+                    document.getElementById(`input_prod1`).value = valor_select;
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                }else{
+                    $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                    document.getElementById(`input_prod1`).value = valor_select;
+                    $(".addmore").prop("disabled", false);
+
+                }
             }
             $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Producto",
+                placeholder: "Seleccionar ",
             });
         }
 

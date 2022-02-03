@@ -1,6 +1,6 @@
  @extends('layout')
 
- @section('title', 'Boleta Ver')
+ @section('title', 'Boleta 2')
  @section('breadcrumb', 'Boleta')
  @section('breadcrumb2', 'Boleta')
  @section('href_accion', route('boleta.index'))
@@ -95,7 +95,7 @@
                     @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
                     @else{{$boleta->cotizacion->cliente->nombre}}
                     @endif <br>
-                    <strong>R.U.C:</strong>
+                    <strong>N° de Documento:</strong>
                     @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                     @else{{$boleta->cotizacion->cliente->numero_documento}}
                     @endif <br>
@@ -138,10 +138,10 @@
         <thead>
             <tr>
                 <th>ITEM</th>
-                <th>Codigo Producto</th>
-                <th>Cantidad</th>
-                <th>Unid.Medida</th>
+                <th>Codigo item</th>
+                {{-- <th>Unid.Medida</th> --}}
                 <th>Descripción</th>
+                <th>Cantidad</th>
                 <th>Valor Unitario</th>
                 <th>Dscto.%</th>
                 <th>P. Unitario Desc.</th>
@@ -154,14 +154,20 @@
 
 
             <tr>
-                @foreach($boleta_registro as $boleta_registros)
                 <span hidden="hidden">{{$i=1}} </span>
+                @foreach($boleta_registro as $boleta_registros)
                 <tr>
-                    <td>{{$i}} </td>
-                    <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                    <td>{{$i++}} </td>
+                    @if(isset($boleta_registros->producto))
+                        <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                        {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
+                        <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
+                    @else
+                        <td>{{$boleta_registros->servicio->codigo_servicio}}</td>
+                        {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
+                        <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
+                    @endif
                     <td>{{$boleta_registros->cantidad}}</td>
-                    <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td>
-                    <td>{{$boleta_registros->producto->nombre}} @if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
                     <td>{{$boleta_registros->precio}}</td>
                     <td>{{$boleta_registros->descuento}}%</td>
                     <td>{{$boleta_registros->precio_unitario_desc}}</td>
@@ -174,7 +180,7 @@
 
                     </td>
                 </tr>
-                <span hidden="hidden">{{$i++}}</span>
+                {{-- <span hidden="hidden">{{$i++}}</span> --}}
                 @endforeach
             </tr>
         </tbody>
@@ -184,11 +190,11 @@
  <div class="col-sm-8"></div>
  <div class="col-sm-4 form-control">
     {{-- <div class="col-sm-4 form-control" > --}}
-        <span style="display: block;float: left"> Sub Total:</span>
-        <span style="display: block;float: right;">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}} </span>
-        <br>
-        <span style="display: block;float: left"> Importe Total: </span>
-        <span style="display: block;float: right">{{$boleta->moneda->simbolo }} .{{number_format(round($sub_total, 2),2)}}</span>
+        {{-- <span style="display: block;float: left"> Sub Total:</span>
+        <span style="display: block;float: right;">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}} </span> --}}
+        {{-- <br> --}}
+        <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
+        <span style="display: block;float: right">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}}</span>
 
     </div>
     <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
