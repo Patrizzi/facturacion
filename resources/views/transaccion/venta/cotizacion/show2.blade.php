@@ -153,7 +153,7 @@
                 <div class="col-sm-12" align="center">
                  <div class="form-control" style="border: none;height: auto" >
                      <div align="left">
-                        <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+                        <strong>Observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
                     </div>
                 </div>
             </div>
@@ -199,58 +199,44 @@
 </div><!-- /table-responsive -->
 
 <footer style="padding-top: 120px">
-   <h3 align="left">
-    <?php $v=new CifrasEnLetras() ;
-    $letra=($v->convertirEurosEnLetras($end));
-    $letra_final = ucfirst(strstr($letra, 'soles',true));
-    $end_final_point=strstr($end2, '.', false);
-    $end_final=str_replace('.', '',$end_final_point);
-    ?>
-    Son : {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
-</h3>
+    <div class="row">
+        <div class="col-sm-8">
+            <h3 align="left">
+                <?php $v=new CifrasEnLetras() ;
+                $letra=($v->convertirEurosEnLetras($end));
+                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                $end_final_point=strstr($end2, '.', false);
+                $end_final=str_replace('.', '',$end_final_point);
+                ?>
+                Son : {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
+            </h3>         
+        </div>
+        <div class="col-sm-4 form-control ">
+            @if($cotizacion->tipo == "boleta")
+                {{-- //POSIBLE CONDICIONAL PARA LA VISTA, 1ERO EN BOLETA, 2DO EN FACTURA POR OP GRAVADA --}}
+                <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
+                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}}{{$end}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>                
+            @else
+                
+                <span style="display: block;float: left"> Sub Total:</span>
+                <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                <br>
+                <span style="display: block;float: left"> Op. Agravada: </span>
+                <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
+                <span style="display: block;float: left"> Op. Inafecta: </span>
+                <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
+                <span style="display: block;float: left"> Op. Exonerada: </span>
+                <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}} </span><br>
+                <span style="display: block;float: left"> I.G.V.: </span>
+                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}} @else  {{$cotizacion->moneda->simbolo}}.00 @endif</span><br>
+                <span style="display: block;float: left"> Importe Total: </span>
+                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{number_format($end,2)}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>
+            @endif
+        </div>
+    </div>
+   
 
-@if($cotizacion->tipo == "boleta")
-{{-- //POSIBLE CONDICIONAL PARA LA VISTA, 1ERO EN BOLETA, 2DO EN FACTURA POR OP GRAVADA --}}
-<div class="row">
-    <div class="col-sm-3 ">
-        <p class="form-control a"> Sub Total</p>
-        <p class="form-control a">{{$simbologia=$cotizacion->moneda->simbolo}} {{round($sub_total, 2)}}</p>
-    </div>
-    <div class="col-sm-3 ">
-        <p class="form-control a"> Op. Agravada</p>
-        <p class="form-control a"> {{$simbologia=$cotizacion->moneda->simbolo}}.00</p>
-    </div>
-    <div class="col-sm-3 ">
-        <p class="form-control a"> IGV</p>
-        <p class="form-control a"> @if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{round($igv_p, 2)}} @else  {{$cotizacion->moneda->simbolo}}.00 @endif</p>
-    </div>
-    <div class="col-sm-3 ">
-        <p class="form-control a"> Importe Total</p>
-        <p class="form-control a"> @if ($regla=="factura"){{$cotizacion->moneda->simbolo}}{{$end}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</p>
-    </div>
-</div>
-@else
-<div class="row">
-    <div class="col-sm-8">
 
-    </div>
-    <div class="col-sm-4 form-control" >
-        <span style="display: block;float: left"> Sub Total:</span>
-        <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
-        <br>
-        <span style="display: block;float: left"> Op. Agravada: </span>
-        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
-        <span style="display: block;float: left"> Op. Inafecta: </span>
-        <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
-        <span style="display: block;float: left"> Op. Exonerada: </span>
-        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}} </span><br>
-        <span style="display: block;float: left"> I.G.V.: </span>
-        <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}} @else  {{$cotizacion->moneda->simbolo}}.00 @endif</span><br>
-        <span style="display: block;float: left"> Importe Total: </span>
-         <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{number_format($end,2)}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>
-    </div>
-</div>
-@endif
 </footer>
 
 <br>

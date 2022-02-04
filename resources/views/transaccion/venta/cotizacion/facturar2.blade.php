@@ -29,8 +29,15 @@
             if({{$cotizacion->forma_pago_id}} == 1){
                 document.getElementById('credito_pago').style.display = "none";
                 document.getElementById('colum-col').className = "col-sm-5";
+                document.getElementById('ven_1p').style.visibility = "initial";
+                document.getElementById('ven_3p').style.visibility = "initial";
+                document.getElementById('fecha_vencimiento').removeAttribute('disabled');
+                
             }else{
                 document.getElementById('credito_pago').style.display = "block";
+                document.getElementById('ven_1p').style.visibility = "hidden";
+                document.getElementById('ven_3p').style.visibility = "hidden";
+                document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
 
         }); 
@@ -169,8 +176,13 @@
                                     <br>
                                     <div class="col-sm-2"><strong>Fecha de Emision:</strong></div>
                                     <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
-                                    <div class="col-sm-2"><strong>Fecha de Vencimiento:</strong></div>
-                                    <div class="col-sm-10"><input type="text" class="form-control"  name="fecha_vencimiento" value="{{$cotizacion->fecha_vencimiento }}" readonly="readonly"></div>
+                                    
+                                    <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
+                                        <strong>Fecha de Vencimiento:</strong>
+                                    </div>
+                                    <div  class="col-sm-10"  id="ven_3p" style="visibility: initial;">
+                                        <input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}">
+                                    </div>
                                     <br>
                                     <br>
                                 </div>
@@ -279,7 +291,7 @@
                                 <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
                                 <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv">
                                 <span style="display: block;float: left"> Importe Total: </span>
-                                <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{$end}}</span>
+                                <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format($end,2)}}</span>
                                 <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv" id="total">
                                 <br>
                             </div>
@@ -516,9 +528,15 @@
 
                     document.getElementById('credito_pago').style.display = "none";
                     document.getElementById('colum-col').className = "col-sm-5";
+                    document.getElementById('ven_1p').style.visibility = "initial";
+                    document.getElementById('ven_3p').style.visibility = "initial";
+                    document.getElementById('fecha_vencimiento').removeAttribute('disabled');
                 }else{
                     document.getElementById('credito_pago').style.display = "block";
                     document.getElementById('colum-col').className = "col-sm-3";
+                    document.getElementById('ven_1p').style.visibility = "hidden";
+                    document.getElementById('ven_3p').style.visibility = "hidden";
+                    document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
                 }
         }
     </script>
