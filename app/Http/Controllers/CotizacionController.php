@@ -489,7 +489,7 @@ class CotizacionController extends Controller
 
             $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
             $cotizacion_nr=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-            $cotizacion_numero="COTPB ".$sucursal_nr."-".$cotizacion_nr;
+            $cotizacion_numero="COTB ".$sucursal_nr."-".$cotizacion_nr;
 
             $tipo = 'boleta';
             $tipo_document = 3;
@@ -831,7 +831,7 @@ class CotizacionController extends Controller
 
         $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
         $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-        $cotizacion_numero="COTPB ".$sucursal_nr."-".$correlativo;
+        $cotizacion_numero="COTB ".$sucursal_nr."-".$correlativo;
         //FIN CODIGO N° DE  COTIZACION
 
 
@@ -935,7 +935,7 @@ public function create_boleta_ms(Request $request)
 
         $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
         $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-        $cotizacion_numero="COTPB ".$sucursal_nr."-".$correlativo;
+        $cotizacion_numero="COTB ".$sucursal_nr."-".$correlativo;
         //FIN CODIGO N° DE  COTIZACION
 
 
@@ -1099,7 +1099,7 @@ public function create_boleta_ms(Request $request)
 
     $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
     $cotizacion_nr=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-    $cotizacion_numero="COTPB ".$sucursal_nr."-".$cotizacion_nr;
+    $cotizacion_numero="COTB ".$sucursal_nr."-".$cotizacion_nr;
 
 
         //CODIGO COTIZACION
@@ -1370,26 +1370,29 @@ public function print($id){
     if($regla=='factura'){
         $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
     }elseif($regla=='boleta'){
-        $cotizacion_registro=Cotizacion_boleta_registro::where('cotizacion_id',$id)->get();
+        $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
     }
     /* FIN registros boleta y factura*/
     /*de numeros a Letras*/
 
     // foreach($cotizacion_registro as $cotizacion_registros){
     $sub_total=$cotizacion->op_gravada;
-    $simbologia=$cotizacion->moneda->simbolo.$igv_p=round($sub_total, 2)*$igv->igv_total/100;
-    //     if ($regla=='factura'){
-    $end=round($sub_total, 2)+round($igv_p, 2);
-    //     }elseif ($regla=='boleta'){
-    //         $end=round($sub_total, 2);
-    //     }
-    // }
+
+    $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
+    if ($regla=='factura') {
+        $end=round($sub_total, 2)+round($igv_p, 2);
+        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
+    }elseif ($regla=='boleta'){
+        $end=round($sub_total, 2);
+        $end2=number_format(round($sub_total, 2),2);
+
+    }
     /* Finde numeros a Letras*/
     $empresa=Empresa::first();
     $sum=0;
     $i=1;
 
-    return view('transaccion.venta.cotizacion.print', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','i','end','igv_p','banco_count'));
+    return view('transaccion.venta.cotizacion.print2', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','i','end','igv_p','banco_count','end2'));
 }
 public function pdf(Request $request,$id){
     $name = $request->get('name');
@@ -1400,20 +1403,23 @@ public function pdf(Request $request,$id){
     $sub_total=0;
     $igv=Igv::first();
     /*registros boleta y factura*/
-    if($regla=='factura'){
+    // if($regla=='factura'){
         $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
-    }elseif($regla=='boleta'){
-        $cotizacion_registro=Cotizacion_boleta_registro::where('cotizacion_id',$id)->get();
-    }
+    // }elseif($regla=='boleta'){
+    //     $cotizacion_registro=Cotizacion_boleta_registro::where('cotizacion_id',$id)->get();
+    // }
     /* FIN registros boleta y factura*/
     /*de numeros a Letras*/
     // foreach($cotizacion_registro as $cotizacion_registros){
     $sub_total=$cotizacion->op_gravada;
-    $simbologia=$cotizacion->moneda->simbolo.$igv_p=round($sub_total, 2)*$igv->igv_total/100;
-    if($regla=='factura'){
+    $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
+    if ($regla=='factura') {
         $end=round($sub_total, 2)+round($igv_p, 2);
-    }elseif($regla=='boleta'){
+        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
+    }elseif ($regla=='boleta'){
         $end=round($sub_total, 2);
+        $end2=number_format(round($sub_total, 2),2);
+
     }
     // }
 
@@ -1423,13 +1429,13 @@ public function pdf(Request $request,$id){
     $i=1;
     $regla=$cotizacion->tipo;
     $archivo=$name.$regla.$id.".pdf";
-    // return view('transaccion.venta.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count'));
+    // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
     if($request->get('firma') == "0"){
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count'));
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
         return $pdf->download('Cotizacion - '.$archivo.'.pdf');
     }else{
         $firma= EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma'));
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'));
         return $pdf->download('Cotizacion - '.$archivo.'.pdf');
     }
 }
