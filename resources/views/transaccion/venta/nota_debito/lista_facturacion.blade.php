@@ -1,9 +1,9 @@
 @extends('layout')
 
-@section('title', 'Nota Credito Boleta - lista')
-@section('breadcrumb', 'Nota Credito Boleta - lista')
-@section('breadcrumb2', 'Nota Credito Boleta - lista')
-@section('href_accion', route('nota-credito.index'))
+@section('title', 'Nota Debito - lista Factura')
+@section('breadcrumb', 'Nota Debito Factura- lista')
+@section('breadcrumb2', 'Nota Debito Factura - lista')
+@section('href_accion', route('nota-debito.index'))
 @section('value_accion', 'Atras')
 
 @section('content')
@@ -25,17 +25,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($boletas as $boleta)
+                                @foreach($facturas as $factura)
                                 <tr class="gradeX">
-                                    <td>{{$boleta->id}}</td>
-                                    <td>{{$boleta->codigo_boleta}}</td>
-                                    <td>{{$boleta->cliente->nombre}}</td>
-                                    <td>{{$boleta->cliente->numero_documento}}</td>
-                                    <td>{{$boleta->fecha_emision}}</td>
+                                    <td>{{$factura->id}}</td>
+                                    <td>{{$factura->codigo_fac}}</td>
+                                    <td>{{$factura->cliente->nombre}}</td>
+                                    <td>{{$factura->cliente->numero_documento}}</td>
+                                    <td>{{$factura->fecha_emision}}</td>
                                     <td>
-                                        <form method="POST" action="{{route('nota-credito.motivo')}}">
+                                        <form method="POST" action="{{route('nota-debito.create_nota_debito')}}">
                                           @csrf
-                                          <input type="hidden" name="boleta_id" value="{{$boleta->id}}">
+                                          <input type="hidden" name="factura_id" value="{{$factura->id}}">
                                           <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
                                         </form>
                                     </td>

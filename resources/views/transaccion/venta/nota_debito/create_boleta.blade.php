@@ -1,13 +1,12 @@
 @extends('layout')
 
-@section('title', 'Nota Credito')
-@section('breadcrumb', 'Nota Credito')
-@section('breadcrumb2', 'Nota Credito')
-@section('href_accion', route('nota-credito.index'))
+@section('title', 'Nota Debito Boleta')
+@section('breadcrumb', 'Nota Debito Boleta')
+@section('breadcrumb2', 'Nota Debito Boleta')
+@section('href_accion', route('nota-debito.index'))
 @section('value_accion', 'atras')
 
 @section('content')
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
@@ -24,42 +23,38 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE CREDITO</h2>
-                                <h5> {{$facturacion->codigo_fac}}</h5>
+                                <h2>NOTA DE DEBITO BOLETA</h2>
+                                <h5> {{$boleta->codigo_boleta}}</h5>
                             </center>
                         </div>
                     </div>
                 </div><br>
-                <form action="{{route('facturacion_electronica.nota_credito',$facturacion->id)}}"  enctype="multipart/form-data" method="post" >
-                    @csrf
-
-
-                
+                <form action="{{route('facturacion_electronica.nota_debito_bol',$boleta->id)}}"  enctype="multipart/form-data" method="post" >
+                @csrf
                 <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
-
                         <div class="form-control">
                             <h3> Datos Generales</h3>
                             <div align="left">
                                 <strong>Cliente:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
-                                @else{{$facturacion->cotizacion->cliente->nombre}}
+                                @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
+                                @else{{$boleta->cotizacion->cliente->nombre}}
                                 @endif <br>
                                 <strong>R.U.C:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
-                                @else{{$facturacion->cotizacion->cliente->numero_documento}}
+                                @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
+                                @else{{$boleta->cotizacion->cliente->numero_documento}}
                                 @endif <br>
                                 <strong>Direccion:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
-                                @else{{$facturacion->cotizacion->cliente->direccion}}
+                                @if(isset($boleta->cliente_id)){{$boleta->cliente->direccion}}
+                                @else{{$boleta->cotizacion->cliente->direccion}}
                                 @endif <br>
                                 <strong>Condiciones de Pago:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->forma_pago->nombre }}
-                                @else{{$facturacion->cotizacion->forma_pago->nombre }}
+                                @if(isset($boleta->cliente_id)){{$boleta->forma_pago->nombre }}
+                                @else{{$boleta->cotizacion->forma_pago->nombre }}
                                 @endif  <br>
                                 <strong>Tipo de Moneda:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->moneda->nombre }}
-                                @else{{$facturacion->cotizacion->moneda->nombre }}
+                                @if(isset($boleta->cliente_id)){{$boleta->moneda->nombre }}
+                                @else{{$boleta->cotizacion->moneda->nombre }}
                                 @endif <br>
 
                             </div>
@@ -70,17 +65,17 @@
                             <h3>Condiciones Generales</h3>
                             <div align="left">
                                 <strong>Orden de Compra:</strong>
-                                {{$facturacion->orden_compra}} <br>
+                                {{$boleta->orden_compra}} <br>
                                 <strong>Guia de Remision:</strong>
-                                {{$facturacion->guia_remision}} <br>
+                                {{$boleta->guia_remision}} <br>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <strong>Fecha Emision:</strong>
-                                        {{$facturacion->fecha_emision}} 
+                                        {{$boleta->fecha_emision}} 
                                     </div>
-                                    <div class="cool-sm-6">
-                                        <strong>Fecha de Vencimiento:</strong>
-                                        {{$facturacion->fecha_vencimiento }} <br>
+                                    <div class="col-sm-6">
+                                        <strong>Fecha de Vencimiento:</strong> 
+                                        {{$boleta->fecha_vencimiento }}
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px ;margin-bottom: 10px">
@@ -89,14 +84,9 @@
                                     </div>
                                     <div class="col-sm-10" style="padding-left: 0px">
                                         <select class="form-control" name="motivo">
-                                            <option >Devolucion por Item</option>
-                                            <option >Descuento por Item</option>
-                                            <option >Anulacion de la operacion</option>
-                                            <option >Anulacion por error en el RUC</option>
-                                            <option >Descuento Global</option>
-                                            <option >Devolucion Ttotal</option>
-                                            <option >Correcion por error en la descripcion</option>
-                                            <option >Ajustes - montos y/o fechas de pago</option>
+                                            <option >Interes por mora</option>
+                                            <option >Aumentos en el valor</option>
+                                            <option >Penalidades</option>
                                         </select>
                                     </div>
                                 </div>
@@ -112,6 +102,7 @@
                 </div>
                 <br>
                 
+                    
                     <div class="table-responsive">
                         <table class="table ">
                             <thead>
@@ -120,40 +111,30 @@
                                     <th>ITEM</th>
                                     <th>Codigo Producto</th>
                                     <th  style="width:30px">Cantidad</th>
-                                    <th style="width:30px">Cantidad Nueva</th>
-                                    {{-- <th>Unid.Medida</th> --}}
                                     <th>Descripción</th>
                                     <th>Precio unitario</th>
-                                    {{-- <th>Dscto.%</th> --}}
-                                    {{-- <th>P. Unitario Desc</th> --}}
-                                    {{-- <th>Comision</th> --}}
-                                    {{-- <th>P. Unitario Com.</th> --}}
+                                    <th style="width:30px">Precio unitario nuevo</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <span hidden="hidden">{{$u=0}} </span>
                                 <tr>
-                                    @foreach($facturacion_registro as $e => $facturacion_registros)
+                                    @foreach($boleta_registro as $e => $boleta_registros)
                                     <tr>
                                         <td><input class="form-check-input" type="checkbox" id="inlineCheckbox_{{$e}}" name="inlineCheckbox_{{$e}}"  onclick="check('{{$e}}')"></td>
                                         <td >{{$u++}}</td>
-                                        <td>{{$facturacion_registros->producto->codigo_producto}}</td>
-                                        <td>{{$facturacion_registros->cantidad}}</td>
-                                        <td><input required="required" class="form-control" type="text" id="input_disabled_{{$e}}" name="input_disabled_{{$e}}" value="0" disabled></td>
-                                        {{-- <td>{{$facturacion_registros->producto->unidad_i_producto->medida}}</td> --}}
-                                        <td>{{$facturacion_registros->producto->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
-                                        <td>{{$facturacion_registros->precio}}</td>
-                                        {{-- <td>{{$facturacion_registros->descuento}}%</td> --}}
-                                        {{-- <td>{{$facturacion_registros->precio_unitario_desc}}</td> --}}
-                                        {{-- <td>{{$facturacion_registros->comision}}%</td> --}}
-                                        {{-- <td>{{$facturacion_registros->precio_unitario_comi}}</td> --}}
-                                        <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td>
+                                        <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                                        <td>{{$boleta_registros->cantidad}}</td>
+                                        <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
+                                        <td>{{$boleta_registros->precio}}</td>
+                                        <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
+                                        <td>{{$boleta_registros->precio_unitario_comi* $boleta_registros->cantidad }}</td>
                                         <td style="display: none">
-                                            {{$sub_total=($facturacion_registros->factura_ids->op_gravada)+($facturacion_registros->factura_ids->op_inafecta)+($facturacion_registros->factura_ids->op_exonerada)}}
-                                            {{$sub_total_gravado=($facturacion_registros->factura_ids->op_gravada)}}
+                                            {{-- {{$sub_total=($boleta_registros->factura_ids->op_gravada)+($boleta_registros->factura_ids->op_inafecta)+($boleta_registros->factura_ids->op_exonerada)}}
+                                            {{$sub_total_gravado=($boleta_registros->factura_ids->op_gravada)}}
                                             {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                            {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                            {{$end=round($sub_total, 2)+round($igv_p, 2)}} --}}
                                         </td>
                                     </tr>
                                    {{--  <span hidden="hidden">{{$i=1}}</span>
@@ -192,10 +173,12 @@
     var estado=1;
     function check(i){
         if(document.getElementById(`inlineCheckbox_${i}`).value == "false"){
-            document.getElementById(`input_disabled_${i}`).disabled = true;
+            
+            document.getElementById(`input_disabled_precio_${i}`).disabled = true;
             document.getElementById(`inlineCheckbox_${i}`).value = "true"
         }else{
-            document.getElementById(`input_disabled_${i}`).disabled = false;
+           
+            document.getElementById(`input_disabled_precio_${i}`).disabled = false;
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
         }
     }

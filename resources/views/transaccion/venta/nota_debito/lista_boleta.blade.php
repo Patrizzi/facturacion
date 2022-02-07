@@ -1,9 +1,9 @@
 @extends('layout')
 
-@section('title', 'Nota Credito Boleta - lista')
-@section('breadcrumb', 'Nota Credito Boleta - lista')
-@section('breadcrumb2', 'Nota Credito Boleta - lista')
-@section('href_accion', route('nota-credito.index'))
+@section('title', 'Nota Debito Boleta - lista')
+@section('breadcrumb', 'Nota Debito Boleta - lista')
+@section('breadcrumb2', 'Nota Debito Boleta - lista')
+@section('href_accion', route('nota-debito.index'))
 @section('value_accion', 'Atras')
 
 @section('content')
@@ -33,7 +33,7 @@
                                     <td>{{$boleta->cliente->numero_documento}}</td>
                                     <td>{{$boleta->fecha_emision}}</td>
                                     <td>
-                                        <form method="POST" action="{{route('nota-credito.motivo')}}">
+                                        <form method="POST" action="{{route('nota-debito.create_nota_debito_boleta')}}">
                                           @csrf
                                           <input type="hidden" name="boleta_id" value="{{$boleta->id}}">
                                           <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
