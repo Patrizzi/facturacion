@@ -104,10 +104,8 @@
                                     @endswitch
                                     <strong>Tipo de sustento:</strong>
                                     {{$notas_credito->tipo}}<br>
-                                    <strong>Fecha Emision:</strong>
-                                    {{$notas_credito->nota_i_facturacion->fecha_emision}}<br>
-                                    <strong>Fecha de Vencimiento:</strong>
-                                    {{$notas_credito->nota_i_facturacion->fecha_vencimiento}}<br>
+                                    <strong>Fecha Emision:</strong>c
+                                    {{$notas_credito->created_at}}<br>
                                 @else
                                     <strong>Documento:</strong>
                                     {{$notas_credito->nota_i_boleta->codigo_boleta}}<br>
@@ -129,9 +127,7 @@
                                     <strong>Tipo de sustento:</strong>
                                     {{$notas_credito->tipo}}<br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$notas_credito->nota_i_boleta->fecha_emision}}<br>
-                                    <strong>Fecha de Vencimiento:</strong>
-                                    {{$notas_credito->nota_i_boleta->fecha_vencimiento}}<br>
+                                    {{$notas_credito->created_at}}<br><br>
                                 @endif
                             </div>
                         </div>
