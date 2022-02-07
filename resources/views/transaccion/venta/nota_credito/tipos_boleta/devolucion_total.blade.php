@@ -24,7 +24,7 @@
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
                                 <h2>NOTA DE CREDITO</h2>
-                                <h5> {{$boleta->codigo_boleta}}</h5>
+                                {{-- <h5> {{$boleta->codigo_fac}}</h5> --}}
                             </center>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <span hidden="hidden">{{$u=0}} </span>
+                                <span hidden="hidden">{{$u=1}} </span>
                                 <tr>
                                     @foreach($boleta_registro as $e => $boleta_registros)
                                     <tr>

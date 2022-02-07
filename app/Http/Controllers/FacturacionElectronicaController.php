@@ -327,7 +327,7 @@ class FacturacionElectronicaController extends Controller
             $nota_credito=new Nota_Credito();
             $nota_credito->codigo_n_c=$nota_credito_numero;
             $nota_credito->facturacion_id=$factura->id;
-            $nota_credito->tipo="producto";
+            $nota_credito->tipo=$request->sustento;;
             $nota_credito->almacen_id=$factura->almacen_id;
             $nota_credito->motivo=$request->motivo;
             $nota_credito->op_gravada=$gravada;

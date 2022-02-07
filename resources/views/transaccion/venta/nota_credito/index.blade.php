@@ -8,7 +8,17 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
-
+@if($errors->any())
+<div style="padding-top: 20px;">
+    <div class="alert alert-danger">
+        <a class="alert-link" href="#">
+            @foreach ($errors->all() as $error)
+            <li style="color: red">{{ $error }}</li>
+            @endforeach
+        </a>
+    </div>
+</div>
+@endif
 <div class="col-lg-12">
     <div id="modal-form" class="modal fade" aria-hidden="true">
         <div class="modal-dialog">
@@ -40,6 +50,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Nota de Credito</th>
+                                    <th>Documento</th>
                                     <th>DOC</th>
                                     <th>Tipo</th>
                                     <th>Fecha emision</th>
@@ -51,6 +63,14 @@
                                 @foreach($notas_creditos as $nota_credito)
                                 <tr class="gradeX">
                                     <td>{{$nota_credito->id}}</td>
+                                    <td>{{$nota_credito->codigo_n_c}}</td>
+                                    <td>
+                                        @if($nota_credito->facturacion_id==NULL)
+                                            {{$nota_credito->nota_i_boleta->codigo_boleta}}
+                                        @else
+                                            {{$nota_credito->nota_i_facturacion->codigo_fac}}
+                                        @endif
+                                    </td> 
                                     <td>
                                         @if($nota_credito->facturacion_id==NULL)
                                             Boleta

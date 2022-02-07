@@ -319,7 +319,13 @@ Route::group(
 		// Route::post('/inventario.kardex.entrada.create/fetcha', 'KardexEntradaController@fetcha')->name('autocomplete.fetcha');
 		// Route::post('/api','api.php');
 	});
-Auth::routes();
+
+	Auth::routes([
+		'register' => false, // Registration
+		'reset' => false, // Password Reset
+		'verify' => false, // Email Verification
+	  ]);
+
 Route::post('sunat_cambio','TipoCambioController@sunat_cambio');
 Route::resource('/tipo_cambio','TipoCambioController')->middleware('auth');
 Route::get('garantia_guia_ingreso/pdf/{id}' , 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');

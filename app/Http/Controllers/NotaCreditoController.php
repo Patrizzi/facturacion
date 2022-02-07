@@ -84,6 +84,16 @@ class NotaCreditoController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
 
+        //validación por boleta no encontrada
+        if($request->tipo_nota_credito == 02){
+            $factura_buscada=Facturacion::where('codigo_fac',$request->nueva_factura)->first();
+            if(isset($factura_buscada)){
+            
+            }else{
+                return redirect()->route('nota-credito.index')->withErrors(['codigo de factura no encontrado!']);
+            }
+        }
+
         if($tipo_nota_credito == 01){//anulación de la operación
             return view('transaccion.venta.nota_credito.tipos.anulacion_operacion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
@@ -136,14 +146,18 @@ class NotaCreditoController extends Controller
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
+        
+        
+        //validación por boleta no encontrada
+        if($request->tipo_nota_credito == 02){
+            $boleta_buscada=Boleta::where('codigo_boleta',$request->nueva_boleta)->first();
+            if(isset($boleta_buscada)){
 
-        $boleta_buscada=Boleta::where('codigo_boleta',$request->nueva_boleta)->first();
-        //validacion por boleta no encontrada
-        if(isset($boleta_buscada)){
-            
-        }else{
-            return "escribe bien";
+            }else{
+                return redirect()->back('nota-credito.index')->withErrors(['codigo de boleta no encontrado!']);
+            }
         }
+        
         
         if($tipo_nota_credito == 01){//anulación de la operación
             return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
@@ -162,6 +176,7 @@ class NotaCreditoController extends Controller
     }
 
     public function motivo(Request $request){
+        
         if(isset($request->factura_id)){
             $facturacion=Facturacion::find($request->factura_id);
             return view('transaccion.venta.nota_credito.create_motivo',compact('facturacion'));
@@ -190,6 +205,7 @@ class NotaCreditoController extends Controller
      */
     public function show($id)
     {
+        //return "1";
         $notas_credito=Nota_Credito::where('id',$id)->first();
         $notas_credito_registros=Nota_Credito_registro::where('nota_credito_id',$id)->get();
 
