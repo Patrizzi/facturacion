@@ -117,8 +117,18 @@ $empresa=Empresa::first(); ?>
                             <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
-                            <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
-                            <li><a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                             <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
+                                <li><a href="{{route('otros.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                                    {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
+                           {{--  <li>
+                                <a href="#"><span  class="nav-label">Cotizaciones</span></a>
+                                <ul class="nav nav-second-level collapse">
+                                    <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li>
+                                    <li><a href="{{route('cotizacion_servicio.index')}}"  style="padding-left: 80px;">C.Servicios</a></li>
+                                    <li><a href="{{route('otros.index')}}"  style="padding-left: 80px;">C.Manual</a></li>
+                                </ul>
+                            </li> --}}
+                            <li><a href="{{route('boleta.index')}}">Boleta</a></li>
                             <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
                             <li><a href="{{route('guia_remision.index')}}">Guia Remision</a></li>
                             <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
@@ -130,20 +140,20 @@ $empresa=Empresa::first(); ?>
                     <li>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Tecnico</span></a>
                         <ul class="nav nav-second-level collapse">
-                           @can('transacciones-garantias-guias_ingreso.index')
-                           <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
-                           @endcan
-                           @can('transacciones-garantias-guias_egreso.index')
-                           <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
-                           @endcan
-                           @can('transacciones-garantias-informe_tecnico.index')
-                           <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
-                           @endcan
+                         @can('transacciones-garantias-guias_ingreso.index')
+                         <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
+                         @endcan
+                         @can('transacciones-garantias-guias_egreso.index')
+                         <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
+                         @endcan
+                         @can('transacciones-garantias-informe_tecnico.index')
+                         <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
+                         @endcan
 
-                       </ul>
-                   </li>
-                   @if(empty($inventario_inicial))
-                   <li>
+                     </ul>
+                 </li>
+                 @if(empty($inventario_inicial))
+                 <li>
                     <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
                     @elseif($inventario_inicial->estado==1)
                     <li>
