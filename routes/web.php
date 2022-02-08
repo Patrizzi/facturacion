@@ -143,6 +143,9 @@ Route::group(
 		Route::post('ticket_ajax', 'FacturacionController@ticket_ajax')->name('ticket_ajax');
 		Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 
+		//facturacion manual
+		Route::resource('facturacion_manual','FacturacionMController');
+
 
 		Route::post('/boleta/create_ms','BoletaController@create_ms')->name('boleta.create_ms');
 		Route::get('/boleta/print/{id}','BoletaController@print')->name('boleta.print');
