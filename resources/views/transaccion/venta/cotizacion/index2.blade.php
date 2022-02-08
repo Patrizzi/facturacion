@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cotizacion 2')
+@section('title', 'Cotizacion')
 @section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)
@@ -107,42 +107,36 @@
                                           @csrf
                                           @method('put')
                                           <center>
-                                           <button type="submit" class="btn btn-w-m btn-info">Aprobar</button>
-                                       </form>
+                                             <button type="submit" class="btn btn-w-m btn-info">Aprobar</button>
+                                         </form>
 
-                                       @else
-                                       <button type="button" class="btn btn-w-m btn-default">Aprobado por <br>
-                                         @if($cotizacions->aprobado->personal->nombres==auth()->user()->personal->nombres)
-                                         usted
                                          @else
-                                         {{$cotizacions->aprobado->personal->nombres}}
-                                         @endif
-                                     </button>
+                                         <button type="button" class="btn btn-w-m btn-default">Aprobado por <br>
+                                           @if($cotizacions->aprobado->personal->nombres==auth()->user()->personal->nombres)
+                                           usted
+                                           @else
+                                           {{$cotizacions->aprobado->personal->nombres}}
+                                           @endif
+                                       </button>
+                                       @endif
+                                   </td>
+                                   <td>
+                                     @if($cotizacions->user_personal->personal->nombres==auth()->user()->personal->nombres)
+                                     Creado por usted
+                                     @else
+                                     Creado por  {{$cotizacions->user_personal->personal->nombres}}
                                      @endif
                                  </td>
-                                 <td>
-                                   @if($cotizacions->user_personal->personal->nombres==auth()->user()->personal->nombres)
-                                   Creado por usted
-                                   @else
-                                   Creado por  {{$cotizacions->user_personal->personal->nombres}}
-                                   @endif
-                               </td>
-                           </tr>
-                           @endforeach
-                       </tbody>
-                   </table>
-               </div>
-           </div>
-       </div>
-   </div>
+                             </tr>
+                             @endforeach
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
 </div>
-</div>
-
-
-
-
-
-
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -160,28 +154,13 @@
 <script>
     $(document).ready(function(){
         $('.dataTables-example').DataTable({
-            pageLength: 25,
+            pageLength: 10,
+            order: [[0, "desc"]],
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
+            buttons: [    ]
 
-            {extend: 'print',
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }
-        ]
-
-    });
+        });
 
     });
 

@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Cotizacion Ver')
+@section('title', 'Cotizacion')
 @section('breadcrumb', 'Cotizacion')
 @section('breadcrumb2', 'Cotizacion')
 @section('href_accion', route('cotizacion.index'))
