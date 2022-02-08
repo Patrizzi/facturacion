@@ -625,11 +625,12 @@
                 var igv_valor={{$igv->renta}};
                 var igv=final_decimal*igv_valor/100;
                 var igv_decimal = Math.round(igv * multiplier) / multiplier;  
-
+                var final_igv_round = parseFloat(final_decimal) + parseFloat(igv_decimal);
+                console.log(final_igv_round);
                 if(afec.toString() == "Gravado"){
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = final_decimal;
-                    document.getElementById(`precio_unitario_igv${a}`).value = final_decimal+igv_decimal;
+                    document.getElementById(`precio_unitario_igv${a}`).value = Math.round(final_igv_round * multiplier) / multiplier;
                }else{
                     document.getElementById(`total${a}`).value = final_decimal;
                    document.getElementById(`afectacion${a}`).value = 0;
@@ -659,10 +660,13 @@
                 var igv_valor={{$igv->renta}};
                 var igv=final_decimal*igv_valor/100;
                 var igv_decimal = Math.round(igv * multiplier) / multiplier;  
+                var final_igv_round = parseFloat(final_decimal) + parseFloat(igv_decimal);
+                console.log(final_igv_round);
+
                 if(afec.toString() == "Gravado"){
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = final_decimal;
-                    document.getElementById(`precio_unitario_igv${a}`).value = final_decimal+igv_decimal;
+                    document.getElementById(`precio_unitario_igv${a}`).value = Math.round(final_igv_round * multiplier) / multiplier;;
                }else{
                     document.getElementById(`total${a}`).value = final_decimal;
                    document.getElementById(`afectacion${a}`).value = 0;
