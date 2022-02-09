@@ -1,7 +1,7 @@
 @extends('layout')
-@section('title', 'Facturacion')
+@section('title', 'Facturación Manual')
 @section('href_accion', route('facturacion.index'))
-@section('value_accion', 'Atras')
+@section('value_accion', 'Atrás')
 @extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <head>
@@ -36,7 +36,7 @@
 @section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
 @section('ruta_retorno', 'facturacion')
 <div class="social-bar">
-    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>Cliente</a>
 </div>
 
 <!-- Inicio-->
@@ -45,10 +45,9 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <form action=""  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
+                    <form action="{{route('facturacion_manual.store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
                         @csrf
-                        @method('put')
-
+                       
                         <!--CABECERA-->
                         <!--//-->
                         <!--//-->
@@ -90,7 +89,7 @@
                                 <tr>
                                     <td>Orden de compra</td><td>:</td>
                                     <td><input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0"></td>
-                                    <td>Guia remision</td><td>:</td>
+                                    <td>Guía remisión</td><td>:</td>
                                     <td><input type="text" class="form-control" value="0" name="guia_r"></td>
                                     
                                 </tr>
@@ -99,234 +98,208 @@
                                     <td><input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"></td>
                                     <td>Forma de pago</td><td>:</td>
                                     <td>
-                                       <div class="row">
-                                        <div class="col-sm-6">
-                                            <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
-                                                @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option> @endforeach
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                    @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option> @endforeach
                                                 <select>
-                                                </div>
-                                                <div class="col-sm-6" id="credito_pago" style="visibility: hidden;">
-                                                    <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                                </div>
                                             </div>
-                                        </td>
-                                        <!-- Modal de Cuotas -->
-                                        <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                                          <div class="modal-dialog modal-lg" role="document">
+                                            <div class="col-sm-6" id="credito_pago" style="visibility: hidden;">
+                                                <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- Modal de Cuotas -->
+                                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
-                                              <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                  <span aria-hidden="true">&times;</span>
-                                              </button>
-                                          </div>
-                                          <div class="modal-body">
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
-                                              <strong style="font-size:11px">Rellenar todos los campos</strong>
-                                              <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                          <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
-                                          <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="row_number">
-                                        <div class="pago_modal row">
-                                            <div class="col-sm-1"><label>Fecha:</label></div>
-                                            <div class="col-sm-4">
-                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
-                                            </div>
-                                            <div class="col-sm-1"><label>Monto:</label></div>
-                                            <div class="col-sm-4">
-                                                <div class="input-group mb-3" style="padding-right:15px">
-                                                  <div class="input-group-prepend">
-
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                                 </div>
-                                                <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                <div class="modal-body">
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+                                                        <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                                            <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                    </div>
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+                                                        <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                        <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="row_number">
+                                                        <div class="pago_modal row">
+                                                            <div class="col-sm-1">
+                                                                <label>Fecha:</label>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                            </div>
+                                                            <div class="col-sm-1">
+                                                                <label>Monto:</label>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="input-group mb-3" style="padding-right:15px">
+                                                                    <div class="input-group-prepend">
+
+                                                                    </div>
+                                                                    <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
-                                        </div>
                                     </div>
-                                </div>
+                                    <!-- Modal de Cuotas -->
+                                </tr>
+                                <tr>
+                                    <td>Moneda</td>
+                                    <td>:</td>
+                                    <td>
+                                        <select name="moneda" class="form-control" >
+                                            @foreach($moneda as $monedas)
+                                            <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>Fecha</td><td>:</td>
+                                    <td><input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tipo de Operación</td><td>:</td>
+                                    <td>
+                                        <select class="form-control" name="tipo_operacion" >
+                                            @foreach($tipo_operacion as $t_op)
+                                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
+                                    <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Observación</td><td>:</td>
+                                    <td colspan="4"><textarea class="form-control" name="observacion" id="observacion" >Emitimos la siguiente Factura a vuestra solicitud</textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--Tabla de Datos Cabecera Factura-->
+
+                        <!--CABECERA-->
+
+
+                        <!--REGISTROS DE PRODUCTOS Y SERVICIO-->
+                        <div class="table-responsive">
+                            <table cellspacing="0" class="table tables  " >
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+                                        <th >Articulo</th>
+                                        <th style="width:100px">Cantidad</th>
+                                        <th style="width:100px">Precio</th>
+                                        <th style="width:100px">Total</th>
+                                    </tr>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' class="case">
+                                    </td>
+                                    <td>
+                                        <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
+                                            <option></option>
+            
+                                            @foreach($productos as $index => $producto)
+                                            <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} }}">
+                                                {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}
+                                            </option>
+                                            @endforeach
+                                            @foreach($servicios as $index2 => $servicio)
+                                            <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}">
+                                                {{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+            
+                                        <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                        <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
+                                        <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
+                                        <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
+            
+                                    </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                        </td>
+    
+                                        <td>
+                                            <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                        </td>
+                                        <span id="spTotal"></span>
+                                    </tr>
+    
+                                </tbody>
+                                <tbody>
+
+                                    {{-- subtotal e igv --}}
+                                    <tr style="background-color: #f5f5f500;" align="center">
+                                        <td></td>
+                                        <td></td>
+                                        
+                                        <td>Subtotal :</td>
+                                        <td colspan="2">
+                                            <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
+                                            <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
+                                        </td>
+                                    </tr>
+                                    <tr style="background-color: #f5f5f500;" align="center">
+                                        <td></td>
+                                        <td></td>
+                                        
+                                        <td>IGV :</td>
+                                        <td colspan="2">
+                                            <input id='igv' type="text" disabled="disabled" class="form-control" required />
+                                        </td>
+                                    </tr>
+
+                                  <tr align="center">
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total :</td>
+                                    <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
+                                <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                            </div>
+                            <div class="col-sm-6 ">
+                                <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button>
+                                <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button>
                             </div>
                         </div>
-                    </div>
+                    </form>
+
                 </div>
-                <!-- Modal de Cuotas -->
-                
-            </tr>
-            <tr>
-                <td>Moneda</td>
-                                <td>:</td>
-                                <td>
-                                   <select name="moneda" class="form-control" >
-                                    @foreach($moneda as $monedas)
-                                    <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                    @endforeach
-                                </select>
-
-                            </td>
-                    <td>Fecha</td><td>:</td>
-                    <td><input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"></td>
-                </tr>
-                <tr>
-                    <td>Tipo de Operacion</td><td>:</td>
-                    <td>
-                        <select class="form-control" name="tipo_operacion" >
-                            @foreach($tipo_operacion as $t_op)
-                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
-                    <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}"></td>
-                </tr>
-                <tr>
-                    <td>Observacion</td><td>:</td>
-                    <td  colspan="4"><textarea class="form-control" name="observacion" id="observacion"   >Emitimos la siguiente Factura a vuestra solicitud</textarea></td>
-                </tr>
-            </tbody>
-        </table>
-        <!--Tabla de Datos Cabecera Factura-->
-        <!--//-->
-        <!--//-->
-        <!--CABECERA-->
-
-
-        <!--REGISTROS DE PRODUCTOS Y SERVICIO-->
-        <div class="table-responsive">
-            <table cellspacing="0" class="table tables  " >
-                <thead>
-                    <tr>
-                        <th style="width: 10px"></th>
-                        <th style="width: 500px">Articulo</th>
-                        <th>Stock</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Dcto</th>
-                        <th>PU. Dcto.</th>
-                        <th>PU. Com.</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <!-- <input type='checkbox' class="case"> -->
-                            <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-
-                        </td>
-                        <td>
-                            <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
-                                <option></option>
-
-                                @foreach($productos as $index => $producto)
-                                <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} ">
-                                    {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}
-                                </option>
-                                @endforeach
-                                @foreach($servicios as $index2 => $servicio)
-                                <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}">
-                                    {{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}
-                                </option>
-                                @endforeach
-                            </select>
-
-                            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                            <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
-                            <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
-                            <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
-
-                        </td>
-
-                        <td>
-                            <input  style="width: 76px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='precio0' name='precio[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                        </td>
-
-
-                        <td>
-                            <div style="position: relative; " > <input class="text_des"type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required  autocomplete="off"/></div>
-
-
-                            <div  class="div_check" >
-                                <input class="check"  type='checkbox' id='check0' name='check[]'    onclick="multi(0)" style="" autocomplete="off"/>
-                            </div>
-                            <input type='hidden' id='check_descuento0' name='check_descuento[]'  class="form-control"  required >
-                            <input type='hidden' id='promedio_original0' name='promedio_original[]'  class="form-control"  required >
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
-                        </td>
-                        <input style="width: 76px"  type='hidden' name="comision[]" id='comision0'  readonly="readonly" class="form-control"  required  autocomplete="off" />
-                        <td>
-                            <input style="width: 76px"  type='text' id='precio_unitario_comision0' name='precio_unitario_comision[]' readonly="readonly" class="form-control"  required  autocomplete="off" />
-                        </td>
-                        <td>
-                            <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
-                            <input type='text' id='afectacion0'  style="width: 76px"  name='afectacion' disabled="disabled" class="afectacion form-control " hidden=""    autocomplete="off"/>
-
-                        </td>
-                        <span id="spTotal"></span>
-                    </tr>
-
-                </tbody>
-                <tbody>
-                    <tr style="background-color: #f5f5f500;" align="center">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Subtotal :</td>
-                        <td colspan="2">
-                            <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
-                            <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" /></td>
-                        </tr>
-                        <tr style="background-color: #f5f5f500;" align="center">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>IGV :</td>
-                            <td colspan="2"><input id='igv' type="text"     disabled="disabled" class="form-control" required /></td>
-                        </tr>
-                        <tr align="center">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Total :</td>
-                            <td colspan="2"><input id='total_final' type="text" name="precio_final_igv"    readonly="" class="form-control" required /></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-            <!-- <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button> -->&nbsp;
-            <button type="button" class='addmore btn btn-success' disabled=""> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-            <button class="btn btn-primary float-right" type="submit" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
-        </form>
-
+        </div>
     </div>
 </div>
-</div>
-</div>
-</div>fv
+
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
@@ -358,6 +331,8 @@
         border: 1px solid #e5e6e7;
     }
 </style>
+
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -377,17 +352,22 @@
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
+
 <script type="text/javascript">
     $(".select2_demo_3").select2({
         placeholder: "Seleccionar Producto",
     });
 </script>
+
 <script type="text/javascript">
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
     });
 </script>
-{{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+
+
+
+{{-- Validar Formulario / No doble insercion de datos(Gente desesperado) --}}
 <script>
     function valida(f) {
         var boton=document.getElementById("boton");
@@ -398,295 +378,115 @@
      else{boton.type = 'button';}
  }
 </script>
-{{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+{{-- FIN Validar Formulario / No doble insercion de datos(Gente desesperado) --}}
+
 {{-- @if($categoria=='producto') --}}
 <script>
     var i = 2;
     $(".addmore").on('click', function () {
         var data = `[
-        <tr>
+            <tr>
         <td>
-        <button type="button" class='delete e borrar btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+            <input type='checkbox' class='case'/>
         </td>";
+        
         <td>
-        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
-        <option></option>
-        @foreach($productos as $index => $producto)
-        <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}" >
-            {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}</option>
-        @endforeach
-        @foreach($servicios as $index2 => $servicio)
-        <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}" >S
-            {{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}
-        </option>
-        @endforeach
-        </select>
-        <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-        <textarea type='text' id='numero_serie0' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-        <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" hidden   autocomplete="off" />
-        <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
-        </td>
-        <td>
-        <input type='text' style="width: 76px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
-        </td>
-        <td>
-        <input type='number' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" min="1" max=""/>
-        </td>
-        <td>
-        <input type='text' style="width: 76px"  id='precio${i}' name='precio[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-        </td>
-        <td>
-        <div style="position: relative;" >
-        <input class="text_des"type='text' id='descuento${i}' name='descuento[]' readonly="readonly" class="" required onkeyup="multi(${i})"  autocomplete="off"/>
-        </div>
-        <div  class="div_check">
-        <input class="check"  type='checkbox' id='check${i}' name='check[]' onclick="multi(${i})" style="" autocomplete="off"/>
-        </div>
-        <input style="width: 76px" type='hidden'id='check_descuento${i}' name='check_descuento[]'  class="form-control"  required >
-        <input type='hidden' id='promedio_original${i}' name='promedio_original[]'  class="form-control"   >
+            <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
+                    <option></option>
+                @foreach($productos as $index => $producto)
+                    <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}">
+                        {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}</option>
+                    @endforeach
+                @foreach($servicios as $index2 => $servicio)
+                    <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}">
+                        {{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}}
+                    </option>
+                @endforeach
+            </select>
+            <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+            <textarea type='text' id='numero_serie0' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
         </td>
 
         <td>
-        <input type='text' id='precio_unitario_descuento${i}'  style="width: 76px"  name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento${i} form-control"  required  autocomplete="off" />
+            <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
-
-        <input type='hidden' name="comision[]" id='comision${i}'  style="width: 76px"  readonly="readonly" class="form-control"  required  autocomplete="off" />
-
         <td>
-        <input type='text' id='precio_unitario_comision${i}'  style="width: 76px"  name='precio_unitario_comision[]' readonly="readonly" class="form-control"  required  autocomplete="off" />
+            <input type='text' style="width: 76px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
-
         <td>
-        <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
-        <input type='text' id='afectacion${i}'  style="width: 76px" hidden  name='afectacion' disabled="disabled" class="afectacion form-control "    autocomplete="off"/>
-
+            <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
         </td>
 
         </tr>
         `;
         $('.tables').append(data);
         i++;
-        var input_ds = [];
-        var number_tot = document.getElementsByName('articulo[]').length;
-        for( j = 0; j < number_tot; j++){
-            input_ds[j]  = document.getElementsByName('articulo[]')[j].value;
-            if(input_ds[j].indexOf("SERV-") == 4){
-                $('option[value="'+input_ds[j]+'"]').prop("disabled", false);
-            }else{
-                $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
-            }
-            
-            
-        };
+
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",
         });
-        $(".addmore").prop("disabled", true);
-        $(".borrar").prop("disabled", false);
-
+       
     });
 </script>
-{{-- <script>
-    $('#articulo').change(function(e){
-        e.preventDefault();
-
-        var articulo = $('[id="articulo"]').val();
-                            // var data={articulo:articulo,_token:token};
-                            $.ajax({
-                                type: "post",
-                                url: "{{ route('descripcion_ajax') }}",
-                                data: {
-                                    '_token': $('input[name=_token]').val(),
-                                    'articulo': articulo
-                                },
-                                success: function (msg) {
-                                            // console.log(msg);
-                                            const msg2 = msg.slice(2);
-                                            $('#descripcion0').val(msg2);
-                                        }
-                                    });
-                        });
 
 
-    function ajax (a){
-        var articulo2 = $(`[id='articulo${a}']`).val();
-        $.ajax({
-            type: "post",
-            url: "{{ route('descripcion_ajax') }}",
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'articulo': articulo2
-            },
-            success: function (msg) {
-                                    // console.log(msg);
-                                    const msg2 = msg.slice(2);
-                                    $(`#descripcion${a}`).val(msg2);
-                                }
-                            });
-    }
-</script> --}}
+
+    <script>
+       
+        
+    </script>
+
 <script>
-    function comision(){
-            //comision
-            var comision=document.querySelector(`#comisionista`).value;
-            var separador=" ";
-            //revirtiendo la cadena
-            var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
-            //para comision
-            var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
-            var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
-            var comision_v =reverseString(comision_v_r[0]);//convierte el precio al revez a la normalidad
+    function multi(a){
+        var total = 1;
+        var totales=0;
+        var change= false; //
+        $(`.monto${a}`).each(function(){
+        if (!isNaN(parseFloat($(this).val()))) {
+        change= true;
 
-            var campos_num = document.getElementsByClassName("total").length;
-
-            console.log(comision_v);
-
-            document.getElementById(`comision0`).value = comision_v;
-
-            if(campos_num!=1){
-                for(var i=2;i<=campos_num;i++){
-                    document.getElementById(`comision${i}`).value = comision_v;
-                }
-            }
-            multi(0);
-            if(campos_num!=1){
-                for(var i=2;i<=campos_num;i++){
-                    multi(i);
-                }
-            }
-
-
+        total *= parseFloat($(this).val());
         }
+        });
+        total = (change)? total:0;
 
-        function multi(a){
+        var cantidad = document.querySelector(`#cantidad${a}`).value;
+        var precio = document.querySelector(`#precio${a}`).value;
+        var multiplier = 100;
+        var final=precio*cantidad;
+        var final_decimal = Math.round(final * multiplier) / multiplier;
+        console.log(final_decimal);
+        document.getElementById(`total${a}`).value = final_decimal;
 
+        var totalInp = $('[name="total"]');
+        var total_t = 0;
 
-            var total = 1;
-            var totales=0;
-            var change= false; //
-            $(`.monto${a}`).each(function(){
-                if (!isNaN(parseFloat($(this).val()))) {
-                    change= true;
+        totalInp.each(function(){
+        total_t += parseFloat($(this).val());
+        });
 
-                    total *= parseFloat($(this).val());
-                }
-            });
-            total = (change)? total:0;
+        var multiplier2 = 100;
+        var total_tt = Math.round(total_t * multiplier2) / multiplier2;
 
-            // Get the checkbox
-            var checkBox = document.getElementById(`check${a}`);
-            var cantidad = document.querySelector(`#cantidad${a}`).value;
-            var promedio_origina_descuento1=document.querySelector(`#precio_unitario_descuento${a}`).value;
-            var promedio_original2=document.querySelector(`#promedio_original${a}`).value;
-            var descuento = document.querySelector(`#descuento${a}`).value;
-            var afec = document.querySelector(`#tipo_afec${a}`).value;
+        $('#sub_total').val(total_tt);
 
-            if (checkBox.checked == true && descuento > 0){
+        var igv_valor={{$igv->renta}}; 
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv=subtotal*igv_valor/100;
 
-                var precio = document.querySelector(`#precio${a}`).value;
-                var promedio_original=document.querySelector(`#promedio_original${a}`).value;
-                var comision_porcentaje=document.querySelector(`#comision${a}`).value;
-                var multiplier = 100;
-                var precio_uni=precio-(promedio_original*descuento/100);
-                var precio_uni_dec=Math.round(precio_uni * multiplier) / multiplier;
+        var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+        var end=igv_decimal+parseFloat(subtotal);
 
-                document.getElementById(`check_descuento${a}`).value = descuento;
-                document.getElementById(`precio_unitario_descuento${a}`).value = precio_uni_dec;
+        var end2 = Math.round(end * multiplier2) / multiplier2;
 
-                var comisiones9=precio_uni_dec+(precio_uni_dec*comision_porcentaje/100);
-                var comisiones=Math.round(comisiones9*multiplier)/multiplier;
-                document.getElementById(`precio_unitario_comision${a}`).value = comisiones;
+        document.getElementById("igv").value = igv_decimal;
+        document.getElementById("sub_total").value = subtotal;
 
-                var final=comisiones*cantidad;
-                var final_decimal = Math.round(final * multiplier) / multiplier;
-                console.log(final_decimal);
-                if(afec.toString() == "Gravado"){
-                    document.getElementById(`total${a}`).value = final_decimal;
-                    document.getElementById(`afectacion${a}`).value = final_decimal;
-                }else{
-                    document.getElementById(`total${a}`).value = final_decimal;
-                    document.getElementById(`afectacion${a}`).value = 0;
-                }
-            } else {
-                var multiplier = 100;
-                var descuento = 0;
-                var precio = document.querySelector(`#precio${a}`).value;
-                var comision_porcentaje=document.querySelector(`#comision${a}`).value;
-                var final= cantidad*precio;
-                var end9=parseFloat(precio)+(parseFloat(precio)*parseInt(comision_porcentaje)/100);
+        var end=parseFloat(igv_decimal)+parseFloat(subtotal);
 
-                var end =Math.round(end9 * multiplier) / multiplier;
-                var final2=cantidad*end;
-                var final_decimal = Math.round(final2 * multiplier) / multiplier;
+        document.getElementById("total_final").value = end;
 
-                console.log("la promedio_origina_descuento1 es:"+  promedio_origina_descuento1);
-                console.log("la comision procentaje es:"+  comision_porcentaje);
-                console.log("la promedio_original2 procentaje es:"+   promedio_original2);
-                console.log("la end es:"+  end);
-
-                document.getElementById(`check_descuento${a}`).value = 0;
-
-                document.getElementById(`precio_unitario_descuento${a}`).value = precio;
-                document.getElementById(`precio_unitario_comision${a}`).value = end;
-                if(afec.toString() == "Gravado"){
-                    document.getElementById(`total${a}`).value = final_decimal;
-                    document.getElementById(`afectacion${a}`).value = final_decimal;
-                }else{
-                    document.getElementById(`total${a}`).value = final_decimal;
-                    document.getElementById(`afectacion${a}`).value = 0;
-                }
-            }
-
-            // var totalInp = $('[name="afectacion"]');
-
-            //SUMA SUBTOTAL SIN IGV
-            var totalInp = $('[name="total"]');
-
-            var total_t = 0;
-
-            totalInp.each(function(){
-                total_t += parseFloat($(this).val());
-            });
-
-            var multiplier2 = 100;
-            var total_tt = Math.round(total_t * multiplier2) / multiplier2;
-
-            $('#sub_total').val(total_tt);
-
-            //SOLO GRAVADO
-            var totalInpG = $('[name="afectacion"]');
-            var total_tg = 0;
-
-            totalInpG.each(function(){
-                total_tg += parseFloat($(this).val());
-            });
-
-            var multiplier3 = 100;
-            var total_ttg = Math.round(total_tg * multiplier3) / multiplier3;
-
-            $('#subtotal_gravado').val(total_ttg);
-
-
-            var igv_valor={{$igv->renta}};
-
-            var subtotal = document.querySelector(`#sub_total`).value;
-            // var igv=subtotal*igv_valor/100;
-
-            //GRAVADO
-            var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
-            var igv=subtotal_gravado*igv_valor/100;
-
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-            var end=igv_decimal+parseFloat(subtotal);
-
-            var end2 = Math.round(end * multiplier2) / multiplier2;
-
-            document.getElementById("igv").value = igv_decimal;
-            document.getElementById("total_final").value = end2;
-            // var total = document.getElementById("total_final").value;
-            // $(`#monto_pago0`).attr('max', end2);
-            // document.getElementById("monto_pago0").value = end2;
-            var monto_c = document.getElementsByClassName('monto_pago');
+        var monto_c = document.getElementsByClassName('monto_pago');
 
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             for (var i = 0; i < inp_mont; i++) {
@@ -696,160 +496,28 @@
                 document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2)/ multiplier2;
                 // document.getElementById(`${monto}`).value = end2;
             }
-        }
+    }
     </script>
 
     <script>
-        function reverseString(str) {
-            return str.split("").reverse().join("");;
-        }
+        $(".delete").on('click', function () {
+            $('.case:checkbox:checked').parents("tr").remove();
+                var totalInp = $('[name="total"]');
+                var total_t = 0;
 
-        function calcular(input,a)
-        {
-            console.log(input.id);
-            var id = input.id;
-            var caracteres = input.value;
-            var caracteres_reverse=reverseString(caracteres);
-            var cadena=input.value;
-            var separador=" ";
-            var seprador_total= " / ";
-            var id=cadena.split(separador,1);
-            //revirtiendo la cadena
-            var reverse=reverseString(caracteres);//devuelve toda la cadena articulo al reves
-            //para precio
-            var precio_v_r=reverse.split(separador,1); //devuelve el precio en objeto al revez
-            var precio_r=precio_v_r[0];//obtiene el precio del objeto [0] al revez
-            var precio_v =reverseString(precio_v_r[0]);//convierte el precio al revez a la normalidad
-
-            var caracteres_space=caracteres_reverse.replace(precio_r,"");//obtiene la cadena articulo sin precio,pero con un espacio en blanco
-            var reverse2=caracteres_space.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para descuento
-            var descuento_v_r=reverse2.split(separador,1);////obtiene el descuento del objeto [0] al revez
-            var descuento_r=descuento_v_r[0];//obtiene el descuento del objeto [0] al revez
-            var descuento_v =reverseString(descuento_v_r[0]);//convierte el descuento al revez a la normalidad
-
-            var caracteres_space_2=reverse2.replace(descuento_r,"");//obtiene la cadena articulo sin precio,descuento,con un espacio en blanco
-            var reverse3=caracteres_space_2.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para stock
-            var stock_v_r=reverse3.split(separador,1);
-            var stock_r=stock_v_r[0];
-            var stock_v =reverseString(stock_v_r[0]);
-
-            var caracteres_space_3=reverse3.replace(stock_r,"");//obtiene la cadena articulo sin precio,descuento,con un espacio en blanco
-            var reverse4=caracteres_space_3.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para promedio_original
-            var prom_v_r=reverse4.split(separador,1);
-            var prom_r=prom_v_r[0];
-            var prom_v =reverseString(prom_v_r[0]);
-            //tipo de afectacion
-            var caracteres_space_4 = reverse4.replace(prom_r,"");
-            var reverse5 = caracteres_space_4.slice(1);
-            // tipo de afectacion
-            var afec_prec_tot=reverse5.split(separador,1);
-            var afec_pre_r=afec_prec_tot[0];
-            var afec_pre_v =reverseString(afec_prec_tot[0]);
-            document.getElementById(`tipo_afec${a}`).value =  afec_pre_v;
-            console.log("el promedio original es: "+prom_v);
-            console.log("el strock es: "+stock_v+"-------------")
-
-            document.getElementById(`precio${a}`).value = precio_v;
-            document.getElementById(`cantidad${a}`).value = 1;
-            document.getElementById(`precio_unitario_descuento${a}`).value = precio_v;
-            document.getElementById(`promedio_original${a}`).value = prom_v;
-            document.getElementById(`stock${a}`).value = stock_v;
-            document.getElementById(`descuento${a}`).value = descuento_v;
-            document.getElementById(`check_descuento${a}`).value =0;
-            var msg2 = parseInt(stock_v) ;
-            $(`#cantidad${a}`).attr('max', msg2 );
-            $(`#cantidad`).attr('max', msg2 );
-            //comision
-            var comision=document.querySelector(`#comisionista`).value;
-            //revirtiendo la cadena
-            var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
-            //para comision
-            var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
-            var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
-            var comision_v =reverseString(comision_v_r[0]);//convierte el precio al revez a la normalidad
-            // console.log(comision_v);
-            if(comision){
-                document.getElementById(`comision${a}`).value = comision_v;
-            }else{
-                document.getElementById(`comision${a}`).value = 0;
-            }
-
-            // $(`#monto_pago0`).attr('max', end);
-        }
-    </script>
-
-    <script>
-        $(document).on('click', '.borrar', function (event) {
-            event.preventDefault();
-            var e = document.getElementsByClassName("e").length;
-            // DESACTIVAR OPTIONS
-            var fila = $(this).parents("tr");
-            var input_text_opt = fila.find('input[class="celda"]').val();
-            $('option[value="'+input_text_opt+'"]').prop("disabled", false);
-            $(".addmore").prop("disabled", false);
-            $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Producto",
-            });
-            // ELIMINAR TR
-           // fila.remove();
-           if (e>1) {
-                fila.closest('tr').remove();
-                $(".borrar").prop("disabled", false);
-                $(".addmore").prop("disabled", false);
-            }else{
-                $(".borrar").prop("disabled", true);
-                $(".addmore").prop("disabled", false);
-            }
-            //SUMA SUBTOTAL SIN IGV
-            var totalInp = $('[name="total"]');
-
-            var total_t = 0;
-
-            totalInp.each(function(){
+                totalInp.each(function(){
                 total_t += parseFloat($(this).val());
             });
-
-            var multiplier2 = 100;
-            var total_tt = Math.round(total_t * multiplier2) / multiplier2;
-
-            $('#sub_total').val(total_tt);
-
-            //SOLO GRAVADO
-            var totalInpG = $('[name="afectacion"]');
-            var total_tg = 0;
-
-            totalInpG.each(function(){
-                total_tg += parseFloat($(this).val());
-            });
-
-            var multiplier3 = 100;
-            var total_ttg = Math.round(total_tg * multiplier3) / multiplier3;
-
-            $('#subtotal_gravado').val(total_ttg);
-
+            $('#sub_total').val(total_t);
 
             var igv_valor={{$igv->renta}};
-
             var subtotal = document.querySelector(`#sub_total`).value;
-            // var igv=subtotal*igv_valor/100;
+            var igv=parseFloat(subtotal)*igv_valor/100;
+            var end=parseFloat(igv)+parseFloat(subtotal);
 
-            //GRAVADO
-            var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
-            var igv=subtotal_gravado*igv_valor/100;
+            document.getElementById("igv").value = igv;
+            document.getElementById("total_final").value = end;
 
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-            var end=igv_decimal+parseFloat(subtotal);
-
-            var end2 = Math.round(end * multiplier2) / multiplier2;
-
-            document.getElementById("igv").value = igv_decimal;
-            document.getElementById("total_final").value = end2;
-            // var total = document.getElementById("total_final").value;
-            // $(`#monto_pago0`).attr('max', end2);
-            // document.getElementById("monto_pago0").value = end2;
             var monto_c = document.getElementsByClassName('monto_pago');
 
             var inp_mont = document.getElementsByClassName('monto_pago').length;
@@ -857,24 +525,16 @@
                 var monto = monto_c[i].id;
                 // var input_text = document.getElementById(`${monto}`).value;
                 var fin = (end2/inp_mont)
-                document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2)/ multiplier2;
+                document.getElementById("monto_pago0").value = Math.round(end * multiplier2)/ multiplier2;
                 // document.getElementById(`${monto}`).value = end2;
             }
 
         });
     </script>
 
-<!--     <script>
-        function select_all() {
-            $('input[class=case]:checkbox').each(function () {
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    $(this).prop("checked", false);
-                } else {
-                    $(this).prop("checked", true);
-                }
-            });
-        }
-    </script> -->
+    
+
+
 
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
@@ -886,6 +546,12 @@
             });
         });
     </script>
+
+
+
+
+
+
     <script type="text/javascript">
         function seleccionado_fp(){
             var opt = $('#forma_pago').val();
@@ -959,6 +625,29 @@
     });
 
     </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <style type="text/css">
         .a{color: red}
     </style>

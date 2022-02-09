@@ -9,6 +9,7 @@ use App\Cliente;
 use App\Personal;
 use App\Personal_venta;
 use App\Igv;
+use App\Producto;
 use App\Servicios;
 use App\Almacen;
 use App\TipoCambio;
@@ -53,7 +54,7 @@ class FacturacionMController extends Controller
         $categoria='producto';
         
         // Productos
-        $productos=Servicios::where('estado_anular',1)->get();
+        $productos=Producto::where('estado_anular',1)->get();
 
         // Sucursal
         $sucursal=1;
