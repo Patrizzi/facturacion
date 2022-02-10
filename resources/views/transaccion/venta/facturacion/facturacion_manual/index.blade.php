@@ -50,7 +50,7 @@
                                     <td>{{$facturacions->cliente->numero_documento}}</td>
                                     <td>{{$facturacions->fecha_vencimiento }}</td>
                                     <td align="center">
-                                        <a href="{{route('facturacion.show',$facturacions->id)}}">
+                                        <a href="{{route('facturacion_manual.show',$facturacions->id)}}">
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                     </td>

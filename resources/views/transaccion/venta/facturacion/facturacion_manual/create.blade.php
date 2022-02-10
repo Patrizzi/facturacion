@@ -207,6 +207,7 @@
                                         <th >Articulo</th>
                                         <th style="width:100px">Cantidad</th>
                                         <th style="width:100px">Precio</th>
+                                        <th style="width:100px">Descuento</th>
                                         <th style="width:100px">Total</th>
                                     </tr>
                             <tbody>
@@ -215,7 +216,7 @@
                                         <input type='checkbox' class="case">
                                     </td>
                                     <td>
-                                        <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
+                                        <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="multi(0);selet_one()"  autocomplete="off">
                                             <option></option>
             
                                             @foreach($productos as $index => $producto)
@@ -242,7 +243,9 @@
                                         <td>
                                             <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
                                         </td>
-    
+                                        <td>
+                                            <input style="width: 76px" type='text' id='descuento0' name='descuento[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                        </td>
                                         <td>
                                             <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                         </td>
@@ -256,7 +259,7 @@
                                     <tr style="background-color: #f5f5f500;" align="center">
                                         <td></td>
                                         <td></td>
-                                        
+                                        <td></td>
                                         <td>Subtotal :</td>
                                         <td colspan="2">
                                             <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
@@ -266,7 +269,7 @@
                                     <tr style="background-color: #f5f5f500;" align="center">
                                         <td></td>
                                         <td></td>
-                                        
+                                        <td></td>
                                         <td>IGV :</td>
                                         <td colspan="2">
                                             <input id='igv' type="text" disabled="disabled" class="form-control" required />
@@ -274,6 +277,7 @@
                                     </tr>
 
                                   <tr align="center">
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td>Total :</td>
@@ -288,8 +292,7 @@
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
                             <div class="col-sm-6 ">
-                                <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button>
-                                <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button>
+                                <button type="submit" name="name" value="pdf" class="ladda-button btn btn-info float-right"  style="margin-right: 5px">Enviar</button>
                             </div>
                         </div>
                     </form>
@@ -391,7 +394,7 @@
         </td>";
         
         <td>
-            <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
+            <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="multi(${i});seleccion_options(${i})"  autocomplete="off">
                     <option></option>
                 @foreach($productos as $index => $producto)
                     <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}">
@@ -405,6 +408,7 @@
             </select>
             <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
             <textarea type='text' id='numero_serie0' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+            <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
         </td>
 
         <td>
@@ -412,6 +416,9 @@
         </td>
         <td>
             <input type='text' style="width: 76px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+        </td>
+        <td>
+            <input style="width: 76px" type='text' id='descuento${i}' name='descuento[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" />
         </td>
         <td>
             <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
@@ -452,8 +459,9 @@
 
         var cantidad = document.querySelector(`#cantidad${a}`).value;
         var precio = document.querySelector(`#precio${a}`).value;
+        var descuento = document.querySelector(`#descuento${a}`).value;
         var multiplier = 100;
-        var final=precio*cantidad;
+        var final=(precio*cantidad)-((precio*cantidad)*descuento/100);
         var final_decimal = Math.round(final * multiplier) / multiplier;
         console.log(final_decimal);
         document.getElementById(`total${a}`).value = final_decimal;
