@@ -291,7 +291,7 @@
                 <input type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
             </td>
             <td>
-                <input type='text' id='precio0' name='precio[]' disabled="disabled" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                <input type='number' id='precio0' name='precio[]' disabled="disabled" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
             </td>
             <td>
                 <div style="position: relative; " > <input class="text_des"type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required  autocomplete="off"/></div>
@@ -604,19 +604,26 @@
             var promedio_original2=document.querySelector(`#promedio_original${a}`).value;
             var descuento = document.querySelector(`#descuento${a}`).value;
             var afec = document.querySelector(`#tipo_afec${a}`).value;
+            var precio = document.querySelector(`#precio${a}`).value;
+            // console.log(precio);
             var igv = {{$igv->renta}};
 
             if (checkBox.checked == true && descuento > 0){
 
-                var precio = document.querySelector(`#precio${a}`).value;
+                
                 var promedio_original=document.querySelector(`#promedio_original${a}`).value;
                 var comision_porcentaje=document.querySelector(`#comision${a}`).value;
                 var multiplier = 100;
                 var precio_uni=precio-(promedio_original*descuento/100);
-
+                
                 if(afec.toString() == "Gravado"){
 
-                    var precio_uni_dec = Math.round((precio_uni+(precio_uni*(igv/100)) * multiplier) / multiplier);
+                    // var precio_uni=precio-(promedio_original*descuento/100);
+                    var precio_u =  ( precio_uni * ( igv / 100 ) );
+                    var prec_uni = parseFloat(precio_uni) + parseFloat(precio_u) ; 
+                    var precio_uni_dec = Math.round(  prec_uni * multiplier ) / multiplier;
+                    console.log(precio_uni_dec);
+                    // var precio_inp_desc = precio_uni_dec 
                     var comisiones9=precio_uni+(precio_uni*comision_porcentaje/100);
                     var comisiones = Math.round((comisiones9+(comisiones9*(igv/100))) * multiplier) / multiplier;
                     var final=comisiones*cantidad;
@@ -624,11 +631,14 @@
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = final_decimal;
                 }else{
-                    var precio_uni_dec = Math.round((precio_uni+(precio_uni) * multiplier) / multiplier);
+                    var precio_uni_dec = Math.round((precio_uni+(precio_uni) * multiplier)) / multiplier;
                     var comisiones9=precio_uni+(precio_uni*comision_porcentaje/100);
                     var comisiones = Math.round((comisiones9) * multiplier) / multiplier;
+
                     var final=comisiones*cantidad;
                     var final_decimal = Math.round(final * multiplier) / multiplier;
+                    // console.log(final_decimal);
+
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = 0;
                 }
@@ -664,7 +674,7 @@
                 document.getElementById(`precio_unitario_comision${a}`).value = end;
             }
 
-            var totalInp = $('[name="afectacion"]');
+            var totalInp = $('[name="total"]');
             var total_t = 0;
 
             totalInp.each(function () {
@@ -798,7 +808,7 @@
         }
 
 
-        var totalInp = $('[name="afectacion"]');
+        var totalInp = $('[name="total"]');
         var total_t = 0;
 
         totalInp.each(function () {

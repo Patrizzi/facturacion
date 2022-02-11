@@ -33,7 +33,7 @@
                                     <td>{{$boleta->cliente->numero_documento}}</td>
                                     <td>{{$boleta->fecha_emision}}</td>
                                     <td>
-                                        <form method="POST" action="{{route('nota-credito.create_nota_credito_boleta')}}">
+                                        <form method="POST" action="{{route('nota-credito.motivo')}}">
                                           @csrf
                                           <input type="hidden" name="boleta_id" value="{{$boleta->id}}">
                                           <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>

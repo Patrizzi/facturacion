@@ -21,4 +21,8 @@ class Nota_Credito_registro extends Model
     public function factura_ids(){
         return $this->belongsTo(Facturacion::class,'facturacion_id');
     }
+
+    public function boleta_ids(){
+        return $this->belongsTo(Boleta::class,'boleta_id');
+    }
 }

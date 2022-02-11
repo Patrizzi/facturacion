@@ -24,11 +24,7 @@
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
                                 <h2>NOTA DE CREDITO</h2>
-                                @if($estado==0)
-                                    <h5>{{$notas_credito->nota_i_facturacion->codigo_fac}}</h5>
-                                @else
-                                    <h5>{{$notas_credito->nota_i_boleta->codigo_fac}}</h5>
-                                @endif
+                                {{$notas_credito->codigo_n_c}}
                             </center>
                         </div>
                     </div>
@@ -89,23 +85,49 @@
                             <h3>Condiciones Generales</h3>
                             <div align="left">
                                 @if($estado==0)
-                                    <strong>Orden de Compra:</strong>
-                                    {{$notas_credito->nota_i_facturacion->orden_compra}}<br>
-                                    <strong>Guia de Remision:</strong>
-                                    {{$notas_credito->nota_i_facturacion->guia_remision}}<br>
-                                    <strong>Fecha Emision:</strong>
-                                    {{$notas_credito->nota_i_facturacion->fecha_emision}}<br>
-                                    <strong>Fecha de Vencimiento:</strong>
-                                    {{$notas_credito->nota_i_facturacion->fecha_vencimiento}}<br>
+                                    <strong>Documento:</strong>
+                                    {{$notas_credito->nota_i_facturacion->codigo_fac}}<br>
+                                    <strong>Tipo de operacion:</strong>
+                                    @switch($notas_credito->motivo)
+                                        @case(01)
+                                        Anulacion de la operacion<br>
+                                        @break
+                                        @case(02)
+                                        Anulacion por error en el ruc<br>
+                                        @break
+                                        @case(03)
+                                        Correcion por error en la descripcion<br>
+                                        @break
+                                        @case(04)
+                                        Devolucion total<br>
+                                        @break
+                                    @endswitch
+                                    <strong>Tipo de sustento:</strong>
+                                    {{$notas_credito->tipo}}<br>
+                                    <strong>Fecha Emision:</strong>c
+                                    {{$notas_credito->created_at}}<br>
                                 @else
-                                    <strong>Orden de Compra:</strong>
-                                    {{$notas_credito->nota_i_boleta->orden_compra}}<br>
-                                    <strong>Guia de Remision:</strong>
-                                    {{$notas_credito->nota_i_boleta->guia_remision}}<br>
+                                    <strong>Documento:</strong>
+                                    {{$notas_credito->nota_i_boleta->codigo_boleta}}<br>
+                                    <strong>Tipo de operacion:</strong>
+                                    @switch($notas_credito->motivo)
+                                        @case(01)
+                                        Anulacion de la operacion<br>
+                                        @break
+                                        @case(02)
+                                        Anulacion por error en el ruc<br>
+                                        @break
+                                        @case(03)
+                                        Correcion por error en la descripcion<br>
+                                        @break
+                                        @case(04)
+                                        Devolucion total<br>
+                                        @break
+                                    @endswitch
+                                    <strong>Tipo de sustento:</strong>
+                                    {{$notas_credito->tipo}}<br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$notas_credito->nota_i_boleta->fecha_emision}}<br>
-                                    <strong>Fecha de Vencimiento:</strong>
-                                    {{$notas_credito->nota_i_boleta->fecha_vencimiento}}<br>
+                                    {{$notas_credito->created_at}}<br><br>
                                 @endif
                             </div>
                         </div>
@@ -131,16 +153,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <span hidden="hidden">{{$u=0}} </span>
+                                <span hidden="hidden">{{$u=1}} </span>
                                 <tr>
                                     @foreach($notas_credito_registros as $e => $notas_credito_registro)
                                         <tr>
                                             <td>{{$u++}}</td>
-                                            <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
+                                            @if(isset($notas_credito_registro->producto_id))
+                                                <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
+                                            @else
+                                                <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
+                                            @endif
                                             <td>{{$notas_credito_registro->cantidad}}</td>
-                                            <td>{{$notas_credito_registro->producto->nombre}} <br><strong>N/S:</strong>{{$notas_credito_registro->numero_serie}}</td>
+
+                                            <td>
+                                                @if(isset($notas_credito_registro->producto_id))
+                                                    {{$notas_credito_registro->producto->nombre}} 
+                                                @else
+                                                    {{$notas_credito_registro->servicio->nombre}} 
+                                                @endif
+                                                <br><strong>N/S:</strong>
+                                                {{$notas_credito_registro->numero_serie}}
+                                            </td>
+
                                             <td>{{$notas_credito_registro->precio}}</td>
-                                            <td>{{$notas_credito_registro->precio_unitario_comi* $notas_credito_registro->cantidad }}</td>
+                                            <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
                                             <td style="display: none">
                                                 {{-- {{$sub_total=($notas_credito_registro->factura_ids->op_gravada)+($notas_credito_registro->factura_ids->op_inafecta)+($notas_credito_registro->factura_ids->op_exonerada)}}
                                                 {{$sub_total_gravado=($notas_credito_registro->factura_ids->op_gravada)}}

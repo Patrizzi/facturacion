@@ -537,7 +537,7 @@ class BoletaController extends Controller
         }
         $total_comi=$request->get('total_comi');
 
-
+        $igv = Igv::first();
         if(isset($comision_id)){
             $comisionista_porcentaje=Personal_venta::where('id',$comision_id)->first();
             $comisionista=new Ventas_registro;

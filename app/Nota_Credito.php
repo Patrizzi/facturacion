@@ -93,6 +93,10 @@ class Nota_Credito extends Model
 
             for($i=0;$i<$count_articulo;$i++){
 
+                if((isset($nota_credito_registro[$i]->servicio_id))){
+                    continue;
+                }
+
                 //Creacion del nuevo registro de kardex entrada
                 $kardex_entrada_registro=new kardex_entrada_registro();
                 $kardex_entrada_registro->kardex_entrada_id=$kardex_entrada->id;
