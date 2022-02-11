@@ -10,24 +10,23 @@
 
 
 <div class="wrapper wrapper-content animated fadeInRight">
-<!-- Modal Create  -->
+  <!-- Modal Create  -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="margin-left: 25%">
+      <div class="modal-content" style="width: 702.22222px;">
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document" style="margin-left: 25%">
-    <div class="modal-content" style="width: 702.22222px;">
+        <div style="padding-left: 15px;padding-right: 15px;">
+          {{-- ccccccccccccccccc --}}
+          <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;padding-top: 0px" align="center">
 
-      <div style="padding-left: 15px;padding-right: 15px;">
-        {{-- ccccccccccccccccc --}}
-        <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;padding-top: 0px" align="center">
-
-          <form action="{{route('empresa.update',$mi_empresa->id) }}"  enctype="multipart/form-data" method="post">
-            @csrf
-            @method('PATCH')
-            <fieldset >
-              <div>
-                <div class="panel-body" >
-                  <div class="row">
-                    <div class="col-sm-12">
+            <form action="{{route('empresa.update',$mi_empresa->id) }}"  enctype="multipart/form-data" method="post">
+              @csrf
+              @method('PATCH')
+              <fieldset >
+                <div>
+                  <div class="panel-body" >
+                    <div class="row">
+                      <div class="col-sm-12">
                        <input type="file" id="archivoInputs" name="fotos" onchange="return validarExtImg()" align="right" style="cursor: pointer;text-align: center;" />
                        <div id="visorArchivos">
                          <!--Aqui se desplegará el fichero-->
@@ -38,64 +37,66 @@
                       </div>
 
 
-                    <label class="col-sm-2 col-form-label">Descripcion:</label>
-                    <div class="col-sm-10" style="padding-bottom: 10px">
-                      <textarea name="descripcion" required class="form-control">{{$mi_empresa->descripcion}}</textarea>
-                    </div>
-                    <label class="col-sm-2 col-form-label">Movil:</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" required name="movil" value="{{$mi_empresa->movil}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Telefono:</label>
-                    <div class="col-sm-4" style="padding-bottom: 15px; ">
-                      <input type="text" class="form-control" required name="telefono" value="{{$mi_empresa->telefono}}">
-                    </div>
+                      <label class="col-sm-2 col-form-label">Descripcion:</label>
+                      <div class="col-sm-10" style="padding-bottom: 10px">
+                        <textarea name="descripcion" required class="form-control">{{$mi_empresa->descripcion}}</textarea>
+                      </div>
+                      <label class="col-sm-2 col-form-label">Movil:</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" required name="movil" value="{{$mi_empresa->movil}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Telefono:</label>
+                      <div class="col-sm-4" style="padding-bottom: 15px; ">
+                        <input type="text" class="form-control" required name="telefono" value="{{$mi_empresa->telefono}}">
+                      </div>
 
-                    <label class="col-sm-2 col-form-label">Correo:</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" required name="correo" value="{{$mi_empresa->correo}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Region Provincia:</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" required name="region_provincia" value="{{$mi_empresa->region_provincia}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Pais:</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" required name="pais" value="{{$mi_empresa->pais}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Ciudad:</label>
-                    <div class="col-sm-4" style="padding-bottom: 15px">
-                      <input type="text" class="form-control" required name="ciudad" value="{{$mi_empresa->ciudad}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Calle:</label>
-                    <div class="col-sm-4" style="padding-bottom: 15px">
-                      <textarea name="calle" class="form-control" required>{{$mi_empresa->calle}}</textarea>
-                    </div>
-                    <label class="col-sm-2 col-form-label">Codigo Postal:</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" required name="codigo_postal" value="{{$mi_empresa->codigo_postal}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Rubro:</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" required name="rubro" value="{{$mi_empresa->rubro}}">
-                    </div>
-                    <label class="col-sm-2 col-form-label">Pagina Web:</label>
-                    <div class="col-sm-4" style="    padding-bottom: 10px;">
-                      <input  type="text" class="form-control" required name="pagina_web" value="{{$mi_empresa->pagina_web}}">
+                      <label class="col-sm-2 col-form-label">Correo:</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" required name="correo" value="{{$mi_empresa->correo}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Region Provincia:</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" required name="region_provincia" value="{{$mi_empresa->region_provincia}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Pais:</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" required name="pais" value="{{$mi_empresa->pais}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Ciudad:</label>
+                      <div class="col-sm-4" style="padding-bottom: 15px">
+                        <input type="text" class="form-control" required name="ciudad" value="{{$mi_empresa->ciudad}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Calle:</label>
+                      <div class="col-sm-4" style="padding-bottom: 15px">
+                        <textarea name="calle" class="form-control" required>{{$mi_empresa->calle}}</textarea>
+                      </div>
+                      <label class="col-sm-2 col-form-label">Codigo Postal:</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" required name="codigo_postal" value="{{$mi_empresa->codigo_postal}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Rubro:</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" required name="rubro" value="{{$mi_empresa->rubro}}">
+                      </div>
+                      <label class="col-sm-2 col-form-label">Pagina Web:</label>
+                      <div class="col-sm-4" style="    padding-bottom: 10px;">
+                        <input  type="text" class="form-control" required name="pagina_web" value="{{$mi_empresa->pagina_web}}">
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-            </fieldset>
-            <button class="btn btn-primary" type="submit">Grabar</button>
-          </form>
+              </fieldset>
+              <button class="btn btn-primary" type="submit">Grabar</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- / Modal Create  -->
+  <!-- / Modal Create  -->
+
+
   <div class="ibox">
     <div class="ibox-content">
       <div class="row ">
@@ -178,6 +179,8 @@
   </div>
 </div>
 {{-- MONEDAS --}}
+
+
 <div class="col-lg-4 m-b-lg">
   <div id="vertical-timeline" class="vertical-container light-timeline no-margins">
 
@@ -226,7 +229,7 @@
                     {{--/ foto --}}
                     {{-- Registros --}}
                     <div class="row">
-                      <div class="col-lg-12" style="padding-bottom: 10px;" align="right">
+                      <div class="col-lg-12" style="padding-bottom: 10px;" align="right" id="div_boton{{$bancos->id}}">
                         <button type="button" class="btn btn-info" id="btn_add_{{$bancos->id}}"> <i class="fa fa-plus-square"></i></button>
                       </div>
                     </div>
@@ -238,7 +241,7 @@
                         <input type="text" name="descripcion1_creadas[]" class="form-control" value=" {{$banco_registros->descripcion1}}">
                       </div>
                       <div class="col-lg-6">
-                        <input type="text" name="descripcion2_creadas[]" class="form-control" value=" {{$banco_registros->descripcion2}}">
+                        <input type="text" name="descripcion2_creadas[]" class="form-control descripcion2_creadas{{$bancos->id}}" value=" {{$banco_registros->descripcion2}}">
                       </div>
                       <div class="col-lg-2" align="right">
                       </div>
@@ -307,8 +310,6 @@
         }
       }
     }
-
-
   </script>
   <style>input#archivoInput{{$bancos->id}}{
     position:absolute;
@@ -319,7 +320,8 @@
     width:100%;
     height:100%;
     opacity: 0  ;
-  }</style> @endforeach
+  }</style>
+  @endforeach
   <div id="form">
 
   </div>
@@ -429,18 +431,6 @@
       height:100%;
       opacity: 0  ;
     }</style>
-    <script>
-
-      $(document).ready(function () {
-
-        // Add slimscroll to element
-        $('.scroll_content').slimscroll({
-          height: '300px'
-        })
-
-      });
-
-    </script>
     <script type="text/javascript">
       {{-- Fotooos --}}
       function validarExtImg(){
@@ -470,13 +460,20 @@
   <script>
     var x = 1;
     $("#btn_add_{{$bancos->id}}").on('click', function () {
+      var suma{{$bancos->id}} = document.getElementsByClassName('descripcion2').length;
+      var otra_suma{{$bancos->id}} = document.getElementsByClassName('descripcion2_creadas{{$bancos->id}}').length;
+      var inp_mont{{$bancos->id}} = suma{{$bancos->id}} + otra_suma{{$bancos->id}} ;
+// alert(inp_mont{{$bancos->id}});
+      if(inp_mont{{$bancos->id}}>3){
+      }
+        else{
       var data = `
       <div class="delete_modal${x} row" style="padding-top: 5px;padding-bottom: 5px;">
       <div class="col-lg-5">
       <input type="text" name="descripcion1[]" class="form-control" >
       </div>
       <div class="col-lg-5">
-      <input type="text" name="descripcion2[]" class="form-control" >
+      <input type="text" name="descripcion2[]" class="form-control descripcion2" >
       </div>
       <div class="col-lg-2" align="right">
       <button type="button" class="btn btn-secondary" onclick="eliminar(${x})"><i class="fa fa-trash-o"></i></button>
@@ -484,11 +481,14 @@
       </div>`;
       $('#conteiner_add_{{$bancos->id}}').append(data);
 
-      var inp_mont = document.getElementsByClassName('monto_pago').length;
       x++;
+      }
+
     });
 
-    function eliminar(x){$(`.delete_modal${x}`).remove(); };
+    function eliminar(x){
+      $(`.delete_modal${x}`).remove();
+    };
   </script>
   @endforeach
   @endsection
