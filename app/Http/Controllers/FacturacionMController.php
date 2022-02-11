@@ -17,7 +17,10 @@ use App\TipoCambio;
 use App\Moneda;
 use App\Empresa;
 use App\Tipo_operacion_f;
+use App\Banco;  
+use App\Cuotas_credito;
 
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 
 class FacturacionMController extends Controller
@@ -114,6 +117,20 @@ class FacturacionMController extends Controller
             $producto_id[$i]=strstr($producto_id_3[$i], ' ', true);
             
         }
+
+        // obtención de forma de pago
+        $forma_pago_id=$request->get('forma_pago');
+        if($forma_pago_id == 1){
+            $val = $request->get('fecha_vencimiento');
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }else{
+            $fecha_pago_forma = $request->input('fecha_pago');
+            $contador_for_1 = count($fecha_pago_forma);
+            for($c = 0; $c<$contador_for_1;$c++ ){
+                $val = $fecha_pago_forma[$c];
+            }
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }
         
         // obtención de Cliente
         $cliente_nombre=$request->get('cliente');
@@ -144,7 +161,7 @@ class FacturacionMController extends Controller
         $facturacion->moneda_id=$request->get('moneda');
         $facturacion->forma_pago_id=$request->get('forma_pago');
         $facturacion->fecha_emision=$request->get('fecha_emision');
-        $facturacion->fecha_vencimiento=$request->get('fecha_vencimiento');
+        $facturacion->fecha_vencimiento=$nuevafechas;
         $facturacion->cambio=$cambio->paralelo;
         $facturacion->observacion=$request->get('observacion');
         $facturacion->user_id =auth()->user()->id;
@@ -152,6 +169,23 @@ class FacturacionMController extends Controller
         $facturacion->tipo_operacion_id= $busca_ope->id;
         $facturacion->tipo_documento_id = 2;
         $facturacion->save();
+
+        //Registro de forma de pago
+        if($facturacion->forma_pago_id == 2){
+
+            $fecha_pago = $request->input('fecha_pago');
+            $contador_for = count($fecha_pago);
+            $monto_pago = $request->input('monto_pago');
+                    // foreach($contador_for as $cuotas => $index ){
+            for($c = 0; $c<$contador_for;$c++ ){
+                $cuota_cred = new Cuotas_credito;
+                $cuota_cred->facturacion_m_id = $facturacion->id;
+                $cuota_cred->numero_cuota = $c+1;
+                $cuota_cred->monto = $monto_pago[$c];
+                $cuota_cred->fecha_pago = $fecha_pago[$c];
+                $cuota_cred->save();
+            }
+        }
 
         //contador de valores de cantidad
         $cantidad = $request->input('cantidad');
@@ -190,13 +224,13 @@ class FacturacionMController extends Controller
                     //modificación para los tipos de afectación al producto y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
                     }
                     $facturacion_2->save();
 
@@ -213,13 +247,13 @@ class FacturacionMController extends Controller
                     //modificación para los tipos de afectación al servicio y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
                     }
                     $facturacion_2->save();
 
@@ -232,7 +266,7 @@ class FacturacionMController extends Controller
 
 
 
-        return "guardado completo";
+        return redirect()->route('facturacion_manual.show',$facturacion->id);
     }
 
     /**
@@ -245,12 +279,12 @@ class FacturacionMController extends Controller
     {
         // Redirección para mostrar el inventario inicial
         
-        $existe_id=Facturacion::where('id',$id)->first();
-        if(empty($existe_id)){ return redirect()->route('facturacion.index'); }
+        $existe_id=Facturacion_m::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('facturacion_manual.index'); }
 
         $empresa=Empresa::first();
-        $facturacion=Facturacion::find($id);
-        $facturacion_registro=Facturacion_registro::where('facturacion_id',$id)->get();
+        $facturacion=Facturacion_m::find($id);
+        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
@@ -259,6 +293,24 @@ class FacturacionMController extends Controller
         
         return view('transaccion.venta.facturacion.facturacion_manual.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
 
+    }
+
+    public function pdf(Request $request,$id){
+        $name = $request->get('name');
+        $empresa=Empresa::first();
+        $facturacion=Facturacion_m::find($id);
+        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
+        $sum=0;
+        $igv=Igv::first();
+        $sub_total=0;
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=Banco::where('estado','0')->count();
+        $i = 1;
+
+        $archivo=$name.'_'.$id;
+        
+        $pdf=PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        return $pdf->download('Facturacion - '.$archivo.'.pdf');
     }
 
     /**
