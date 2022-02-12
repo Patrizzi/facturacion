@@ -28,8 +28,6 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-
-        return view('configuracion_general.categoria.create');
     }
 
     /**
@@ -45,7 +43,13 @@ class CategoriaController extends Controller
         $suma ++;
         $cien=1000+$suma;
         $contador=substr($cien,1);
+
         $nombre=$request->get('descripcion');
+        if (empty($nombre)) {
+            return redirect()->route('categoria.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
+        // return redirect()->route('categoria.index');
+
+        }
         $nombre=strtoupper($nombre);
 
         $categoria=new Categoria;
@@ -96,7 +100,6 @@ class CategoriaController extends Controller
         $nombre=$request->get('descripcion');
         $nombre=strtoupper($nombre);
         $categoria=Categoria::find($id);
-        // $categoria->descripcion=$nombre;
         $categoria->estado=$estado_numero;
         $categoria->save();
 

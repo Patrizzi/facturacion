@@ -17,10 +17,6 @@ class MonedaController extends Controller
      */
     public function index()
     {
-        $moneda=Moneda::all();
-        $cantidad_monedas=count($moneda);
-        $paises=Pais::all();
-        return view('configuracion_general.moneda.index',compact('moneda','paises','cantidad_monedas'));
     }
 
     /**
@@ -30,8 +26,7 @@ class MonedaController extends Controller
      */
     public function create()
     {
-        $paises=Pais::all();
-        return view('configuracion_general.moneda.create',compact('paises'));
+
     }
 
     /**

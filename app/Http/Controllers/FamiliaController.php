@@ -41,6 +41,13 @@ class FamiliaController extends Controller
         $cien=1000+$suma;
         $contador=substr($cien,1);
         $nombre=$request->get('descripcion');
+
+        if (empty($nombre)) {
+            return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
+        // return redirect()->route('categoria.index');
+
+        }
+
         $nombre=strtoupper($nombre);
 
         $familia=new Familia;
@@ -92,6 +99,10 @@ class FamiliaController extends Controller
             $estado_marca = 1;
         }
         $nombre=$request->get('descripcion');
+        if (empty($nombre)) {
+            return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
+
+        }
         $nombre=strtoupper($nombre);
         $familia=Familia::find($id);
         $familia->descripcion=$nombre;

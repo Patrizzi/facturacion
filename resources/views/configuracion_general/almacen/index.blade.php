@@ -1,8 +1,6 @@
 @extends('layout')
 
-@section('title', 'Almacen')
-@section('breadcrumb', 'Almacen')
-@section('breadcrumb2', 'Almacen')
+@section('title', 'Almacén')
 @section('data-toggle', 'modal')
 @section('href_accion', '#exampleModal')
 @section('value_accion', 'Agregar')
@@ -41,7 +39,7 @@
                             <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/almacen.svg')}}" width="100px"></div>
                             <label class="col-sm-2 col-form-label">Nombre:</label>
                             <div class="col-sm-4">
-                                <input type="text" placeholder="Almacen" class="form-control" required="required" name="nombre" autocomplete="off" >
+                                <input type="text" placeholder="Almacén" class="form-control" required="required" name="nombre" autocomplete="off" >
                             </div><br>
                             <label class="col-sm-2 col-form-label">Abreviatura:</label>
                             <div class="col-sm-4">
@@ -55,7 +53,7 @@
                                   @endforeach
                               </select>
                           </div>
-                          <label class="col-sm-2 col-form-label">Codigo Sunat:</label>
+                          <label class="col-sm-2 col-form-label">Código Sunat :</label>
                           <div class="col-sm-4">
                             <input  type="number" class="form-control" name="cod_sunat" autocomplete="off" required="required" placeholder="Numero de sucursal">
                         </div>
@@ -68,7 +66,7 @@
                             <input type="number"  class="form-control" name="ubigeo" autocomplete="off" required="required" value="150101">
                         </div>
 
-                        <label class="col-sm-2 col-form-label">Descripcion:</label>
+                        <label class="col-sm-2 col-form-label">Descripción:</label>
                         <div class="col-sm-10">
                             <textarea class="form-control" name="descripcion" autocomplete="off" required="required">Almacen ...</textarea>
                         </div>
@@ -79,7 +77,7 @@
                             <p class="form-control"  style="background: #57b59738;text-align: left;font-family: fangsong;"><b>Nota:</b>Los campos siguientes es el numero de registro que se continuara en el sistema.</p>
                         </div>
                         <div class="col-lg-4 ">
-                            <label class="col-sm-12 col-form-label">Cod.Facturacion:</label>
+                            <label class="col-sm-12 col-form-label">Cod.Facturación:</label>
                             <div class="input-group m-b">
                                 <div class="input-group-prepend">
                                     <span class="input-group-addon">F00 &nbsp;</span>
@@ -106,7 +104,7 @@
 
                         </div>
                         <div class="col-lg-4 ">
-                            <label class="col-sm-12 col-form-label">Cod.Guia R.:</label>
+                            <label class="col-sm-12 col-form-label">Cod.Guía R.:</label>
 
                             <div class="input-group m-b">
                                 <div class="input-group-prepend">
@@ -123,7 +121,7 @@
                             <div class="col-lg-2">
                             </div>
                             <div class="col-lg-4">
-                                <label class="col-sm-12 col-form-label">Cod. Nota Credito:</label>
+                                <label class="col-sm-12 col-form-label">Cod. Nota Crédito:</label>
                                 <div class="input-group m-b">
                                     <div class="input-group-prepend">
                                         <span class="input-group-addon">F00 &nbsp;</span>
@@ -138,7 +136,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <label class="col-sm-12 col-form-label">Cod. Nota Debito:</label>
+                                <label class="col-sm-12 col-form-label">Cod. Nota Débito:</label>
                                 <div class="input-group m-b">
                                     <div class="input-group-prepend">
                                         <span class="input-group-addon">F00 &nbsp;</span>
@@ -179,11 +177,11 @@
                                     <th>Id</th>
                                     <th>Nombre</th>
                                     <th>Abreviatura</th>
-                                    <th>Direccion</th>
+                                    <th>Dirección</th>
                                     <th>Responsable</th>
-                                    <th>Descripcion</th>
+                                    <th>Descripción</th>
                                     <th>Activo/Desactivo</th>
-                                    <th>Editar</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -197,7 +195,7 @@
                                     <td>{{$almacen->descripcion}}</td>
                                     <td>@if($almacen->estado==0)Activo @elseif($almacen->estado==1)Desactivo @endif</td>
                                     <td>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$almacen->id}}">Editar</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$almacen->id}}"><i class="fa fa-edit"></i></button>
                                         <div class="modal fade" id="exampleModal{{$almacen->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document"style="margin-left: 450px;">
                                                 <div class="modal-content" style="width: 702px;">
@@ -226,7 +224,7 @@
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
-                                                                    <label class="col-sm-2 col-form-label">Codigo Sunat:</label>
+                                                                    <label class="col-sm-2 col-form-label">Código Sunat:</label>
                                                                     <div class="col-sm-4">
                                                                         <input style="padding-right: 0;padding-left:  7px"  type="text" class="form-control"  value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_sunat')->first()}}" name="cod_sunat">
                                                                     </div>
@@ -237,7 +235,7 @@
                                                                     <div class="col-sm-4">
                                                                         <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}">
                                                                     </div>
-                                                                    <label class="col-sm-2 col-form-label">Descripcion:</label>
+                                                                    <label class="col-sm-2 col-form-label">Descripción:</label>
                                                                     <div class="col-sm-6"><textarea class="form-control" name="descripcion" autocomplete="off" required="required" >{{$almacen->descripcion}}</textarea></div>
 
                                                                     <label class="col-sm-2 col-form-label">Activo/desactivo:</label>
@@ -266,7 +264,7 @@
                                                                 </div>
                                                                 <div class="form-group  row">
                                                                     <div class="col-lg-4 ">
-                                                                        <label class="col-sm-12 col-form-label">Cod.Facturacion:</label>
+                                                                        <label class="col-sm-12 col-form-label">Cod.Facturación:</label>
                                                                         <div class="input-group m-b">
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">F00 &nbsp;</span>
@@ -300,7 +298,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 ">
-                                                                        <label class="col-sm-12 col-form-label">Cod.Guia R.:</label>
+                                                                        <label class="col-sm-12 col-form-label">Cod.Guía R.:</label>
                                                                         <div class="input-group m-b">
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">T00 &nbsp;</span>
@@ -321,7 +319,7 @@
                                                                     <div class="col-lg-2">
                                                                     </div>
                                                                     <div class="col-lg-4">
-                                                                        <label class="col-sm-12 col-form-label">Cod. Nota Credito:</label>
+                                                                        <label class="col-sm-12 col-form-label">Cod. Nota Crédito:</label>
                                                                         <div class="input-group m-b">
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">F00 &nbsp;</span>
@@ -338,7 +336,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4">
-                                                                        <label class="col-sm-12 col-form-label">Cod. Nota Debito:</label>
+                                                                        <label class="col-sm-12 col-form-label">Cod. Nota Débito:</label>
                                                                         <div class="input-group m-b">
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">F00 &nbsp;</span>
