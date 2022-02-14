@@ -42,7 +42,7 @@
                 <div class="col-sm-4 text-center" style="font-size: 15px">
                    <strong>{{$empresa->razon_social}}</strong>
                    <br>
-                   Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+                   Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                    <br>
                    {{$empresa->correo}}
                    <br>
@@ -54,7 +54,7 @@
                 <div class="form-control ruc" style="height: 125px">
                     <center>
                         <h3 style="padding-top:10px ">RUC : {{$empresa->ruc}}</h3>
-                        <h2>BOLETA ELECTRONICA</h2>
+                        <h2>BOLETA ELECTRÓNICA</h2>
                         <h5> {{$boleta->codigo_boleta}}</h5>
 
                     </center>
@@ -76,7 +76,7 @@
                         @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                         @else{{$boleta->cotizacion->cliente->numero_documento}}
                         @endif <br>
-                        <strong>Direccion:</strong>
+                        <strong>Dirección:</strong>
                         @if(isset($boleta->cliente_id)){{$boleta->cliente->direccion}}
                         @else{{$boleta->cotizacion->cliente->direccion}}
                         @endif <br>
@@ -97,9 +97,9 @@
                    <div align="left">
                     <strong>Orden de Compra:</strong>
                     {{$boleta->orden_compra}} <br>
-                    <strong>Guia de Remision:</strong>
+                    <strong>Guía de Remisión:</strong>
                     {{$boleta->guia_remision}} <br>
-                    <strong>Fecha Emision:</strong>
+                    <strong>Fecha Emisión:</strong>
                     {{$boleta->fecha_emision}} <br>
                     <strong>Fecha de Vencimiento:</strong>
                     {{$boleta->fecha_vencimiento }} <br>
@@ -115,14 +115,14 @@
     <table class="table ">
         <thead>
             <tr>
-                <th style="width: 8%">ITEM</th>
-                <th style="width: 15%">Codigo de Item</th>
+                <th style="width: 8%">Item</th>
+                <th style="width: 15%">Código de Item</th>
                 {{-- <th  style="width: 10%">Unid.Medida</th> --}}
                 <th >Descripción</th>
                 <th style="width: 8%">Cantidad</th>
 
                             {{-- <th>Valor Unitario</th>
-                            <th>Dscto.%</th> --}}
+                            <th>Dscto. %</th> --}}
                             <th  style="text-align: center;width: 8%">P.Unit.</th>
                             <th  style="text-align: center;width: 8%">Total</th>
                         </tr>
@@ -164,7 +164,7 @@
                 <div class="col-sm-8"></div>
  <div class="col-sm-4 form-control">
     {{-- <div class="col-sm-4 form-control" > --}}
-        {{-- <span style="display: block;float: left"> Sub Total:</span>
+        {{-- <span style="display: block;float: left"> Subtotal:</span>
         <span style="display: block;float: right;">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}} </span>
         <br> --}}
         <span style="display: block;float: left"><strong> Importe Total: </strong></span>
@@ -173,53 +173,19 @@
     </div>
     <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
      <div align="left">
-        <strong>Observacion :</strong>
+        <strong>Observación:</strong>
         <p> {{$boleta->observacion }} </p>
     </div>
 </div>
 
 
-            </div>
-            <br>
-            <div class="row">
-                @foreach($banco as $bancos)
-                <div class="col-sm-3 " align="center">
-                    <p class="form-control" style="height: 100px">
-                      <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 100px;height: 30px;">
-                      <br>
-                      N° S/. : {{$bancos->numero_soles}}
-                      <br>
-                      N° $ : {{$bancos->numero_dolares}}<br>
-
-                  </p>
-              </div>
-              @endforeach
-
-          </div>
-          <br>
-
-              {{-- <div class="row">
-                        <div class="col-sm-3">
-                            <p><u>centro de Atencion : </u></p>
-                            Usuario : {{$boleta->user->personal->nombres }}<br>
-                            Telefono : {{$boleta->user->personal->telefono }}<br>
-                            Celular : {{$boleta->user->personal->celular }}<br>
-                            Email : {{$boleta->user->personal->email }}<br>
-                            Web :
-                            <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
-                        </div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>
-
-                    </div>
-                    --}}
-
-
-                </div>
-            </div>
-
-        </div>
+</div>
+<br>
+    @include('layout_bancos')
+<br>
+</div>
+</div>
+</div>
 
 
 

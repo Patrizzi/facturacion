@@ -1,12 +1,11 @@
 @extends('layout')
+@section('title', 'Cotización Servicio')
+@section('breadcrumb', 'Cotización Servicio')
+@section('breadcrumb2', 'Cotización Servicio')
+@section('href_accion', route('cotizacion.index'))
+@section('value_accion', 'Atrás')
 
-@section('title', 'Cotizacion Servicio Ver')
-@section('breadcrumb', 'Cotizacion Servicio')
-@section('breadcrumb2', 'Cotizacion Servicio')
-@section('href_accion', route('cotizacion_servicio.index'))
-@section('value_accion', 'Atras')
-
-@section('button2', 'Nueva cotizacion')
+@section('button2', 'Nueva Cotización')
 @section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();")
 
 @section('content')
@@ -23,9 +22,9 @@
              <div class="col-sm-6"  >
                 @if($cotizacion->estado == '1')
                     @if($cotizacion->tipo=='factura')
-                        <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('facturacion_servicio.show',$facturacion->id)}}" >Ver Factura</a>
+                        <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('facturacion.show',$facturacion->id)}}" >Ver Factura</a>
                     @else
-                        <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('boleta_servicio.show',$boleta->id)}}" >Ver Boleta</a>
+                        <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('boleta.show',$boleta->id)}}" >Ver Boleta</a>
                     @endif
                 @else
                 {{-- SIN PROCESAR --}}
@@ -82,8 +81,8 @@
                         </address>
                     </div>
                     <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                         <strong>{{$empresa->nombre}}</strong>
-                         <br>
+                         <!-- <strong>{{$empresa->nombre}}</strong> -->
+                         <!-- <br> -->
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
                          Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
@@ -97,7 +96,7 @@
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRONICA</h2>
                             <h5>{{$cotizacion->cod_cotizacion}} </h5>
                         </div>
                     </div>
@@ -110,7 +109,7 @@
                                 <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
-                                <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
                                 <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
                             </div>
@@ -120,8 +119,8 @@
                         <div class="form-control" ><h3>Condiciones Generales</h3>
                             <div align="left">
                                 <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
-                                <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                                <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Validez:</strong> &nbsp;{{$cotizacion->validez}}<br>
+                                <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                 <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             </div>
                         </div>
@@ -130,7 +129,7 @@
                 <br>
                 <div class="row">
                     <div class="col-sm-12" >
-                        <h4>Observacion:</h4>
+                        <h4>Observación:</h4>
                         {{$cotizacion->observacion }}
                     </div>
                 </div>
@@ -243,7 +242,7 @@
                         </div>
                         <div class="col-sm-3 ">
                             <p class="form-control a"> Importe Total</p>
-                            <p class="form-control a"> {{$simbologia=$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}}</p>
+                            <p class="form-control a"> {{$simbologia=$cotizacion->moneda->simbolo}} {{$end=round($sub_total, 2)}}</p>
                         </div>
                     </div>
                 @endif
