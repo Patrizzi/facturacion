@@ -207,7 +207,7 @@
          <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
             <span > Sub Total:</span>
             <br>
-            <span > Op. Agravada:</span> <br>
+            <span > Op. Gravada:</span> <br>
             <span > Op. Inafecta:</span> <br>
             <span > Op. Exonerada:</span> <br>
             <span > I.G.V.:</span> <br>

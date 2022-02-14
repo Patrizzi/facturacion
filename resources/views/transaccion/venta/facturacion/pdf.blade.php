@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturacion</title>{{--
+    <title>Facturación</title>{{--
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
     <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
 </head>
@@ -14,7 +14,7 @@
         background-color: #FFFFFF;
         background-image: none;
         border: 1px solid #808080;
-        border-radius: 1px;
+        border-radius: 10px;
         color: inherit;
         display: block;
         padding: 6px 12px;
@@ -24,12 +24,7 @@
     @page { size: 420mm 297mm landscape; }
 </style>
 <body class="white-bg">
-{{-- <div class="ibox" style=" margin-bottom:0px; width: 100%">
-    <div class="table-responsive" >
 
-        <img align="left" src="{{asset('img/logos/')}}/{{$mi_empresa->foto}}" style="width:200px;height: 50px ;margin-top: 5px">
-    </div>
-</div> --}}
 <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
     <tr>
         <td style="width: 30%;border-color: white" rowspan="2" valign="top">
@@ -39,7 +34,7 @@
         <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
            <strong>{{$empresa->razon_social}}</strong>
            <br>
-           Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+           Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
            <br>
            {{$empresa->correo}}
            <br>
@@ -48,7 +43,7 @@
        <td style="width: 30%; ;border: 1px #808080 solid;border-radius: 8px;margin-top: 0px" align="right">
         <center>
             <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-            <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRONICA</h2><br>
+            <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRÓNICA</h2><br>
             <h5 style="text-align: center;margin-bottom: -1px" >{{$facturacion->codigo_fac}}</h5>
         </center>
     </td>
@@ -61,15 +56,15 @@
         <tr >
             <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
                 <!-- <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br> -->
-                <strong>Señor(es)</strong>&nbsp;
+                <strong>Señor(es):</strong>&nbsp;
                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
                 @else{{$facturacion->cotizacion->cliente->nombre}}
                 @endif<br>
-                <strong>R.U.C :</strong>&nbsp;
+                <strong>R.U.C:</strong>&nbsp;
                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
                 @else{{$facturacion->cotizacion->cliente->numero_documento}}
                 @endif&nbsp;&nbsp;<br>
-                <strong>Direccion:</strong>&nbsp;
+                <strong>Dirección:</strong>&nbsp;
                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
                 @else{{$facturacion->cotizacion->cliente->direccion}}
                 @endif<br>
@@ -85,8 +80,8 @@
             <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
                 <!-- <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center> <br> -->
                 <strong>Orden de Compra:</strong>&nbsp;{{$facturacion->orden_compra}}<br>
-                <strong>Guia de Remision:</strong> &nbsp;{{$facturacion->guia_remision}}<br>
-                <strong>Fecha de Emision:</strong> &nbsp;{{$facturacion->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                <strong>Guía de Remisión:</strong> &nbsp;{{$facturacion->guia_remision}}<br>
+                <strong>Fecha de Emisión:</strong> &nbsp;{{$facturacion->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                 <strong>Fecha de Vencimiento:</strong> &nbsp;{{$facturacion->fecha_vencimiento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
             </td>
         </tr>
@@ -102,11 +97,11 @@
         <table class="table " style="border-top: 0px;border-color: #808080" >
             <thead style="border-color: #808080">
                 <tr >
-                 <th style="width: 8%">ITEM</th>
-                 <th style="width: 15%">Cod.Producto</th>
+                 <th style="width: 8%">Item</th>
+                 <th style="width: 15%">Cod. de Item</th>
                  <th>Descripción</th>
                  <th style="width: 11%">Cantidad</th>
-                 <th  style="text-align: center;width: 8%">P.Unit.</th>
+                 <th  style="text-align: center;width: 8%">P. Unit.</th>
                  <th  style="text-align: center;width: 8%">Total</th>
 
              </tr>
@@ -154,8 +149,8 @@
             </h3>
         </td>
         <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
-            <span > Sub Total:</span><br>
-            <span > Op. Agravada:</span><br>
+            <span > Subtotal:</span><br>
+            <span > Op. Gravada:</span><br>
             <span > Op. Inafecta:</span><br>
             <span > Op. Exonerada:</span><br>
             <span > I.G.V.:</span> <br>
@@ -189,58 +184,10 @@
 
 <!-- Fin Totales de Productos -->
 <br>
-<table style="border-collapse: separate;">
-    <tr>
-       <th style="width: 2%;border-color: white"></th>
-       @foreach($banco as $bancos)
-       @if($banco_count==3)
-       <th width="33%" style="border: 1px #808080 solid;border-radius: 8px;">
-        @elseif($banco_count==2)
-        <th width="50%"style="border: 1px #808080 solid;border-radius: 8px;">
-            @elseif($banco_count==1)
-            <th width="100%"style="border: 1px #808080 solid;border-radius: 8px;">
-                @else
-                <th width="20%"style="border: 1px #808080 solid;border-radius: 8px;">
-                    @endif
-                    <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-                    <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-                    <br>
-                    <span style="font-size: 12px">
-                      S/: {{$bancos->numero_soles}}
-                      <br>
-                      $: {{$bancos->numero_dolares}}<br>
-                  </span>
-              </p>
-          </th>
-          <th style="width: 2%;border-color: white"></th>
-          @endforeach
-      </tr>
-  </table>
-  <div class="row">
-    <br>
-{{-- <table style="border:  0px solid white">
-    <tr style="border:  0px solid white">
-        <td>
-            <p><u>centro de Atencion : </u></p>
-            Usuario : {{$facturacion->user->personal->nombres }}<br>
-            Telefono : {{$facturacion->user->personal->telefono }}<br>
-            Celular : {{$facturacion->user->personal->celular }}<br>
-            Email : {{$facturacion->user->personal->email }}<br>
-            Web :{{$empresa->pagina_web}} <br>
-        </td>
-        <td >
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <hr>
-            <center>{{$cotizacion->user_personal->personal->nombres }}</center>
-        </td>
-    </tr>
-</table> --}}
-</div>
+<br>
+<!-- EXTENSION PARA LLAMAR AL LAYOUT DE BANCOS -->
+@include('layout_bancos')
+</body>
 
 {{--  --}}
 <style>
@@ -268,5 +215,31 @@
         background-color: transparent;
         border-top-width: 0px;
 
+    }
+    
+    /* PARA CENTRAR LOS DIVS PROVENIENTESAL BANCO */
+    .divs-cont{
+        width: 22%;
+        
+        display: inline-block;
+        padding-left:  12px ;
+        padding-right:  12px ;
+        align-items: baseline;
+        margin-top: 3px;
+        vertical-align: top;
+        /* float: start; */
+    }
+    .flex{
+        display: inline;
+        width: 100%;
+        align-items: baseline;
+        margin-top: 0px;
+        padding-top: 0px;
+        
+        /* margin: 0px auto; */
+        /* position: absolute; */
+    }
+    p.form-control{
+        font-size: 12px;
     }
 </style>

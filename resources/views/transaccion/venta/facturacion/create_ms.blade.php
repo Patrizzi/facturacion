@@ -1,9 +1,9 @@
 @extends('layout')
-@section('title', 'Facturacion M.Secundaria')
-@section('breadcrumb', 'Facturacion M.Secundaria')
-@section('breadcrumb2', 'Facturacion M.Secundaria')
+@section('title', 'Facturación M.Secundaria')
+@section('breadcrumb', 'Facturación M.Secundaria')
+@section('breadcrumb2', 'Facturación M.Secundaria')
 @section('href_accion', route('facturacion.index'))
-@section('value_accion', 'Atras')
+@section('value_accion', 'Atrás')
 @extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <head>
@@ -17,7 +17,7 @@
                     }, 4);
                     e.preventDefault();
                 }
-            });
+            }); 
 
 
         });
@@ -99,7 +99,7 @@
                                 <div class="form-control ruc" style="height:125px">
                                     <center>
                                         <h3 style="padding-top:10px">{{$empresa->ruc}}</h3>
-                                        <h2>FACTURA ELECTRONICA</h2>
+                                        <h2>FACTURA ELECTRÓNICA</h2>
                                         <h5>{{$factura_numero}}</h5>
                                     </center>
                                 </div>
@@ -137,128 +137,128 @@
                                     <td>
                                         <input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0">
                                     </td>
-                                    <td>Guia remision</td>
+                                    <td>Guía Remisión</td>
                                     <td>:</td>
                                     <td><input type="text" class="form-control" value="0" name="guia_r"></td>
                                 </tr>
-                                        <tr>
-                                            <td>Vendedor</td>
-                                            <td>:</td>
-                                            <td>
-                                                <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
-                                            </td>
-                                            
-                                            <td>Forma de pago</td>
-                                            <td>:</td>
-                                            <td>
-                                                 <div class="row">
-                                                    <div class="col-sm-5">
-                                                        <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
-                                                            @foreach($forma_pagos as $forma_pago)
-                                                                <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
-                                                            @endforeach
-                                                        <select>
-                                                    </div>
-                                                    <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
-                                                        <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                                    </div>
-                                                    <!-- Modal -->
-                                                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                                                      <div class="modal-dialog modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                          <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                              <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                          </div>
-                                                          <div class="modal-body">
-                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
-                                                              <strong style="font-size:11px">Rellenar todos los campos</strong>
-                                                              <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
-                                                                <span aria-hidden="true">&times;</span>
-                                                              </button>
-                                                            </div>
-                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                                              <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
-                                                              <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
-                                                                <span aria-hidden="true">&times;</span>
-                                                              </button>
-                                                            </div>
-                                                            <div class="row_number">
-                                                                <div class="pago_modal row">
-                                                                    <div class="col-sm-1"><label>Fecha:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
-                                                                    </div>
-                                                                    <div class="col-sm-1"><label>Monto:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <div class="input-group mb-3" style="padding-right:15px">
-                                                                          <div class="input-group-prepend">
-                                                                            <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
-                                                                          </div>
-                                                                          <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
-                                                                </div>
-                                                                </div>
-                                                            </div>
-                                                          </div>
+                                    <tr>
+                                        <td>Vendedor</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
+                                        </td>
+                                        
+                                        <td>Forma de pago</td>
+                                        <td>:</td>
+                                        <td>
+                                                <div class="row">
+                                                <div class="col-sm-5">
+                                                    <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                        @foreach($forma_pagos as $forma_pago)
+                                                            <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                        @endforeach
+                                                    <select>
+                                                </div>
+                                                <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
+                                                    <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                                </div>
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                         </div>
-                                                      </div>
+                                                        <div class="modal-body">
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+                                                            <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                                            <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+                                                            <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                            <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="row_number">
+                                                            <div class="pago_modal row">
+                                                                <div class="col-sm-1"><label>Fecha:</label></div>
+                                                                <div class="col-sm-4">
+                                                                    <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                                </div>
+                                                                <div class="col-sm-1"><label>Monto:</label></div>
+                                                                <div class="col-sm-4">
+                                                                    <div class="input-group mb-3" style="padding-right:15px">
+                                                                        <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
+                                                                        </div>
+                                                                        <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
                                                     </div>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Moneda</td>
-                                            <td>:</td>
-                                            <td>
-                                                <div class="row">
-                                                    <input type="hidden" name="almacen" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
-                                                    <div class=" col-sm-5">
-                                                        <input type="text" name="moneda" class="form-control " value=" {{$moneda->nombre}}" readonly="readonly">
-                                                    </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Moneda</td>
+                                        <td>:</td>
+                                        <td>
+                                            <div class="row">
+                                                <input type="hidden" name="almacen" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                                                <div class=" col-sm-5">
+                                                    <input type="text" name="moneda" class="form-control " value=" {{$moneda->nombre}}" readonly="readonly">
+                                                </div>
 
-                                                    <a class="col-sm-5" onclick="event.preventDefault();document.getElementById('almacen-form').submit();">
-                                                        <button style="height: 35px;width: auto" type="button" class=' addmores btn btn-info'>@if($moneda->tipo=='nacional')Dolares @elseif($moneda->tipo=='extranjera') Soles @endif</button></a>
-                                                    </div>
+                                                <a class="col-sm-5" onclick="event.preventDefault();document.getElementById('almacen-form').submit();">
+                                                    <button style="height: 35px;width: auto" type="button" class=' addmores btn btn-info'>@if($moneda->tipo=='nacional')Dolares @elseif($moneda->tipo=='extranjera') Soles @endif</button></a>
+                                                </div>
 
-                                                </td>
-                                                <td>Fecha</td>
-                                                <td>:</td>
-                                                <td>
-                                                    <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                            <td>Tipo de Operacion</td>
-                                            <td>:</td>
-                                            <td><select class="form-control" name="tipo_operacion" >
-                                                @foreach($tipo_operacion as $t_op)
-                                                <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
-                                                @endforeach
-                                                </select>
                                             </td>
-                                             <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
-                                            <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}" ></td>
-                                            {{-- <td>Fecha de cotizacion</td>
+                                            <td>Fecha</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                                            </td> --}}
+                                            </td>
                                         </tr>
-                                            <tr>
-                                                <td>Observacion</td>
-                                                <td>:</td>
-                                                <td colspan="4">
-                                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                        <tr>
+                                        <td>Tipo de Operación</td>
+                                        <td>:</td>
+                                        <td><select class="form-control" name="tipo_operacion" >
+                                            @foreach($tipo_operacion as $t_op)
+                                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                                            @endforeach
+                                            </select>
+                                        </td>
+                                            <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td><td id="ven_2p" style="visibility: initial;">:</td>
+                                        <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}" ></td>
+                                        {{-- <td>Fecha de Cotización</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                        </td> --}}
+                                    </tr>
+                                        <tr>
+                                            <td>Observación</td>
+                                            <td>:</td>
+                                            <td colspan="4">
+                                                <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
                                     <div id="resultado_moneda"></div>
 
@@ -273,7 +273,7 @@
                                                     <th>Stock</th>
                                                     <th>Cantidad</th>
                                                     <th>Precio</th>
-                                                    <th>Dcto</th>
+                                                    <th>Dcto. </th>
                                                     <th>PU. Dcto.</th>
                                                     <th>PU. Com.</th>
                                                     <th>Total</th>
@@ -295,7 +295,7 @@
                                                             </option>
                                                             @endforeach
                                                         </select>
-                                                            <textarea  type='text' {{-- id='descripcion0' --}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                            <textarea  type='text' {{-- id='descripcion0' --}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="Descripción de Item"></textarea>
                                                             <textarea type='text' id='numero_serie0' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                                                             <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                                             <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
@@ -377,7 +377,7 @@
                                             </div>
                                             &nbsp;
                                             <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                                            <button class="btn btn-primary float-right" type="submit" id="boton" name="boton" onsubmit="valida()"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+                                            <button class="ladda-button btn btn-primary float-right" type="submit" id="boton" name="boton" onsubmit="valida()"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
                                         </form>
 
                                     </div>
@@ -475,7 +475,7 @@
                             @endforeach
                             </select>
                             <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
-                            <textarea type='text'     name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                            <textarea type='text'     name='descripcion_item[]' class="form-control" placeholder="Descripción de Item"  autocomplete="off" style="margin-top: 5px;"></textarea>
                             <textarea type='text' id='numero_serie0' placeholder="N° de Serie"  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                             <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
 

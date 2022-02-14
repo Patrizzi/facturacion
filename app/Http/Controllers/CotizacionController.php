@@ -1411,7 +1411,7 @@ public function pdf(Request $request,$id){
     /* FIN registros boleta y factura*/
     /*de numeros a Letras*/
     // foreach($cotizacion_registro as $cotizacion_registros){
-    $sub_total=$cotizacion->op_gravada;
+        $sub_total = $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
     if ($regla=='factura') {
         $end=round($sub_total, 2)+round($igv_p, 2);
@@ -1429,6 +1429,7 @@ public function pdf(Request $request,$id){
     $i=1;
     $regla=$cotizacion->tipo;
     $archivo=$name.$regla.$id.".pdf";
+    // return "1";
     // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
     if($request->get('firma') == "0"){
         $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
@@ -1710,7 +1711,7 @@ public function facturar_store(Request $request)
     $facturar->fecha_emision=$request->get('fecha_emision');
     $facturar->fecha_vencimiento=$nuevafechas;
     $facturar->cambio=$cambio->paralelo;
-    $facturar->observacion=$cotizacion->observacion;
+    $facturar->observacion=$request->get('observacion');
     $facturar->comisionista=$cotizacion->comisionista_id;
     $facturar->user_id =auth()->user()->id;
     $facturar->estado='0';
@@ -2567,7 +2568,7 @@ public function facturar_store(Request $request)
         $i=1;
         $regla=$cotizacion->tipo;
         $archivo=$name.'_'.$id.".pdf";
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count'));
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count'));
         $content = $pdf->download();
         $especif = $carbon_sp.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
