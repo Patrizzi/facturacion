@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Config_fe;
+use App\config_acceso_sunat;
 use App\Facturacion_m;
 use App\Facturacion_registro_m;
 use App\Forma_pago;
@@ -311,6 +313,36 @@ class FacturacionMController extends Controller
         
         $pdf=PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
         return $pdf->download('Facturacion - '.$archivo.'.pdf');
+    }
+
+    public function facturacion_e(Request $request){
+
+        // Obtención de facturación y facturacion registro
+        $factura=Facturacion_m::find($request->id);
+        $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$request->id)->get();
+
+        if($factura->guia_remision=="0"){
+            $guia=0;
+        }else{
+            $guia=1;
+        }
+
+        $facturacion_manual=1;
+
+        //configuración de conexión
+        $see=config_acceso_sunat::facturacion_electronica();
+
+        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
+
+        $result=config_acceso_sunat::send($see, $invoice);
+
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+
+        //cambio de factura electronica - en caso sea todo exitoso
+        $factura->f_electronica=1;
+        $factura->save();
+
     }
 
     /**

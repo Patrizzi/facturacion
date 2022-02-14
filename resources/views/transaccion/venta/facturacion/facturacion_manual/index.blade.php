@@ -21,7 +21,6 @@
 </div>
 @endif
 
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -49,16 +48,24 @@
                                     <td>{{$facturacions->cliente->nombre}}</td>
                                     <td>{{$facturacions->cliente->numero_documento}}</td>
                                     <td>{{$facturacions->fecha_vencimiento }}</td>
+                                    {{-- Ver --}}
                                     <td align="center">
                                         <a href="{{route('facturacion_manual.show',$facturacions->id)}}">
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                     </td>
+                                    {{-- Envio a Sunat --}}
                                     <td style="text-align:center;">
-                                        @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
-                                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                        @if($facturacions->f_electronica==0)
+                                            <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="text" style="display: none" value="{{$facturacions->id}}" name="id">
+                                                <button type="submit" class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
+                                            </form>
+                                            
                                         @else
-                                        <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
+                                        
+                                            <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
                                         @endif
                                     </td>
                                 </tr>
