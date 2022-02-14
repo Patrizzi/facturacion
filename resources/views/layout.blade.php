@@ -117,14 +117,17 @@ $empresa=Empresa::first(); ?>
                             <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
-                            <li>
+                             <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
+                                <li><a href="{{route('otros.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                                    {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
+                           {{--  <li>
                                 <a href="#"><span  class="nav-label">Cotizaciones</span></a>
                                 <ul class="nav nav-second-level collapse">
                                     <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li>
                                     <li><a href="{{route('cotizacion_servicio.index')}}"  style="padding-left: 80px;">C.Servicios</a></li>
                                     <li><a href="{{route('otros.index')}}"  style="padding-left: 80px;">C.Manual</a></li>
                                 </ul>
-                            </li>
+                            </li> --}}
                             <li><a href="{{route('boleta.index')}}">Boleta</a></li>
                             <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
                             <li><a href="{{route('guia_remision.index')}}">Guia Remision</a></li>

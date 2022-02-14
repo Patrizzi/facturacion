@@ -607,8 +607,11 @@
                 var precio_uni=precio-(promedio_original*descuento/100);
 
                 if(afec.toString() == "Gravado"){
+                    var precio_u = (precio_uni * (igv / 100));
+                    var prec_uni =  parseFloat(precio_uni) + parseFloat(precio_u);
 
-                    var precio_uni_dec = Math.round((precio_uni+(precio_uni*(igv/100)) * multiplier) / multiplier);
+                    var precio_uni_dec = Math.round( prec_uni * multiplier) /multiplier;
+
                     var comisiones9=precio_uni+(precio_uni*comision_porcentaje/100);
                     var comisiones = Math.round((comisiones9+(comisiones9*(igv/100))) * multiplier) / multiplier;
                     var final=comisiones*cantidad;
@@ -656,7 +659,7 @@
                 document.getElementById(`precio_unitario_comision${a}`).value = end;
             }
 
-            var totalInp = $('[name="afectacion"]');
+            var totalInp = $('[name="total"]');
             var total_t = 0;
 
             totalInp.each(function () {
@@ -790,7 +793,7 @@
             }
 
             // $('.case:checkbox:checked').parents("tr").remove();
-            var totalInp = $('[name="afectacion"]');
+            var totalInp = $('[name="total"]');
             var total_t = 0;
 
             totalInp.each(function () {
