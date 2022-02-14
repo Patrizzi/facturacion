@@ -14,9 +14,9 @@ class BancoRegistro extends Model
     //   return $this->belongsTo(Cliente::class);
     // }
 
-    // public function clientes_i(){
-    //     return $this->belongsTo(Cliente::class,'cliente_id');
-    // }
+    public function bancos_i(){
+        return $this->belongsTo(Banco::class,'banco_id');
+    }
 
 }
 

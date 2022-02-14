@@ -1,15 +1,33 @@
-@php use App\Banco @endphp
+@php use App\Banco  @endphp
+@php use App\BancoRegistro @endphp
 @php $banco=Banco::where('estado',0)->get(); @endphp
 <div class="row flex" align="center">
     @foreach($banco as $bancos)
-    <div class="col-sm-3 divs-cont">
-        <p class="form-control" >
-            <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 100px;height: 30px;">
-            <br>
-            N° S/. : {{$bancos->numero_soles}}
-            <br>
-            N° $ : {{$bancos->numero_dolares}}<br>
-        </p>
-    </div>
+        <?php $banco_registros = BancoRegistro::where('banco_id', $bancos->id)->get() ?>
+        <div class="col-sm-3 divs-cont">
+            <p class="form-control" >
+                <span class="inter-line">
+                    <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 70%;"><br><br>
+                    <span class="lol">
+                    @foreach($banco_registros as $banco_reg)    
+                        <strong>{{$banco_reg->descripcion1}} :</strong> {{$banco_reg->descripcion2}} <br>
+                    @endforeach
+                    </span>
+                </span>
+            </p>    
+        </div>
     @endforeach
 </div>
+<style>
+    .divs-cont{
+        display: flex ;
+        
+        /* margin: auto; */
+    }
+    p.form-control{
+        display: flex ;
+        justify-content: center ;
+        align-items: center ;
+    }
+    
+</style>
