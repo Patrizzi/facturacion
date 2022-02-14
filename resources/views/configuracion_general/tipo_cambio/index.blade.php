@@ -1,7 +1,6 @@
 @extends('layout')
 @section('title', 'Tipo de cambio')
 
-
 @if($consulta)
 @section('atributo_1', 'hidden')
 @section('atributo_actu', 'hidden')
@@ -10,7 +9,6 @@
 @section('href_accion', route('tipo_cambio.create'))
 @section('value_accion', 'Agregar')
 @endif
-
 
 @section('content')
 
