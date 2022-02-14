@@ -76,10 +76,10 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Codigo de Boleta</th>
+                                    <th>Código de Boleta</th>
                                     <th>Cliente </th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha Vencimiento</th>
+                                    <th>Fecha de Vencimiento</th>
                                     <th></th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>

@@ -1,24 +1,63 @@
 @extends('layout')
 
-@section('title', 'Cotizacion Servicio')
-@section('breadcrumb', 'Cotizacion Servicio')
-@section('breadcrumb2', 'cotizacion_servicio')
-{{-- @section('href_accion', route('cotizacion_servicio.create_factura'))
-@section('value_accion', 'Agregar') --}}
-@section('data-toggle', 'modal')
-@section('href_accion', '#modal-form')
+@section('title', 'Cotización Servicio')
+@section('atributo_actu', 'hidden')
+
+@if($conteo_almacen==1)
 @section('value_accion', 'Agregar')
+@section('onclick1', 'Enviar_create()')
+@else
+@section('atributo_1', 'hidden')
+@section('boton_opcional')
+@if($user_login->name=='Administrador')
+<span class="dropdown ">
+  <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
+  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+    @foreach($almacen as $almacens)
+    <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
+    <form action="{{ route('cotizacion.create_factura')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text" value="{{$almacens->id}}" hidden="hidden" name="almacen">
+    </form>
+    <script>
+        console.log({{$almacens->id}});
+        function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
+    </script>
+    @endforeach
+</ul>
+</span>
+@elseif($user_login->name=='Colaborador')
+<button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
+@endif
+@endsection
+@endif
+
 @section('content')
+<span hidden>
+    <script>
+        function Enviar_create(){document.getElementById('myform1').submit();}
+        function Enviar_create2(){document.getElementById('myform2').submit();}
+    </script>
+    <form id="myform1" action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+    </form>
+    <form id="myform2" action="{{ route('cotizacion.create_factura')}}" enctype="multipart/form-data" method="post">
+        @csrf
+        <input type="text"  hidden="hidden" name="almacen"  value="{{$user_login->almacen_id}}">
+    </form>
+</span>
 @if($errors->any())
-       <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
-            <a class="alert-link" href="#">
-            @foreach ($errors->all() as $error)
-                <li class="error" style="color: red">{{ $error }}</li>
-            @endforeach
-            </a>
-        </div>
-    @endif
-<!-- modal -->
+    <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+        <a class="alert-link" href="#">
+        @foreach ($errors->all() as $error)
+            <li class="error" style="color: red">{{ $error }}</li>
+        @endforeach
+        </a>
+    </div>
+@endif
+<!-- modal para antiguo sistema de facturas y boletas -->
 <div class="row">
   <div class="col-lg-12">
     <div id="modal-form" class="modal fade" aria-hidden="true">
@@ -26,7 +65,7 @@
         <div class="modal-content">
           <div class="modal-body">
             <div class="row" align="center">
-              <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Cotizacion Servicio</h3>
+              <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Cotización Servicio</h3>
               </div>
               <!--FACTURA-->
               <div class="col-sm-6">
@@ -39,7 +78,7 @@
                 @else
                 @if($user_login->name=='Administrador')
                 <div class="dropdown">
-                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cotizacion factura</button>
+                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cotización factura</button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <form action="{{ route('cotizacion_servicio.create_factura')}}"enctype="multipart/form-data" method="post">
                       @csrf
@@ -69,7 +108,7 @@
                 @else
                 @if($user_login->name=='Administrador')
                 <div class="dropdown">
-                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cotizacion boleta</button>
+                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cotización boleta</button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <form action="{{ route('cotizacion_servicio.create_boleta')}}"enctype="multipart/form-data" method="post">
                       @csrf
@@ -95,7 +134,7 @@
     </div>
   </div>
 </div>
-{{-- fimodal --}}
+<!-- {{-- fimodal --}} -->
 
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="row">

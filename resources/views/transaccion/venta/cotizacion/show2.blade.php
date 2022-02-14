@@ -1,11 +1,11 @@
 @extends('layout')
-@section('title', 'Cotizacion')
-@section('breadcrumb', 'Cotizacion')
-@section('breadcrumb2', 'Cotizacion')
+@section('title', 'Cotización')
+@section('breadcrumb', 'Cotización')
+@section('breadcrumb2', 'Cotización')
 @section('href_accion', route('cotizacion.index'))
-@section('value_accion', 'Atras')
+@section('value_accion', 'Atrás')
 
-@section('button2', 'Nueva cotizacion')
+@section('button2', 'Nueva Cotización')
 @section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();")
 
 @section('content')
@@ -26,7 +26,7 @@
                     <a class="btn btn-success" href="{{route('cotizacion.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
                 @endif --}}
 
-                 @if($cotizacion->estado == '1')
+                @if($cotizacion->estado == '1')
                     @if($cotizacion->tipo=='factura')
                         <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('facturacion.show',$factura->id)}}" >Ver Factura</a>
                     @else
@@ -101,7 +101,7 @@
                     <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
-                     Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                     Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
                     <br>
                      {{$empresa->correo}}
                      <br>
@@ -113,7 +113,7 @@
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRONICA</h2>
                             <h5>{{$cotizacion->cod_cotizacion}} </h5>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                                 <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
-                                <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
                                 <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
                             </div>
@@ -138,7 +138,7 @@
                          <div align="left">
                             <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
                             <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
-                            <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Comisionista:</strong> &nbsp;
                             @if(isset($cotizacion->comisionista->cod_vendedor))
@@ -163,15 +163,15 @@
             <table class="table " >
                 <thead>
                  <tr >
-                    <th>ITEM </th>
-                    <th>Codigo </th>
-                    <th>Descripcion</th>
+                    <th>ITEM</th>
+                    <th>Código</th>
+                    <th>Descripción</th>
                     <th>Cantidad</th>
-                    <th>Descuento</th>
+                    <th>Dscto.</th>
                     <th>P.Unitario Desc.</th>
-                    <th>Comision</th>
+                    <th>Comisión</th>
                     <th>P.Unitario Com.</th>
-                    <th>Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></th>
+                    <th>Total<span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -218,10 +218,10 @@
                 <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}}{{$end}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>                
             @else
                 
-                <span style="display: block;float: left"> Sub Total:</span>
+                <span style="display: block;float: left"> Subtotal:</span>
                 <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
                 <br>
-                <span style="display: block;float: left"> Op. Agravada: </span>
+                <span style="display: block;float: left"> Op. Gravada: </span>
                 <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
                 <span style="display: block;float: left"> Op. Inafecta: </span>
                 <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
@@ -241,43 +241,13 @@
 
 <br>
 <!-- Fin Totales de Productos -->
-<div class="row">
-    @foreach($banco as $bancos)
+@include('layout_bancos')
 
-    @if($banco_count==3)
-    <div class="col-sm-4 " align="center">
-    <p class="form-control" >
-
-    @elseif($banco_count==2)
-    <div class="col-sm-6" align="center">
-    <p class="form-control">
-
-    @elseif($banco_count==1)
-    <div class="col-sm-12" align="center" style="width: 100px">
-    <p class="form-control" style="width: 426px;">
-
-    @else
-    <div class="col-sm-3 " align="center">
-    <p class="form-control" >
-    @endif
-
-      <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-      <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-      <br>
-      <span style="font-size: 12px">
-      S/: {{$bancos->numero_soles}}
-      <br>
-      $: {{$bancos->numero_dolares}}<br>
-      </span>
-     </p>
-     </div>
-      @endforeach
-</div>
           <br>
           <div class="row">
             <div class="col-sm-3">
-                <p><u>centro de Atencion : </u></p>
-                Telefono :  {{$empresa->telefono}}<br>
+                <p><u>Centro de Atención : </u></p>
+                Teléfono :  {{$empresa->telefono}}<br>
                 Celular : {{$cotizacion->user_personal->personal->celular }}<br>
                 Email : {{$cotizacion->user_personal->personal->email }}<br>
                 Web : {{$empresa->pagina_web}} <br>

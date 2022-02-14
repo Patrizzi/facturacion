@@ -1,9 +1,9 @@
 @extends('layout')
-@section('title', 'Boleta 2')
+@section('title', 'Boleta ')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('boleta.index'))
 @extends('layout_agregado_rapido')
-@section('value_accion', 'Atras')
+@section('value_accion', 'Atrás')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <head>
     <script type="text/javascript">

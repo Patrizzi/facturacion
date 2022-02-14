@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Cotizacion- Impresion</title>
+    <title>Cotización- Impresión</title>
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -46,7 +46,7 @@
                     <div class="col-sm-4 text-center" style="font-size: 15px"><br>
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
-                         Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
                         <br>
                          {{$empresa->correo}}
                          <br>
@@ -58,7 +58,7 @@
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRONICA</h2>
                             <h5>{{$cotizacion->cod_cotizacion}} </h5>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                                 <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
-                                <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
                                 <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
                             </div>
@@ -82,8 +82,8 @@
                            <h3>Condiciones Generales</h3>
                            <div align="left">
                             <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
-                            <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                            <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <strong>Validez:</strong> &nbsp;{{$cotizacion->validez}}<br>
+                            <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                 <div class="col-sm-12" align="center">
                    <div class="form-control" style="border: none;height: auto" >
                        <div align="left">
-                        <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+                        <strong>Observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
                     </div>
                 </div>
             </div>
@@ -101,12 +101,12 @@
             <table class="table " >
                 <thead>
                    <tr >
-                    <th style="width: 4%">ITEM </th>
-                    <th style="width: 12%">Codigo </th>
-                    <th>Descripcion</th>
+                    <th style="width: 4%">Item</th>
+                    <th style="width: 12%">Código</th>
+                    <th>Descripción</th>
                     <th style="width: 12%">Cantidad</th>
                     <th style="width: 12%">P.Unitario</th>
-                    <th style="width: 12%">Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></th>
+                    <th style="width: 12%">Total<span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -147,7 +147,7 @@
     </div>
     <div class="col-sm-4 form-control" >
         @if($cotizacion->tipo == "factura")
-            <span style="display: block;float: left"> Sub Total:</span>
+            <span style="display: block;float: left"> Subtotal:</span>
             <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
             <br>
             <span style="display: block;float: left"> Op. Agravada: </span>
@@ -171,44 +171,12 @@
 
 <br>
 <!-- Fin Totales de Productos -->
-<div class="row">
-     @foreach($banco as $bancos)
-
-    @if($banco_count==3)
-    <div class="col-sm-4 " align="center">
-    <p class="form-control">
-
-    @elseif($banco_count==2)
-    <div class="col-sm-6" align="center">
-    <p class="form-control">
-
-    @elseif($banco_count==1)
-    <div class="col-sm-12" align="center" style="width: 100px">
-    <p class="form-control" style="width: 426px;">
-
-    @else
-    <div class="col-sm-3 " align="center">
-    <p class="form-control" style="height: 110px">
-    @endif
-
-      <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-      <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-      <br>
-      <span style="font-size: 12px">
-      S/: {{$bancos->numero_soles}}
-      <br>
-      $: {{$bancos->numero_dolares}}<br>
-      </span>
-     </p>
-     </div>
-      @endforeach
-
-</div>
+@include('layout_bancos')
 <br>
 <div class="row">
     <div class="col-sm-3">
-        <p><u>centro de Atencion : </u></p>
-        Telefono : {{$cotizacion->user_personal->personal->telefono }}<br>
+        <p><u>Centro de Atención: </u></p>
+        Teléfono : {{$cotizacion->user_personal->personal->telefono }}<br>
         Celular : {{$cotizacion->user_personal->personal->celular }}<br>
         Email : {{$cotizacion->user_personal->personal->email }}<br>
         Web : {{$empresa->pagina_web}} <br>

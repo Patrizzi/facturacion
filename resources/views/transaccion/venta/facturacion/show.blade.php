@@ -1,11 +1,11 @@
  @extends('layout')
 
- @section('title', 'Facturacion Ver')
+ @section('title', 'Facturación Ver')
 
  @section('href_accion', route('facturacion.index'))
- @section('value_accion', 'Atras')
+ @section('value_accion', 'Atrás')
 
- @section('button2', 'Nueva Facturacion')
+ @section('button2', 'Nueva Facturación')
  @section('onclick',"event.preventDefault();document.getElementById('nueva_cots').submit();")
 
  @section('content')
@@ -80,7 +80,7 @@
                         <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                            <strong>{{$empresa->razon_social}}</strong>
                            <br>
-                           Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+                           Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                            <br>
                            {{$empresa->correo}}
                            <br>
@@ -92,7 +92,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>FACTURA ELECTRONICA</h2>
+                                <h2>FACTURA ELECTRÓNICA</h2>
                                 <h5> {{$facturacion->codigo_fac}}</h5>
                             </center>
                         </div>
@@ -111,7 +111,7 @@
                                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
                                 @else{{$facturacion->cotizacion->cliente->numero_documento}}
                                 @endif <br>
-                                <strong>Direccion:</strong>
+                                <strong>Dirección:</strong>
                                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
                                 @else{{$facturacion->cotizacion->cliente->direccion}}
                                 @endif <br>
@@ -133,9 +133,9 @@
                            <div align="left">
                             <strong>Orden de Compra:</strong>
                             {{$facturacion->orden_compra}} <br>
-                            <strong>Guia de Remision:</strong>
+                            <strong>Guía de Remisión:</strong>
                             {{$facturacion->guia_remision}} <br>
-                            <strong>Fecha Emision:</strong>
+                            <strong>Fecha Emisión:</strong>
                             {{$facturacion->fecha_emision}} <br>
                             <strong>Fecha de Vencimiento:</strong>
                             {{$facturacion->fecha_vencimiento }} <br>
@@ -157,14 +157,14 @@
             <table class="table ">
                 <thead>
                     <tr>
-                        <th>ITEM</th>
-                        <th>Codigo Producto</th>
+                        <th>Item</th>
+                        <th style="width: 10%">Código de Item</th>
                         <th>Descripción</th>
                         <th>Cantidad</th>
                         <th>Valor Unitario</th>
-                        <th>Dscto.%</th>
+                        <th>Dscto. %</th>
                         <th>P. Unitario Desc</th>
-                        <th>Comision</th>
+                        <th>Comisión %</th>
                         <th>P. Unitario Com.</th>
                         <th>Valor Venta</th>
                     </tr>
@@ -182,7 +182,7 @@
                             <td>{{$facturacion_registros->producto->nombre}} {{$facturacion_registros->descripcion_item}} @if(isset($facturacion_registros->numero_serie))<br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}@endif</td>
                             @else
                             <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>
-                            <td>{{$facturacion_registros->servicio->nombre}} {{$facturacion_registros->descripcion_item}}
+                            <td>{{$facturacion_registros->servicio->nombre}} {{$facturacion_registros->descripcion_item}} @if(isset($facturacion_registros->numero_serie))<br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}@endif</td>
                             @endif
                             <td>{{$facturacion_registros->cantidad}}</td>
                             <td>{{$facturacion_registros->precio}}</td>
@@ -208,22 +208,6 @@
         </div><br><br><br><br>
 
         <div class="row">
-                {{-- <div class="col-sm-3 ">
-                    <p class="form-control a"> Sub Total</p>
-                    <p class="form-control a">{{$facturacion->moneda->simbolo}}.{{round($sub_total, 2)}}</p>
-                </div>
-                <div class="col-sm-3 ">
-                    <p class="form-control a"> Op. Agravada</p>
-                    <p class="form-control a"> {{$facturacion->moneda->simbolo}}.00</p>
-                </div>
-                <div class="col-sm-3 ">
-                    <p class="form-control a"> IGV</p>
-                    <p class="form-control a"> {{$facturacion->moneda->simbolo}}.{{round($igv_p, 2)}}</p>
-                </div>
-                <div class="col-sm-3 ">
-                    <p class="form-control a"> Importe Total</p>
-                    <p class="form-control a"> {{$facturacion->moneda->simbolo}}.{{$end}}</p>
-                </div> --}}
                 <div class="col-sm-8">
                     <h3 align="left">
                         <?php $v=new CifrasEnLetras() ;
@@ -238,10 +222,10 @@
             </div>
             <div class="col-sm-4 form-control">
                 {{-- <div class="col-sm-4 form-control" > --}}
-                    <span style="display: block;float: left"> Sub Total:</span>
+                    <span style="display: block;float: left"> Subtotal:</span>
                     <span style="display: block;float: right;"> {{$simbologia=$facturacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
                     <br>
-                    <span style="display: block;float: left"> Op. Agravada: </span>
+                    <span style="display: block;float: left"> Op. Gravada: </span>
                     <span style="display: block;float: right">{{$simbologia}} {{number_format($facturacion->op_gravada,2)}}</span><br>
                     <span style="display: block;float: left"> Op. Inafecta: </span>
                     <span style="display: block;float: right">{{$simbologia}} {{ number_format($facturacion->op_inafecta,2)}}</span><br>
@@ -262,36 +246,9 @@
                 </div>
             </div>
             <br>
-            <div class="row">
-                @foreach($banco as $bancos)
-                <div class="col-sm-3 " align="center">
-                    <p class="form-control" style="height: 100px">
-                      <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 100px;height: 30px;">
-                      <br>
-                      N° S/. : {{$bancos->numero_soles}}
-                      <br>
-                      N° $ : {{$bancos->numero_dolares}}<br>
-
-                  </p>
-              </div>
-              @endforeach
-
-          </div>
+            <!-- EXTENSION PARA LLAMAR AL LAYOUT DE BANCOS -->
+            @include('layout_bancos')
           <br>
-          {{-- <div class="row">
-                <div class="col-sm-3">
-                    <p><u>centro de Atencion : </u></p>
-                    Usuario : {{$facturacion->user->personal->nombres }}<br>
-                    Telefono : {{$facturacion->user->personal->telefono }}<br>
-                    Celular : {{$facturacion->user->personal->celular }}<br>
-                    Email : {{$facturacion->user->personal->email }}<br>
-                    Web :
-                    <a href="{{$empresa->pagina_web}}" target="blank_">{{$empresa->pagina_web}}</a><br>
-                </div>
-                <div class="col-sm-3"></div>
-                <div class="col-sm-3"></div>
-                <div class="col-sm-3"></div>
-            </div> --}}
         </div>
     </div>
 
@@ -383,7 +340,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
-                                <button class="btn btn-primary" type="submit">Grabar</button>
+                                <button class="ladda-button btn btn-primary" type="submit">Grabar</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </form>
                         </div>

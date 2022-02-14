@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturacion')
+@section('title', 'Facturación')
 @section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)
@@ -79,10 +79,10 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Codigo de Factura</th>
+                                    <th>Código de Factura</th>
                                     <th>Cliente</th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha Vencimiento</th>
+                                    <th>Fecha de Vencimiento</th>
                                     <th></th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
