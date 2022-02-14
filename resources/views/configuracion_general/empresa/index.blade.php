@@ -154,7 +154,7 @@
         <div class="row">
 
           @foreach($moneda as $monedas)
-          <div class="col-lg-6"  @if($monedas->principal == 0) id="demo{{$monedas->id}}" @else id="demo_principal" @endif>
+          <div class="col-lg-6"  @if($monedas->principal == 0) id="demo{{$monedas->id}}" @else id="demo_principal{{$monedas->id}}" @endif>
            <div class="widget p-lg text-center " style="">
             <div class="m-b-md">
               <i class="fa fa-4x">{{$monedas->simbolo}}</i>
@@ -342,7 +342,7 @@
 
   <script>
 
-    $('#demo_principal').click(function(){
+    $('#demo_principal{{$monedas->id}}').click(function(){
       swal({
         title: "{{$monedas->simbolo}} {{$monedas->nombre}}",
         text: "Moneda '{{$monedas->nombre}}' actualmente registrada como Moneda Principal."
