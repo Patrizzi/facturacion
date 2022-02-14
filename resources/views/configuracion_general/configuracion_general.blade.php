@@ -1,12 +1,12 @@
  @extends('layout')
 
-@section('title', 'Configuración Sistema')
-@section('href_accion','/' )
-@section('value_accion', 'Inicio')
+ @section('title', 'Configuración Sistema')
+ @section('atributo_actu', 'hidden')
+ @section('atributo_1', 'hidden')
 
-@section('content')
+ @section('content')
 
-<div class="wrapper wrapper-content animated fadeInRight">
+ <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -50,11 +50,6 @@
                                     <td><img src="{{asset('img/logos/motivo.svg')}}" width="20px" alt=""></td>
                                     <td>Motivo</td>
                                     <td><a class="btn btn-primary" href="{{route('motivo.index')}}"><i class="fa fa-gear"></i></a></td>
-                                </tr>
-                                <tr class="gradeX">
-                                    <td><img src="{{asset('img/logos/igv.svg')}}" width="20px"></td>
-                                    <td>IGV</td>
-                                    <td><a class="btn btn-primary" href="{{route('igv.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/unidad_medida.svg')}}" width="20px"></td>
