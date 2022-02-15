@@ -147,58 +147,29 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
 </div>
 
 <br>
+@include('layout_bancos')
 <!-- Fin Totales de Productos -->
-<div class="row">
-    @foreach($banco as $bancos)
 
-    @if($banco_count==3)
-    <div class="col-sm-4 " align="center">
-        <p class="form-control" >
-
-            @elseif($banco_count==2)
-            <div class="col-sm-6" align="center">
-                <p class="form-control">
-
-                    @elseif($banco_count==1)
-                    <div class="col-sm-12" align="center" style="width: 100px">
-                        <p class="form-control" style="width: 426px;">
-
-                            @else
-                            <div class="col-sm-3 " align="center">
-                                <p class="form-control" >
-                                    @endif
-
-                                    <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-                                    <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-                                    <br>
-                                    <span style="font-size: 12px">
-                                      S/: {{$bancos->numero_soles}}
-                                      <br>
-                                      $: {{$bancos->numero_dolares}}<br>
-                                  </span>
-                              </p>
-                          </div>
-                          @endforeach
-                      </div>
-                      <br>
-                      <div class="row">
-                        <div class="col-sm-3">
-                            <p><u>Centro de Atencion : </u></p>
-                            Telefono : {{$nota_venta->user->personal->telefono }}<br>
-                            Celular : {{$nota_venta->user->personal->celular }}<br>
-                            Email : {{$nota_venta->user->personal->email }}<br>
-                            Web : {{$empresa->pagina_web}} <br>
-                        </div>
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-3"></div>º
-                        <div class="col-sm-3"><br><br>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3">
+            <p><u>Centro de Atencion : </u></p>
+            Telefono : {{$nota_venta->user->personal->telefono }}<br>
+            Celular : {{$nota_venta->user->personal->celular }}<br>
+            Email : {{$nota_venta->user->personal->email }}<br>
+            Web : {{$empresa->pagina_web}} <br>
         </div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"><br><br>
+
     </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
     {{--  --}}
     <style>
         .form-control{margin-top: 5px; border-radius: 5px}

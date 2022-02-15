@@ -165,61 +165,24 @@
 
             <br>
             <!-- Fin Totales de Productos -->
-            <div class="row">
-                @foreach($banco as $bancos)
-
-                @if($banco_count==3)
-                <div class="col-sm-4 " align="center">
-                    <p class="form-control" >
-
-                        @elseif($banco_count==2)
-                        <div class="col-sm-6" align="center">
-                            <p class="form-control">
-
-                                @elseif($banco_count==1)
-                                <div class="col-sm-12" align="center" style="width: 100px">
-                                    <p class="form-control" style="width: 426px;">
-
-                                        @else
-                                        <div class="col-sm-3 " align="center">
-                                            <p class="form-control" >
-                                                @endif
-
-                                                <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-                                                <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-                                                <br>
-                                                <span style="font-size: 12px">
-                                                  S/: {{$bancos->numero_soles}}
-                                                  <br>
-                                                  $: {{$bancos->numero_dolares}}<br>
-                                              </span>
-                                          </p>
-                                      </div>
-                                      @endforeach
-                                  </div>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-sm-3">
-                                        <p><u>centro de Atencion : </u></p>
-                                        Telefono : {{$guia_remision->user_personal->personal->telefono }}<br>
-                                        Celular : {{$guia_remision->user_personal->personal->celular }}<br>
-                                        Email : {{$guia_remision->user_personal->personal->email }}<br>
-                                        Web : {{$empresa->pagina_web}}<br>
-                                    </div>
-                                    <div class="col-sm-3"></div>
-                                    <div class="col-sm-3"></div>
-                                    <div class="col-sm-3"><br><br>
-                                        <hr>
-                                        <center>{{$guia_remision->user_personal->personal->nombres }}</center>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
+            @include('layout_bancos')
+      
+                <br>
+                <div class="row">
+                <div class="col-sm-3">
+                    <p><u>centro de Atencion : </u></p>
+                    Telefono : {{$guia_remision->user_personal->personal->telefono }}<br>
+                    Celular : {{$guia_remision->user_personal->personal->celular }}<br>
+                    Email : {{$guia_remision->user_personal->personal->email }}<br>
+                    Web : {{$empresa->pagina_web}}<br>
                 </div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3"><br><br>
+                    <hr>
+                    <center>{{$guia_remision->user_personal->personal->nombres }}</center>
+                </div>
+
 
                 <style type="text/css">
                     .form-control{border-radius: 10px; height: auto;}

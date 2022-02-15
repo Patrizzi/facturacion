@@ -152,38 +152,13 @@
         <br>
         <!-- Fin Totales de Productos -->
 
-        <table style="border-collapse: separate;">
-            <tr>
-               <th style="width: 2%;border-color: white"></th>
-               @foreach($banco as $bancos)
-               @if($banco_count==3)
-               <th width="33%" style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-                @elseif($banco_count==2)
-                <th width="50%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-                    @elseif($banco_count==1)
-                    <th width="100%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-                        @else
-                        <th width="20%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-                            @endif
-                            <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-                            <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-                            <br>
-                            <span style="font-size: 12px">
-                              S/: {{$bancos->numero_soles}}
-                              <br>
-                              $: {{$bancos->numero_dolares}}<br>
-                          </span>
-                      </p>
-                  </th>
-                  <th style="width: 2%;border-color: white"></th>
-                  @endforeach
-              </tr>
-          </table>
+        @include('layout_bancos_pdf')
+
           <div style="height: 100px"></div>
           <table style="border:  0px solid white">
             <tr style="border:  0px solid white">
                 <td>
-                    <p><u>centro de Atencion : </u></p>
+                    <p><u>Centro de Atención: </u></p>
                     Telefono : {{$guia_remision->user_personal->personal->telefono }}<br>
                     Celular : {{$guia_remision->user_personal->personal->celular }}<br>
                     Email : {{$guia_remision->user_personal->personal->email }}<br>
