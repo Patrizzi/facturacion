@@ -15,7 +15,8 @@ class FamiliaController extends Controller
     public function index()
     {
         $familias=Familia::all();
-        return view('configuracion_general.familia.index',compact('familias'));
+        $conteo=Familia::where('estado','0')->count();
+        return view('configuracion_general.familia.index',compact('familias','conteo'));
     }
 
     /**
@@ -93,12 +94,14 @@ class FamiliaController extends Controller
     {
         //ESTADO
         $estado = $request->get('estado');
-        if($estado == "on"){
+        $nombre=$request->get('descripcion');
+        $buscador_id=Familia::where('id',$id)->where('estado',0)->count();
+        return $buscador_id;
+        if($estado == "on" or $buscador_id==1){
             $estado_marca = 0;
         }else{
             $estado_marca = 1;
         }
-        $nombre=$request->get('descripcion');
         if (empty($nombre)) {
             return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
 

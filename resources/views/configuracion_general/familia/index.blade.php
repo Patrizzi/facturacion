@@ -4,7 +4,7 @@
  @section('data-toggle', 'modal')
  @section('href_accion', '#exampleModal')
  @section('value_accion', 'Agregar')
- @section('button2', 'Inicio')
+ @section('button2', 'Atras')
  @section('config',route('Configuracion'))
 
  @section('content')
@@ -60,21 +60,18 @@
                                     <th>ID</th>
                                     <th>codigo</th>
                                     <th>Descripcion</th>
-                                    <th>Estado</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <span hidden="hidden">{{$i=1}}</span>
                                 @foreach($familias as $familia)
                                 <tr class="gradeX">
-                                    <td>{{$familia->id}}</td>
+                                  <td>@if($familia->estado==0) <i class="fa fa-circle" style="color: green;"></i>@else
+                                    <i class="fa fa-circle"></i>@endif {{$i++}}</td>
+                                    {{-- <td>{{$familia->id}}</td> --}}
                                     <td>{{$familia->codigo}}</td>
                                     <td>{{$familia->descripcion}}</td>
-                                    @if($familia->estado == 0)
-                                    <td style="width: 20%;"><center><label class="label label-primary" style="font-size: 14px">ACTIVADO</label></center></td>
-                                    @else
-                                    <td style="width: 20%;"><center><label class="label label-danger" style="font-size: 14px">DESACTIVADO</label></center></td>
-                                    @endif
                                     <td>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$familia->id}}"><i class="fa fa-edit"></i></button>
                                         <div class="modal fade" id="exampleModal{{$familia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -92,36 +89,39 @@
                                                                         <div class="panel-body" >
 
                                                                             <div class="row">
-                                                                             <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
-                                                                             <label class="col-sm-2 col-form-label">Descripcion:</label>
-                                                                             <div class="col-sm-10">
+                                                                               <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
+                                                                               <label class="col-sm-2 col-form-label">Descripcion:</label>
+                                                                               <div class="col-sm-10">
                                                                                 <input type="text" required class="form-control" name="descripcion" value="{{$familia->descripcion}}">
                                                                             </div>
+                                                                            @if($conteo > 1 || $familia->estado==1 )
                                                                             <div class="col-sm-12" align="center" style="padding-top: 10px">
-                                                                               <input type="checkbox" class="js-switch_{{$familia->id}}" name="estado"  @if($familia->estado==0) checked="" @endif />
-                                                                           </div>
-                                                                       </div>
-                                                                   </div>
-                                                               </div>
+                                                                             <input type="checkbox" class="js-switch_{{$familia->id}}" name="estado"  @if($familia->estado==0) checked="" @endif />
+                                                                         </div>
+                                                                         @endif
 
-                                                           </fieldset>
-                                                           <button class="ladda-button btn btn-primary" type="submit">Guardar</button>
-                                                       </form>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <!-- / Modal Create  -->
-                               </td>
-                           </tr>
-                           @endforeach
-                       </tbody>
-                   </table>
-               </div>
-           </div>
-       </div>
-   </div>
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
+
+                                                         </fieldset>
+                                                         <button class="ladda-button btn btn-primary" type="submit">Guardar</button>
+                                                     </form>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <!-- / Modal Create  -->
+                             </td>
+                         </tr>
+                         @endforeach
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     </div>
+ </div>
 </div>
 </div>
 <style>

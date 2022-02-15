@@ -16,7 +16,8 @@ class MarcaController extends Controller
     public function index()
     {
         $marcas=Marca::all();
-        return view('configuracion_general.marca.index',compact('marcas'));
+        $conteo=Marca::where('estado','0')->count();
+        return view('configuracion_general.marca.index',compact('marcas','conteo'));
     }
 
     /**
