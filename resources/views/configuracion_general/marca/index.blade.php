@@ -7,7 +7,6 @@
  @section('config',route('Configuracion'))
  @section('content')
 
-
  <!-- Modal Create  -->
 
  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -150,9 +149,9 @@
                                                                 <div>
                                                                     <div class="panel-body" >
                                                                         <div class="row">
-                                                                         <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/marca.svg')}}" width="100px"></div>
-                                                                         <label class="col-sm-2 col-form-label">Nombre:</label>
-                                                                         <div class="col-sm-10">
+                                                                           <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/marca.svg')}}" width="100px"></div>
+                                                                           <label class="col-sm-2 col-form-label">Nombre:</label>
+                                                                           <div class="col-sm-10">
                                                                             <input required="required" type="text" class="form-control" value="{{$marca->nombre}}" name="nombre">
                                                                         </div>
 
@@ -172,18 +171,16 @@
                                                                             <input type="text" class="form-control" value="{{$marca->abreviatura}}"readonly="">
                                                                         </div>
 
+                                                                        @if($conteo > 1 || $marca->estado==1 )
                                                                         <label class="col-sm-2 col-form-label">Estado:</label>
                                                                         <div class="col-sm-4" align="center">
-                                                                            @if($conteo > 1 || $marca->estado==1 )
                                                                             <input type="checkbox" class="js-switch_{{$marca->id}}" name="estado"  @if($marca->estado==0) checked="" @endif />
-                                                                            @else
-                                                                              <input type="checkbox" name="estado"  class="js-switch_{{$marca->id}}" readonly checked=""/>
-                                                                            @endif
                                                                         </div>
-                                                                        <label class="col-sm-2 col-form-label">Foto:</label>
-                                                                        <div class="col-sm-10">
-                                                                         <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0  ;" id="archivoInput{{$marca->id}}" name="imagen" onchange="return validarExt{{$marca->id}}()"  />
-                                                                         <span id="visorArchivo{{$marca->id}}">
+                                                                        @endif
+                                                                        <label class="col-sm-12 col-form-label">Foto:</label>
+                                                                        <div class="col-sm-12">
+                                                                           <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0  ;" id="archivoInput{{$marca->id}}" name="imagen" onchange="return validarExt{{$marca->id}}()"  />
+                                                                           <span id="visorArchivo{{$marca->id}}">
                                                                             <!--Aqui se desplegará el fichero-->
 
                                                                             @if(isset($marca->imagen))

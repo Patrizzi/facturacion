@@ -122,6 +122,13 @@ class MarcaController extends Controller
         }else{
             $estado_marca = 1;
         }
+
+        $cant_activo=Marca::where('estado',0)->count();
+        $unico=Marca::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_marca = 0;
+      }
+
         // return $estado;
         $marca=Marca::find($id);
         $marca->nombre=strtoupper($request->get('nombre'));

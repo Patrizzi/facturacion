@@ -1,49 +1,35 @@
 @extends('layout')
 
 @section('title', 'Motivos')
-@section('breadcrumb', 'Motivos')
-@section('breadcrumb2', 'Motivos')
 @section('data-toggle', 'modal')
 @section('href_accion', '#exampleModal')
 @section('value_accion', 'Agregar')
-@section('button2', 'Inicio')
+@section('button2', 'Atras')
 @section('config',route('Configuracion'))
 
 @section('content')
 
 <!-- Modal Create  -->
-
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> Motivo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
             <div style="padding-left: 15px;padding-right: 15px;">
                 {{-- ccccccccccccccccc --}}
                 <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
                     <form action="{{ route('motivo.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
                         @csrf
-                        <fieldset >
                             <div>
                                 <div class="panel-body" >
                                     <div class="row">
-                                       <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/motivo.svg')}}" width="100px"></div>
-                                       <label class="col-sm-2 col-form-label">Nombre:</label>
-                                       <div class="col-sm-10">
+                                     <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/motivo.svg')}}" width="100px"></div>
+                                     <label class="col-sm-2 col-form-label">Nombre:</label>
+                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" name="nombre">
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                    </fieldset>
                     <button class="btn btn-primary" type="submit" id="boton">Grabar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
             </div>
         </div>
@@ -51,6 +37,7 @@
 </div>
 </div>
 <!-- / Modal Create  -->
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -88,8 +75,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                             @foreach($motivos as $motivo)
-                             <tr class="gradeX">
+                               @foreach($motivos as $motivo)
+                               <tr class="gradeX">
                                 <td>{{$motivo->id}}</td>
                                 <td>{{$motivo->nombre}}</td>
                                 <td>{{$motivo->created_at}}</td>
@@ -115,9 +102,9 @@
                                                                 <div>
                                                                     <div class="panel-body" >
                                                                         <div class="row">
-                                                                           <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/motivo.svg')}}" width="100px"></div>
-                                                                           <label class="col-sm-2 col-form-label">Nombre:</label>
-                                                                           <div class="col-sm-10">
+                                                                         <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/motivo.svg')}}" width="100px"></div>
+                                                                         <label class="col-sm-2 col-form-label">Nombre:</label>
+                                                                         <div class="col-sm-10">
                                                                             @if($motivo->created_at==$motivo->updated_at)
                                                                             <input type="text" class="form-control" value="{{$motivo->nombre}}" name="nombre">
                                                                             @else
@@ -200,9 +187,9 @@
         var completo = true;
         var incompleto = false;
         if( f.elements[0].value == "" )
-           { alert(incompleto); }
-       else{boton.type = 'button';}
-   }
+         { alert(incompleto); }
+     else{boton.type = 'button';}
+ }
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 @endsection

@@ -95,26 +95,32 @@ class FamiliaController extends Controller
         //ESTADO
         $estado = $request->get('estado');
         $nombre=$request->get('descripcion');
-        $buscador_id=Familia::where('id',$id)->where('estado',0)->count();
-        return $buscador_id;
-        if($estado == "on" or $buscador_id==1){
-            $estado_marca = 0;
+
+        if($estado == "on" ){
+            $estado_familia = 0;
         }else{
-            $estado_marca = 1;
+            $estado_familia = 1;
         }
         if (empty($nombre)) {
             return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
 
         }
-        $nombre=strtoupper($nombre);
-        $familia=Familia::find($id);
-        $familia->descripcion=$nombre;
-        $familia->estado=$estado_marca;
-        $familia->save();
 
-        return redirect()->route('familia.index');
+        $cant_activo=Familia::where('estado',0)->count();
+        $unico=Familia::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+            $estado_familia = 0;
+      }
 
-    }
+      $nombre=strtoupper($nombre);
+      $familia=Familia::find($id);
+      $familia->descripcion=$nombre;
+      $familia->estado=$estado_familia;
+      $familia->save();
+
+      return redirect()->route('familia.index');
+
+  }
 
     /**
      * Remove the specified resource from storage.

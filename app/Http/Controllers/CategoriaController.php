@@ -96,10 +96,14 @@ class CategoriaController extends Controller
         $estado=$request->get('estado');
         if($estado=='on'){$estado_numero='0';}
         else{$estado_numero='1';}
-
+    $cant_activo=Marca::where('estado',0)->count();
+        $unico=Marca::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_numero = 0;
+      }
         $nombre=$request->get('descripcion');
         $nombre=strtoupper($nombre);
-        $categoria=Categoria::find($id);
+        $categoria=Catgoria::efind($id);
         $categoria->estado=$estado_numero;
         $categoria->save();
 
