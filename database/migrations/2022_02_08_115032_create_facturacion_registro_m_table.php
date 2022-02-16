@@ -30,7 +30,7 @@ class CreateFacturacionRegistroMTable extends Migration
 
             $table->double('precio',17,2);
             $table->integer('cantidad');
-            $table->integer('descuento');
+            
 
             
             $table->timestamps();

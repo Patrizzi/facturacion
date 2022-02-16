@@ -64,7 +64,7 @@
                                     <center>
                                         <h3 style="padding-top:10px">{{$empresa->ruc}}</h3>
                                         <h2>FACTURA ELECTRONICA</h2>
-                                        <h5>{{$factura_numero}}</h5>
+                                        
                                     </center>
                                 </div>
                             </div>
@@ -82,6 +82,15 @@
                                             <option></option>
                                             @foreach($clientes as $cliente)
                                             <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>Almacen</td><td>:</td>
+                                    <td>
+                                        <select class="select2_demo_almacen" name="almacen" required="" value="{{old('almacen')}}">
+                                            <option></option>
+                                            @foreach($almacenes as $almacen)
+                                            <option value="{{$almacen->id}}">{{$almacen->nombre}} - {{$almacen->abreviatura}}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -207,7 +216,6 @@
                                         <th >Articulo</th>
                                         <th style="width:100px">Cantidad</th>
                                         <th style="width:100px">Precio</th>
-                                        <th style="width:100px">Descuento</th>
                                         <th style="width:100px">Total</th>
                                     </tr>
                             <tbody>
@@ -244,9 +252,6 @@
                                             <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='descuento0' name='descuento[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                        </td>
-                                        <td>
                                             <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                         </td>
                                         <span id="spTotal"></span>
@@ -259,7 +264,6 @@
                                     <tr style="background-color: #f5f5f500;" align="center">
                                         <td></td>
                                         <td></td>
-                                        <td></td>
                                         <td>Subtotal :</td>
                                         <td colspan="2">
                                             <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
@@ -269,7 +273,6 @@
                                     <tr style="background-color: #f5f5f500;" align="center">
                                         <td></td>
                                         <td></td>
-                                        <td></td>
                                         <td>IGV :</td>
                                         <td colspan="2">
                                             <input id='igv' type="text" disabled="disabled" class="form-control" required />
@@ -277,7 +280,6 @@
                                     </tr>
 
                                   <tr align="center">
-                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td>Total :</td>
@@ -368,7 +370,11 @@
     });
 </script>
 
-
+<script type="text/javascript">
+    $(".select2_demo_almacen").select2({
+        placeholder: "Seleccionar Almacen",
+    });
+</script>
 
 {{-- Validar Formulario / No doble insercion de datos(Gente desesperado) --}}
 <script>
@@ -418,9 +424,6 @@
             <input type='text' style="width: 76px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
         <td>
-            <input style="width: 76px" type='text' id='descuento${i}' name='descuento[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" />
-        </td>
-        <td>
             <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
         </td>
 
@@ -435,13 +438,6 @@
        
     });
 </script>
-
-
-
-    <script>
-       
-        
-    </script>
 
 <script>
     function multi(a){
@@ -459,9 +455,9 @@
 
         var cantidad = document.querySelector(`#cantidad${a}`).value;
         var precio = document.querySelector(`#precio${a}`).value;
-        var descuento = document.querySelector(`#descuento${a}`).value;
+        
         var multiplier = 100;
-        var final=(precio*cantidad)-((precio*cantidad)*descuento/100);
+        var final=(precio*cantidad);
         var final_decimal = Math.round(final * multiplier) / multiplier;
         console.log(final_decimal);
         document.getElementById(`total${a}`).value = final_decimal;
@@ -491,8 +487,8 @@
         document.getElementById("sub_total").value = subtotal;
 
         var end=parseFloat(igv_decimal)+parseFloat(subtotal);
-
-        document.getElementById("total_final").value = end;
+        var end3 = Math.round(end * multiplier2) / multiplier2;
+        document.getElementById("total_final").value = end3;
 
         var monto_c = document.getElementsByClassName('monto_pago');
 

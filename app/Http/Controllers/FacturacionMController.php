@@ -21,6 +21,7 @@ use App\Empresa;
 use App\Tipo_operacion_f;
 use App\Banco;  
 use App\Cuotas_credito;
+use App\Codigo_guia_almacen;
 
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -95,7 +96,10 @@ class FacturacionMController extends Controller
         // Tipo de operación
         $tipo_operacion = Tipo_operacion_f::all();
 
-        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion'));
+        //Almacen
+        $almacenes = Almacen::all();
+
+        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes'));
     }
 
     /**
@@ -140,7 +144,47 @@ class FacturacionMController extends Controller
         $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
 
         // obtención de Código de factura
-        $factura_numero="F001-000001";
+        // $factura_numero="F001-000001";
+        $almacen=$request->get('almacen');
+        $sucursal =Almacen::where('id', $almacen)->first();
+        
+        $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
+            // return $sucursal;
+        $factura_cod_fac=$cod_guia->cod_factura_m;
+        if (is_numeric($factura_cod_fac)) {
+                // expresión del numero de factura
+            $factura_cod_fac++;
+            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+                // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_factura=Facturacion_m::where('almacen_id',$sucursal->id)->latest()->first();
+            $factura_num=$ultima_factura->codigo_fac;
+            $factura_num_string_porcion= explode("-", $factura_num);
+            $factura_num_string=$factura_num_string_porcion[1];
+            $factura_num=(int)$factura_num_string;
+    
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($factura_num == 99999999){
+                $ultima_factura = $almacen_codigo->serie_factura_m+1;
+                $almacen_save_last = Codigo_guia_almacen::find($sucursal->id);
+                $almacen_save_last->serie_factura = $almacen_codigo->serie_factura_m+1;
+                $almacen_save_last->save();
+                $factura_num = 00000000;
+    
+            }else{
+                $ultima_factura = $cod_guia->serie_factura_m;
+            }
+            $factura_num++;
+            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+        }
+    
+        $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+
+
 
         // obtención de buscador al cambio
         $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
@@ -156,7 +200,7 @@ class FacturacionMController extends Controller
         // Guardado de facturación manual
         $facturacion=new facturacion_m;
         $facturacion->codigo_fac=$factura_numero;
-        $facturacion->almacen_id =1;
+        $facturacion->almacen_id =$request->get('almacen');
         $facturacion->orden_compra=$request->get('orden_compra');
         $facturacion->guia_remision=$request->get('guia_r');
         $facturacion->cliente_id=$cliente_buscador->id;
@@ -170,7 +214,15 @@ class FacturacionMController extends Controller
         $facturacion->estado='0';
         $facturacion->tipo_operacion_id= $busca_ope->id;
         $facturacion->tipo_documento_id = 2;
+
         $facturacion->save();
+
+        // modificación para que se cierre el codigo en almacen
+        $factura_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
+        if(is_numeric($factura_primera->cod_factura_m)){
+            $factura_primera->cod_factura_m='NN';
+            $factura_primera->save();
+        }
 
         //Registro de forma de pago
         if($facturacion->forma_pago_id == 2){
@@ -220,19 +272,18 @@ class FacturacionMController extends Controller
                     }
                     $facturacion_registro->precio=$request->get('precio')[$i];
                     $facturacion_registro->cantidad=$request->get('cantidad')[$i];
-                    $facturacion_registro->descuento=$request->get('descuento')[$i];
                     $facturacion_registro->save();
 
                     //modificación para los tipos de afectación al producto y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
+                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
+                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
+                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
                     }
                     $facturacion_2->save();
 
@@ -243,19 +294,18 @@ class FacturacionMController extends Controller
                     $facturacion_registro->servicio_id=$servicio->id;
                     $facturacion_registro->precio=$request->get('precio')[$i];
                     $facturacion_registro->cantidad=$request->get('cantidad')[$i];
-                    $facturacion_registro->descuento=$request->get('cantidad')[$i];
                     $facturacion_registro->save(); 
 
                     //modificación para los tipos de afectación al servicio y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
+                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
+                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad - ($facturacion_registro->precio*$facturacion_registro->cantidad * $facturacion_registro->descuento / 100),2);
+                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
                     }
                     $facturacion_2->save();
 
@@ -329,6 +379,11 @@ class FacturacionMController extends Controller
 
         $facturacion_manual=1;
 
+        foreach($factura_registro as $facturas_registros){
+            $facturas_registros->precio_unitario_comi=$facturas_registros->precio;
+        }
+
+        
         //configuración de conexión
         $see=config_acceso_sunat::facturacion_electronica();
 
@@ -342,6 +397,8 @@ class FacturacionMController extends Controller
         //cambio de factura electronica - en caso sea todo exitoso
         $factura->f_electronica=1;
         $factura->save();
+
+        return redirect()->route('facturacion_manual.index');
 
     }
 

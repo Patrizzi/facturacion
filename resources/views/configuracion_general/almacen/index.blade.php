@@ -120,8 +120,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-lg-2">
-                            </div>
                             <div class="col-lg-4">
                                 <label class="col-sm-12 col-form-label">Cod. Nota Credito:</label>
                                 <div class="input-group m-b">
@@ -152,8 +150,20 @@
                                     {{-- @endif --}}
                                 </div>
                             </div>
-                            <div class="col-lg-2">
-
+                            <div class="col-lg-4">
+                                <label class="col-sm-12 col-form-label">Cod. Factura manual:</label>
+                                <div class="input-group m-b">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-addon">FA0 &nbsp;</span>
+                                    </div>
+                                    <input type="text" value="" class="form-control write_button" name="serie_factura_m" autocomplete="off" required="required">
+                                    <div class="input-group-append">
+                                        <span class="input-group-addon">- 000</span>
+                                    </div>
+                                    {{-- @if(is_numeric($almacen->cod_fac)) --}}
+                                    <input type="text" value="" required name="cod_factura_m" class="form-control write_button">
+                                    {{-- @endif --}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -318,8 +328,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
-                                                                    <div class="col-lg-2">
-                                                                    </div>
+                                                                    
                                                                     <div class="col-lg-4">
                                                                         <label class="col-sm-12 col-form-label">Cod. Nota Credito:</label>
                                                                         <div class="input-group m-b">
@@ -354,10 +363,26 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-2">
-
+                                                                    <div class="col-lg-4">
+                                                                        <label class="col-sm-12 col-form-label">Cod. Factura manual:</label>
+                                                                        <div class="input-group m-b">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-addon">FA0 &nbsp;</span>
+                                                                            </div>
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura_m')->first()}}" class="form-control" name="serie_debito" autocomplete="off" readonly="" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()}}" name="cod_factura_m" class="form-control ">
+                                                                            @else
+                                                                            <input type="text" value="" readonly name="cod_factura_m" class="form-control ">
+                                                                            @endif
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+
+                                                                
                                                                 <button class="btn btn-primary" type="submit" name="action">Guardar</button>
                                                             </form>
                                                         </div>

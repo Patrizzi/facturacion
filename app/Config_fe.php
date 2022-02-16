@@ -228,7 +228,7 @@ class Config_fe extends Model
             ->setSerie($serie)// numero de serie
             ->setCorrelativo($correlativo) // y numero correlativo  // ejemplo en seccion 2.2 pagina 20 del pdf sunat 2.1 infomracion precisa pagina 30 pdf sunat 2.1
             ->setFechaEmision($factura->created_at)
-            ->setFormaPago(new FormaPagoCredito()) // FormaPago: credito
+            ->setFormaPago(new FormaPagoCredito($total)) // FormaPago: credito
             ->setCuotas(
                 $cuotas_credito
             )
