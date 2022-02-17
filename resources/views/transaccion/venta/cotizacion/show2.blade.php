@@ -15,7 +15,15 @@
     <input type="text"  hidden="hidden" name="almacen"  value="{{$cotizacion->almacen_id}}">
     <input  hidden="hidden" type="submit"  >
 </form>
-
+@if($errors->any())
+<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+    <a class="alert-link" href="#">
+        @foreach ($errors->all() as $error)
+        <li class="error" style="color: red">{{ $error }}</li>
+        @endforeach
+    </a>
+</div>
+@endif
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title" style="padding-right: 3.1%;padding-left:  3.1%">
         <div class="row tooltip-demo">
