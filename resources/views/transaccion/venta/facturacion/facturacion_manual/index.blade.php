@@ -1,8 +1,5 @@
 @extends('layout')
-
 @section('title', 'Facturacion Manual')
-@section('breadcrumb', 'Facturacion Manual')
-@section('breadcrumb2', 'Facturacion Manual')
 @section('href_accion', route('facturacion_manual.create'))
 @section('value_accion', 'Agregar')
 
@@ -68,15 +65,15 @@
                                     {{-- Envio a Sunat --}}
                                     <td style="text-align:center;">
                                         @if($facturacions->f_electronica==0)
-                                            <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">
-                                                @csrf
-                                                <input type="text" style="display: none" value="{{$facturacions->id}}" name="id">
-                                                <button type="submit" class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
-                                            </form>
-                                            
+                                        <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                            <input type="text" style="display: none" value="{{$facturacions->id}}" name="id">
+                                            <button type="submit" class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
+                                        </form>
+
                                         @else
                                         
-                                            <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
                                         @endif
                                     </td>
                                 </tr>
@@ -109,26 +106,8 @@
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }
-        ]
-
-    });
-
+            buttons: []
+        });
     });
 
 </script>
