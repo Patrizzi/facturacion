@@ -1,8 +1,8 @@
 @extends('layout')
-@section('title', 'Facturacion Manual')
+@section('title', 'Facturacion')
+@section('atributo_actu', 'hidden')
 @section('href_accion', route('facturacion_manual.create'))
 @section('value_accion', 'Agregar')
-
 @section('content')
 
 {{-- obtener errores --}}
@@ -38,10 +38,10 @@
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Item</th>
                                     <th>Codigo de Factura</th>
                                     <th>Cliente</th>
-                                    <th>Ruc/DNI</th>
+                                    <th>N°Documento</th>
                                     <th>Fecha Vencimiento</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
@@ -70,9 +70,8 @@
                                             <input type="text" style="display: none" value="{{$facturacions->id}}" name="id">
                                             <button type="submit" class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
                                         </form>
-
                                         @else
-                                        
+
                                         <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
                                         @endif
                                     </td>
