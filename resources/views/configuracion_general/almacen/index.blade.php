@@ -281,13 +281,18 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">F00 &nbsp;</span>
                                                                             </div>
+                                                                            
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura')->first()}}" class="form-control" name="serie_factura" autocomplete="off" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura')->first()}}" name="cod_fac" class="form-control ">
+                                                                            @else
                                                                             <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura')->first()}}" class="form-control" name="serie_factura" autocomplete="off" readonly="" required="required">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-addon">- 000</span>
                                                                             </div>
-                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura')->first()))
-                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura')->first()}}" name="cod_fac" class="form-control ">
-                                                                            @else
                                                                             <input type="text" value="" readonly name="cod_fac" class="form-control ">
                                                                             @endif
                                                                         </div>
@@ -298,13 +303,18 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">B00 &nbsp;</span>
                                                                             </div>
+                                                                            
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_boleta')->first()}}" class="form-control" name="serie_boleta" autocomplete="off" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta')->first()}}" name="cod_bol" class="form-control ">
+                                                                            @else
                                                                             <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_boleta')->first()}}" class="form-control" name="serie_boleta" autocomplete="off" readonly="" required="required">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-addon">- 000</span>
                                                                             </div>
-                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta')->first()))
-                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta')->first()}}" name="cod_bol" class="form-control ">
-                                                                            @else
                                                                             <input type="text" value="" readonly name="cod_bol" class="form-control ">
                                                                             @endif
                                                                         </div>
@@ -315,13 +325,17 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">T00 &nbsp;</span>
                                                                             </div>
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_remision')->first()}}" class="form-control" name="serie_remision" autocomplete="off" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision')->first()}}" name="cod_guia" class="form-control ">
+                                                                            @else
                                                                             <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_remision')->first()}}" class="form-control" name="serie_remision" autocomplete="off" readonly="" required="required">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-addon">- 000</span>
                                                                             </div>
-                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision')->first()))
-                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision')->first()}}" name="cod_guia" class="form-control ">
-                                                                            @else
                                                                             <input type="text" value="" readonly name="cod_guia" class="form-control ">
                                                                             @endif
                                                                         </div>
@@ -335,13 +349,17 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">F00 &nbsp;</span>
                                                                             </div>
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_credito')->first()}}" class="form-control" name="serie_credito" autocomplete="off" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito')->first()}}" name="cod_credito" class="form-control ">
+                                                                            @else
                                                                             <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_credito')->first()}}" class="form-control" name="serie_credito" autocomplete="off" readonly="" required="required">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-addon">- 000</span>
                                                                             </div>
-                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito')->first()))
-                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito')->first()}}" name="cod_credito" class="form-control ">
-                                                                            @else
                                                                             <input type="text" value="" readonly name="cod_credito" class="form-control ">
                                                                             @endif
                                                                         </div>
@@ -352,13 +370,18 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">F00 &nbsp;</span>
                                                                             </div>
+                                                                            
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_debito')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_debito')->first()}}" class="form-control" name="serie_debito" autocomplete="off" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_debito')->first()}}" name="cod_debito" class="form-control ">
+                                                                            @else
                                                                             <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_debito')->first()}}" class="form-control" name="serie_debito" autocomplete="off" readonly="" required="required">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-addon">- 000</span>
                                                                             </div>
-                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_debito')->first()))
-                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_debito')->first()}}" name="cod_debito" class="form-control ">
-                                                                            @else
                                                                             <input type="text" value="" readonly name="cod_debito" class="form-control ">
                                                                             @endif
                                                                         </div>
@@ -369,13 +392,20 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-addon">FA0 &nbsp;</span>
                                                                             </div>
-                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura_m')->first()}}" class="form-control" name="serie_debito" autocomplete="off" readonly="" required="required">
+                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()))
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura_m')->first()}}" class="form-control" name="serie_factura_m" autocomplete="off" required="required">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-addon">- 000</span>
                                                                             </div>
-                                                                            @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()))
                                                                             <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()}}" name="cod_factura_m" class="form-control ">
+
+                                                                            
                                                                             @else
+                                                                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura_m')->first()}}" class="form-control" name="serie_factura_m" autocomplete="off" readonly="" required="required">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-addon">- 000</span>
+                                                                            </div>
+                                                                            
                                                                             <input type="text" value="" readonly name="cod_factura_m" class="form-control ">
                                                                             @endif
                                                                         </div>

@@ -14,8 +14,8 @@ class AddCodGuiaAlmacenTable extends Migration
     public function up()
     {
         Schema::table('cod_guia_almacen', function (Blueprint $table) {
-            $table->integer('serie_factura_m')->after('cod_nota_debito')->nullable();
-            $table->string('cod_factura_m')->after('serie_factura_m')->nullable();
+            $table->integer('serie_factura_m')->after('cod_nota_debito')->default(0);
+            $table->string('cod_factura_m')->after('serie_factura_m')->default(0);
         });
     }
 

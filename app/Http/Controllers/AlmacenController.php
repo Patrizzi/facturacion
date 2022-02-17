@@ -180,6 +180,8 @@ class AlmacenController extends Controller
         $nr_fac=$request->get('cod_fac');
         $nr_bol=$request->get('cod_bol');
         $nr_guia=$request->get('cod_guia');
+        $nr_nota_c=$request->get('cod_credito');
+        $nr_nota_d=$request->get('cod_debito');
         $nr_factura_m=$request->get('cod_factura_m');
         // $almacen=Almacen::where('id', $id)->first();
         $almacen=Almacen::find($id);
@@ -195,15 +197,29 @@ class AlmacenController extends Controller
         $cod_guia_almacen = Codigo_guia_almacen::where('almacen_id',$id)->first();
         $cod_guia_almacen->cod_sunat=$request->get('cod_sunat');
         if(is_numeric($cod_guia_almacen->cod_factura) and is_numeric($nr_fac)){
+            $cod_guia_almacen->serie_factura=$request->get('serie_factura');
             $cod_guia_almacen->cod_factura=$request->get('cod_fac');
         }
         if(is_numeric($cod_guia_almacen->cod_boleta) and is_numeric($nr_bol)){
+            $cod_guia_almacen->serie_boleta=$request->get('serie_boleta');
             $cod_guia_almacen->cod_boleta=$request->get('cod_bol');
         }
         if(is_numeric($cod_guia_almacen->cod_remision) and is_numeric($nr_guia)){
+            $cod_guia_almacen->serie_remision=$request->get('serie_remision');
             $cod_guia_almacen->cod_remision=$request->get('cod_guia');
         }
+        if(is_numeric($cod_guia_almacen->cod_nota_credito) and is_numeric($nr_nota_c)){
+            $cod_guia_almacen->serie_nota_credito=$request->get('serie_credito');
+            $cod_guia_almacen->cod_nota_credito=$request->get('cod_credito');
+        }
+        if(is_numeric($cod_guia_almacen->cod_nota_debito) and is_numeric($nr_nota_d)){
+            $cod_guia_almacen->serie_nota_debito=$request->get('serie_debito');
+            $cod_guia_almacen->cod_nota_debito=$request->get('cod_debito');
+        }
+
+
         if(is_numeric($cod_guia_almacen->cod_factura_m) and is_numeric($nr_factura_m)){
+            $cod_guia_almacen->serie_factura_m=$request->get('serie_factura_m');
             $cod_guia_almacen->cod_factura_m=$request->get('cod_factura_m');
         }
         $cod_guia_almacen->save();
