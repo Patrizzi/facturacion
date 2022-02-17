@@ -107,14 +107,14 @@ $empresa=Empresa::first(); ?>
                         <ul class="nav nav-second-level collapse">
                             @if(empty($inventario_inicial))
                             @if($conteo_almacen==1)
-                            <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
+                            <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
-                            <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
+                            <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @endif
                             @elseif($inventario_inicial->estado==1)
-                            <li><a href="{{route('facturacion.index')}}">Facturacion Servicio</a></li>
+                            <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
                              <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
@@ -129,25 +129,26 @@ $empresa=Empresa::first(); ?>
                                 </ul>
                             </li> --}}
                             <li><a href="{{route('boleta.index')}}">Boleta</a></li>
-                            <li><a href="{{route('facturacion.index')}}">Facturacion</a></li>
-                            <li><a href="{{route('guia_remision.index')}}">Guia Remision</a></li>
+                            <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
+                            <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
+                            <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>
                             <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
-                            <li><a href="{{route('nota-credito.index')}}">Nota Credito</a></li>
-                            <li><a href="{{route('nota-credito.index')}}">Nota Debito</a></li>
+                            <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
+                            <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li>
                             @endif
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Tecnico</span></a>
+                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
                         <ul class="nav nav-second-level collapse">
                            @can('transacciones-garantias-guias_ingreso.index')
-                           <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
+                           <li><a href="{{route('garantia_guia_ingreso.index')}}">Guía Ingreso</a></li>
                            @endcan
                            @can('transacciones-garantias-guias_egreso.index')
-                           <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
+                           <li><a href="{{route('garantia_guia_egreso.index')}}">Guía Egreso</a></li>
                            @endcan
                            @can('transacciones-garantias-informe_tecnico.index')
-                           <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
+                           <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Técnico</a></li>
                            @endcan
 
                        </ul>
@@ -172,8 +173,8 @@ $empresa=Empresa::first(); ?>
                                         @can('inventario-productos_kardex-entrada_producto.index')
                                         <li><a href="{{route('kardex-entrada.index')}}">Entrada Producto</a></li>
                                         @endcan
-                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}">Distribucion Producto</a></li>
-                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}">Transalado de Almacen </a></li>
+                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}">Distribución Producto</a></li>
+                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}">Traslado de Almacén </a></li>
                                         @can('inventario-productos_kardex-salida_producto.index')
                                         <li><a href="{{route('kardex-salida.index')}}">Salida Producto</a></li>
                                         @endcan
@@ -206,7 +207,7 @@ $empresa=Empresa::first(); ?>
                         @can('planilla-vendedores.index')
                         <li><a href="{{route('vendedores.index')}}">Vendedores</a></li>
                         @endcan
-                        <li><a href="{{route('vehiculo.index')}}">Vehiculos</a></li>
+                        <li><a href="{{route('vehiculo.index')}}">Vehículos</a></li>
 
                     </ul>
                 </li>
@@ -220,13 +221,13 @@ $empresa=Empresa::first(); ?>
                             <a href="#">Garantias</a>
                             <ul class="nav nav-third-level">
                                 @can('consultas-garantias-guia_ingreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}">Guia Ingreso</a></li>
+                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}">Guía Ingreso</a></li>
                                 @endcan
                                 @can('consultas-garantias-guia_egreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_egreso')}}">Guia Egreso</a></li>
+                                <li><a href="{{route('consultas.garantias.guias_egreso')}}">Guía Egreso</a></li>
                                 @endcan
                                 @can('consultas-garantias-informe_tecnico.index')
-                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}">Informe Tecnico</a></li>
+                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}">Informe Técnico</a></li>
                                 @endcan
                             </ul>
                         </li>
@@ -242,15 +243,15 @@ $empresa=Empresa::first(); ?>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}">Facturas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
-                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}">Guia Remision</a></li>
-                        <li><a href="{{route('facturacion_electronica.index')}}">Nota de creditos</a></li>
+                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}">Guía Remisión</a></li>
+                        <li><a href="{{route('facturacion_electronica.index')}}">Nota de créditos</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('email.index')}}">Bandeja de Entrada</a></li>
-                        {{-- <li><a href="{{route('configuracion_email.index')}}">Configuracion</a></li> --}}
+                        {{-- <li><a href="{{route('configuracion_email.index')}}">Configuración</a></li> --}}
                         <li><a href="{{route('email.trash')}}">Papelera</a></li>
 
                     </ul>
@@ -263,7 +264,7 @@ $empresa=Empresa::first(); ?>
                         <li><a href="{{route('cliente.index')}}">Clientes</a></li>
                         @endcan
                         @can('auxiliares-provedores.index')
-                        <li><a href="{{route('provedor.index')}}">Provedores</a></li>
+                        <li><a href="{{route('provedor.index')}}">Proveedores</a></li>
                         @endcan
                     </ul>
                 </li>
@@ -271,17 +272,17 @@ $empresa=Empresa::first(); ?>
 
                 @can('maestro')
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg')}}" class="iconos"><span class="nav-label">Produtos y Servicios</span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg')}}" class="iconos"><span class="nav-label">Productos y Servicios</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('productos.index')}}">Productos</a></li>
                         <li><a href="{{route('servicios.index')}}">Servicios</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/configuracion.svg')}}" class="iconos"><span class="nav-label">Configuracion </span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/configuracion.svg')}}" class="iconos"><span class="nav-label">Configuración </span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
-                        <li><a href="{{route('Configuracion')}}">Configuracion del Sistema</a></li>
+                        <li><a href="{{route('Configuracion')}}">Configuración del Sistema</a></li>
                         @endcan
                         @can('maestro-configuracion_general.mi_empresa.index')
                         <li><a href="{{route('empresa.index')}}">Mi Empresa</a></li>
@@ -292,7 +293,7 @@ $empresa=Empresa::first(); ?>
                   <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"><img src="{{ asset('/archivos/imagenes/layout/logout.png')}}" class="iconos"><span class="nav-label">
-                    Cerrar Seccion
+                    Cerrar Sección
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
@@ -365,7 +366,7 @@ $empresa=Empresa::first(); ?>
                             <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20" target="_blank" ><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
                         </div>
                         <div>
-                            <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Perifericos</a>&nbsp;  &copy; 2019-2022
+                            <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Periféricos</a>&nbsp;  &copy; 2019-2022
                         </div>
 
                     </div>
