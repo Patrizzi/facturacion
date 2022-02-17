@@ -16,7 +16,8 @@ class MarcaController extends Controller
     public function index()
     {
         $marcas=Marca::all();
-        return view('configuracion_general.marca.index',compact('marcas'));
+        $conteo=Marca::where('estado','0')->count();
+        return view('configuracion_general.marca.index',compact('marcas','conteo'));
     }
 
     /**
@@ -121,6 +122,13 @@ class MarcaController extends Controller
         }else{
             $estado_marca = 1;
         }
+
+        $cant_activo=Marca::where('estado',0)->count();
+        $unico=Marca::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_marca = 0;
+      }
+
         // return $estado;
         $marca=Marca::find($id);
         $marca->nombre=strtoupper($request->get('nombre'));

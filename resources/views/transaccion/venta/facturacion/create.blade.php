@@ -106,7 +106,7 @@
                                 <tr>
                                     <td>Orden de compra</td><td>:</td>
                                     <td><input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0"></td>
-                                    <td>Guia remision</td><td>:</td>
+                                    <td>Guía de Remisión</td><td>:</td>
                                     <td><input type="text" class="form-control" value="0" name="guia_r"></td>
                                     
             </tr>
@@ -193,7 +193,7 @@
                     <td><input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"></td>
                 </tr>
                 <tr>
-                    <td>Tipo de Operacion</td><td>:</td>
+                    <td>Tipo de Operación</td><td>:</td>
                     <td>
                         <select class="form-control" name="tipo_operacion" >
                             @foreach($tipo_operacion as $t_op)
@@ -205,7 +205,7 @@
                     <td id="ven_3p" style="visibility: initial;"><input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}"></td>
                 </tr>
                 <tr>
-                    <td>Observacion</td><td>:</td>
+                    <td>Observación</td><td>:</td>
                     <td  colspan="4"><textarea class="form-control" name="observacion" id="observacion"   >Emitimos la siguiente Factura a vuestra solicitud</textarea></td>
                 </tr>
             </tbody>
@@ -226,7 +226,7 @@
                         <th>Stock</th>
                         <th>Cantidad</th>
                         <th>Precio</th>
-                        <th>Dcto</th>
+                        <th>Dcto.</th>
                         <th>PU. Dcto.</th>
                         <th>PU. Com.</th>
                         <th>Total</th>
@@ -255,7 +255,7 @@
                                 @endforeach
                             </select>
 
-                            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"  placeholder="Descripción de Item" autocomplete="off" style="margin-top: 5px;"></textarea>
                             <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
                             <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
                             <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
@@ -307,7 +307,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>Subtotal :</td>
+                        <td>Subtotal:</td>
                         <td colspan="2">
                             <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
                             <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" /></td>
@@ -338,7 +338,7 @@
             </div>
             <!-- <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button> -->&nbsp;
             <button type="button" class='addmore btn btn-success' disabled=""> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-            <button class="btn btn-primary float-right" type="submit" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+            <button class="ladda-button btn btn-primary float-right" type="submit" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
         </form>
 
     </div>
@@ -439,7 +439,7 @@
         </option>
         @endforeach
         </select>
-        <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+        <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control" placeholder="Descripción de Item"  autocomplete="off" style="margin-top: 5px;"></textarea>
         <textarea type='text' id='numero_serie0' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
         <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" hidden   autocomplete="off" />
         <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">

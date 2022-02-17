@@ -15,7 +15,8 @@ class FamiliaController extends Controller
     public function index()
     {
         $familias=Familia::all();
-        return view('configuracion_general.familia.index',compact('familias'));
+        $conteo=Familia::where('estado','0')->count();
+        return view('configuracion_general.familia.index',compact('familias','conteo'));
     }
 
     /**
@@ -41,6 +42,13 @@ class FamiliaController extends Controller
         $cien=1000+$suma;
         $contador=substr($cien,1);
         $nombre=$request->get('descripcion');
+
+        if (empty($nombre)) {
+            return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
+        // return redirect()->route('categoria.index');
+
+        }
+
         $nombre=strtoupper($nombre);
 
         $familia=new Familia;
@@ -86,21 +94,33 @@ class FamiliaController extends Controller
     {
         //ESTADO
         $estado = $request->get('estado');
-        if($estado == "on"){
-            $estado_marca = 0;
-        }else{
-            $estado_marca = 1;
-        }
         $nombre=$request->get('descripcion');
-        $nombre=strtoupper($nombre);
-        $familia=Familia::find($id);
-        $familia->descripcion=$nombre;
-        $familia->estado=$estado_marca;
-        $familia->save();
 
-        return redirect()->route('familia.index');
+        if($estado == "on" ){
+            $estado_familia = 0;
+        }else{
+            $estado_familia = 1;
+        }
+        if (empty($nombre)) {
+            return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
 
-    }
+        }
+
+        $cant_activo=Familia::where('estado',0)->count();
+        $unico=Familia::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+            $estado_familia = 0;
+      }
+
+      $nombre=strtoupper($nombre);
+      $familia=Familia::find($id);
+      $familia->descripcion=$nombre;
+      $familia->estado=$estado_familia;
+      $familia->save();
+
+      return redirect()->route('familia.index');
+
+  }
 
     /**
      * Remove the specified resource from storage.

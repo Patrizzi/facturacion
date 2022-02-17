@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Facturacion/Print</title>
+    <title>Facturación/Print</title>
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -42,7 +42,7 @@
                 <div class="col-sm-4 text-center" style="font-size: 15px">
                    <strong>{{$empresa->razon_social}}</strong>
                    <br>
-                   Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+                   Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                    <br>
                    {{$empresa->correo}}
                    <br>
@@ -55,7 +55,7 @@
                 <div class="form-control ruc" style="height: 125px">
                     <center>
                         <h3 style="padding-top:10px ">RUC : {{$empresa->ruc}}</h3>
-                        <h2>FACTURA ELECTRONICA</h2>
+                        <h2>FACTURA ELECTRÓNICA</h2>
                         <h5> {{$facturacion->codigo_fac}}</h5>
 
                     </center>
@@ -77,7 +77,7 @@
                         @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
                         @else{{$facturacion->cotizacion->cliente->numero_documento}}
                         @endif <br>
-                        <strong>Direccion:</strong>
+                        <strong>Dirección:</strong>
                         @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
                         @else{{$facturacion->cotizacion->cliente->direccion}}
                         @endif <br>
@@ -98,9 +98,9 @@
                    <div align="left">
                     <strong>Orden de Compra:</strong>
                     {{$facturacion->orden_compra}} <br>
-                    <strong>Guia de Remision:</strong>
+                    <strong>Guía de Remisión:</strong>
                     {{$facturacion->guia_remision}} <br>
-                    <strong>Fecha Emision:</strong>
+                    <strong>Fecha Emisión:</strong>
                     {{$facturacion->fecha_emision}} <br>
                     <strong>Fecha de Vencimiento:</strong>
                     {{$facturacion->fecha_vencimiento }} <br>
@@ -125,11 +125,11 @@
     <table class="table ">
         <thead style="font-weight: bold">
             <tr>
-                <th style="width: 8%">ITEM</th>
-                <th style="width: 15%">Cod.Producto</th>
+                <th style="width: 8%">Item</th>
+                <th style="width: 15%">Cod. de Item</th>
                 <th>Descripción</th>
                 <th style="width: 11%">Cantidad</th>
-                <th  style="text-align: center;width: 8%">Pr.Unit.</th>
+                <th  style="text-align: center;width: 8%">Pr. Unit.</th>
                 <th  style="text-align: center;width: 8%">Total</th>
             </tr>
         </thead>
@@ -183,10 +183,10 @@
         </h3>
     </div>
     <div class="col-sm-4 form-control" >
-        <span style="display: block;float: left"> Sub Total:</span>
+        <span style="display: block;float: left"> Subtotal:</span>
         <span style="display: block;float: right;">{{$simbologia=$facturacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
         <br>
-        <span style="display: block;float: left"> Op. Agravada: </span>
+        <span style="display: block;float: left"> Op. Gravada: </span>
         <span style="display: block;float: right">{{$simbologia}} {{number_format($facturacion->op_gravada,2)}}</span><br>
         <span style="display: block;float: left"> Op. Inafecta: </span>
         <span style="display: block;float: right">{{$simbologia}} {{ number_format($facturacion->op_inafecta,2)}}</span><br>
@@ -206,21 +206,9 @@
     </div>
 </div>
 <br>
-<div class="row">
-    @foreach($banco as $bancos)
-    <div class="col-sm-3 " align="center">
-        <p class="form-control" style="height: 100px">
-          <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 100px;height: 30px;">
-          <br>
-          N° S/. : {{$bancos->numero_soles}}
-          <br>
-          N° $ : {{$bancos->numero_dolares}}<br>
+<!-- EXTENSION PARA LLAMAR AL LAYOUT DE BANCOS -->
+@include('layout_bancos')
 
-      </p>
-  </div>
-  @endforeach
-
-</div>
 <br>
 </div>
 </div>

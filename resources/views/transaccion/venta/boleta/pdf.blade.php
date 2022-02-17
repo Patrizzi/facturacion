@@ -2,10 +2,9 @@
 <html>
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizacion</title>{{--
+    <title>Boleta/PDF</title>{{--
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
     <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
 </head>
@@ -39,7 +38,7 @@
         <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
          <strong>{{$empresa->razon_social}}</strong>
          <br>
-         Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+         Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
          <br>
          {{$empresa->correo}}
          <br>
@@ -48,7 +47,7 @@
      <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
         <center>
             <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-            <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >BOLETA ELECTRONICA</h2><br>
+            <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >BOLETA ELECTRÓNICA</h2><br>
             <h5 style="text-align: center;margin-bottom: -5px" >{{$boleta->codigo_boleta}}</h5>
         </center>
     </td>
@@ -69,7 +68,7 @@
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                 @else{{$boleta->cotizacion->cliente->numero_documento}}
                 @endif&nbsp;&nbsp;<br>
-                <strong>Direccion:</strong>&nbsp;
+                <strong>Dirección:</strong>&nbsp;
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->direccion}}
                 @else{{$boleta->cotizacion->cliente->direccion}}
                 @endif<br>
@@ -85,8 +84,8 @@
             <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
                 <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
                 <strong>Orden de Compra:</strong>&nbsp;{{$boleta->orden_compra}}<br>
-                <strong>Guia de Remision:</strong> &nbsp;{{$boleta->guia_remision}}<br>
-                <strong>Fecha de Emision:</strong> &nbsp;{{$boleta->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                <strong>Guía de Remisión:</strong> &nbsp;{{$boleta->guia_remision}}<br>
+                <strong>Fecha de Emisión:</strong> &nbsp;{{$boleta->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                 <strong>Fecha de Vencimiento:</strong> &nbsp;{{$boleta->fecha_vencimiento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
             </td>
         </tr>
@@ -101,9 +100,9 @@
     <table class="table " style="border-top: 0px" >
         <thead style="">
            <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
-            <td width="30px">ITEM </td>
-            <td width="110px" >Cod de Item</td>
-            <td >Descripcion</td>
+            <td width="30px">Item</td>
+            <td width="110px" >Código de Item</td>
+            <td >Descripción</td>
             <td width="50px">Cantidad</td>
             <td width="50px">P.Unit.</td>
             <td width="50px">Total</td>
@@ -157,7 +156,7 @@
     <tr style="border: white 0px solid" >
         <td style="width: 80%;border-color: white"></td>
         <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:  none;">
-            <strong> Importe Total</strong>
+            <strong>Importe Total</strong>
         </td>
         {{-- <th style="width: 2%;border-color: white"></th> --}}
         <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;">
@@ -173,58 +172,22 @@
 <br>
 
 <!-- Fin Totales de Productos -->
-<br>
-<table style="border-collapse: separate;">
+<table style="width: 100%;height: 120px;border-collapse:separate;margin-bottom: -10px">
     <tr>
-     <th style="width: 2%;border-color: white"></th>
-     @foreach($banco as $bancos)
-     @if($banco_count==3)
-     <th width="33%" style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-        @elseif($banco_count==2)
-        <th width="50%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-            @elseif($banco_count==1)
-            <th width="100%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-                @else
-                <th width="20%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-                    @endif
-                    <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-                    <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-                    <br>
-                    <span style="font-size: 12px">
-                      S/: {{$bancos->numero_soles}}
-                      <br>
-                      $: {{$bancos->numero_dolares}}<br>
-                  </span>
-              </p>
-          </th>
-          <th style="width: 2%;border-color: white"></th>
-          @endforeach
-      </tr>
-  </table>
+        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+            <strong>Observaciones:</strong><br>
+            {{$boleta->observacion}}
+        </td>
+
+    </tr>
+
+
+</table>
+
+<br>
+@include('layout_bancos_pdf')
   <div class="row">
     <br>
-{{-- <table style="border:  0px solid white">
-    <tr style="border:  0px solid white">
-        <td>
-            <p><u>centro de Atencion : </u></p>
-            Usuario : {{$boleta->user->personal->nombres }}<br>
-            Telefono : {{$boleta->user->personal->telefono }}<br>
-            Celular : {{$boleta->user->personal->celular }}<br>
-            Email : {{$boleta->user->personal->email }}<br>
-            Web :{{$empresa->pagina_web}} <br>
-        </td>
-        <td >
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <hr>
-            <center>{{$cotizacion->user_personal->personal->nombres }}</center>
-        </td>
-    </tr>
-</table> --}}
 </div>
 
 {{--  --}}

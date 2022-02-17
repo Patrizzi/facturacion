@@ -916,7 +916,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $i = 1;
 
         $archivo=$name.'_'.$id;
-        // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        // return view('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
         
         $pdf=PDF::loadView('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
         return $pdf->download('Facturacion - '.$archivo.'.pdf');

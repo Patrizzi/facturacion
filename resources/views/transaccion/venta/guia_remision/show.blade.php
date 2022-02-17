@@ -255,38 +255,7 @@
         <br>
         <!-- Fin Totales de Productos -->
 
-        <div class="row">
-    @foreach($banco as $bancos)
-
-    @if($banco_count==3)
-    <div class="col-sm-4 " align="center">
-    <p class="form-control" >
-
-    @elseif($banco_count==2)
-    <div class="col-sm-6" align="center">
-    <p class="form-control">
-
-    @elseif($banco_count==1)
-    <div class="col-sm-12" align="center" style="width: 100px">
-    <p class="form-control" style="width: 426px;">
-
-    @else
-    <div class="col-sm-3 " align="center">
-    <p class="form-control" >
-    @endif
-
-      <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-      <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-      <br>
-      <span style="font-size: 12px">
-      S/: {{$bancos->numero_soles}}
-      <br>
-      $: {{$bancos->numero_dolares}}<br>
-      </span>
-     </p>
-     </div>
-      @endforeach
-</div>
+@include('layout_bancos')
 
       <br>
       <div class="row">

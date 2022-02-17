@@ -1,10 +1,10 @@
  @extends('layout')
 
- @section('title', 'Boletear 2 Cotizacion')
+ @section('title', 'Boletear 2 Cotización')
  @section('breadcrumb', 'Boletear')
  @section('breadcrumb2', 'Boletear')
  @section('href_accion', route('cotizacion.show',$cotizacion->id))
- @section('value_accion', 'Atras')
+ @section('value_accion', 'Atrás')
 
  @section('content')
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -58,7 +58,7 @@
                      <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
-                         Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
                         <br>
                          {{$empresa->correo}}
                          <br>
@@ -70,7 +70,7 @@
                          <div class="form-control ruc" style="height: 125px">
                              <center>
                                  <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                 <h2>BOLETA ELECTRONICA</h2>
+                                 <h2>BOLETA ELECTRÓNICA</h2>
                                  <input type="text" value="{{$cotizacion->id}}" name="id_cotizador" hidden="hidden">
                                  <p>{{$cod_bol}}</p>
                                  <input type="text" value="{{$cotizacion->comisionista_id}}" name="id_comisionista" hidden="hidden">
@@ -89,7 +89,7 @@
                                     <div class="col-sm-2"><strong>R.U.C:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" name="" value="{{$cotizacion->cliente->numero_documento}}" readonly=""></div>
                                     <br>
-                                    <div class="col-sm-2"><strong>Direccion:</strong></div>
+                                    <div class="col-sm-2"><strong>Dirección:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->direccion}}" readonly></div>
                                     <br>
                                     <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
@@ -170,10 +170,10 @@
                                     <div class="col-sm-2"><strong>Orden de Compra:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" value="0" name="orden_compra"></div>
                                     <br>
-                                    <div class="col-sm-2"><strong>Guia de Remision:</strong></div>
+                                    <div class="col-sm-2"><strong>Guía de Remisión:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" name="" value="0" name="guia_remision" ></div>
                                     <br>
-                                    <div class="col-sm-2"><strong>Fecha de Emision:</strong></div>
+                                    <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
                                     <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
                                     <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
                                         <strong>Fecha de Vencimiento:</strong>
@@ -200,7 +200,7 @@
                          <table class="table ">
                              <thead>
                                  <tr>
-                                     <th style="width:10%">Codigo Utem</th>
+                                     <th style="width:10%">Código Item</th>
                                      <th style="width:10%">Cantidad</th>
                                      <th>Descripción</th>
                                      <th>Stock</th>
@@ -219,7 +219,7 @@
 
                                              {{$cotizacion_registro->producto->nombre}} / {{$cotizacion_registro->producto->descripcion}}
                                              <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
-                                             <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° Serie">
+                                             <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° de Serie">
                                          </td>
                                          <div style="display: none">
                                              @if(strpos($cotizacion_registro->producto->tipo_afec_i_producto->informacion,'Gravado') !== false)
@@ -238,7 +238,7 @@
                                          <td>
                                              {{$cotizacion_registro->servicio->nombre}} / {{$cotizacion_registro->servicio->descripcion}}
                                              <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
-                                             <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° Serie">
+                                             <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° de Serie">
                                          </td>
                                          <div style="display: none">
                                              @if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false)
@@ -271,14 +271,14 @@
                      </div>
                      <div class="row">
                         <div class="col-sm-8">
-                            <h3>
+                            <!-- <h3>
                                  <?php $v=new CifrasEnLetras() ;
                                  $letra=($v->convertirEurosEnLetras($sub_total));
                                  $letra_final = strstr($letra, 'soles',true);
                                  $end_final=strstr($sub_total, '.');
                                  ?>
                                  {{$letra_final}} {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
-                             </h3>
+                             </h3> -->
                         </div>
                         <div class="col-sm-4 form-control">
                             <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
@@ -311,21 +311,7 @@
                         </div>
                     </div>
                      <br>
-                    <div class="row">
-                        @foreach($banco as $bancos)
-                        <div class="col-sm-3 " align="center">
-                            <p class="form-control" style="height: 100px">
-                              <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 100px;height: 30px;">
-                              <br>
-                              N° S/. : {{$bancos->numero_soles}}
-                              <br>
-                              N° $ : {{$bancos->numero_dolares}}<br>
-
-                          </p>
-                      </div>
-                      @endforeach
-
-                  </div>
+                    @include('layout_bancos')
                 </div>
             </div>
         </div>

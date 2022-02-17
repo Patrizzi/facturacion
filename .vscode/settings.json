@@ -3,5 +3,7 @@
     "terminal.integrated.shellArgs.windows": [
         "/k C:\\Cmder\\vendor\\init.bat"
     ],
-    "terminal.explorerKind": "external"
+    "terminal.explorerKind": "external",
+    "cSpell.language": "en,es",
+
 }

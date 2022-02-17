@@ -1,8 +1,8 @@
 @extends('layout')
-@section('title', 'Cotizacion M.Principal')
+@section('title', 'Cotización M.Principal')
 @section('href_accion', route('cotizacion.index') )
 @section('atributo_actu', 'hidden')
-@section('value_accion', 'Atras')
+@section('value_accion', 'Atrás')
 @extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <head>
@@ -80,7 +80,7 @@
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                    <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                     <h5 id="n_factura">{{$cotizacion_numero}}</h5>
                                     <h5 id="n_boleta">{{$cotizacion_numero_boleta}}</h5>
 
@@ -140,13 +140,13 @@
                                             <td>
                                                 <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
                                             </td>
-                                            <td>Garantia</td>
+                                            <td>Garantía</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="garantia">
+                                                <option value="6 meses">6 Meses</option>
                                                 <option value="1 año">1 Año</option>
                                                 <option value="2 años">2 Años</option>
                                                 <option value="3 años">3 Años</option>
-                                                <option value="6 meses">6 Meses</option>
                                             </select></td>
                                         </tr>
 
@@ -165,14 +165,14 @@
                                                 </div>
 
                                             </td>
-                                            <td>Fecha de cotizacion</td>
+                                            <td>Fecha de Emisión</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Tipo de Operacion</td>
+                                            <td>Tipo de Operación</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="tipo_operacion" >
                                                 @foreach($tipo_operacion as $t_op)
@@ -180,7 +180,7 @@
                                                 @endforeach
                                                 </select>
                                             </td>
-                                            <td>Tipo de Cotizacion</td>
+                                            <td>Tipo de Cotización</td>
                                             <td>:</td>
                                             <td><div class="radio">
                                                 <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
@@ -196,7 +196,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Observacion</td>
+                                            <td>Observación</td>
                                             <td>:</td>
                                             <td colspan="4">
                                                 <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
@@ -214,7 +214,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px">{{-- <input class='check_all' type='checkbox' onclick="select_all()" /> --}}</th>
-                                                <th style="width: 500px">Articulo</th>
+                                                <th style="width: 500px">Artículo</th>
                                                 <th>Stock</th>
                                                 <th>Cantidad</th>
                                                 <th>Precio</th>
@@ -243,7 +243,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
+                                                    <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
                                                     <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
                                                     </td>   
@@ -325,8 +325,8 @@
                                             </table>
                                         </div>
                                         &nbsp;
-                                        <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                                        <button class="btn btn-primary float-right"  id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+                                        <button type="button" class='ladda-button addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                                        <button class="ladda-button btn btn-primary float-right"  id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
 
                                     </form>
 
@@ -439,7 +439,7 @@
         </select>
 
 
-        <textarea type='text'   name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+        <textarea type='text'   name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
         <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
         <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
         </td>

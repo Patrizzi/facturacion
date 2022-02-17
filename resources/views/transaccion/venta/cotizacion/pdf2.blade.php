@@ -5,23 +5,23 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizacion</title>{{--
+    <title>Cotización</title>{{--
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
     <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
 </head>
 <style type="text/css">
     .form-control, .single-line {
-    background-color: #FFFFFF;
-    background-image: none;
-    border: 1px solid #e5e6e7;
-    border-radius: 1px;
-    color: inherit;
-    display: ;
-    padding: 6px 12px;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100%;
-}
-@page { size: 420mm 297mm landscape; }
+        background-color: #FFFFFF;
+        background-image: none;
+        border: 1px solid #808080;
+        border-radius: 10px;
+        color: inherit;
+        display: block;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 100%;
+    }
+    @page { size: 420mm 297mm landscape; }
 </style>
 <body class="white-bg">
 {{-- <div class="ibox" style=" margin-bottom:0px; width: 100%">
@@ -39,7 +39,7 @@
             <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
-                     Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                     Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
                     <br>
                      {{$empresa->correo}}
                      <br>
@@ -48,7 +48,7 @@
             <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
                     <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-                    <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACION ELECTRONICA</h2><br>
+                    <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACIÓN ELECTRONICA</h2><br>
                     <h5 style="text-align: center;margin-bottom: -5px" >{{$cotizacion->cod_cotizacion}}</h5>
                 </center>
             </td>
@@ -62,7 +62,7 @@
             <strong>Nombre o Empresa:</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
             <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
             <strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
-            <strong>Telefono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Teléfono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
         </td>
         <th style="width: 5%;border-color: white"></th>
@@ -70,7 +70,7 @@
             <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
             <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}<br>
             <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-            <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+            <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
         </td>
     </tr>
@@ -78,7 +78,7 @@
 
 <div class="form-control" style="border: none;height: auto" >
     <div align="left">
-        <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+        <strong>Observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
     </div>
 </div>
 <br>
@@ -88,8 +88,8 @@
         <thead style="">
            <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
                 <td width="30px">ITEM </td>
-                <td width="120px" >Codigo </td>
-                <td width="400px">Descripcion</td>
+                <td width="120px" >Código</td>
+                <td width="400px">Descripción</td>
                 <td width="auto">Cantidad</td>
                 <td width="auto">P.Unitario</td>
                 <td width="80px">Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></td>
@@ -132,7 +132,7 @@
          </td>
         @if($regla== "factura")
             <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
-                <span > Sub Total:</span>
+                <span > Subtotal:</span>
                 <br>
                 <span > Op. Agravada:</span> <br>
                 <span > Op. Inafecta:</span> <br>
@@ -141,7 +141,7 @@
                 <span > Importe Total:</span> <br>
             </td>
             <td   style="width: auto; border: 1px #e5e6e7 solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
-                <span>{{$simbologia=$cotizacion->moneda->simbolo}}. {{number_format($sub_total, 2)}}</span><br>
+                <span>{{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
                 <span>{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
                 <span>{{$simbologia}} {{number_format($cotizacion->op_inafecta,2)}}</span><br>
                 <span>{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}}</span><br>
@@ -150,7 +150,7 @@
             </td>
         @else
             <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
-                <span ><strong> Importe Total:</strong></span><br>
+                <span ><strong>Importe Total:</strong></span><br>
             </td>
             <td   style="width: auto; border: 1px #e5e6e7 solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
                 <span>{{$simbologia}} {{$end=number_format(round($sub_total, 2),2)}}</span><br>
@@ -162,90 +162,63 @@
 
 
 <br>
-
+@include('layout_bancos_pdf')
 <!-- Fin Totales de Productos -->
 <br>
-<table style="border-collapse: separate;">
-    <tr>
-         <th style="width: 2%;border-color: white"></th>
-        @foreach($banco as $bancos)
-        @if($banco_count==3)
-        <th width="33%" style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-        @elseif($banco_count==2)
-        <th width="50%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-        @elseif($banco_count==1)
-        <th width="100%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-        @else
-        <th width="20%"style="border: 1px #e5e6e7 solid;border-radius: 8px;">
-        @endif
-        <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="height: 30px;"><br>
-          <span style="font-size: 11px"><strong> {{$bancos->tipo_cuenta}}</strong></span>
-          <br>
-          <span style="font-size: 12px">
-          S/: {{$bancos->numero_soles}}
-          <br>
-          $: {{$bancos->numero_dolares}}<br>
-          </span>
-         </p>
-        </th>
-         <th style="width: 2%;border-color: white"></th>
-        @endforeach
-    </tr>
-</table>
-<div class="row">
-<br>
-<table style="border:  0px solid white">
-    <tr style="border:  0px solid white">
-        <td>
-            <p><u>centro de Atencion : </u></p>
-            Telefono : {{$cotizacion->user_personal->personal->telefono }}<br>
-            Celular : {{$cotizacion->user_personal->personal->celular }}<br>
-            Email : {{$cotizacion->user_personal->personal->email }}<br>
-            Web : {{$empresa->pagina_web}} <br>
-        </td>
-        <td >
-            <br>
-            <br>
-            <br>
-            <br>
-            @if(isset($firma))
-            <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
-            @else
-            <br>
-            <br>
-            @endif
-            <hr>
-            <center>{{$cotizacion->user_personal->personal->nombres }}</center>
-        </td>
-    </tr>
-</table>
-</div>
 
+<div class="">
+    <table >
+        <tr>
+            <td style="border: none">
+                <p><u>centro de Atención : </u></p>
+                Teléfono : {{$cotizacion->user_personal->personal->telefono }}<br>
+                Celular : {{$cotizacion->user_personal->personal->celular }}<br>
+                Email : {{$cotizacion->user_personal->personal->email }}<br>
+                Web : {{$empresa->pagina_web}} <br>
+            </td>
+            <td style="border: none">
+                <br>
+                <br>
+                <br>
+                <br>
+                @if(isset($firma))
+                <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
+                @else
+                <br>
+                <br>
+                @endif
+                <hr>
+                <center>{{$cotizacion->user_personal->personal->nombres }}</center>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
 {{--  --}}
 <style>
 
-    *{font-size: 15px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+*{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
     .cero{
-    margin-bottom: 0px;
+        margin-bottom: 0px;
 
     }
-     .table-bordered .blanco {
-    border: none;
-}
+    .table-bordered .blanco {
+        border: none;
+    }
     .blanco{border: none;
-        border: medium transparent;
-        }
+        border: border-color: #808080 ;
+    }
     .border {
-        border-color: #aaaaaa;
+        border-color: #808080;
         border-width: 1px;
         border-style: solid;
     }
     .table {
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 1rem;
-    background-color: transparent;
-    border-top-width: 0px;
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+        border-top-width: 0px;
 
-}
+    }
 </style>

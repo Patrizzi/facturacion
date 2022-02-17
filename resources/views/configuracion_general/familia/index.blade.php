@@ -1,51 +1,46 @@
  @extends('layout')
 
  @section('title', 'Familia')
- @section('breadcrumb', 'Familia')
- @section('breadcrumb2', 'Familia')
  @section('data-toggle', 'modal')
  @section('href_accion', '#exampleModal')
  @section('value_accion', 'Agregar')
- @section('button2', 'Inicio')
-@section('config',route('Configuracion'))
+ @section('button2', 'Atras')
+ @section('config',route('Configuracion'))
 
  @section('content')
-
- <!-- Modal Create  -->
-
- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ @if($errors->any())
+ <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+    <a class="alert-link" href="#">
+        @foreach ($errors->all() as $error)
+        <li class="error" style="color: red">{{ $error }}</li>
+        @endforeach
+    </a>
+</div>
+@endif
+<!-- Modal Create  -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> Familia</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
             <div style="padding-left: 15px;padding-right: 15px;">
                 {{-- ccccccccccccccccc --}}
                 <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
 
                     <form action="{{ route('familia.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
                         @csrf
-                        <fieldset >
-                            <div>
-                                <div class="panel-body" >
-                                    <div class="row">
-                                        <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
-                                        <label class="col-sm-2 col-form-label">Descripcion:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="descripcion">
-                                        </div>
-                                        <br>
-                                        <br>
+                        <div>
+                            <div class="panel-body" >
+                                <div class="row">
+                                    <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
+                                    <label class="col-sm-2 col-form-label">Descripcion:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="descripcion" required>
                                     </div>
+                                    <br>
+                                    <br>
                                 </div>
                             </div>
-
-                        </fieldset>
-                        <button class="btn btn-primary" type="submit" id="boton"> Grabar</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                        </div>
+                        <button class="ladda-button btn btn-primary" type="submit" id="boton"> Guardar</button>
                     </form>
                 </div>
             </div>
@@ -57,26 +52,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-title">
-                    <h5>Familias</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
@@ -85,32 +60,23 @@
                                     <th>ID</th>
                                     <th>codigo</th>
                                     <th>Descripcion</th>
-                                    <th>Estado</th>
-                                    <th>EDITAR</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <span hidden="hidden">{{$i=1}}</span>
                                 @foreach($familias as $familia)
                                 <tr class="gradeX">
-                                    <td>{{$familia->id}}</td>
+                                  <td>@if($familia->estado==0) <i class="fa fa-circle" style="color: green;"></i>@else
+                                    <i class="fa fa-circle"></i>@endif {{$i++}}</td>
+                                    {{-- <td>{{$familia->id}}</td> --}}
                                     <td>{{$familia->codigo}}</td>
                                     <td>{{$familia->descripcion}}</td>
-                                    @if($familia->estado == 0)
-                                        <td style="width: 20%;"><center><label class="label label-primary" style="font-size: 14px">ACTIVADO</label></center></td>
-                                    @else
-                                        <td style="width: 20%;"><center><label class="label label-danger" style="font-size: 14px">DESACTIVADO</label></center></td>
-                                    @endif
                                     <td>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$familia->id}}">Editar</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$familia->id}}"><i class="fa fa-edit"></i></button>
                                         <div class="modal fade" id="exampleModal{{$familia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel"> Edit Familia</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
                                                     <div style="padding-left: 15px;padding-right: 15px;">
                                                         {{-- ccccccccccccccccc --}}
                                                         <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
@@ -121,42 +87,42 @@
                                                                 <fieldset >
                                                                     <div>
                                                                         <div class="panel-body" >
+
                                                                             <div class="row">
-                                                                                 <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
-                                                                                <label class="col-sm-2 col-form-label">Descripcion:</label>
-                                                                                <div class="col-sm-10">
-                                                                                    <input type="text" class="form-control" name="descripcion" value="{{$familia->descripcion}}">
-                                                                                </div>
-                                                                                <label class="col-sm-2 col-form-label">Estado:</label>
-                                                                                <div class="col-sm-10" align="center">
-                                                                                   <input type="checkbox" class="js-switch_{{$familia->id}}" name="estado"  @if($familia->estado==0) checked="" @endif />
-                                                                                </div>
+                                                                               <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
+                                                                               <label class="col-sm-2 col-form-label">Descripcion:</label>
+                                                                               <div class="col-sm-10">
+                                                                                <input type="text" required class="form-control" name="descripcion" value="{{$familia->descripcion}}">
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
+                                                                            @if($conteo > 1 || $familia->estado==1 )
+                                                                            <div class="col-sm-12" align="center" style="padding-top: 10px">
+                                                                             <input type="checkbox" class="js-switch_{{$familia->id}}" name="estado"  @if($familia->estado==0) checked="" @endif />
+                                                                         </div>
+                                                                         @endif
 
-                                                                </fieldset>
-                                                                <button class="btn btn-primary" type="submit">Grabar</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- / Modal Create  -->
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
 
-                                    </td>
-
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                                         </fieldset>
+                                                         <button class="ladda-button btn btn-primary" type="submit">Guardar</button>
+                                                     </form>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <!-- / Modal Create  -->
+                             </td>
+                         </tr>
+                         @endforeach
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     </div>
+ </div>
+</div>
 </div>
 <style>
     .col-sm-10{padding-bottom: 5px;padding-top: 5px;}
@@ -174,32 +140,10 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
- <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
 <!-- Switchery -->
 <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
-<script>
 
-    $(document).ready(function () {
-
-        // Add slimscroll to element
-        $('.scroll_content').slimscroll({
-            height: '200px'
-        })
-
-    });
-
-</script>
-{{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-<script>
-    function valida(f) {
-        var boton=document.getElementById("boton");
-        var completo = true;
-        var incompleto = false;
-        if( f.elements[0].value == "" )
-           { alert(incompleto); }
-       else{boton.type = 'button';}
-   }
-</script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
     $(document).ready(function(){
@@ -207,26 +151,8 @@
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }
-        ]
-
-    });
-
+            buttons: []
+        });
     });
 
 </script>

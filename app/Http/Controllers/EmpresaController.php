@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Empresa;
 use App\Banco;
+use App\BancoRegistro;
+use App\Empresa;
+use App\Moneda;
 use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
@@ -15,9 +17,12 @@ class EmpresaController extends Controller
      */
     public function index()
     {
+
         $mi_empresa=Empresa::first();
         $banco=Banco::all();
-        return view('configuracion_general.empresa.index',compact('mi_empresa','banco'));
+        $moneda=Moneda::all();
+        $banco_registro=BancoRegistro::all();
+        return view('configuracion_general.empresa.index',compact('mi_empresa','banco','banco_registro','moneda'));
     }
 
     /**

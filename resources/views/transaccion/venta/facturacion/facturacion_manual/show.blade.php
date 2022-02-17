@@ -1,11 +1,11 @@
 @extends('layout')
 
-@section('title', 'Facturación Manual Ver')
+@section('title', 'Facturación')
 
 @section('href_accion', route('facturacion_manual.index'))
 @section('value_accion', 'Atrás')
 
-@section('button2', 'Nueva Facturación Manual')
+@section('button2', 'Nueva Facturación')
 @section('config', route('facturacion_manual.create'))
 
 @section('content')
@@ -174,14 +174,13 @@
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th>Item</th>
-                                    <th>Código Producto</th>
+                                    <th style="text-align:center">Item</th>
+                                    <th style="text-align:center">Código Producto</th>
                                     <th>Descripción</th>
-                                    <th>Cantidad</th>
-                                    <th>Valor Unitario</th>
-                                    <th>Dscto.%</th>
+                                    <th style="text-align:center">Cantidad</th>
+                                    <th style="text-align:center">Valor Unitario</th>
 
-                                    <th>Valor Venta</th>
+                                    <th style="text-align:center">Valor Venta</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,21 +188,20 @@
                                     <span hidden="hidden">{{ $i = 1 }} </span>
                                     @foreach ($facturacion_registro as $facturacion_registros)
                                 <tr>
-                                    <td>{{ $i }} </td>
+                                    <td style="text-align:center">{{ $i }} </td>
                                     @if (isset($facturacion_registros->producto))
-                                        <td>{{ $facturacion_registros->producto->codigo_producto }}</td>
+                                        <td style="text-align:center">{{ $facturacion_registros->producto->codigo_producto }}</td>
                                         <td>{{ $facturacion_registros->producto->nombre }}
                                             {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))<br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}@endif</td>
                                     @else
-                                        <td>{{ $facturacion_registros->servicio->codigo_servicio }}</td>
+                                        <td style="text-align:center">{{ $facturacion_registros->servicio->codigo_servicio }}</td>
                                         <td>{{ $facturacion_registros->servicio->nombre }}
                                             {{ $facturacion_registros->descripcion_item }}
                                     @endif
-                                    <td>{{ $facturacion_registros->cantidad }}</td>
-                                    <td>{{ $facturacion_registros->precio }}</td>
-                                    <td>{{ $facturacion_registros->descuento }}%</td>
+                                    <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
+                                    <td style="text-align:center">{{number_format($facturacion_registros->precio,2)}}</td>
 
-                                    <td>{{ $facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento/100) }}</td>
+                                    <td style="text-align:center">{{number_format( $facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento/100),2) }}</td>
 
                                     <td style="display: none">
                                         {{ $sub_total =$facturacion_registros->factura_ids->op_gravada +$facturacion_registros->factura_ids->op_inafecta +$facturacion_registros->factura_ids->op_exonerada }}

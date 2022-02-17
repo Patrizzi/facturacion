@@ -1,10 +1,10 @@
 @extends('layout')
 
-@section('title', 'Boleta Agregar M.Secundaria')
-@section('breadcrumb', 'Boleta M.Secundaria')
-@section('breadcrumb2', 'Boleta M.Secundaria')
+@section('title', 'Boleta Agregar M. Secundaria')
+@section('breadcrumb', 'Boleta M. Secundaria')
+@section('breadcrumb2', 'Boleta M. Secundaria')
 @section('href_accion', route('boleta.index'))
-@section('value_accion', 'Atras')
+@section('value_accion', 'Atrás')
 @extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -70,7 +70,7 @@
                                 <div class="form-control ruc" style="height: 125px">
                                     <center>
                                         <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                        <h2>BOLETA ELECTRONICA</h2>
+                                        <h2>BOLETA ELECTRÓNICA</h2>
                                         <h5>{{$boleta_numero}}</h5>
                                     </center>
 
@@ -130,7 +130,7 @@
                                                 <button type="button" class='addmores btn btn-success'>Cambiar</button>
                                             </a>
                                         </td>
-                                        <td>Guia remision</td>
+                                        <td>Guía Remisión</td>
                         <td>:</td>
                         <td> <input type="text" class="form-control" value="0" name="guia_r"></td>
                                         
@@ -139,7 +139,7 @@
                         <td>Vendedor</td>
                         <td>:</td>
                         <td><input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"></td>
-                        <td>Tipo de Operacion</td>
+                        <td>Tipo de Operación</td>
                     <td>:</td>
                     <td><select class="form-control" name="tipo_operacion" >
                         @foreach($tipo_operacion as $t_op)
@@ -228,7 +228,7 @@
                                         </tr>
                                         <tr>
 
-                                            <td>Observacion</td>
+                                            <td>Observación</td>
                                             <td>:</td>
                                             <td ><textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
                                             </td>
@@ -247,11 +247,11 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 10px"></th>
-                                            <th style="width: 500px;font-size: 13px">Articulo</th>
+                                            <th style="width: 500px;font-size: 13px">Artículo</th>
                                             <th>Stock</th>
                                             <th>Cantidad</th>
                                             <th>Precio</th>
-                                            <th>Dcto</th>
+                                            <th>Dcto.</th>
                                             <th>PU. Dcto.</th>
                                             <th>PU. Com.</th>
                                             <th>Total</th>

@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cotizacion')
+@section('title', 'Cotización')
 @section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)
@@ -71,7 +71,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>N° Cotizacion</th>
+                                    <th>N° Cotización</th>
                                     <th>Ruc/DNI</th>
                                     <th>Cliente</th>
                                     <th>Fecha</th>

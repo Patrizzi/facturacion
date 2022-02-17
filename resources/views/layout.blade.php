@@ -140,20 +140,20 @@ $empresa=Empresa::first(); ?>
                     <li>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Tecnico</span></a>
                         <ul class="nav nav-second-level collapse">
-                         @can('transacciones-garantias-guias_ingreso.index')
-                         <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
-                         @endcan
-                         @can('transacciones-garantias-guias_egreso.index')
-                         <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
-                         @endcan
-                         @can('transacciones-garantias-informe_tecnico.index')
-                         <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
-                         @endcan
+                           @can('transacciones-garantias-guias_ingreso.index')
+                           <li><a href="{{route('garantia_guia_ingreso.index')}}">Guias Ingreso</a></li>
+                           @endcan
+                           @can('transacciones-garantias-guias_egreso.index')
+                           <li><a href="{{route('garantia_guia_egreso.index')}}">Guia Egreso</a></li>
+                           @endcan
+                           @can('transacciones-garantias-informe_tecnico.index')
+                           <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Tecnico</a></li>
+                           @endcan
 
-                     </ul>
-                 </li>
-                 @if(empty($inventario_inicial))
-                 <li>
+                       </ul>
+                   </li>
+                   @if(empty($inventario_inicial))
+                   <li>
                     <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
                     @elseif($inventario_inicial->estado==1)
                     <li>
@@ -374,4 +374,18 @@ $empresa=Empresa::first(); ?>
 
 
         </body>
-        </html>
+        <!-- Ladda -->
+        <script src="{{ asset('js/plugins/ladda/spin.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/ladda/ladda.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/ladda/ladda.jquery.min.js') }}"></script>
+
+        <!-- Ladda style -->
+        <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+
+        <script>
+            $(document).ready(function (){
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 8000 });
+    });
+</script>
+</html>

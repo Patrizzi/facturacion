@@ -17,10 +17,6 @@ class MonedaController extends Controller
      */
     public function index()
     {
-        $moneda=Moneda::all();
-        $cantidad_monedas=count($moneda);
-        $paises=Pais::all();
-        return view('configuracion_general.moneda.index',compact('moneda','paises','cantidad_monedas'));
     }
 
     /**
@@ -30,8 +26,7 @@ class MonedaController extends Controller
      */
     public function create()
     {
-        $paises=Pais::all();
-        return view('configuracion_general.moneda.create',compact('paises'));
+
     }
 
     /**
@@ -42,14 +37,6 @@ class MonedaController extends Controller
      */
     public function store(Request $request)
     {
-        $moneda=new Moneda;
-        $moneda->nombre=$request->get('nombre');
-        $moneda->simbolo=$request->get('simbolo');
-        $moneda->codigo=$request->get('codigo');
-        $moneda->pais=$request->get('pais');
-        $moneda->descripcion=$request->get('descripcion');
-        $moneda->save();
-        return redirect()->route('moneda.index');
     }
 
     /**
@@ -71,9 +58,7 @@ class MonedaController extends Controller
      */
     public function edit($id)
     {
-        $moneda = Moneda::find($id);
-        $paises=Pais::all();
-        return view('configuracion_general.moneda.edit' ,compact('moneda','paises'));
+
     }
 
     /**
@@ -85,44 +70,30 @@ class MonedaController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $btn_principal=$request->get('principal');
-       if ($btn_principal=='on') {
-        $principal='1';
-        $buscar_principa=Moneda::where('principal',1)->first();
-        $id_principal=$buscar_principa->id;
+       $id_mone_principal=$request->get('id_moneda');
 
-        $moneda=Moneda::find($id_principal);
-        $moneda->principal=0;
-        $moneda->save();
+       $buscar_principal=Moneda::where('principal',1)->first();
 
-        $tipo_cambio=TipoCambio::latest('created_at')->first();
-        $tipo_cambio_delete=TipoCambio::findOrFail($tipo_cambio->id);
-        $tipo_cambio_delete->delete();
-    }
-    else{ $principal='0';}
+       $cambio_moneda_secundario=Moneda::find($buscar_principal->id); /*Cambio de moneda de empresa*/
+       $cambio_moneda_secundario->principal=0;
+       $cambio_moneda_secundario->save();
 
-    $moneda=Moneda::find($id);
-    // $moneda->nombre=$request->get('nombre');
-    // $moneda->simbolo=$request->get('simbolo');
-    // $moneda->codigo=strtoupper($request->get('codigo'));
-    $moneda->principal=$principal;
-    // $moneda->pais=$request->get('pais');
-    $moneda->save();
+       $cambio_moneda_primario=Moneda::find($id_mone_principal);
+       $cambio_moneda_primario->principal=1;
+       $cambio_moneda_primario->save();
 
-    /*Buscador de moneda Principal*/
-    $principal_mone=Moneda::where('principal',1)->first();
-    $id_prin_mone=$principal_mone->id;
-    $ids_empresa=1;/*id empresa*/
+       $empresa=Empresa::find(1); /*Cambio de moneda de empresa*/
+       $empresa->moneda_principal=$id_mone_principal;
+       $empresa->save();
 
-    $empresa=Empresa::find($ids_empresa); /*Cambio de moneda de empresa*/
-    $empresa->moneda_principal=$id_prin_mone;
-    $empresa->save();
-    return redirect()->route('moneda.index');
-}
+       $tipo_cambio=TipoCambio::latest('created_at')->first();
+       $tipo_cambio_delete=TipoCambio::findOrFail($tipo_cambio->id);
+       $tipo_cambio_delete->delete();
+       return redirect()->route('empresa.index');
+   }
 
-public function principal($id)
-{
-    return redirect()->route('moneda.index');
+   public function principal($id)
+   {
 }
 
     /**
@@ -133,9 +104,6 @@ public function principal($id)
      */
     public function destroy($id)
     {
-        $moneda=Moneda::findOrFail($id);
-        $moneda->delete();
 
-        return redirect()->route('moneda.index');
     }
 }

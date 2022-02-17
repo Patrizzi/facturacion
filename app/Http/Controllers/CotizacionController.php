@@ -1411,7 +1411,7 @@ public function pdf(Request $request,$id){
     /* FIN registros boleta y factura*/
     /*de numeros a Letras*/
     // foreach($cotizacion_registro as $cotizacion_registros){
-    $sub_total=$cotizacion->op_gravada;
+        $sub_total = $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
     if ($regla=='factura') {
         $end=round($sub_total, 2)+round($igv_p, 2);
@@ -1429,6 +1429,7 @@ public function pdf(Request $request,$id){
     $i=1;
     $regla=$cotizacion->tipo;
     $archivo=$name.$regla.$id.".pdf";
+    // return "1";
     // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
     if($request->get('firma') == "0"){
         $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
@@ -1617,6 +1618,41 @@ public function facturar_store(Request $request)
 {
     // return $request;
     $id = $request->get('id');
+    $id_cotizador=$request->get('id_cotizador');
+    $cotizacion=Cotizacion::where('id',$id_cotizador)->first();
+    $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$cotizacion->id)->get();
+    // $almacen_producto_validacion=$request->get('almacen');
+    
+    foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
+        $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
+        if(isset($producto_servicio->id)){
+            $kardex_entrada_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->get();
+            $kardex_entrada_count_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->count();
+
+            //return $kardex_entrada;
+            foreach($kardex_entrada_v as $kardex_entradas_v){
+                $kadex_entrada_id_v[]=$kardex_entradas_v->id;
+            }
+            // return $kardex_entrada;
+            for($x=0;$x<$kardex_entrada_count_v;$x++){
+                if(Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first()){
+                    $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
+                }
+            }
+            $comparacion_v=$nueva_v;
+            //buble para la cantidad
+            $cantidad_v=0;
+            foreach($comparacion_v as $comparaciones_v){
+                $cantidad_v=$comparaciones_v->cantidad+$cantidad_v;
+            }
+            $cantidad_entrada=$cotizacion_registros2->cantidad;
+            if($cantidad_v<$cantidad_entrada){
+               // return back()->with('repite',);
+                 return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
+            }
+        }
+     }
+    // return $cantidad_entrada;
     //LLAMDO AL DIA ACTUAL Y CONVERSION DE SIMBOLOS
     $date_sp = Carbon::now();
     $data_g = str_replace(' ', '_',$date_sp);
@@ -1627,7 +1663,7 @@ public function facturar_store(Request $request)
 
     $tipo_cambio=TipoCambio::latest('created_at')->first();
         // cambio de Estado Cotizador
-    $id_cotizador=$request->get('id_cotizador');
+    
     $cotizacion=Cotizacion::where('id',$id_cotizador)->first();
     $cotizacion->estado=1;
     $cotizacion->save();
@@ -1710,7 +1746,7 @@ public function facturar_store(Request $request)
     $facturar->fecha_emision=$request->get('fecha_emision');
     $facturar->fecha_vencimiento=$nuevafechas;
     $facturar->cambio=$cambio->paralelo;
-    $facturar->observacion=$cotizacion->observacion;
+    $facturar->observacion=$request->get('observacion');
     $facturar->comisionista=$cotizacion->comisionista_id;
     $facturar->user_id =auth()->user()->id;
     $facturar->estado='0';
@@ -2221,7 +2257,37 @@ public function facturar_store(Request $request)
         $data_g = str_replace(' ', '_',$date_sp);
         $carbon_sp = str_replace(':','-',$data_g);
         $id = $request->get('id');
+         $cotizacion=Cotizacion::where('id',$id)->first();
+        $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+        foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
+            $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
+            if(isset($producto_servicio->id)){
+                $kardex_entrada_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->get();
+                $kardex_entrada_count_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->count();
 
+                //return $kardex_entrada;
+                foreach($kardex_entrada_v as $kardex_entradas_v){
+                    $kadex_entrada_id_v[]=$kardex_entradas_v->id;
+                }
+                // return $kardex_entrada;
+                for($x=0;$x<$kardex_entrada_count_v;$x++){
+                    if(Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first()){
+                        $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
+                    }
+                }
+                $comparacion_v=$nueva_v;
+                //buble para la cantidad
+                $cantidad_v=0;
+                foreach($comparacion_v as $comparaciones_v){
+                    $cantidad_v=$comparaciones_v->cantidad+$cantidad_v;
+                }
+                $cantidad_entrada=$cotizacion_registros2->cantidad;
+                if($cantidad_v<$cantidad_entrada){
+                   // return back()->with('repite',);
+                     return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
+                }
+            }
+         }
         //buscador al cambio
         $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
         $tipo_cambio=TipoCambio::latest('created_at')->first();
@@ -2341,7 +2407,7 @@ public function facturar_store(Request $request)
 
 
 
-    $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+    
 
     foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
         if(isset($cotizacion_registro->producto_id)){
@@ -2567,7 +2633,7 @@ public function facturar_store(Request $request)
         $i=1;
         $regla=$cotizacion->tipo;
         $archivo=$name.'_'.$id.".pdf";
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count'));
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count'));
         $content = $pdf->download();
         $especif = $carbon_sp.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
