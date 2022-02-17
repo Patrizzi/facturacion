@@ -26,7 +26,7 @@ class CreateFacturacionRegistroMTable extends Migration
             $table->foreign('servicio_id')->references('id')->on('servicios')->onDelete('cascade');
 
             $table->string('numero_serie')->nullable();
-            $table->string('descripcion_item')->nullable();
+            $table->text('descripcion_item')->nullable();
 
             $table->double('precio',17,2);
             $table->integer('cantidad');
