@@ -146,6 +146,7 @@ Route::group(
 
 		//facturacion manual
 		//->Vista para facturacion manual próximamente...
+		Route::get('/facturacion_manual/print/{id}','FacturacionMController@print')->name('facturacion_manual.print');
 		Route::post('/facturacion_manual/facturacion_e','FacturacionMController@facturacion_e')->name('facturacion_manual.f_e');
 		Route::resource('facturacion_manual','FacturacionMController');
 

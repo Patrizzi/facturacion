@@ -1,15 +1,32 @@
-@extends('layout')
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Facturación Manual/Print</title>
 
-@section('title', 'Facturación')
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
 
-@section('href_accion', route('facturacion_manual.index'))
-@section('value_accion', 'Atrás')
+    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-@section('button2', 'Nueva Facturación')
-@section('config', route('facturacion_manual.create'))
+    <!-- <script src="@yield('vue_js', '#')" defer></script> -->
 
-@section('content')
+    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
 
+    <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
+    {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
+    <SCRIPT LANGUAGE="JavaScript">
+        function cerrar() {
+            window.close();
+        }
+    </SCRIPT>
+
+</head>
+<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     
     <style type="text/css">
         .procesado:before {
@@ -22,58 +39,7 @@
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox-title" style="padding-right: 3.1%">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6" align="right">
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0"
-                        action="{{ route('pdf_fac_m', $facturacion->id) }}">
-                        <input type="text" name="name" maxlength="50" hidden="" value="{{ $facturacion->codigo_fac }}">
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title=""
-                            data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i> </button>
-                    </form>
-                    <button id="btn_ticket" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button>
-                    <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden="">
-                    <a class="btn btn-success" href="{{ route('facturacion_manual.print', $facturacion->id) }}" target="_blank"
-                        class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                        data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
-                    @if (Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.save') }}" method="post"
-                            style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                            @csrf
-                            <input type="text" hidden="hidden" name="tipo" value="App\Facturacion" />
-                            <input type="text" hidden="hidden" name="id" value="{{ $facturacion->id }}" />
-                            <input type="text" hidden="hidden" name="redict" value="cotizacion_factura" />
-                            <input type="text" hidden="hidden" name="cliente" value=" {{ $facturacion->cliente->email }}" />
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                title="" formtarget="_blank" data-original-title="Enviar por correo"><i
-                                    class="fa fa-envelope fa-lg"></i> </button>
-                        </form>
-                    @endif
-                    <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg"
-                                style="color: white"></i> </a>
-                    </div>
-                    <div id="div-mostrar">
-                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
-                            style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero" value="{{ $facturacion->cliente->celular }}" />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url"
-                                value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden=""
-                                value="Facturacion_{{ $facturacion->codigo_fac }}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
-                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
-                                data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         {{-- <div class="ibox-tools">
                <a class="btn btn-success"  href="{{route('facturacion.print' , $facturacion->id)}}" target="_blank">Imprimir</a>
            </div>
@@ -268,7 +234,7 @@
                 </div>
             </div>
 
-            
+
 
             <style type="text/css">
                 .ruc {
@@ -536,4 +502,10 @@
             <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 
-        @endsection
+
+{{-- IMPRIMIR --}}
+<script type="text/javascript">
+    window.print();
+</script>
+</body>
+</html>

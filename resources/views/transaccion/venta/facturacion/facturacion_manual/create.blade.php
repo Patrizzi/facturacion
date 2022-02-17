@@ -295,7 +295,7 @@
                                             <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                                         </div>
                                         <div class="col-sm-6 ">
-                                            <button type="submit" name="name" value="pdf" class="ladda-button btn btn-info float-right"  style="margin-right: 5px">Enviar</button>
+                                            <button type="submit" name="name" value="pdf" class="ladda-button btn btn-info float-right" id="boton"  style="margin-right: 5px">Enviar</button>
                                         </div>
                                     </div>
                                 </form>
@@ -687,7 +687,7 @@
            // if(cliente.length != 0){
             var f_p = $('#forma_pago').val();
             var total = document.getElementById('total_final').value;
-            // console.log(total);
+             console.log(total);
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');

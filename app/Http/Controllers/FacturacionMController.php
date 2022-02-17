@@ -401,6 +401,23 @@ class FacturacionMController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    public function print($id){
+        $existe_id=Facturacion_m::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('facturacion_manual.index'); }
+
+        $empresa=Empresa::first();
+        $facturacion=Facturacion_m::find($id);
+        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
+        $sum=0;
+        $igv=Igv::first();
+        $sub_total=0;
+        $banco=Banco::where('estado',0)->get();
+        $j = 1;
+        
+        return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+    }
+
     public function edit($id)
     {
         //
