@@ -186,7 +186,7 @@
 <br>
 <br>
 <!-- EXTENSION PARA LLAMAR AL LAYOUT DE BANCOS -->
-@include('layout_bancos')
+@include('layout_bancos_pdf')
 </body>
 
 {{--  --}}
@@ -217,29 +217,4 @@
 
     }
     
-    /* PARA CENTRAR LOS DIVS PROVENIENTESAL BANCO */
-    .divs-cont{
-        width: 22%;
-        
-        display: inline-block;
-        padding-left:  12px ;
-        padding-right:  12px ;
-        align-items: baseline;
-        margin-top: 3px;
-        vertical-align: top;
-        /* float: start; */
-    }
-    .flex{
-        display: inline;
-        width: 100%;
-        align-items: baseline;
-        margin-top: 0px;
-        padding-top: 0px;
-        
-        /* margin: 0px auto; */
-        /* position: absolute; */
-    }
-    p.form-control{
-        font-size: 12px;
-    }
 </style>
