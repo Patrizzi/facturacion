@@ -21,6 +21,17 @@
 </div>
 @endif
 
+{{-- obtener errores --}}
+@if (Session::has('successMsg'))
+<div style="padding-top: 20px;">
+    <div class="alert alert-warning">
+        <a class="alert-link" href="#">
+            <li style="color: black">{{ Session::get('successMsg') }}</li>
+        </a>
+    </div>
+</div>
+@endif
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">

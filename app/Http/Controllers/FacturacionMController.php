@@ -72,15 +72,6 @@ class FacturacionMController extends Controller
         // Servicios
         $servicios=Servicios::where('estado_anular',0)->get();
 
-        if(count($servicios) == 0){
-            return redirect()->route('servicios.index');
-        }
-        if(count($servicios) == 0){
-            return back()->withErrors(['No hay Servicios Agregados: '.$sucursal->nombre.'']);
-        }
-
-        $servicios=Servicios::where('estado_anular',1)->get();
-
         // Tipo de cambio
         $tipo_cambio=TipoCambio::latest('created_at')->first();
 
@@ -258,7 +249,7 @@ class FacturacionMController extends Controller
                 // Llamado de producto y servicio para su diferenciación y registro propio
                 $producto = Producto::where('codigo_producto',$producto_id[$i])->first();
                 $servicio=Servicios::where('codigo_servicio',$producto_id[$i])->where('estado_anular',0)->first();
-
+                // return $producto_id[$i];
                 if(isset($producto)){ //Guardado de facturación registro solo para productos 
 
                     $facturacion_registro= new Facturacion_registro_m();
@@ -290,7 +281,7 @@ class FacturacionMController extends Controller
                 }else{ //Guardado de facturación registro solo para servicios 
                     
                     $facturacion_registro=new Facturacion_registro_m();
-                    $facturacion_registro->facturacion_id=$facturacion->id;
+                    $facturacion_registro->facturacion_m_id=$facturacion->id;
                     $facturacion_registro->servicio_id=$servicio->id;
                     $facturacion_registro->precio=$request->get('precio')[$i];
                     $facturacion_registro->cantidad=$request->get('cantidad')[$i];
@@ -394,11 +385,13 @@ class FacturacionMController extends Controller
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
+        $mensaje="La factura fue enviada exitosamente";
+
         //cambio de factura electronica - en caso sea todo exitoso
         $factura->f_electronica=1;
         $factura->save();
 
-        return redirect()->route('facturacion_manual.index');
+        return redirect()->route('facturacion_manual.index')->with('successMsg',$mensaje);
 
     }
 

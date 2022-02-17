@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title', 'Facturación Manual')
-@section('href_accion', route('facturacion.index'))
+@section('href_accion', route('facturacion_manual.index'))
 @section('value_accion', 'Atrás')
 @extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
