@@ -62,12 +62,14 @@ class AlmacenController extends Controller
             'serie_factura' => ['required','unique:cod_guia_almacen'],
             'serie_boleta' => ['required','unique:cod_guia_almacen'],
             'serie_remision' => ['required','unique:cod_guia_almacen'],
+            'serie_factura_m' => ['required','unique:cod_guia_almacen'],
             'responsable' => ['required'],
             'direccion' => ['required'],
             'descripcion' => ['required'],
             'cod_fac' => ['required','integer'],
             'cod_bol' => ['required','integer'],
             'cod_guia' => ['required','integer'],
+            'cod_factura_m' => ['required','integer'],
             'cod_sunat' => ['required','unique:cod_guia_almacen'],
             'ubigeo' => ['required', 'max:6', 'min:6'],
         ]);
@@ -111,6 +113,9 @@ class AlmacenController extends Controller
         //nota de debito
         $cod_guia_almacen->serie_nota_debito = $request->get('serie_debito');
         $cod_guia_almacen->cod_nota_debito = $request->get('cod_debito');
+        // factura manual
+        $cod_guia_almacen->serie_factura_m = $request->get('serie_factura_m');
+        $cod_guia_almacen->cod_factura_m = $request->get('cod_factura_m');
         $cod_guia_almacen->save();
 
         $productos= Producto::get();
@@ -175,6 +180,7 @@ class AlmacenController extends Controller
         $nr_fac=$request->get('cod_fac');
         $nr_bol=$request->get('cod_bol');
         $nr_guia=$request->get('cod_guia');
+        $nr_factura_m=$request->get('cod_factura_m');
         // $almacen=Almacen::where('id', $id)->first();
         $almacen=Almacen::find($id);
         $almacen->nombre=$request->get('nombre');
@@ -196,6 +202,9 @@ class AlmacenController extends Controller
         }
         if(is_numeric($cod_guia_almacen->cod_remision) and is_numeric($nr_guia)){
             $cod_guia_almacen->cod_remision=$request->get('cod_guia');
+        }
+        if(is_numeric($cod_guia_almacen->cod_factura_m) and is_numeric($nr_factura_m)){
+            $cod_guia_almacen->cod_factura_m=$request->get('cod_factura_m');
         }
         $cod_guia_almacen->save();
         return redirect()->route('almacen.index');

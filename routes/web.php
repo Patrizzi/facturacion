@@ -144,6 +144,12 @@ Route::group(
 		Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 
 
+		//facturacion manual
+		//->Vista para facturacion manual próximamente...
+		Route::post('/facturacion_manual/facturacion_e','FacturacionMController@facturacion_e')->name('facturacion_manual.f_e');
+		Route::resource('facturacion_manual','FacturacionMController');
+
+
 		Route::post('/boleta/create_ms','BoletaController@create_ms')->name('boleta.create_ms');
 		Route::get('/boleta/print/{id}','BoletaController@print')->name('boleta.print');
 		Route::resource('/boleta','BoletaController')->except(['store','create']);
@@ -335,6 +341,7 @@ Route::get('cotizacion/pdf/{id}' , 'CotizacionController@pdf')->name('pdf_cotiza
 Route::get('cotizacion_servicio/pdf/{id}' , 'CotizacionServiciosController@pdf')->name('pdf_cotizacion_servicio');
 Route::get('guia_remision/pdf/{id}' , 'GuiaRemisionController@pdf')->name('pdf_guia');
 Route::get('facturacion/pdf/{id}' , 'FacturacionController@pdf')->name('pdf_fac');
+Route::get('facturacion_manual/pdf/{id}' , 'FacturacionMController@pdf')->name('pdf_fac_m');
 Route::get('boleta/pdf/{id}' , 'BoletaController@pdf')->name('pdf_bol');
 Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');

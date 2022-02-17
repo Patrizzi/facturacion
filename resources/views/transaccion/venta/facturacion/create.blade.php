@@ -904,6 +904,10 @@
             });
         });
     </script>
+
+
+
+
     <script type="text/javascript">
         function seleccionado_fp(){
             var opt = $('#forma_pago').val();

@@ -48,7 +48,11 @@ class Config_fe extends Model
 
     protected $guarded = [];
 
-    public static function factura($factura,$facturas_registros,$guia){
+    public static function factura($factura,$facturas_registros,$guia,$facturacion_manual=0){
+
+        if($facturacion_manual==1){
+            // return "funciona";
+        }
 
         //libro: https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia%2Bxml%2Bfactura%2Bversion%202-1%2B1%2B0%20%282%29_0.pdf
         // return $guia;
@@ -202,8 +206,13 @@ class Config_fe extends Model
 
             return $invoice;
         }else{
-            // Venta - credito
-            $cuotas=Cuotas_Credito::where('facturacion_id',$factura->id)->get();
+            // Venta - crédito
+            if($facturacion_manual==0){
+                $cuotas=Cuotas_Credito::where('facturacion_id',$factura->id)->get();
+            }else{
+                $cuotas=Cuotas_Credito::where('facturacion_m_id',$factura->id)->get();
+            }
+            
 
             foreach ($cuotas as $key => $cuota) {
                 # code...
@@ -219,7 +228,7 @@ class Config_fe extends Model
             ->setSerie($serie)// numero de serie
             ->setCorrelativo($correlativo) // y numero correlativo  // ejemplo en seccion 2.2 pagina 20 del pdf sunat 2.1 infomracion precisa pagina 30 pdf sunat 2.1
             ->setFechaEmision($factura->created_at)
-            ->setFormaPago(new FormaPagoCredito()) // FormaPago: credito
+            ->setFormaPago(new FormaPagoCredito($total)) // FormaPago: credito
             ->setCuotas(
                 $cuotas_credito
             )
