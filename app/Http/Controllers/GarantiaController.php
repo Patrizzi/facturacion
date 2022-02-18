@@ -10,7 +10,7 @@ class GarantiaController extends Controller
     {
         $garantia=Garantia::all();
         $conteo=Garantia::where('estado',0)->count();
-        return view('configuracion_general.garantia.index',compact('garantia','conteo','cod_guia_almacen'));
+        return view('configuracion_general.garantia.index',compact('garantia','conteo'));
     }
 
 
