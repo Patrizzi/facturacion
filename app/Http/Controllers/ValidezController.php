@@ -11,7 +11,7 @@ class ValidezController extends Controller
     {
         $validez=Validez::all();
         $conteo=Validez::where('estado',0)->count();
-        return view('configuracion_general.validez.index',compact('validez','personal','conteo','cod_guia_almacen'));
+        return view('configuracion_general.validez.index',compact('validez','conteo','cod_guia_almacen'));
     }
 
 
