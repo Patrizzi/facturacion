@@ -6,17 +6,19 @@ use App\Banco;
 use App\Cliente;
 use App\Empresa;
 use App\Forma_pago;
+use App\Garantia;
 use App\Igv;
 use App\Kardex_entrada;
 use App\Moneda;
 use App\Personal;
-use Barryvdh\DomPDF\Facade as PDF;
 use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Unidad_medida;
-use Carbon\Carbon;
+use App\Validez;
 use App\kardex_entrada_registro;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +31,22 @@ class CotizacionOtrosController extends Controller
      */
     public function index()
     {
+         // Migracion nuevav
+        $garantia=Garantia::where('estado',0)->get();
+        $validez=Validez::where('estado',0)->get();
+        if (count($garantia)==0) {
+         $garantia_new=new Garantia;
+         $garantia_new->descripcion='Sin Garantia';
+         $garantia_new->estado='0';
+         $garantia_new->save();
+     }
+     if (count($validez)==0) {
+         $validez_new=new Validez;
+         $validez_new->descripcion='1 dia';
+         $validez_new->estado='0';
+         $validez_new->save();
+     }
+        // Migracion nueva
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=Kardex_entrada::where('estado',2)->first();
         if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
@@ -41,7 +59,7 @@ class CotizacionOtrosController extends Controller
         $productos=Producto::all();
 
         $empresa=Empresa::first();
-        return view('transaccion.venta.cotizacion.otros.create',compact('igv','empresa','clientes','forma_pagos','moneda','productos','servicios'));
+        return view('transaccion.venta.cotizacion.otros.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios'));
 
     }
 

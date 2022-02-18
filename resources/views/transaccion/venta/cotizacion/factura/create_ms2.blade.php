@@ -126,11 +126,9 @@
                                             <td>Validez</td>
                                             <td>:</td>
                                             <td><select  class="form-control" name="validez" required="required">
-                                                <option value="5 Días">5 Días</option>
-                                                <option value="4 Días">4 Días</option>
-                                                <option value="3 Días">3 Días</option>
-                                                <option value="2 Días">2 Días</option>
-                                                <option value="1 Día">1 Día</option>
+                                             @foreach($validez as $validezz)
+                                              <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option>
+                                              @endforeach
                                             </select></td>
                                         </tr>
                                         <tr>
@@ -142,10 +140,9 @@
                                             <td>Garantía</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="garantia">
-                                                <option value="6 meses">6 Meses</option>
-                                                <option value="1 año">1 Año</option>
-                                                <option value="2 años">2 Años</option>
-                                                <option value="3 años">3 Años</option>
+                                                  @foreach($garantia as $garantias)
+                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                            @endforeach
                                             </select></td>
                                         </tr>
 
