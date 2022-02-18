@@ -319,7 +319,9 @@ Route::group(
 		Route::resource('/cantidad_precio','CantidadPrecioController');
 
 		Route::view('/configuracion_general' , 'configuracion_general.configuracion_general')->name('Configuracion');
-
+//Validez y Garantia
+		Route::resource('/garantia','GarantiaController');
+		Route::resource('/validez','ValidezController');
 
 		//Ajax
 		// Route::get('/inventario.kardex.entrada.create', 'KardexEntradaController@index');
@@ -327,11 +329,11 @@ Route::group(
 		// Route::post('/api','api.php');
 	});
 
-	Auth::routes([
+Auth::routes([
 		'register' => false, // Registration
 		'reset' => false, // Password Reset
 		'verify' => false, // Email Verification
-	  ]);
+	]);
 
 Route::post('sunat_cambio','TipoCambioController@sunat_cambio');
 Route::resource('/tipo_cambio','TipoCambioController')->middleware('auth');

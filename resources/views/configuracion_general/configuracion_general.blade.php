@@ -41,6 +41,11 @@
                                     <td>Familias</td>
                                     <td><a class="btn btn-primary" href="{{route('familia.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
+                                 <tr class="gradeX">
+                                    <td><img src="{{asset('img/logos/garantia.png')}}" width="20px" alt=""></td>
+                                    <td>Garantia</td>
+                                    <td><a class="btn btn-primary" href="{{route('garantia.index')}}"><i class="fa fa-gear"></i></a></td>
+                                </tr>
                                 <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/marca.svg')}}" width="20px" alt=""></td>
                                     <td>Marcas</td>
@@ -52,6 +57,11 @@
                                     <td><a class="btn btn-primary" href="{{route('motivo.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
+                                    <td><img src="{{asset('img/logos/tipo-cambio.svg')}}" width="20px" alt=""></td>
+                                    <td>Tipo de Cambio</td>
+                                    <td><a class="btn btn-primary" href="{{route('tipo_cambio.index')}}"><i class="fa fa-gear"></i></a></td>
+                                </tr>
+                                <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/unidad_medida.svg')}}" width="20px"></td>
                                     <td>Unidades de Medidas</td>
                                     <td><a class="btn btn-primary" href="{{route('unidad-medida.index')}}"><i class="fa fa-gear"></i></a></td>
@@ -61,10 +71,10 @@
                                     <td>Usuarios</td>
                                     <td><a class="btn btn-primary" href="{{route('usuario.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
-                                <tr class="gradeX">
-                                    <td><img src="{{asset('img/logos/tipo-cambio.svg')}}" width="20px" alt=""></td>
-                                    <td>Tipo de Cambio</td>
-                                    <td><a class="btn btn-primary" href="{{route('tipo_cambio.index')}}"><i class="fa fa-gear"></i></a></td>
+                                 <tr class="gradeX">
+                                    <td><img src="{{asset('img/logos/validez.svg')}}" width="20px" alt=""></td>
+                                    <td>Validez</td>
+                                    <td><a class="btn btn-primary" href="{{route('validez.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/backup_mail.svg')}}" width="20px" alt=""></td>
