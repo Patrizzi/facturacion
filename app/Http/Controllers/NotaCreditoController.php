@@ -216,8 +216,9 @@ class NotaCreditoController extends Controller
         }else{
             $estado=1;
         }
+        $igv=Igv::first();
 
-        return view('transaccion.venta.nota_credito.show',compact('notas_credito','notas_credito_registros','empresa','estado'));
+        return view('transaccion.venta.nota_credito.show',compact('notas_credito','notas_credito_registros','empresa','estado','igv'));	
 
     }
 

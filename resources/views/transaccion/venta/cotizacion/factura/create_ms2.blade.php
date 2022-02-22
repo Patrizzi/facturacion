@@ -804,10 +804,10 @@
            // fila.remove();
            if (e>1) {
                 fila.closest('tr').remove();
-                $(".borrar").prop("disabled", true);
+                $(".borrar").prop("disabled", false);
                 $(".addmore").prop("disabled", false);
             }else{
-                $(".borrar").prop("disabled", false);
+                $(".borrar").prop("disabled", true);
                 $(".addmore").prop("disabled", false);
             }
             var multiplier = 100;

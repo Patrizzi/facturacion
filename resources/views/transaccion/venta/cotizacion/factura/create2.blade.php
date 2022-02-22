@@ -815,10 +815,10 @@
            // fila.remove();
            if (e>1) {
             fila.closest('tr').remove();
-            $(".borrar").prop("disabled", true);
+            $(".borrar").prop("disabled", false);
             $(".addmore").prop("disabled", false);
         }else{
-            $(".borrar").prop("disabled", false);
+            $(".borrar").prop("disabled", true);
             $(".addmore").prop("disabled", false);
         }
         var multiplier = 100;
@@ -841,7 +841,7 @@
             var igv_valor={{$igv->renta}};
             var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
             var subtotal = document.querySelector(`#sub_total`).value;
-            var igv_va=parseFloat(subtotal_gravado)*igv_valor/100;
+            var igv_val=parseFloat(subtotal_gravado)*igv_valor/100;
             var igv = Math.round(igv_val * multiplier) / multiplier;
             var end_2=parseFloat(igv)+parseFloat(subtotal);
             var end = Math.round(end_2 * multiplier) / multiplier;
