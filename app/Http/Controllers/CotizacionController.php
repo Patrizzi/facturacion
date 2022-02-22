@@ -90,11 +90,18 @@ class CotizacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function descripcion_ajax(Request $request){
+
         $articulo=$request->get('articulo');
         $id=explode(" ",$articulo);
-        $producto=Producto::where('id',$id[0])->first();
-        $descripcion= $producto->descripcion;
-        echo $descripcion;
+        $producto=Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
+        $servicio=Servicios::where('id',$id[0])->where('codigo_servicio',$id[2])->where('codigo_original',$id[4])->first();
+        //diferenciador de producto y servicio
+        if(isset($producto)){
+            $descripcion= $producto->descripcion;
+        }else{
+            $descripcion= $servicio->descripcion;
+        }
+        return $descripcion;
     }
 
     public function create_factura(Request $request)
