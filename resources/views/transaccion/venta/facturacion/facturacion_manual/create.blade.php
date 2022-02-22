@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturación')
+@section('title', 'Factura Manual')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('facturacion_manual.index'))
 @section('value_accion', 'Atrás')
@@ -89,7 +89,6 @@
                                     <td>Almacen</td><td>:</td>
                                     <td>
                                         <select class="select2_demo_almacen" name="almacen" required="" value="{{old('almacen')}}">
-                                            <option></option>
                                             @foreach($almacenes as $almacen)
                                             <option value="{{$almacen->id}}">{{$almacen->nombre}} - {{$almacen->abreviatura}}</option>
                                             @endforeach

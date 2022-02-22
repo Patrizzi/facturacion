@@ -17,11 +17,11 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Por Enviar</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
+                        {{-- <li><a class="nav-link" data-toggle="tab" href="#tab-3">Facturacion Manual</a></li> --}}
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
-
                              <div class="table-responsive">
                                  <table class="table table-striped table-bordered table-hover dataTables-example" >
                                     <thead>
@@ -114,6 +114,60 @@
                     </div>
                 </div>
             </div>
+
+                    <div role="tabpanel" id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                             <div class="table-responsive">
+                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Codigo de Factura</th>
+                                            <th>Cliente</th>
+                                            <th>Ruc/DNI</th>
+                                            <th>Fecha Vencimiento</th>
+                                            <th>Guia Remision</th>
+                                            <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($facturacion_m as $facturaciones_m)
+                                        <tr class="gradeX">
+                                            <td>{{$facturaciones_m->id}}</td>
+                                            <td>{{$facturaciones_m->codigo_fac}}</td>
+                                            @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
+                                            <td>{{$facturaciones_m->cliente->nombre}}</td>
+                                            @else
+                                            <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
+                                            @endif
+                                            @if(isset($facturaciones_m->cliente_id))<!-- documento del cliente -->
+                                            <td>{{$facturaciones_m->cliente->numero_documento}}</td>
+                                            @else
+                                            <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
+                                            @endif
+                                            <td>{{$facturaciones_m->fecha_vencimiento }}</td>
+                                            @if($facturaciones_m->guia_remision=="0")
+                                            <td>Sin guia</td>
+                                            @else
+                                            <td>{{$facturaciones_m->guia_remision}}</td>
+                                            @endif
+                                            <td>
+                                                <center>
+                                                    <form action="{{route('facturacion_electronica.factura_sunat')}}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="factura_id" value="{{$facturaciones_m->id}}">
+                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
         </div>
     </div>
 </div>

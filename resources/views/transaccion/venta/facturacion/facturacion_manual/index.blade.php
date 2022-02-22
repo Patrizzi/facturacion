@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturacion')
+@section('title', 'Factura Manual')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('facturacion_manual.create'))
 @section('value_accion', 'Agregar')
