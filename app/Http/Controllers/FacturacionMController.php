@@ -391,7 +391,7 @@ class FacturacionMController extends Controller
         $factura->f_electronica=1;
         $factura->save();
 
-        return redirect()->route('facturacion_manual.index')->with('successMsg',$mensaje);
+        return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
 
     }
 
