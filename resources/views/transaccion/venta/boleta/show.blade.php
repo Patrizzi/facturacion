@@ -176,7 +176,10 @@
                     <td style="display: none">
                         {{-- {{$sub_total=(($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad)+$sub_total)}} --}}
                         {{$sub_total=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}
-
+                        {{$sub_total_gravado=($boleta_registros->boleta_i->op_gravada)}}
+                        {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
+                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                     </td>
                 </tr>
                 {{-- <span hidden="hidden">{{$i++}}</span> --}}
@@ -185,19 +188,42 @@
         </tbody>
     </table>
 </div><br><br><br><br>
+
 <div class="row">
- <div class="col-sm-8"></div>
+    <div class="col-sm-8">
+        <h3 align="left">
+            <?php $v=new CifrasEnLetras() ;
+                $letra=($v->convertirEurosEnLetras($end));
+                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                $end_final_point=strstr($end2, '.',false);
+                $end_final=str_replace('.', '',$end_final_point);
+            ?>
+            Son: {{$letra_final}} con {{$end_final}}/100 {{$boleta->moneda->nombre}}
+            {{-- {{$end2}} --}}
+        </h3>
+    </div>
     <div class="col-sm-4 form-control">
-        <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
-        <span style="display: block;float: right">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}}</span>
+        <span style="display: block;float: left"> Subtotal:</span>
+                    <span style="display: block;float: right;"> {{$simbologia=$boleta->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                    <br>
+                    <span style="display: block;float: left"> Op. Gravada: </span>
+                    <span style="display: block;float: right">{{$simbologia}} {{number_format($boleta->op_gravada,2)}}</span><br>
+                    <span style="display: block;float: left"> Op. Inafecta: </span>
+                    <span style="display: block;float: right">{{$simbologia}} {{ number_format($boleta->op_inafecta,2)}}</span><br>
+                    <span style="display: block;float: left"> Op. Exonerada: </span>
+                    <span style="display: block;float: right">{{$simbologia}} {{number_format($boleta->op_exonerada,2)}} </span><br>
+                    <span style="display: block;float: left"> I.G.V.: </span>
+                    <span style="display: block;float: right">{{$boleta->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                    <span style="display: block;float: left"> Importe Total: </span>
+                    <span style="display: block;float: right">{{$boleta->moneda->simbolo}} {{number_format(round($end, 2),2)}}</span>
 
     </div>
     <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
-     <div align="left">
-        <strong>Observación :</strong>
-        <p> {{$boleta->observacion }} </p>
+        <div align="left">
+            <strong>Observación :</strong>
+            <p> {{$boleta->observacion }} </p>
+        </div>
     </div>
-</div>
 </div><br>
 @include('layout_bancos')
 <br>

@@ -90,11 +90,18 @@ class CotizacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function descripcion_ajax(Request $request){
+
         $articulo=$request->get('articulo');
         $id=explode(" ",$articulo);
-        $producto=Producto::where('id',$id[0])->first();
-        $descripcion= $producto->descripcion;
-        echo $descripcion;
+        $producto=Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
+        $servicio=Servicios::where('id',$id[0])->where('codigo_servicio',$id[2])->where('codigo_original',$id[4])->first();
+        //diferenciador de producto y servicio
+        if(isset($producto)){
+            $descripcion= $producto->descripcion;
+        }else{
+            $descripcion= $servicio->descripcion;
+        }
+        return $descripcion;
     }
 
     public function create_factura(Request $request)
@@ -674,7 +681,7 @@ class CotizacionController extends Controller
                 if($request->get('tipo_coti') == "0"){
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                         $igv=Igv::first();
-                        $igv_ac = $igv->igv_total;
+                        $igv_ac = 0;
                     }else{
                         $igv_ac = 0;
                     }
@@ -765,7 +772,7 @@ class CotizacionController extends Controller
                 if($request->get('tipo_coti') == "0"){
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
                         $igv=Igv::first();
-                        $igv_ac = $igv->igv_total;
+                        $igv_ac = 0;
                     }else{
                         $igv_ac = 0;
                     }
@@ -2485,7 +2492,7 @@ foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
 
             if(strpos($boleta_registros->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                 $igv = Igv::first();
-                $igv_tot = $igv->igv_total;
+                $igv_tot = 0;
             }else{
                 $igv_tot = 0;
             }

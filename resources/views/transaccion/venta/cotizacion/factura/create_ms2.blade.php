@@ -239,7 +239,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <textarea  type='text' {{-- id='descripcion0' --}} placeholder="Descripción de Item"  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                    <textarea  type='text' id='descripcion0' placeholder="Descripción de Item"  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                                                     {{-- Afectacion de producto --}}
                                                     <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
@@ -418,7 +418,7 @@
          <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
         </td>";
         <td>
-        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
+        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i});ajax(${i})"  autocomplete="off">
             <option> </option>
             @foreach($productos as $index => $producto)
                 <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
@@ -431,7 +431,7 @@
             @endforeach
         </select>
 
-        <textarea type='text' placeholder="Descripcion de Item"  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+        <textarea type='text' id='descripcion${i}' placeholder="Descripcion de Item"  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
 
         <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
         <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
@@ -497,11 +497,10 @@
     });
 </script>
 
-{{-- 
+
 <script>
     $('#articulo').change(function(e){
         e.preventDefault();
-
         var articulo = $('[id="articulo"]').val();
         // var data={articulo:articulo,_token:token};
         $.ajax({
@@ -512,16 +511,17 @@
                 'articulo': articulo
             },
             success: function (msg) {
-            // console.log(msg);
-            const msg2 = msg.slice(2);
-            $('#descripcion0').val(msg2);
+                console.log(msg);
+                const msg2 = msg.slice(2);
+                $('#descripcion0').val(msg2);
             }
         });
     });
 
 
     function ajax (a){
-        var articulo2 = $(`[id='articulo${a}']`).val();
+        var articulo2 = document.getElementById(`articulo${a}`).value;
+        console.log(articulo2);
         $.ajax({
             type: "post",
             url: "{{ route('descripcion_ajax') }}",
@@ -530,13 +530,13 @@
                 'articulo': articulo2
             },
             success: function (msg) {
-            // console.log(msg);
-            const msg2 = msg.slice(2);
-            $(`#descripcion${a}`).val(msg2);
+                // console.log(msg);
+                const msg2 = msg.slice(2);
+                $(`#descripcion${a}`).val(msg2);
             }
         });
     }
-</script> --}}
+</script> 
 <script>
     function comision(){
             //comision
@@ -804,10 +804,10 @@
            // fila.remove();
            if (e>1) {
                 fila.closest('tr').remove();
-                $(".borrar").prop("disabled", true);
+                $(".borrar").prop("disabled", false);
                 $(".addmore").prop("disabled", false);
             }else{
-                $(".borrar").prop("disabled", false);
+                $(".borrar").prop("disabled", true);
                 $(".addmore").prop("disabled", false);
             }
             var multiplier = 100;

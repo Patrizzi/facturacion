@@ -178,10 +178,13 @@
                                             <td>{{$notas_credito_registro->precio}}</td>
                                             <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
                                             <td style="display: none">
-                                                {{-- {{$sub_total=($notas_credito_registro->factura_ids->op_gravada)+($notas_credito_registro->factura_ids->op_inafecta)+($notas_credito_registro->factura_ids->op_exonerada)}}
-                                                {{$sub_total_gravado=($notas_credito_registro->factura_ids->op_gravada)}}
-                                                {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                                {{$end=round($sub_total, 2)+round($igv_p, 2)}} --}}
+                                                
+                                                    {{$sub_total=($notas_credito_registro->nota_credito_ids->op_gravada)+($notas_credito_registro->nota_credito_ids->op_inafecta)+($notas_credito_registro->nota_credito_ids->op_exonerada)}}
+                                                    {{$sub_total_gravado=($notas_credito_registro->nota_credito_ids->op_gravada)}}
+                                                    {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
+                                                    {{$end=round($sub_total, 2)+round($igv_p, 2)}} 
+                                                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
+                                                
                                             </td>
                                         </tr>
                                     @endforeach
@@ -195,6 +198,58 @@
                     </table>
                 </div>
                 <br><br><br><br>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h3 align="left">
+                            <?php $v=new CifrasEnLetras() ;
+                            $letra=($v->convertirEurosEnLetras($end));
+                            $letra_final = ucfirst(strstr($letra, 'soles',true));
+                            $end_final_point=strstr($end2, '.',false);
+                            $end_final=str_replace('.', '',$end_final_point);
+                        ?>
+                        Son: {{$letra_final}} con {{$end_final}}/100
+                        @if(isset($notas_credito->facturacion_id))
+                            {{$notas_credito->nota_i_facturacion->moneda->nombre}}
+                        @else
+                            {{$notas_credito->nota_i_boleta->moneda->nombre}}
+                        @endif
+                        {{-- {{$end2}} --}}
+                    </h3>
+                </div>
+                <div class="col-sm-4 form-control">
+                    {{-- <div class="col-sm-4 form-control" > --}}
+                        <span style="display: block;float: left"> Subtotal:</span>
+                        <span style="display: block;float: right;"> 
+                            @if(isset($notas_credito->facturacion_id))
+                                {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}} 
+                            @else
+                                {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}} 
+                            @endif 
+                                {{number_format($sub_total, 2)}}</span>
+                        <br>
+                        <span style="display: block;float: left"> Op. Gravada: </span>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format($notas_credito->op_gravada,2)}}</span><br>
+                        <span style="display: block;float: left"> Op. Inafecta: </span>
+                        <span style="display: block;float: right">{{$simbologia}} {{ number_format($notas_credito->op_inafecta,2)}}</span><br>
+                        <span style="display: block;float: left"> Op. Exonerada: </span>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format($notas_credito->op_exonerada,2)}} </span><br>
+                        <span style="display: block;float: left"> I.G.V.: </span>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                        <span style="display: block;float: left"> Importe Total: </span>
+                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($end, 2),2)}}</span>
+    
+                    </div>
+                </div>
+                <br>
+                {{-- <div class="row">
+                    <div class="col-sm-12 form-control" style="height:  120px">
+                        <strong>Observaciones:</strong><br>
+                        {{$notas_credito->observacion}}
+                    </div>
+                </div> --}}
+                <br>
+              <br>
+            </div>
         </div>
     </div>
 </div>

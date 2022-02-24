@@ -240,7 +240,7 @@
                                             </option>
                                             @endforeach
                                         </select>
-                                        <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
+                                        <textarea  type='text'  id='descripcion0'   name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
                                         <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                         <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
                                     </td>
@@ -422,7 +422,7 @@
         <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
         </td>";
         <td>
-        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i})"  autocomplete="off">
+        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i});ajax(${i})"  autocomplete="off">
         <option> </option>
         @foreach($productos as $index => $producto)
         <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
@@ -436,7 +436,7 @@
         </select>
 
 
-        <textarea type='text'   name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+        <textarea type='text'  id='descripcion${i}'  name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
         <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
         <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
         </td>
@@ -503,7 +503,7 @@
     });
 </script>
 
-{{-- 
+
 <script>
     $('#articulo').change(function(e){
         e.preventDefault();
@@ -517,6 +517,7 @@
                 'articulo': articulo
             },
             success: function (msg) {
+                console.log(msg);
                 const msg2 = msg.slice(2);
                 $('#descripcion0').val(msg2);
             }
@@ -525,7 +526,8 @@
 
 
     function ajax (a){
-        var articulo2 = $(`[id='articulo${a}']`).val();
+        var articulo2 = document.getElementById(`articulo${a}`).value;
+        console.log(articulo2);
         $.ajax({
             type: "post",
             url: "{{ route('descripcion_ajax') }}",
@@ -540,7 +542,7 @@
             }
         });
     }
-</script> --}}
+</script> 
 <script>
     function comision(){
 
@@ -813,10 +815,10 @@
            // fila.remove();
            if (e>1) {
             fila.closest('tr').remove();
-            $(".borrar").prop("disabled", true);
+            $(".borrar").prop("disabled", false);
             $(".addmore").prop("disabled", false);
         }else{
-            $(".borrar").prop("disabled", false);
+            $(".borrar").prop("disabled", true);
             $(".addmore").prop("disabled", false);
         }
         var multiplier = 100;
@@ -839,7 +841,7 @@
             var igv_valor={{$igv->renta}};
             var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
             var subtotal = document.querySelector(`#sub_total`).value;
-            var igv_va=parseFloat(subtotal_gravado)*igv_valor/100;
+            var igv_val=parseFloat(subtotal_gravado)*igv_valor/100;
             var igv = Math.round(igv_val * multiplier) / multiplier;
             var end_2=parseFloat(igv)+parseFloat(subtotal);
             var end = Math.round(end_2 * multiplier) / multiplier;

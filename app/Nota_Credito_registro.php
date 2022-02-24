@@ -25,4 +25,8 @@ class Nota_Credito_registro extends Model
     public function boleta_ids(){
         return $this->belongsTo(Boleta::class,'boleta_id');
     }
+
+    public function nota_credito_ids(){
+        return $this->belongsTo(Nota_Credito::class,'nota_credito_id');
+    }
 }
