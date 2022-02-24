@@ -681,7 +681,7 @@ class CotizacionController extends Controller
                 if($request->get('tipo_coti') == "0"){
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                         $igv=Igv::first();
-                        $igv_ac = $igv->igv_total;
+                        $igv_ac = 0;
                     }else{
                         $igv_ac = 0;
                     }
@@ -772,7 +772,7 @@ class CotizacionController extends Controller
                 if($request->get('tipo_coti') == "0"){
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
                         $igv=Igv::first();
-                        $igv_ac = $igv->igv_total;
+                        $igv_ac = 0;
                     }else{
                         $igv_ac = 0;
                     }
@@ -2492,7 +2492,7 @@ foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
 
             if(strpos($boleta_registros->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                 $igv = Igv::first();
-                $igv_tot = $igv->igv_total;
+                $igv_tot = 0;
             }else{
                 $igv_tot = 0;
             }

@@ -3,6 +3,13 @@
 // 	echo "<pre>{$query->sql}</pre>";
 // });
 // a
+
+Route::get('sentencia1', function (App\Sentencia $post) {
+	return $post->boleta();
+});
+Route::get('sentencia2', function (App\Sentencia $post) {
+	return $post->cotizacion();
+});
 Route::group(
 	[ 'middleware' => ['auth','api','cambio_diario']],
 	function(){
