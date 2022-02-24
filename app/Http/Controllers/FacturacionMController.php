@@ -383,9 +383,9 @@ class FacturacionMController extends Controller
         $result=config_acceso_sunat::send($see, $invoice);
 
         //lectura CDR
-        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        $mensaje=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
-        $mensaje="La factura fue enviada exitosamente";
+        // $mensaje="La factura fue enviada exitosamente";
 
         //cambio de factura electronica - en caso sea todo exitoso
         $factura->f_electronica=1;

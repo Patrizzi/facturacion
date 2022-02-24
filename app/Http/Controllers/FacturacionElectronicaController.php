@@ -41,8 +41,10 @@ class FacturacionElectronicaController extends Controller
     {
         $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
         $facturacion=Facturacion::where('f_electronica',0)->get();
+
+        $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
         $facturacion_enviada=Facturacion::where('f_electronica',1)->get();
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m'));
+        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m','facturacion_enviada_m'));
     }
 
     public function index_boleta(){
