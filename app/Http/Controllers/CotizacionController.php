@@ -85,17 +85,21 @@ class CotizacionController extends Controller
        return view('transaccion.venta.cotizacion.index2',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero'));
    }
     /**
-     * Show the form for creating a new resource.
-     *
+       
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function descripcion_ajax(Request $request){
-
+    public function parameter_call(Request $request)
+    {
+        //Obtención del articulo
         $articulo=$request->get('articulo');
-        $id=explode(" ",$articulo);
+        $id=explode(" ",$articulo); //separador del articulo por espacio
+
+        //Obtención de los datos del articulo (producto-servicio)
         $producto=Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
         $servicio=Servicios::where('id',$id[0])->where('codigo_servicio',$id[2])->where('codigo_original',$id[4])->first();
-        //diferenciador de producto y servicio
+
+        //Diferenciador de producto y servicio
         if(isset($producto)){
             $descripcion= $producto->descripcion;
         }else{

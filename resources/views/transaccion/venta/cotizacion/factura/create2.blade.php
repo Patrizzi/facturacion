@@ -4,21 +4,7 @@
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Atrás')
 @extends('layout_agregado_rapido')
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<head>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("form").keypress(function(e)
-             {  if (e.which == 13) {setTimeout(function()
-                 { e.target.value += ' | '; }, 4);
-             e.preventDefault(); }
-         });
-            // $('#chek_factura').prop("checked", true);
-            document.getElementById("n_boleta").style.display = "none";
-
-        });
-    </script>
-</head>
+{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 @section('content')
 
 @if (session('repite'))
@@ -44,16 +30,18 @@
     </div>
 </div>
 @endif
+{{-- ! Botón para clientes ocultado por llamada de jquery errada   --}}
 
-{{-- Boton para modal de Clientes --}}
-@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
-@section('ruta_retorno', 'cotizacion')
-<div class="social-bar">
-    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
-</div>
-{{--Fin Boton para modal de Clientes --}}
+    {{-- Boton para modal de Clientes --}}
+    {{-- @section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
+    @section('ruta_retorno', 'cotizacion')
+    <div class="social-bar">
+        <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+    </div> --}}
+    {{--Fin Boton para modal de Clientes --}}
 
 {{-- Formulario para ir a Moneda Secundaria --}}
+
 <form action="{{ route('cotizacion.create_factura_ms')}}" enctype="multipart/form-data" id="almacen-form" method="POST">
     @csrf
     <input type="text" value="{{$sucursal->id}}" hidden="hidden" name="almacen">
@@ -83,7 +71,6 @@
                                     <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                     <h5 id="n_factura">{{$cotizacion_numero}}</h5>
                                     <h5 id="n_boleta">{{$cotizacion_numero_boleta}}</h5>
-
                                 </div>
                             </div>
                         </div>
@@ -94,12 +81,7 @@
                                     <td>Cliente</td>
                                     <td>:</td>
                                     <td>
-                                        <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
-                                            <option></option>
-                                            @foreach($clientes as $cliente)
-                                            <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
-                                            @endforeach
-                                        </select>
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
                                     </td>
                                     <input type="hidden" value="0" name="print" id="prints">
                                     <td>Comisionista</td>
@@ -146,18 +128,19 @@
                                             @endforeach
                                         </select></td>
                                     </tr>
-
+                                   
                                     <tr>
                                         <td>Moneda</td>
                                         <td>:</td>
                                         <td>
                                          <div class="row">
-                                            <input type="hidden" name="almacen" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                                            <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
                                             <div class=" col-sm-5">
-                                                <input type="text" name="moneda" class="form-control " value=" {{$moneda->nombre}}" readonly="readonly">
+                                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
                                             </div>
 
-                                            <a class="col-sm-5" onclick="event.preventDefault();document.getElementById('almacen-form').submit();">
+                                            <a class="col-sm-5" onclick="changeMoney()">
                                                 <button style="height: 35px;width: auto" type="button" class=' addmores btn btn-info'>@if($moneda->tipo=='nacional')Dolares @elseif($moneda->tipo=='extranjera') Soles @endif</button></a>
                                             </div>
 
@@ -210,7 +193,7 @@
                         <table cellspacing="0" class="table tables  " >
                             <thead>
                                 <tr>
-                                    <th style="width: 10px">{{-- <input class='check_all' type='checkbox' onclick="select_all()" /> --}}</th>
+                                    <th style="width: 10px"></th>
                                     <th style="width: 500px">Artículo</th>
                                     <th>Stock</th>
                                     <th>Cantidad</th>
@@ -228,18 +211,7 @@
                                         <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                     </td>
                                     <td>
-                                        <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="calcular(this,0);multi(0);selet_one()"  autocomplete="off">
-                                            <option></option>
-                                            @foreach($productos as $index => $producto)
-                                            <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
-                                                {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}
-                                            </option>
-                                            @endforeach
-                                            @foreach($servicios  as $index2 => $servicio)
-                                            <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index2] = strtok($servicio->tipo_afec_i_serv->informacion," ")}} {{$array_promedio_serv[$index2]}} 10 {{$servicio->descuento}} {{$array2[$index2]}}">{{$servicio->id}} | {{$servicio->nombre}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}}
-                                            </option>
-                                            @endforeach
-                                        </select>
+                                        <select class="monto0 select2_demo_3 select_change"  required="" id="articulo"  onchange="ajax(0);selet_one()"  autocomplete="off"></select>
                                         <textarea  type='text'  id='descripcion0'   name='descripcion_item[]' placeholder="Descripción de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
                                         <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                         <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
@@ -386,15 +358,45 @@
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
-<script type="text/javascript">
-    $(".select2_demo_3").select2({
-        placeholder: "Seleccionar Item",
-    });
+
+
+<script>
+    //TODO Creación de array para el control de los articulos
+    var array_articulos = [0];
 </script>
-<script type="text/javascript">
-    $(".select2_demo_client").select2({
-        placeholder: "Seleccionar Cliente",
-    });
+
+
+
+<script type="text/javascript"> 
+
+    // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
+        $(".select2_demo_client").select2({
+            placeholder: "Seleccionar Cliente",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 500,
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.nombre,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
 </script>
 
 {{-- scritp de modal agregar --}}
@@ -422,17 +424,7 @@
         <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
         </td>";
         <td>
-        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="calcular(this,${i});multi(${i});seleccion_options(${i});ajax(${i})"  autocomplete="off">
-        <option> </option>
-        @foreach($productos as $index => $producto)
-        <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index] = strtok($producto->tipo_afec_i_producto->informacion," ")}} {{$array_promedio[$index]}} {{$array_cantidad[$index]}} {{$producto->descuento2}} {{$array[$index]}}">
-        {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}
-        </option>
-        @endforeach
-        @foreach($servicios  as $index2 => $servicio)
-        <option value="{{$servicio->id}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}} | {{$servicio->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$prc_afec[$index2] = strtok($servicio->tipo_afec_i_serv->informacion," ")}} {{$array_promedio_serv[$index2]}} 10 {{$servicio->descuento}} {{$array2[$index2]}}">{{$servicio->id}} | {{$servicio->nombre}} | {{$servicio->codigo_servicio}} | {{$servicio->codigo_original}}
-        </option>
-        @endforeach
+        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i});seleccion_options(${i})"  autocomplete="off">
         </select>
 
 
@@ -480,11 +472,10 @@
         <input style="width: 76px"  type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control"  required  autocomplete="off" />
         <td>
         </tr>`;
+        array_articulos.push(i);
         $('.tables').append(data);
         i++;
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Item",
-        });
+        articlesSelect2();
         var input_ds = [];
         var number_tot = document.getElementsByName('articulo[]').length;
         for( j = 0; j < number_tot; j++){
@@ -495,54 +486,109 @@
                 $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
             }
         };
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Item",
-        });
+        
         $(".addmore").prop("disabled", true);
         $(".borrar").prop("disabled", false);
+        
     });
 </script>
 
-
-<script>
-    $('#articulo').change(function(e){
-        e.preventDefault();
-        var articulo = $('[id="articulo"]').val();
-        // var data={articulo:articulo,_token:token};
-        $.ajax({
-            type: "post",
-            url: "{{ route('descripcion_ajax') }}",
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'articulo': articulo
-            },
-            success: function (msg) {
-                console.log(msg);
-                const msg2 = msg.slice(2);
-                $('#descripcion0').val(msg2);
-            }
-        });
+<script type="text/javascript">
+    $(document).ready(function() {
+        articlesSelect2();
     });
-
-
-    function ajax (a){
-        var articulo2 = document.getElementById(`articulo${a}`).value;
-        console.log(articulo2);
-        $.ajax({
-            type: "post",
-            url: "{{ route('descripcion_ajax') }}",
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'articulo': articulo2
-            },
-            success: function (msg) {
-                // console.log(msg);
-                const msg2 = msg.slice(2);
-                $(`#descripcion${a}`).val(msg2);
+    
+    
+    function articlesSelect2() {
+        $(".select2_demo_3").select2({
+            placeholder: "Seleccionar Articulo",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.articles') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 500,
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                            };
+                        })
+                    };
+                },
+                cache: true
             }
         });
     }
-</script> 
+    </script>
+
+<script>
+    // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
+    function ajax (a){
+        if(a==0){
+            var articulo = document.getElementById(`articulo`).value;
+        }else{
+            var articulo = document.getElementById(`articulo${a}`).value;
+        }
+        var almacen = $('[id="almacen_id"]').val();
+        var moneda = $('[id="moneda_id"]').val();
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.description') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'articulo': articulo,
+                'almacen': almacen,
+                'moneda': moneda	
+            },
+            success: function (msg) {
+                console.log('console log de msg');
+                console.log(msg);
+                $(`#descripcion${a}`).val(msg.description);
+                $(`#tipo_afec${a}`).val(msg.afectacion);
+                $(`#precio${a}`).val(msg.price);
+                $(`#cantidad${a}`).val(1);
+                $(`#precio_unitario_descuento${a}`).val(msg.price);
+                $(`#promedio_original${a}`).val(msg.average);
+                $(`#stock${a}`).val(msg.amount);
+                $(`#descuento${a}`).val(msg.discount);
+                $(`#check_descuento${a}`).val(0);
+                $(`#cantidad${a}`).attr('max', msg.amount );
+                $(`#cantidad`).attr('max', msg.amount );
+                // //Cambio de moneda
+                // $(`#moneda_id`).val(msg.moneda.id);
+                // $(`#moneda`).val(msg.moneda.nombre);
+                var separador=" ";
+                var comision=document.querySelector(`#comisionista`).value;
+                //revirtiendo la cadena
+                var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
+                //para comision
+                var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
+                var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
+                var comision_v =reverseString(comision_v_r[0]);//convierte el precio al revez a la normalidad
+                if(comision){
+                    document.getElementById(`comision${a}`).value = comision_v;
+                }else{
+                    document.getElementById(`comision${a}`).value = 0;
+                }
+                console.log("envios por ajax");
+                console.log(msg);
+                multi(a);
+            }
+        });
+    }
+
+</script>
+
 <script>
     function comision(){
 
@@ -559,7 +605,7 @@
 
             var campos_num = document.getElementsByClassName("total").length;
 
-            console.log(comision_v);
+            // console.log(comision_v);
 
             document.getElementById(`comision0`).value = comision_v;
 
@@ -580,7 +626,7 @@
 
         function multi(a){
 
-
+            console.log("multi : ------------------------------------------------------------>");
             var total = 1;
             var totales=0;
             var change= false; //
@@ -624,7 +670,7 @@
                 var igv=final_decimal*igv_valor/100;
                 var igv_decimal = Math.round(igv * multiplier) / multiplier;  
                 var final_igv_round = parseFloat(final_decimal) + parseFloat(igv_decimal);
-                console.log(final_igv_round);
+                
                 if(afec.toString() == "Gravado"){
                     document.getElementById(`total${a}`).value = final_decimal;
                     document.getElementById(`afectacion${a}`).value = final_decimal;
@@ -659,7 +705,7 @@
                 var igv=final_decimal*igv_valor/100;
                 var igv_decimal = Math.round(igv * multiplier) / multiplier;  
                 var final_igv_round = parseFloat(final_decimal) + parseFloat(igv_decimal);
-                console.log(final_igv_round);
+                
 
                 if(afec.toString() == "Gravado"){
                     document.getElementById(`total${a}`).value = final_decimal;
@@ -670,6 +716,11 @@
                     document.getElementById(`afectacion${a}`).value = 0;
                     document.getElementById(`precio_unitario_igv${a}`).value = final_decimal;
                 }
+                
+                console.log("final_decimal : "+final_decimal);
+                console.log("final_igv_round : "+final_igv_round);	
+                console.log("multiplier : "+multiplier);
+
 
             }
             var totalInp = $('[name="total"]');
@@ -685,6 +736,8 @@
 
             $('#sub_total').val(total_tt);
 
+            console.log("sub total : "+total_tt);
+
             //SOLO GRAVADO
             var totalInpG = $('[name="afectacion"]');
             var total_tg = 0;
@@ -693,16 +746,19 @@
                 total_tg += parseFloat($(this).val());
             });
 
+            console.log("total afectacion : "+total_tg);
+
             var multiplier3 = 100;
             var total_ttg = Math.round(total_tg * multiplier3) / multiplier3;
 
             $('#subtotal_gravado').val(total_ttg);
 
             var igv_valor={{$igv->renta}};
+            console.log("igv : "+igv_valor);
             var subtotal = document.querySelector(`#sub_total`).value;
             var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
 
-            var igv=subtotal_gravado*igv_valor/100;
+            var igv=subtotal_gravado*igv_valor/100; 
 
             var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
             var end=igv_decimal+parseFloat(subtotal);
@@ -720,91 +776,24 @@
         function reverseString(str) {
             return str.split("").reverse().join("");;
         }
-
-        function calcular(input,a)
-        {
-         console.log(input.id);
-         var id = input.id;
-         var caracteres = input.value;
-         var caracteres_reverse=reverseString(caracteres);
-         var cadena=input.value;
-         var separador=" ";
-         var seprador_total= " / ";
-         var id=cadena.split(separador,1);
-            //revirtiendo la cadena
-            var reverse=reverseString(caracteres);//devuelve toda la cadena articulo al reves
-            //para precio
-            var precio_v_r=reverse.split(separador,1); //devuelve el precio en objeto al revez
-            var precio_r=precio_v_r[0];//obtiene el precio del objeto [0] al revez
-            var precio_v =reverseString(precio_v_r[0]);//convierte el precio al revez a la normalidad
-
-            var caracteres_space=caracteres_reverse.replace(precio_r,"");//obtiene la cadena articulo sin precio,pero con un espacio en blanco
-            var reverse2=caracteres_space.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para descuento
-            var descuento_v_r=reverse2.split(separador,1);////obtiene el descuento del objeto [0] al revez
-            var descuento_r=descuento_v_r[0];//obtiene el descuento del objeto [0] al revez
-            var descuento_v =reverseString(descuento_v_r[0]);//convierte el descuento al revez a la normalidad
-
-            var caracteres_space_2=reverse2.replace(descuento_r,"");//obtiene la cadena articulo sin precio,descuento,con un espacio en blanco
-            var reverse3=caracteres_space_2.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para stock
-            var stock_v_r=reverse3.split(separador,1);
-            var stock_r=stock_v_r[0];
-            var stock_v =reverseString(stock_v_r[0]);
-
-            var caracteres_space_3=reverse3.replace(stock_r,"");//obtiene la cadena articulo sin precio,descuento,con un espacio en blanco
-            var reverse4=caracteres_space_3.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para promedio_original
-            var prom_v_r=reverse4.split(separador,1);
-            var prom_r=prom_v_r[0];
-            var prom_v =reverseString(prom_v_r[0]);
-            //tipo de afectacion
-            var caracteres_space_4 = reverse4.replace(prom_r,"");
-            var reverse5 = caracteres_space_4.slice(1);
-            // tipo de afectacion
-            var afec_prec_tot=reverse5.split(separador,1);
-            var afec_pre_r=afec_prec_tot[0];
-            var afec_pre_v =reverseString(afec_prec_tot[0]);
-            document.getElementById(`tipo_afec${a}`).value =  afec_pre_v;
-            console.log("el promedio original es: "+prom_v);
-            console.log("el strock es: "+stock_v+"-------------")
-
-            document.getElementById(`precio${a}`).value = precio_v;
-            document.getElementById(`cantidad${a}`).value = 1;
-            document.getElementById(`precio_unitario_descuento${a}`).value = precio_v;
-            document.getElementById(`promedio_original${a}`).value = prom_v;
-            document.getElementById(`stock${a}`).value = stock_v;
-            document.getElementById(`descuento${a}`).value = descuento_v;
-            document.getElementById(`check_descuento${a}`).value = 0;
-            var msg2 = parseInt(stock_v) ;
-            $(`#cantidad${a}`).attr('max', stock_v );
-            $(`#cantidad`).attr('max', stock_v );
-            //comision
-            var comision=document.querySelector(`#comisionista`).value;
-            //revirtiendo la cadena
-            var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
-            console.log(reverse9);
-            //para comision
-            var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
-            var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
-            var comision_v =reverseString(comision_v_r[0]);//convierte el precio al revez a la normalidad
-            // console.log(comision_v);
-            if(comision){
-                document.getElementById(`comision${a}`).value = comision_v;
-            }else{
-                document.getElementById(`comision${a}`).value = 0;
-            }
-
-
-        }
     </script>
 
     <script>
         $(document).on('click', '.borrar', function (event) {
            event.preventDefault();
            var e = document.getElementsByClassName("e").length;
+            
+            for (let i=0; i<array_articulos.length; i++){
+                if(array_articulos[i] == e){
+                    array_articulos.splice(i, 1);
+                    
+                }
+            }
+
+
             // DESACTIVAR OPTIONS
             var fila = $(this).parents("tr");
+            console.log("el numero de borrado es : "+$(this));
             var input_text_opt = fila.find('input[class="celda"]').val();
             $('option[value="'+input_text_opt+'"]').prop("disabled", false);
             $(".addmore").prop("disabled", false);
@@ -852,18 +841,6 @@
             document.getElementById("total_final").value = end;
         });
     </script>
-
-    {{-- <script>
-        function select_all() {
-            $('input[class=case]:checkbox').each(function () {
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    $(this).prop("checked", false);
-                } else {
-                    $(this).prop("checked", true);
-                }
-            });
-        }
-    </script> --}}
 
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
@@ -954,6 +931,37 @@
             } 
         }   
     </script>
+    <script type="text/javascript">
+        // TODO Script para cambiar por moneda
+        let status=0;
+        function changeMoney() {
+            
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.money') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'status': status,
+                },
+                success: function (msg) {
+                    //Cambio de moneda
+                    console.log("esto es el msg de moneda : "+msg.nombre)
+                    $(`#moneda_id`).val(msg.id);
+                    $(`#moneda`).val(msg.nombre);
+                    if(status==1){
+                        status=0;
+                    }else{
+                        status=1;
+                    }
+                    
+                }
+            });
+            // for(let i=0;i<=10;i++){
+            //     ajax(2); 
+            // }   
+            ajax(2);   
+        }
+        </script>
     <style type="text/css">
         .a{color: red}
     </style>

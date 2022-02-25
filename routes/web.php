@@ -168,7 +168,16 @@ Route::group(
 		Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
 		Route::post('stock_ajax_distribucion', 'KardexEntradaDistribucionController@stock_ajax_distribucion')->name('stock_ajax_distribucion');
 		Route::post('stock_ajax_traslado', 'KardexEntradaTrasladoAlmacenController@stock_ajax_traslado')->name('stock_ajax_traslado');
-		Route::post('descripcion_ajax', 'CotizacionController@descripcion_ajax')->name('descripcion_ajax');
+
+		//Llamada general de los parámetros requeridos por el articulo (producto-servicio), por medio de ajax (parameter_call)
+		// Route::post('parameter_call', 'CotizacionController@parameter_call')->name('parameter_call');
+
+		// * Llamada general de los parámetros requeridos por el articulo (producto-servicio), por medio de ajax (parameter_call)
+		Route::post('parameter_call/description', 'ParameterCallController@description')->name('pa.description');
+		Route::post('parameter_call/getClients', 'ParameterCallController@getClients')->name('pa.clients');
+		Route::post('parameter_call/getArticles', 'ParameterCallController@getArticles')->name('pa.articles');
+		Route::post('parameter_call/getMoney', 'ParameterCallController@getMoney')->name('pa.money');
+
 		Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
 		Route::post('ajax_periodo', 'PeriodoConsultaController@ajax_periodo')->name('ajax_periodo');
