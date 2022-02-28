@@ -34,6 +34,11 @@ class ParameterCallController extends Controller
         $store=$request->get('almacen');
         $branch_office=Almacen::where('id',$store)->first(); //obtención del almacén por el id
 
+        //validación en caso se envié campo vacíos
+        if($article==NULL){
+            return response()->json(['error'=>'No existe ningún artículo'],400);
+        }
+
 
         //Obtención de los datos del articulo (producto-servicio)
         $product=Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
@@ -231,9 +236,13 @@ class ParameterCallController extends Controller
         if($request->status == 1){
             $money=Moneda::where('principal',1)->first();
             $money->status=0;
+            $other_money=Moneda::where('principal',0)->first();
+            $money->other=$other_money->nombre;
         }else{
             $money=Moneda::where('principal',0)->first();
             $money->status=1;
+            $other_money=Moneda::where('principal',1)->first();
+            $money->other=$other_money->nombre;
         }
         
         return $money;
