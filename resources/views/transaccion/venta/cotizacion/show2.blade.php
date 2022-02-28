@@ -250,14 +250,14 @@
 <br>
 <!-- Fin Totales de Productos -->
 @include('layout_bancos')
-
           <br>
-          <div class="row">
+@include('layout_firma_pie_hoja')
+         {{--  <div class="row">
             <div class="col-sm-3">
                 <p><u>Centro de Atención : </u></p>
                 Teléfono :  {{$empresa->telefono}}<br>
-                Celular : {{$cotizacion->user_personal->personal->celular }}<br>
-                Email : {{$cotizacion->user_personal->personal->email }}<br>
+                Celular : {{$cotizacion->user_personal->celular }}<br>
+                Email : {{$cotizacion->user_personal->email_user}}<br>
                 Web : {{$empresa->pagina_web}} <br>
             </div>
             <div class="col-sm-3"></div>
@@ -268,9 +268,9 @@
                 <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
                 @endif
                 <hr>
-                <center>{{$cotizacion->user_personal->personal->nombres }}</center>
+                <center>{{$cotizacion->user_personal->nombre}}</center>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 </div>

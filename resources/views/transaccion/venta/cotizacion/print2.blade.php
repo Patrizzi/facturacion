@@ -173,7 +173,9 @@
 <!-- Fin Totales de Productos -->
 @include('layout_bancos')
 <br>
-<div class="row">
+@include('layout_firma_pie_hoja')
+
+{{-- <div class="row">
     <div class="col-sm-3">
         <p><u>Centro de Atención: </u></p>
         Teléfono : {{$cotizacion->user_personal->personal->telefono }}<br>
@@ -187,7 +189,7 @@
         <hr>
         <center>{{$cotizacion->user_personal->personal->nombres }}</center>
     </div>
-</div>
+</div> --}}
 </div>
 </div>
 </div>
