@@ -959,7 +959,21 @@
             // for(let i=0;i<=10;i++){
             //     ajax(2); 
             // }   
-            ajax(2);   
+            let articles_selected = document.getElementsByClassName("select2_demo_3");
+            let articles_selected_count = articles_selected.length;
+            for(let z=0;z<articles_selected_count;z++){
+                let selected=document.getElementsByClassName("select2_demo_3 select_change")[z].getAttribute('id');
+                console.log("valor de selected");
+                console.log(selected);
+                console.log("valor de articles_selected_count");
+                console.log(articles_selected_count);
+                if(selected=='articulo'){
+                    ajax(0); 
+                }else{
+                    ajax(selected.substring(8)); 
+                }
+            }
+            
         }
         </script>
     <style type="text/css">
