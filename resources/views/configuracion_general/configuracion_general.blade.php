@@ -69,7 +69,7 @@
                                 <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/usuarios.svg')}}" width="20px" alt=""></td>
                                     <td>Usuarios</td>
-                                    <td><a class="btn btn-primary" href="{{route('usuario.index')}}"><i class="fa fa-gear"></i></a></td>
+                                    <td><a class="btn btn-primary" href="{{route('usuarios.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                  <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/validez.png')}}" width="20px" alt=""></td>

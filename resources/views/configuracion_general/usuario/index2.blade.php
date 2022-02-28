@@ -6,7 +6,7 @@
 @section('content')
 @if($errors->any())
 <div style="padding-top: 20px;">
- <div class="alert alert-danger">
+   <div class="alert alert-danger">
     <a class="alert-link" href="#">
       @foreach ($errors->all() as $error)
       <li class="error">{{ $error }}</li>
@@ -19,7 +19,7 @@
     <div class="animated fadeInRight">
         <div class="row">
             <div class="col-md-12">
-               <div class="ibox ">
+             <div class="ibox ">
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-md-6">
@@ -27,16 +27,16 @@
                             <p class="form-control">{{auth()->user()->email}}</p>
                         </div>
                         <div class="col-md-6">
-                           <h5>Almacén Asignado:</h5>
-                           <p class="form-control">{{auth()->user()->almacen->nombre}}</p>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
+                         <h5>Almacén Asignado:</h5>
+                         <p class="form-control">{{auth()->user()->almacen->nombre}}</p>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
 
-   <form action="{{ route('usuario.update',auth()->user()->id) }}"  enctype="multipart/form-data" method="post">
+ <form action="{{ route('usuario.update',auth()->user()->id) }}"  enctype="multipart/form-data" method="post">
     @csrf
     @method('PATCH')
     <div class="row">
@@ -44,11 +44,11 @@
             <div class="ibox ">
                 <div>
                     <div class="ibox-content no-padding border-left-right">
-                       {{-- <img  class="img-fluid" src="{{ asset('/profile/images/')}}/{{auth()->user()->avatar}}" > --}}
+                     {{-- <img  class="img-fluid" src="{{ asset('/profile/images/')}}/{{auth()->user()->avatar}}" > --}}
 
-                       <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()"  />
-                       <input name="avatar_respaldo" value="{{auth()->user()->avatar}}" hidden/>
-                       <div id="visorArchivo">
+                     <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()"  />
+                     <input name="avatar_respaldo" value="{{auth()->user()->avatar}}" hidden/>
+                     <div id="visorArchivo">
                         <img style="padding: 51px;" class="img-fluid" src="{{ asset('/profile/images/')}}/{{auth()->user()->avatar}}" >
                     </div>
                 </div>
@@ -72,14 +72,14 @@
         <div class="ibox-content">
           <div class="ibox-content profile-content">
               <h5>Nombre:</h5>
-              <h4><input type="text" class="form-control" value="{{auth()->user()->nombre}}" name="nombre"></h4>
+              <h4><input type="text" class="form-control" value="{{auth()->user()->nombre}}" required name="nombre"></h4>
               <h5>Correo:</h5>
-              <h4><input type="text" class="form-control" value="{{auth()->user()->email_user}}" name="email_user"></h4>
+              <h4><input type="text" class="form-control" value="{{auth()->user()->email_user}}" required name="email_user"></h4>
               <h5>Celular:</h5>
-              <h4><input type="text" class="form-control" value="{{auth()->user()->celular}}" name="celular"></h4>
+              <h4><input type="text" class="form-control" value="{{auth()->user()->celular}}" required name="celular"></h4>
               <h5>Contraseña:</h5>
-              <h4><input type="password" class="form-control" id="div" name="password" readonly placeholder="************"></h4>
-          </div>
+              <h4><input type="password" class="form-control" id="div" name="password" required readonly placeholder="************"></h4>
+          </div><input type="hidden" name="btn" value="user" hidden>
           <button class="btn btn-primary">Guardar</button>
       </div>
   </div>
@@ -104,15 +104,15 @@
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
 
 <script>
- $(document).ready(function(){
+   $(document).ready(function(){
     $("#div").dblclick(function(){
         var readonly = document.getElementById("div").hasAttribute("readonly");
         // alert(readonly);
         if (readonly==true) {document.getElementById("div").removeAttribute("readonly");}
         if (readonly==false){
-              document.getElementById("div").value ="";
-              document.getElementById("div").setAttribute("readonly","");}
-    });
+          document.getElementById("div").value ="";
+          document.getElementById("div").setAttribute("readonly","");}
+      });
 });
 </script>
 <script type="text/javascript">

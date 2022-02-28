@@ -4,12 +4,12 @@
 // });
 // a
 
-Route::get('sentencia1', function (App\Sentencia $post) {
-	return $post->boleta();
-});
-Route::get('sentencia2', function (App\Sentencia $post) {
-	return $post->cotizacion();
-});
+// Route::get('sentencia1', function (App\Sentencia $post) {
+// 	return $post->boleta();
+// });
+// Route::get('sentencia2', function (App\Sentencia $post) {
+// 	return $post->cotizacion();
+// });
 Route::group(
 	[ 'middleware' => ['auth','api','cambio_diario']],
 	function(){
@@ -321,6 +321,7 @@ Route::group(
 		Route::post('usuario/permisos/asignar/{id}','UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
 		Route::post('usuario/permisos/delegar/{id}','UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
 		Route::resource('/usuario','UsuarioController');
+		Route::get('/usuarios','UsuarioController@index_usuarios')->name('usuarios.index');
 		Route::resource('/venta','VentaController');
 
 		Route::resource('/cantidad_precio','CantidadPrecioController');
