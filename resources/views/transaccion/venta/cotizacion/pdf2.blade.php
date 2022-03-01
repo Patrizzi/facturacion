@@ -130,7 +130,7 @@
              Son : {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
          </h3>
      </td>
-     @if($regla== "factura")
+     {{-- @if($regla== "factura") --}}
      <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
         <span > Subtotal:</span>
         <br>
@@ -148,14 +148,14 @@
         <span>{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
         <span>{{$simbologia}} {{number_format($end,2)}}</span><br>
     </td>
-    @else
+    {{-- @else
     <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
         <span ><strong>Importe Total:</strong></span><br>
     </td>
     <td   style="width: auto; border: 1px #e5e6e7 solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
         <span>{{$simbologia}} {{$end=number_format(round($sub_total, 2),2)}}</span><br>
     </td>
-    @endif
+    @endif --}}
 </tr>
 </table>
 </center>
