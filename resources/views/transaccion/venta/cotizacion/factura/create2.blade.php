@@ -201,7 +201,7 @@
                                             <button type="button" class='delete borrar e btn btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                         </td>
                                         <td>
-                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0);selet_one()" autocomplete="off"></select>
+                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
                                             <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
                                             <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                             <input type="hidden" class="celda" name="articulo[]" id="input_prod1" >
@@ -357,6 +357,7 @@
 
 {{-- Scripts realizados por el desarrollador --}}
 <script type="text/javascript"> 
+
     // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
@@ -407,7 +408,7 @@
                 <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
             </td>";
             <td>
-                <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i});seleccion_options(${i})"  autocomplete="off"></select>
+                <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off"></select>
                 <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
                 <input type='text' style="width: 76px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
                 <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}">
@@ -471,6 +472,9 @@
     $(document).ready(function() {
         articlesSelect2();
     });
+
+    // TODO Array de articulos agregados
+    let articles_added = [];
     
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
@@ -492,8 +496,8 @@
                     return {
                         results: $.map(data, function (item) {
                             return {
-                                id: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
-                                text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                id:  item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre
                             };
                         })
                     };
@@ -510,6 +514,9 @@
         }else{
             var articulo = document.getElementById(`articulo${a}`).value;
         }
+        //Agregado a array de articulos
+        // articles_added = articles_added.push(articulo);
+
         var almacen = $('[id="almacen_id"]').val();
         var moneda = $('[id="moneda_id"]').val();
         $.ajax({
@@ -785,9 +792,7 @@
                 $(".addmore").prop("disabled", false);
             }
         }
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Item",
-        });
+        articlesSelect2();
     }
  
     function selet_one(){
@@ -812,9 +817,7 @@
                 $(".addmore").prop("disabled", false);
             }
         }
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Item",
-        });
+        articlesSelect2();
     }
 
     function click_radio_boleta(){

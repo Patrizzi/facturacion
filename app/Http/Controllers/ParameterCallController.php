@@ -21,7 +21,6 @@ class ParameterCallController extends Controller
     // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros  
     public function description(Request $request)
     {
-        // return "F";
         //Obtención de la moneda
         $money=$request->get('moneda');
         $money_id=Moneda::where('id',$money)->first();
@@ -39,7 +38,6 @@ class ParameterCallController extends Controller
             return response()->json(['error'=>'No existe ningún artículo'],400);
         }
 
-
         //Obtención de los datos del articulo (producto-servicio)
         $product=Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
         $service=Servicios::where('id',$id[0])->where('codigo_servicio',$id[2])->where('codigo_original',$id[4])->first();
@@ -55,13 +53,11 @@ class ParameterCallController extends Controller
             if(isset($product)){
                 //Calculo de array para precio, stock en (PRODUCTO)
                 if ($moneda->tipo == 'nacional') {
-                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')+$utilidad),2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
                     $array_promedio=round(Stock_producto::where('producto_id',$product->id)->avg('precio_nacional'),2);
                 }else{
-                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')+$utilidad),2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
@@ -105,13 +101,11 @@ class ParameterCallController extends Controller
             if(isset($product)){
                 //Calculo de array para precio, stock en (PRODUCTO)
                 if ($moneda->tipo == 'extranjera') {
-                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')+$utilidad)/$tipo_cambio->paralelo,2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
                     $array_promedio=round(Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')/$tipo_cambio->paralelo,2);
                 }else{
-                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')+$utilidad)*$tipo_cambio->paralelo,2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
@@ -150,9 +144,6 @@ class ParameterCallController extends Controller
                 $afectacion=$afectacion_explode[0];
             }
         }
-
-        
-        
         
         // * (data) es un array donde se alojaran todos los campos requeridos para devolverlos de forma correcta
         $data=[
@@ -198,7 +189,6 @@ class ParameterCallController extends Controller
         if($search == ''){
             $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->limit(5)->get();
-            // $articles = array_merge($products->toArray(),$service->toArray());
         }else{
             $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
@@ -228,8 +218,6 @@ class ParameterCallController extends Controller
 
         $articles = array();
         $articles = array_merge($products_array,$services_array);
-  
-        // return response()->json($response);
 
         return $articles;
 
