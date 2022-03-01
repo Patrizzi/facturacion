@@ -21,7 +21,7 @@ class ParameterCallController extends Controller
     // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros  
     public function description(Request $request)
     {
-        
+        // return "F";
         //Obtención de la moneda
         $money=$request->get('moneda');
         $money_id=Moneda::where('id',$money)->first();
@@ -55,11 +55,13 @@ class ParameterCallController extends Controller
             if(isset($product)){
                 //Calculo de array para precio, stock en (PRODUCTO)
                 if ($moneda->tipo == 'nacional') {
+                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')+$utilidad),2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
                     $array_promedio=round(Stock_producto::where('producto_id',$product->id)->avg('precio_nacional'),2);
                 }else{
+                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')+$utilidad),2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
@@ -103,11 +105,13 @@ class ParameterCallController extends Controller
             if(isset($product)){
                 //Calculo de array para precio, stock en (PRODUCTO)
                 if ($moneda->tipo == 'extranjera') {
+                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')+$utilidad)/$tipo_cambio->paralelo,2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();
                     $array_promedio=round(Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')/$tipo_cambio->paralelo,2);
                 }else{
+                    
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')*($product->utilidad-$product->descuento1)/100;
                     $array=round((Stock_producto::where('producto_id',$product->id)->avg('precio_extranjero')+$utilidad)*$tipo_cambio->paralelo,2);
                     $array_cantidad=Stock_almacen::where('producto_id',$product->id)->where('almacen_id',$store)->pluck('stock')->first();

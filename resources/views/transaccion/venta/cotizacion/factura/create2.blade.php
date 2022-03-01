@@ -121,7 +121,7 @@
                                         <div class="row">
                                             <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
                                             <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
-                                            <div class=" col-sm-5">
+                                            <div class="col-sm-5">
                                                 <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
                                             </div>
 
@@ -281,7 +281,7 @@
                         </div>
                         &nbsp;
                         <button type="button" class='ladda-button addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                        <button class="ladda-button btn btn-primary float-right"  id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+                        <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
                     </form>
                 </div>
             </div>
@@ -505,7 +505,6 @@
 
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
     function ajax (a){
-        console.log("primera "+a)
         if(a==0){
             var articulo = document.getElementById(`articulo`).value;
         }else{
@@ -513,7 +512,6 @@
         }
         var almacen = $('[id="almacen_id"]').val();
         var moneda = $('[id="moneda_id"]').val();
-        console.log("moneda "+moneda)
         $.ajax({
             type: "post",
             url: "{{ route('pa.description') }}",
@@ -555,6 +553,7 @@
                     console.log(eject.responseJSON.error);
                 }
             },
+            cache:true
         });
     }
     //Funcion de comision 
@@ -861,19 +860,20 @@
                     status=1;
                     }
                 $('#loaderGif').hide(); 
+                let articles_selected = document.getElementsByClassName("select2_demo_3");
+                let articles_selected_count = articles_selected.length;
+                for(let z=0;z<articles_selected_count;z++){
+                    let selected=document.getElementsByClassName("select2_demo_3 select_change")[z].getAttribute('id');
+                    if(selected=='articulo'){
+                        ajax(0); 
+                    }else{
+                        ajax(selected.substring(8)); 
+                    }
+                }
+               
             },
         });
-        ajax(0);
-        // let articles_selected = document.getElementsByClassName("select2_demo_3");
-        // let articles_selected_count = articles_selected.length;
-        // for(let z=0;z<articles_selected_count;z++){
-        //     let selected=document.getElementsByClassName("select2_demo_3 select_change")[z].getAttribute('id');
-        //     if(selected=='articulo'){
-        //         ajax(0); 
-        //     }else{
-        //         ajax(selected.substring(8)); 
-        //     }
-        // }
+        
             
     }
 
