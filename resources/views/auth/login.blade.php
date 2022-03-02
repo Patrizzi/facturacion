@@ -1,157 +1,57 @@
-@extends('layouts.app')
+<!doctype html>
+    <html lang="es">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
 
-@section('content')
+        <!-- Bootstrap CSS -->
 
-<div class="container">
-    <div class="d-flex justify-content-center h-100">
-        <div class="card">
-            <div class="card-header">
-                <center><h3 class="letra">Iniciar Sesion</h3></center>
-            </div>
-            <div class="card-body"  >
-                <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-user cwhite"></i> </span>
-                        </div>
-                        <!-- <input type="text" class="form-control" placeholder="Nombre Usuario" > -->
-                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Nombre Usuario">
-                          @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                    </div>
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-key cwhite "></i></span>
-                        </div>
-                        <!-- <input type="password" class="form-control" placeholder="contraseña" > -->
-                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"  placeholder="contraseña">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                    </div>
-                    <div class="row align-items-center remember">
-                        <!-- <input type="checkbox">Recuérdame -->
-                         {{-- <input  type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>{{ __('Remember Me') }} --}}
+        {{-- <title>Hello, world!</title> --}}
+    </head>
+    <body>
+     <div class="ibox">
+        <div class="ibox-content">
+          <div class="row ">
+              <div class="col-lg-8" style="background-image: url('{{ asset('/archivos/imagenes/leonosoft.jpg')}}');background-position: center center;background-size: cover;">
+              </div>
 
-                                   <!--  <label class="form-check-label" for="remember">
-                                        
-                                    </label> -->
-                    </div>
+              <div class="col-lg-4" align="center" >
+                <div style="padding:25% 15% 35% 15%" >
+                  <img src="{{asset('img/logos/'.$mi_empresa->foto)}}" style="width: 250px;"></center><br><br>
+                  <h5 style="color: gray;">{{ $buenas}}, Bienvenido.</h5>
+                  <p>Ingresa a tu cuenta</p>
+                  <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+                      <input type="text" class="form-control @error('email') is-invalid @enderror" placeholder="Usuario" name="email" value="{{ old('email') }}" required  id="email">
+                      @error('email')<span class="invalid-feedback" role="alert">  <strong>{{ $message }}</strong></span> @enderror
+                  </div>
+                  <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock"></i></span>
+                      <input type="text" class="form-control" placeholder="Contraseña" aria-label="Username" aria-describedby="basic-addon1">
+                  </div>
+                  <input type="submit" class="btn btn-primary form-control" value="Ingresar" style="color: #fff;background-color: #034fb1;border-color: #044aaa;">
+              </div>
+          </div>
 
-                    <center><div class="form-group " >
-                        <button type="submit" class=" btn login_btn cwhite">Ingresar</button><br>
-                    </div></center>
-                </form>
-            </div>
-        </div>
-    </div>
+      </div>
+  </div>
 </div>
-<style type="text/css">
 
-/*@import url('https://fonts.googleapis.com/css?family=Numans');
-https://images2.alphacoders.com/361/thumb-1920-36170.jpg
-*/
+{{-- <h1>Hello, world!<h1> --}}
 
-html,body{
-background-image: url('{{ asset('/archivos/imagenes/leonosoft.jpg')}}');
-background-position: center center;
-background-attachment: fixed;
-background-size: cover;
-background-repeat: no-repeat;
-font-family: 'Numans', sans-serif;
-}
-.pt-4, .py-4{
-        padding-top: 10% !important;
-}
-.container{
-height: 100%;
-align-content: center;
-}
+    <!-- Optional JavaScript; choose one of the two! -->
 
-.card{
-/*height: 370px;*/
-margin-top: auto;
-margin-bottom: auto;
-width: 400px;
-background-color: rgba(0,0,0,0.5) !important;
-}
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
-.social_icon span{
-font-size: 60px;
-margin-left: 10px;
-color: #3F7B26;
-}
-
-.social_icon span:hover{
-color: white;
-cursor: pointer;
-}
-
-.card-header h3{
-color: white;
-}
-
-.social_icon{
-position: absolute;
-right: 20px;
-top: -45px;
-}
-
-.input-group-prepend span{
-width: 50px;
-background-color: #3F7B26;
-color: black;
-border:0 !important;
-}
-
-input:focus{
-outline: 0 0 0 0  !important;
-box-shadow: 0 0 0 0 !important;
-
-}
-
-.remember{
-color: white;
-}
-
-.remember input
-{
-width: 15px;
-height: 15px;
-margin-left: 15px;
-margin-right: 5px;
-}
-
-.login_btn{
-color: black;
-background-color: #3F7B26;
-width: 100px;
-}
-
-.login_btn:hover{
-color: black;
-background-color: white;
-}
-
-.links{
-color: white;
-}
-
-.links a{
-margin-left: 4px;
-}
-.cwhite{
-  color: white;
-}
-.letra{
-    font-family: Arial, Helvetica, sans-serif;
-}
-</style>
-@endsection
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+-->
+</body>
+</html>
