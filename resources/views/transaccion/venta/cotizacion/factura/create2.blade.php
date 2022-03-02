@@ -463,7 +463,7 @@
                 $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
             }
         };
-        $(".addmore").prop("disabled", true);
+        $(".addmore").prop("disabled", false);
         $(".borrar").prop("disabled", false);
         
     });
@@ -472,9 +472,6 @@
     $(document).ready(function() {
         articlesSelect2();
     });
-
-    // TODO Array de articulos agregados
-    let articles_added = [];
     
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
@@ -485,24 +482,37 @@
                 url: "{{ route('pa.articles') }}",
                 dataType: 'json',
                 type: "POST",
-                delay: 500,
+                // delay: 1500,
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term // search term
+                        search: params.term // search term 
                     };
                 },
                 processResults: function (data) {
+                    //validador de articulos multiples
+                    let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
+                    let articles_selected_count_ajax = articles_selected_ajax.length; 
+                    for(var z=0;z<articles_selected_count_ajax;z++){
+                        var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
+                        for(var y=0;y<10;y++){
+                            if(selected_ajax == data[y].id+ " | " + data[y].codigo + " | " + data[y].codigo_original + " | " + data[y].nombre){
+                                data[y].disabled=true;
+                            }
+                        }
+                    }
                     return {
                         results: $.map(data, function (item) {
                             return {
                                 id:  item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
-                                text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre
+                                text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                disabled: item.disabled
                             };
                         })
                     };
                 },
-                cache: true
+                cache: true,
+                passive: true
             }
         });
     }
@@ -514,8 +524,6 @@
         }else{
             var articulo = document.getElementById(`articulo${a}`).value;
         }
-        //Agregado a array de articulos
-        // articles_added = articles_added.push(articulo);
 
         var almacen = $('[id="almacen_id"]').val();
         var moneda = $('[id="moneda_id"]').val();
@@ -767,59 +775,6 @@
         document.getElementById("total_final").value = end;
     });
 
-
-    function seleccion_options(b){
-        var cant_opt = document.getElementById(`articulo${b}`).length;
-        var count_input = document.getElementsByClassName('celda').length;
-
-        var option = document.getElementById(`articulo${b}`);
-        var valor_select = option.value;
-        var ant_val = document.getElementById(`input_prod${b}`).value;
-        $('option[value="'+ant_val+'"]').prop( "disabled", false);
-        
-        if(valor_select.indexOf("SERV-") == 4){
-            $(".addmore").prop("disabled", false);
-            document.getElementById(`input_prod${b}`).value = valor_select;
-            $('option[value="'+valor_select+'"]').prop( "disabled", false);
-        }else{
-            if(valor_select == ""){
-                document.getElementById(`input_prod${b}`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-            }else{
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`input_prod${b}`).value = valor_select;
-
-                $(".addmore").prop("disabled", false);
-            }
-        }
-        articlesSelect2();
-    }
- 
-    function selet_one(){
-        var cant_opt = document.getElementById(`articulo`).length;
-        var count_input = document.getElementsByClassName('celda').length;
-        var option = document.getElementById(`articulo`);
-        var valor_select = option.value;
-        var ant_val = document.getElementById(`input_prod1`).value;
-        $('option[value="'+ant_val+'"]').prop( "disabled", false);
-        
-        if(valor_select.indexOf("SERV-") == 4){
-            $(".addmore").prop("disabled", false);
-            document.getElementById(`input_prod1`).value = valor_select;
-            $('option[value="'+valor_select+'"]').prop( "disabled", false);
-        }else{
-            if(valor_select == ""){
-                document.getElementById(`input_prod1`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", false);
-            }else{
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`input_prod1`).value = valor_select;
-                $(".addmore").prop("disabled", false);
-            }
-        }
-        articlesSelect2();
-    }
-
     function click_radio_boleta(){
         if ($('input[class=n_boleta]:radio:checked').length == 0) {
             document.getElementById("n_factura").style.display = "none";
@@ -872,12 +827,9 @@
                     }else{
                         ajax(selected.substring(8)); 
                     }
-                }
-               
+                }    
             },
         });
-        
-            
     }
 
     $(document).on({
@@ -888,5 +840,26 @@
             $("body").removeClass("loading"); 
         }    
     });
+
+    jQuery.event.special.touchstart = {
+    setup: function( _, ns, handle ) {
+        this.addEventListener("touchstart", handle, { passive: !ns.includes("noPreventDefault") });
+    }
+    };
+    jQuery.event.special.touchmove = {
+        setup: function( _, ns, handle ) {
+            this.addEventListener("touchmove", handle, { passive: !ns.includes("noPreventDefault") });
+        }
+    };
+    jQuery.event.special.wheel = {
+        setup: function( _, ns, handle ){
+            this.addEventListener("wheel", handle, { passive: true });
+        }
+    };
+    jQuery.event.special.mousewheel = {
+        setup: function( _, ns, handle ){
+            this.addEventListener("mousewheel", handle, { passive: true });
+        }
+    };
 </script>        
 @stop
