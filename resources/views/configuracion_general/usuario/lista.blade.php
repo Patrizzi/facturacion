@@ -3,7 +3,7 @@
 @section('title', 'Usuario Creacion')
 @section('breadcrumb', 'Usuario Creacion')
 @section('breadcrumb2', 'Usuario Creacion')
-@section('href_accion', route('usuario.index'))
+@section('href_accion', route('usuarios.index'))
 @section('value_accion', 'Atras')
 
 @section('content')
