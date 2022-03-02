@@ -10,7 +10,7 @@
     </head>
     <body>
       <div class="row" style="height:100%;width: 100%;">
-          <div class="col-sm-8" style="background-image: url('{{ asset('/archivos/imagenes/leonosoft.jpg')}}');background-position: center center;background-size: cover;"></div>
+          <div class="col-sm-8" style="background-image: url('{{ asset('/archivos/imagenes/leonosofts.jpg')}}');background-position: center center;background-size: cover;"></div>
           <div class="col-sm-4" align="center" >
               <form method="POST" action="{{ route('login') }}">
                 @csrf
