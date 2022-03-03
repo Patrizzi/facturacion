@@ -1637,7 +1637,7 @@ $cod_fac="F".$sucursal_nr."-".$factura_nr;
 
 
 if ($cotizacion->estado==0) {
-    return view('transaccion.venta.cotizacion.facturar2', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','cotizacion_registros','array_cantidad','comi','array_promedio','forma_pagos','banco','index'));
+    return view('transaccion.venta.cotizacion.facturar2', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','cotizacion_registros','array_cantidad','comi','array_promedio','forma_pagos','banco'));
 }
 elseif ($cotizacion->estado==1) {
     return redirect()->route('cotizacion.show',$cotizacion->id);
