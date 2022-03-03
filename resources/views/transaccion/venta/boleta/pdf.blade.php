@@ -36,28 +36,27 @@
             <br>
         </td>
         <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
-         <strong>{{$empresa->razon_social}}</strong>
-         <br>
-         Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
-         <br>
-         {{$empresa->correo}}
-         <br>
-         {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-     </td>
-     <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
-        <center>
-            <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-            <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >BOLETA ELECTRÓNICA</h2><br>
-            <h5 style="text-align: center;margin-bottom: -5px" >{{$boleta->codigo_boleta}}</h5>
-        </center>
-    </td>
-</tr>
+            <strong>{{$empresa->razon_social}}</strong>
+            <br>
+            Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
+            <br>
+            {{$empresa->correo}}
+            <br>
+            {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+        </td>
+        <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
+            <center>
+                <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
+                <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >BOLETA ELECTRÓNICA</h2><br>
+                <h5 style="text-align: center;margin-bottom: -5px" >{{$boleta->codigo_boleta}}</h5>
+            </center>
+        </td>
+    </tr>
 </table>
 
 <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
-
     <table style="width: 100%;border-collapse:separate;margin-top: -20px">
-        <tr >
+        <tr>
             <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto;height:auto;" >
                 <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br>
                 <strong>Señor(es)</strong>&nbsp;
@@ -91,81 +90,85 @@
         </tr>
     </table>
     <div class="form-control" style="border: none;height: auto" >
-        <div align="left">
-
-        </div>
+        <div align="left"></div>
     </div>
     <br>
-   <div class="table-responsive">
-    <table class="table " style="border-top: 0px" >
-        <thead style="">
-           <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
-            <td width="30px">Item</td>
-            <td width="110px" >Código de Item</td>
-            <td >Descripción</td>
-            <td width="50px">Cantidad</td>
-            <td width="50px">P.Unit.</td>
-            <td width="50px">Total</td>
-        </tr>
-    </thead>
-        <tbody>
-            @foreach($boleta_registro as $boleta_registros)
-
-            <tr style="border-bottom-width:   0px white ;font-size: 10px">
-                <td>{{$i++}} </td>
-               @if(isset($boleta_registros->producto))
+    <div class="table-responsive">
+        <table class="table " style="border-top: 0px" >
+            <thead style="">
+                <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
+                    <td width="30px">Item</td>
+                    <td width="110px" >Código de Item</td>
+                    <td >Descripción</td>
+                    <td width="50px">Cantidad</td>
+                    <td width="50px">P.Unit.</td>
+                    <td width="50px">Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($boleta_registro as $boleta_registros)
+                <tr style="border-bottom-width:   0px white ;font-size: 10px">
+                    <td>{{$i++}} </td>
+                    @if(isset($boleta_registros->producto))
                     <td>{{$boleta_registros->producto->codigo_producto}}</td>
                     {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
                     <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
-                @else
+                    @else
                     <td>{{$boleta_registros->servicio->codigo_servicio}}</td>
                     {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
                     <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
-                @endif
-                <td>{{$boleta_registros->cantidad}}</td>
-                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
-                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
-                <td style="display: none">{{$sub_total=($boleta->op_gravada)}}
-                    S/.{{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
-                    {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+                    @endif
+                    <td>{{$boleta_registros->cantidad}}</td>
+                    <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
+                    <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
+                    <td style="display: none">
+                        {{$sub_total=($boleta->op_gravada)}}
+                        {{$sub_total_gravado=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}
+                        {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
+                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </tbody>
 </table>
 </div><!-- /table-responsive -->
 <footer style="padding-top: 120px">
-
-    <table style="border: white 0px solid;text-align: center;border-radius: 4px;" >
-        <tr style="border: white 0px solid;border-radius: 4px;" >
-            <td style="width: 90%;border-color: white">
-                
-            </td>
-            {{-- <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:none;border-bottom: none">
-                Subtotal <br style="height: 2px;">
-            </td>
-            <th style="width: 2%;border-color: white"></th>
-            <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;border-bottom: none">
-             {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
-         </td> --}}
-    </tr>
-
-    <tr style="border: white 0px solid" >
-        <td style="width: 80%;border-color: white"></td>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: left;border-right:  none;">
-            <strong>Importe Total</strong>
-        </td>
-        {{-- <th style="width: 2%;border-color: white"></th> --}}
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 15%;text-align: right;border-left: none;">
-             {{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}
-        </td>
-        
-    </td>
-</tr>
+    <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
+        <tr>
+            <td style="width: 70%;border: none">
+             <h3 align="left">
+                 <?php $v=new CifrasEnLetras() ;
+                 $letra=($v->convertirEurosEnLetras($end));
+                 $letra_final = ucfirst(strstr($letra, 'soles',true));
+                 $end_final_point=strstr($end2, '.',false);
+                 $end_final=str_replace('.', '',$end_final_point);
+             ?>
+             Son : {{$letra_final}} con {{$end_final}}/100 {{$boleta->moneda->nombre }}
+         </h3>
+     </td>
+     <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
+         <span > Subtotal:</span><br>
+         <span > Op. Gravada:</span><br>
+         <span > Op. Inafecta:</span><br>
+         <span > Op. Exonerada:</span><br>
+         <span > I.G.V.:</span> <br>
+         <span > Importe Total:</span><br>
+     </td>
+     <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
+         <span>{{$simbologia= $boleta->moneda->simbolo}} {{round($sub_total, 2)}}</span><br>
+         <span>{{$simbologia}} {{number_format($boleta->op_gravada,2)}}</span><br>
+         <span>{{$simbologia}} {{number_format($boleta->op_inafecta,2)}}</span><br>
+         <span>{{$simbologia}} {{number_format($boleta->op_exonerada,2)}}</span><br>
+         <span>{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
+         <span>{{$simbologia}} {{number_format($end,2)}}</span>
+     </td>
+ </tr>
 </table>
+    
 </center>
 
 
