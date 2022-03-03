@@ -1637,7 +1637,7 @@ $cod_fac="F".$sucursal_nr."-".$factura_nr;
 
 
 if ($cotizacion->estado==0) {
-    return view('transaccion.venta.cotizacion.facturar2', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','cotizacion_registros','array_cantidad','validor','comi','array_promedio','forma_pagos','banco','index'));
+    return view('transaccion.venta.cotizacion.facturar2', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','cotizacion_registros','array_cantidad','comi','array_promedio','forma_pagos','banco','index'));
 }
 elseif ($cotizacion->estado==1) {
     return redirect()->route('cotizacion.show',$cotizacion->id);
@@ -2272,7 +2272,7 @@ if($validacion==1){
     $cod_bol="B".$sucursal_nr."-".$boleta_nr;
 
     if ($cotizacion->estado==0) {
-        return view('transaccion.venta.cotizacion.boletear2', compact('cotizacion','empresa','cotizacion_registros','sum','igv',"array","sub_total" ,'cod_bol','validor','array_cantidad','comi','array_promedio','forma_pagos','banco'));
+        return view('transaccion.venta.cotizacion.boletear2', compact('cotizacion','empresa','cotizacion_registros','sum','igv',"array","sub_total" ,'cod_bol','array_cantidad','comi','array_promedio','forma_pagos','banco'));
     }
     elseif ($cotizacion->estado==1) {
         return redirect()->route('cotizacion.show',$cotizacion->id);
