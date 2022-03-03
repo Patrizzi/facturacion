@@ -3,8 +3,8 @@
 @section('href_accion', route('cotizacion.index') )
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Atrás')
-{{-- @extends('layout_agregado_rapido') --}}
-{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
+@extends('layout_agregado_rapido')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 
 @if (session('repite'))
@@ -30,6 +30,14 @@
     </div>
 </div>
 @endif
+
+{{-- Boton para modal de Clientes --}}
+@section('ruta_retorno', 'cotizacion')
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
+{{--Fin Boton para modal de Clientes --}}
+
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -354,6 +362,7 @@
 <script src="{{ asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
 
 {{-- Scripts realizados por el desarrollador --}}
 <script type="text/javascript"> 

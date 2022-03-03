@@ -49,8 +49,8 @@
             <div class="col-lg-12">
                 <div >
                     <div >
-                        <form action=" @yield('form_action_modal_cliente', route('cliente.store'))"  enctype="multipart/form-data" id="form" class="wizard-big" method="post"> {{-- Yiel form- es para colocar una ruta alterna  --}}
-                            @csrf
+                        <form enctype="multipart/form-data" id="form_cliente_modal" class="wizard-big"> {{-- Yiel form- es para colocar una ruta alterna  --}}
+                            
                             <h1>Datos Personales</h1>
                             <fieldset>
                                 <div class="row">
@@ -186,6 +186,7 @@
                             </div>
                         </fieldset>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -277,7 +278,7 @@
 <script>
     $(document).ready(function(){
         $("#wizard").steps();
-        $("#form").steps({
+        $("#form_cliente_modal").steps({
             bodyTag: "fieldset",
             onStepChanging: function (event, currentIndex, newIndex)
             {
@@ -373,4 +374,22 @@
                 // $('#consulta_s').show();
             }
         }
+
+        $("#form_cliente_modal").submit(function(event) {
+            event.preventDefault();
+            var datos =
+            {
+                '_token': $('input[name=_token]').val(),
+                'status': 1,
+            },
+            jQuery.ajax({
+                type: "POST",
+                url: "{ route('agregado_rapido.cliente_store') }}",
+                data: datos,
+                success: function(data)
+                {
+                    console.log("respuesta: ", data);
+                }
+            });
+        });
     </script>
