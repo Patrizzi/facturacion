@@ -109,11 +109,10 @@ class PeriodoConsultaController extends Controller
                     $precio_nacional=$precio_nacional+$kardex_entrada_r_precio_nacional;
                     $precio_extranjero=$precio_extranjero+round($kardex_entrada_r_precio_extranjero,2);
 
-                    $kardex_entrada_r[$a]=array("producto" => $producto->nombre, "cantidad_inicial" => $kardex_entrada_r_cantidad_inicial , "precio_nacional" => $kardex_entrada_r_precio_nacional, "precio_extranjero" => round($kardex_entrada_r_precio_extranjero,2));
+                    $kardex_entrada_r[$a]=array("producto" => $producto->nombre, "cantidad_inicial" => $kardex_entrada_r_cantidad_inicial , "precio_nacional" => number_format(round($kardex_entrada_r_precio_nacional,2),2), "precio_extranjero" => number_format(round($kardex_entrada_r_precio_extranjero,2),2));
                 }
                 //suma para los totales
-                $kardex_entrada_r[$contador_prod]=array("producto" => "Total", "cantidad_inicial" => $cantidad_inicial , "precio_nacional" => $precio_nacional, "precio_extranjero" => round($precio_extranjero,2));
-
+                $kardex_entrada_r[$contador_prod]=array("producto" => "Total", "cantidad_inicial" => $cantidad_inicial , "precio_nacional" => number_format(round($precio_nacional,2),2) , "precio_extranjero" => number_format(round($precio_extranjero,2),2) );
                 if (!isset($kardex_entrada_r)) {
                     $kardex_entrada_r[]="";
                 }
@@ -134,11 +133,13 @@ class PeriodoConsultaController extends Controller
     }
 
     public function ajax_periodo_ventas(Request $request){
+        //SOLO PRODUCTOS NO CUENTA CON IGV LOS PRECIOS
         // consultas
         // 1 = Compra
         // 2 = Venta
         // 3 = Compara y venta
         $almacen=$request->almacen;
+        $igv = Igv::first();
         $fecha_inicio=Carbon::createFromFormat('Y-m-d\TH:i',$request->fecha_inicio);
         $fecha_final=Carbon::createFromFormat('Y-m-d\TH:i',$request->fecha_final);
         $categoria=$request->categoria;
@@ -165,11 +166,16 @@ class PeriodoConsultaController extends Controller
                 }
                 //MONEDA NACIONAL
                 if($factura->moneda_id == $moneda_nac->id){
-                    $f_reg_pre_nac = $f_reg->precio_unitario_comi;
-                    $f_reg_pre_ex = number_format(round($f_reg->precio_unitario_comi/$factura->cambio,1),2);
+                    $f_reg_pre_nac = number_format($f_reg->precio_unitario_comi,2);
+                    // $f_reg_pre_nac_igv = number_format(round($f_reg->precio_unitario_comi + ($f_reg->precio_unitario_comi + ($igv->igv_total/100)),2),2);
+                    $f_reg_pre_ex = number_format(round($f_reg->precio_unitario_comi/$factura->cambio,2),2);
+                    // $f_reg_pre_ex_igv = number_format(round($f_reg->precio_unitario_comi/$factura->cambio + (($f_reg->precio_unitario_comi/$factura->cambio) + ($igv_total->valor/100)),2),2);
                 }else{
-                    $f_reg_pre_nac = number_format(round($f_reg->precio_unitario_comi*$factura->cambio, 1, PHP_ROUND_HALF_UP),2);
-                    $f_reg_pre_ex = $f_reg->precio_unitario_comi;
+                    $f_reg_pre_nac = number_format(round($f_reg->precio_unitario_comi*$factura->cambio, 2),2);
+                    // $f_reg_pre_nac_igv = number_format(round(($f_reg->precio_unitario_comi*$factura->cambio) + (($f_reg->precio_unitario_comi*$factura->cambio) + ($igv->igv_total/100)),2),2);
+                    $f_reg_pre_ex = number_format(round($f_reg->precio_unitario_comi,2),2);
+                    // $f_reg_pre_ex_igv = number_format(round($f_reg->precio_unitario_comi + ($f_reg->precio_unitario_comi + ($igv->igv_total/100)),2),2);
+
                 }
                 // $cant_fact_pro =
                 $prod_fact[] = $f_reg->producto->nombre;
@@ -190,7 +196,7 @@ class PeriodoConsultaController extends Controller
                     }
                 }
 
-                $data_final_fac[] = array('tipo' => 'Factura' ,'producto' => $prods_fac,'precio nacional' => array_sum($precio_nac_total_fac) ,'cantidad' => array_sum($cantidad_fac)  ,'precio extranjero' =>array_sum($precio_ex_total_fac) );
+                $data_final_fac[] = array('tipo' => 'Factura' ,'producto' => $prods_fac,'precio nacional' => number_format(round(array_sum($precio_nac_total_fac),2),2) ,'cantidad' => array_sum($cantidad_fac) ,'precio extranjero' => number_format(round(array_sum($precio_ex_total_fac),2),2) );
                 unset($precio_nac_total_fac);
                 unset($precio_ex_total_fac);
                 unset($cantidad_fac);
@@ -212,11 +218,11 @@ class PeriodoConsultaController extends Controller
 
 
                 if($boleta->moneda_id == $moneda_nac->id){
-                    $b_reg_pre_nac = $b_reg->precio_unitario_comi;
-                    $b_reg_pre_ex = number_format(round($b_reg->precio_unitario_comi/$boleta->cambio,1),2);
+                    $b_reg_pre_nac = number_format($b_reg->precio_unitario_comi,2);
+                    $b_reg_pre_ex = number_format(round($b_reg->precio_unitario_comi/$boleta->cambio,2),2);
                 }else{
-                    $b_reg_pre_nac = number_format(round($b_reg->precio_unitario_comi*$boleta->cambio, 1, PHP_ROUND_HALF_UP),2);
-                    $b_reg_pre_ex = $b_reg->precio_unitario_comi;
+                    $b_reg_pre_nac = number_format(round($b_reg->precio_unitario_comi*$boleta->cambio, 2, PHP_ROUND_HALF_UP),2);
+                    $b_reg_pre_ex = number_format($b_reg->precio_unitario_comi,2);
                 }
                 $prod_bol[] = $b_reg->producto->nombre;
                 $data_extra_b[] = array('tipo'=> 'Boleta' ,'producto' => $b_reg->producto->nombre,'cantidad' => $b_reg->cantidad  ,'precio nacional' => $b_reg_pre_nac, 'precio extranjero' => $b_reg_pre_ex);
@@ -236,7 +242,7 @@ class PeriodoConsultaController extends Controller
                     }
                 }
 
-                $data_final_bol[] = array('tipo' => 'Boleta' ,'producto' => $prods_bol, 'cantidad' => array_sum($cantidad_bol) ,'precio nacional' => round(array_sum($precio_nac_total_bol),2) ,'precio extranjero' =>array_sum($precio_ex_total_bol) );
+                $data_final_bol[] = array('tipo' => 'Boleta' ,'producto' => $prods_bol, 'cantidad' => array_sum($cantidad_bol) ,'precio nacional' => number_format(round(array_sum($precio_nac_total_bol),2),2) ,'precio extranjero' =>round(array_sum($precio_ex_total_bol),2) ) ;
                 unset($precio_nac_total_bol);
                 unset($precio_ex_total_bol);
                 unset($cantidad_bol);
@@ -400,10 +406,15 @@ class PeriodoConsultaController extends Controller
                 //MONEDA NACIONAL
                 if($factura->moneda_id == $moneda_nac->id){
                     $f_reg_pre_nac = $f_reg->precio_unitario_comi;
-                    $f_reg_pre_ex = number_format(round($f_reg->precio_unitario_comi/$factura->cambio,1),2);
+                    // $f_reg_pre_nac_igv = number_format(round($f_reg->precio_unitario_comi + ($f_reg->precio_unitario_comi + ($igv_t/100)),2),2);
+                    $f_reg_pre_ex = number_format(round($f_reg->precio_unitario_comi/$factura->cambio,2),2);
+                    // $f_reg_pre_nac_igv = number_format(round(($f_reg->precio_unitario_comi/$factura->cambio) + (($f_reg->precio_unitario_comi/$factura->cambio) + ($igv_t/100)),2),2);
+
                 }else{
-                    $f_reg_pre_nac = number_format(round($f_reg->precio_unitario_comi*$factura->cambio, 1, PHP_ROUND_HALF_UP),2);
+                    $f_reg_pre_nac = number_format(round($f_reg->precio_unitario_comi*$factura->cambio, 1, PHP_ROUND_HALF_UP,2),2);
+                    // $f_reg_pre_nac_igv = number_format(round(($f_reg->precio_unitario_comi*$factura->cambio) + (($f_reg->precio_unitario_comi*$factura->cambio) + ($igv_t/100)), 1, PHP_ROUND_HALF_UP,2) ,2)
                     $f_reg_pre_ex = $f_reg->precio_unitario_comi;
+                    // $f_reg_pre_ex_igv = number_format( ($f_reg->precio_unitario_comi) + $f_reg->precio_unitario_comi*($igv_t/100)  ,2);
                 }
                 // $cant_fact_pro = 
                 $prod_fact[] = $f_reg->producto->nombre;
@@ -449,10 +460,14 @@ class PeriodoConsultaController extends Controller
 
                 if($boleta->moneda_id == $moneda_nac->id){
                     $b_reg_pre_nac = $b_reg->precio_unitario_comi;
-                    $b_reg_pre_ex = number_format(round($b_reg->precio_unitario_comi/$boleta->cambio,1),2);
+                    // $b_reg_pre_nac_igv = number_format(round($f_reg->precio_unitario_comi + ($b_reg->precio_unitario_comi + ($igv_t/100)),2),2);
+                    $b_reg_pre_ex = number_format(round($b_reg->precio_unitario_comi/$boleta->cambio,2),2);
+                    // $b_reg_pre_ex_igv = number_format(round($b_reg->precio_unitario_comi/$boleta->cambio + ($b_reg->precio_unitario_comi/$boleta->cambio * ($igv_t / 100)),2),2);
                 }else{
-                    $b_reg_pre_nac = number_format(round($b_reg->precio_unitario_comi*$boleta->cambio, 1, PHP_ROUND_HALF_UP),2);
+                    $b_reg_pre_nac = number_format(round($b_reg->precio_unitario_comi*$boleta->cambio, 2),2);
+                    // $b_reg_pre_nac_igv = number_format(round($b_reg->precio_unitario_comi*$boleta->cambio + ($b_reg->precio_unitario_comi*$boleta->cambio*($igv_t/100)), 2),2);
                     $b_reg_pre_ex = $b_reg->precio_unitario_comi;
+                    // $b_reg_pre_ex_igv = round($b_reg->precio_unitario_comi + ($b_reg->precio_unitario_comi*($igv_t/100)) ,2);
                 }
                 $prod_bol[] = $b_reg->producto->nombre;
                 $data_extra_b[] = array('tipo'=> 'Boleta' ,'producto' => $b_reg->producto->nombre,'cantidad' => $b_reg->cantidad  ,'precio nacional' => $b_reg_pre_nac, 'precio extranjero' => $b_reg_pre_ex);
