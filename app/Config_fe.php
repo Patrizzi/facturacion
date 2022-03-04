@@ -1044,7 +1044,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - FACTURA
 
-    public static function nota_credito($factura, $factura_registro, $request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$descuento){
+    public static function nota_credito($factura, $factura_registro, $request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento){
 
         $empresa=Empresa::first();
         $igv=Igv::first();
@@ -1332,7 +1332,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - BOLETA
 
-    public static function nota_credito_boleta($boleta,$boleta_registro,$request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$descuento){
+    public static function nota_credito_boleta($boleta,$boleta_registro,$request,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento){
         // return $motivo;
         
         $empresa=Empresa::first();
