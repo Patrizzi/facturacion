@@ -1,227 +1,162 @@
 @extends('layout')
 
 @section('title', 'Servicios')
-@section('breadcrumb', 'Servicios-Agregar')
-@section('breadcrumb2', 'Servicios-Agregar')
 @section('href_accion', route('servicios.index') )
-@section('value_accion', 'Atras')
+@section('atributo_actu', 'hidden')
+@section('value_accion', 'Atrás')
 
 @section('content')
-
-@if($errors->any())
-<div style="padding-top: 20px;">
-  <div class="alert alert-danger">
-    <a class="alert-link" href="#">
-      @foreach ($errors->all() as $error)
-      <li style="color: red">{{ $error }}</li>
-      @endforeach
-    </a>
+<form action="{{ route('servicios.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+ @csrf
+ <div class="wrapper wrapper-content animated fadeInRight">
+  @if($errors->any())
+  <div style="padding-top: 20px;">
+    <div class="alert alert-danger">
+      <a class="alert-link" href="#">
+        @foreach ($errors->all() as $error)
+        <li style="color: red">{{ $error }}</li>
+        @endforeach
+      </a>
+    </div>
   </div>
-</div>
-@endif
+  @endif
+
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="ibox product-detail">
+        <div class="ibox-content">
+
+          <div class="row">
+            <div class="col-md-5">
+
+              <div class="product-images">
+
+                <div>
+                  <div class="image-imitation" style="padding:0px">
+                   <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
+                   <div id="visorArchivo">
+
+                     <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width:100%;padding: 30px;">
+                   </div>
+                 </div>
+               </div>
+
+             </div>
+
+           </div>
+           <div class="col-md-7">
+            <div class="tooltip-demo">
+
+              <div class="row" style="padding-bottom:10px">
+                <div class="col-sm-4" align="center">
+                  <input placeholder="SERV-0X33X345XX" data-toggle="tooltip" data-placement="top"  title="Código Alternativo:" type="text" class="form-control" name="codigo_original" autocomplete="off">
+                </div>
+
+                <div class="col-sm-4" align="center">
+                 <select data-toggle="tooltip" data-placement="top" title="Familia"  class="form-control" name="familia_id" required="required">
+                   {{-- <option>Seleccione una Familia</option> --}}
+                   @foreach($familias as $familia)
+                   <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
+                   @endforeach
+                 </select></div>
+
+                 <div class="col-sm-4" align="center">
+                  <select  data-toggle="tooltip" data-placement="top" title="Marca"class="form-control " name="marca_id" required="required">
+                   @foreach($marcas as $marca)
+                   <option value="{{ $marca->id }}">{{ $marca->nombre}}</option>
+                   @endforeach
+                 </select>
+               </div>
+             </div>
+
+             <input type="text" placeholder="Nombre del Servicio" class="form-control" required="required" data-toggle="tooltip" name="nombre" data-placement="top" title="Nombre del Servicio"  autocomplete="off" >
+             <textarea style="margin-top:10px" data-toggle="tooltip" data-placement="top" title="Description del Servicio"  type="text" class="form-control" placeholder="Descripción del Servicio" name="descripcion" rows="2" ></textarea >
+           </div>
+
+           <hr style="border:1px solid #8080803d;">
+
+           <div class="tooltip-demo " >
 
 
-<div class="ibox-content" style="margin-top: 5px;margin-bottom:50px" align="center">
 
- <form action="{{ route('servicios.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-   @csrf
-   <div class="row">
+             <div class="row">
+               <label class="col-sm-2 col-form-label">Descuento:</label>
+               <div class="col-sm-4">
+                 <div class="input-group m-b">
+                  <div class="input-group-prepend">
+                    <span class="input-group-addon">%</span>
+                  </div>
+                  <input type="text" class="form-control" name="descuento" required="required" value="0">
+                </div>
+              </div>
+              <label class="col-sm-2 col-form-label">Utilidad:</label>
+              <div class="col-sm-4"><div class="input-group m-b">
+                <div class="input-group-prepend">
+                  <span class="input-group-addon">%</span>
+                </div>
+                <input type="text" class="form-control" name="utilidad" required="required" value="0">
+              </div>
+            </div>
 
-    <fieldset class="col-sm-6">
-     <legend>Clasificacion del <br>Servicio</legend>
-
-     <div class="panel panel-default">
-       <div class="panel-body" align="left">
-        <div class="row">
-          <label class="col-sm-2 col-form-label">Codigo Alernativo:</label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" name="codigo_original" >
           </div>
 
 
-          <label class="col-sm-2 col-form-label">Categoria:</label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control m-b" readonly="readonly" value="Servicios" name="categoria">
+          <div class="row">
+
+            <label class="col-sm-2 col-form-label">Precio:</label>
+            <div class="col-sm-4"><div class="input-group m-b">
+              <div class="input-group-prepend">
+                <select class="input-group-addon"  name="moneda">
+                  @foreach($monedas as $moneda)
+                  <option value="{{$moneda->id}}">{{$moneda->simbolo}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <input type="number" min="1" step="0.01" class="form-control" name="precio" required="required" value="0">
+            </div>
           </div>
-
-          <label class="col-sm-2 col-form-label">Marca:</label>
+          <label class="col-sm-2 col-form-label">Afectación:</label>
           <div class="col-sm-4">
-            <select class="form-control m-b" name="marca_id" required="required">
-             {{-- <option>Seleccione una Marca</option> --}}
-             @foreach($marcas as $marca)
-             <option value="{{ $marca->id }}">{{ $marca->nombre}}</option>
-             @endforeach
-           </select>
-         </div>
-
-         <label class="col-sm-2 col-form-label">Familia:</label>
-         <div class="col-sm-4">
-          <select class="form-control m-b" name="familia_id" required="required">
-           {{-- <option>Seleccione una Familia</option> --}}
-           @foreach($familias as $familia)
-           <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
-           @endforeach
-         </select>
-       </div>
-
-
-     </div>
-
-   </div>
-   <br>
- </div>
-
-</fieldset>
-
-<fieldset class="col-sm-6">
- <legend>Datos del <br>Servicios </legend>
-
- <div class="panel panel-default">
-  <div class="panel-body" align="left">
-   <div class="row">
-    <label class="col-sm-2 col-form-label">Nombre:</label>
-    <div class="col-sm-10"><input type="text" class="form-control" onkeypress="return (event.charCode != 34 )" name="nombre" placeholder="Nombre del Servicio" required="required"></div>
-
-    <label class="col-sm-2 col-form-label">Descripcion:</label>
-    <div class="col-sm-10"><textarea type="text" class="form-control" name="descripcion" rows="2" required="required" ></textarea ></div>
-  </div>
-
-</div>
-</div>
-
-</fieldset>
-
-<fieldset class="col-sm-6">
- <legend>Precio del <br>Servicios</legend>
-
- <div class="panel panel-default">
-  <div class="panel-body" align="left">
-   <div class="row">
-     <label class="col-sm-2 col-form-label">Descuento:</label>
-     <div class="col-sm-4">
-       <div class="input-group m-b">
-        <div class="input-group-prepend">
-          <span class="input-group-addon">%</span>
+            <select class="form-control"  name="afectacion">
+              @foreach($afectacion as $afecta)
+              <option value="{{$afecta->id}}">{{$afecta->informacion}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-sm-12">
+  <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
         </div>
-        <input type="text" class="form-control" name="descuento" required="required" value="0">
+        </div>
       </div>
     </div>
-    <label class="col-sm-2 col-form-label">Utilidad:</label>
-    <div class="col-sm-4"><div class="input-group m-b">
-      <div class="input-group-prepend">
-        <span class="input-group-addon">%</span>
-      </div>
-      <input type="text" class="form-control" name="utilidad" required="required" value="0">
-    </div>
-  </div>
-
-</div>
-<div class="row">
-  <label class="col-sm-2 col-form-label">Precio:</label>
-  <div class="col-sm-4"><div class="input-group m-b">
-    <div class="input-group-prepend">
-      <select class="input-group-addon"  name="moneda">
-      @foreach($monedas as $moneda)
-      <option value="{{$moneda->id}}">{{$moneda->simbolo}}</option>
-      @endforeach
-    </select>
-    </div>
-    <input type="number" min="1" step="0.01" class="form-control" name="precio" required="required" value="0">
   </div>
 </div>
-<label class="col-sm-2 col-form-label">Afectacion:</label>
-<div class="col-sm-4">
-    <select class="form-control"  name="afectacion">
-      @foreach($afectacion as $afecta)
-      <option value="{{$afecta->id}}">{{$afecta->informacion}}</option>
-      @endforeach
-    </select>
-</div>
 
-</div>
 
-<div class="row">
+<div class="ibox-footer">
+  <span style="text-align:right;">
+    Fecha de Creación <i class="fa fa-clock-o"></i> {{date('d:m:Y')}}
+  </span>
 </div>
 </div>
 
-</fieldset>
-<fieldset class="col-sm-6">
- <legend>Foto del <br>Servicio </legend>
-
- <div class="panel panel-default">
-  <div class="panel-body">
-    <div class="col-sm-12">
-     <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"  />
-     <div id="visorArchivo">
-       <!--Aqui se desplegará el fichero-->
-       <center ><img name="foto"  src="{{ asset('/archivos/imagenes/servicios/defecto.png')}}" width="350px" height="180px" /></center>
-     </div>
-   </div>
- </div>
 </div>
-
-</fieldset>
-
-
 </div>
-
-<button class="btn btn-primary" type="submit" id="boton">Guardar</button>
-
-
+</div>
 </form>
-</div>
 
-
-<style>
-	/*img{border-radius: 40px}*/
- p#texto{
-  text-align: center;
-  color:black;
-}
-
-input#archivoInput{
+<style>  input#archivoInput{
   position:absolute;
   top:0px;
   left:0px;
   right:0px;
   bottom:0px;
   width:100%;
-  height:100%;
-  opacity: 0	;
+  /*height:100%;*/
+  opacity: 0  ;
+  padding: 30px;
 }
-.form-control{    margin-bottom: 15px;border-radius: 5px
-}
-fieldset
-{
-  /*border: 1px solid #ddd !important;*/
-  padding: 10px;
-  /*border-radius:4px ;*/
-  background-color:#f5f5f5;
-  padding-left:10px!important;
-  padding-right:10px!important;
-  margin-bottom: 10px;
-  border-left: 1px solid #ddd !important;
-
-}
-
-legend
-{
-  font-size:14px;
-  font-weight:bold;
-  margin-bottom: 0px;
-  width: 35%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px 5px 5px 10px;
-  background-color: #ffffff;
-}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
--webkit-appearance: none;
-margin: 0;
-}
-
-input[type=number] { -moz-appearance:textfield; }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -232,6 +167,7 @@ input[type=number] { -moz-appearance:textfield; }
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+{{-- foto --}}
 <script type="text/javascript">
   function validarExt()
   {
@@ -239,7 +175,7 @@ input[type=number] { -moz-appearance:textfield; }
     var archivoRuta = archivoInput.value;
     var extPermitidas = /(.jpg|.png|.jfif)$/i;
     if(!extPermitidas.exec(archivoRuta)){
-      alert('Asegurese de haber seleccionado una Imagen');
+      alert('Asegúrese de haber seleccionado una Imagen');
       archivoInput.value = '';
       return false;
     }
@@ -253,23 +189,11 @@ input[type=number] { -moz-appearance:textfield; }
           visor.onload = function(e)
           {
             document.getElementById('visorArchivo').innerHTML =
-            '<center><img name="foto" src="'+e.target.result+'"width="350px" height="180px" /></center>';
+            '<img name="foto" src="'+e.target.result+'" style="width:100%;padding: 30px;"/>';
           };
           visor.readAsDataURL(archivoInput.files[0]);
         }
       }
     }
   </script>
-  {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-  <script>
-    function valida(f) {
-      var boton=document.getElementById("boton");
-      var completo = true;
-      var incompleto = false;
-      if( f.elements[0].value == "" )
-       { alert(incompleto); }
-     else{boton.type = 'button';}
-   }
- </script>
- {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
- @endsection
+  @endsection

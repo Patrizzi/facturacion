@@ -1,13 +1,9 @@
 @extends('layout')
-
 @section('title', 'productos')
-@section('breadcrumb', 'productos')
-@section('breadcrumb2', 'productos')
+@section('atributo_actu', 'hidden')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
 @section('content')
-
-
 
 <div class="wrapper wrapper-content animated fadeInRight">
     @if (session('anulacion'))
@@ -25,12 +21,12 @@
                                 <tr>
                                     <th>Item</th>
                                     <th>Nombre</th>
-                                    <th>Codigo Producto</th>
-                                    <th>Codigo Original</th>
+                                    <th>Código Producto</th>
+                                    <th>Código Original</th>
                                     {{-- <th>Familia</th> --}}
                                     <th>Marca</th>
                                     <th>Estado</th>
-                                    <th>Afectacion</th>
+                                    <th>Afectación</th>
                                     <th>Foto</th>
                                     <th>Ver</th>
                                     <th>Anular</th>
@@ -114,7 +110,7 @@
                         '<div class="ibox-content float-e-margins">'+
                         '<h3 class="font-bold col-lg-12" align="center">'+
                         '¿Esta Seguro que Deseas Anular el Producto: :id".?<br>'+
-                        '<h4 align="center"> <strong>Nota: Una vez Anulado no hay opcion de devolver la accion </strong></h4>'+
+                        '<h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>'+
                         '</h3><p align="center"><form action="{{ route('productos.destroy',':id')}}" method="POST">'+
                         '@csrf @method('delete')'+
 
