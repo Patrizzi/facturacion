@@ -60,13 +60,13 @@
                <div class="col-sm-4"><input type="text" placeholder="Código del Producto" class="form-control"  name="codigo_original" data-toggle="tooltip" data-placement="top" title="Código del Producto"  value="{{$producto->codigo_original}}" ></div>
 
                <div class="col-sm-4">  <select class="form-control m-b" name="origen"  data-toggle="tooltip" data-placement="top" title="Origen del Producto" >
-                <option value="Producto Nacional"  @if($producto->origen=="Producto Nacional")checked @endif>Producto Nacional</option>
-                <option value="Producto Importado" @if($producto->origen=="Producto Importado")checked @endif>Producto Importado</option>
+                <option value="Producto Nacional"  @if($producto->origen=="Producto Nacional")selected @endif>Producto Nacional</option>
+                <option value="Producto Importado" @if($producto->origen=="Producto Importado")selected @endif>Producto Importado</option>
               </select></div>
 
               <div class="col-sm-4"><select  data-toggle="tooltip" data-placement="top" title="Familia"  class="form-control m-b" name="familia_id" required="required">
                @foreach($familias as $familia)
-               <option value="{{ $familia->id }}"  @if($producto->familia_i_producto->id==$familia->id)checked @endif>{{ $familia->descripcion}}</option>
+               <option value="{{ $familia->id }}"  @if($producto->familia_i_producto->id==$familia->id)selected @endif>{{ $familia->descripcion}}</option>
                @endforeach
              </select></div>
 
