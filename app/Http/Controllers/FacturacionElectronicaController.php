@@ -219,41 +219,13 @@ class FacturacionElectronicaController extends Controller
         $factura_registro=Facturacion_registro::where('facturacion_id',$nota_credito->facturacion_id)->get();
 
         // $n_c_request=array('cantidad' => null,'precio'=>null);
-        // // return $n_c_request->id;
-        // foreach($notas_creditos_registro as $nota_c_registros ){
-        //     $n_c_cantidad['cantidad'] = $nota_c_registros->cantidad;
-        //     $n_c_precio['precio'] = $nota_c_registros->precio;
-        // }
-        
-        $cero=0;
-        $zero=0;
-        for($i=0;$i<30;$i++){
-            $n_c_cantidad[$cero] = $i;
-            $cero++;
+        // return $factura_registro;
+        foreach($notas_creditos_registro as $i => $nota_c_registros ){
+            $n_c_cantidad[$i] = $nota_c_registros->cantidad;
+            $n_c_precio[$i] = $nota_c_registros->precio;
         }
 
-        for($k=50;$k<80;$k++){
-            $n_c_precio[$zero] = $k;
-            $zero++;
-        }
-
-
-
-        $test1=json_encode($n_c_cantidad);
-        $test2=json_encode($n_c_precio);
-
-        $array_2000=array("cantidad" => $test1,"precio"=>$test2);
-        // $array_1 = ['cantidad' => $value2];
-        // $array_2 = ['input_precio' => $value2];
-        
-        // $value_cont = array_merge($n_c_cantidad, $n_c_precio);
-        $json = json_encode($array_2000);
-        // response()->json($array_2000, 200, []);
-
-        return var_dump($json['cantidad']);
-        // foreach($notas_creditos_registro as $value){
-        //     return $value->cantidad;
-        // }
+        // return $n_c_cantidad[0];
 
         //notas_creditos_count
         $notas_creditos_count=Nota_Credito_registro::count();
@@ -276,7 +248,7 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();    
 
 
-        $invoice=Config_fe::nota_credito($factura,$factura_registro,$request,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento);
+        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
@@ -287,28 +259,70 @@ class FacturacionElectronicaController extends Controller
         $contador=count($notas_creditos_registro);
 
         //codigo
-
+        $codigo=$factura->codigo_fac;
 
         nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
 
-        return redirect()->route('nota-credito.show',$nota_credito->id);
+        $nota_credito->n_electronica=1;
+        $nota_credito->save();
+        return redirect()->route('facturacion_electronica.index_nota_credito')->with('successMsg',$msg);
+        // return redirect()->route('nota-credito.show',$nota_credito->id);
 
     }
 
 
     public function nota_credito_boleta(Request $request)
     {   
-        return 'nota de credito boleta';
-        //configuracion
-        $see=config_acceso_sunat::facturacion_electronica();
-        $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$request,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$request->motivo,$sustento);
+        // return 'nota de credito boleta';
+        $nota_credito=Nota_Credito::where('id',$request->id)->first();
+        $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
+        // return $notas_creditos_registro;  
+        //factura - factura registro
+        $boleta=Boleta::where('id',$nota_credito->boleta_id)->first();
+        $boleta_registro=Boleta_registro::where('boleta_id',$nota_credito->boleta_id)->get();
+
+        // $n_c_request=array('cantidad' => null,'precio'=>null);
+        // return $factura_registro;
+        foreach($notas_creditos_registro as $i => $nota_c_registros ){
+            $n_c_cantidad[$i] = $nota_c_registros->cantidad;
+            $n_c_precio[$i] = $nota_c_registros->precio;
+        }
+        $notas_creditos_count=Nota_Credito_registro::count();
+        $notas_creditos_count++;
+
+        //nota_Credito_numero
+        $nota_credito_numero=$nota_credito->codigo_n_c;
+
+        //gravada
+        $gravada=$nota_credito->op_gravada;
+        //exonerada
+        $exonerada=$nota_credito->op_inafecta;
+        //inafecta
+        $inafecta=$nota_credito->op_exonerada;
+        //request->motivo
+        $motivo=$nota_credito->motivo;
+        //sustento
+        $sustento=$nota_credito->tipo;
+
+        $see=config_acceso_sunat::facturacion_electronica();   
+
+         $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+
+        //contador
+        $contador=count($notas_creditos_registro);
+
+        //codigo
+        $codigo=$boleta->codigo_boleta;
         nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+
+        $nota_credito->n_electronica=1;
+        $nota_credito->save();
         
-        return redirect()->route('nota-credito.show',$nota_credito->id);
+        return redirect()->route('facturacion_electronica.index_nota_credito')->with('successMsg',$msg);
     }
 
     // nota de debito
