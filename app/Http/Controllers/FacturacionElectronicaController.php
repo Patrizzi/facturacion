@@ -209,11 +209,11 @@ class FacturacionElectronicaController extends Controller
 
     public function nota_credito(Request $request)
     {   
-        
+        // return 1;
         //configuración
         $nota_credito=Nota_Credito::where('id',$request->id)->first();
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
-
+        // return $notas_creditos_registro;  
         //factura - factura registro
         $factura=Facturacion::where('id',$nota_credito->facturacion_id)->first();
         $factura_registro=Facturacion_registro::where('facturacion_id',$nota_credito->facturacion_id)->get();
@@ -221,24 +221,39 @@ class FacturacionElectronicaController extends Controller
         // $n_c_request=array('cantidad' => null,'precio'=>null);
         // // return $n_c_request->id;
         // foreach($notas_creditos_registro as $nota_c_registros ){
-        //     $n_c_cantidad = $nota_c_registros->cantidad;
-        //     $n_c_precio = $nota_c_registros->precio;
+        //     $n_c_cantidad['cantidad'] = $nota_c_registros->cantidad;
+        //     $n_c_precio['precio'] = $nota_c_registros->precio;
         // }
-
+        
+        $cero=0;
+        $zero=0;
         for($i=0;$i<30;$i++){
-            $n_c_cantidad['precio'][] = $i;
+            $n_c_cantidad[$cero] = $i;
+            $cero++;
         }
 
         for($k=50;$k<80;$k++){
-            $n_c_precio["cantidad"][] = $k;
+            $n_c_precio[$zero] = $k;
+            $zero++;
         }
+
+
+
+        $test1=json_encode($n_c_cantidad);
+        $test2=json_encode($n_c_precio);
+
+        $array_2000=array("cantidad" => $test1,"precio"=>$test2);
         // $array_1 = ['cantidad' => $value2];
         // $array_2 = ['input_precio' => $value2];
-        // // ['input_precio']
-        // // ['cantidad']
-        $value_cont = array_merge($n_c_cantidad, $n_c_precio);
-        json_encode($value_cont);
-        return $value_cont->cantidad;
+        
+        // $value_cont = array_merge($n_c_cantidad, $n_c_precio);
+        $json = json_encode($array_2000);
+        // response()->json($array_2000, 200, []);
+
+        return var_dump($json['cantidad']);
+        // foreach($notas_creditos_registro as $value){
+        //     return $value->cantidad;
+        // }
 
         //notas_creditos_count
         $notas_creditos_count=Nota_Credito_registro::count();
