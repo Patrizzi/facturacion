@@ -277,8 +277,12 @@
 {{-- Fin Modal Provedor --}}
 <script>
     $(document).ready(function(){
-        // $("wizard-big").steps();
-        $("#form_cliente_modal").steps({
+        call_wizard();
+    });
+</script>
+<script>
+   function call_wizard(){
+    $("#form_cliente_modal").steps({
             bodyTag: "fieldset",
             onStepChanging: function (event, currentIndex, newIndex)
             {
@@ -349,8 +353,10 @@
                             'Actulizacion de cliente', {
                                 timeOut: 3000
                             });
-                            $("#form_cliente_modal").steps("finish");
-                            // $("#form_cliente_modal").steps("");
+                            $("#form_cliente_modal").steps("destroy");
+                            llamado_vuelta();
+                            // $("#form_cliente_modal").steps("add",{contentUrl : "{{}}"} );
+                            
                         
                     }
                 });
@@ -367,10 +373,12 @@
                 }
             }
         });
-    });
+   }
 </script>
 <script>
-
+    function llamado_vuelta(){
+        call_wizard();
+    }
 </script>
 <script >
     function seleccionado(){
