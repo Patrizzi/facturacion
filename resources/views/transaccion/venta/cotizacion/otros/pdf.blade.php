@@ -153,7 +153,7 @@
 
 <!-- Fin Totales de Productos -->
 <br>
-<table style="border-collapse: separate;">
+{{-- <table style="border-collapse: separate;">
     <tr>
      <th style="width: 2%;border-color: white"></th>
      @foreach($banco as $bancos)
@@ -179,7 +179,8 @@
           <th style="width: 2%;border-color: white"></th>
           @endforeach
       </tr>
-  </table>
+  </table> --}}
+@include('layout_bancos_pdf')
 
 
 <div class="">
