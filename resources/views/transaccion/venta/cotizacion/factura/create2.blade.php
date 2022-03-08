@@ -783,6 +783,7 @@
 
         document.getElementById("igv").value = igv;
         document.getElementById("total_final").value = end;
+        articlesSelect2();
     });
 
     function click_radio_boleta(){
