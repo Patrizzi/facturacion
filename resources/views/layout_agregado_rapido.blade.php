@@ -50,8 +50,8 @@
                 <div >
                     <div >
                         <form enctype="multipart/form-data" id="form_cliente_modal" class="wizard-big"> {{-- Yiel form- es para colocar una ruta alterna  --}}
-                            
-                            <h1>Datos Personales</h1>
+                        @csrf
+                            <h1>Datos Personale</h1>
                             <fieldset>
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -277,7 +277,7 @@
 {{-- Fin Modal Provedor --}}
 <script>
     $(document).ready(function(){
-        $("#wizard").steps();
+        // $("wizard-big").steps();
         $("#form_cliente_modal").steps({
             bodyTag: "fieldset",
             onStepChanging: function (event, currentIndex, newIndex)
@@ -337,7 +337,24 @@
                 var form = $(this);
 
                 // Enviar entrada de formulario
-                form.submit();
+                // event.preventDefault();
+                var datos =  $("#form_cliente_modal").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('agregado_rapido.cliente_store') }}",
+                    data: datos,
+                    success: function(data)
+                    {
+                        toastr.info("El registro se actulizo corectamente",
+                            'Actulizacion de cliente', {
+                                timeOut: 3000
+                            });
+                            $("#form_cliente_modal").steps("finish");
+                            // $("#form_cliente_modal").steps("");
+                        
+                    }
+                });
+               
             }
         }).validate({
             errorPlacement: function (error, element)
@@ -351,6 +368,9 @@
             }
         });
     });
+</script>
+<script>
+
 </script>
 <script >
     function seleccionado(){
@@ -376,20 +396,6 @@
         }
 
         $("#form_cliente_modal").submit(function(event) {
-            event.preventDefault();
-            var datos =
-            {
-                '_token': $('input[name=_token]').val(),
-                'status': 1,
-            },
-            jQuery.ajax({
-                type: "POST",
-                url: "{ route('agregado_rapido.cliente_store') }}",
-                data: datos,
-                success: function(data)
-                {
-                    console.log("respuesta: ", data);
-                }
-            });
+            console.log("a");
         });
     </script>

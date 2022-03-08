@@ -23,6 +23,7 @@
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/icono.svg') }}" sizes="any">
+    <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
 
 </head>
 
@@ -382,6 +383,8 @@ $empresa=Empresa::first(); ?>
 
         <!-- Ladda style -->
         <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+        <!-- Toastr script -->
+        <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
         <script>
             $(document).ready(function (){
