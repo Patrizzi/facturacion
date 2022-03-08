@@ -355,9 +355,7 @@
                             });
                             $("#form_cliente_modal").steps("destroy");
                             llamado_vuelta();
-                            // $("#form_cliente_modal").steps("add",{contentUrl : "{{}}"} );
-                            
-                        
+                            $("#table_cliente").DataTable().ajax.reload();   
                     }
                 });
                
