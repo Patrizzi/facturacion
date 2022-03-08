@@ -82,9 +82,9 @@ $empresa=Empresa::first(); ?>
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element" style="left: 10% ">
-                            <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->personal->nombres)</span>
+                            <a href="{{route('usuario.index')}}">
+                                <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
+                                <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
                                 <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
                             </a>
                         </div>
@@ -118,9 +118,9 @@ $empresa=Empresa::first(); ?>
                             <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
-                             <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
-                                <li><a href="{{route('otros.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
-                                    {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
+                            <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
+                            <li><a href="{{route('otros.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                            {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
                            {{--  <li>
                                 <a href="#"><span  class="nav-label">Cotizaciones</span></a>
                                 <ul class="nav nav-second-level collapse">
@@ -142,20 +142,20 @@ $empresa=Empresa::first(); ?>
                     <li>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
                         <ul class="nav nav-second-level collapse">
-                           @can('transacciones-garantias-guias_ingreso.index')
-                           <li><a href="{{route('garantia_guia_ingreso.index')}}">Guía Ingreso</a></li>
-                           @endcan
-                           @can('transacciones-garantias-guias_egreso.index')
-                           <li><a href="{{route('garantia_guia_egreso.index')}}">Guía Egreso</a></li>
-                           @endcan
-                           @can('transacciones-garantias-informe_tecnico.index')
-                           <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Técnico</a></li>
-                           @endcan
+                         @can('transacciones-garantias-guias_ingreso.index')
+                         <li><a href="{{route('garantia_guia_ingreso.index')}}">Guía Ingreso</a></li>
+                         @endcan
+                         @can('transacciones-garantias-guias_egreso.index')
+                         <li><a href="{{route('garantia_guia_egreso.index')}}">Guía Egreso</a></li>
+                         @endcan
+                         @can('transacciones-garantias-informe_tecnico.index')
+                         <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Técnico</a></li>
+                         @endcan
 
-                       </ul>
-                   </li>
-                   @if(empty($inventario_inicial))
-                   <li>
+                     </ul>
+                 </li>
+                 @if(empty($inventario_inicial))
+                 <li>
                     <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
                     @elseif($inventario_inicial->estado==1)
                     <li>

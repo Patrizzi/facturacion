@@ -1361,14 +1361,14 @@ public function show($id)
     //     }
     // }
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
-    if ($regla=='factura') {
+    // if ($regla=='factura') {
         $end=round($sub_total, 2)+round($igv_p, 2);
         $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
-    }elseif ($regla=='boleta'){
-        $end=round($sub_total, 2);
-        $end2=number_format(round($sub_total, 2),2);
+    // }elseif ($regla=='boleta'){
+    //     $end=round($sub_total, 2);
+    //     $end2=number_format(round($sub_total, 2),2);
 
-    }
+    // }
     /* Finde numeros a Letras*/
 
     $firma= EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
@@ -1413,14 +1413,14 @@ public function print($id){
     $sub_total=$cotizacion->op_gravada;
 
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
-    if ($regla=='factura') {
+    // if ($regla=='factura') {
         $end=round($sub_total, 2)+round($igv_p, 2);
         $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
-    }elseif ($regla=='boleta'){
-        $end=round($sub_total, 2);
-        $end2=number_format(round($sub_total, 2),2);
+    // }elseif ($regla=='boleta'){
+    //     $end=round($sub_total, 2);
+    //     $end2=number_format(round($sub_total, 2),2);
 
-    }
+    // }
     /* Finde numeros a Letras*/
     $empresa=Empresa::first();
     $sum=0;
@@ -1447,14 +1447,14 @@ public function pdf(Request $request,$id){
     // foreach($cotizacion_registro as $cotizacion_registros){
     $sub_total = $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
-    if ($regla=='factura') {
+    // if ($regla=='factura') {
         $end=round($sub_total, 2)+round($igv_p, 2);
         $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
-    }elseif ($regla=='boleta'){
-        $end=round($sub_total, 2);
-        $end2=number_format(round($sub_total, 2),2);
+    // }elseif ($regla=='boleta'){
+    //     $end=round($sub_total, 2);
+    //     $end2=number_format(round($sub_total, 2),2);
 
-    }
+    // }
     // }
 
     /* Finde numeros a Letras*/

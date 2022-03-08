@@ -40,18 +40,23 @@ class LoginController extends Controller
 
     }
 
-     protected function credentials(Request $request)
+    protected function credentials(Request $request)
     {
        $request['estado'] = 1;
-       
-       return $request->only($this->username(), 'password', 'estado');
-    }
 
-    public function showLoginForm()
-    {
-        $mi_empresa=Empresa::first();
-        $url=$mi_empresa->background;
-        return view('auth.login',compact('url'));
-    }
+       return $request->only($this->username(), 'password', 'estado');
+   }
+
+   public function showLoginForm()
+   {
+    $hora=date('H:m:s');
+    // $hora='03:03:04';
+    if ($hora > '12:00:01' and $hora < '18:00:00'){$buenas='Buenas Tardes'; }
+    elseif ($hora > '18:00:01') {$buenas='Buenas Noches';}
+    else{ $buenas='Buen Día'; }
+    $mi_empresa=Empresa::first();
+    $url=$mi_empresa->background;
+    return view('auth.login',compact('url','mi_empresa','buenas'));
+}
 
 }

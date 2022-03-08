@@ -220,11 +220,11 @@
             </h3>         
         </div>
         <div class="col-sm-4 form-control ">
-            @if($cotizacion->tipo == "boleta")
+            {{-- @if($cotizacion->tipo == "boleta") --}}
                 {{-- //POSIBLE CONDICIONAL PARA LA VISTA, 1ERO EN BOLETA, 2DO EN FACTURA POR OP GRAVADA --}}
-                <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
-                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}}{{$end}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>                
-            @else
+                {{-- <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
+                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}}{{$end}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>                 --}}
+            {{-- @else --}}
                 
                 <span style="display: block;float: left"> Subtotal:</span>
                 <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
@@ -236,10 +236,10 @@
                 <span style="display: block;float: left"> Op. Exonerada: </span>
                 <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}} </span><br>
                 <span style="display: block;float: left"> I.G.V.: </span>
-                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}} @else  {{$cotizacion->moneda->simbolo}}.00 @endif</span><br>
+                <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
                 <span style="display: block;float: left"> Importe Total: </span>
-                <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}} {{number_format($end,2)}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</span>
-            @endif
+                <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format($end,2)}}</span>
+            {{-- @endif --}}
         </div>
     </div>
    
@@ -250,14 +250,14 @@
 <br>
 <!-- Fin Totales de Productos -->
 @include('layout_bancos')
-
           <br>
-          <div class="row">
+@include('layout_firma_pie_hoja')
+         {{--  <div class="row">
             <div class="col-sm-3">
                 <p><u>Centro de Atención : </u></p>
                 Teléfono :  {{$empresa->telefono}}<br>
-                Celular : {{$cotizacion->user_personal->personal->celular }}<br>
-                Email : {{$cotizacion->user_personal->personal->email }}<br>
+                Celular : {{$cotizacion->user_personal->celular }}<br>
+                Email : {{$cotizacion->user_personal->email_user}}<br>
                 Web : {{$empresa->pagina_web}} <br>
             </div>
             <div class="col-sm-3"></div>
@@ -268,9 +268,9 @@
                 <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
                 @endif
                 <hr>
-                <center>{{$cotizacion->user_personal->personal->nombres }}</center>
+                <center>{{$cotizacion->user_personal->nombre}}</center>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 </div>

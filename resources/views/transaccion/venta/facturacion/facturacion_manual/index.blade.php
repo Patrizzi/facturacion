@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Facturacion')
+@section('title', 'Factura Manual')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('facturacion_manual.create'))
 @section('value_accion', 'Agregar')
@@ -64,15 +64,10 @@
                                     </td>
                                     {{-- Envio a Sunat --}}
                                     <td style="text-align:center;">
-                                        @if($facturacions->f_electronica==0)
-                                        <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="text" style="display: none" value="{{$facturacions->id}}" name="id">
-                                            <button type="submit" class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
-                                        </form>
-                                        @else
-
+                                        @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
                                         <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                        @else
+                                        <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
                                         @endif
                                     </td>
                                 </tr>

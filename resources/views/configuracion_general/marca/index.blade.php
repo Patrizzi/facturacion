@@ -288,10 +288,10 @@
 <script>
     var elem_2 = document.querySelector('.js-switch_{{$marca->id}}');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
-</script>
+{{-- </script>
 @endforeach
 @foreach($marcas as $marca)
-<script>
+<script> --}}
     var elem_2 = document.querySelector('.js-switch_vehiculo{{$marca->id}}');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 </script>

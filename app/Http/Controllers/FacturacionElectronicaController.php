@@ -2,36 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Config_fe;
-use App\config_acceso_sunat;
-
-use App\Facturacion;
-use App\Facturacion_registro;
-use App\Boleta;
-use App\Boleta_registro; 
-use App\Guia_remision;
-use App\Codigo_guia_almacen;
 use App\Almacen;
-
-use App\g_remision_registro;
+use App\Boleta;
+use App\Boleta_registro;
+use App\Codigo_guia_almacen;
+use App\Config_fe;
+use App\Facturacion;
+use App\Facturacion_m;
+use App\Facturacion_registro;
+use App\Guia_remision;
 use App\Nota_Credito;
 use App\Nota_Credito_registro;
-
 use App\Nota_Debito;
 use App\Nota_Debito_registro;
+use App\config_acceso_sunat;
+use App\g_remision_registro;
 use DateTime;
-
 use Greenter\Model\Client\Client;
-use Greenter\Model\Company\Company;
 use Greenter\Model\Company\Address;
+use Greenter\Model\Company\Company;
 use Greenter\Model\Sale\FormaPagos\FormaPagoContado;
 use Greenter\Model\Sale\Invoice;
-use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
-
-use Illuminate\Support\Facades\Storage;
+use Greenter\Model\Sale\SaleDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class FacturacionElectronicaController extends Controller
 {
@@ -43,9 +39,12 @@ class FacturacionElectronicaController extends Controller
 
     public function index()
     {
+        $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
         $facturacion=Facturacion::where('f_electronica',0)->get();
+
+        $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
         $facturacion_enviada=Facturacion::where('f_electronica',1)->get();
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada'));
+        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m','facturacion_enviada_m'));
     }
 
     public function index_boleta(){

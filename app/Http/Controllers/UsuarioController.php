@@ -28,10 +28,21 @@ class UsuarioController extends Controller
      */
     public function index()
     {
+        // $usuarios=User::where('id','!=',1)->get();
+        $usuarios=User::where('id','!=',1)->get();
+        $almacen=Almacen::where('estado',0)->get();
+        $i = 1;
+        // return view('configuracion_general.usuario.index',compact('usuarios','almacen','i'));
+        return view('configuracion_general.usuario.index2',compact('usuarios'));
+    }
+    public function index_usuarios()
+    {
+        // $usuarios=User::where('id','!=',1)->get();
         $usuarios=User::where('id','!=',1)->get();
         $almacen=Almacen::where('estado',0)->get();
         $i = 1;
         return view('configuracion_general.usuario.index',compact('usuarios','almacen','i'));
+        // return view('configuracion_general.usuario.index2',compact('usuarios'));
     }
 
     /**
@@ -129,7 +140,7 @@ class UsuarioController extends Controller
             $user->email_creado=0;
             $user->avatar = $avatar;
             //asignacion de rol automatico
-                $user->assignRole('Admin');
+            $user->assignRole('Admin');
             //
             $user->save();
             $empresa= Empresa::first();
@@ -162,13 +173,13 @@ class UsuarioController extends Controller
             $mailer =new \Swift_Mailer($transport);
             $message = (new \Swift_Message($titulo)) ->setFrom([ $yourEmail => $empresa->nombre ])->setTo([$sendto])->setBody($mensaje, 'text/html');
             if($mailer->send($message)){
-                return redirect()->route('usuario.index');
+                return redirect()->route('usuarios.index');
             }else{
                 return "Something went wrong :(";
             }
             /*fin envio*/
-             
-            return redirect()->route('usuario.index');
+
+            return redirect()->route('usuarios.index');
         }
         else{
             $i = 1;
@@ -212,110 +223,129 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $numero_validacion=rand(600000000, 900000000) ;
-        $nombre_personal=Personal::where('id',$id)->first();
-        $usuario_id=User::where('id',$id)->first();
-        $usuarios=User::where('id','!=',1)->get();
-        $almacen=Almacen::all();
-        $celular=$request->get('celular');
-        $contrasena_confirmar=$request->get('contrasena_confirmar');
-        $correo_new=$request->get('correo');
 
-        $password_new=$request->get('password_new');
-        $contrasena_adm=$request->get('contrasena_adm');
-        $almacen_id=$request->get('almacen_id');
-        $estado=$request->get('estado');
-        if ($estado=='on') { $estado_numero='1'; }
-        else{ $estado_numero='0';}
-        if (isset($password_new)) { $password=bcrypt($password_new); }
-        else{ $password=$usuario_id->password;}
+       $btn=$request->get('btn');
+       if(isset($btn)){
+           $password=$request->get('password');
+           if($request->hasfile('avatar')){
+            $image1 =$request->file('avatar');
+            $avatar =time().'profile';
+            $destinationPath = public_path('/profile/images/');
+            $image1->move($destinationPath,$avatar);
+        }else{
+            $avatar=$request->get('avatar_respaldo');
+        }
+        $user=User::find($id);
+        $user->nombre=$request->get('nombre');
+        $user->email_user=$request->get('email_user');
+        $user->celular=$request->get('celular');
+        if(isset($password)){$user->password=bcrypt($password);}
+        $user->avatar = $avatar;
+        $user->save();
+        return redirect()->route('usuario.index');
+    }
+        // return $request->file('avatar');
+    $numero_validacion=rand(600000000, 900000000) ;
+    $nombre_personal=Personal::where('id',$id)->first();
+    $usuario_id=User::where('id',$id)->first();
+    $usuarios=User::where('id','!=',1)->get();
+    $almacen=Almacen::all();
+    $celular=$request->get('celular');
+    $contrasena_confirmar=$request->get('contrasena_confirmar');
+    $correo_new=$request->get('correo');
 
-        if (password_verify($contrasena_confirmar, $contrasena_adm)){
-            if ($correo_new!=$usuario_id->email ) {
-                $this->validate($request,[
-                    'correo' => ['required','email','unique:users,email'],
-                ],[
-                    'correo.unique' => 'El Correo "'.$correo_new.'" ya esta Registrado, Use otro correo para registrar este usuario.',
-                ]);
+    $password_new=$request->get('password_new');
+    $contrasena_adm=$request->get('contrasena_adm');
+    $almacen_id=$request->get('almacen_id');
+    $estado=$request->get('estado');
+    if ($estado=='on') { $estado_numero='1'; }
+    else{ $estado_numero='0';}
+    if (isset($password_new)) { $password=bcrypt($password_new); }
+    else{ $password=$usuario_id->password;}
 
-                $data = $request->all();
+    if (password_verify($contrasena_confirmar, $contrasena_adm)){
+        if ($correo_new!=$usuario_id->email ) {
+            $this->validate($request,[
+                'correo' => ['required','email','unique:users,email'],
+            ],[
+                'correo.unique' => 'El Correo "'.$correo_new.'" ya esta Registrado, Use otro correo para registrar este usuario.',
+            ]);
 
-                if($request->hasfile('avatar')){
-                    $image1 =$request->file('avatar');
-                    $avatar =time().$image1->getClientOriginalName();
-                    $destinationPath = public_path('/profile/images/');
-                    $image1->move($destinationPath,$avatar);
-                }else{
-                    $avatar='defecto.jpg';
-                }
+            $data = $request->all();
 
-                $user=User::find($id);
-                $user->email=$correo_new;
-                $user->estado_validacion='0';
-                $user->estado='0';
-                $user->numero_validacion=$numero_validacion;
-                $user->password=$password;
-                $user->avatar = $avatar;
-                $user->save();
-                $codigo_mensaje=$numero_validacion;
-                $usuario_hora =Carbon::now()->format('Y-m-d');
-                $codigo_1 = substr($codigo_mensaje, 0, 3);
-                $codigo_2 = substr($codigo_mensaje, 3, 3);
-                $codigo_3 = substr($codigo_mensaje, 6, 3);
-                $codigo_unidos=$codigo_1.'-'.$codigo_2.'-'.$codigo_3;/*Codigo unido */
-                $cuerpo_mensaje = view('email_html.email_cod_confirmacion',compact('codigo_unidos','nombre_personal','usuario_hora','empresa'));
+            if($request->hasfile('avatar')){
+                $image1 =$request->file('avatar');
+                $avatar =time().$image1->getClientOriginalName();
+                $destinationPath = public_path('/profile/images/');
+                $image1->move($destinationPath,$avatar);
+            }else{
+                $avatar='defecto.jpg';
+            }
 
-                $smtpAddress = 'mail.jypsac.com';
-                $port = '465';
-                $encryption = 'SSL';
-                $yourEmail = 'desarrollo@jypsac.com';
-                $yourPassword = '=+WQyq73%cC"';
-                $sendto = $correo_new;
-                $titulo = 'Sistema-Codigo Confirmacion';
-                $mensaje = $cuerpo_mensaje;
+            $user=User::find($id);
+            $user->email=$correo_new;
+            $user->estado_validacion='0';
+            $user->estado='0';
+            $user->numero_validacion=$numero_validacion;
+            $user->save();
+
+            $codigo_mensaje=$numero_validacion;
+            $usuario_hora =Carbon::now()->format('Y-m-d');
+            $codigo_1 = substr($codigo_mensaje, 0, 3);
+            $codigo_2 = substr($codigo_mensaje, 3, 3);
+            $codigo_3 = substr($codigo_mensaje, 6, 3);
+            $codigo_unidos=$codigo_1.'-'.$codigo_2.'-'.$codigo_3;/*Codigo unido */
+            $cuerpo_mensaje = view('email_html.email_cod_confirmacion',compact('codigo_unidos','nombre_personal','usuario_hora','empresa'));
+
+            $smtpAddress = 'mail.jypsac.com';
+            $port = '465';
+            $encryption = 'SSL';
+            $yourEmail = 'desarrollo@jypsac.com';
+            $yourPassword = '=+WQyq73%cC"';
+            $sendto = $correo_new;
+            $titulo = 'Sistema-Codigo Confirmacion';
+            $mensaje = $cuerpo_mensaje;
             // $bakcup=    $correo_busqueda->email_backup ;
-                /*Fin Confi*/
-                $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
-                $mailer =new \Swift_Mailer($transport);
-                $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto])->setBody($mensaje, 'text/html');
-                if($mailer->send($message)){
-                    return redirect()->route('usuario.index');
-                }
-                else{
-                    return "Something went wrong :(";
-                }
-                /*fin envio*/
+            /*Fin Confi*/
+            $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
+            $mailer =new \Swift_Mailer($transport);
+            $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto])->setBody($mensaje, 'text/html');
+            if($mailer->send($message)){
                 return redirect()->route('usuario.index');
             }
             else{
-                if($request->hasfile('avatar')){
-                    $image1 =$request->file('avatar');
-                    $avatar =time().$image1->getClientOriginalName();
-                    $destinationPath = public_path('/profile/images/');
-                    $image1->move($destinationPath,$avatar);
-                }else{
-                    $avatar='defecto.png';
-                }
-
-
-                $user=User::find($id);
-                $user->almacen_id=$almacen_id;
-                $user->celular=$celular;
-                $user->estado=$estado_numero;
-                $user->password=$password;
-                $user->avatar = $avatar;
-                $user->save();
-                return redirect()->route('usuario.index');
+                return "Something went wrong :(";
             }
+            /*fin envio*/
+            return redirect()->route('usuarios.index');
         }
-        else {
-            $errores='Contraseña delAdministrador Erronea - Ningun Cambio Realizado';
-            $i = 1;
-            return view('configuracion_general.usuario.index',compact('usuarios','errores','almacen','i'));
-        }
+        else{
+            if($request->hasfile('avatar')){
+                $image1 =$request->file('avatar');
+                $avatar =time().$image1->getClientOriginalName();
+                $destinationPath = public_path('/profile/images/');
+                $image1->move($destinationPath,$avatar);
+            }else{
+                $avatar='defecto.png';
+            }
 
 
+            $user=User::find($id);
+            $user->almacen_id=$almacen_id;
+            $user->estado=$estado_numero;
+            $user->save();
+            return redirect()->route('usuarios.index');
+        }
     }
+    else {
+        $errores='Contraseña delAdministrador Erronea - Ningun Cambio Realizado';
+        $i = 1;
+        return view('configuracion_general.usuario.index',compact('usuarios','errores','almacen','i'));
+    }
+
+
+
+}
 
     /**
      * Remove the specified resource from storage.
@@ -388,7 +418,7 @@ class UsuarioController extends Controller
             $mailer =new \Swift_Mailer($transport);
             $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto])->setBody($mensaje, 'text/html');
             if($mailer->send($message)){
-                return redirect()->route('usuario.index');
+                return redirect()->route('usuarios.index');
             }
             else{
                 return "Something went wrong :(";
@@ -401,7 +431,7 @@ class UsuarioController extends Controller
                 $user->estado_validacion='1';
                 $user->estado='1';
                 $user->save();
-                return redirect()->route('usuario.index');
+                return redirect()->route('usuarios.index');
             }
             else{
                $usuarios=User::where('id','!=',1)->get();
@@ -418,7 +448,7 @@ class UsuarioController extends Controller
             $user->email=$request->get('correo');
             $user->numero_validacion=$numero_validacion;
             $user->save();
-            return redirect()->route('usuario.index');
+            return redirect()->route('usuarios.index');
         }
         else{
             $this->validate($request,[
@@ -460,13 +490,13 @@ class UsuarioController extends Controller
             $mailer =new \Swift_Mailer($transport);
             $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto])->setBody($mensaje, 'text/html');
             if($mailer->send($message)){
-                return redirect()->route('usuario.index');
+                return redirect()->route('usuarios.index');
             }
             else{
                 return "Something went wrong :(";
             }
             /*fin envio*/
-            return redirect()->route('usuario.index');
+            return redirect()->route('usuarios.index');
         }
 
     }
