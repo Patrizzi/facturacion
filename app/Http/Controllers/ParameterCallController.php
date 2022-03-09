@@ -165,9 +165,9 @@ class ParameterCallController extends Controller
     public function getClients(Request $request){
         $search = $request->search;
         if($search == ''){
-            $employees = Cliente::orderby('nombre','asc')->select('id','nombre')->where('documento_identificacion','ruc')->limit(5)->get();
+            $employees = Cliente::orderby('created_at','desc')->select('id','nombre')->where('documento_identificacion','ruc')->limit(5)->get();
         }else{
-            $employees = Cliente::orderby('nombre','asc')->select('id','nombre')->where('nombre', 'like', '%' .$search . '%')->where('documento_identificacion','ruc')->limit(5)->get();
+            $employees = Cliente::orderby('created_at','desc')->select('id','nombre')->where('nombre', 'like', '%' .$search . '%')->where('documento_identificacion','ruc')->limit(5)->get();
         }
 
         $response = array();
@@ -185,9 +185,9 @@ class ParameterCallController extends Controller
 
     // * Llamado de la tabla artículos (PRODUCTOS - SERVICIOS)
     public function getArticles(Request $request){
-        $search = $request->search;
+        $search = $request->desc;
         if($search == ''){
-            $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->limit(5)->get();
+            $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->limit(5)->get();
         }else{
             $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
