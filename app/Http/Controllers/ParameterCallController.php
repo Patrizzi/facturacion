@@ -166,7 +166,7 @@ class ParameterCallController extends Controller
         $search = $request->search;
         // return $request;
         $tipo = $request->tipo_coti;
-        if($tipo == '0'){ //Factura
+        if($tipo == '1'){ //Factura
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','RUC')->limit(5)->get();
             }else{
