@@ -44,18 +44,18 @@
                                 </address>
                             </div>
                             <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                             <strong>{{$empresa->razon_social}}</strong>
-                             <br>
-                             Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
-                             <br>
-                             {{$empresa->correo}}
-                             <br>
-                             {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
+                               <strong>{{$empresa->razon_social}}</strong>
+                               <br>
+                               Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
+                               <br>
+                               {{$empresa->correo}}
+                               <br>
+                               {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
 
 
-                         </div>
+                           </div>
 
-                         <div class="col-sm-4">
+                           <div class="col-sm-4">
                             <div class="form-control" align="center" style="height: auto;">
                                 <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                 <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
@@ -78,9 +78,9 @@
                             </div>
                         </div>
                         <div class="col-sm-6" align="center">
-                         <div class="form-control" >
-                             <h3>Condiciones Generales</h3>
-                             <div align="left">
+                           <div class="form-control" >
+                               <h3>Condiciones Generales</h3>
+                               <div align="left">
                                 <strong>Forma De Pago:</strong> &nbsp;{{$forma_pago_id }}<br>
                                 <strong>Validez :</strong> &nbsp;{{$validez}}<br>
                                 <strong>Garantia:</strong> &nbsp;{{$garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -89,8 +89,8 @@
                         </div>
                     </div>
                     <div class="col-sm-12" align="center">
-                     <div class="form-control" style="border: none;height: auto" >
-                         <div align="left">
+                       <div class="form-control" style="border: none;height: auto" >
+                           <div align="left">
                             <strong>observaciones:</strong> &nbsp;{{$observacion }}<br>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
             <div class="table-responsive">
                 <table class="table " >
                     <thead >
-                     <tr >
+                       <tr >
                         <th style="text-align:center;">ITEM </th>
                         <th>Descripcion</th>
                         <th style="text-align:center;">Cantidad</th>
@@ -109,8 +109,8 @@
                     </tr>
                 </thead>
                 <tbody > <span hidden="">{{$i=1}}</span>
-                   @foreach ($producto_id as $index => $producto_ids)
-                   <tr>
+                 @foreach ($producto_id as $index => $producto_ids)
+                 <tr>
                     <td  style="text-align:center;">{{$i++}}</td>
                     <td >{{$articulos[$index]}}</td>
                     <td  style="text-align:center;">{{$cantidad[$index]}}</td>
@@ -188,10 +188,26 @@
                   </div>
               </div>
           </div>
-      </div>
-      {{--  --}}
+          <div class="row">
+            <div class="col-sm-3">
+                <p><u>Atendido Por: </u></p>
+                Teléfono :  {{$empresa->telefono}}<br>
+                Celular : {{auth()->user()->celular }}<br>
+                Email : {{auth()->user()->email_user}}<br>
+                Web : {{$empresa->pagina_web}} <br>
+            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3"><br><br>
 
-      <style>
+                <hr>
+                <center>{{auth()->user()->nombre}}</center>
+            </div>
+        </div>
+    </div>
+    {{--  --}}
+
+    <style>
         .form-control{margin-top: 5px; border-radius: 5px}
         p#texto{
             text-align: center;

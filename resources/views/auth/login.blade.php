@@ -25,7 +25,7 @@
                   </div>
                   <div class="input-group mb-3">
                       <span class="input-group-text" id="basic-addon1" style="background:white; border-right:1px solid #00000000;"><i class="fa fa-lock" style="color:grey;"></i></span>
-                      <input id="password" type="password" style="border-left: 1px solid #00000000; color: grey;" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"  placeholder="contraseña">
+                      <input id="password" type="password" style="border-left: 1px solid #00000000; color: grey;" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"  placeholder="Contraseña">
                       @error('password')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                   </div>
                   <input type="submit" class="btn btn-primary form-control" value="Ingresar" style="color: #fff;background-color: #034fb1;border-color: #044aaa;">
