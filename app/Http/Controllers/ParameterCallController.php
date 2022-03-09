@@ -170,13 +170,13 @@ class ParameterCallController extends Controller
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','RUC')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','RUC')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->where('documento_identificacion','RUC')->limit(5)->get();
             }
         }else{
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->where('documento_identificacion','DNI')->limit(5)->get();
             }
         }
         
