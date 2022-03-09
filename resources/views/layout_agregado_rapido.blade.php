@@ -51,7 +51,7 @@
                     <div >
                         <form enctype="multipart/form-data" id="form_cliente_modal" class="wizard-big"> {{-- Yiel form- es para colocar una ruta alterna  --}}
                         @csrf
-                            <h1>Datos Personale</h1>
+                            <h1>Datos Personales</h1>
                             <fieldset>
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -350,12 +350,18 @@
                     success: function(data)
                     {
                         toastr.info("El registro se actulizo corectamente",
-                            'Actulizacion de cliente', {
+                        'Actulizacion de cliente', {
+                            timeOut: 3000
+                        });
+                        $("#form_cliente_modal").steps("destroy");
+                        llamado_vuelta();
+                        $("#table_cliente").DataTable().ajax.reload();   
+                    },
+                    error: function(error){
+                        toastr.error("Error en el Registro",
+                            'Error de Cliente', {
                                 timeOut: 3000
                             });
-                            $("#form_cliente_modal").steps("destroy");
-                            llamado_vuelta();
-                            $("#table_cliente").DataTable().ajax.reload();   
                     }
                 });
                

@@ -60,7 +60,7 @@
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                     <h5 id="n_factura">{{$cotizacion_numero}}</h5>
-                                    <h5 id="n_boleta">{{$cotizacion_numero_boleta}}</h5>
+                                    <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
                                 </div>
                             </div>
                         </div>
