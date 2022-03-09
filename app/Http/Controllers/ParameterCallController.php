@@ -164,17 +164,29 @@ class ParameterCallController extends Controller
     // * Llamado de la tabla clientes
     public function getClients(Request $request){
         $search = $request->search;
-        if($search == ''){
-            $employees = Cliente::orderby('created_at','desc')->select('id','nombre')->where('documento_identificacion','ruc')->limit(5)->get();
+        // return $request;
+        $tipo = $request->tipo_coti;
+        if($tipo == '0'){ //Factura
+            if($search == ''){
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','RUC')->limit(5)->get();
+            }else{
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','RUC')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+            }
         }else{
-            $employees = Cliente::orderby('created_at','desc')->select('id','nombre')->where('nombre', 'like', '%' .$search . '%')->where('documento_identificacion','ruc')->limit(5)->get();
+            if($search == ''){
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->limit(5)->get();
+            }else{
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+            }
         }
+        
 
         $response = array();
         foreach($employees as $employee){
            $response[] = array(
                 "id"=>$employee->id,
-                "nombre"=>$employee->nombre
+                "nombre"=>$employee->nombre,
+                "numero_documento"=>$employee->numero_documento 
            );
         }
   

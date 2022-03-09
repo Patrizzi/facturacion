@@ -368,6 +368,7 @@
 <script type="text/javascript"> 
 
     // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
+    // $('').val();
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {
@@ -377,9 +378,11 @@
             type: "POST",
             delay: 10,
             data: function (params) {
+                var tipo_coti = $('[name="tipo_coti"]:checked').val();
                 return {
                     _token: "{{ csrf_token() }}",
-                    search: params.term // search term
+                    search: params.term, // search term
+                    tipo_coti: tipo_coti    
                 };
             },
             processResults: function (data) {
@@ -387,7 +390,7 @@
                     results: $.map(data, function (item) {
                         return {
                             id: item.id,
-                            text: item.nombre,
+                            text: item.nombre + ' | ' +  item.numero_documento,
                         };
                     })
                 };
@@ -790,6 +793,7 @@
         if ($('input[class=n_boleta]:radio:checked').length == 0) {
             document.getElementById("n_factura").style.display = "none";
             document.getElementById("n_boleta").style.display = "block";
+            $(".select2_demo_client").select2("val", "");
         }
         
     }
@@ -797,6 +801,7 @@
         if ($('input[class=n_factura]:radio:checked').length == 0) {
             document.getElementById("n_boleta").style.display = "none";
             document.getElementById("n_factura").style.display = "block";
+            $(".select2_demo_client").select2("val", "");
         } 
     }   
 
