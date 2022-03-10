@@ -332,8 +332,8 @@
         color: red
     }
     #loaderGif{
-        background: url('https://tenor.com/view/reload-cat-loading-buffering-kitty-gif-17184357.gif')  50% 50% no-repeat #000000a3;
-        background-size: 575px;
+        background: url('https://acegif.com/wp-content/uploads/loading-13.gif')  50% 50% no-repeat #000000a3;
+        background-size: 250px;
         display: none;
         position: fixed;
         left: 0px;
