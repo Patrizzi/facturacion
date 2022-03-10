@@ -197,7 +197,7 @@ class ParameterCallController extends Controller
 
     // * Llamado de la tabla artículos (PRODUCTOS - SERVICIOS)
     public function getArticles(Request $request){
-        $search = $request->desc;
+        $search = $request->search;
         if($search == ''){
             $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->limit(5)->get();
