@@ -16,6 +16,7 @@ class AgregadoRapidoController extends Controller
 
 //FUNCION PARA CREAR CLIENTES Y CONTACTOS
     public function cliente_store(Request $request){
+        // return $request;
         // return "1";
         $this->validate($request,[
             'numero_documento' => ['required','unique:clientes,numero_documento'],
@@ -43,7 +44,7 @@ class AgregadoRapidoController extends Controller
         $this->contactos_store($data,$idCliente);
 
         // return view('auxiliar.cliente.contacto.cliente_new');
-        return back();
+        // return back();
     }
 
     public function contactos_store($data,$idCliente){
@@ -65,14 +66,15 @@ class AgregadoRapidoController extends Controller
     public function cliente_cotizado(Request $request){
         // return $request;
         $documento_identificacion=$request->get('numero_documento');
-        $ruta_retorno=$request->get('ruta_retorno');
+        // return $documento_identificacion;
+        // $ruta_retorno=$request->get('ruta_retorno');
         if(strstr($documento_identificacion,' ',true) == true){
           $doc_ruc = strstr($documento_identificacion,' ',true);
           // return "1";
-      }else{
-          $doc_ruc = $documento_identificacion;
-          // return "2";
-      }
+        }else{
+            $doc_ruc = $documento_identificacion;
+            // return "2";
+        }
       $cliente_existe=Cliente::where('numero_documento',$doc_ruc)->count();
         // return $cliente_existe;
       if ($cliente_existe==0) {
@@ -104,13 +106,15 @@ class AgregadoRapidoController extends Controller
          $contacto->clientes_id=$cliente->id;
          $contacto->save();
          // return redirect()->route('cotizacion.create_factura');
-        // return back();
-        return redirect()->route($ruta_retorno.'.index');
-     }else{
-
-        // return back();
+        return back();
+        // return "1";
         // return redirect()->route($ruta_retorno.'.index');
-          return redirect()->route($ruta_retorno.'.index')->withErrors(['Cliente ya Agregado!']);
+     }else{
+        // return "1";
+
+        return back();
+        // return redirect()->route($ruta_retorno.'.index');
+        //   return redirect()->route($ruta_retorno.'.index')->withErrors(['Cliente ya Agregado!']);
     }
 }
 
