@@ -197,13 +197,13 @@ class ParameterCallController extends Controller
 
     // * Llamado de la tabla artículos (PRODUCTOS - SERVICIOS)
     public function getArticles(Request $request){
-        $search = $request->desc;
+        $search = $request->search;
         if($search == ''){
-            $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->limit(5)->get();
-            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->limit(5)->get();
+            $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
         }else{
-            $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
-            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+            $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
+            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->orWhere('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
         }
 
         //Productos a array
