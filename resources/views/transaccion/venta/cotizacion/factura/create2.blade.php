@@ -133,8 +133,8 @@
                                                 <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
                                             </div>
 
-                                            <a class="col-sm-5" onclick="changeMoney()">
-                                                <button style="height: 35px;width: auto" type="button" class='addmores btn btn-info' id="button_changeMoney">
+                                            <a class="col-sm-5 button_money" onclick="changeMoney()">
+                                                <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
                                                     @if($moneda->tipo=='nacional')
                                                         Dolares 
                                                     @elseif($moneda->tipo=='extranjera') 
@@ -342,6 +342,10 @@
         height: 100vh;
         z-index: 20;
     }
+    .not-active { 
+        pointer-events: none; 
+        cursor: default; 
+    } 
         
 </style>
 
@@ -847,6 +851,7 @@
                         ajax(selected.substring(8)); 
                     }
                 }    
+                disabled_money();
             },
         });
     }
@@ -880,5 +885,16 @@
             this.addEventListener("mousewheel", handle, { passive: true });
         }
     };
+
+    function disabled_money(){
+        $(`.money_change`).prop('disabled', true);
+        $(`.button_money`).addClass('not-active');
+
+        setTimeout(function(){
+            $(`.money_change`).prop('disabled', false);
+            $(`.button_money`).removeClass('not-active');
+        }, 10000);
+    }
+
 </script>        
 @stop
