@@ -288,7 +288,7 @@
                             </table>
                         </div>
                         &nbsp;
-                        <button type="button" class='ladda-button addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                        <button type="button" class='addmore btn btn-success' disabled > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                         <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
                     </form>
                 </div>
@@ -332,8 +332,8 @@
         color: red
     }
     #loaderGif{
-        background: url('https://tenor.com/view/reload-cat-loading-buffering-kitty-gif-17184357.gif')  50% 50% no-repeat #000000a3;
-        background-size: 575px;
+        background: url('https://acegif.com/wp-content/uploads/loading-13.gif')  50% 50% no-repeat #000000a3;
+        background-size: 250px;
         display: none;
         position: fixed;
         left: 0px;
@@ -420,7 +420,7 @@
                 <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
             </td>";
             <td>
-                <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off"></select>
+                <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                 <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
                 <input type='text' style="width: 76px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
                 <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
@@ -475,7 +475,7 @@
                 $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
             }
         };
-        $(".addmore").prop("disabled", false);
+        $(".addmore").prop("disabled", true);
         $(".borrar").prop("disabled", false);
         
     });
@@ -577,6 +577,7 @@
                     document.getElementById(`comision${a}`).value = 0;
                 }
                 multi(a);
+                $(`.addmore`).prop("disabled", false);
             },
             error: function(eject) {
                 if(eject.status===400){

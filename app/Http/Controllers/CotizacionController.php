@@ -458,8 +458,8 @@ class CotizacionController extends Controller
 
         //Convertir nombre del cliente a id
         $cliente_nombre=$request->get('cliente');
-        $nombre = strstr($cliente_nombre, '-',true);
-        $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
+        // $nombre = strstr($cliente_nombre, '-',true);
+        $cliente_buscador=Cliente::where('id',$cliente_nombre)->first();
 
         if(!$cliente_buscador){
             return 'NO hay';
