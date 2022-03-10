@@ -195,8 +195,8 @@
                                             {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))<br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}@endif</td>
                                     @else
                                         <td style="text-align:center">{{ $facturacion_registros->servicio->codigo_servicio }}</td>
-                                        <td>{{ $facturacion_registros->servicio->nombre }}
-                                            {{ $facturacion_registros->descripcion_item }}
+                                        <td>{{ $facturacion_registros->servicio->nombre }} 
+                                            {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))<br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}@endif
                                     @endif
                                     <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
                                     <td style="text-align:center">{{number_format($facturacion_registros->precio,2)}}</td>

@@ -153,7 +153,7 @@
 
 <!-- Fin Totales de Productos -->
 <br>
-<table style="border-collapse: separate;">
+{{-- <table style="border-collapse: separate;">
     <tr>
      <th style="width: 2%;border-color: white"></th>
      @foreach($banco as $bancos)
@@ -179,7 +179,39 @@
           <th style="width: 2%;border-color: white"></th>
           @endforeach
       </tr>
-  </table>
+  </table> --}}
+@include('layout_bancos_pdf')
+
+
+<div class="">
+    <table >
+        <tr>
+            <td style="border: none">
+                <p><u>Atendido por: </u></p>
+
+                Teléfono : {{$empresa->telefono}}<br>
+                Celular : {{auth()->user()->celular}}<br>
+                Email : {{auth()->user()->email_user}}<br>
+                Web : {{$empresa->pagina_web}} <br>
+            </td>
+            <td style="border: none">
+                <br>
+                <br>
+                <br>
+                <br>
+                @if(isset($firma))
+                <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
+                @else
+                <br>
+                <br>
+                @endif
+                <hr style="width:250px">
+                <center>{{auth()->user()->nombre}}</center>
+            </td>
+        </tr>
+    </table>
+</div>
+
   {{--  --}}
   <style>
 

@@ -52,7 +52,7 @@ class ServiciosController extends Controller
             $destinationPath = public_path('/archivos/imagenes/servicios/');
             $image1->move($destinationPath,$name);
         }else{
-            $name="defecto.png";
+            $name="servicio.png";
         }
         $conteo=Servicios::all()->count();
         $suma=$conteo +1;
@@ -80,27 +80,25 @@ class ServiciosController extends Controller
         $servicios=new Servicios;
         $servicios->codigo_servicio=$codigo_servicio;
 
-        if (isset($codigo_original)) {
-        $servicios->codigo_original=$request->get('codigo_original');}
-        else{
-        $servicios->codigo_original=$codigo_servicio; }
+        if (isset($codigo_original)) {$servicios->codigo_original=$request->get('codigo_original');}
+        else{ $servicios->codigo_original=$codigo_servicio; }
 
         $servicios->moneda_id=$moneda_id;
         $servicios->marca_id=$request->get('marca_id');
         $servicios->familia_id=$request->get('familia_id');
         $servicios->nombre=$request->get('nombre');
-        $servicios->categoria=$request->get('categoria');
+        $servicios->categoria=2;
         $servicios->precio_nacional=round($precio_nacional,2);
         $servicios->precio_extranjero=round($precio_extranjero,2);
-        $servicios->descripcion=$request->get('descripcion');
-        $servicios->descuento=$request->get('descuento');
-        $servicios->utilidad=$request->get('utilidad');
+        if ($request->get('descripcion')) {$servicios->descripcion=$request->get('descripcion');}else{$servicios->descripcion=' '; }
+        if ($request->get('descuento')) {$servicios->descuento=$request->get('descuento');}else{$servicios->descuento=0; }
+        if ($request->get('utilidad')) {$servicios->utilidad=$request->get('utilidad');}else{$servicios->utilidad=0; }
         $servicios->foto=$name;
         $servicios->estado_anular='0';
         $servicios->estado_activo='0';
         $servicios->tipo_afectacion_id=$request->get('afectacion');
         $servicios->save();
-        return redirect()->route('servicios.index');
+        return redirect()->route('servicios.show',$servicios->id);
 
     }
 
@@ -112,11 +110,22 @@ class ServiciosController extends Controller
      */
     public function show($id)
     {
-        $servicios=Servicios::find($id);
-        $monedas=Moneda::all();
-        $moneda_nacional=Moneda::where('tipo','nacional')->first();
-        $moneda_extranjera=Moneda::where('tipo','extranjera')->first();
-        return view('producto_servicios.servicios.show',compact('servicios','monedas','moneda_nacional','moneda_extranjera'));
+             $marcas=Marca::all();
+     $familias=Familia::all();
+     $moneda_principal=Moneda::where('tipo','nacional')->first();
+     $afectacion=Tipo_afectacion::all();
+     $moneda_principal_id=$moneda_principal->id;
+        // $moneda_id=$request->get('moneda');
+
+     $monedas=Moneda::all();
+     $servicios=Servicios::find($id);
+     // return view('producto_servicios.servicios.edit',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
+
+     //    $servicios=Servicios::find($id);
+     //    $monedas=Moneda::all();
+     //    $moneda_nacional=Moneda::where('tipo','nacional')->first();
+     //    $moneda_extranjera=Moneda::where('tipo','extranjera')->first();
+        return view('producto_servicios.servicios.show',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
     }
 
     /**
@@ -127,17 +136,17 @@ class ServiciosController extends Controller
      */
     public function edit($id)
     {
-       $marcas=Marca::all();
-       $familias=Familia::all();
-       $moneda_principal=Moneda::where('tipo','nacional')->first();
-        $afectacion=Tipo_afectacion::all();
-       $moneda_principal_id=$moneda_principal->id;
+     $marcas=Marca::all();
+     $familias=Familia::all();
+     $moneda_principal=Moneda::where('tipo','nacional')->first();
+     $afectacion=Tipo_afectacion::all();
+     $moneda_principal_id=$moneda_principal->id;
         // $moneda_id=$request->get('moneda');
 
-       $monedas=Moneda::all();
-       $servicios=Servicios::find($id);
-       return view('producto_servicios.servicios.edit',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
-   }
+     $monedas=Moneda::all();
+     $servicios=Servicios::find($id);
+     return view('producto_servicios.servicios.edit',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
+ }
 
     /**
      * Update the specified resource in storage.
@@ -148,14 +157,8 @@ class ServiciosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $boton=$request->get('actualizar');
-        if ($boton=='anular') {
-           $servicio= Servicios::find($id);
-           $servicio->estado_anular='1';
-           $servicio->save();
-           return redirect()->route('servicios.index');
-       }
-       elseif ($boton=='edit_servicio') {
+
+
         if($request->hasfile('foto')){
             $image1 =$request->file('foto');
             $name =time().$image1->getClientOriginalName();
@@ -181,12 +184,13 @@ class ServiciosController extends Controller
             $precio_extranjero=$request->get('precio');
             $precio_nacional=$precio_extranjero*$cambio->paralelo;
         }
-
+// return $request->get('descripcion');
         $servicio= Servicios::find($id);
         $servicio->moneda_id=$moneda_id;
+        $servicio->codigo_original=$request->get('codigo_original');
         $servicio->familia_id=$request->get('familia_id');
         $servicio->nombre=$request->get('nombre');
-        $servicio->descripcion=$request->get('descripcion');
+        if ($request->get('descripcion')) {$servicio->descripcion=$request->get('descripcion');}else{$servicio->descripcion='';}
         $servicio->descuento=$request->get('descuento');
         $servicio->utilidad=$request->get('utilidad');
         $servicio->precio_nacional=round($precio_nacional,2);
@@ -194,8 +198,8 @@ class ServiciosController extends Controller
         $servicio->foto=$name;
         $servicio->tipo_afectacion_id=$request->get('afectacion');
         $servicio->save();
+        // return $servicio;
         return redirect()->route('servicios.show', $id);
-    }
 }
 
     /**

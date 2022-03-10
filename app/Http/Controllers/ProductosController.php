@@ -61,6 +61,7 @@ class ProductosController extends Controller
     {
         $this->validate($request,[
             'codigo_original' => ['unique:productos,codigo_original'],
+            'nombre' => ['required:productos,nombre'],
         ],[
             'codigo_original.unique' => 'El codigo alternativo ya existe',
         ]);
@@ -82,50 +83,47 @@ class ProductosController extends Controller
             $destinationPath = public_path('/archivos/imagenes/productos/');
             $image1->move($destinationPath,$name);
         }else{
-            $name='defecto.png';
+            $name='producto.svg';
         }
 
-        $peso=$request->get('peso');
+        if ($request->get('peso')) {$peso=$request->get('peso');  }else{$peso=0;  }
         $simbolo=$request->get('simbolo');
 
         $codigo_original=$request->get('codigo_original');
-        if (isset($codigo_original)) {
-         $codigo_original=$request->get('codigo_original');
-     }else{
-        $codigo_original=$codigo;
+        if (isset($codigo_original)){$codigo_original=$request->get('codigo_original');}
+        else{$codigo_original=$codigo;}
+
+        $producto=new Producto;
+        $producto->codigo_producto=$codigo;
+        $producto->codigo_original=$codigo_original;
+        $producto->categoria_id=1;
+        $producto->familia_id=$request->get('familia_id');
+        $producto->marca_id=$request->get('marca_id');
+        $producto->nombre=$request->get('nombre');
+        $producto->descripcion=$request->get('descripcion');
+        $producto->estado_id=1;
+        $producto->origen='Producto Nacional';
+        if($request->get('descuento1')) {$producto->descuento1=$request->get('descuento1');}else{$producto->descuento1=0;}
+        if($request->get('descuento2')) {$producto->descuento2=$request->get('descuento2');}else{$producto->descuento2=0;}
+        if($request->get('utilidad')) {$producto->utilidad=$request->get('utilidad');}else{$producto->utilidad=0;}
+        if($request->get('stock_minimo')) {$producto->stock_minimo=$request->get('stock_minimo');}else{$producto->stock_minimo=0;}
+        if($request->get('stock_maximo')) {$producto->stock_maximo=$request->get('stock_maximo');}else{$producto->stock_maximo=0;}
+        if($request->get('descuento_maximo')) {$producto->descuento_maximo=$request->get('descuento_maximo');}else{$producto->descuento_maximo=0;}
+        if($request->get('garantia')) {$producto->garantia=$request->get('garantia');}else{$producto->garantia='0 Meses';}
+        $producto->unidad_medida_id=$request->get('unidad_medida_id');
+        $producto->peso=$peso.' '.$simbolo;
+        $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
+        $producto->foto=$name;
+        $producto->estado_anular='1';
+        $producto->save();
+
+        Stock_almacen::new($producto->id);
+        Stock_producto::new($producto->id);
+
+        return redirect()->route('productos.show',$producto->id);
+
+
     }
-    $categorias=Categoria::where('descripcion','PRODUCTOS')->first();
-    $producto=new Producto;
-    $producto->codigo_producto=$codigo;
-    $producto->codigo_original=$codigo_original;
-    $producto->categoria_id=$categorias->id;
-    $producto->familia_id=$request->get('familia_id');
-    $producto->marca_id=$request->get('marca_id');
-    $producto->nombre=$request->get('nombre');
-    $producto->descripcion=$request->get('descripcion');
-    $producto->estado_id=$request->get('estado_id');
-    $producto->origen=$request->get('origen');
-    $producto->descuento1=$request->get('descuento1');
-    $producto->descuento2=$request->get('descuento2');
-    $producto->descuento_maximo=$request->get('descuento_maximo');
-    $producto->utilidad=$request->get('utilidad');
-    $producto->unidad_medida_id=$request->get('unidad_medida_id');
-    $producto->garantia=$request->get('garantia');
-    $producto->peso=$peso.' '.$simbolo;
-    $producto->stock_minimo=$request->get('stock_minimo');
-    $producto->stock_maximo=$request->get('stock_maximo');
-    $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
-    $producto->foto=$name;
-    $producto->estado_anular='1';
-    $producto->save();
-
-    Stock_almacen::new($producto->id);
-    Stock_producto::new($producto->id);
-
-    return redirect()->route('productos.show',$producto->id);
-
-
-}
 
     /**
      * Display the specified resource.
@@ -135,12 +133,28 @@ class ProductosController extends Controller
      */
     public function show($id)
     {
-        $producto=Producto::find($id);
-        if ($producto== null) {
-            return response()->view("errors.404_registros_no_foud",[],404);
-        }
-        return view('producto_servicios.productos.show',compact('producto'));
+       $precio_promedio=Stock_producto::where('producto_id',$id)->first();
+        // return $precio_promedio->precio_nacional;
+
+       $producto=Producto::find($id);
+       $pro_peso=$producto->peso;
+
+       $simbolo = strstr($pro_peso, ' ',false);
+       $peso = strstr($pro_peso, ' ',true);
+
+       $moneda_principal=Moneda::where('principal',1)->first();
+       $familias=Familia::all();
+       $marcas=Marca::all();
+       $estados=Estado::all();
+       $categorias=Categoria::all();
+       $unidad_medidas=Unidad_medida::all();
+       $tipo_afectacion = Tipo_afectacion::all();
+       $producto=Producto::find($id);
+       if ($producto== null) {
+        return response()->view("errors.404_registros_no_foud",[],404);
     }
+    return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -178,56 +192,57 @@ class ProductosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
-            'codigo_original' => ['required','unique:productos,codigo_original,'.$id],
-        ],[
-            'codigo_original.unique' => 'El codigo alternativo ya existe',
-        ]);
+      $name =NULL;
+      $this->validate($request,[
+        'codigo_original' => ['required','unique:productos,codigo_original,'.$id],
+    ],[
+        'codigo_original.unique' => 'El codigo alternativo ya existe',
+    ]);
 
-        if($request->hasfile('foto')){
-            $image1 =$request->file('foto');
-            $name =time().$image1->getClientOriginalName();
-            $destinationPath = public_path('/archivos/imagenes/productos/');
-            $image1->move($destinationPath,$name);
-        }else{
-            $name=$request->get('foto_original');
-        }
-
-        $peso=$request->get('peso');
-        $simbolo=$request->get('simbolo');
-
-        $codigo_original=$request->get('codigo_original');
-        if (isset($codigo_original)) {
-           $codigo_original=$request->get('codigo_original');
-       }else{
-        $codigo_original=$request->get('codigo');
+      if($request->hasfile('foto')){
+        $image1 =$request->file('foto');
+        $name =time().$image1->getClientOriginalName();
+        $destinationPath = public_path('/archivos/imagenes/productos/');
+        $image1->move($destinationPath,$name);
     }
 
-    $producto=Producto::find($id);
-    if($request->get('nombre') == null){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
-    $producto->codigo_original=$codigo_original;
-    $producto->descripcion=$request->get('descripcion');
-    $producto->estado_id=$request->get('estado_id');
-    $producto->origen=$request->get('origen');
+    if ($request->get('peso')) {$peso=$request->get('peso');  }else{$peso=0;  }
+    $simbolo=$request->get('simbolo');
 
-    if($request->get('descuento1') == null){$producto->descuento1=0;}else{$producto->descuento1=$request->get('descuento1');}
-    if($request->get('descuento2') == null){$producto->descuento2=0;}else{$producto->descuento2=$request->get('descuento2');}
-    if($request->get('descuento_maximo') == null){$producto->descuento_maximo=0;}else{$producto->descuento_maximo=$request->get('descuento_maximo');}
-    if($request->get('utilidad') == null){$producto->utilidad=0;}else{$producto->utilidad=$request->get('utilidad');}
+    $codigo_original=$request->get('codigo_original');
+    if (isset($codigo_original)) {$codigo_original=$request->get('codigo_original');}
+    else{$codigo_original=$request->get('codigo');}
 
-    $producto->precio_venta=$request->get('precio_venta');
-    $producto->precio_impuesto='1';
-    $producto->unidad_medida_id=$request->get('unidad_medida_id');
-    $producto->garantia=$request->get('garantia');
-    $producto->peso=$peso.' '.$simbolo;
-    $producto->stock_minimo=$request->get('stock_minimo');
-    $producto->stock_maximo=$request->get('stock_maximo');
-    $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
-    $producto->foto=$name;
-    $producto->familia_id = $request->get('familia_id');
-    $producto->save();
-    return redirect()->route('productos.show',$id);
-}
+    // Estado
+    if ( $request->get('estado_id')){$estado=1;}
+    else{ $estado=2;}
+    // Estado
+
+
+        $producto=Producto::find($id);
+        if($request->get('nombre') == NULL){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
+        $producto->codigo_original=$codigo_original;
+        $producto->descripcion=$request->get('descripcion');
+        $producto->estado_id=$estado;
+        $producto->origen=$request->get('origen');
+
+        if($request->get('descuento1') == null){$producto->descuento1=0;}else{$producto->descuento1=$request->get('descuento1');}
+        if($request->get('descuento2') == null){$producto->descuento2=0;}else{$producto->descuento2=$request->get('descuento2');}
+        if($request->get('descuento_maximo') == null){$producto->descuento_maximo=0;}else{$producto->descuento_maximo=$request->get('descuento_maximo');}
+        if($request->get('utilidad') == null){$producto->utilidad=0;}else{$producto->utilidad=$request->get('utilidad');}
+        if($request->get('garantia') == null){$producto->garantia='0 Meses';}else{$producto->garantia=$request->get('garantia');}
+        if($request->get('stock_minimo') == null){$producto->stock_minimo=0 ;}else{$producto->stock_minimo=$request->get('stock_minimo');}
+        if($request->get('stock_maximo') == null){$producto->stock_maximo=0;}else{$producto->stock_maximo=$request->get('stock_maximo');}
+        $producto->precio_venta=$request->get('precio_venta');
+        $producto->precio_impuesto='1';
+        $producto->unidad_medida_id=$request->get('unidad_medida_id');
+        $producto->peso=$peso.' '.$simbolo;
+        $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
+        if($name){$producto->foto=$name;}
+        $producto->familia_id = $request->get('familia_id');
+        $producto->save();
+        return redirect()->route('productos.show',$id);
+    }
     /**
      * Remove the specified resource from storage.
      *

@@ -323,7 +323,7 @@
                         </div>
                     </div>
                     <br>
-                    @includes('layout_bancos')
+                    @include('layout_bancos')
                 </div>
             </div>
         </div>

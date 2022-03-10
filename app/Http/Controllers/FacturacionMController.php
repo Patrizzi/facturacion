@@ -101,7 +101,6 @@ class FacturacionMController extends Controller
      */
     public function store(Request $request)
     {
-
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);
@@ -283,6 +282,12 @@ class FacturacionMController extends Controller
                     $facturacion_registro=new Facturacion_registro_m();
                     $facturacion_registro->facturacion_m_id=$facturacion->id;
                     $facturacion_registro->servicio_id=$servicio->id;
+                    $facturacion_registro->numero_serie=$request->get('numero_serie')[$i];
+                    if($request->get('descripcion_item')[$i] == null){ 
+                        $facturacion_registro->descripcion_item = null;
+                    }else{ 
+                        $facturacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
                     $facturacion_registro->precio=$request->get('precio')[$i];
                     $facturacion_registro->cantidad=$request->get('cantidad')[$i];
                     $facturacion_registro->save(); 
