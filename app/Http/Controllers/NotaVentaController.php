@@ -33,21 +33,6 @@ class NotaVentaController extends Controller
         $almacen_primero =Almacen::first();
         $user_login =auth()->user();
         return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen'));
-
-        // // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        // $existe_id=Kardex_entrada::where('estado',2)->first();
-        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
-
-        // $clientes=Cliente::all();
-        // $moneda=Moneda::all();
-        // $forma_pagos= Forma_pago::all();
-        // $igv=Igv::first();
-        // $servicios = Servicios::all();
-        // $productos=Producto::all();
-
-        // $empresa=Empresa::first();
-        // return view('transaccion.venta.cotizacion.otros.create',compact('igv','empresa','clientes','forma_pagos','moneda','productos','servicios'));
-
     }
 
     /**
