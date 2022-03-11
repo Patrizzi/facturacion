@@ -7,6 +7,7 @@ use App\Boleta;
 use App\Boleta_registro;
 use App\Codigo_guia_almacen;
 use App\Config_fe;
+use App\Empresa;
 use App\Facturacion;
 use App\Facturacion_m;
 use App\Facturacion_registro;
@@ -39,12 +40,13 @@ class FacturacionElectronicaController extends Controller
 
     public function index()
     {
+        $empresa=Empresa::first();
         $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
         $facturacion=Facturacion::where('f_electronica',0)->get();
 
         $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
         $facturacion_enviada=Facturacion::where('f_electronica',1)->get();
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m','facturacion_enviada_m'));
+        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m','facturacion_enviada_m','empresa'));
     }
 
     public function index_boleta(){

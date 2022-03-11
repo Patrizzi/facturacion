@@ -152,7 +152,9 @@
 </div>
 <br>
 <!-- Fin Totales de Productos -->
-<div class="row">
+@include('layout_bancos')
+          <br>
+{{-- <div class="row">
     @foreach($banco as $bancos)
 
     @if($banco_count==3)
@@ -187,7 +189,7 @@
                       <br>
                   </div>
               </div>
-          </div>
+          </div> --}}
           <div class="row">
             <div class="col-sm-3">
                 <p><u>Atendido Por: </u></p>

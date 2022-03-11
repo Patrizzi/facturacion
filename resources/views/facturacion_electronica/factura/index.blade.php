@@ -26,8 +26,8 @@
                         <!-- Mod1 -->
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
-                               <div class="table-responsive">
-                                   <table class="table table-striped table-bordered table-hover dataTables-example" >
+                             <div class="table-responsive">
+                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                                     <thead>
                                         <tr>
                                             <th>Item</th>
@@ -74,16 +74,18 @@
                     <!-- Mod2 -->
                     <div role="tabpanel" id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                           <div class="table-responsive">
+                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover dataTables-example" >
                                 <thead>
-                                    <tr>
+                                    <tr align="center">
                                         <th>Item</th>
                                         <th>Codigo</th>
                                         <th>Cliente</th>
                                         <th>N°Documento</th>
                                         <th>Fecha Vencimiento</th>
                                         <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                        <th>XML</th>
+                                        <th>ZIP</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -105,103 +107,113 @@
                                         <td align="center">
                                             <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                         </td>
-                                    </tr>
-                                    @endforeach
+                                        <td align="center">
+                                         <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$facturaciones->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                     </td>
+                                     <td align="center"><a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$facturaciones->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a></td>
+                                 </tr>
+                                 @endforeach
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <!-- Mod2 -->
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+             <!-- Mod2 -->
 
-                <!-- Mod3 -->
-                <div role="tabpanel" id="tab-3" class="tab-pane">
-                    <div class="panel-body">
-                       <div class="table-responsive">
-                           <table class="table table-striped table-bordered table-hover dataTables-example" >
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Codigo</th>
-                                    <th>Cliente</th>
-                                    <th>N°Documento</th>
-                                    <th>Fecha Vencimiento</th>
-                                    <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <span hidden>{{$a=1}}</span>
-                                @foreach($facturacion_m as $facturaciones_m)
-                                <tr class="gradeX">
-                                    <td>{{$a++}}</td>
-                                    <td>{{$facturaciones_m->codigo_fac}}</td>
-                                    @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
-                                    <td>{{$facturaciones_m->cliente->nombre}}</td>
-                                    <td>{{$facturaciones_m->cliente->numero_documento}}</td>
-                                    @else
-                                    <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
-                                    <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
-                                    @endif
-                                    <td>{{$facturaciones_m->fecha_vencimiento }}</td>
-                                    <td>
-                                        <center>
-                                          <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">@csrf
-                                            <input type="text" style="display: none" value="{{$facturaciones_m->id}}" name="id">
-                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                        </form>
-                                    </center>
-                                </td>
+             <!-- Mod3 -->
+             <div role="tabpanel" id="tab-3" class="tab-pane">
+                <div class="panel-body">
+                 <div class="table-responsive">
+                     <table class="table table-striped table-bordered table-hover dataTables-example" >
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Codigo</th>
+                                <th>Cliente</th>
+                                <th>N°Documento</th>
+                                <th>Fecha Vencimiento</th>
+                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                             </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-        <!-- Mod3 -->
-
-        <!-- Mod4 -->
-        <div role="tabpanel" id="tab-4" class="tab-pane">
-            <div class="panel-body">
-               <div class="table-responsive">
-                   <table class="table table-striped table-bordered table-hover dataTables-example" >
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Codigo</th>
-                            <th>Cliente</th>
-                            <th>N°Documento</th>
-                            <th>Fecha Vencimiento</th>
-                            <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <span hidden>{{$a=1}}</span>
-                        @foreach($facturacion_enviada_m as $facturaciones_m)
-                        <tr class="gradeX">
-                            <td>{{$a++}}</td>
-                            <td>{{$facturaciones_m->codigo_fac}}</td>
-                            @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
-                            <td>{{$facturaciones_m->cliente->nombre}}</td>
-                            <td>{{$facturaciones_m->cliente->numero_documento}}</td>
-                            @else
-                            <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
-                            <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
-                            @endif
-                            <td>{{$facturaciones_m->fecha_vencimiento }}</td>
-                            <td align="center">
-                                <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
+                        </thead>
+                        <tbody>
+                            <span hidden>{{$a=1}}</span>
+                            @foreach($facturacion_m as $facturaciones_m)
+                            <tr class="gradeX">
+                                <td>{{$a++}}</td>
+                                <td>{{$facturaciones_m->codigo_fac}}</td>
+                                @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
+                                <td>{{$facturaciones_m->cliente->nombre}}</td>
+                                <td>{{$facturaciones_m->cliente->numero_documento}}</td>
+                                @else
+                                <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
+                                <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
+                                @endif
+                                <td>{{$facturaciones_m->fecha_vencimiento }}</td>
+                                <td>
+                                    <center>
+                                      <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">@csrf
+                                        <input type="text" style="display: none" value="{{$facturaciones_m->id}}" name="id">
+                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                    </form>
+                                </center>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
+    <!-- Mod3 -->
+
     <!-- Mod4 -->
+    <div role="tabpanel" id="tab-4" class="tab-pane">
+        <div class="panel-body">
+         <div class="table-responsive">
+             <table class="table table-striped table-bordered table-hover dataTables-example" >
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Codigo</th>
+                        <th>Cliente</th>
+                        <th>N°Documento</th>
+                        <th>Fecha Vencimiento</th>
+                        <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                        <th>XML</th>
+                        <th>ZIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <span hidden>{{$a=1}}</span>
+                    @foreach($facturacion_enviada_m as $facturaciones_m)
+                    <tr class="gradeX">
+                        <td>{{$a++}}</td>
+                        <td>{{$facturaciones_m->codigo_fac}}</td>
+                        @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
+                        <td>{{$facturaciones_m->cliente->nombre}}</td>
+                        <td>{{$facturaciones_m->cliente->numero_documento}}</td>
+                        @else
+                        <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
+                        <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
+                        @endif
+                        <td>{{$facturaciones_m->fecha_vencimiento }}</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
+                        </td>
+                        <td align="center">
+                         <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$facturaciones_m->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                     </td>
+                     <td align="center"><a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$facturaciones_m->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a></td>
+                 </tr>
+                 @endforeach
+             </tbody>
+         </table>
+     </div>
+ </div>
+</div>
+<!-- Mod4 -->
 
 </div>
 </div>
