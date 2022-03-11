@@ -1,26 +1,24 @@
 
 {{-- Modal Cliente --}}
-<div class="modal fade" id="ModalCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document" style="margin-left: 22%;">
-    <div class="modal-content" style="width: 880px;">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar Cliente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
-  </div>
+
+        <div class="modal fade bd-example-modal-lg" id="ModalCliente" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
   <div>
+
     <div class="ibox-content" style="padding-bottom: 0px;">
         <form>
             {{ csrf_field() }}
-            <div class="form-group  row"><label class="col-sm-3 col-form-label">Introducir Ruc (Inestable):</label>
+            <div class="row">
+                <label class="col-sm-3 col-form-label">Introducir Ruc (Inestable):</label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" class="ruc" id="ruc_cliente" name="ruc_cliente" required="required">
                 </div>
-                <div class="col-sm-2"> <button class="btn btn-primary" id="botoncito_cliente" name="btn" value="cliente" class="botoncito_cliente"><i class="fa fa-search"></i> Buscar</button></div>
+                <div class="col-sm-2"> <button class="btn btn-info botoncito_cliente" id="botoncito_cliente" name="btn" value="cliente"><i class="fa fa-search"></i> </button></div>
             </div>
         </form>
     </div>
+
     <script>
         $(function(){
             $('#botoncito_cliente').on('click', function(){
@@ -412,3 +410,12 @@
             console.log("a");
         });
     </script>
+<style>
+    .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
+    background: #23c6c8!important;
+    color: #fff;
+    cursor: default;}
+    .wizard > .steps .done a, .wizard > .steps .done a:hover, .wizard > .steps .done a:active {
+    background: #23c6c8ab!important;
+    color: #fff;}
+</style>
