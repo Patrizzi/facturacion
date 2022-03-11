@@ -20,8 +20,6 @@
 				e.preventDefault();
 			}
 		});
-
-
 	});
 </script>
 
@@ -97,10 +95,10 @@
 								<label class="col-sm-2 col-form-label">Cliente:</label>
 								<div class="col-sm-10">
 									<select class="select2_demo_3 form-control" onchange="buscador_contac();" name="cliente_id" id="cliente_id" required  >
-										<option></option>
+										{{-- <option></option>
 										@foreach($clientes as $cliente)
 										<option value="{{$cliente->id}}">{{$cliente->numero_documento}}- {{$cliente->nombre}}</option>
-										@endforeach
+										@endforeach --}}
 									</select>
 								</div>
 								<label class="col-sm-2 col-form-label">Contacto:</label>
@@ -151,28 +149,6 @@
 						<div class="form-control for">
 							<center><h3>Informe del Problema</h3></center>
 							<br>
-							{{-- <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-								<div class="col-sm-4">
-									<center><h4>Descripcion del Problema</h4></center>
-									<div class="input-group m-b">
-										<textarea class="form-control for" rows="5" id="comment" name="descripcion_problema" maxlength="1230" required style="resize: none;height: 300px;"></textarea>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<center><h4>Revisión y diganostico</h4></center>
-									<div class="input-group m-b">
-										<textarea class="form-control for" rows="5" id="comment" name="revision_diagnostico" maxlength="1230" required style="resize: none;height: 300px;"></textarea>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<center><h4>Estética</h4></center>
-									<div class="input-group m-b">
-										<textarea class="form-control for" rows="5" id="comment" name="estetica" maxlength="1230" required style="resize: none;height: 300px;"></textarea>
-									</div>
-								</div>
-							</div> --}}
-
-
 							{{-- Vista --}}
 							<div class="wrapper wrapper-content animated fadeIn">
 								<div class="row">
@@ -264,11 +240,43 @@
 	<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 	<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 	<script>
-		$(".select2_demo_2").select2();
-		$(".select2_demo_3").select2({
+
+	$(".select2_demo_3").select2({
+			width: 'resolve',
 			placeholder: "Seleccionar Cliente",
-			allowClear: false
+			ajax: {
+				minimumInputLength: 1,
+				url: "{{ route('pa.clients') }}",
+				dataType: 'json',
+				type: "POST",
+				delay: 10,
+				data: function (params) {
+					var tipo_coti = 3;
+					return {
+						_token: "{{ csrf_token() }}",
+						search: params.term, // search term
+						tipo_coti: tipo_coti    
+					};
+				},
+				processResults: function (data) {
+					return {
+						results: $.map(data, function (item) {
+							return {
+								id: item.id,
+								text: item.nombre + ' | ' +  item.numero_documento,
+							};
+						})
+					};
+				},
+				cache: true
+			}
 		});
+
+		// $(".select2_demo_2").select2();
+		// $(".select2_demo_3").select2({
+		// 	placeholder: "Seleccionar Cliente",
+		// 	allowClear: false
+		// });
 	</script>
 	<script type="text/javascript">
 		function change_motivo() {

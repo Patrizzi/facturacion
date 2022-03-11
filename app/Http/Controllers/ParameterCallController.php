@@ -164,7 +164,6 @@ class ParameterCallController extends Controller
     // * Llamado de la tabla clientes
     public function getClients(Request $request){
         $search = $request->search;
-        // return $request;
         $tipo = $request->tipo_coti;
         if($tipo == '1'){ //Factura
             if($search == ''){
@@ -172,11 +171,17 @@ class ParameterCallController extends Controller
             }else{
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->where('documento_identificacion','RUC')->limit(5)->get();
             }
-        }else{
+        }else if($tipo == '0'){ //Boleta
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->limit(5)->get();
             }else{
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->where('documento_identificacion','DNI')->limit(5)->get();
+            }
+        }else{ // TODO : ESTE ELSE ES EXCLUYENTE SI ES UNA BOLETA O FACTURA PARA EL LLAMADO DE RUC O DNI
+            if($search == ''){
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->limit(5)->get();
+            }else{
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
             }
         }
         

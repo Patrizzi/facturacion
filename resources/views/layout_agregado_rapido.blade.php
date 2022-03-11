@@ -356,6 +356,7 @@
                         $("#form_cliente_modal").steps("destroy");
                         llamado_vuelta();
                         $("#table_cliente").DataTable().ajax.reload();   
+                        $('#ModalCliente').modal('hide');
                     },
                     error: function(error){
                         toastr.error("Error en el Registro",
