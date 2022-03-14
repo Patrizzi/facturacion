@@ -332,7 +332,7 @@
         color: red
     }
     #loaderGif{
-        background: url('https://acegif.com/wp-content/uploads/loading-13.gif')  50% 50% no-repeat #000000a3;
+        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
         background-size: 250px;
         display: none;
         position: fixed;

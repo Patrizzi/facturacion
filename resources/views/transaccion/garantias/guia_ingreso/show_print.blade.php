@@ -159,7 +159,7 @@
                 <strong>Direccion:</strong> {{$usuario->almacen->direccion}}<br>
                 <strong>Telefonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
                 <strong>{{$garantia_guia_ingreso->marcas_i->nombre_empresa}}:</strong> {{$garantia_guia_ingreso->marcas_i->telefono}}<br>
-                <strong>Email:</strong> {{$usuario->email}}<br>
+                <strong>Email:</strong> {{$usuario->email_user}}<br>
                 <strong>Web:</strong> {{$empresa->pagina_web}}<br>
             </div>
             <div class="col-sm-2"></div>

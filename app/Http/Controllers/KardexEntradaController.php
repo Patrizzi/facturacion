@@ -136,15 +136,56 @@ class KardexEntradaController extends Controller
       // return $request;
         $this->validate($request,[
             'motivo' => ['required','exists:motivos,nombre'],
-            'factura' => ['required'],
             'almacen' => ['required','exists:almacen,id'],
             // 'clasificacion' => ['required','exists:categorias,id'],
-            // 'guia_remision' => ['required'],
             'provedor' => ['required','exists:provedores,empresa'],
             'moneda' => ['required','exists:monedas,nombre'],
         ]);
 
+        // PROVEEDORES BUSQUEDA
+        $provedor_totc = Provedor::where('empresa',$request->get('provedor'))->first();
+        $provedor = $provedor_totc->id;
+
+        // return $request;
         $data = $request->all();
+        $factura = $request->get('factura');
+        $guia_remision = $request->get('guia_remision');
+
+        // return $request->all();
+        if($factura == '0' || $factura ==  null ){
+          $factura = null;
+        }else{
+          $busc_prove_fac = Kardex_entrada::where('provedor_id',$provedor)->where('factura',$factura)->where('estado','!=', 'ANULADO')->where('motivo_id','!=', '5')->first();
+          if(isset($busc_prove_fac)){
+            return redirect()->route('kardex-entrada.create')->with('repite', 'El numero de factura ya está en uso');
+            $this->validate($request,[
+                'factura' => ['required','unique:kardex_entrada'],
+            ]);
+          }else{
+              $factura = $factura;
+          }
+        }
+        if($guia_remision == '0' || $guia_remision ==  null ){
+          $guia_remision = null;
+        }else{
+          $busc_prove_guia = Kardex_entrada::where('provedor_id',$provedor)->where('guia_remision',$guia_remision)->where('motivo_id','!=', '5')->where('estado','!=', 'ANULADO')->first();
+          if(isset($busc_prove_guia) || $guia_remision != null || $factura != "0"){
+            $this->validate($request,[
+                'guia_remision' => ['required','unique:kardex_entrada'],
+            ]);
+          }else{
+              $guia_remision = $guia_remision;
+          }
+        }
+
+        // return $busc_prove_fac;
+        
+
+        
+        
+
+
+
         
         //codigo para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
@@ -202,37 +243,17 @@ class KardexEntradaController extends Controller
             $codigo_guia='GE'.$cantidad_sucursal.'-'.$cantidad_registro;
         }
 
-        if($request->get('guia_remision') == ""){
-            $guia_re = 'Sin Guia de Remision';
-        }else{
-            $guia_re=$request->get('guia_remision');
-        }
+        // if($request->get('guia_remision') == ""){
+        //     $guia_re = 'Sin Guia de Remision';
+        // }else{
+        //     $guia_re=$request->get('guia_remision');
+        // }
 
-        $provedor_totc = Provedor::where('empresa',$request->get('provedor'))->first();
-        $provedor = $provedor_totc->id;
-        $factura = $request->get('factura');
-        $guia_remision = $request->get('guia_remision');
+       
+       
 
-        $busc_prove_fac = Kardex_entrada::where('provedor_id',$provedor)->where('factura',$factura)->where('estado','!=', 'ANULADO')->where('motivo_id','!=', '5')->first();
         
-        if(isset($busc_prove_fac)){
-            return redirect()->route('kardex-entrada.create')->with('repite', 'El numero de factura ya está en uso');
-            $this->validate($request,[
-                'factura' => ['required','unique:kardex_entrada'],
-            ]);
-        }else{
-            $factura = $request->get('factura');
-        }
-
-        $busc_prove_guia = Kardex_entrada::where('provedor_id',$provedor)->where('guia_remision',$guia_remision)->where('motivo_id','!=', '5')->where('estado','!=', 'ANULADO')->first();
-        if(isset($busc_prove_guia)){
-            $this->validate($request,[
-                'guia_remision' => ['required','unique:kardex_entrada'],
-            ]);
-        }else{
-            $guia_remision = $request->get('factura');
-        }
-
+       
         // MOTIVO
         $motivo = Motivo::where('nombre',$request->get('motivo'))->first();
         // MONEDA

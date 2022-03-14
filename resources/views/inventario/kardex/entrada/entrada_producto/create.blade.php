@@ -54,14 +54,14 @@
 
 							<label class="col-sm-2 col-form-label">G Remision:</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="guia_remision" id="guia_remision" required="required" value="0">
+								<input type="text" class="form-control" name="guia_remision" id="guia_remision"  value="0">
 							</div>
 						</div>
 
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Factura:</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="factura" id="factura" required="required" value="0">
+								<input type="text" class="form-control" name="factura" id="factura"  value="0">
 							</div>
 
 							<label class="col-sm-2 col-form-label"> Provedor:</label>

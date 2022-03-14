@@ -51,12 +51,12 @@
 
 							<label class="col-sm-2 col-form-label">Fecha Final:</label>
 								<div class="col-sm-4">
-                                    <input type="datetime-local" class="form-control" name="fecha_final" required="" >
+                                    <input type="datetime-local" class="form-control" name="fecha_final" required="required" >
 							    </div>
 						</div>
 
 						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Almacen:</label>
+							<label class="col-sm-2 col-form-label" >Almacén:</label>
 								<div class="col-sm-4">
 									<select class="form-control" name="almacen">
                                         <option value="0">Todos los almacenes</option>
@@ -66,7 +66,7 @@
                                     </select>
 								</div>
 
-							<label class="col-sm-2 col-form-label">Categoria :</label>
+							<label class="col-sm-2 col-form-label">Categoría:</label>
 								<div class="col-sm-4">
                                     <select class="form-control" name="categoria" id="categoria" onchange="seleccionado()" required="">
                                         <option value="0">Seleccione Categoria</option>
@@ -97,7 +97,7 @@
 						</div>
 
 					</form>
-                    <button  class="btn btn-primary" id="boton" name="boton">Consultar</button>
+                    <button  class="btn btn-primary" id="boton" name="boton" >Consultar</button>
                     {{-- <button  class="btn btn-primary" id="boton-d" name="boton-d">Descargar</button> --}}
 				</div>
 
@@ -134,7 +134,7 @@
                 <div class="ibox-title">
                     <h5>Ventas</h5>
                     <div class="table-responsive">
-                        <table id="tablaid_venta" class="table table-striped table-bordered table-hover dataTables-example">
+                        <table id="tablaid_venta" class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
                                 <tr>
                                     <th>Tipo</th>
@@ -144,7 +144,7 @@
                                     <th>Precio Extranjero</th>
                                 </tr>
                             </thead>
-                        <tbody id="tbody_venta">
+                        <tbody id="tbody_venta"> 
                             {{-- <tr style="display: none">
                                 <td></td>
                                 <td></td>
@@ -160,8 +160,21 @@
 		</div>
 	</div>
 </div>
+<style>
+    .last-tr-datatables{
+        font-weight: bold;
+        color: black;
+    }
+
+    .bold{
+        font-weight: bold;
+        color: black;
+    }
+</style>
+
 <script>
     $(document).ready(function(e) {
+
         $('#boton').on('click', function() {
 
 			$.ajax({
@@ -171,8 +184,9 @@
 			}).done(function(res){
                 $('#tablaid').dataTable().fnDestroy();
                 var data=JSON.parse(res);
+                // console.log(data);
                 $('#tablaid').dataTable({
-                        pageLength: 25,
+                        pageLength: 15,
                         responsive: true,
                         dom: '<"html5buttons"B>lTfgitp',
                         buttons: [
@@ -191,13 +205,23 @@
                                 }
                             }
                         ],
+                    order: [[1, "asc"]],
                     "aaData": data,
                     "columns": [
                         { "data": "producto" },
                         { "data": "cantidad_inicial" },
                         { "data": "precio_nacional" },
                         { "data": "precio_extranjero" }
-                    ]
+                    ],
+                    rowCallback: function(row, data, index) {
+                        if (data.producto == "Total") {
+                            $("td:eq(0)", row).addClass("bold");
+                            $("td:eq(1)", row).addClass("bold");
+                            $("td:eq(2)", row).addClass("bold");
+                            $("td:eq(3)", row).addClass("bold");
+                        }
+                        
+                    }
                 })
             });
 
@@ -205,12 +229,12 @@
 			$.ajax({
 				method: "POST",
 				url: "{{ route('ajax_periodo_ventas') }}",
-				data:$("#formulario").serialize()
+				data:$("#formulario").serialize(),
 			}).done(function(res){
                 $('#tablaid_venta').dataTable().fnDestroy();
                 var data=JSON.parse(res);
                 $('#tablaid_venta').dataTable({
-                        pageLength: 25,
+                        pageLength: 15,
                         responsive: true,
                         dom: '<"html5buttons"B>lTfgitp',
                         buttons: [
@@ -237,11 +261,17 @@
                         { "data": "cantidad" },
                         { "data": "precio nacional" },
                         { "data": "precio extranjero" }
-                    ]
+                    ],
+                    // "drawCallback": function( settings ) {
+                    //     change_total();
+                    // }
+                   
                 })
+                
             });
+            
 		});
-
+        
         $('#pdf').on('click', function() {
             $("#formulario").attr("action",'{{ route('periodo_consulta_pdf') }}');
             $("#formulario").attr("method",'POST');
@@ -263,37 +293,51 @@
    {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 
 <script>
+    function seleccionado(){
+        var opt = $('#categoria').val();
+        // console.log(opt);
+        if(opt=="1"){
+            $('#consulta_p').show();
+            $('#consulta_s').hide();
+        }else{
+            $('#consulta_p').hide();
+            $('#consulta_s').show();
+        }
+    }
 
+    function actualizatext() {
+        let action = document.getElementById("texto2").value;
+        document.getElementById("texto_orden").value = action;
+    }
 
-        function seleccionado(){
-            var opt = $('#categoria').val();
-            console.log(opt);
-            if(opt=="1"){
-                $('#consulta_p').show();
-                $('#consulta_s').hide();
-            }else{
-                $('#consulta_p').hide();
-                $('#consulta_s').show();
+</script>
+<!-- <script>
+    function change_total(){
+        var tbody = document.getElementById('tablaid').rows;
+        var tr = tbody[tbody.length - 1];
+        for(var i = 0; i < 4 ;i++){
+            var td_name_zero = tr.cells[0].innerHTML; //total
+            var td_name_bold = tr.cells[i]; 
+            console.log(tr.cells[i]);
+            if(td_name_zero == "Total"){
+                console.log(td_name_bold);
+                td_name_bold.style.fontWeight = "bold";
             }
+            
         }
-
-        function actualizatext() {
-            let action = document.getElementById("texto2").value;
-            document.getElementById("texto_orden").value = action;
-        }
-
-   </script>
+    }
+</script>    -->
 
 
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-	<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 @endsection
