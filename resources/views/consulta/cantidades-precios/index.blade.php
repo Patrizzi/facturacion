@@ -123,12 +123,13 @@
                                 <tr>
                                     <th data-toggle="true">Id</th>
                                     <th>Nombre de Produto</th>
+                                    <th>Codigo Orig.</th>
                                     <th>Stock</th>
-                                    <th>Precio Nacional Venta</th>
+                                    <th>Precio Nac. Venta</th>
                                     <th>/I.G.V</th>
-                                    <th>Precio Extranjero Venta</th>
+                                    <th>Precio Ex. Venta</th>
                                     <th>/I.G.V</th>
-                                    <th data-hide="all" >Codigo</th>
+                                    <th data-hide="all" >Codigo Prod.</th>
                                     <th data-hide="all">Descripcion</th>
                                     <th data-hide="all">Garantia</th>
                                     <th data-hide="all">Marca</th>
@@ -147,6 +148,7 @@
                                             {{$stock_productos->producto->nombre}}
                                         </a>
                                     </td>
+                                    <td >{{$stock_productos->producto->codigo_original}}</td>
                                     @if($stock_productos->stock > 0)
                                         <td>{{$stock_productos->stock}}</td>
 
@@ -155,6 +157,7 @@
                                         <td style="color: red">SIN STOCK</td>
 
                                     @endif
+                                    
                                     <td>{{$moneda_nacional->simbolo}}. {{$precio_nacional[$index] }}</td>
                                     <td>{{$moneda_nacional->simbolo}}. {{round($precio_nacional[$index] + ($precio_nacional[$index] * ($igv->igv_total/100)),2)}}</td>
                                     <td>{{$moneda_extranjera->simbolo}}. {{$precio_extranjero[$index] }}</td>
@@ -163,6 +166,7 @@
                                     <td>{{$stock_productos->producto->descripcion}} </td>
                                     <td>{{$stock_productos->producto->garantia}} </td>
                                     <td>{{$stock_productos->producto->marcas_i_producto->nombre}}</td>
+                                    
                                     {{-- data-all --}}
 
                                 </tr>
