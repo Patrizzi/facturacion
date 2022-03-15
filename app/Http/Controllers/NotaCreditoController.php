@@ -356,7 +356,8 @@ class NotaCreditoController extends Controller
         // return "listo";
         // return redirect()->back('nota-credito.index');
         
-        return redirect()->route('nota-credito.index');
+     return redirect()->route('nota-credito.show',$nota_credito->id);
+        // return redirect()->route('nota-credito.index');
 
     }
 
@@ -516,7 +517,8 @@ class NotaCreditoController extends Controller
         $boleta->nota_credito=1;
         $boleta->save();
         
-        return redirect()->route('nota-credito.index');
+     return redirect()->route('nota-credito.show',$nota_credito->id);
+        // return redirect()->route('nota-credito.index');
     }
 
     /**
