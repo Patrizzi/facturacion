@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div><br>
-                <form action="{{route('facturacion_electronica.nota_credito_bol',$boleta->id)}}"  enctype="multipart/form-data" method="post" >
+                <form action="{{route('nota-credito.store_boleta',$boleta->id)}}"  enctype="multipart/form-data" method="post" >
                     @csrf
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">

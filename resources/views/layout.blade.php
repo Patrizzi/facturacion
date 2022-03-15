@@ -245,7 +245,7 @@ $empresa=Empresa::first(); ?>
                         <li><a href="{{route('facturacion_electronica.index')}}">Facturas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_guia_remision')}}">Guía Remisión</a></li>
-                        <li><a href="{{route('facturacion_electronica.index')}}">Nota de créditos</a></li>
+                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}">Nota de créditos</a></li>
                     </ul>
                 </li>
                 <li>
