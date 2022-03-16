@@ -107,9 +107,12 @@ class AlmacenController extends Controller
         //remision
         $cod_guia_almacen->serie_remision = $request->get('serie_remision');
         $cod_guia_almacen->cod_remision = $request->get('cod_guia');
-        //nota de credito
+        //nota de credito - Factura
         $cod_guia_almacen->serie_nota_credito = $request->get('serie_credito');
         $cod_guia_almacen->cod_nota_credito = $request->get('cod_credito');
+        //nota de credito - Boleta
+        $cod_guia_almacen->serie_nota_credito_b = $request->get('serie_credito_b');
+        $cod_guia_almacen->cod_nota_credito_b = $request->get('cod_credito_b');
         //nota de debito
         $cod_guia_almacen->serie_nota_debito = $request->get('serie_debito');
         $cod_guia_almacen->cod_nota_debito = $request->get('cod_debito');
@@ -181,6 +184,7 @@ class AlmacenController extends Controller
         $nr_bol=$request->get('cod_bol');
         $nr_guia=$request->get('cod_guia');
         $nr_nota_c=$request->get('cod_credito');
+        $nr_nota_c_b=$request->get('cod_credito_b');
         $nr_nota_d=$request->get('cod_debito');
         $nr_factura_m=$request->get('cod_factura_m');
         // $almacen=Almacen::where('id', $id)->first();
@@ -211,6 +215,10 @@ class AlmacenController extends Controller
         if(is_numeric($cod_guia_almacen->cod_nota_credito) and is_numeric($nr_nota_c)){
             $cod_guia_almacen->serie_nota_credito=$request->get('serie_credito');
             $cod_guia_almacen->cod_nota_credito=$request->get('cod_credito');
+        }
+        if(is_numeric($cod_guia_almacen->cod_nota_credito_b) and is_numeric($nr_nota_c_b)){
+            $cod_guia_almacen->serie_nota_credito_b=$request->get('serie_credito_b');
+            $cod_guia_almacen->cod_nota_credito_b=$request->get('cod_credito_b');
         }
         if(is_numeric($cod_guia_almacen->cod_nota_debito) and is_numeric($nr_nota_d)){
             $cod_guia_almacen->serie_nota_debito=$request->get('serie_debito');
