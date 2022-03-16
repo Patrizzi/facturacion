@@ -281,10 +281,8 @@
 		});
 	}
 	
-	$('form').submit(function(e) { 
-		e.preventDefault();
-     	e.returnValue = false;
-		 
+	$( "kardex_submit" ).submit(function( e ) {
+		console.log("a");
 		var n_factura = $('[id="factura"]').val();
 		$.ajax({
 			type: "post",
@@ -300,9 +298,14 @@
                             'N de Factura ya en uso', {
                                 timeOut: 3000
                             });
-				}else{
-					document.getElementById('kardex_submit').submit();
+							e.preventDefault();
+     						e.returnValue = false;
 				}
+				// else{
+					// $("#kardex_submit").keyup(function() {
+					// 	document.getElementById('kardex_submit').submit();
+					// });
+				// }
 				
 			}
 		});
