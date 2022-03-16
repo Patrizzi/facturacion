@@ -187,6 +187,7 @@ Route::group(
 		Route::post('parameter_call/getClients', 'ParameterCallController@getClients')->name('pa.clients');
 		Route::post('parameter_call/getArticles', 'ParameterCallController@getArticles')->name('pa.articles');
 		Route::post('parameter_call/getMoney', 'ParameterCallController@getMoney')->name('pa.money');
+		Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
 
 		Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 

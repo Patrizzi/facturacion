@@ -11,6 +11,7 @@ use App\Stock_producto;
 use App\Stock_almacen;
 use App\Cliente;
 use App\TipoCambio;
+use App\Kardex_entrada;
 
 
 
@@ -255,4 +256,21 @@ class ParameterCallController extends Controller
         
         return $money;
     }
+    public function getNFactura(Request $request){
+        $search = $request->n_factura;
+        // search 0 = no existe
+        // search 1 = existe
+        if($search == 0){
+            $var_vuelta = 0;
+        }else{
+            $n_factura = Kardex_entrada::where('factura', $search)->first();
+            if( isset($n_factura) ){
+                $var_vuelta = 1;
+            }else{
+                $var_vuelta = 0;
+            }
+        }
+        return $var_vuelta;
+    }
+    
 }
