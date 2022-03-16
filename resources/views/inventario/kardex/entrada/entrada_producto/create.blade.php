@@ -41,6 +41,7 @@
 				<div class="ibox-content">
 					<form action="{{ route('kardex-entrada.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="kardex_submit" >
 						@csrf
+						<input type="text" name="valdacion" id="validacion" value="green">
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Motivos:</label>
 							<div class="col-sm-4">
@@ -61,7 +62,7 @@
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Factura:</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control " name="factura" id="factura"  value="0" onblur="valid_factura()">
+								<input type="text" class="form-control " name="factura" id="factura"  value="0" >
 							</div>
 
 							<label class="col-sm-2 col-form-label"> Provedor:</label>
@@ -147,7 +148,7 @@
 						</table>
 
 						<button type="button" class='addmore btn btn-success' disabled="" > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-						<button class="ladda-button btn btn-primary float-right" type="submit" id="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+						<button class="ladda-button btn btn-primary float-right" type="submit" id="boton"  ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
 					</form>
 					<tr>
 						<style type="text/css">
@@ -262,7 +263,6 @@
 		$.ajax({
 			type: "post",
 			url: "{{ route('pa.nfactura') }}",
-			// delay: 15,
 			data: {
 				'_token': $('input[name=_token]').val(),
 				'n_factura': n_factura
@@ -274,43 +274,21 @@
                                 timeOut: 3000
                             });
 					$('[id="factura"]').addClass('input_red');
+					$('[id="validacion"]').val("error");
 				}else{
 					$('[id="factura"]').removeClass('input_red');
+					$('[id="validacion"]').val("green");
 				}				
 			}
 		});
 	}
-	
-	$( "kardex_submit" ).submit(function( e ) {
-		console.log("a");
-		var n_factura = $('[id="factura"]').val();
-		$.ajax({
-			type: "post",
-			url: "{{ route('pa.nfactura') }}",
-			// delay: 15,
-			data: {
-				'_token': $('input[name=_token]').val(),
-				'n_factura': n_factura
-			},
-			success: function(msg){
-				if(msg == 1){
-					toastr.error("Error en el Registro",
-                            'N de Factura ya en uso', {
-                                timeOut: 3000
-                            });
-							e.preventDefault();
-     						e.returnValue = false;
-				}
-				// else{
-					// $("#kardex_submit").keyup(function() {
-					// 	document.getElementById('kardex_submit').submit();
-					// });
-				// }
-				
-			}
-		});
+	$("#boton").on("click", function() {
+		// clearTimeout(controladorTiempo);
+		// controladorTiempo = setTimeout(valid_factura(), 0);
+		valid_factura();
+		
 	});
-
+	
 </script>
 <script>
 	function multi(a){
