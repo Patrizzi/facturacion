@@ -436,9 +436,9 @@ public function create_ms(Request $request){
 
         //Convertir nombre del cliente a id
         $cliente_nombre=$request->get('cliente');
-        $nombre = strstr($cliente_nombre, '-',true);
+        // $nombre = strstr($cliente_nombre, '-',true);
 
-        $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
+        $cliente_buscador=Cliente::where('id',$cliente_nombre)->first();
 
         // FORMA DE PAGO
         $forma_pago_id=$request->get('forma_pago');
@@ -547,6 +547,8 @@ public function create_ms(Request $request){
    }
     // return $comparacion_v;
         // CODIGO PARA BUSCAR EL ID DEL TIPO DE DOCUMENTO
+    $coin=$request->get('moneda');
+   $id_moneda=Moneda::where('nombre',$coin)->first();
    $operacion=$request->get('tipo_operacion');
    $nombre = strstr($operacion, '-',true);
    $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
@@ -556,7 +558,7 @@ public function create_ms(Request $request){
    $facturacion->orden_compra=$request->get('orden_compra');
    $facturacion->guia_remision=$request->get('guia_r');
    $facturacion->cliente_id=$cliente_buscador->id;
-   $facturacion->moneda_id=$id_moneda;
+   $facturacion->moneda_id=$id_moneda->id;
    $facturacion->forma_pago_id=$request->get('forma_pago');
    $facturacion->fecha_emision=$request->get('fecha_emision');
    $facturacion->fecha_vencimiento=$nuevafechas;
