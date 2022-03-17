@@ -100,24 +100,8 @@
         <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
-                    <div class="col-sm-4 text-left" align="left">
-
-                        <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
-                        </address>
-                    </div>
-                    <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                     <strong>{{$empresa->razon_social}}</strong>
-                     <br>
-                     Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
-                    <br>
-                     {{$empresa->correo}}
-                     <br>
-                      {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-                     
-
-                </div>
-
+                    {{-- Cabecera logo y informacion --}}
+                    @include('layout_cabecera_ventas')
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
@@ -132,11 +116,12 @@
                             <h3>Contacto Cliente</h3>
                             <div align="left">
                                 <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
-                                <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
+                                <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                 <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
+                                <strong>N° Contacto:</strong>&nbsp;{{$cotizacion->cliente->celular}} 
+                                @if(isset($cotizacion->cliente->telefono ))
+                                    / {{$cotizacion->cliente->telefono}}<br>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -144,7 +129,7 @@
                      <div class="form-control" >
                          <h3>Condiciones Generales</h3>
                          <div align="left">
-                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
+                                <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
                             <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
                             <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
