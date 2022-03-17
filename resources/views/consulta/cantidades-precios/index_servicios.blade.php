@@ -1,34 +1,13 @@
 @extends('layout')
 @section('title', 'Consulta de Servicios')
-@section('breadcrumb', 'Consulta de Servicios')
-@section('breadcrumb2', 'Consulta de Servicios')
-
+@section('atributo_actu', 'hidden')
+@section('atributo_1', 'hidden')
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-title">
-                    <h5>Cantidades y Precios de Servicios</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
                         <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
@@ -120,97 +99,12 @@
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-<!-- Page-Level Scripts -->
-<script>
-    function myFunction() {
-        var element = document.getElementById("null footable-sortable");
-        element.classList.remove("null footable-sort-indicator");
-    }
-    function mostrar_check() {
-        var arr = $('[name="producto_id[]"]:checked').map(function(){
-          return this.value;
-        }).get();
-        if(arr.length == 0){
-            $('#miBoton').hide();
-            $('input[type=number]').attr('disabled','true');
-            $('input[type=number]').val('');
-        }else{
 
-            for (var i = 0 ; i < arr.length; i++) {
-                $('#miBoton').show();
-                $('#nuevo_stock'+arr[i]).prop('disabled', false);
-            };
-
-        }
-        var arr2 = $('[name="producto_id[]"]:not(:checked)').map(function(){
-          return this.value;
-        }).get();
-        // console.log(arr2);
-        if(arr2.length == 0){
-            // $('#miBoton').hide();
-            // $('input[type=number]').attr('disabled','true');
-            // $('input[type=number]').val('');
-        }else{
-            for (var i = 0 ; i < arr2.length; i++) {
-                // $('#miBoton').hide();
-                $('#nuevo_stock'+arr2[i]).prop('disabled', true);
-                $('#nuevo_stock'+arr2[i]).prop('value', '');
-            };
-
-        }
-    }
-    function display_check(){
-        //Siempre que salgamos de un campo de texto, se chequeará esta función
-        // $('#filter2').keyup(function() {
-             if($('#filter2').val().length > 0) {
-                $('#select_all_cheak').attr('disabled', true);
-            }else{
-                $('#select_all_cheak').attr('disabled', false);
-            }
-
-        // });
-
-    };
-
-</script>
-<script>
-    $(document).ready(function(){
-        $('.dataTables-example').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }
-        ]
-
-    });
-
-    });
-
-</script>
 <script>
     $(document).ready(function() {
 
@@ -220,51 +114,4 @@
     });
 
 </script>
-<script>
-        $(document).ready(function () {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-        });
-</script>
-<script>
-    function select_all() {
-        $('input[class=case]:checkbox').each(function () {
-            if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                $(this).prop("checked", false);
-            } else {
-                $(this).prop("checked", true);
-            }
-
-            var elementos = $('input.check_all');
-            var algunoMarcado = elementos.toArray().find(function(elemento) {
-             return $(elemento).prop('checked');
-            });
-
-          if(algunoMarcado) {
-            $('#miBoton').show();
-          } else {
-            $('#miBoton').hide();
-          }
-
-          var arr = $('[name="producto_id[]"]:checked').map(function(){
-            return this.value;
-            }).get();
-            if(arr.length == 0){
-                $('#miBoton').hide();
-                $('input[type=number]').attr('disabled',true);
-                $('input[type=number]').val('');
-            }else{
-                for (var i = 0 ; i < arr.length; i++) {
-                    $('#miBoton').show();
-                    $('#nuevo_stock'+arr[i]).prop('disabled', false);
-                };
-            }
-        });
-
-
-    }
-</script>
-
 @endsection
