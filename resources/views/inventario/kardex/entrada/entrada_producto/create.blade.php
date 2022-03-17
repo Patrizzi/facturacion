@@ -273,7 +273,7 @@
                                 timeOut: 3000
                             });
 					$('[id="factura"]').addClass('input_red');
-					$('[id="boton"]').prop("disabled", true);
+					// $('[id="boton"]').prop("disabled", true);
 				}else{
 					$('[id="factura"]').removeClass('input_red');
 					$('[id="boton"]').prop("disabled", false);
@@ -283,6 +283,7 @@
 	}
 	var  timeout;
 	$("#factura").on('keydown', () => {
+		$('[id="boton"]').prop("disabled", true);
 		clearTimeout(timeout)
 		timeout = setTimeout(() => {
 			valid_factura();
