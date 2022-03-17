@@ -10,6 +10,7 @@ use App\Moneda;
 use App\Stock_almacen;
 use App\Igv;
 use App\Empresa;
+use App\Servicios;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
@@ -175,5 +176,61 @@ class CantidadPrecioController extends Controller
     public function destroy(CantidadPrecio $cantidadPrecio)
     {
         //
+    }
+
+    public function index_servicio(){
+        $igv = Igv::get()->first();
+        $id_t1 = 1;
+        $id_t2 = intval(1);
+
+        $tipo_cambio=TipoCambio::latest('created_at')->first();
+        $servicio = Servicios::where('estado_anular',0)->get();
+
+        $servicio_count = count($servicio);
+        if($servicio_count == 0){
+            return view('consulta.cantidades-precios.index_servicios',compact('stock_producto','id','tipo_cambio','precio_nacional','precio_extranjero','moneda_simb','moneda_nacional','moneda_extranjera','servicio_count'));
+        }
+        // return $servicio;
+        foreach ($servicio as $serv) {
+            $servi_id[] = $serv->id;
+        }
+        
+        for ($i=0; $i < $servicio_count ; $i++) {
+            $servicios[]=Servicios::where('id',$servi_id[$i])->first();
+        }
+
+        $moneda=Moneda::where('principal',1)->first();
+
+        // return $servicios;
+        if($moneda->tipo == "nacional"){
+            foreach ($servicios as $index => $servicio) {
+                $servicio_first=Servicios::where('id',$servicio->id)->first();
+                //precio nacional
+                $utilidad_precio_nac[] = $servicio_first->precio_nacional*($servicio->utilidad)/100;
+                $precio_nacional[] = round(($servicio_first->precio_nacional+$utilidad_precio_nac[$index]),2);
+                //precio extranjero
+                $utilidad_precio_ext[] = $servicio_first->precio_nacional*($servicio->utilidad)/100;
+                $precio_extranjero[] = round(($servicio_first->precio_nacional+$utilidad_precio_nac[$index])/$tipo_cambio->paralelo,2);
+                $id[] = $servicio->id;
+            }
+        }else{
+            foreach ($servicios as $index => $servicio) {
+                $servicio_first=Servicios::where('id',$servicio->id)->first();
+                //precio_nacional
+                $utilidad_precio_nac[] = $servicio_first->precio_extranjero*($servicio->utilidad)/100;
+                $precio_nacional[] = round(($servicio_first->precio_extranjero+$utilidad_precio_nac[$index]),2);
+                //precio_extranjero
+                $utilidad_precio_ext[] = $servicio_first->precio_extranjero*($servicio->utilidad)/100;
+                $precio_extranjero[] = round(($servicio_first->precio_extranjero+$utilidad_precio_ext[$index])*$tipo_cambio->paralelo,2);
+                $id[] = $servicio->id;
+            }
+        }
+
+        $moneda_nacional=Moneda::where('tipo','nacional')->first();
+        $moneda_extranjera=Moneda::where('tipo','extranjera')->first();
+
+        $servicio = Servicios::where('estado_anular',0)->get();
+
+         return view('consulta.cantidades-precios.index_servicios',compact('id_t1','id_t2','tipo_cambio','precio_nacional','precio_extranjero','moneda_nacional','moneda_extranjera','servicio_count','igv','servicio'));
     }
 }
