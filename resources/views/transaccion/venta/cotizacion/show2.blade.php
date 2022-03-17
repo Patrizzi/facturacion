@@ -129,7 +129,7 @@
                      <div class="form-control" >
                          <h3>Condiciones Generales</h3>
                          <div align="left">
-                                <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
+                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
                             <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
                             <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -181,9 +181,9 @@
                 
                 <td>{{$cotizacion_registros->cantidad}}</td>
                 <td>{{$cotizacion_registros->descuento}}%</td>
-                <td>{{$cotizacion_registros->precio_unitario_desc}}</td>
+                <td>{{number_format($cotizacion_registros->precio_unitario_desc,2)}}</td>
                 <td>{{$cotizacion_registros->comision}}%</td>
-                <td>{{$cotizacion_registros->precio_unitario_comi}}</td>
+                <td>{{number_format($cotizacion_registros->precio_unitario_comi,2)}}</td>
                 <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2)}}</td>
             </tr>
             @endforeach

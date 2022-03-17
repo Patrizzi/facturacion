@@ -54,10 +54,11 @@
                             <div align="left">
                                 <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
                                 <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
+                                <strong>N° Contacto:</strong>&nbsp; {{$cotizacion->cliente->celular}}
+                                @if(isset($cotizacion->cliente->telefono))
+                                    / {{$cotizacion->cliente->telefono}}
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -65,7 +66,7 @@
                        <div class="form-control" >
                            <h3>Condiciones Generales</h3>
                            <div align="left">
-                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
+                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
                             <strong>Validez:</strong> &nbsp;{{$cotizacion->validez}}<br>
                             <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>

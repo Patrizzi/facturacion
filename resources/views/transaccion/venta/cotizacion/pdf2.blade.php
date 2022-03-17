@@ -49,14 +49,16 @@
                 <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
                 <strong>Nombre o Empresa:</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
-                <strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
-                <strong>Teléfono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
+                <strong>Dirección:</strong>&nbsp;{{$cotizacion->cliente->direccion}}<br>
+                <strong>N° Contacto:</strong>&nbsp;{{$cotizacion->cliente->celular}}
+                @if(isset($cotizacion->cliente->telefono))
+                    / {{$cotizacion->cliente->celular}}
+                @endif
             </td>
             <th style="width: 5%;border-color: white"></th>
             <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
                 <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
-                <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}<br>
+                <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
                 <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
                 <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                 <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -95,7 +97,7 @@
             <td width="400px" style="">{{$cotizacion_registros->servicio->nombre}} <br>{{$cotizacion_registros->descripcion_item}}</span></td>
             @endif
             <td width="auto" style="">{{$cotizacion_registros->cantidad}}</td>
-            <td width="auto" style="">{{$cotizacion_registros->precio_unitario_comi}}</td>
+            <td width="auto" style="">{{number_format($cotizacion_registros->precio_unitario_comi,2)}}</td>
             <td width="80px" style="text-align: right" >{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2)}}</td>
         </tr>
         @endforeach
