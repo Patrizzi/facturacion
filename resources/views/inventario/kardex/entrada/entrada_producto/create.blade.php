@@ -41,7 +41,6 @@
 				<div class="ibox-content">
 					<form action="{{ route('kardex-entrada.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="kardex_submit" >
 						@csrf
-						<input type="text" name="valdacion" id="validacion" value="green">
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Motivos:</label>
 							<div class="col-sm-4">
@@ -274,20 +273,22 @@
                                 timeOut: 3000
                             });
 					$('[id="factura"]').addClass('input_red');
-					$('[id="validacion"]').val("error");
+					$('[id="boton"]').prop("disabled", true);
 				}else{
 					$('[id="factura"]').removeClass('input_red');
-					$('[id="validacion"]').val("green");
+					$('[id="boton"]').prop("disabled", false);
 				}				
 			}
 		});
 	}
-	$("#boton").on("click", function() {
-		// clearTimeout(controladorTiempo);
-		// controladorTiempo = setTimeout(valid_factura(), 0);
-		valid_factura();
-		
-	});
+	var  timeout;
+	$("#factura").on('keydown', () => {
+		clearTimeout(timeout)
+		timeout = setTimeout(() => {
+			valid_factura();
+			clearTimeout(timeout)
+		},400)
+	})
 	
 </script>
 <script>
