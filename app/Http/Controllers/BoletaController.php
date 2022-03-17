@@ -395,9 +395,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
 
         //Convertir nombre del cliente a id
         $cliente_nombre=$request->get('cliente');
-        $nombre = strstr($cliente_nombre, '-',true);
+        // $nombre = strstr($cliente_nombre, '-',true);
 
-        $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
+        $cliente_buscador=Cliente::where('id',$cliente_nombre)->first();
         // return $cliente_buscador->id;
         $forma_pago_id = $request->get('forma_pago');
         //fecha de vencimiento
@@ -492,6 +492,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
          }
 
      }
+    $nombre_moneda = $request->get('moneda');
+    $id_moneda = Moneda::where('nombre', $nombre_moneda)->first();
+    //  return $nombre_moneda;
         // return $request->get('cantidad');
      $tipo_cambio=TipoCambio::latest('created_at')->first();
         // CODIGO PARA BUSCAR EL ID DEL TIPO DE DOCUMENTO
@@ -504,7 +507,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
      $boleta->orden_compra=$request->get('orden_compra');
      $boleta->guia_remision=$request->get('guia_r');
      $boleta->cliente_id=$cliente_buscador->id;
-     $boleta->moneda_id=$id_moneda;
+     $boleta->moneda_id=$id_moneda->id;
      $boleta->forma_pago_id=$request->get('forma_pago');
      $boleta->fecha_emision=$request->get('fecha_emision');
      $boleta->fecha_vencimiento=$nuevafechas;
