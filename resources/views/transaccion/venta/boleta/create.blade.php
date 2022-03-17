@@ -239,6 +239,7 @@
                                         <th>PU. Dcto.</th>
                                         <th>PU. Com.</th>
                                         <th>Total</th>
+                                        <th>Total IGV</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -287,14 +288,43 @@
                                             <input type='text' id='afectacion0'  style=""  name='afectacion' disabled="disabled" class="afectacion form-control " hidden=""  required  autocomplete="off"/>
 
                                         </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
+                                        </td>
                                         <span id="spTotal"></span>
                                     </tr>
 
                                 </tbody>
                                 <br>
                                 <tbody>
-
-                                    <tr align="center">
+                                    <tr style="background-color: #f5f5f500;" align="center">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Subtotal:</td>
+                                        <td colspan="2">
+                                            <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
+                                            <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
+                                        </td>
+                                    </tr>
+                                    <tr style="background-color: #f5f5f500;" align="center">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>IGV :</td>
+                                        <td colspan="2">
+                                            <input id='igv' type="text"     disabled="disabled" class="form-control" required />
+                                        </td>
+                                    </tr>
+                                    <tr  align="center">
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -303,7 +333,8 @@
                                         <td></td>
                                         <td></td>
                                         <td>Total :</td>
-                                        <td><input id='total_final'  readonly="" name="total_comi" class="form-control" required/>
+                                        <td colspan="2">
+                                            <input id='total_final' type="text" name="total_comi"    readonly="" class="form-control" required />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -482,6 +513,9 @@
                 <input type='text' id='total${i}' name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
                 <input type='text' id='afectacion${i}'  style="width: 76px" hidden  name='afectacion' disabled="disabled" class="afectacion form-control "  required  autocomplete="off"/>
             </td>
+            <td>
+                <input style="width: 76px" type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
+            </td>
         </tr>`;
         $('.tables').append(data);
         i++;
@@ -657,7 +691,8 @@
         var descuento = document.querySelector(`#descuento${a}`).value;
         var afec = document.querySelector(`#tipo_afec${a}`).value;
         var precio = document.querySelector(`#precio${a}`).value;
-        var igv = {{$igv->renta}};
+        var igv = 0;
+        var igv_new = {{$igv->renta}};
 
         if (checkBox.checked == true && descuento > 0){        
             var promedio_original=document.querySelector(`#promedio_original${a}`).value;
@@ -675,6 +710,9 @@
                 var final_decimal = Math.round(final * multiplier) / multiplier;
                 document.getElementById(`total${a}`).value = final_decimal;
                 document.getElementById(`afectacion${a}`).value = final_decimal;
+                
+                var precio_uni_igv =  Math.round((final_decimal+(final_decimal*(igv_new/100)))*multiplier)/multiplier;
+                
             }else{
                 var precio_uni_dec = Math.round((precio_uni+(precio_uni) * multiplier)) / multiplier;
                 var comisiones9=precio_uni+(precio_uni*comision_porcentaje/100);
@@ -683,13 +721,16 @@
                 var final=comisiones*cantidad;
                 var final_decimal = Math.round(final * multiplier) / multiplier;
                 // console.log(final_decimal);
-
+                
                 document.getElementById(`total${a}`).value = final_decimal;
                 document.getElementById(`afectacion${a}`).value = 0;
+                var precio_uni_igv = final_decimal ;
             }
             document.getElementById(`check_descuento${a}`).value = descuento;
             document.getElementById(`precio_unitario_comision${a}`).value = comisiones;
             document.getElementById(`precio_unitario_descuento${a}`).value = precio_uni_dec;
+            document.getElementById(`precio_unitario_igv${a}`).value = precio_uni_igv ;
+            
 
         } else {
             var multiplier = 100;
@@ -705,6 +746,8 @@
                 var final_decimal = Math.round(final2 * multiplier) / multiplier;
                 document.getElementById(`total${a}`).value = final_decimal;
                 document.getElementById(`afectacion${a}`).value = final_decimal;
+                var precio_uni_igv =  Math.round((final_decimal+(final_decimal*(igv_new/100)))*multiplier)/multiplier;
+
             }else{
                 var precio_igv = (Math.round(precio * multiplier) / multiplier);
                 var final= cantidad*precio;
@@ -714,23 +757,50 @@
                 var final_decimal = Math.round(final2 * multiplier) / multiplier;
                 document.getElementById(`total${a}`).value = final_decimal;
                 document.getElementById(`afectacion${a}`).value = final_decimal;
+                var precio_uni_igv = final_decimal ;
+
             }
             document.getElementById(`check_descuento${a}`).value = 0;
             document.getElementById(`precio_unitario_descuento${a}`).value = precio_igv;
             document.getElementById(`precio_unitario_comision${a}`).value = end;
+            document.getElementById(`precio_unitario_igv${a}`).value = precio_uni_igv;
         }
 
         var totalInp = $('[name="total"]');
         var total_t = 0;
 
-        totalInp.each(function () {
+        totalInp.each(function(){
             total_t += parseFloat($(this).val());
         });
 
         var multiplier2 = 100;
         var total_tt = Math.round(total_t * multiplier2) / multiplier2;
 
-        $('#total_final').val(total_tt);
+        $('#sub_total').val(total_tt);
+
+        //SOLO GRAVADO
+        var totalInpG = $('[name="afectacion"]');
+        var total_tg = 0;
+
+        totalInpG.each(function(){
+            total_tg += parseFloat($(this).val());
+        });
+
+        var multiplier3 = 100;
+        var total_ttg = Math.round(total_tg * multiplier3) / multiplier3;
+
+        $('#subtotal_gravado').val(total_ttg);
+
+        var igv_valor={{$igv->renta}};
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        var igv=subtotal_gravado*igv_valor/100; 
+        var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+        var end=igv_decimal+parseFloat(subtotal);
+        var end2 = Math.round(end * multiplier2) / multiplier2;
+
+        document.getElementById("igv").value = igv_decimal;
+        document.getElementById("total_final").value = end2;
 
         var monto_c = document.getElementsByClassName('monto_pago');
         
@@ -738,7 +808,7 @@
         for (var i = 0; i < inp_mont; i++) {
             var monto = monto_c[i].id;
             var fin = (total_tt/inp_mont)
-            document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier2)/ multiplier2;
+            document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2)/ multiplier2;
         }
     }
     
@@ -765,20 +835,32 @@
             $(".borrar").prop("disabled", true);
             $(".addmore").prop("disabled", false);
         }
-
-
-        var totalInp = $('[name="total"]');
+        var multiplier = 100;
+        var totalInp = $('[name="afectacion"]');
         var total_t = 0;
 
-        totalInp.each(function () {
+        totalInp.each(function(){
             total_t += parseFloat($(this).val());
         });
-        $('#total_final').val(total_t);
 
-        var igv_valor = ({{$igv->renta}}) ;
-        var subtotal = document.querySelector(`#total_final`).value;
-        var igv = parseFloat(subtotal) * igv_valor / 100;
-        var end = Math.round(parseFloat(igv) + parseFloat(subtotal),2);
+        $('#subtotal_gravado').val(total_t);
+        //GRAVADO
+        var totalInpG = $('[name="total"]');
+        var total_tt = 0;
+
+        totalInpG.each(function(){
+            total_tt += parseFloat($(this).val());
+        });
+        $('#sub_total').val(total_tt);
+
+        var igv_valor=({{$igv->renta}});
+        var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv_val=parseFloat(subtotal_gravado)*igv_valor/100;
+        var igv = Math.round(igv_val * multiplier) / multiplier;
+        var end_2=parseFloat(igv)+parseFloat(subtotal);
+        var end = Math.round(end_2 * multiplier) / multiplier;
+        console.log(end);
         document.getElementById("igv").value = igv;
         document.getElementById("total_final").value = end;
 
