@@ -21,7 +21,7 @@ class ParameterCallController extends Controller
     // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros  
     public function description(Request $request)
     {
-        return $request;
+        // return $request;
         //Obtención de la moneda
         $money=$request->get('moneda');
         $money_id=Moneda::where('id',$money)->first();

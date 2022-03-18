@@ -146,11 +146,23 @@
                                     <td>Moneda</td>
                                     <td>:</td>
                                     <td>
-                                        <select name="moneda" class="form-control" >
-                                            @foreach($moneda as $monedas)
-                                            <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="row">
+                                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                                            <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                                            <div class="col-sm-5">
+                                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                                            </div>
+
+                                            <a class="col-sm-5 button_money" onclick="changeMoney()">
+                                                <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
+                                                    @if($moneda->tipo=='nacional')
+                                                        Dolares 
+                                                    @elseif($moneda->tipo=='extranjera') 
+                                                        Soles 
+                                                    @endif
+                                                </button>
+                                            </a>
+                                        </div>
                                     </td>
                                     <td>Fecha</td><td>:</td>
                                     <td><input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"></td>
@@ -468,12 +480,17 @@
                 'moneda': moneda	
             },
             success: function (msg) {
-                
-                $(`#precio${a}`).val(msg.price);
-                $(`#cantidad${a}`).val(1);
-                $(`#cantidad${a}`).attr('max', msg.amount );
-                $(`#cantidad`).attr('max', msg.amount );
-                
+                if(msg.price == 0 && msg.amount == 0){
+                    $(`#precio${a}`).val(0);
+                    $(`#cantidad${a}`).val(0);
+                    $(`#cantidad${a}`).attr('max', msg.amount );
+                    $(`#cantidad`).attr('max', msg.amount );
+                }else{
+                    $(`#precio${a}`).val(msg.price);
+                    $(`#cantidad${a}`).val(1);
+                    $(`#cantidad${a}`).attr('max', msg.amount );
+                    $(`#cantidad`).attr('max', msg.amount );
+                }
                 multi(a);
                 $(`.addmore`).prop("disabled", false);
             },
@@ -729,6 +746,50 @@
                  }
             // buton.preventDefault();
         });
+
+        // TODO Script para cambiar por moneda
+    let status=0;
+    function changeMoney() {
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.money') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'status': status,
+            },
+            beforeSend: function(){
+                $('#loaderGif').show(); 							
+			},
+			complete:function(data){
+                /*
+                * Se ejecuta al termino de la petición
+                * */
+            },
+            success: function (msg) {
+                //Cambio de moneda
+                $(`#moneda_id`).val(msg.id);
+                $(`#moneda`).val(msg.nombre);
+                $(`#button_changeMoney`).html(msg.other);
+                if(status==1){
+                    status=0;
+                }else{
+                    status=1;
+                    }
+                $('#loaderGif').hide(); 
+                let articles_selected = document.getElementsByClassName("select2_demo_3");
+                let articles_selected_count = articles_selected.length;
+                for(let z=0;z<articles_selected_count;z++){
+                    let selected=document.getElementsByClassName("select2_demo_3 select_change")[z].getAttribute('id');
+                    if(selected=='articulo'){
+                        ajax(0); 
+                    }else{
+                        ajax(selected.substring(8)); 
+                    }
+                }    
+                disabled_money();
+            },
+        });
+    }
 
     
         function cerrar_but_rc(){

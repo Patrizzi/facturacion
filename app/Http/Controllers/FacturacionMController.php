@@ -76,7 +76,7 @@ class FacturacionMController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
 
         // Moneda
-        $moneda=Moneda::get();
+        $moneda=Moneda::where('principal','1')->first();
 
         // Número de factura
         $factura_numero="FA01-000001";
@@ -90,7 +90,7 @@ class FacturacionMController extends Controller
         //Almacen
         $almacenes = Almacen::all();
 
-        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes'));
+        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes','sucursal'));
     }
 
     /**
