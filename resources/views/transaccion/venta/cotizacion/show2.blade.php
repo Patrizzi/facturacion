@@ -28,12 +28,6 @@
     <div class="ibox-title" style="padding-right: 3.1%;padding-left:  3.1%">
         <div class="row tooltip-demo">
              <div class="col-sm-6" >
-              {{--   @if ($regla=='factura')
-                    <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Facturar</a>
-                @elseif($regla=='boleta')
-                    <a class="btn btn-success" href="{{route('cotizacion.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
-                @endif --}}
-
                 @if($cotizacion->estado == '1')
                     @if($cotizacion->tipo=='factura')
                         <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('facturacion.show',$factura->id)}}" >Ver Factura</a>
@@ -59,15 +53,13 @@
             </div>
              <div class="col-sm-6" align="right">
                 <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_cotizacion' ,$cotizacion->id)}}">
-                <input type="text" name="name" maxlength="50" hidden="" value="Cotizacion_{{$cotizacion->tipo}}"  >
-                <input type="text" hidden="" name="firma" value="0">
-                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                    <input type="text" name="name" maxlength="50" hidden="" value="Cotizacion_{{$cotizacion->tipo}}"  >
+                    <input type="text" hidden="" name="firma" value="0">
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
                 <button id="btn_ticket" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button>
                 <input type="text" value="{{$cotizacion->id}}" name="id" id="id" hidden="">
                 <a class="btn btn-success" href="{{route('cotizacion.print',$cotizacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
-
-                         {{-- </a> --}}
                 @if(Auth::user()->email_creado == 1)
                     <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
                         @csrf
@@ -83,19 +75,17 @@
                 </div>
                 <div id="div-mostrar">
                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                    @csrf
-                     <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}"   />
-                     <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                     <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$cotizacion->id)}}?archivo=">
-                     <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
-                    <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                        @csrf
+                        <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}"   />
+                        <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                        <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$cotizacion->id)}}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
+                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
                     </form>
                 </div>
             </div>
         </div>
-
     </div>
-
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
