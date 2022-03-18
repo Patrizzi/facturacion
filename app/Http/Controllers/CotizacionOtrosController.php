@@ -81,6 +81,7 @@ class CotizacionOtrosController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         $tipo_coti = $request->get('tipo_coti');
         // return $tipo_coti;
         /*IMPRENSION*/
@@ -113,18 +114,10 @@ class CotizacionOtrosController extends Controller
         $count_articulo=count($articulo);
         $cantidad_p = $request->input('cantidad');
 
-        $costo_sub_total = $request->input('costo_sub_total');
-        $costo_igv = $request->input('costo_igv');
-        $costo_total = $request->input('costo_total');
+        
         $count_cantidad_p=count($cantidad_p);
-        $sub_total=0;
-        $igv=Igv::first();
 
-        if (strpos($costo_total, '.') !== false) { $punto= 'true';}else{ $punto='false'; }
-        if ($punto=='true') {$total = strstr($costo_total, '.',true);$final=strstr($costo_total, '.'); }
-        else{ $total = $costo_total; $final = ' '; }
-        $end=$total;
-        $end_final=$final;
+        // $igv=Igv::first();
 
         for($i=0 ; $i<$count_cantidad_p;$i++){
             $articulos[$i]= $request->input('articulo')[$i];
@@ -134,46 +127,41 @@ class CotizacionOtrosController extends Controller
 
         for($i=0;$i<$count_articulo;$i++){
             $cantidad[]=$request->input('cantidad')[$i];
-            $precio[]=$request->input('precio')[$i];
+            $precio[]=$request->input('precio_s_igv')[$i];
+            $precio_igv[]=$request->input('precio_c_igv')[$i];
         }
+        $sub_total = $request->input('subtotal');
+        $igv = $request->input('igv');
+        $total_final = $request->input('total_final');
+        //Numeor a letras vartiables
+        $igv_p=round($total_final,2);
+        $end=round($total_final,2);
+        $end2=number_format(round($total_final,2),2);
+
         if ($name=='print') {
+           return view('transaccion.venta.cotizacion.otros.print',compact('tipo_coti','producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','precio_igv','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_igv','costo_total','personal','sub_total','igv','total_final','igv_p','end','end2'));
+        }elseif ($name=='pdf'){
+            $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('tipo_coti','producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','precio_igv','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos','costo_igv','personal','sub_total','igv','total_final','igv_p','end','end2'));
+            return $pdf->download('COTPF 001-0000000'.$codigo.'.pdf');
+        }elseif ($name=='correo'){
+            $date_sp = Carbon::now();
+            $data_g = str_replace(' ', '_',$date_sp);
+            $carbon_sp = str_replace(':','-',$data_g);
+            $date = $carbon_sp;
+            $redic='mailbox';
+            $clientes=$cliente_id->email;
+            $rutapdf = 'transaccion.venta.cotizacion.pdf';
+            $name = 'COTPF 001-0000000';
 
-
-           return view('transaccion.venta.cotizacion.otros.print',compact('tipo_coti','producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
-       }
-       elseif ($name=='pdf'){
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('tipo_coti','producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
-         return $pdf->download('COTPF 001-0000000'.$codigo.'.pdf');
-     }
-     elseif ($name=='correo'){
-        $date_sp = Carbon::now();
-        $data_g = str_replace(' ', '_',$date_sp);
-        $carbon_sp = str_replace(':','-',$data_g);
-        $date = $carbon_sp;
-        $redic='mailbox';
-        $clientes=$cliente_id->email;
-        $rutapdf = 'transaccion.venta.cotizacion.pdf';
-        $name = 'COTPF 001-0000000';
-
-           // return $cotizacion;
-        $archivo=$name.$codigo.".pdf";
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
-        $especif = $carbon_sp.$archivo;
-        $contenido=$pdf->download();
-        Storage::disk($redic)->put($especif,$contenido);
-
-
-       // $archivo=$especif;
-            // \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-
-        // Storage::disk('mailbox')->put($especif,$content);
-        // $date = $carbon_sp;
-
-        return view('mailbox.create',compact('archivo','clientes','redic','date'));
+            // return $cotizacion;
+            $archivo=$name.$codigo.".pdf";
+            $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
+            $especif = $carbon_sp.$archivo;
+            $contenido=$pdf->download();
+            Storage::disk($redic)->put($especif,$contenido);
+            return view('mailbox.create',compact('archivo','clientes','redic','date'));
+        }
     }
-
-        // }
-}
 
     /**
      * Display the specified resource.

@@ -114,13 +114,8 @@
                     <td  style="text-align:center;">{{$i++}}</td>
                     <td >{{$articulos[$index]}}</td>
                     <td  style="text-align:center;">{{$cantidad[$index]}}</td>
-                    @if($tipo_coti==1)
-                    <td  style="text-align:center;">{{$moneda_id->simbolo}} {{round($igv_del_precio=$precio[$index]/1.18,2)}}</td>
-                    <td  style="text-align:center;">{{$moneda_id->simbolo}}{{$sub_total=round($cantidad[$index] *$igv_del_precio,2)}}</td>
-                    @else
-                    <td  style="text-align:center;">{{$moneda_id->simbolo}}{{$precio[$index]}}</td>
-                    <td  style="text-align:center;">{{$moneda_id->simbolo}}{{$cantidad[$index] *$precio[$index]}}</td>
-                    @endif
+                    <td  style="text-align:center;">{{$moneda_id->simbolo}} {{number_format($precio[$index],2)}}</td>
+                    <td  style="text-align:center;">{{$moneda_id->simbolo}} {{number_format($precio[$index] *$cantidad[$index],2)}}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -130,23 +125,24 @@
     <div class="row" style="margin-top:10px">
       <div class="col-sm-8">
         <h3 align="left">
-          <?php $v=new CifrasEnLetras() ;
-          $letra=($v->convertirEurosEnLetras($end));
-          $letra_final = strstr($letra, 'soles',true);
-      ?>
-      Son : {{$letra_final}} {{$end_final}}/100 {{$moneda_id->nombre }}
-  </h3>
-</div>
+            <?php $v=new CifrasEnLetras() ;
+            $letra=($v->convertirEurosEnLetras($end));
+            $letra_final = ucfirst(strstr($letra, 'soles',true));
+            $end_final_point=strstr($end2, '.', false);
+            $end_final=str_replace('.', '',$end_final_point);
+            ?>
+            Son : {{$letra_final}} {{$end_final}}/100 {{$moneda_id->nombre }}
+        </h3>
+        </div>
 <div class="col-sm-4 form-control">
-  @if($tipo_coti==1)
   <span style="display: block;float: left"> Sub Total:</span>
-  <span style="display: block;float: right;"> {{$simbologia=$moneda_id->simbolo}}{{$sub_total=round($costo_total/1.18,2)}} </span>
+  <span style="display: block;float: right;"> {{$simbologia=$moneda_id->simbolo}}{{number_format( round($sub_total ,2),2) }} </span>
   <br>
   <span style="display: block;float: left"> I.G.V.: </span>
-  <span style="display: block;float: right">{{$simbologia}}{{round($sub_total*0.18,2)}} </span><br>
-  @endif
+  <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv,2),2)}} </span><br>
+  
   <span style="display: block;float: left"><b> Total:</b> </span>
-  <span style="display: block;float: right">{{$moneda_id->simbolo}} {{$costo_total}}</span>
+  <span style="display: block;float: right">{{$moneda_id->simbolo}} {{number_format($total_final,2)}}</span>
 
 </div>
 </div>
