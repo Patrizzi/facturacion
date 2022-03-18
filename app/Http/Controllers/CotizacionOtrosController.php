@@ -139,9 +139,9 @@ class CotizacionOtrosController extends Controller
         $end2=number_format(round($total_final,2),2);
 
         if ($name=='print') {
-           return view('transaccion.venta.cotizacion.otros.print',compact('tipo_coti','producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','precio_igv','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_igv','costo_total','personal','sub_total','igv','total_final','igv_p','end','end2'));
+           return view('transaccion.venta.cotizacion.otros.print',compact('tipo_coti','producto_codigo','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','precio_igv','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos','personal','sub_total','igv','total_final','igv_p','end','end2'));
         }elseif ($name=='pdf'){
-            $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('tipo_coti','producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','precio_igv','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos','costo_igv','personal','sub_total','igv','total_final','igv_p','end','end2'));
+            $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('tipo_coti','producto_codigo','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','precio_igv','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos','personal','sub_total','igv','total_final','igv_p','end','end2'));
             return $pdf->download('COTPF 001-0000000'.$codigo.'.pdf');
         }elseif ($name=='correo'){
             $date_sp = Carbon::now();
@@ -155,7 +155,7 @@ class CotizacionOtrosController extends Controller
 
             // return $cotizacion;
             $archivo=$name.$codigo.".pdf";
-            $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('producto_codigo','sub_total','igv','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos', 'costo_sub_total','costo_igv','costo_total','personal','end','punto','end_final'));
+            $pdf=PDF::loadView('transaccion.venta.cotizacion.otros.pdf',compact('producto_codigo','cliente_id','forma_pago_id','validez','observacion','producto_id','cantidad','precio','codigo','fecha_emision','moneda_id','garantia','empresa','banco','banco_count','articulos','personal','sub_total','igv','total_final','igv_p','end','end2'));
             $especif = $carbon_sp.$archivo;
             $contenido=$pdf->download();
             Storage::disk($redic)->put($especif,$contenido);
