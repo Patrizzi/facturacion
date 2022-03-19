@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\ClienteRetenedores;
 use App\Garantia;
 use Illuminate\Http\Request;
 
@@ -28,24 +29,28 @@ class ClienteRetenedoresController extends Controller
     public function update(Request $request, $id)
     {
          //ESTADO
+        $retenedores=ClienteRetenedores::where('cliente_id',$id)->first();
         $estado = $request->get('estado');
-        $nombre=$request->get('descripcion');
+        $porcentaje=$request->get('porcentaje');
 
-        if($estado == "on" ){ $estado_familia = 0;}
-        else{ $estado_familia = 1;}
-        if (empty($nombre)) {return redirect()->route('garantia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);}
+        if($estado == "on" ){ $estado_retenedores = 0;}else{ $estado_retenedores = 1;}
 
-        $cant_activo=Garantia::where('estado',0)->count();
-        $unico=Garantia::where('id',$id)->where('estado',0)->first();
+        if (!isset($porcentaje)) {return redirect()->route('cliente.show',$id)->withErrors(['Numero Porsentaje % vacio']);}
+        if (isset($retenedores)) {
+            $cli_retenedores=ClienteRetenedores::find($retenedores->id);
+            $cli_retenedores->porcentaje=$porcentaje;
+            $cli_retenedores->estado=$estado_retenedores;
+            $cli_retenedores->save();
+        }
+        else{
+          $cli_retenedores=new ClienteRetenedores;
+          $cli_retenedores->cliente_id=$id;
+          $cli_retenedores->porcentaje=$porcentaje;
+          $cli_retenedores->estado='0';
+          $cli_retenedores->save();
+      }
 
-        if ($cant_activo==1 && isset($unico)) { $estado_familia = 0; }
+      return redirect()->route('cliente.show',$id);
 
-        $garantia=Garantia::find($id);
-        $garantia->descripcion=$nombre;
-        $garantia->estado=$estado_familia;
-        $garantia->save();
-
-        return redirect()->route('garantia.index');
-
-    }
+  }
 }
