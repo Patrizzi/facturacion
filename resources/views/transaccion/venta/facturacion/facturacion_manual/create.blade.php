@@ -202,17 +202,19 @@
                                             <input type='checkbox' class="case">
                                         </td>
                                         <td>
-                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0);cambio(0)" autocomplete="off"></select>
                                             <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                                             <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
                                             <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
                                             <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
+                                            <input type="hidden" class="status0"  name="status[]" id="status1" value="0">
+                                            <input type="hidden" class="change_article0"  name="change_article[]" id="change_article1" value="0">
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
+                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)" onchange="change(0)"  required  autocomplete="off" />
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
                                         </td>
                                         <td>
                                             <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
@@ -372,6 +374,17 @@
             { alert(incompleto); }
         else{boton.type = 'button';}
     }
+
+    function cambio(a){
+        if(a==0){
+            var articulo = document.getElementById(`articulo`).value;
+            document.getElementById(`change_article1`).value = articulo;
+        }else{
+            var articulo = document.getElementById(`articulo${a}`).value;
+            document.getElementById(`change_article1`).value = articulo;
+        }
+    }
+
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desesperado) --}}
 
@@ -385,16 +398,18 @@
                     <input type='checkbox' class='case'/>
                 </td>";
                 <td>
-                    <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
+                    <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i});cambio(${i})" autocomplete="off" required></select>
                     <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                     <textarea type='text' id='numero_serie${i}' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
+                    <input type="hidden" class="status"  name="status[]" id="status${i}" value="0">
+                    <input type="hidden" class="change_article0"  name="change_article[]" id="change_article${i}" value="0">
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    <input type='text' style="width: 76px"  id='cantidad${i}' onchange="change(${i})" name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
                 </td>
                 <td>
                     <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
@@ -407,6 +422,17 @@
         //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
         articlesSelect2();
     });
+
+    function change(a){
+        var activo = 1;
+        if(a==0){
+            document.getElementById(`change_article1`).value = activo;
+            document.getElementById(`status1`).value = activo;
+        }else{
+            document.getElementById(`change_article${a}`).value = activo;
+            document.getElementById(`status${a}`).value = activo;
+        }
+    }
 
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
     $(document).ready(function() {
@@ -463,9 +489,15 @@
         if(a==0){
             var articulo = document.getElementById(`articulo`).value;
             document.getElementById(`input_prod1`).value = articulo;
+
+            var change_article_ajax=document.getElementById(`change_article1`).value;
+            var status_change = document.getElementById(`status1`).value;
         }else{
             var articulo = document.getElementById(`articulo${a}`).value;
             document.getElementById(`input_prod${a}`).value = articulo;
+
+            var change_article_ajax=document.getElementById(`change_article1`).value;
+            var status_change = document.getElementById(`status${a}`).value;
         }
 
         var almacen = $('[id="almacen_id"]').val();
@@ -480,17 +512,27 @@
                 'moneda': moneda	
             },
             success: function (msg) {
-                if(msg.price == 0 && msg.amount == 0){
-                    $(`#precio${a}`).val(0);
-                    $(`#cantidad${a}`).val(0);
-                    $(`#cantidad${a}`).attr('max', msg.amount );
-                    $(`#cantidad`).attr('max', msg.amount );
-                }else{
+                if(change_article_ajax == articulo){ //si los articulos son iguales 
+                    if(status_change==0){
+                        if(msg.price == 0 && msg.amount == 0){
+                            $(`#precio${a}`).val(0);
+                            $(`#cantidad${a}`).val(0);
+                            $(`#cantidad${a}`).attr('max', msg.amount );
+                            $(`#cantidad`).attr('max', msg.amount );
+                        }else{
+                            $(`#precio${a}`).val(msg.price);
+                            $(`#cantidad${a}`).val(1);
+                            $(`#cantidad${a}`).attr('max', msg.amount );
+                            $(`#cantidad`).attr('max', msg.amount );
+                        }
+                    }
+                }else{ // si se cambia de articulo
                     $(`#precio${a}`).val(msg.price);
                     $(`#cantidad${a}`).val(1);
                     $(`#cantidad${a}`).attr('max', msg.amount );
                     $(`#cantidad`).attr('max', msg.amount );
                 }
+                
                 multi(a);
                 $(`.addmore`).prop("disabled", false);
             },
@@ -523,7 +565,7 @@
         var multiplier = 100;
         var final=(precio*cantidad);
         var final_decimal = Math.round(final * multiplier) / multiplier;
-        console.log(final_decimal);
+        
         document.getElementById(`total${a}`).value = final_decimal;
 
         var totalInp = $('[name="total"]');
