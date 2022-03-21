@@ -86,7 +86,7 @@ class GarantiaGuiaIngresoController extends Controller
 
       $productos = Producto::where('estado_anular',1)->where('marca_id',$marca_t->id)->get();
       //SERVIOS ANULAR ESTA AL REVEZ 0 = SIN ANULAR / 1 = ANULADO 
-      $servicios = Servicios::where('estado_anular',0)->where('marca_id',$marca_t->id)->get();
+      $servicios = Servicios::where('estado_anular',0)->get();
       if(count($productos) == 0){
         return redirect()->route('garantia_guia_ingreso.index')->with('repite', 'La marca escogida no cuenta con productos relacionados');
       }
