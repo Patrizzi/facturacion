@@ -193,6 +193,7 @@
                                         <th >Articulo</th>
                                         <th style="width:100px">Cantidad</th>
                                         <th style="width:100px">Precio</th>
+                                        <th style="width:100px">Precio Oficial</th>
                                         <th style="width:100px">Total</th>
                                     </tr>
                                 </thead>
@@ -211,10 +212,13 @@
                                             <input type="hidden" class="change_article0"  name="change_article[]" id="change_article1" value="0">
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)" onchange="change(0)"  required  autocomplete="off" />
+                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
                                         </td>
                                         <td>
                                             <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]'  class="precio_oficial0 form-control" required  autocomplete="off" disabled="disabled" />
                                         </td>
                                         <td>
                                             <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
@@ -226,6 +230,7 @@
                                     <tr style="background-color: #f5f5f500;" align="center">
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                         <td>Subtotal :</td>
                                         <td colspan="2">
                                             <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
@@ -235,12 +240,14 @@
                                     <tr style="background-color: #f5f5f500;" align="center">
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                         <td>IGV :</td>
                                         <td colspan="2">
                                             <input id='igv' type="text" disabled="disabled" class="form-control" required />
                                         </td>
                                     </tr>
                                     <tr align="center">
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td>Total :</td>
@@ -406,10 +413,13 @@
                     <input type="hidden" class="change_article0"  name="change_article[]" id="change_article${i}" value="0">
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='cantidad${i}' onchange="change(${i})" name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
                 </td>
                 <td>
                     <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                </td>
+                <td>
+                    <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' class="precio_oficial${i} form-control" required  autocomplete="off" disabled="disabled"/>
                 </td>
                 <td>
                     <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
@@ -423,13 +433,12 @@
         articlesSelect2();
     });
 
+    //Funcion cambio de articulo - se aplica siempre y cuando se cambie el precio del articulo
     function change(a){
         var activo = 1;
         if(a==0){
-            document.getElementById(`change_article1`).value = activo;
             document.getElementById(`status1`).value = activo;
         }else{
-            document.getElementById(`change_article${a}`).value = activo;
             document.getElementById(`status${a}`).value = activo;
         }
     }
@@ -512,27 +521,19 @@
                 'moneda': moneda	
             },
             success: function (msg) {
-                if(change_article_ajax == articulo){ //si los articulos son iguales 
-                    if(status_change==0){
-                        if(msg.price == 0 && msg.amount == 0){
-                            $(`#precio${a}`).val(0);
-                            $(`#cantidad${a}`).val(0);
-                            $(`#cantidad${a}`).attr('max', msg.amount );
-                            $(`#cantidad`).attr('max', msg.amount );
-                        }else{
-                            $(`#precio${a}`).val(msg.price);
-                            $(`#cantidad${a}`).val(1);
-                            $(`#cantidad${a}`).attr('max', msg.amount );
-                            $(`#cantidad`).attr('max', msg.amount );
-                        }
-                    }
-                }else{ // si se cambia de articulo
-                    $(`#precio${a}`).val(msg.price);
+                if(msg.price == 0 && msg.amount == 0){
+                    $(`#precio${a}`).val(0);
+                    $(`#precio_oficial${a}`).val(msg.price)
+                    $(`#cantidad${a}`).val(0);
+                    $(`#cantidad${a}`).attr('max', msg.amount );
+                    $(`#cantidad`).attr('max', msg.amount );
+                }else{
+                    $(`#precio${a}`).val(1);
+                    $(`#precio_oficial${a}`).val(msg.price)
                     $(`#cantidad${a}`).val(1);
                     $(`#cantidad${a}`).attr('max', msg.amount );
                     $(`#cantidad`).attr('max', msg.amount );
                 }
-                
                 multi(a);
                 $(`.addmore`).prop("disabled", false);
             },
