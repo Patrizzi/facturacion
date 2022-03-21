@@ -192,8 +192,8 @@
                                         <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
                                         <th >Articulo</th>
                                         <th style="width:100px">Cantidad</th>
+                                        <th style="width:100px">P.Sugerido</th>
                                         <th style="width:100px">Precio</th>
-                                        <th style="width:100px">Precio Oficial</th>
                                         <th style="width:100px">Total</th>
                                     </tr>
                                 </thead>
@@ -212,13 +212,13 @@
                                             <input type="hidden" class="change_article0"  name="change_article[]" id="change_article1" value="0">
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
-                                        </td>
-                                        <td>
-                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
+                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"/>
                                         </td>
                                         <td>
                                             <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]'  class="precio_oficial0 form-control" required  autocomplete="off" disabled="disabled" />
+                                        </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
                                         </td>
                                         <td>
                                             <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
@@ -413,13 +413,13 @@
                     <input type="hidden" class="change_article0"  name="change_article[]" id="change_article${i}" value="0">
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-                </td>
-                <td>
-                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
                 </td>
                 <td>
                     <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' class="precio_oficial${i} form-control" required  autocomplete="off" disabled="disabled"/>
+                </td>
+                <td>
+                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
                 </td>
                 <td>
                     <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
@@ -522,17 +522,16 @@
             },
             success: function (msg) {
                 if(msg.price == 0 && msg.amount == 0){
-                    $(`#precio${a}`).val(0);
-                    $(`#precio_oficial${a}`).val(msg.price)
+                    // $(`#precio${a}`).val(0);
                     $(`#cantidad${a}`).val(0);
                     $(`#cantidad${a}`).attr('max', msg.amount );
                     $(`#cantidad`).attr('max', msg.amount );
                 }else{
-                    $(`#precio${a}`).val(1);
+                    // $(`#precio${a}`).val(1);
                     $(`#precio_oficial${a}`).val(msg.price)
-                    $(`#cantidad${a}`).val(1);
-                    $(`#cantidad${a}`).attr('max', msg.amount );
-                    $(`#cantidad`).attr('max', msg.amount );
+                    // $(`#cantidad${a}`).val(1);
+                    // $(`#cantidad${a}`).attr('max', msg.amount );
+                    // $(`#cantidad`).attr('max', msg.amount );
                 }
                 multi(a);
                 $(`.addmore`).prop("disabled", false);
