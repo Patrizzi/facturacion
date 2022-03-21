@@ -32,19 +32,7 @@
 </div> --}}
 <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
     <tr>
-        <td style="width: 30%;border-color: white" rowspan="2" valign="top">
-            <img align="" src="{{asset('img/logos/')}}/{{$empresa->foto}}" style="margin-top: 0px;" width="300px" />
-            <br>
-        </td>
-        <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
-           <strong>{{$empresa->razon_social}}</strong>
-           <br>
-           Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
-           <br>
-           {{$empresa->correo}}
-           <br>
-           {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-       </td>
+        @include('layout_cabecera_ventas_pdf')
        <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
         <center>
             <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
@@ -61,14 +49,16 @@
                 <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
                 <strong>Nombre o Empresa:</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
-                <strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
-                <strong>Teléfono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
+                <strong>Dirección:</strong>&nbsp;{{$cotizacion->cliente->direccion}}<br>
+                <strong>N° Contacto:</strong>&nbsp;{{$cotizacion->cliente->celular}}
+                @if(isset($cotizacion->cliente->telefono))
+                    / {{$cotizacion->cliente->celular}}
+                @endif
             </td>
             <th style="width: 5%;border-color: white"></th>
             <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
                 <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
-                <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}<br>
+                <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
                 <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
                 <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                 <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -107,7 +97,7 @@
             <td width="400px" style="">{{$cotizacion_registros->servicio->nombre}} <br>{{$cotizacion_registros->descripcion_item}}</span></td>
             @endif
             <td width="auto" style="">{{$cotizacion_registros->cantidad}}</td>
-            <td width="auto" style="">{{$cotizacion_registros->precio_unitario_comi}}</td>
+            <td width="auto" style="">{{number_format($cotizacion_registros->precio_unitario_comi,2)}}</td>
             <td width="80px" style="text-align: right" >{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2)}}</td>
         </tr>
         @endforeach

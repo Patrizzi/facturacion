@@ -32,6 +32,7 @@ Route::group(
 
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
+		Route::post('/cliente_retenedores/{id}' , 'ClienteRetenedoresController@update')->name('cliente_retenedores.reupdate');
 		Route::resource('/compra','CompraController');
 
 // COTIZACIONES BOLETA - FACTURA
