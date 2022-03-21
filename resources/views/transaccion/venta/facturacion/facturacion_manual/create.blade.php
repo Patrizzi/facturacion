@@ -186,79 +186,79 @@
                             </tbody>
                         </table>
                         <div class="table-responsive">
-                            <table cellspacing="0" class="table tables  " >
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-                                        <th >Articulo</th>
-                                        <th style="width:100px">Cantidad</th>
-                                        <th style="width:100px">P.Sugerido</th>
-                                        <th style="width:100px">Precio</th>
-                                        <th style="width:100px">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type='checkbox' class="case">
-                                        </td>
-                                        <td>
-                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0);cambio(0)" autocomplete="off"></select>
-                                            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                                            <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
-                                            <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
-                                            <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
-                                            <input type="hidden" class="status0"  name="status[]" id="status1" value="0">
-                                            <input type="hidden" class="change_article0"  name="change_article[]" id="change_article1" value="0">
-                                        </td>
-                                        <td>
-                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"/>
-                                        </td>
-                                        <td>
-                                            <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]'  class="precio_oficial0 form-control" required  autocomplete="off" disabled="disabled" />
-                                        </td>
-                                        <td>
-                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
-                                        </td>
-                                        <td>
-                                            <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
-                                        </td>
-                                        <span id="spTotal"></span>
-                                    </tr>
-                                </tbody>
-                                <tbody>
-                                    <tr style="background-color: #f5f5f500;" align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Subtotal :</td>
-                                        <td colspan="2">
-                                            <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
-                                            <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
-                                        </td>
-                                    </tr>
-                                    <tr style="background-color: #f5f5f500;" align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>IGV :</td>
-                                        <td colspan="2">
-                                            <input id='igv' type="text" disabled="disabled" class="form-control" required />
-                                        </td>
-                                    </tr>
-                                    <tr align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Total :</td>
-                                        <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {{-- <div  > --}}
+                                <table cellspacing="0" class="table tables  " >
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px"></th>
+                                            <th >Articulo</th>
+                                            <th style="width:100px">Cantidad</th>
+                                            <th style="width:100px">P.Sugerido</th>
+                                            <th style="width:100px">Precio</th>
+                                            <th style="width:100px">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <button type="button" class='delete borrar e btn btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                            </td>
+                                            <td>
+                                                <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                                <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
+                                                <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
+                                                <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
+                                            </td>
+                                            <td>
+                                                <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"/>
+                                            </td>
+                                            <td class="full-height-scroll tooltip-demo">
+                                                <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 form-control" required readonly  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Doble Click (Copiar)"/>
+                                            </td>
+                                            <td>
+                                                <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
+                                            </td>
+                                            <td>
+                                                <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                            </td>
+                                            <span id="spTotal"></span>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr style="background-color: #f5f5f500;" align="center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Subtotal :</td>
+                                            <td colspan="2">
+                                                <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
+                                                <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f5f5f500;" align="center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>IGV :</td>
+                                            <td colspan="2">
+                                                <input id='igv' type="text" disabled="disabled" class="form-control" required />
+                                            </td>
+                                        </tr>
+                                        <tr align="center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Total :</td>
+                                            <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            {{-- </div> --}}
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
-                                <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
+                                
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
                             <div class="col-sm-6 ">
@@ -301,6 +301,9 @@
         display: block;
         padding: 3px 12px;
         border: 1px solid #e5e6e7;
+    }
+    .slimScrollBar{
+        display: none !important;
     }
 </style>
 
@@ -382,16 +385,6 @@
         else{boton.type = 'button';}
     }
 
-    function cambio(a){
-        if(a==0){
-            var articulo = document.getElementById(`articulo`).value;
-            document.getElementById(`change_article1`).value = articulo;
-        }else{
-            var articulo = document.getElementById(`articulo${a}`).value;
-            document.getElementById(`change_article1`).value = articulo;
-        }
-    }
-
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desesperado) --}}
 
@@ -402,21 +395,19 @@
         var data = `[
             <tr>
                 <td>
-                    <input type='checkbox' class='case'/>
+                    <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>";
                 <td>
-                    <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i});cambio(${i})" autocomplete="off" required></select>
+                    <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
                     <textarea type='text' {{-- id='descripcion${i}'--}}   name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                     <textarea type='text' id='numero_serie${i}' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
-                    <input type="hidden" class="status"  name="status[]" id="status${i}" value="0">
-                    <input type="hidden" class="change_article0"  name="change_article[]" id="change_article${i}" value="0">
                 </td>
                 <td>
                     <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
                 </td>
-                <td>
-                    <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' class="precio_oficial${i} form-control" required  autocomplete="off" disabled="disabled"/>
+                <td class="full-height-scroll tooltip-demo">
+                    <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Doble Click (Copiar)" />
                 </td>
                 <td>
                     <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
@@ -431,17 +422,10 @@
 
         //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
         articlesSelect2();
-    });
 
-    //Funcion cambio de articulo - se aplica siempre y cuando se cambie el precio del articulo
-    function change(a){
-        var activo = 1;
-        if(a==0){
-            document.getElementById(`status1`).value = activo;
-        }else{
-            document.getElementById(`status${a}`).value = activo;
-        }
-    }
+        $(".addmore").prop("disabled", true);
+        $(".borrar").prop("disabled", false);
+    });
 
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
     $(document).ready(function() {
@@ -493,20 +477,27 @@
         });
     }
 
+    //Funcion Copiar
+    function copy(a){
+        if(a==0){
+            var copy = document.getElementById(`precio_oficial0`).value;
+            document.getElementById(`precio0`).value = copy;
+        }else{
+            var copy = document.getElementById(`precio_oficial${a}`).value;
+            document.getElementById(`precio${a}`).value = copy;
+        }
+    }
+
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
     function ajax (a){
         if(a==0){
             var articulo = document.getElementById(`articulo`).value;
             document.getElementById(`input_prod1`).value = articulo;
 
-            var change_article_ajax=document.getElementById(`change_article1`).value;
-            var status_change = document.getElementById(`status1`).value;
         }else{
             var articulo = document.getElementById(`articulo${a}`).value;
             document.getElementById(`input_prod${a}`).value = articulo;
-
-            var change_article_ajax=document.getElementById(`change_article1`).value;
-            var status_change = document.getElementById(`status${a}`).value;
+            
         }
 
         var almacen = $('[id="almacen_id"]').val();
@@ -606,35 +597,56 @@
         }
     }
 
-        $(".delete").on('click', function () {
-            $('.case:checkbox:checked').parents("tr").remove();
-            var totalInp = $('[name="total"]');
-            var total_t = 0;
-
-            totalInp.each(function(){
-                total_t += parseFloat($(this).val());
-            });
-            $('#sub_total').val(total_t);
-
-            var igv_valor={{$igv->renta}};
-            var subtotal = document.querySelector(`#sub_total`).value;
-            var igv=parseFloat(subtotal)*igv_valor/100;
-            var end=parseFloat(igv)+parseFloat(subtotal);
-
-            document.getElementById("igv").value = igv;
-            document.getElementById("total_final").value = end;
-
-            var monto_c = document.getElementsByClassName('monto_pago');
-
-            var inp_mont = document.getElementsByClassName('monto_pago').length;
-            for (var i = 0; i < inp_mont; i++) {
-                var monto = monto_c[i].id;
-                var fin = (end2/inp_mont)
-                document.getElementById("monto_pago0").value = Math.round(end * multiplier2)/ multiplier2;
-                
-            }
-
+        //Función de borrado de fila de articulos (Producto-Servicio)
+    $(document).on('click', '.borrar', function (event) {
+        event.preventDefault();
+        var e = document.getElementsByClassName("e").length;
+        var fila = $(this).parents("tr");
+        var input_text_opt = fila.find('input[class="celda"]').val();
+        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
+        $(".addmore").prop("disabled", false);
+        $(".select2_demo_3").select2({
+            placeholder: "Seleccionar Item",
         });
+        // ELIMINAR TR
+        if (e>1) {
+            fila.closest('tr').remove();
+            $(".borrar").prop("disabled", false);
+            $(".addmore").prop("disabled", false);
+        }else{
+            $(".borrar").prop("disabled", true);
+            $(".addmore").prop("disabled", false);
+        }
+        var multiplier = 100;
+        var totalInp = $('[name="afectacion"]');
+        var total_t = 0;
+
+        totalInp.each(function(){
+            total_t += parseFloat($(this).val());
+        });
+
+        $('#subtotal_gravado').val(total_t);
+        //GRAVADO
+        var totalInpG = $('[name="total"]');
+        var total_tt = 0;
+
+        totalInpG.each(function(){
+            total_tt += parseFloat($(this).val());
+        });
+        $('#sub_total').val(total_tt);
+
+        var igv_valor=({{$igv->renta}});
+        var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv_val=parseFloat(subtotal_gravado)*igv_valor/100;
+        var igv = Math.round(igv_val * multiplier) / multiplier;
+        var end_2=parseFloat(igv)+parseFloat(subtotal);
+        var end = Math.round(end_2 * multiplier) / multiplier;
+
+        document.getElementById("igv").value = igv;
+        document.getElementById("total_final").value = end;
+        articlesSelect2();
+    });
   
         $(document).ready(function () {
             $('.i-checks').iCheck({
