@@ -1,19 +1,19 @@
 @extends('layout')
-@section('title', 'Cotizacion Ver')
-@section('breadcrumb', 'Cotizacion')
-@section('breadcrumb2', 'Cotizacion')
-@section('href_accion', route('cotizacion.index'))
+@section('title', 'Cotizacion Manual')
+@section('breadcrumb', 'Cotizacion Manual')
+@section('breadcrumb2', 'Cotizacion Manual')
+@section('href_accion', route('manual.index'))
 @section('value_accion', 'Atras')
 @section('nombre', 'nueva cotizacion')
 @section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();")
 
 @section('content')
 
-<form action="{{ route($nueva_cot)}}"enctype="multipart/form-data" method="post" id="nueva_cot">
+{{-- <form action="{{ route($nueva_cot)}}"enctype="multipart/form-data" method="post" id="nueva_cot">
     @csrf
     <input type="text"  hidden="hidden" name="almacen"  value="{{$almacen}}">
     <input  hidden="hidden" type="submit"  >
-</form>
+</form> --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title" style="padding-right: 3.1%">
@@ -26,32 +26,32 @@
                 @endif --}}
             </div>
              <div class="col-sm-6" align="right">
-                <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_cotizacion' ,$cotizacion->id)}}">
-                <input type="text" name="name" maxlength="50" hidden="" value="Cotizacion_{{$cotizacion->tipo}}"  >
-                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion_m->id)}}">
+                    <input type="text" name="name" maxlength="50" hidden="" value="CotizacionManual_{{$cotizacion_m->tipo}}"  >
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
-                <a class="btn btn-success" href="{{route('cotizacion.print',$cotizacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                <a class="btn btn-success" href="{{route('cotizacion_manual.print',$cotizacion_m->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
                     @csrf
-                     <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}" hidden="" />
+                     <input type="tel" name="numero"  value="{{$cotizacion_m->cliente->celular}}" hidden="" />
                      <input type="text" name="mensaje"  hidden="" value="" />
-                     <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$cotizacion->id)}}?archivo=">
-                     <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
+                     <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$cotizacion_m->id)}}?archivo=">
+                     <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion_m->tipo}}" />
                     <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-whatsapp fa-lg"></i>  </button>
                 </form>
                          {{-- </a> --}}
-                @if(Auth::user()->email_creado == 0)
+                {{-- @if(Auth::user()->email_creado == 0)
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#config" ><i class="fa fa-envelope fa-lg " ></i>  </button>
                 @else
                     <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
                         @csrf
                         <input type="text" hidden="hidden"  name="tipo" value="App\Cotizacion"/>
-                        <input type="text" hidden="hidden"  name="id" value="{{$cotizacion->id}}"/>
+                        <input type="text" hidden="hidden"  name="id" value="{{$cotizacion_m->id}}"/>
                         <input type="text" hidden="hidden"  name="redict" value="cotizacion_factura"/>
-                        <input type="text" hidden="hidden"  name="cliente" value=" {{$cotizacion->cliente->email}}"/>
+                        <input type="text" hidden="hidden"  name="cliente" value=" {{$cotizacion_m->cliente->email}}"/>
                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
                     </form>
-                @endif
+                @endif --}}
             </div>
         </div>
 
@@ -61,20 +61,12 @@
         <div class="col-lg-12">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
-                    <div class="col-sm-4 text-left" align="left">
-
-                        <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
-                        </address>
-                    </div>
-                    <div class="col-sm-4">
-                    </div>
-
+                    @include('layout_cabecera_ventas')
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                             <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                            <h5>{{$cotizacion->cod_cotizacion}} </h5>
+                            <h5>{{$cotizacion_m->cod_cotizacion}} </h5>
                         </div>
                     </div>
                 </div><br>
@@ -83,12 +75,12 @@
                         <div class="form-control">
                             <h3>Contacto Cliente</h3>
                             <div align="left">
-                                <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
-                                <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
-                                <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
+                                <strong>Señor(es):</strong> &nbsp;{{$cotizacion_m->cliente->nombre}}<br>
+                                <strong>{{$cotizacion_m->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion_m->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <strong>Fecha:</strong> &nbsp;{{$cotizacion_m->created_at}}<br>
+                                <strong>Direccion:</strong>&nbsp; {{$cotizacion_m->cliente->direccion}}<br>
+                                <strong>Telefono:</strong>&nbsp; {{$cotizacion_m->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <strong>Celular:</strong>&nbsp; {{$cotizacion_m->cliente->celular}}<br>
                             </div>
                         </div>
                     </div>
@@ -96,17 +88,17 @@
                      <div class="form-control" >
                          <h3>Condiciones Generales</h3>
                          <div align="left">
-                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
-                            <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                            <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion_m->forma_pago->nombre }}<br>
+                            <strong>Validez :</strong> &nbsp;{{$cotizacion_m->validez}}<br>
+                            <strong>Garantia:</strong> &nbsp;{{$cotizacion_m->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion_m->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-12" align="center">
                  <div class="form-control" style="border: none;height: auto" >
                      <div align="left">
-                        <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+                        <strong>observaciones:</strong> &nbsp;{{$cotizacion_m->observacion }}<br>
                     </div>
                 </div>
             </div>
@@ -115,58 +107,73 @@
         <div class="table-responsive">
             <table class="table " >
                 <thead>
-                 <tr >
-                    <th>ITEM </th>
-                    <th>Codigo </th>
-                    <th>Descripcion</th>
-                    <th>Cantidad</th>
-                    <th>P.Unitario</th>
-                    <th>Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></th>
-                </tr>
-            </thead>
-            <tbody>
-             @foreach($cotizacion_registro as $cotizacion_registros)
-             <tr>
-                <td>{{$i++}} </td>
-                <td>{{$cotizacion_registros->producto->codigo_producto}}</td>
-                <td>{{$cotizacion_registros->producto->nombre}}  <br>{{$cotizacion_registros->producto->descripcion}}</span></td>
-                <td>{{$cotizacion_registros->cantidad}}</td>
-                <td>{{$cotizacion_registros->precio_unitario_comi}}</td>
-                <td>{{$cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi}}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div><!-- /table-responsive -->
+                    <tr >
+                        <th>ITEM </th>
+                        <th>Codigo </th>
+                        <th>Descripcion</th>
+                        <th>Cantidad</th>
+                        <th>P.Unitario</th>
+                        <th>Total <span hidden="hidden">{{$simbologia=$cotizacion_m->moneda->simbolo}}</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cotizacion_m_reg as $cotizacion_registros)
+                    <tr>
+                        <td>{{$j++}} </td>
+                        @if(isset($cotizacion_registros->producto->codigo_producto))
+                            <td>
+                                {{$cotizacion_registros->producto->codigo_producto}}
+                            </td>
+                            <td>
+                                {{$cotizacion_registros->producto->nombre}}  <br>{{$cotizacion_registros->descripcion_item}} </span>
+                            </td>
+                        @else
+                            <td>
+                                {{$cotizacion_registros->servicio->codigo_servicio}}
+                            </td>
+                            <td>
+                                {{$cotizacion_registros->servicio->nombre}}  <br> {{$cotizacion_registros->descripcion_item}} </span>
+                            </td>
+                        @endif                        
+                        <td>{{$cotizacion_registros->cantidad}}</td>
+                        <td>{{number_format($cotizacion_registros->precio,2)}}</td>
+                        <td>{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div><!-- /table-responsive -->
 
 <footer style="padding-top: 120px">
-   <h3 align="left">
-    <?php $v=new CifrasEnLetras() ;
-    $letra=($v->convertirEurosEnLetras($end));
-    $letra_final = strstr($letra, 'soles',true);
-    $end_final=strstr($end, '.');
-    ?>
-    Son : {{$letra_final}} {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
-</h3>
-
-<div class="row">
-    <div class="col-sm-3 ">
-        <p class="form-control a"> Sub Total</p>
-        <p class="form-control a">{{$simbologia=$cotizacion->moneda->simbolo}}.{{round($sub_total, 2)}}</p>
+    <div class="row">
+        <div class="col-sm-8">
+            <h3 align="left">
+                <?php $v=new CifrasEnLetras() ;
+                $letra=($v->convertirEurosEnLetras($end));
+                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                $end_final_point=strstr($end2, '.', false);
+                $end_final=str_replace('.', '',$end_final_point);
+                ?>
+                Son : {{$letra_final}} con {{$end_final}}/100 {{$cotizacion_m->moneda->nombre }}
+            </h3>         
+        </div>
+        <div class="col-sm-4 form-control ">
+                <span style="display: block;float: left"> Subtotal:</span>
+                <span style="display: block;float: right;"> {{$simbologia=$cotizacion_m->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                <br>
+                <span style="display: block;float: left"> Op. Gravada: </span>
+                <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion_m->op_gravada,2)}}</span><br>
+                <span style="display: block;float: left"> Op. Inafecta: </span>
+                <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion_m->op_inafecta,2)}}</span><br>
+                <span style="display: block;float: left"> Op. Exonerada: </span>
+                <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion_m->op_exonerada,2)}} </span><br>
+                <span style="display: block;float: left"> I.G.V.: </span>
+                <span style="display: block;float: right">{{$cotizacion_m->moneda->simbolo}} {{number_format(round($igv, 2),2)}}</span><br>
+                <span style="display: block;float: left"> Importe Total: </span>
+                <span style="display: block;float: right">{{$cotizacion_m->moneda->simbolo}} {{number_format($end,2)}}</span>
+            {{-- @endif --}}
+        </div>
     </div>
-    <div class="col-sm-3 ">
-        <p class="form-control a"> Op. Agravada</p>
-        <p class="form-control a"> {{$simbologia=$cotizacion->moneda->simbolo}}.00</p>
-    </div>
-    <div class="col-sm-3 ">
-        <p class="form-control a"> IGV</p>
-        <p class="form-control a"> @if ($regla=="factura"){{$cotizacion->moneda->simbolo}}.{{round($igv_p, 2)}} @else  {{$cotizacion->moneda->simbolo}}.00 @endif</p>
-    </div>
-    <div class="col-sm-3 ">
-        <p class="form-control a"> Importe Total</p>
-        <p class="form-control a"> @if ($regla=="factura"){{$cotizacion->moneda->simbolo}}.{{$end}} @else  {{$cotizacion->moneda->simbolo}}.{{$end=round($sub_total, 2)}} @endif</p>
-    </div>
-</div>
 </footer>
 
 <br>
@@ -207,16 +214,16 @@
           <div class="row">
             <div class="col-sm-3">
                 <p><u>centro de Atencion : </u></p>
-                Telefono : {{$cotizacion->user_personal->personal->telefono }}<br>
-                Celular : {{$cotizacion->user_personal->personal->celular }}<br>
-                Email : {{$cotizacion->user_personal->personal->email }}<br>
+                Telefono : {{$cotizacion_m->user_personal->personal->telefono }}<br>
+                Celular : {{$cotizacion_m->user_personal->personal->celular }}<br>
+                Email : {{$cotizacion_m->user_personal->personal->email }}<br>
                 Web : {{$empresa->pagina_web}} <br>
             </div>
             <div class="col-sm-3"></div>
             <div class="col-sm-3"></div>
             <div class="col-sm-3"><br><br>
                 <hr>
-                <center>{{$cotizacion->user_personal->personal->nombres }}</center>
+                <center>{{$cotizacion_m->user_personal->personal->nombres }}</center>
             </div>
         </div>
     </div>

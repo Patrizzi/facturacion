@@ -19,7 +19,9 @@ Route::group(
 		Route::post('/whatsapp','AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
-		Route::resource('/cotizacion/otros','CotizacionOtrosController');
+		Route::resource('/cotizacion/manual','CotizacionManualController');
+		Route::get('/cotizacion/manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
+		
 
 		Route::resource('/categoria','CategoriaController')->only(['index','create','store','update']);;
 		Route::resource('/vendedores','PersonalVentaController');
@@ -371,6 +373,7 @@ Route::get('boleta/pdf/{id}' , 'BoletaController@pdf')->name('pdf_bol');
 Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
 Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');
+Route::get('/cotizacion/manual/pdf/{id}','CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
