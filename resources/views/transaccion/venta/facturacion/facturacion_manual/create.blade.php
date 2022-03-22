@@ -207,20 +207,20 @@
                                                 <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
                                                 <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
                                                 <textarea type='text' id='numero_serie0'  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
-                                                <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)"   autocomplete="off"  />
+                                                <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" autocomplete="off"  />
                                                 <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"/>
-                                            </td>
-                                            <td class="full-height-scroll tooltip-demo">
-                                                <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 form-control" required readonly  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Doble Click (Copiar)"/>
+                                                <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control inp"  onkeyup="multi(0)"  required  autocomplete="off"/>
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" onchange="change(0)" required  autocomplete="off" />
+                                                <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                             </td>
                                             <td>
-                                                <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                                <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi(0)" required  autocomplete="off" />
+                                            </td>
+                                            <td>
+                                                <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control inp" required  autocomplete="off" />
                                             </td>
                                             <span id="spTotal"></span>
                                         </tr>
@@ -232,8 +232,8 @@
                                             <td></td>
                                             <td>Subtotal :</td>
                                             <td colspan="2">
-                                                <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
-                                                <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
+                                                <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control inp" required />
+                                                <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control inp" required hidden="" />
                                             </td>
                                         </tr>
                                         <tr style="background-color: #f5f5f500;" align="center">
@@ -242,7 +242,7 @@
                                             <td></td>
                                             <td>IGV :</td>
                                             <td colspan="2">
-                                                <input id='igv' type="text" disabled="disabled" class="form-control" required />
+                                                <input id='igv' type="text" disabled="disabled" class="form-control inp" required />
                                             </td>
                                         </tr>
                                         <tr align="center">
@@ -250,7 +250,7 @@
                                             <td></td>
                                             <td></td>
                                             <td>Total :</td>
-                                            <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
+                                            <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control inp" required /></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -342,6 +342,20 @@
     });
 </script>
 
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    function toggle(){
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    }
+</script>
+
+
+
 {{-- Validar Formulario / No doble insercion de datos(Gente desesperado) --}}
 <script>
     // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
@@ -404,16 +418,16 @@
                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
+                    <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control inp" onkeyup="multi(${i})" required  autocomplete="off"/>
                 </td>
                 <td class="full-height-scroll tooltip-demo">
-                    <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Doble Click (Copiar)" />
+                    <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi(${i})" required  autocomplete="off"/>
                 </td>
                 <td>
-                    <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                    <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control inp"  required  autocomplete="off"/>
                 </td>
             </tr>
         `;
@@ -422,9 +436,10 @@
 
         //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
         articlesSelect2();
+        toggle();
 
         $(".addmore").prop("disabled", true);
-        $(".borrar").prop("disabled", false);
+        // $(".borrar").prop("disabled", false);
     });
 
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
@@ -486,6 +501,7 @@
             var copy = document.getElementById(`precio_oficial${a}`).value;
             document.getElementById(`precio${a}`).value = copy;
         }
+        multi(a);    
     }
 
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
@@ -517,10 +533,11 @@
                     $(`#cantidad${a}`).val(0);
                     $(`#cantidad${a}`).attr('max', msg.amount );
                     $(`#cantidad`).attr('max', msg.amount );
+                    $(`#precio_oficial${a}`).val(msg.price)
                 }else{
                     // $(`#precio${a}`).val(1);
                     $(`#precio_oficial${a}`).val(msg.price)
-                    // $(`#cantidad${a}`).val(1);
+                    $(`#cantidad${a}`).val(1);
                     // $(`#cantidad${a}`).attr('max', msg.amount );
                     // $(`#cantidad`).attr('max', msg.amount );
                 }
@@ -611,40 +628,51 @@
         // ELIMINAR TR
         if (e>1) {
             fila.closest('tr').remove();
-            $(".borrar").prop("disabled", false);
+            // $(".borrar").prop("disabled", false);
             $(".addmore").prop("disabled", false);
         }else{
-            $(".borrar").prop("disabled", true);
+            // $(".borrar").prop("disabled", true);
             $(".addmore").prop("disabled", false);
+            $(".select2_demo_3").val(null).trigger("change");
+            $(".inp").val(null);
+
         }
-        var multiplier = 100;
-        var totalInp = $('[name="afectacion"]');
+        var totalInp = $('[name="total"]');
         var total_t = 0;
 
         totalInp.each(function(){
             total_t += parseFloat($(this).val());
         });
 
-        $('#subtotal_gravado').val(total_t);
-        //GRAVADO
-        var totalInpG = $('[name="total"]');
-        var total_tt = 0;
+        var multiplier2 = 100;
+        var total_tt = Math.round(total_t * multiplier2) / multiplier2;
 
-        totalInpG.each(function(){
-            total_tt += parseFloat($(this).val());
-        });
         $('#sub_total').val(total_tt);
 
-        var igv_valor=({{$igv->renta}});
-        var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        var igv_valor={{$igv->renta}}; 
         var subtotal = document.querySelector(`#sub_total`).value;
-        var igv_val=parseFloat(subtotal_gravado)*igv_valor/100;
-        var igv = Math.round(igv_val * multiplier) / multiplier;
-        var end_2=parseFloat(igv)+parseFloat(subtotal);
-        var end = Math.round(end_2 * multiplier) / multiplier;
+        var igv=subtotal*igv_valor/100;
 
-        document.getElementById("igv").value = igv;
-        document.getElementById("total_final").value = end;
+        var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+        var end=igv_decimal+parseFloat(subtotal);
+
+        var end2 = Math.round(end * multiplier2) / multiplier2;
+
+        document.getElementById("igv").value = igv_decimal;
+        document.getElementById("sub_total").value = subtotal;
+
+        var end=parseFloat(igv_decimal)+parseFloat(subtotal);
+        var end3 = Math.round(end * multiplier2) / multiplier2;
+        document.getElementById("total_final").value = end3;
+
+        var monto_c = document.getElementsByClassName('monto_pago');
+
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        for (var i = 0; i < inp_mont; i++) {
+            var monto = monto_c[i].id;
+            var fin = (end2/inp_mont)
+            document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2)/ multiplier2;
+        }
         articlesSelect2();
     });
   
@@ -844,8 +872,6 @@
             },
         });
     }
-
-    
         function cerrar_but_rc(){
             document.getElementById('alert_campos').style.display = "none";
         }
