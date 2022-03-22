@@ -32,6 +32,7 @@ Route::group(
 
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
+		Route::post('/cliente_retenedores/{id}' , 'ClienteRetenedoresController@update')->name('cliente_retenedores.reupdate');
 		Route::resource('/compra','CompraController');
 
 // COTIZACIONES BOLETA - FACTURA
@@ -337,6 +338,7 @@ Route::group(
 		Route::get('/usuarios','UsuarioController@index_usuarios')->name('usuarios.index');
 		Route::resource('/venta','VentaController');
 
+		Route::get('/cantidad_precio/servicio','CantidadPrecioController@index_servicio')->name('cantidad_precio.index_servicio');
 		Route::resource('/cantidad_precio','CantidadPrecioController');
 
 		Route::view('/configuracion_general' , 'configuracion_general.configuracion_general')->name('Configuracion');

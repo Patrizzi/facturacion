@@ -574,11 +574,15 @@ class CotizacionController extends Controller
         $nombre = strstr($operacion, '-',true);
         $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
 
+        //MONEDA
+        $nombre_moneda = $request->get('moneda');
+        $id_moneda = Moneda::where('nombre', $nombre_moneda)->first();
+
         $cotizacion=new Cotizacion;
         $cotizacion->cod_cotizacion=$cotizacion_numero;
         $cotizacion->almacen_id=$request->get('almacen');
         $cotizacion->cliente_id=$cliente_buscador->id;
-        $cotizacion->moneda_id=$id_moneda;
+        $cotizacion->moneda_id=$id_moneda->id;
         $cotizacion->forma_pago_id=$request->get('forma_pago');
         $cotizacion->estado_aprovar='0';
         $cotizacion->estado_aprobado='0';

@@ -235,6 +235,7 @@ $empresa=Empresa::first(); ?>
                         @endcan
                         {{-- @can('consulta.cantidad_precio.index') --}}
                         <li><a href="{{route('cantidad_precio.index')}}">Productos</a></li>
+                        <li><a href="{{route('cantidad_precio.index_servicio')}}">Servicios</a></li>
                         {{-- @endcan --}}
                     </ul>
                 </li>

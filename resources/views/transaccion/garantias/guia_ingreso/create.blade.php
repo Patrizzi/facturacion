@@ -1,10 +1,8 @@
 @extends('layout')
 
-@section('title', 'Crear - Guia de Ingreso')
-@section('breadcrumb', 'Crear Guia de Ingreso')
-@section('breadcrumb2', 'Garantia')
+@section('title', 'Guía de Ingreso')
 @section('href_accion', route('garantia_guia_ingreso.index') )
-@section('value_accion', 'Inicio / Guia Ingreso')
+@section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden="hidden"')
 @extends('layout_agregado_rapido')
 
@@ -55,7 +53,7 @@
 				<div class="col-sm-4" align="right" >
 					<div class="form-control for" align="center" style="height: 79%;"align="right">
 						<h3 style="">R.U.C {{$empresa->ruc}}</h3>
-						<h2 style="font-size: 19px">GUIA DE INGRESO</h2>
+						<h2 style="font-size: 19px">GUÍA DE INGRESO</h2>
 						<h5>{{$orden_servicio}}</h5>
 					</div>
 				</div>
@@ -81,9 +79,9 @@
 								<label class="col-sm-2 col-form-label">Motivo:</label>
 								<div class="col-sm-4">
 									<select class="form-control for m-b" name="motivo" id="motivo" onchange="change_motivo()">
-										<option value="Garantia">Garantia</option>
+										<option value="Garantía">Garantía</option>
 										<option value="Servicio">Servicio</option>
-										<option value="Informativo">Informativo</option>
+										{{-- <option value="Informativo">Informativo</option> --}}
 										<option value="Reingreso">Reingreso</option>
 									</select>
 								</div>
@@ -134,7 +132,7 @@
 								<div class="col-sm-10">
 									<input type="text" class="form-control for" name="numero_serie"  value="0" required>
 								</div>
-								<label class="col-sm-2 col-form-label">Codigo Interno:</label>
+								<label class="col-sm-2 col-form-label">Código Interno:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control for" name="codigo_interno" value="000000" required>
 								</div>
@@ -155,24 +153,24 @@
 									<div class="col-lg-12">
 										<div class="tabs-container">
 											<ul class="nav nav-tabs" role="tablist">
-												<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
-												<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+												<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción del Problema</a></li>
+												<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diagnostico</a></li>
 												<li><a class="nav-link" data-toggle="tab" href="#tab-3">Estética</a></li>
 											</ul>
 											<div class="tab-content">
 												<div role="tabpanel" id="tab-1" class="tab-pane active">
 													<div class="panel-body">
-														<textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema" name="descripcion_problema" maxlength="1230" required ></textarea>
+														<textarea class="form-control" rows="10" placeholder="Escribir aquí Descripción Del Problema" name="descripcion_problema" maxlength="1230" required ></textarea>
 													</div>
 												</div>
 												<div role="tabpanel" id="tab-2" class="tab-pane">
 													<div class="panel-body">
-														<textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganostico" name="revision_diagnostico" maxlength="1230" required ></textarea>
+														<textarea class="form-control" rows="10" placeholder="Escribir aquí Revisión y diagnostico" name="revision_diagnostico" maxlength="1230" required ></textarea>
 													</div>
 												</div>
 												<div role="tabpanel" id="tab-3" class="tab-pane">
 													<div class="panel-body">
-														<textarea class="form-control" rows="10" placeholder="Escribir aqui Estética" name="estetica" maxlength="1230" required></textarea>
+														<textarea class="form-control" rows="10" placeholder="Escribir aquí Estética" name="estetica" maxlength="1230" required></textarea>
 													</div>
 												</div>
 											</div>

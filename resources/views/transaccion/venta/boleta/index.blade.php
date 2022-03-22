@@ -59,6 +59,7 @@
     </div>
 </div>
 @endif
+<style> .dropdown-menu{left: 70px; padding: 20px 0;}</style>
 <div class="wrapper wrapper-content animated fadeInRight">
     @if (session('repite'))
     <div class="alert alert-danger">
