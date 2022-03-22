@@ -401,6 +401,7 @@ class CotizacionManualController extends Controller
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
         
+        
         return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
         //a
     }

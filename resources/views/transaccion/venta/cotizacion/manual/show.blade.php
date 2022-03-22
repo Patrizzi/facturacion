@@ -4,16 +4,12 @@
 @section('breadcrumb2', 'Cotizacion Manual')
 @section('href_accion', route('manual.index'))
 @section('value_accion', 'Atras')
-@section('nombre', 'nueva cotizacion')
-@section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();")
+
+@section('button2', 'Nueva Cotización')
+@section('config', route('manual.create'))
 
 @section('content')
 
-{{-- <form action="{{ route($nueva_cot)}}"enctype="multipart/form-data" method="post" id="nueva_cot">
-    @csrf
-    <input type="text"  hidden="hidden" name="almacen"  value="{{$almacen}}">
-    <input  hidden="hidden" type="submit"  >
-</form> --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title" style="padding-right: 3.1%">
