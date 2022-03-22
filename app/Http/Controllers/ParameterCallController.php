@@ -258,19 +258,24 @@ class ParameterCallController extends Controller
     }
     public function getNFactura(Request $request){
         $search = $request->n_factura;
+        
+
         // search 0 = no existe
         // search 1 = existe
-        if($search == 0){
-            $var_vuelta = 0;
-        }else{
-            $n_factura = Kardex_entrada::where('factura', $search)->first();
-            if( isset($n_factura) ){
-                $var_vuelta = 1;
-            }else{
-                $var_vuelta = 0;
-            }
-        }
-        return $var_vuelta;
+        
+            $n_factura = Kardex_entrada::where('factura', "K001-000001")->first();
+            // if( empty($n_factura->factura) ){
+            //     if($search == 0){
+            //         $var_vuelta = 0;
+            //     }else{
+            //         $var_vuelta = 1;
+            //     }
+
+            // }else{
+            //     $var_vuelta = 0;
+            // }
+            
+        return $n_factura->factura;
     }
     
 }
