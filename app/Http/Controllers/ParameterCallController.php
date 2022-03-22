@@ -262,20 +262,17 @@ class ParameterCallController extends Controller
 
         // search 0 = no existe
         // search 1 = existe
-        
-            $n_factura = Kardex_entrada::where('factura', "K001-000001")->first();
-            // if( empty($n_factura->factura) ){
-            //     if($search == 0){
-            //         $var_vuelta = 0;
-            //     }else{
-            //         $var_vuelta = 1;
-            //     }
-
-            // }else{
-            //     $var_vuelta = 0;
-            // }
+    
+        $n_factura = Kardex_entrada::where('factura', $search)->first();
+        if($search == "0"){
+            $var_vuelta = 0;
+        }elseif( isset($n_factura) ){
+            $var_vuelta = 1;
+        }else{
+            $var_vuelta = 0;
+        }
             
-        return $n_factura->factura;
+        return $var_vuelta;
     }
     
 }
