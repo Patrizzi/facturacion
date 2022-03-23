@@ -75,19 +75,21 @@ class CotizacionManualController extends Controller
         if(empty($existe_id)){ 
             return redirect()->route('kardex-entrada.index'); 
         }
-
+        // Sucursal
+        $sucursal_1=1;
+        $sucursal=Almacen::where('id',$sucursal_1)->first();
         
         $almacen = Almacen::where('estado','!=',1)->get();
         $clientes=Cliente::all();
-        $moneda=Moneda::all();
+        $moneda=Moneda::where('principal','1')->first();
+
         $forma_pagos= Forma_pago::all();
         $igv=Igv::first();
         $servicios = Servicios::all();
         $productos=Producto::all();
         $empresa=Empresa::first();
         $tipo_operacion=Tipo_operacion_f::get();
-
-        return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion'));
+        return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal'));
     }
 
     /**
