@@ -56,7 +56,7 @@
                                     <td>Almacen</td>
                                     <td>:</td>
                                     <td>
-                                        <select class="select2_demo_almacen" name="almacen" required="" value="">
+                                        <select class="select2_demo_almacen" name="almacen_form" required="" value="">
                                             @foreach($almacen as $almacenes)
                                                 <option value="{{$almacenes->id}}">{{$almacenes->nombre}} - {{$almacenes->abreviatura}}</option>
                                             @endforeach

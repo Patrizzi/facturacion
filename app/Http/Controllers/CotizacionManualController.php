@@ -116,10 +116,10 @@ class CotizacionManualController extends Controller
         }
 
         // ALMACEN Y CODIGO PARA ALMACEN
-        $almacen_req = $request->get('almacen');
+        $almacen_req = $request->get('almacen_form');
         $sucursal =Almacen::where('id', $almacen_req)->first();
         
-        // return $sucursal;
+        // return $request;
         
         // CLIENTE
         $cliente_id=$request->get('cliente');
@@ -191,11 +191,16 @@ class CotizacionManualController extends Controller
          $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
         // return $request;
 
+        //MONEDA
+        $moneda = $request->get('moneda');
+        $moneda_search = Moneda::where('nombre', $moneda)->first();
+    //    return $moneda_search; 
+
         $cotizacion_manual = new CotizacionManual;
         $cotizacion_manual->cod_cotizacion = $cotizacion_numero;
         $cotizacion_manual->almacen_id = $sucursal->id;
         $cotizacion_manual->cliente_id = $cliente->id;
-        $cotizacion_manual->moneda_id = $request->get('moneda');
+        $cotizacion_manual->moneda_id = $moneda_search->id;
         $cotizacion_manual->forma_pago_id = $forma_pago->id;
         $cotizacion_manual->garantia = $request->get('garantia');
         $cotizacion_manual->validez =  $request->get('validez');
