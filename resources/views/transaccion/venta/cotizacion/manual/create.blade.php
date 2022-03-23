@@ -204,7 +204,7 @@
                                 </tbody>
                                 <tbody>
                                     <input id='sub_total' hidden /></td>
-                                    <input id='total' hidden   /></td>
+                                    <input id='total' hidden   /></td>  
                                     <tr>
                                         <td colspan="4"></td>
                                         <td>Subtotal: </td>
@@ -245,7 +245,7 @@
         </div>
     </div>
 </div>
-
+<div id="loaderGif"></div>
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
@@ -271,6 +271,17 @@
         margin: 0;
     }
     input[type=number] { -moz-appearance:textfield; }
+    #loaderGif{
+        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
+        background-size: 250px;
+        display: none;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100vh;
+        z-index: 20;
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -663,5 +674,48 @@
         $(`.total_final`).val("");
         $(`.p_inp`).val("");
     }
+    let status=0;
+    function changeMoney() {
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.money') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'status': status,
+            },
+            beforeSend: function(){
+                $('#loaderGif').show(); 							
+			},
+			complete:function(data){
+                /*
+                * Se ejecuta al termino de la petición
+                * */
+            },
+            success: function (msg) {
+                //Cambio de moneda
+                $(`#moneda_id`).val(msg.id);
+                $(`#moneda`).val(msg.nombre);
+                $(`#button_changeMoney`).html(msg.other);
+                if(status==1){
+                    status=0;
+                }else{
+                    status=1;
+                    }
+                $('#loaderGif').hide(); 
+                let articles_selected = document.getElementsByClassName("select2_demo_3");
+                let articles_selected_count = articles_selected.length;
+                for(let z=0;z<articles_selected_count;z++){
+                    let selected=document.getElementsByClassName("select2_demo_3 select_change")[z].getAttribute('id');
+                    if(selected=='articulo'){
+                        ajax(0); 
+                    }else{
+                        ajax(selected.substring(8)); 
+                    }
+                }    
+                disabled_money();
+            },
+        });
+    }
+
 </script>
 @stop
