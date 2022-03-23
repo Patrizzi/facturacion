@@ -35,6 +35,9 @@ use DB;
 use App\Servicios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Swift_SmtpTransport;
+use Swift_Mailer;
+use Swift_TransportException;
 class EmailBandejaEnviosController extends Controller
 {
     /**
@@ -97,8 +100,22 @@ class EmailBandejaEnviosController extends Controller
       $mensaje = view('email_html.email_send_layout',compact('empresa','mensaje_html','firma','alto','ancho'));
       $bakcup = $correo_busqueda->email_backup ;
 
-      $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
-      $mailer = new \Swift_Mailer($transport);
+      try{
+        $transport = (new Swift_SmtpTransport($smtpAddress, $port, $encryption)) 
+        ->setUsername($yourEmail) 
+        ->setPassword($yourPassword);
+        $mailer = new Swift_Mailer($transport);
+        $mailer->getTransport()->start();
+      }catch(Swift_TransportException $e){
+        return redirect()->route('email.index')->with('error_email', $e->getMessage());
+        // return $e->getMessage();
+      }catch(Exception $e){
+        return redirect()->route('email.index')->with('error_email', $e->getMessage());
+        // return $e->getMessage();
+      }
+      
+      // $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
+      // $mailer = new \Swift_Mailer($transport);
 
       $newfile = $request->file('archivos');
       if($request->hasfile('archivos')){
@@ -116,7 +133,7 @@ class EmailBandejaEnviosController extends Controller
       }else{
         $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup ])->setBody($mensaje, 'text/html');
       }
-
+      return "1";
       if($mailer->send($message)){
         $mensaje =$request->get('mensaje') ;
         $texto= strip_tags($mensaje);
@@ -130,7 +147,7 @@ class EmailBandejaEnviosController extends Controller
         $mail->estado = '0';
         $mail->fecha_hora =Carbon::now() ;
         $mail-> save();
-
+        
         $newfile2 = $request->file('archivos');
         if($request->hasfile('archivos')){
           foreach ($newfile2 as $file2) {
@@ -143,6 +160,7 @@ class EmailBandejaEnviosController extends Controller
         }
         return redirect()->route('email.index');
       }
+      
       return "Something went wrong :(";
     }
 
