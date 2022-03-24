@@ -50,44 +50,105 @@
                    <div class="col-sm-3">
                        <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
                    </div>
-                    <div class="col-sm-6" align="right">
-                        <button></button>
-                    </div>
+                   <div class="col-sm-6" align="right">
+
+                       <span class="dropdown ">
+                        <button class="btn btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown"> <i class="fa fa-sliders"></i></button>
+                        <ul class="dropdown-menu animated fadeInRight mr-5" >
+                            <span style="margin-left:12px; padding-bottom: 5px;" ><b>Opciones Disponibles:</b></span>
+                            <div class="form-check"style="margin-left:12px;" >
+                                <input type="checkbox" class="form-check-input">
+                                <label class="form-check-label">Comisionista</label>
+                            </div>
+                            <div class="form-check"style="margin-left:12px;" >
+                                <input type="checkbox" class="form-check-input">
+                                <label class="form-check-label">Forma de Pago</label>
+                            </div>
+                            <div class="form-check"style="margin-left:12px;" >
+                                <input type="checkbox" class="form-check-input">
+                                <label class="form-check-label">Tipo Operacion</label>
+                            </div>
+                            <div class="form-check"style="margin-left:12px;" >
+                                <input type="checkbox" class="form-check-input">
+                                <label class="form-check-label">Forma de Pago</label>
+                            </div>
+
+                        </ul>
+                    </span>
+                    <style> .dropdown-menu{left: 70px; padding: 20px 0;}</style>
+
+
                 </div>
             </div>
-            <div class="ibox">
-                <div class="ibox-content">
-                    <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-                        @csrf
-                        @method('put')
-                        {{-- Cabecera --}}
-                        <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
-                                <address class="col-sm-4" align="left">
-                                    <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
-                                </address>
-                            </div>
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <div class="form-control" align="center" style="height: auto;">
-                                    <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
-                                    <h5 id="n_factura">{{$cotizacion_numero}}</h5>
-                                    <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
-                                </div>
+        </div>
+        <div class="ibox">
+            <div class="ibox-content">
+                <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+                    @csrf
+                    @method('put')
+                    {{-- Cabecera --}}
+                    <div class="row">
+                        <div class="col-sm-4 text-left" align="left">
+                            <address class="col-sm-4" align="left">
+                                <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
+                            </address>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <div class="form-control" align="center" style="height: auto;">
+                                <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                                <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
+                                <h5 id="n_factura">{{$cotizacion_numero}}</h5>
+                                <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- Cabecera new --}}
-                        <div class="form-group row">
+                    {{-- Cabecera new --}}
+                    <div class="form-group row">
+                        <label class="col-sm-1 col-form-label">Cliente:</label>
+                        <div class="col-sm-5">
+                            <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                        </div>
 
-                            <label class="col-sm-1 col-form-label">Cliente:</label>
-                            <div class="col-sm-5">
-                                <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                        <label  class="col-sm-1 col-form-label">T.Cotización:</label>
+                        <div class="col-sm-5">
+
+                            <div class="radio">
+                                <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
+                                <label style="padding-right: 5px;" for="radio1">
+                                    Factura
+                                </label>
+                                <input type="radio" name="tipo_coti" id="radio2" value="0" class="radio_boleta" onchange="click_radio_boleta()">
+                                <label for="radio2">
+                                    Boleta
+                                </label>
                             </div>
+                        </div>
+                        <div class="col-sm-12" style="margin-top:10px">
+                        </div>
 
-                            <label class="col-sm-1 col-form-label">Comisionista:</label>
-                            <div class="col-sm-5">
+                        <label  class="col-sm-1 col-form-label">Validez:</label>
+                        <div class="col-sm-5">
+                            <select  class="form-control" name="validez" required="required">
+                                @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
+                            </select>
+                        </div>
+
+                        <label  class="col-sm-1 col-form-label">Garantía:</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="garantia">
+                                @foreach($garantia as $garantias) <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group row">
+
+                            <label  id="comisionista_1"  class="col-sm-1 col-form-label">Comisionista:</label>
+                            <div class="col-sm-5" id="comisionista_2" >
                                 <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
                                 <datalist id="browsersc2" >
                                     <option id="">Sin comision - 0 </option>
@@ -97,43 +158,17 @@
                                 </datalist>
                             </div>
 
-                        </div>
-
-                        <div class="form-group row">
-
+                        {{-- <div id="forma_pago_view"> --}}
                             <label class="col-sm-1 col-form-label">F.Pago:</label>
                             <div class="col-sm-5">
                                 <select class="form-control" name="forma_pago" required="required">
                                     @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> @endforeach
                                 </select>
                             </div>
+                        {{-- </div> --}}
 
-                            <label  class="col-sm-1 col-form-label">Validez:</label>
-                            <div class="col-sm-5">
-                                <select  class="form-control" name="validez" required="required">
-                                    @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
-                                </select>
-                            </div>
 
-                        </div>
-
-                        <div class="form-group row">
-
-                            <label class="col-sm-1 col-form-label">Vendedor:</label>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
-                            </div>
-
-                            <label  class="col-sm-1 col-form-label">Garantía:</label>
-                            <div class="col-sm-5">
-                                <select class="form-control" name="garantia">
-                                    @foreach($garantia as $garantias) <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-
+                        {{-- <div id="moneda_view"> --}}
                             <label class="col-sm-1 col-form-label">Moneda:</label>
                             <div class="col-sm-5">
                                 <div class="row">
@@ -152,16 +187,10 @@
                                     </a>
                                 </div>
                             </div>
+                        {{-- </div> --}}
 
-                            <label  class="col-sm-1 col-form-label">F.Emisión:</label>
-                            <div class="col-sm-5">
-                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                            </div>
 
-                        </div>
-
-                        <div class="form-group row">
-
+                        {{-- <div id="tipo_operacion_view"> --}}
                             <label class="col-sm-1 col-form-label">T.Operación:</label>
                             <div class="col-sm-5">
 
@@ -171,39 +200,26 @@
                                     @endforeach
                                 </select>
                             </div>
+                        {{-- </div> --}}
 
-                            <label  class="col-sm-1 col-form-label">T.Cotización:</label>
-                            <div class="col-sm-5">
+                    </div>
 
-                                <div class="radio">
-                                    <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
-                                    <label style="padding-right: 5px;" for="radio1">
-                                        Factura
-                                    </label>
-                                    <input type="radio" name="tipo_coti" id="radio2" value="0" class="radio_boleta" onchange="click_radio_boleta()">
-                                    <label for="radio2">
-                                        Boleta
-                                    </label>
-                                </div>
-                            </div>
+                    <div class="form-group row">
+                        <label class="col-sm-1 col-form-label">Observación:</label>
+
+                        <div class="col-sm-11">
+                            <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
                         </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-1 col-form-label">Observación:</label>
-
-                            <div class="col-sm-11">
-                                <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
-                            </div>
-                        </div>
+                    </div>
 
 
 
 
-                        {{-- Cabecera new --}}
+                    {{-- Cabecera new --}}
 
-                        <style type="text/css">
-                            label{font-size: 14px !important;}
-                        </style>
+                    <style type="text/css">
+                        label{font-size: 14px !important;}
+                    </style>
 
                         {{-- <table class="table">
                             <tbody>
