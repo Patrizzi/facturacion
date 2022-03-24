@@ -194,7 +194,8 @@
                                             <th >Articulo</th>
                                             <th style="width:100px">Cantidad</th>
                                             <th style="width:100px">P.Sugerido</th>
-                                            <th style="width:100px">Precio</th>
+                                            <th style="width:100px">Precio s/Igv</th>
+                                            <th style="width:100px">Precio c/Igv</th>
                                             <th style="width:100px">Total</th>
                                         </tr>
                                     </thead>
@@ -217,8 +218,12 @@
                                                 <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi(0)" required  autocomplete="off" />
+                                                <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                                <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                             </td>
+                                            <td>
+                                                <input style="width: 76px" type='text' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control inp" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
+                                            </td> 
                                             <td>
                                                 <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control inp" required  autocomplete="off" />
                                             </td>
@@ -227,6 +232,7 @@
                                     </tbody>
                                     <tbody>
                                         <tr style="background-color: #f5f5f500;" align="center">
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -240,12 +246,14 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
+                                            <td></td>
                                             <td>IGV :</td>
                                             <td colspan="2">
                                                 <input id='igv' type="text" disabled="disabled" class="form-control inp" required />
                                             </td>
                                         </tr>
                                         <tr align="center">
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -424,7 +432,11 @@
                     <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
+                    <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                </td>
+                <td>
+                    <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
                     <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control inp"  required  autocomplete="off"/>
@@ -497,9 +509,11 @@
         if(a==0){
             var copy = document.getElementById(`precio_oficial0`).value;
             document.getElementById(`precio0`).value = copy;
+            multi_s_igv(0);
         }else{
             var copy = document.getElementById(`precio_oficial${a}`).value;
             document.getElementById(`precio${a}`).value = copy;
+            multi_s_igv(a);
         }
         multi(a);    
     }
@@ -878,5 +892,27 @@
         function cerrar_but_mt(){
             document.getElementById('suma_campos').style.display = "none";
         }
+
+    var igv = {{$igv->renta}}
+    var multiplier = 100;
+    function multi_s_igv(a){
+        var pr_s_igv = $(`#precio${a}`).val();
+        $(`#precio_s_igv_float${a}`).val(pr_s_igv);
+        var c_igv_s_redondeo = parseFloat(pr_s_igv)+(parseFloat(pr_s_igv)*igv/multiplier);
+        var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier)/multiplier;
+        $(`#precio_c_igv${a}`).val(c_igv_redondeo);
+    }
+
+    function multi_c_igv(a){
+        var pr_c_igv = $(`#precio_c_igv${a}`).val();
+        var igv_dec = igv / multiplier ;
+        var s_igv_s_base = parseFloat(pr_c_igv) / ( 1 + parseFloat(igv_dec));
+        var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+        $(`#precio${a}`).val(s_igv_redondeo);
+        $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
+        
+
+    }
+
     </script>
     @stop
