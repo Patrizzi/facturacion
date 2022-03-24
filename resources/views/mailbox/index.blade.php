@@ -733,44 +733,66 @@ function validarExtF(){
     }
 }
 
-var global_editar=0
 
-function checkEmail() {
+
+function checkEmail(variableenviada, my_callback){
+    var global_editar=false;
+
     var smtpAddress = $('[id="smtp_editar"]').val();
     var port = $('[id="port_editar"]').val();
     var encryption = $('[id="encryption_editar"]').val();
     var yourEmail = $('[id="email_editar"]').val();
     var yourPassword = $('.password_editar').val();
-    $.ajax({
-        type: "post",
-        url: "{{ route('pa.check_email') }}",
-        data: {
-            '_token': $('input[name=_token]').val(),
-            'smtpAddress': smtpAddress,
-            'port': port,
-            'encryption': encryption,
-            'yourEmail': yourEmail,
-            'yourPassword': yourPassword,
-        },
-        beforeSend: function(){
-            $('#loaderGif').show(); 							
-        },
-        complete:function(data){
-            /*
-            * Se ejecuta al termino de la petición
-            * */
-        },
-        success: function (msg) {
-            // console.log(msg);
-            global_editar=msg;
-        },
-    });
+    $(document).ready(function() {
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.check_email') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'smtpAddress': smtpAddress,
+                'port': port,
+                'encryption': encryption,z
+                'yourEmail': yourEmail,
+                'yourPassword': yourPassword,
+            },
+            beforeSend: function(){
+                $('#loaderGif').show(); 							
+            },
+            complete:function(data){
+                /*
+                * Se ejecuta al termino de la petición
+                * */
+            },
+            success: function (msg) {
+                // console.log(msg);
+                // global_editar=msg;
+                if(msg == 0){
+                    global_editar = false;
+                }
+                if(data == 1){
+                    global_editar = true;
+                }
+                global_editar(global_editar); //AQUI
+            },
+        });
+        return global_editar;
+    }
 }
 
 //funcion para validar las credenciales del usuario
 $("#grabar_actualizar").on("click" ,function()
 {
-    checkEmail();
+    checkEmail(variableaenviar, function(resp) {
+        if(resp)
+        {
+            alert("la respuesta fue verdadero");
+        }
+        else{
+            alert("la respuesta fue falso");
+        }
+    });
+
+    // checkEmail();
     // var valor=checkEmail();
     // console.log(valor);
     if(global_editar==1){
