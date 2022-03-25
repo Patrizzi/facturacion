@@ -44,34 +44,38 @@
         <div class="col-lg-12">
             <div class="ibox-content" style="padding-bottom: 0px;" >
                 <div class="row" >
-                   <div class="col-sm-3 ">
-                       <p class="form-control " align="center" >Cotizado por: {{auth()->user()->nombre}}</p>
-                   </div>
-                   <div class="col-sm-3">
-                       <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
-                   </div>
-                   <div class="col-sm-6" align="right">
+                 <div class="col-sm-3 ">
+                     <p class="form-control " align="center" >Cotizado por: {{auth()->user()->nombre}}</p>
+                 </div>
+                 <div class="col-sm-3">
+                     <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
+                 </div>
+                 <div class="col-sm-6" align="right">
 
-                       <span class="dropdown ">
+                     <span class="dropdown ">
                         <button class="btn btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown"> <i class="fa fa-sliders"></i></button>
                         <ul class="dropdown-menu animated fadeInRight mr-5" >
                             <span style="margin-left:12px; padding-bottom: 5px;" ><b>Opciones Disponibles:</b></span>
                             <div class="form-check"style="margin-left:12px;" >
-                                <input type="checkbox" class="form-check-input">
+                                <input type="checkbox" class="form-check-input" onclick="comisionista()">
                                 <label class="form-check-label">Comisionista</label>
                             </div>
                             <div class="form-check"style="margin-left:12px;" >
-                                <input type="checkbox" class="form-check-input">
+                                <input type="checkbox" class="form-check-input" onclick="forma_pago()">
                                 <label class="form-check-label">Forma de Pago</label>
                             </div>
                             <div class="form-check"style="margin-left:12px;" >
-                                <input type="checkbox" class="form-check-input">
+                                <input type="checkbox" class="form-check-input" onclick="tipo_operacion()">
                                 <label class="form-check-label">Tipo Operacion</label>
                             </div>
-                            <div class="form-check"style="margin-left:12px;" >
+                                <div class="form-check"style="margin-left:12px;" >
+                                <input type="checkbox" class="form-check-input" onclick="moneda()">
+                                <label class="form-check-label">Cambio de Moneda</label>
+                            </div>
+                          {{--   <div class="form-check"style="margin-left:12px;" >
                                 <input type="checkbox" class="form-check-input">
                                 <label class="form-check-label">Forma de Pago</label>
-                            </div>
+                            </div> --}}
 
                         </ul>
                     </span>
@@ -100,6 +104,7 @@
                                 <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                 <h5 id="n_factura">{{$cotizacion_numero}}</h5>
                                 <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -144,82 +149,141 @@
 
                     </div>
 
+                    <script>
+                        function comisionista() {
+                        var data1 = document.getElementById("comisionista_1");
+                        var data2 = document.getElementById("comisionista_2");
 
-                    <div class="form-group row">
+                        if( data1.hasAttribute("hidden") )
+                        {
+                          data1.removeAttribute("hidden", "");
+                          data2.removeAttribute("hidden", "");
+                      }
+                      else{
+                          data1.setAttribute("hidden", "");
+                          data2.setAttribute("hidden", "");
+                      }
+                  }
 
-                            <label  id="comisionista_1"  class="col-sm-1 col-form-label">Comisionista:</label>
-                            <div class="col-sm-5" id="comisionista_2" >
-                                <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
-                                <datalist id="browsersc2" >
-                                    <option id="">Sin comision - 0 </option>
-                                    @foreach($p_venta as $p_ventas)
-                                    <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
-                                    @endforeach
-                                </datalist>
-                            </div>
+                  function forma_pago() {
+                    var data1 = document.getElementById("forma_pago_1");
+                    var data2 = document.getElementById("forma_pago_2");
 
-                        {{-- <div id="forma_pago_view"> --}}
-                            <label class="col-sm-1 col-form-label">F.Pago:</label>
-                            <div class="col-sm-5">
-                                <select class="form-control" name="forma_pago" required="required">
-                                    @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> @endforeach
-                                </select>
-                            </div>
-                        {{-- </div> --}}
+                    if( data1.hasAttribute("hidden") )
+                    {
+                      data1.removeAttribute("hidden", "");
+                      data2.removeAttribute("hidden", "");
+                  }
+                  else{
+                      data1.setAttribute("hidden", "");
+                      data2.setAttribute("hidden", "");
+                  }
+              }
+               function tipo_operacion() {
+                    var data1 = document.getElementById("tipo_operacion_1");
+                    var data2 = document.getElementById("tipo_operacion_2");
+
+                    if( data1.hasAttribute("hidden") )
+                    {
+                      data1.removeAttribute("hidden", "");
+                      data2.removeAttribute("hidden", "");
+                  }
+                  else{
+                      data1.setAttribute("hidden", "");
+                      data2.setAttribute("hidden", "");
+                  }
+              }
+               function moneda() {
+                    var data1 = document.getElementById("moneda_1");
+                    var data2 = document.getElementById("moneda_2");
+
+                    if( data1.hasAttribute("hidden") )
+                    {
+                      data1.removeAttribute("hidden", "");
+                      data2.removeAttribute("hidden", "");
+                  }
+                  else{
+                      data1.setAttribute("hidden", "");
+                      data2.setAttribute("hidden", "");
+                  }
+              }
+
+          </script>
+          <div class="form-group row">
+
+            <label  hidden id="comisionista_1"  class="col-sm-1 col-form-label">Comisionista:</label>
+            <div class="col-sm-5" id="comisionista_2"  hidden>
+                <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
+                <datalist id="browsersc2" >
+                    <option id="">Sin comision - 0 </option>
+                    @foreach($p_venta as $p_ventas)
+                    <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
+                    @endforeach
+                </datalist>
+            </div>
+
+            {{-- <div id="forma_pago_view"> --}}
+                <label  hidden id="forma_pago_1" class="col-sm-1 col-form-label">F.Pago:</label>
+                <div class="col-sm-5" id="forma_pago_2"  hidden>
+                    <select class="form-control" name="forma_pago" required="required">
+                        @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> @endforeach
+                    </select>
+                </div>
+            {{-- </div> --}}
 
 
-                        {{-- <div id="moneda_view"> --}}
-                            <label class="col-sm-1 col-form-label">Moneda:</label>
-                            <div class="col-sm-5">
-                                <div class="row">
-                                    <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
-                                    <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
-                                    <div class="col-sm-5">
-                                        <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
-                                    </div>
-
-                                    <a class="col-sm-5 button_money" onclick="changeMoney()">
-                                        <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
-                                            @if($moneda->tipo=='nacional')Dolares
-                                            @elseif($moneda->tipo=='extranjera')Soles
-                                            @endif
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        {{-- </div> --}}
-
-
-                        {{-- <div id="tipo_operacion_view"> --}}
-                            <label class="col-sm-1 col-form-label">T.Operación:</label>
-                            <div class="col-sm-5">
-
-                                <select class="form-control" name="tipo_operacion" >
-                                    @foreach($tipo_operacion as $t_op)
-                                    <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        {{-- </div> --}}
-
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label">Observación:</label>
-
-                        <div class="col-sm-11">
-                            <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
+            {{-- <div id="moneda_view"> --}}
+                <label  hidden id="moneda_1" class="col-sm-1 col-form-label">Moneda:</label>
+                <div class="col-sm-5" id="moneda_2" hidden >
+                    <div class="row">
+                        <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                        <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                        <div class="col-sm-5">
+                            <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
                         </div>
+
+                        <a class="col-sm-5 button_money" onclick="changeMoney()">
+                            <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
+                                @if($moneda->tipo=='nacional')Dolares
+                                @elseif($moneda->tipo=='extranjera')Soles
+                                @endif
+                            </button>
+                        </a>
                     </div>
+                </div>
+            {{-- </div> --}}
+
+
+            {{-- <div id="tipo_operacion_view"> --}}
+                <label  hidden id="tipo_operacion_1" class="col-sm-1 col-form-label">T.Operación:</label>
+                <div class="col-sm-5" id="tipo_operacion_2" hidden >
+
+                    <select class="form-control" name="tipo_operacion" >
+                        @foreach($tipo_operacion as $t_op)
+                        <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            {{-- </div> --}}
+
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-1 col-form-label">Observación:</label>
+
+            <div class="col-sm-11">
+                <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
+            </div>
+        </div>
 
 
 
 
-                    {{-- Cabecera new --}}
+        {{-- Cabecera new --}}
 
-                    <style type="text/css">
-                        label{font-size: 14px !important;}
-                    </style>
+        <style type="text/css">
+            label{font-size: 14px !important;}
+        </style>
 
                         {{-- <table class="table">
                             <tbody>

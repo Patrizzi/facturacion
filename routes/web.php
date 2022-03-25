@@ -16,6 +16,9 @@ Route::group(
 
 		// Route::view('/' , 'home')->name('inicio');
 		Route::get('/' , 'ViewController@home')->name('inicio');
+
+		Route::post('configuracion_guias_ingresos', 'ConfiguracionGuiaIngresosController@store')->name('envio_confi_ingresos');
+
 		Route::post('/whatsapp','AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
