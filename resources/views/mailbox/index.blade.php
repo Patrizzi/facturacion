@@ -564,6 +564,7 @@
 </div>
 
 </div>
+<div id="loaderGif"></div>
 <!-- Mainly scripts -->
 </br>
 <style>
@@ -617,6 +618,21 @@ span.fileinput-filename{
         height:100%;
         opacity: 0  ;
     }
+    /* #loaderGif{
+        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
+        background-size: 250px;
+        display: none;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100vh;
+        z-index: 20;
+    }
+    .not-active { 
+        pointer-events: none; 
+        cursor: default; 
+    }  */
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -733,9 +749,20 @@ function validarExtF(){
     }
 }
 
+//funcion para validar las credenciales del usuario
+$("#grabar_actualizar").on("click" ,function(){
+    checkEmail(function(resp) {
+        if(resp){
+            alert("las credenciales son incorrectas");
+        }else{
+            alert("las credenciales son correctas");
+            $("#submit_actualizar").click();
+        }
+    });
+});
 
 
-function checkEmail(variableenviada, my_callback){
+function checkEmail(my_callback){
     var global_editar=false;
 
     var smtpAddress = $('[id="smtp_editar"]').val();
@@ -747,11 +774,12 @@ function checkEmail(variableenviada, my_callback){
         $.ajax({
             type: "post",
             url: "{{ route('pa.check_email') }}",
+            processData: true,
             data: {
                 '_token': $('input[name=_token]').val(),
                 'smtpAddress': smtpAddress,
                 'port': port,
-                'encryption': encryption,z
+                'encryption': encryption,
                 'yourEmail': yourEmail,
                 'yourPassword': yourPassword,
             },
@@ -764,45 +792,22 @@ function checkEmail(variableenviada, my_callback){
                 * */
             },
             success: function (msg) {
-                // console.log(msg);
+                console.log(msg);
                 // global_editar=msg;
                 if(msg == 0){
                     global_editar = false;
                 }
-                if(data == 1){
+                if(msg == 1){
                     global_editar = true;
                 }
-                global_editar(global_editar); //AQUI
+                my_callback(global_editar); //AQUI
             },
         });
         return global_editar;
-    }
+    })
 }
 
-//funcion para validar las credenciales del usuario
-$("#grabar_actualizar").on("click" ,function()
-{
-    checkEmail(variableaenviar, function(resp) {
-        if(resp)
-        {
-            alert("la respuesta fue verdadero");
-        }
-        else{
-            alert("la respuesta fue falso");
-        }
-    });
 
-    // checkEmail();
-    // var valor=checkEmail();
-    // console.log(valor);
-    if(global_editar==1){
-        alert('las credenciales estan erroneas');	
-    }else{
-        alert('las credenciales son correctas');	
-        // $("#submit_actualizar").click();
-    }
-    
-});
 </script>
 <link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
 
