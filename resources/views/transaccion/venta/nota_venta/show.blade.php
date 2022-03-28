@@ -15,7 +15,12 @@
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row ibox-title" style="padding-right: 3.1%;margin: 0; padding-bottom: 1px" >
-        <div class="col-sm-12 tooltip-demo "align="right"  > 
+        <div class="col-sm-6">
+            <button class="btn-editar btn btn-warning" onclick="click_editar()">Editar</button>
+            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">Cancelar</button>
+            {{-- <a href="" id="btn-editar" class="btn-editar btn btn-warning">Editar</a> --}}
+        </div>
+        <div class="col-sm-6 tooltip-demo "align="right"  > 
             <!-- PDF -->
             <a href="{{route('nota_venta_pdf' ,$nota_venta->id)}}"class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i></a>
             <!-- Impresion -->
@@ -94,6 +99,7 @@
                            <div align="left">
                             <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <input type="hidden" name="moneda" id="moneda" value="{{$nota_venta->moneda->nombre}}">
                         </div>
                     </div>
                 </div>
@@ -107,50 +113,134 @@
 
         </div><br>
         <div class="table-responsive">
-            <table class="table " >
-                <thead>
-                   <tr >
-                    <th>ITEM </th>
-                    <th>Descripcion</th>
-                    <th>Cantidad</th>
-                    <th>P.Unitario</th>
-                    <th>Total <span hidden="hidden">{{$simbologia=$nota_venta->moneda->simbolo}}</span></th>
-                </tr>
-            </thead>
-            <span hidden>{{$i=1}}{{$sume=0}}</span>
-            <tbody>
-               @foreach($nota_venta_re as $nota_venta_reg)
-               <tr>
-                <td>{{$i++}} </td>
-                <td>{{$nota_venta_reg->producto}}</td>
-                <td>{{$nota_venta_reg->cantidad}}</td>
-                <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
-                <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
-                <span hidden>{{$sume=$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional+$sume}}</span>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div><!-- /table-responsive -->
+            <div class="table-no">
+                <table class="table " >
+                    <thead>
+                       <tr >
+                            <th>ITEM </th>
+                            <th>Descripcion</th>
+                            <th>Cantidad</th>
+                            <th>P.Unitario</th>
+                            <th>Total <span hidden="hidden">{{$simbologia=$nota_venta->moneda->simbolo}}</span></th>
+                        </tr>
+                    </thead>
+                    <span hidden>{{$i=1}}{{$sume=0}}</span>
+                    <tbody>
+                    @foreach($nota_venta_re as $nota_venta_reg)
+                    <tr>
+                            <td>{{$i++}} </td>
+                            <td>{{$nota_venta_reg->producto}}</td>
+                            <td>{{$nota_venta_reg->cantidad}}</td>
+                            <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
+                            <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
+                            <span hidden>{{$sume=$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional+$sume}}</span>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="row" style="width: 100%">
+                    <div class="col-sm-8">
+                        <h3 align="left" class="">
+                            <?php 
+                                $v=new CifrasEnLetras() ;
+                                $end2=number_format(round($sume, 2),2);
+                                $end=round($sume, 2);
+    
+                                $v=new CifrasEnLetras() ;
+                                $letra=($v->convertirEurosEnLetras($end));
+                                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                $end_final_point=strstr($end2, '.', false);
+                                $end_final=str_replace('.', ' ',$end_final_point);
+                                ?>
+                                Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                        </h3>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-control" align="center">
+                            <p class=" a"> Importe Total</p>
+                            <span>{{$nota_venta->moneda->simbolo}}</span>
+                            <span class="">{{$sume}}</span>
+                            {{-- <input type="text" name="impor_t" id="impor_t" value="" readonly class="form-control-plaintext" style="width: 60%"> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- //SOLO EDITAR  --}}
+            <div class="div-editar no_mostrar">
+                <form action="{{route('nota_venta.update',$nota_venta->id)}}" method="post">
+                    @csrf
+                    <table   class="table tables">
+                        <thead>
+                            <tr >
+                                <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
+                                <th style="width: 65%">Descripcion</th>
+                                <th>Cantidad</th>
+                                <th>P.Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <span hidden>{{$h=1}}</span>
+                        <tbody>
+                            @foreach($nota_venta_re as $nota_venta_reg)
+                            
+                            <tr>
+                                <td>
+                                    <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                </td>
+                                <td>
+                                    <input maxlength="190" class="form-control limp" list="browsers2" name="articulo[]"  required autocomplete="off" value="{{$nota_venta_reg->producto}}">
+                                        <datalist id="browsers2" >
+                                            @foreach($productos as $index)
+                                            <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                            @endforeach
+                                            @foreach($servicios as $servicio)
+                                            <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                                            @endforeach
+                                        </datalist>
+                                    </input>
+                                </td>
+                                <input type="hidden" name="elem_delete[]" value="{{$nota_venta_reg->id}}">
+                                <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
+                                <td><input type="text" value="{{$nota_venta_reg->cantidad}}" class="cantidad{{$h}} form-control limp" id="cantidad{{$h}}" name="cantidad[]" onkeyup="multi({{$h}})"></td>
+                                <td><input type="text" value="{{$nota_venta_reg->precio_nacional}}" class="precio{{$h}} form-control limp" id="precio{{$h}}" name="precio[]" onkeyup="multi({{$h}})"></td>
+                                <td><input type="text" value="{{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}" class="form-control limp" name="total" id="total{{$h}}" readonly></td>
+                            </tr>
+                            <span hidden>{{$h++}}</span>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+                    <br>
+                </form>
+                <div class="row" style="width: 100%">
+                    <div class="col-sm-8">
+                        <h3 align="left" class="h3-total">
+                            <?php 
+                                $v=new CifrasEnLetras() ;
+                                $end2=number_format(round($sume, 2),2);
+                                $end=round($sume, 2);
+
+                                $v=new CifrasEnLetras() ;
+                                $letra=($v->convertirEurosEnLetras($end));
+                                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                $end_final_point=strstr($end2, '.', false);
+                                $end_final=str_replace('.', ' ',$end_final_point);
+                                ?>
+                                Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                        </h3>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-control" align="center">
+                            <p class=" a"> Importe Total</p>
+                            <span>{{$nota_venta->moneda->simbolo}}</span>
+                            <span class="impor_t">{{$sume}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /table-responsive -->
 <br><br><br><br>
-<h3 align="left">
-    <?php $v=new CifrasEnLetras() ;
-    $letra=($v->convertirEurosEnLetras($sume));
-    $letra_final = strstr($letra, 'soles',true);
-    $end_final=strstr($sume, '.');
-?>
-Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
-</h3>
 
-<div class="row">
-    <div class="col-lg-12" align="right">
-        <div style="width:20%">
-         <p class="form-control a"> Importe Total</p>
-         <p class="form-control a"> {{$nota_venta->moneda->simbolo}}{{$sume}}</p>
-     </div>
-
- </div>
-</div>
 
 <br>
 @include('layout_bancos')
@@ -177,25 +267,24 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
 </div>
 
     {{--  --}}
-    <style>
-        .form-control{margin-top: 5px; border-radius: 5px}
-        p#texto{
-            text-align: center;
-            color:black;
-        }
+<style>
+    .form-control{margin-top: 5px; border-radius: 5px}
+    p#texto{
+        text-align: center;
+        color:black;
+    }
 
-        input#archivoInput{
-            position:absolute;
-            top:0px;
-            left:0px;
-            right:0px;
-            bottom:0px;
-            width:100%;
-            height:100%;
-            opacity: 0  ;
-        }
-    </style>
-    <style>
+    input#archivoInput{
+        position:absolute;
+        top:0px;
+        left:0px;
+        right:0px;
+        bottom:0px;
+        width:100%;
+        height:100%;
+        opacity: 0  ;
+    }
+   
     #auto{
         /*padding: -100px;*/
         /*background: orange;*/
@@ -228,69 +317,25 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
     #auto:hover + #div-mostrar{
         height: 50px;
     }
-    </style>
-    <style type="text/css">
-        .form-control{border-radius: 10px; padding: 10px }
-        .ibox-tools a{color: white !important}
-        .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
-        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
-
-    </style>
-    <script>
-    var clic = 1;
-    function divAuto(){
-       if(clic==1){
-           document.getElementById("div-mostrar").style.height = "50px";
-           clic = clic + 1;
-       } else{
-        document.getElementById("div-mostrar").style.height = "0px";
-        clic = 1;
-        }
+    .form-control-plaintext{
+        display: table-column !important;
     }
-    </script>
-
-    <script type="text/javascript">
-        function mostrarPassword(){
-            var cambio = document.getElementById("txtPassword");
-            if(cambio.type == "password"){
-                cambio.type = "text";
-                $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-            }else{
-                cambio.type = "password";
-                $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
-            }
-        }
-
-    </script>
-    <script type="text/javascript">
-        {{-- Fotooos --}}
-        function validarExt()
-        {
-            var archivoInput = document.getElementById('archivoInput');
-            var archivoRuta = archivoInput.value;
-            var extPermitidas = /(.jpg|.png|.jfif)$/i;
-            if(!extPermitidas.exec(archivoRuta)){
-                alert('Asegurese de haber seleccionado una Imagen');
-                archivoInput.value = '';
-                return false;
-            }
-
-            else
-            {
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivo').innerHTML =
-                '<img name="firma" src="'+e.target.result+'"width="390px" height="200px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
-        }
+    .form-control{border-radius: 10px; padding: 10px }
+    .ibox-tools a{color: white !important}
+    .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
+    .mostrar{
+        display: revert;
     }
-}
-</script>
+    .no_mostrar{
+        display: none;
+    }
+    .table-responsive{
+        overflow-x: revert;
+    }
+</style>
+
+
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -306,6 +351,152 @@ Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
+<script>
+    function click_editar(){
+        // MOSTRAR LOS INPUTS
+        $('.div-editar').removeClass('no_mostrar');
+        $('.div-editar').addClass('mostrar');
+        // OCULTAR TABLA
+        $('.table-no').addClass('no_mostrar');
+        // BOTONES
+        $('.btn-no-editar').removeClass('no_mostrar');
+        $('.btn-editar').addClass('no_mostrar');
+    }
+    function click_cancelar_editar(){
+        // OCULTAR INPUTS
+        $('.div-editar').removeClass('mostrar');
+        $('.div-editar').addClass('no_mostrar');
+        // MOSTRAR TABLA
+        $('.table-no').removeClass('no_mostrar');
+        $('.table-no').addClass('mostrar');
 
+        $('.btn-editar').removeClass('no_mostrar');
+        $('.btn-no-editar').addClass('no_mostrar');
+    }
+</script>
+<script>
+    
+    var i = {{$h}};
+    $(".addmore").on('click', function () {
+        var data = `[
+        <tr>
+            <td>
+                <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+            </td>";
+            <td>
+                <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
+                <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
+                    <datalist id="browsers2" >
+                        @foreach($productos as $index)
+                        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                        @endforeach
+                        @foreach($servicios as $servicio)
+                        <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                        @endforeach
+                    </datalist>
+                </input>
+            </td>
+            <td>
+                <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+            </td>
+            <td>
+                <input type='text'  id='precio${i}' name='precio[]' class="precio${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+            </td>
+            <td>
+                <input type='text' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+            </td>   
+        </tr>`;
+        $('.tables').append(data);
+        i++;
+        $(".addmore").prop("disabled", false);
+        $(".borrar").prop("disabled", false);
+    });
+    
+    function multi(a){
+        var cantidad = document.querySelector(`#cantidad${a}`).value;
+        var precio = document.querySelector(`#precio${a}`).value;
+        var total = cantidad*precio;
+        document.querySelector(`#total${a}`).value = total;
+        // console.log(total);
+        var totalInp = $('[name="total"]');
+        var total_t = 0;
+
+        totalInp.each(function(){
+            total_t += parseFloat($(this).val());
+        });
+        // document.querySelector(`#impor_t`).value = total_t;
+        $('.impor_t').html(total_t);
+        ajax_l();
+    }
+    function ajax_l(){
+        var numeros = $('.impor_t').html();
+
+        console.log("antes_ajax"+numeros);
+        var moneda = document.querySelector(`#moneda`).value;
+        $.ajax({
+            type: "post",
+            url: "{{route('pa.numberletters')}}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'numeros': numeros,
+                'moneda': moneda
+            },
+            success: function(msg){
+                console.log(msg);  
+                $('.h3-total').html(msg);
+            }
+        });
+    }
+    $(document).on('click', '.borrar', function (event) {
+        event.preventDefault();
+        var e = document.getElementsByClassName("e").length;
+        var fila = $(this).parents("tr");
+        $(".addmore").prop("disabled", false);
+        // ELIMINAR TR
+        if (e>1) {
+            fila.closest('tr').remove();
+            $(".borrar").prop("disabled", false);
+            $(".addmore").prop("disabled", false);
+        }else{
+            $(".borrar").prop("disabled", true);
+            $(".addmore").prop("disabled", false);
+            $(".limp").val("");
+        }
+        var totalInp = $('[name="total"]');
+        var total_t = 0;
+
+        totalInp.each(function(){
+            total_t += parseFloat($(this).val());
+        });
+        $('.impor_t').html(total_t);
+        ajax_l();
+    });
+</script>
+<script>
+var clic = 1;
+function divAuto(){
+    if(clic==1){
+        document.getElementById("div-mostrar").style.height = "50px";
+        clic = clic + 1;
+    } else{
+    document.getElementById("div-mostrar").style.height = "0px";
+    clic = 1;
+    }
+}
+</script>
+
+<script type="text/javascript">
+    function mostrarPassword(){
+        var cambio = document.getElementById("txtPassword");
+        if(cambio.type == "password"){
+            cambio.type = "text";
+            $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+        }else{
+            cambio.type = "password";
+            $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+        }
+    }
+
+</script>
 
 @endsection

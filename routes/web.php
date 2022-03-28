@@ -93,6 +93,7 @@ Route::group(
 //NOTA VENTA
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
+		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		
 
@@ -190,6 +191,7 @@ Route::group(
 		Route::post('parameter_call/getClients', 'ParameterCallController@getClients')->name('pa.clients');
 		Route::post('parameter_call/getArticles', 'ParameterCallController@getArticles')->name('pa.articles');
 		Route::post('parameter_call/getMoney', 'ParameterCallController@getMoney')->name('pa.money');
+		Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
 
 		Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 

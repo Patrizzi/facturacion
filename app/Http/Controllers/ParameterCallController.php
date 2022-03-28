@@ -11,7 +11,8 @@ use App\Stock_producto;
 use App\Stock_almacen;
 use App\Cliente;
 use App\TipoCambio;
-
+use App\helpers;
+use CifrasEnLetras;
 
 
 use Illuminate\Http\Request;
@@ -255,5 +256,22 @@ class ParameterCallController extends Controller
         }
         
         return $money;
+    }
+
+    //* LLamado para convertir de numero a letras con php 
+    public function getNumberLetter(Request $request){
+        $number = $request->numeros;
+        $moneda = $request->moneda;
+        $end2=number_format(round($number, 2),2);
+        $end=round($number, 2);
+
+        $v=new CifrasEnLetras() ;
+        $letra=($v->convertirEurosEnLetras($end));
+        $letra_final = ucfirst(strstr($letra, 'soles',true));
+        $end_final_point=strstr($end2, '.', false);
+        $end_final=str_replace('.', ' ',$end_final_point);
+
+        $convertido = "Son : "."$letra_final"."con"."$end_final"."/100 ".$moneda;
+        return $convertido;
     }
 }
