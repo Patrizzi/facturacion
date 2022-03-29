@@ -94,6 +94,7 @@ Route::group(
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
 		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		
 

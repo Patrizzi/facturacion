@@ -377,7 +377,7 @@
             type: "POST",
             delay: 10,
             data: function (params) {
-                var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                var tipo_coti = 1;
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term

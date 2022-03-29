@@ -171,7 +171,7 @@ class ParameterCallController extends Controller
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
             }
         }else if($tipo == '0'){ //Boleta
             if($search == ''){
@@ -195,7 +195,7 @@ class ParameterCallController extends Controller
                 "numero_documento"=>$employee->numero_documento 
            );
         }
-  
+        return $employees;
         return response()->json($response);
     }
 

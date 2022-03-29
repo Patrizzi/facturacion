@@ -134,27 +134,35 @@
                                     <td>{{$nota_ventas->fecha_emision}}</td>
                                     <td>{{$nota_ventas->user->personal->nombres}}</td>
                                     <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a></center></td>
-                                    <td><center>
-                                        <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$nota_ventas->id}}"><i class="fa fa-trash" ></i>
+                                    <td class=" tooltip-demo"><center>
+                                        @if($nota_ventas->estado == 0)
+                                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$nota_ventas->id}}"><i class="fa fa-trash" ></i>
+                                            </button>
+                                        @else
+                                            <button class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ya está Anulada"><i class="fa fa-trash" ></i>
                                         </button>
+                                        @endif
                                         <div class="modal fade" id="exampleModal{{$nota_ventas->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                              <div class="modal-content">
-                                                <div class="modal-header">
-                                                  {{-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> --}}
-                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                  </button>
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <form action="{{route('nota_venta.anulacion',$nota_ventas->id)}}" method="post" >
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                        {{-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> --}}
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">        
+                                                            <strong>¿Esta seguro de anula la Nota de Venta N~ {{$nota_ventas->cod_nota_venta}}?</strong>
+                                                            <strong>Observacion:</strong><br>
+                                                            <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control">{{$nota_ventas->observacion}}</textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <strong>Observacion:</strong><br>
-                                                    <textarea name="" id="" cols="30" rows="10" class="form-control">{{$nota_ventas->observacion}}</textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                  {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
-                                                  <button type="button" class="btn btn-primary">Confirmar</button>
-                                                </div>
-                                              </div>
                                             </div>
                                         </div>
                                     </center></td>

@@ -232,8 +232,12 @@ class NotaVentaController extends Controller
         }
         return back();
     }
-    public function anulacion($id){
-        
+    public function anulacion(Request $request, $id){
+        $nota_venta = NotaVenta::find($id);
+        $nota_venta->observacion =  $request->get('observacion');
+        $nota_venta->estado = 1;
+        $nota_venta->save();
+        return back();
     }
     /**
      * Remove the specified resource from storage.
