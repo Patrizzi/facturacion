@@ -7,6 +7,7 @@ use App\Boleta;
 use App\Boleta_registro;
 use App\Cliente;
 use App\Codigo_guia_almacen;
+use App\ConfiguracionGuiaIngresos;
 use App\Cotizacion;
 use App\Cotizacion_Servicios;
 use App\Cotizacion_boleta_registro;
@@ -56,6 +57,17 @@ class CotizacionController extends Controller
      */
     public function index()
     {
+        //Configuracion
+        $array=array('comisionista_create','forma_pago_create','tipo_operacion_create','moneda_create');
+        foreach ($array as $key ) {
+        $configuracion_nuevo=new ConfiguracionGuiaIngresos;
+        $configuracion_nuevo->nombre=$key;
+        $configuracion_nuevo->tipo_guia='cotizacion';
+        $configuracion_nuevo->estado='0';
+        $configuracion_nuevo->save();
+        }
+        //Configuracion
+
         // Migracion nuevav
         $garantia=Garantia::all()->count();
         $validez=Validez::all()->count();
@@ -255,8 +267,9 @@ class CotizacionController extends Controller
             }
         }
         // r
+        $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
 
-        return view('transaccion.venta.cotizacion.factura.create2',compact('garantia','validez','productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','array2','array_promedio_serv','cotizacion_numero_boleta'));
+        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','array2','array_promedio_serv','cotizacion_numero_boleta'));
     }
 
     public function create_factura_ms(Request $request)
@@ -1366,8 +1379,8 @@ public function show($id)
     // }
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
     // if ($regla=='factura') {
-        $end=round($sub_total, 2)+round($igv_p, 2);
-        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
+    $end=round($sub_total, 2)+round($igv_p, 2);
+    $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
     // }elseif ($regla=='boleta'){
     //     $end=round($sub_total, 2);
     //     $end2=number_format(round($sub_total, 2),2);
@@ -1418,8 +1431,8 @@ public function print($id){
 
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
     // if ($regla=='factura') {
-        $end=round($sub_total, 2)+round($igv_p, 2);
-        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
+    $end=round($sub_total, 2)+round($igv_p, 2);
+    $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
     // }elseif ($regla=='boleta'){
     //     $end=round($sub_total, 2);
     //     $end2=number_format(round($sub_total, 2),2);
@@ -1452,8 +1465,8 @@ public function pdf(Request $request,$id){
     $sub_total = $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
     $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
     // if ($regla=='factura') {
-        $end=round($sub_total, 2)+round($igv_p, 2);
-        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
+    $end=round($sub_total, 2)+round($igv_p, 2);
+    $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
     // }elseif ($regla=='boleta'){
     //     $end=round($sub_total, 2);
     //     $end2=number_format(round($sub_total, 2),2);

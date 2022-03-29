@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Banco;
 use App\BancoRegistro;
+use App\ConfiguracionGuiaIngresos;
 use Illuminate\Http\Request;
 
 class ConfiguracionGuiaIngresosController extends Controller
@@ -36,11 +37,21 @@ class ConfiguracionGuiaIngresosController extends Controller
      */
     public function store(Request $request)
     {
-// Aqui escribir
+
+        $tipo_configuracion=$request->get('tipo_configuracion');
+            $configuracion_buscar=ConfiguracionGuiaIngresos::where('nombre',$tipo_configuracion.'_create')->where('tipo_guia','cotizacion')->first();
+            if ($configuracion_buscar){
+
+                $configuracion_edicion= ConfiguracionGuiaIngresos::find($configuracion_buscar->id);
+                if ($configuracion_buscar->estado=='1'){$configuracion_edicion->estado='0';}
+                else{$configuracion_edicion->estado='1';}
+                $configuracion_edicion->save();
+            }
 
 
 
 
+        return $tipo_configuracion;
     }
 
     /**
@@ -74,6 +85,8 @@ class ConfiguracionGuiaIngresosController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+
     }
 
     /**
