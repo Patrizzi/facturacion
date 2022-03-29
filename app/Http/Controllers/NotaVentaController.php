@@ -232,7 +232,9 @@ class NotaVentaController extends Controller
         }
         return back();
     }
-
+    public function anulacion($id){
+        
+    }
     /**
      * Remove the specified resource from storage.
      *

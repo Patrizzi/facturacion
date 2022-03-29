@@ -122,6 +122,7 @@
                                     <th>Fecha Emision</th>
                                     <th>Usuario Registrado</th>
                                     <th></th>
+                                    <th>Anular</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -132,7 +133,31 @@
                                     <td>{{$nota_ventas->almacen->nombre}}</td>
                                     <td>{{$nota_ventas->fecha_emision}}</td>
                                     <td>{{$nota_ventas->user->personal->nombres}}</td>
-                                    <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a></center></td>
+                                    <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a></center></td>
+                                    <td><center>
+                                        <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$nota_ventas->id}}"><i class="fa fa-trash" ></i>
+                                        </button>
+                                        <div class="modal fade" id="exampleModal{{$nota_ventas->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  {{-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> --}}
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <strong>Observacion:</strong><br>
+                                                    <textarea name="" id="" cols="30" rows="10" class="form-control">{{$nota_ventas->observacion}}</textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                  {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+                                                  <button type="button" class="btn btn-primary">Confirmar</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </center></td>
                                 </tr>
                                 @endforeach
                             </tbody>
