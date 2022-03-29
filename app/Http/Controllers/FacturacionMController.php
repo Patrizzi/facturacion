@@ -101,6 +101,7 @@ class FacturacionMController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);
@@ -130,8 +131,8 @@ class FacturacionMController extends Controller
         
         // obtención de Cliente
         $cliente_nombre=$request->get('cliente');
-        $nombre = strstr($cliente_nombre, '-',true);
-        $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
+        // $nombre = strstr($cliente_nombre, '-',true);
+        $cliente_buscador=Cliente::where('id',$cliente_nombre)->first();
 
         // obtención de Código de factura
         // $factura_numero="F001-000001";
