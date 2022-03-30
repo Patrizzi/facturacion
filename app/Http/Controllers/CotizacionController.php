@@ -124,12 +124,12 @@ class CotizacionController extends Controller
     public function create_factura(Request $request)
     {
         $config_create = array(
-            array('nombre' => 'comisionista_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'forma_pago_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'tipo_operacion_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'moneda_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'validez_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'garantia_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'comisionista_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'forma_pago_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'tipo_operacion_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'moneda_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'validez_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'garantia_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
             );
         // return $config_create;
         $garantia=Garantia::where('estado',0)->get();

@@ -44,13 +44,13 @@
         <div class="col-lg-12">
             <div class="ibox-content" style="padding-bottom: 0px;" >
                 <div class="row" >
-                   <div class="col-sm-3 ">
-                       <p class="form-control " align="center" >Cotizado por: {{auth()->user()->nombre}}</p>
-                   </div>
-                   <div class="col-sm-3">
-                       <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
-                   </div>
-                   <div class="col-sm-6" align="right">
+                 <div class="col-sm-3 ">
+                     <p class="form-control " align="center" >Cotizado por: {{auth()->user()->nombre}}</p>
+                 </div>
+                 <div class="col-sm-3">
+                     <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
+                 </div>
+                 <div class="col-sm-6" align="right">
                     <style>
                       .dropdown {position: relative;display: inline-block;}
                       .dropdown-content {display: none;position: absolute; right: 0; background-color: #f9f9f9; min-width: 200px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1;}
@@ -62,13 +62,10 @@
                   <div class="dropdown" style="float:right;">
                     <button class="btn btn-info" type="button" > <i class="fa fa-sliders"></i></button>
                     <div class="dropdown-content" align="left">
-                        @foreach($config_create as $lista)
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="comisionista" @foreach($config as $comision) @if($comision->nombre=='comisionista_create' && $comision->estado=='1') checked @endif @endforeach >
                             <label class="form-check-label" for="comisionista">Comisionista</label>
                         </div>
-                        @endforeach
-
 
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="forma_pago" @foreach($config as $comision) @if($comision->nombre=='forma_pago_create' && $comision->estado=='1') checked @endif @endforeach >
@@ -153,8 +150,8 @@
 
                 <script>
                     function ajax_confi(parameters){
-                     var configuracion_seleccionado = parameters.id;
-                     $.ajax({
+                       var configuracion_seleccionado = parameters.id;
+                       $.ajax({
                         type: "post",
                         url: "{{ route('envio_confi_ingresos') }}",
                         data: {
@@ -165,16 +162,16 @@
                                 // alert(msg);
                             }
                         });
-                 }
+                   }
 
-                 function ConfiguracionSelector(parameters) {
-                     var configuracion_seleccionado = parameters.id;
+                   function ConfiguracionSelector(parameters) {
+                       var configuracion_seleccionado = parameters.id;
 
-                     var data1 = document.getElementById(configuracion_seleccionado+"_1");
-                     var data2 = document.getElementById(configuracion_seleccionado+"_2");
+                       var data1 = document.getElementById(configuracion_seleccionado+"_1");
+                       var data2 = document.getElementById(configuracion_seleccionado+"_2");
 
-                     if( data1.hasAttribute("hidden") )
-                     {
+                       if( data1.hasAttribute("hidden") )
+                       {
                         data1.removeAttribute("hidden", "");
                         data2.removeAttribute("hidden", "");
                         ajax_confi(parameters);
