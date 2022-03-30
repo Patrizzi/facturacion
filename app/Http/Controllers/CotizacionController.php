@@ -60,11 +60,12 @@ class CotizacionController extends Controller
         //Configuracion
         $array=array('comisionista_create','forma_pago_create','tipo_operacion_create','moneda_create','validez_create','garantia_create');
         foreach ($array as $key ) {
+            $buscador=ConfiguracionGuiaIngresos::where('nombre',$key)->where('tipo_guia','cotizacion')->first();
             $configuracion_nuevo=new ConfiguracionGuiaIngresos;
             $configuracion_nuevo->nombre=$key;
             $configuracion_nuevo->tipo_guia='cotizacion';
             $configuracion_nuevo->estado='0';
-            $configuracion_nuevo->save();
+            if (empty($buscador)){$configuracion_nuevo->save();}
         }
         //Configuracion
 
@@ -122,6 +123,15 @@ class CotizacionController extends Controller
 
     public function create_factura(Request $request)
     {
+        $config_create = array(
+            array('nombre' => 'comisionista_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'forma_pago_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'tipo_operacion_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'moneda_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'validez_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'garantia_create','id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            );
+        // return $config_create;
         $garantia=Garantia::where('estado',0)->get();
         $validez=Validez::where('estado',0)->get();
 
@@ -269,7 +279,7 @@ class CotizacionController extends Controller
         // r
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
 
-        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','array2','array_promedio_serv','cotizacion_numero_boleta'));
+        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','array2','array_promedio_serv','cotizacion_numero_boleta','config_create'));
     }
 
     public function create_factura_ms(Request $request)
