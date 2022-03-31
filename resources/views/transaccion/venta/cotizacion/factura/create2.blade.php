@@ -85,7 +85,7 @@
                                 <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                 <h5 id="n_factura">{{$cotizacion_numero}}</h5>
                                 <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
-                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                {{-- <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"> --}}
                             </div>
                         </div>
                     </div>

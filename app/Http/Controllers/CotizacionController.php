@@ -611,7 +611,7 @@ class CotizacionController extends Controller
         $cotizacion->estado_aprobado='0';
         $cotizacion->garantia=$request->get('garantia');
         $cotizacion->validez=$request->get('validez');
-        $cotizacion->fecha_emision=$request->get('fecha_emision');
+        $cotizacion->fecha_emision=date("d-m-Y");
         $cotizacion->fecha_vencimiento=$nuevafechas;
         $cotizacion->cambio=$cambio->paralelo;
         $cotizacion->observacion=$request->get('observacion');
