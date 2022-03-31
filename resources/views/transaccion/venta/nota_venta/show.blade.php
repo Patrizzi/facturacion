@@ -16,8 +16,12 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row ibox-title" style="padding-right: 3.1%;margin: 0; padding-bottom: 1px" >
         <div class="col-sm-6">
-            <button class="btn-editar btn btn-warning" onclick="click_editar()">Editar</button>
-            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">Cancelar</button>
+            @if($nota_venta->estado == 0)
+                <button class="btn-editar btn btn-warning" onclick="click_editar()">Editar</button>
+                <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">Cancelar</button>
+            @else
+
+            @endif
             {{-- <a href="" id="btn-editar" class="btn-editar btn btn-warning">Editar</a> --}}
         </div>
         <div class="col-sm-6 tooltip-demo "align="right"  > 
@@ -166,78 +170,82 @@
                 </div>
             </div>
             {{-- //SOLO EDITAR  --}}
-            <div class="div-editar no_mostrar">
-                <form action="{{route('nota_venta.update',$nota_venta->id)}}" method="post">
-                    @csrf
-                    <table   class="table tables">
-                        <thead>
-                            <tr >
-                                <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
-                                <th style="width: 65%">Descripcion</th>
-                                <th>Cantidad</th>
-                                <th>P.Unitario</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <span hidden>{{$h=1}}</span>
-                        <tbody>
-                            @foreach($nota_venta_re as $nota_venta_reg)
-                            
-                            <tr>
-                                <td>
-                                    <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                                </td>
-                                <td>
-                                    <input maxlength="190" class="form-control limp" list="browsers2" name="articulo[]"  required autocomplete="off" value="{{$nota_venta_reg->producto}}">
-                                        <datalist id="browsers2" >
-                                            @foreach($productos as $index)
-                                            <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-                                            @endforeach
-                                            @foreach($servicios as $servicio)
-                                            <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
-                                            @endforeach
-                                        </datalist>
-                                    </input>
-                                </td>
-                                <input type="hidden" name="elem_delete[]" value="{{$nota_venta_reg->id}}">
-                                <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
-                                <td><input type="text" value="{{$nota_venta_reg->cantidad}}" class="cantidad{{$h}} form-control limp" id="cantidad{{$h}}" name="cantidad[]" onkeyup="multi({{$h}})"></td>
-                                <td><input type="text" value="{{$nota_venta_reg->precio_nacional}}" class="precio{{$h}} form-control limp" id="precio{{$h}}" name="precio[]" onkeyup="multi({{$h}})"></td>
-                                <td><input type="text" value="{{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}" class="form-control limp" name="total" id="total{{$h}}" readonly></td>
-                            </tr>
-                            <span hidden>{{$h++}}</span>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
-                    <br>
-                </form>
-                <div class="row" style="width: 100%">
-                    <div class="col-sm-8">
-                        <h3 align="left" class="h3-total">
-                            <?php 
-                                $v=new CifrasEnLetras() ;
-                                $end2=number_format(round($sume, 2),2);
-                                $end=round($sume, 2);
+            <span hidden>{{$h=1}}</span>
+            @if($nota_venta->estado == 0)
+                <div class="div-editar no_mostrar">
+                    <form action="{{route('nota_venta.update',$nota_venta->id)}}" method="post">
+                        @csrf
+                        <table   class="table tables">
+                            <thead>
+                                <tr >
+                                    <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
+                                    <th style="width: 65%">Descripcion</th>
+                                    <th>Cantidad</th>
+                                    <th>P.Unitario</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($nota_venta_re as $nota_venta_reg)
+                                
+                                <tr>
+                                    <td>
+                                        <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                    </td>
+                                    <td>
+                                        <input maxlength="190" class="form-control limp" list="browsers2" name="articulo[]"  required autocomplete="off" value="{{$nota_venta_reg->producto}}">
+                                            <datalist id="browsers2" >
+                                                @foreach($productos as $index)
+                                                <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                                @endforeach
+                                                @foreach($servicios as $servicio)
+                                                <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                                                @endforeach
+                                            </datalist>
+                                        </input>
+                                    </td>
+                                    <input type="hidden" name="elem_delete[]" value="{{$nota_venta_reg->id}}">
+                                    <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
+                                    <td><input type="text" value="{{$nota_venta_reg->cantidad}}" class="cantidad{{$h}} form-control limp" id="cantidad{{$h}}" name="cantidad[]" onkeyup="multi({{$h}})"></td>
+                                    <td><input type="text" value="{{$nota_venta_reg->precio_nacional}}" class="precio{{$h}} form-control limp" id="precio{{$h}}" name="precio[]" onkeyup="multi({{$h}})"></td>
+                                    <td><input type="text" value="{{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}" class="form-control limp" name="total" id="total{{$h}}" readonly></td>
+                                </tr>
+                                <span hidden>{{$h++}}</span>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+                        <br>
+                    </form>
+                    <div class="row" style="width: 100%">
+                        <div class="col-sm-8">
+                            <h3 align="left" class="h3-total">
+                                <?php 
+                                    $v=new CifrasEnLetras() ;
+                                    $end2=number_format(round($sume, 2),2);
+                                    $end=round($sume, 2);
 
-                                $v=new CifrasEnLetras() ;
-                                $letra=($v->convertirEurosEnLetras($end));
-                                $letra_final = ucfirst(strstr($letra, 'soles',true));
-                                $end_final_point=strstr($end2, '.', false);
-                                $end_final=str_replace('.', ' ',$end_final_point);
-                                ?>
-                                Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
-                        </h3>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-control" align="center">
-                            <p class=" a"> Importe Total</p>
-                            <span>{{$nota_venta->moneda->simbolo}}</span>
-                            <span class="impor_t">{{$sume}}</span>
+                                    $v=new CifrasEnLetras() ;
+                                    $letra=($v->convertirEurosEnLetras($end));
+                                    $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                    $end_final_point=strstr($end2, '.', false);
+                                    $end_final=str_replace('.', ' ',$end_final_point);
+                                    ?>
+                                    Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                            </h3>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-control" align="center">
+                                <p class=" a"> Importe Total</p>
+                                <span>{{$nota_venta->moneda->simbolo}}</span>
+                                <span class="impor_t">{{$sume}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            
+            @else
+            @endif
         </div><!-- /table-responsive -->
 <br><br><br><br>
 

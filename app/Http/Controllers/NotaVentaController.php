@@ -191,43 +191,41 @@ class NotaVentaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        
         $nota_venta = NotaVenta::where('id',$id)->first();
-        $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
-        
-        // return $request;
-        // REGISTROS EXISTENTES
-        $n_registros_ori = $request->get('n_registros_ori');
-        $n_r_ori_c = count($n_registros_ori);
+        if($nota_venta->estado == 0){              
+            $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
+            // REGISTROS EXISTENTES
+            $n_registros_ori = $request->get('n_registros_ori');
+            $n_r_ori_c = count($n_registros_ori);
 
-        $var =$request->get('elem_delete');
-        // return array_count_values();
-        // ELIMINAR LOS QUE ESTAN DELETE
-        if( isset( $var )){
-            $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->whereNotIn('id', $request->get('elem_delete'))->get();
-        }else{
-            $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
-        }
-        // return $nota_registros_delete;
-        for ($i=0; $i < count($nota_registros_delete) ; $i++) { 
-            NotaVentaRegistro::Destroy($nota_registros_delete[$i]->id);
-        }   
-        //nuevos registros
-        for ($h=0; $h < $n_r_ori_c ; $h++) { 
-            if($request->get('n_registros_ori')[$h] == "existente"){
-                $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
-                $nota_venta_upd_new->producto= $request->get('articulo')[$h];
-                $nota_venta_upd_new->cantidad= $request->get('cantidad')[$h];
-                $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
-                $nota_venta_upd_new->save();
+            $var =$request->get('elem_delete');
+            // return array_count_values();
+            // ELIMINAR LOS QUE ESTAN DELETE
+            if( isset( $var )){
+                $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->whereNotIn('id', $request->get('elem_delete'))->get();
             }else{
-                $nota_venta_upd =new NotaVentaRegistro;
-                $nota_venta_upd->nota_venta_id = $nota_venta->id;
-                $nota_venta_upd->producto= $request->get('articulo')[$h];
-                $nota_venta_upd->cantidad= $request->get('cantidad')[$h];
-                $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
-                $nota_venta_upd->save();
+                $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
+            }
+            // return $nota_registros_delete;
+            for ($i=0; $i < count($nota_registros_delete) ; $i++) { 
+                NotaVentaRegistro::Destroy($nota_registros_delete[$i]->id);
+            }   
+            //nuevos registros
+            for ($h=0; $h < $n_r_ori_c ; $h++) { 
+                if($request->get('n_registros_ori')[$h] == "existente"){
+                    $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
+                    $nota_venta_upd_new->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd_new->cantidad= $request->get('cantidad')[$h];
+                    $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
+                    $nota_venta_upd_new->save();
+                }else{
+                    $nota_venta_upd =new NotaVentaRegistro;
+                    $nota_venta_upd->nota_venta_id = $nota_venta->id;
+                    $nota_venta_upd->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd->cantidad= $request->get('cantidad')[$h];
+                    $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
+                    $nota_venta_upd->save();
+                }
             }
         }
         return back();
