@@ -3,7 +3,6 @@
 @section('href_accion', route('cotizacion.index') )
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Atrás')
-@extends('layout_agregado_rapido')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 
@@ -30,6 +29,7 @@
     </div>
 </div>
 @endif
+@include('layout_agregado_rapido')
 
 {{-- Boton para modal de Clientes --}}
 @section('ruta_retorno', 'cotizacion')
@@ -44,331 +44,281 @@
         <div class="col-lg-12">
             <div class="ibox-content" style="padding-bottom: 0px;" >
                 <div class="row" >
-                 <div class="col-sm-3 ">
-                     <p class="form-control " align="center" >Cotizado por: {{auth()->user()->nombre}}</p>
-                 </div>
-                 <div class="col-sm-3">
-                     <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
-                 </div>
-                 <div class="col-sm-6" align="right">
-                    <style>
-                      .dropdown {position: relative;display: inline-block;}
-                      .dropdown-content {display: none;position: absolute; right: 0; background-color: #f9f9f9; min-width: 200px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1;}
-                      .dropdown-content a {color: black; padding: 12px 16px; text-decoration: none; display: block;}
-                      .dropdown-content a:hover {background-color: #f1f1f1;}
-                      .dropdown:hover .dropdown-content {display: block;}
-                      .form-check{margin: 20px 12px;}
-                  </style>
-                  <div class="dropdown" style="float:right;">
-                    <button class="btn btn-info" type="button" > <i class="fa fa-sliders"></i></button>
-                    <div class="dropdown-content" align="left">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="comisionista" @foreach($config as $comision) @if($comision->nombre=='comisionista_create' && $comision->estado=='1') checked @endif @endforeach >
-                            <label class="form-check-label" for="comisionista">Comisionista</label>
-                        </div>
+                   <div class="col-sm-3 ">
+                       <p class="form-control " align="center" >Cotizado por: {{auth()->user()->nombre}}</p>
+                   </div>
+                   <div class="col-sm-3">
+                       <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
+                   </div>
+                   <div class="col-sm-6" align="right">
 
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="forma_pago" @foreach($config as $comision) @if($comision->nombre=='forma_pago_create' && $comision->estado=='1') checked @endif @endforeach >
-                            <label class="form-check-label" for="forma_pago">Forma de Pago</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="tipo_operacion" @foreach($config as $comision) @if($comision->nombre=='tipo_operacion_create' && $comision->estado=='1') checked @endif @endforeach >
-                            <label class="form-check-label" for="tipo_operacion">Tipo Operacion</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="moneda" @foreach($config as $comision) @if($comision->nombre=='moneda_create' && $comision->estado=='1') checked @endif @endforeach >
-                            <label class="form-check-label" for="moneda">Cambio de Moneda</label>
+                      <div class="dropdown" style="float:right;">
+                        <button class="btn btn-info" type="button" > <i class="fa fa-sliders"></i></button>
+                        <div class="dropdown-content" align="left">
+                            @foreach($config_create as $index => $lista)
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="{{$lista['id_input']}}" @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre== $lista["nombre"] && $confi_create_blade->estado=='1') checked @endif @endforeach >
+                                <label class="form-check-label" for="{{$lista['id_input']}}">  {{$lista["input_value"]}}</label>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="ibox">
-        <div class="ibox-content">
-            <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-                @csrf
-                @method('put')
-                {{-- Cabecera --}}
-                <div class="row">
-                    <div class="col-sm-4 text-left" align="left">
-                        <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
-                        </address>
-                    </div>
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4">
-                        <div class="form-control" align="center" style="height: auto;">
-                            <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
-                            <h5 id="n_factura">{{$cotizacion_numero}}</h5>
-                            <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
-                            <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Cabecera new --}}
-                <div class="form-group row">
-                    <label class="col-sm-1 col-form-label">Cliente:</label>
-                    <div class="col-sm-5">
-                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
-                    </div>
-
-                    <label  class="col-sm-1 col-form-label">T.Cotización:</label>
-                    <div class="col-sm-5">
-
-                        <div class="radio">
-                            <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
-                            <label style="padding-right: 5px;" for="radio1">
-                                Factura
-                            </label>
-                            <input type="radio" name="tipo_coti" id="radio2" value="0" class="radio_boleta" onchange="click_radio_boleta()">
-                            <label for="radio2">
-                                Boleta
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" style="margin-top:10px">
-                    </div>
-
-                    <label  class="col-sm-1 col-form-label">Validez:</label>
-                    <div class="col-sm-5">
-                        <select  class="form-control" name="validez" required="required">
-                            @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
-                        </select>
-                    </div>
-
-                    <label  class="col-sm-1 col-form-label">Garantía:</label>
-                    <div class="col-sm-5">
-                        <select class="form-control" name="garantia">
-                            @foreach($garantia as $garantias) <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> @endforeach
-                        </select>
-                    </div>
-
-                </div>
-
-                <script>
-                    function ajax_confi(parameters){
-                       var configuracion_seleccionado = parameters.id;
-                       $.ajax({
-                        type: "post",
-                        url: "{{ route('envio_confi_ingresos') }}",
-                        data: {
-                            '_token': $('input[name=_token]').val(),
-                            'tipo_configuracion': configuracion_seleccionado
-                        },
-                        success: function (msg) {
-                                // alert(msg);
-                            }
-                        });
-                   }
-
-                   function ConfiguracionSelector(parameters) {
-                       var configuracion_seleccionado = parameters.id;
-
-                       var data1 = document.getElementById(configuracion_seleccionado+"_1");
-                       var data2 = document.getElementById(configuracion_seleccionado+"_2");
-
-                       if( data1.hasAttribute("hidden") )
-                       {
-                        data1.removeAttribute("hidden", "");
-                        data2.removeAttribute("hidden", "");
-                        ajax_confi(parameters);
-                    }
-                    else{
-                      data1.setAttribute("hidden", "");
-                      data2.setAttribute("hidden", "");
-                      ajax_confi(parameters);
-                  }
-              }
-
-          </script>
-          <div class="form-group row">
-
-            <label @foreach($config as $comision)  @if($comision->nombre=='comisionista_create' && $comision->estado=='0')  hidden="hidden" @endif  @endforeach id="comisionista_1"  class="col-sm-1 col-form-label">Comisionista:</label>
-            <div class="col-sm-5" id="comisionista_2"  @foreach($config as $comision) @if($comision->nombre=='comisionista_create' && $comision->estado=='0') hidden @endif @endforeach  >
-                <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
-                <datalist id="browsersc2" >
-                    <option id="">Sin comision - 0 </option>
-                    @foreach($p_venta as $p_ventas)
-                    <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
-                    @endforeach
-                </datalist>
-            </div>
-
-            {{-- <div id="forma_pago_view"> --}}
-                <label  @foreach($config as $comision) @if($comision->nombre=='forma_pago_create' && $comision->estado=='0') hidden @endif @endforeach id="forma_pago_1" class="col-sm-1 col-form-label" >F.Pago:</label>
-                <div class="col-sm-5" id="forma_pago_2"  @foreach($config as $comision) @if($comision->nombre=='forma_pago_create' && $comision->estado=='0') hidden @endif @endforeach>
-                    <select class="form-control" name="forma_pago" required="required">
-                        @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> @endforeach
-                    </select>
-                </div>
-            {{-- </div> --}}
-
-
-            {{-- <div id="moneda_view"> --}}
-                <label  @foreach($config as $comision) @if($comision->nombre=='moneda_create' && $comision->estado=='0') hidden @endif @endforeach id="moneda_1" class="col-sm-1 col-form-label">Moneda:</label>
-                <div class="col-sm-5" id="moneda_2" @foreach($config as $comision) @if($comision->nombre=='moneda_create' && $comision->estado=='0') hidden @endif @endforeach >
+        <div class="ibox">
+            <div class="ibox-content">
+                <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+                    @csrf
+                    @method('put')
+                    {{-- Cabecera --}}
                     <div class="row">
-                        <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
-                        <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                        <div class="col-sm-4 text-left" align="left">
+                            <address class="col-sm-4" align="left">
+                                <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
+                            </address>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <div class="form-control" align="center" style="height: auto;">
+                                <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                                <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
+                                <h5 id="n_factura">{{$cotizacion_numero}}</h5>
+                                <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Cabecera new --}}
+
+
+              <style>
+                  .col-form-label{margin-top: 15px!important;}
+                  .col-sm-5{margin-top: 15px!important;}
+              </style>
+                    <div class="form-group row">
+                        <label class="col-sm-1 col-form-label">Cliente:</label>
                         <div class="col-sm-5">
-                            <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                            <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
                         </div>
 
-                        <a class="col-sm-5 button_money" onclick="changeMoney()">
-                            <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
-                                @if($moneda->tipo=='nacional')Dolares
-                                @elseif($moneda->tipo=='extranjera')Soles
-                                @endif
-                            </button>
-                        </a>
+                        <label  class="col-sm-1 col-form-label">T.Cotización:</label>
+                        <div class="col-sm-5">
+
+                            <div class="radio">
+                                <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
+                                <label style="padding-right: 5px;" for="radio1">
+                                    Factura
+                                </label>
+                                <input type="radio" name="tipo_coti" id="radio2" value="0" class="radio_boleta" onchange="click_radio_boleta()">
+                                <label for="radio2">
+                                    Boleta
+                                </label>
+                            </div>
+                        </div>
+
+                        <label  id="validez_1"  class="col-sm-1 col-form-label"  @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>Validez:</label>
+                        <div   id="validez_2"class="col-sm-5"  @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>
+                            <select  class="form-control" name="validez" required="required">
+                                @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
+                            </select>
+                        </div>
+
+                        <label   id="garantia_1" class="col-sm-1 col-form-label" @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>Garantía:</label>
+                        <div  id="garantia_2" class="col-sm-5"  @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>
+                            <select class="form-control" name="garantia">
+                                @foreach($garantia as $garantias) <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> @endforeach
+                            </select>
+                        </div>
+{{--
                     </div>
-                </div>
-            {{-- </div> --}}
 
+              <div class="form-group row"> --}}
 
-            {{-- <div id="tipo_operacion_view"> --}}
-                <label  @foreach($config as $comision) @if($comision->nombre=='tipo_operacion_create' && $comision->estado=='0') hidden @endif @endforeach id="tipo_operacion_1" class="col-sm-1 col-form-label">T.Operación:</label>
-                <div class="col-sm-5" id="tipo_operacion_2" @foreach($config as $comision) @if($comision->nombre=='tipo_operacion_create' && $comision->estado=='0') hidden @endif @endforeach >
-
-                    <select class="form-control" name="tipo_operacion" >
-                        @foreach($tipo_operacion as $t_op)
-                        <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                <label @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach id="personalcomision_1"  class="col-sm-1 col-form-label">Comisionista:</label>
+                <div class="col-sm-5" id="personalcomision_2"  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach  >
+                    <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
+                    <datalist id="browsersc2" >
+                        <option id="">Sin comision - 0 </option>
+                        @foreach($p_venta as $p_ventas)
+                        <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
                         @endforeach
-                    </select>
+                    </datalist>
                 </div>
-            {{-- </div> --}}
 
-        </div>
+                {{-- <div id="forma_pago_view"> --}}
+                    <label  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach id="forma_pago_1" class="col-sm-1 col-form-label" >F.Pago:</label>
+                    <div class="col-sm-5" id="forma_pago_2"  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach>
+                        <select class="form-control" name="forma_pago" required="required">
+                            @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> @endforeach
+                        </select>
+                    </div>
+                {{-- </div> --}}
 
-        <div class="form-group row">
-            <label class="col-sm-1 col-form-label">Observación:</label>
 
-            <div class="col-sm-11">
-                <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                {{-- <div id="moneda_view"> --}}
+                    <label  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach id="moneda_1" class="col-sm-1 col-form-label">Moneda:</label>
+                    <div class="col-sm-5" id="moneda_2" @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach >
+                        <div class="row">
+                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                            <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                            <div class="col-sm-5">
+                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                            </div>
+
+                            <a class="col-sm-5 button_money" onclick="changeMoney()">
+                                <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
+                                    @if($moneda->tipo=='nacional')Dolares
+                                    @elseif($moneda->tipo=='extranjera')Soles
+                                    @endif
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                {{-- </div> --}}
+
+
+                {{-- <div id="tipo_operacion_view"> --}}
+                    <label  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach id="tipo_operacion_1" class="col-sm-1 col-form-label">T.Operación:</label>
+                    <div class="col-sm-5" id="tipo_operacion_2" @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach >
+
+                        <select class="form-control" name="tipo_operacion" >
+                            @foreach($tipo_operacion as $t_op)
+                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                {{-- </div> --}}
+
             </div>
-        </div>
+
+            <div class="form-group row">
+                <label class="col-sm-1 col-form-label">Observación:</label>
+
+                <div class="col-sm-11">
+                    <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                </div>
+            </div>
 
 
 
 
-        {{-- Cabecera new --}}
+            {{-- Cabecera new --}}
 
-        <style type="text/css">
-            label{font-size: 14px !important;}
-        </style>
+            <style type="text/css">
+                label{font-size: 14px !important;}
+            </style>
 
 
 
-        <div id="resultado_moneda"></div>
+            <div id="resultado_moneda"></div>
 
-        <div class="table-responsive">
-            <table cellspacing="0" class="table tables">
-                <thead>
-                    <tr>
-                        <th style="width: 10px"></th>
-                        <th style="width: 500px">Artículo</th>
-                        <th>Stock</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Dcto</th>
-                        <th>PU. Dcto.</th>
-                        <th>PU. Com.</th>
-                        <th>Total</th>
-                        <th>Total IGV</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <button type="button" class='delete borrar e btn btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                        </td>
-                        <td>
-                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
-                            <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
-                            <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
-                            <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required autocomplete="off"/>
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='precio0' name='precio[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                        </td>
-                        <td>
-                            <div style="position: relative;">
-                                <input class="text_des" type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required autocomplete="off"/>
-                            </div>
-                            <div  class="div_check">
-                                <input class="check" type='checkbox' id='check0' name='check[]' onclick="multi(0)" style="" autocomplete="off"/>
-                            </div>
-                            <input type='hidden' id='check_descuento0' name='check_descuento[]' class="form-control"  required >
-                            <input type='hidden' id='promedio_original0' name='promedio_original[]' class="form-control" required >
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
-                        </td>
-                        <input style="width: 76px" type='hidden' name="comision[]" id='comision0'  readonly="readonly" class="form-control"  required  autocomplete="off" />
-                        <td>
-                            <input style="width: 76px" type='text' id='precio_unitario_comision0' name='precio_unitario_comision[]' readonly="readonly" class="form-control"  required autocomplete="off" />
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='total0' name='total' disabled="disabled" class="total form-control" required  autocomplete="off" />
-                            <input type='text' id='afectacion0'  style="width: 76px"  name='afectacion' disabled="disabled" class="afectacion form-control" hidden="" required  autocomplete="off"/>
-                        </td>
-                        <td>
-                            <input style="width: 76px" type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
-                        </td>
-                        <span id="spTotal"></span>
-                    </tr>
-                </tbody>
-                <tbody>
-                    <tr style="background-color: #f5f5f500;" align="center">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Subtotal :</td>
-                        <td colspan="3">
-                            <input id='sub_total' disabled="disabled" class="form-control" required />
-                            <input id='subtotal_gravado'  disabled="disabled"  hidden="" class="form-control" required />
-                        </td>
-                    </tr>
-                    <tr style="background-color: #f5f5f500;" align="center">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>IGV :</td>
-                        <td colspan="3"><input id='igv' disabled="disabled" class="form-control" required /></td>
-                    </tr>
-                    <tr align="center">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Total :</td>
-                        <td colspan="3"><input id='total_final' disabled="disabled" class="form-control" required /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        &nbsp;
-        <button type="button" class='addmore btn btn-success' disabled > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-        <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
-    </form>
-</div>
+            <div class="table-responsive">
+                <table cellspacing="0" class="table tables">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px"></th>
+                            <th style="width: 500px">Artículo</th>
+                            <th>Stock</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Dcto</th>
+                            <th>PU. Dcto.</th>
+                            <th>PU. Com.</th>
+                            <th>Total</th>
+                            <th>Total IGV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <button type="button" class='delete borrar e btn btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                            </td>
+                            <td>
+                                <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
+                                <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
+                                <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
+                            </td>
+                            <td>
+                                <input style="width: 76px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required autocomplete="off"/>
+                            </td>
+                            <td>
+                                <input style="width: 76px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                            </td>
+                            <td>
+                                <input style="width: 76px" type='text' id='precio0' name='precio[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                            </td>
+                            <td>
+                                <div style="position: relative;">
+                                    <input class="text_des" type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required autocomplete="off"/>
+                                </div>
+                                <div  class="div_check">
+                                    <input class="check" type='checkbox' id='check0' name='check[]' onclick="multi(0)" style="" autocomplete="off"/>
+                                </div>
+                                <input type='hidden' id='check_descuento0' name='check_descuento[]' class="form-control"  required >
+                                <input type='hidden' id='promedio_original0' name='promedio_original[]' class="form-control" required >
+                            </td>
+                            <td>
+                                <input style="width: 76px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
+                            </td>
+                            <input style="width: 76px" type='hidden' name="comision[]" id='comision0'  readonly="readonly" class="form-control"  required  autocomplete="off" />
+                            <td>
+                                <input style="width: 76px" type='text' id='precio_unitario_comision0' name='precio_unitario_comision[]' readonly="readonly" class="form-control"  required autocomplete="off" />
+                            </td>
+                            <td>
+                                <input style="width: 76px" type='text' id='total0' name='total' disabled="disabled" class="total form-control" required  autocomplete="off" />
+                                <input type='text' id='afectacion0'  style="width: 76px"  name='afectacion' disabled="disabled" class="afectacion form-control" hidden="" required  autocomplete="off"/>
+                            </td>
+                            <td>
+                                <input style="width: 76px" type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
+                            </td>
+                            <span id="spTotal"></span>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr style="background-color: #f5f5f500;" align="center">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Subtotal :</td>
+                            <td colspan="3">
+                                <input id='sub_total' disabled="disabled" class="form-control" required />
+                                <input id='subtotal_gravado'  disabled="disabled"  hidden="" class="form-control" required />
+                            </td>
+                        </tr>
+                        <tr style="background-color: #f5f5f500;" align="center">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>IGV :</td>
+                            <td colspan="3"><input id='igv' disabled="disabled" class="form-control" required /></td>
+                        </tr>
+                        <tr align="center">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total :</td>
+                            <td colspan="3"><input id='total_final' disabled="disabled" class="form-control" required /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            &nbsp;
+            <button type="button" class='addmore btn btn-success' disabled > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+            <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+        </form>
+    </div>
 </div>
 </div>
 </div>
@@ -424,6 +374,12 @@
         cursor: default;
     }
 
+    .dropdown {position: relative;display: inline-block;}
+    .dropdown-content {display: none;position: absolute; right: 0; background-color: #f9f9f9; min-width: 200px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1;}
+    .dropdown-content a {color: black; padding: 12px 16px; text-decoration: none; display: block;}
+    .dropdown-content a:hover {background-color: #f1f1f1;}
+    .dropdown:hover .dropdown-content {display: block;}
+    .form-check{margin: 20px 12px;}
 </style>
 
 <!-- Mainly scripts -->
@@ -443,7 +399,42 @@
 <script src="{{ asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+          <script>
+                        function ajax_confi(parameters){
+                         var configuracion_seleccionado = parameters.id;
+                         $.ajax({
+                            type: "post",
+                            url: "{{ route('envio_confi_ingresos') }}",
+                            data: {
+                                '_token': $('input[name=_token]').val(),
+                                'tipo_configuracion': configuracion_seleccionado
+                            },
+                            success: function (msg) {
+                                // alert(msg);
+                            }
+                        });
+                     }
 
+                     function ConfiguracionSelector(parameters) {
+                         var configuracion_seleccionado = parameters.id;
+
+                         var data1 = document.getElementById(configuracion_seleccionado+"_1");
+                         var data2 = document.getElementById(configuracion_seleccionado+"_2");
+
+                         if( data1.hasAttribute("hidden") )
+                         {
+                            data1.removeAttribute("hidden", "");
+                            data2.removeAttribute("hidden", "");
+                            ajax_confi(parameters);
+                        }
+                        else{
+                          data1.setAttribute("hidden", "");
+                          data2.setAttribute("hidden", "");
+                          ajax_confi(parameters);
+                      }
+                  }
+
+              </script>
 
 {{-- Scripts realizados por el desarrollador --}}
 <script type="text/javascript">

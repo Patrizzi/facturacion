@@ -58,7 +58,7 @@ class CotizacionController extends Controller
     public function index()
     {
         //Configuracion
-        $array=array('comisionista_create','forma_pago_create','tipo_operacion_create','moneda_create','validez_create','garantia_create');
+        $array=array('personalcomision_create','forma_pago_create','tipo_operacion_create','moneda_create','validez_create','garantia_create');
         foreach ($array as $key ) {
             $buscador=ConfiguracionGuiaIngresos::where('nombre',$key)->where('tipo_guia','cotizacion')->first();
             $configuracion_nuevo=new ConfiguracionGuiaIngresos;
@@ -124,12 +124,12 @@ class CotizacionController extends Controller
     public function create_factura(Request $request)
     {
         $config_create = array(
-            array('nombre' => 'comisionista_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'forma_pago_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'tipo_operacion_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'moneda_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'validez_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
-            array('nombre' => 'garantia_create', 'id_input' => 'comisionista', 'input_value' => 'Comisionista'),
+            array('nombre' => 'personalcomision_create', 'id_input' => 'personalcomision', 'input_value' => 'Comisionista'),
+            array('nombre' => 'forma_pago_create', 'id_input' => 'forma_pago', 'input_value' => 'Forma de Pago'),
+            array('nombre' => 'tipo_operacion_create', 'id_input' => 'tipo_operacion', 'input_value' => 'Tipo Operacion'),
+            array('nombre' => 'moneda_create', 'id_input' => 'moneda', 'input_value' => 'Cambio de Moneda'),
+            array('nombre' => 'validez_create', 'id_input' => 'validez', 'input_value' => 'Validez'),
+            array('nombre' => 'garantia_create', 'id_input' => 'garantia', 'input_value' => 'Garantia'),
             );
         // return $config_create;
         $garantia=Garantia::where('estado',0)->get();
