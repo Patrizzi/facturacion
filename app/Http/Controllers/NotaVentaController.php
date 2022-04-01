@@ -28,6 +28,7 @@ class NotaVentaController extends Controller
      */
     public function index()
     {
+
         $nota_venta=NotaVenta::all();
         $almacen =Almacen::all();
         $conteo_almacen=Almacen::where('estado',0)->count();
