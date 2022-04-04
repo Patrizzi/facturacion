@@ -62,110 +62,108 @@
                                     <td>Garantia</td>
                                     <td>:</td>
                                     <td><select class="form-control" name="garantia">
-                                        <option value="0">Sin Garantia</option>
-                                        <option value="6">6 Meses</option>
-                                        <option value="12">12 Meses</option>
-                                        <option value="24">24 Meses</option>
-                                        <option value="36">36 Meses</option>
-                                    </select></td>
-                                </tr>
+                                      @foreach($garantia as $garantias)
+                                      <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                      @endforeach
+                                  </select></td>
+                              </tr>
 
-                                <tr>
-                                    <td>Moneda</td>
-                                    <td>:</td>
-                                    <td>
-                                       <select name="moneda" class="form-control" required >
-                                        <option value="">Seleccione Moneda</option>
-                                        @foreach($moneda as $monedas)
-                                        <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                        @endforeach
-                                    </select>
-
-                                </td>
-                                <td>Fecha de Emision</td>
+                              <tr>
+                                <td>Moneda</td>
                                 <td>:</td>
                                 <td>
-                                    <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                                </td>
-                            </tr>
+                                   <select name="moneda" class="form-control" required >
+                                    <option value="">Seleccione Moneda</option>
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
+
+                            </td>
+                            <td>Fecha de Emision</td>
+                            <td>:</td>
+                            <td>
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Observacion</td>
+                            <td>:</td>
+                            <td colspan="4">
+                                <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Nota de Venta a vuestra solicitud</textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="resultado_moneda"></div>
+
+                <div class="table-responsive">
+                    <table cellspacing="0" class="table tables  " >
+                        <thead>
                             <tr>
-                                <td>Observacion</td>
-                                <td>:</td>
-                                <td colspan="4">
-                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Nota de Venta a vuestra solicitud</textarea>
-                                </td>
+                                <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+                                <th >Articulo</th>
+                                <th style="width:100px">Cantidad</th>
+                                <th style="width:100px">Precio</th>
+                                <th style="width:100px">Total</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type='checkbox' class="case"></td>
+                                <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
+                                 <datalist id="browsers2" >
+                                    @foreach($productos as $index)
+                                    <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                    @endforeach
+                                    @foreach($servicios as $servicio)
+                                    <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
+                                </td>
+                                <td>
+                                    <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                </td>
+
+                                <td>
+                                    <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                </td>
+                                <span id="spTotal"></span>
+                            </tr>
+
                         </tbody>
-                    </table>
+                        <tbody>
 
-                    <div id="resultado_moneda"></div>
 
-                    <div class="table-responsive">
-                        <table cellspacing="0" class="table tables  " >
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-                                    <th >Articulo</th>
-                                    <th style="width:100px">Cantidad</th>
-                                    <th style="width:100px">Precio</th>
-                                    <th style="width:100px">Total</th>
+                            <tr  align="center">
+                                <td></td>
+                                <td></td>
+                                <td>Total :</td>
+                                <td colspan="2">
+                                    <input id='sub_total' hidden name="costo_sub_total"  readonly="readonly" class="form-control" required />
+                                    <input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type='checkbox' class="case"></td>
-                                    <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-                                     <datalist id="browsers2" >
-                                        @foreach($productos as $index)
-                                        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-                                        @endforeach
-                                        @foreach($servicios as $servicio)
-                                        <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
-                                    </td>
-                                    <td>
-                                        <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                    </td>
-
-                                    <td>
-                                        <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
-                                    </td>
-                                    <span id="spTotal"></span>
-                                </tr>
-
                             </tbody>
-                            <tbody>
-
-
-                                <tr  align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total :</td>
-                                    <td colspan="2">
-                                        <input id='sub_total' hidden name="costo_sub_total"  readonly="readonly" class="form-control" required />
-                                        <input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
+                            <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
-                                <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                            </div>
-                            <div class="col-sm-6" align="right">
-                                <button type="submit" class='delete btn btn-info'>Guardar</button>&nbsp;
+                        <div class="col-sm-6" align="right">
+                            <button type="submit" class='delete btn btn-info'>Guardar</button>&nbsp;
 
-                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <style>

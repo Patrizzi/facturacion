@@ -1,21 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Almacen;
+use App\Banco;
 use App\Cliente;
 use App\Empresa;
+use App\Forma_pago;
+use App\Garantia;
+use App\Moneda;
 use App\NotaVenta;
+use App\NotaVentaRegistro;
 use App\Personal;
-use App\Almacen;
 use App\Producto;
 use App\Servicios;
-use App\Banco;
-use App\Moneda;
-use App\Forma_pago;
 use App\kardex_entrada;
-use App\NotaVentaRegistro;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Storage;
 
 class NotaVentaController extends Controller
@@ -27,6 +28,7 @@ class NotaVentaController extends Controller
      */
     public function index()
     {
+
         $nota_venta=NotaVenta::all();
         $almacen =Almacen::all();
         $conteo_almacen=Almacen::where('estado',0)->count();
@@ -51,6 +53,7 @@ class NotaVentaController extends Controller
 
 
       $clientes=Cliente::all();
+      $garantia=Garantia::where('estado',0)->get();
       $moneda=Moneda::all();
       $forma_pagos= Forma_pago::all();
       $servicios = Servicios::all();
@@ -58,7 +61,7 @@ class NotaVentaController extends Controller
       $user_login =auth()->user();
 
       $empresa=Empresa::first();
-      return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen'));
+      return view('transaccion.venta.nota_venta.create',compact('garantia','empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen'));
 
   }
 
