@@ -30,11 +30,24 @@ class NotaVentaController extends Controller
     {
 
         $nota_venta=NotaVenta::all();
+        
+        foreach($nota_venta as $index =>  $nota_ventas){    
+            $total = 0;
+            $suma = 0;
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+            foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $suma += $total;
+            $totales[$index] = $suma;
+        }
+        
+        // return $totales;
         $almacen =Almacen::all();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen_primero =Almacen::first();
         $user_login =auth()->user();
-        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen'));
+        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen','totales'));
     }
 
     /**
@@ -194,6 +207,7 @@ class NotaVentaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return $request;
         $nota_venta = NotaVenta::where('id',$id)->first();
         if($nota_venta->estado == 0){              
             $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
@@ -229,6 +243,12 @@ class NotaVentaController extends Controller
                     $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
                     $nota_venta_upd->save();
                 }
+            }
+            $submit=$request->get('submit');
+            if($submit == 2){
+                $nota_venta_esta_v=NotaVenta::find($nota_venta->id);
+                $nota_venta_esta_v->estado_vigente = 1;   
+                $nota_venta_esta_v->save();
             }
         }
         return back();

@@ -92,7 +92,7 @@
                                     <td>{{$cotizacions->cliente->nombre}}</td>
                                     <td>{{$cotizacions->created_at}}</td>
                                     <span hidden>{{$subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }} </span>
-                                    <td>{{$cotizacions->moneda->simbolo}} {{number_format(round(($subtotal+($subtotal*$igv->renta/100)),2),2)}}</td>
+                                    <td>{{$cotizacions->moneda->simbolo}} {{number_format(round(($subtotal+($cotizacions->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     <td><center><a href="{{route('cotizacion.show',$cotizacions->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
                                     <td>
                                         @if($cotizacions->estado =='0')

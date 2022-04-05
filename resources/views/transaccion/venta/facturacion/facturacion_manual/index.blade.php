@@ -42,7 +42,8 @@
                                     <th>Codigo de Factura</th>
                                     <th>Cliente</th>
                                     <th>N°Documento</th>
-                                    <th>Fecha Vencimiento</th>
+                                    <th>Fecha Emision</th>
+                                    <th>Importe T.</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
@@ -55,7 +56,9 @@
                                     <td>{{$facturacions->codigo_fac}}</td>
                                     <td>{{$facturacions->cliente->nombre}}</td>
                                     <td>{{$facturacions->cliente->numero_documento}}</td>
-                                    <td>{{$facturacions->fecha_vencimiento }}</td>
+                                    <td>{{$facturacions->fecha_emision }}</td>
+                                    <span hidden>{{$subtotal = $facturacions->op_gravada + $facturacions->op_inafecta + $facturacions->op_exonerada }} </span>
+                                    <td>{{$facturacions->moneda->simbolo}} {{number_format(round(($subtotal+($facturacions->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     {{-- Ver --}}
                                     <td align="center">
                                         <a href="{{route('facturacion_manual.show',$facturacions->id)}}">

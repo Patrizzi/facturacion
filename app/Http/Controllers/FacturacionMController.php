@@ -36,7 +36,8 @@ class FacturacionMController extends Controller
     public function index()
     {
         $facturacion=Facturacion_m::all();
-        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion'));
+        $igv = Igv::first();
+        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv'));
     }
 
     /**

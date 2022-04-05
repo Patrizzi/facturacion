@@ -32,7 +32,7 @@
 @endif
 
 
-@section('content')
+@section('content')facturacions
 
 <span hidden>
     <script>
@@ -81,6 +81,7 @@
                                     <th>Cliente </th>
                                     <th>Ruc/DNI</th>
                                     <th>Fecha de Vencimiento</th>
+                                    <th>Importe T.</th>
                                     <th></th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
@@ -100,7 +101,9 @@
                                     @else
                                     <td>{{$boleta->cotizacion->cliente->numero_documento}}</td>
                                     @endif
-                                    <td>{{$boleta->fecha_vencimiento }}</td>
+                                    <td>{{$boleta->fecha_emision }}</td>
+                                    <span hidden>{{$subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }} </span>
+                                    <td>{{$boleta->moneda->simbolo}} {{number_format(round(($subtotal+($boleta->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     <td style="text-align:center">
                                         <a href="{{route('boleta.show',$boleta->id)}}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a>
                                     </td>

@@ -478,7 +478,7 @@
         $('.demo3').click(function () {
             swal({
                 title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, no podras modificar el Inventario Inicial",
+                text: "Una vez Finalizado, no podras editar esta Nota de venta",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3686ff",
@@ -489,9 +489,9 @@
                 function (isConfirm) {
                     if (isConfirm) {
                         document.getElementById("finalizar").click();
-                        swal("Inventario Inicial Finalizado", "Ahora podras facturar...", "success");
+                        swal("Edicion de Cotizacion Cerrado", "No se va a poder editar de nuevo", "success");
                     } else {
-                        swal("Cancelado", "Cancelado la Finalizar", "error");
+                        swal("Cancelado", "Cancelando el Finalizar", "error");
                     }
                 });
         })
