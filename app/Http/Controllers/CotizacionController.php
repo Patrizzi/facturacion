@@ -96,7 +96,9 @@ class CotizacionController extends Controller
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
-        return view('transaccion.venta.cotizacion.index2',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero'));
+        $igv = Igv::first();
+        
+        return view('transaccion.venta.cotizacion.index2',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero','igv'));
     }
     /**
        
@@ -1341,8 +1343,9 @@ class CotizacionController extends Controller
     }
     public function update(Request $request, $id){
 
-        return $request;
+        // return $request;
         $cotizacion = Cotizacion::where('id',$id)->first();
+        //* ESTADO VIGENTE : USADO PARA EDICION DE COTIZACION;
         $moneda=Moneda::where('principal',1)->first();
         $moneda_registrada=$cotizacion->moneda_id;
         $tipo_cambio=TipoCambio::latest('created_at')->first();
@@ -1352,9 +1355,15 @@ class CotizacionController extends Controller
         }else{
             $comision = $cotizacion->comisionista->comision;
         }
-
-        if($cotizacion->estado == 0){
-            
+        
+        if($cotizacion->estado == 0 && $cotizacion->estado_vigente == 0 ){
+            //Subtotales en 0 para nueva insercion
+            $cotizacion::find($cotizacion->id);
+            $cotizacion->op_gravada = 0;
+            $cotizacion->op_exonerada = 0;
+            $cotizacion->op_inafecta = 0;
+            $cotizacion->save();
+            //Fin de subtotales en 0 para nueva insercion
             // REGISTROS EXISTENTES
             $c_registros_ori = $request->get('n_registros_ori');
             $c_r_ori_c = count($c_registros_ori);
@@ -1368,7 +1377,7 @@ class CotizacionController extends Controller
             }
             // BUCLE PARA DESTRUIR LOS REGISTROS
             for ($i=0; $i < count($coti_registros_delete) ; $i++) { 
-                // Cotizacion_factura_registro::Destroy($coti_registros_delete[$i]->id);
+                Cotizacion_factura_registro::Destroy($coti_registros_delete[$i]->id);
             } 
              //nuevos registros
             $articulo = $request->get('articulo');
@@ -1381,110 +1390,164 @@ class CotizacionController extends Controller
                 $articulo_id_3[$a]=substr(strstr($articulo_id_2[$a], ' '),1);
                 $articulo_id[$a]=strstr($articulo_id_3[$a], ' ', true);
             }
-            return $articulo_id;
+            // return $articulo_id;
             for ($h=0; $h < $c_r_ori_c ; $h++) { 
                 $producto = Producto::where('codigo_producto',$articulo_id[$h])->first();
+                // Update registros
                 if($request->get('n_registros_ori')[$h] == "existente"){
-                    // Update registros
-                    if(isset($producto)){
-                        $cotizacion_r_update = Cotizacion_factura_registro::find($request->get('elem_delete')[$h]);
-                        $cotizacion_r_update->cotizacion_id = $cotizacion->id;
-                        $cotizacion_r_update->producto_id = $producto->id;
-                        if($request->get('descripcion_item')[$h] == null){
-                            $cotizacion_r_update->descripcion_item = null;
-                        }else{
-                            $cotizacion_r_update->descripcion_item = $request->get('descripcion_item')[$a];
-                        }
-                        $stock = Stock_almacem::where('producto_id',$producto->id)->pluck('stock')->first();
-                        $cotizacion_r_update->stock = $stock;
-                        if($moneda->id == $moneda_registrada){
-                            if($moneda->tipo == "nacional"){
-                                $pro_ori = round(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'),2);
-                                $cotizacion_r_update->promedio_original = $pro_ori;
-                                $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
-                                $precio = round($pre_pro+$utilidad,2);
-                                $cotizacion_r_update->precio = $precio;
-                            }else{
-                                $pro_ori = round(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'),2);
-                                $cotizacion_r_update->promedio_original = $pro_ori;
-                                $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
-                                $precio = round($pre_pro+$utilidad,2);
-                                $cotizacion_r_update->precio = $precio;
-                            }
-                        }else{
-                            if($moneda->tipo == "extranjera"){
-                                $pro_ori = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')*$tipo_cambio->paralelo),2);
-                                $cotizacion_r_update->promedio_original = $pro_ori;
-                                $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
-                                $precio = round($pre_pro+$utilidad,2);
-                                $cotizacion_r_update->precio = $precio;
-                            }else{
-                                $pro_ori = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')/$tipo_cambio->paralelo),2);
-                                $cotizacion_r_update->promedio_original = $pro_ori;
-                                $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
-                                $precio = round($pre_pro+$utilidad,2);
-                                $cotizacion_r_update->precio = $precio;
-                            }
-                        }
-                        $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                        $check_desc = $request->get('check_descuento')[$h];
-                        //PRECIO UNITARIO DESCUENTO
-                        if($check_desc <> 0){
-                            $precio_unitario = $precio - ($pro_ori*$check_desc/100);
-                            $cotizacion_r_update->precio_unitario_desc = $precio_unitario;
-                            $pre_uni_comi = $precio_unitario + ($precio_unitario*($comision/100));
-                            $cotizacion_r_update->precio_unitario_comi = round($pre_uni_comi,2);
-                        }else{
-                            $cotizacion_r_update->precio_unitario_desc = $precio;
-                            $cotizacion_r_update->precio_unitario_comi = $precio;
-                        }
-                        //TIPO DE AFECTACION
-                        $cotizacion_2=Cotizacion::find($cotizacion->id);
-                        $cotizacion_2->op_gravada = 0;
-                        $cotizacion_2->op_exonerada = 0;
-                        $cotizacion_2->op_inafecta = 0;
-                        if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                            $cotizacion_2->op_gravada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
-                        }
-                        if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                            $cotizacion_2->op_exonerada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
-                        }
-                        if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                            $cotizacion_2->op_inafecta += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
-                        }
-                        $cotizacion_2->save();
-                        $cotizacion_r_update->save();
-                    }else{
-                        //SERVICIOS
-                        $servicio=Servicios::where('codigo_servicio',$articulo_id[$h])->where('estado_anular',0)->first();
-
-                        $cotizacion_r_update = Cotizacion_factura_registro::find($request->get('elem_delete')[$h]);
-                        $cotizacion_r_update->cotizacion_id = $cotizacion->id;
-                        $cotizacion_r_update->producto_id = $servicio->id;
-                        if($request->get('descripcion_item')[$h] == null){
-                            $cotizacion_r_update->descripcion_item = null;
-                        }else{
-                            $cotizacion_r_update->descripcion_item = $request->get('descripcion_item')[$a];
-                        }
-                        $stock = Stock_almacem::where('producto_id',$producto->id)->pluck('stock')->first();
-                    }
-                    // $request->get('articulo')[$h];
-
+                    $cotizacion_r_update = Cotizacion_factura_registro::find($request->get('elem_delete')[$h]);
                 }else{
-                    // add registros
-                    // $coti_r_add =new Cotizacion_factura_registro;
-                    // $coti_r_add->nota_venta_id = $nota_venta->id;
-                    // $coti_r_add->producto= $request->get('articulo')[$h];
-                    // $coti_r_add->cantidad= $request->get('cantidad')[$h];
-                    // $coti_r_add->precio_nacional= $request->get('precio')[$h];
-                    // $coti_r_add->save();
+                    $cotizacion_r_update = new Cotizacion_factura_registro;
+                }
+                if(isset($producto)){
+                    
+                    $cotizacion_r_update->cotizacion_id = $cotizacion->id;
+                    $cotizacion_r_update->producto_id = $producto->id;
+                    if($request->get('descripcion_item')[$h] == null){
+                        $cotizacion_r_update->descripcion_item = null;
+                    }else{
+                        $cotizacion_r_update->descripcion_item = $request->get('descripcion_item')[$h];
+                    }
+                    $stock = Stock_almacen::where('producto_id',$producto->id)->pluck('stock')->first();
+                    $cotizacion_r_update->stock = $stock;
+                    if($moneda->id == $moneda_registrada){
+                        if($moneda->tipo == "nacional"){
+                            $pro_ori = round(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'),2);
+                            $cotizacion_r_update->promedio_original = $pro_ori;
+                            $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
+                            $precio = round($pro_ori+$utilidad,2);
+                            $cotizacion_r_update->precio = $precio;
+                        }else{
+                            $pro_ori = round(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'),2);
+                            $cotizacion_r_update->promedio_original = $pro_ori;
+                            $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
+                            $precio = round($pro_ori+$utilidad,2);
+                            $cotizacion_r_update->precio = $precio;
+                        }
+                    }else{
+                        if($moneda->tipo == "extranjera"){
+                            $pro_ori = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')*$tipo_cambio->paralelo),2);
+                            $cotizacion_r_update->promedio_original = $pro_ori;
+                            $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
+                            $precio = round($pro_ori+$utilidad,2);
+                            $cotizacion_r_update->precio = $precio;
+                        }else{
+                            $pro_ori = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')/$tipo_cambio->paralelo),2);
+                            $cotizacion_r_update->promedio_original = $pro_ori;
+                            $utilidad = $pro_ori*(($producto->utilidad-$producto->descuento1)/100);
+                            $precio = round($pro_ori+$utilidad,2);
+                            $cotizacion_r_update->precio = $precio;
+                        }
+                    }
+                    $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
+                    $check_desc = $request->get('check_descuento')[$h];
+                    $cotizacion_r_update->descuento = $check_desc;
+                    $cotizacion_r_update->comision = $comision;
+                    //PRECIO UNITARIO DESCUENTO
+                    if($check_desc <> 0){
+                        $precio_unitario = $precio - ($pro_ori*$check_desc/100);
+                        $cotizacion_r_update->precio_unitario_desc = $precio_unitario;
+                        $pre_uni_comi = $precio_unitario + ($precio_unitario*($comision/100));
+                        $cotizacion_r_update->precio_unitario_comi = round($pre_uni_comi,2);
+                    }else{
+                        $cotizacion_r_update->precio_unitario_desc = $precio;
+                        $cotizacion_r_update->precio_unitario_comi = $precio;
+                    }
+                    //TIPO DE AFECTACION
+                    $cotizacion_2=Cotizacion::find($cotizacion->id);
+                    
+                    if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                        $cotizacion_2->op_gravada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
+                    }
+                    if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                        $cotizacion_2->op_exonerada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
+                    }
+                    if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                        $cotizacion_2->op_inafecta += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
+                    }
+                    $cotizacion_2->save();
+                    $cotizacion_r_update->save();
+                }else{
+                    //SERVICIOS
+                    $servicio=Servicios::where('codigo_servicio',$articulo_id[$h])->where('estado_anular',0)->first();
+
+                    
+                    $cotizacion_r_update->cotizacion_id = $cotizacion->id;
+                    $cotizacion_r_update->producto_id = $servicio->id;
+                    if($request->get('descripcion_item')[$h] == null){
+                        $cotizacion_r_update->descripcion_item = null;
+                    }else{
+                        $cotizacion_r_update->descripcion_item = $request->get('descripcion_item')[$f];
+                    }
+                    //LOGICA PARA LA MONEDA
+                    if($moneda->id == $moneda_registrada){
+                        if($moneda->tipo == "nacional"){
+                            $pre_prom = $servicio->precio_nacional;
+                            $cotizacion_r_update->promedio_original = $pre_prom;
+                            $utilidad = $pre_prom * ($servicio->utilidad/100);
+                            $precio = round($pre_prom + $utilidad,2); 
+                            $cotizacion_r_update->precio = $precio;
+                        }else{
+                            $pre_prom = $servicio->precio_extranjero;
+                            $cotizacion_r_update->promedio_original = $pre_prom;
+                            $utilidad = $pre_prom * ($servicio->utilidad/100);
+                            $precio = round($pre_prom + $utilidad,2); 
+                            $cotizacion_r_update->precio = $precio;
+                        }
+                    }else{
+                        if($moneda->tipo == "extrnjera"){
+                            $pre_prom = round($servicio->precio_extranjero * $tipo_cambio->paralelo,2);
+                            $cotizacion_r_update->promedio_original = $pre_prom;
+                            $utilidad = $pre_prom * ($servicio->utilidad/100);
+                            $precio = round($pre_prom + $utilidad,2); 
+                            $cotizacion_r_update->precio = $precio;
+                        }else{
+                            $pre_prom = round($servicio->precio_nacional / $tipo_cambio->paralelo,2);
+                            $cotizacion_r_update->promedio_original = $pre_prom;
+                            $utilidad = $pre_prom * ($servicio->utilidad/100);
+                            $precio = round($pre_prom + $utilidad,2); 
+                            $cotizacion_r_update->precio = $precio;
+                        }
+                    }
+                    $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
+                    $check_desc = $request->get('check_descuento')[$h];
+                    $cotizacion_r_update->descuento = $check_desc;
+                    $cotizacion_r_update->comision = $comision;
+                    //PRECIO UNITARIO DESCUENTO
+                    if($check_desc <> 0){
+                        $precio_unitario = $precio - ($pro_ori*$check_desc/100);
+                        $cotizacion_r_update->precio_unitario_desc = $precio_unitario;
+                        $pre_uni_comi = $precio_unitario + ($precio_unitario*($comision/100));
+                        $cotizacion_r_update->precio_unitario_comi = round($pre_uni_comi,2);
+                    }else{
+                        $cotizacion_r_update->precio_unitario_desc = $precio;
+                        $cotizacion_r_update->precio_unitario_comi = $precio;
+                    }
+                    //TIPO DE AFECTACION
+                    $cotizacion_2=Cotizacion::find($cotizacion->id);
+                    
+                    if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                        $cotizacion_2->op_gravada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
+                    }
+                    if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                        $cotizacion_2->op_exonerada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
+                    }
+                    if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                        $cotizacion_2->op_inafecta += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
+                    }
+                    $cotizacion_2->save();
+                    $cotizacion_r_update->save();
 
                 }
             }
-        }
-        return $producto;
-        //RETURN
-        
+            $submit=$request->get('submit');
+            if($submit == 2){
+                $cotizacion_es_v=Cotizacion::find($cotizacion->id);
+                $cotizacion_es_v->estado_vigente = 1;   
+                $cotizacion_es_v->save();
+            }
+        }        
+        return back();
     }
     public function show($id){
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
@@ -1546,7 +1609,7 @@ class CotizacionController extends Controller
         $almacen=Almacen::where('id',$cotizacion->almacen_id)->pluck('id')->first();
         $nueva_cot='cotizacion.create_factura';
 
-        return view('transaccion.venta.cotizacion.show3', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2'));
+        return view('transaccion.venta.cotizacion.show2', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2'));
     }
 
 public function print($id){

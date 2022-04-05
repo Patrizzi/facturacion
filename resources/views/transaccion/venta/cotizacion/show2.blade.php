@@ -74,7 +74,7 @@
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
                 </div>
                 {{-- BOTON PARA EDITAR / ESTADOS PARA 0 NO FACTURADO/BOLETEADO --}}
-                @if($cotizacion->estado == 0)
+                @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
                     <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i class="fa fa-pencil"></i></button>
                     <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i class="fa fa-times"></i></button>
                 @else
@@ -225,9 +225,10 @@
         </div>
         <span hidden> {{$h = 1}} {{ $sume = 0}}</span>
         <div class="table-responsive div-editar no_mostrar">
-            <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post">
+            @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
+            <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post"  enctype="multipart/form-data">
                 @csrf
-                <table cellspacing="0" class="table " >
+                <table cellspacing="0" class="table " id="inp_s">
                     <thead>
                         <tr>
                             <th><button class="addmore btn btn-success" type="button"><i class="fa fa-plus"></i></button></th>
@@ -263,7 +264,7 @@
                                 <input type="text" class="form-control limp" name="stock" id="stock{{$h}}" value="@if($cotizacion_registros->stock != null) {{$cotizacion_registros->stock}} @else 100 @endif" readonly>
                             </td>
                             <td>
-                                <input type="text"  name="cantidad[]" id="cantidad{{$h}}" class="form-control limp" onkeyup="multi({{$h}})"  value="{{$cotizacion_registros->cantidad}}">
+                                <input type="number"  name="cantidad[]" id="cantidad{{$h}}" class="form-control limp" onkeyup="multi({{$h}})"  value="{{$cotizacion_registros->cantidad}}" max="{{$cotizacion_registros->stock}}">
                             </td>
                             <td>
                                 <input type="text"  name="precio[]" id="precio{{$h}}" class="form-control limp" value="{{$cotizacion_registros->precio}}" readonly>
@@ -276,11 +277,13 @@
                                     <div  class="div_check">
                                         @if($cotizacion_registros->descuento > 0)
                                             <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" checked/>
+                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="{{$cotizacion_registros->producto->descuento2}}">
                                         @else
                                             <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" />
+                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="0">
                                         @endif
                                     </div>
-                                    <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="{{$cotizacion_registros->producto->descuento2}}">
+                                    
                                     <input style="width: 76px" hidden="" type='text' id='tipo_afec{{$h}}' name='tipo_afec[]' readonly="readonly" class="monto0 form-control limp" onkeyup="multi({{$h}})" required  autocomplete="off" value="{{strtok($cotizacion_registros->producto->tipo_afec_i_producto->informacion," ")}}"  />
                                     <input class="celda" name="articulo[]" id="input_prod{{$h}}" value="{{$cotizacion_registros->producto->id}} | {{$cotizacion_registros->producto->codigo_producto}} | {{$cotizacion_registros->producto->codigo_original}} | {{$cotizacion_registros->producto->nombre}}" class="limp" hidden>
                                 @else
@@ -291,11 +294,13 @@
                                     <div  class="div_check">
                                         @if($cotizacion_registros->descuento > 0)
                                             <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" checked />
+                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="{{$cotizacion_registros->descuento}}">
                                         @else
                                             <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" />
+                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="0">
                                         @endif
                                     </div>
-                                    <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="{{$cotizacion_registros->servicio->descuento}}">
+                                    
                                     <input style="width: 76px" hidden="" type='text' id='tipo_afec{{$h}}' name='tipo_afec[]' readonly="readonly" class="monto0 form-control limp" onkeyup="multi({{$h}})" required  autocomplete="off" value="{{strtok($cotizacion_registros->servicio->tipo_afec_i_serv->informacion," ")}}"  />
                                     <input  class="celda" name="articulo[]" id="input_prod{{$h}}" value="{{$cotizacion_registros->servicio->id}} | {{$cotizacion_registros->servicio->codigo_servicio}} | {{$cotizacion_registros->servicio->codigo_original}} | {{$cotizacion_registros->servicio->nombre}}" class="limp" hidden>
                                 @endif
@@ -365,8 +370,15 @@
                         </tr>
                     </tfooter>
                 </table>
-                <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+                <div class="col-sm-12" align="right">
+                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
+                    <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
+                    </button>
+                </div>
             </form>
+            @else
+            @endif
         </div>
         <!-- /table-responsive -->
         <br>
@@ -404,9 +416,12 @@
     .ibox-tools a{color: white !important}
     .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
     .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
-    /* .table-responsive{
-        overflow-x: inherit !important;
-    } */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] { -moz-appearance:textfield; }
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         font-size: 12px;
     }
@@ -453,10 +468,57 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- Sweet alert -->
+<link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 {{-- //TICKET --}}
 {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 <script>
+    $(document).ready(function () {
+        $('.demo3').click(function () {
+            swal({
+                title: "¿Estas seguro que deseas Finalizar?",
+                text: "Una vez Finalizado, no podras modificar el Inventario Inicial",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3686ff",
+                confirmButtonText: "Si, Finalizar",
+                cancelButtonText: "Cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        document.getElementById("finalizar").click();
+                        swal("Inventario Inicial Finalizado", "Ahora podras facturar...", "success");
+                    } else {
+                        swal("Cancelado", "Cancelado la Finalizar", "error");
+                    }
+                });
+        })
+    });
+    $(document).ready(function (){
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 8000 });
+    });
+
+    $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     
+    function mostrarMensaje(mensaje){
+       $("#divmsg").empty(); //limpiar div
+       $("#divmsg").append(mensaje);
+       $("#divmsg").show(200);
+    }
+    {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}}
+    $(".guardar").on('click', function () {
+        var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        $(".demo3").remove();
+    });
+    $(".finalizar").on('click', function () {
+        var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        $(".guardar").remove();
+    });
     function click_editar(){
         // MOSTRAR LOS INPUTS
         $('.div-editar').removeClass('no_mostrar');
@@ -540,7 +602,6 @@
                 <button class="btn btn-danger e  borrar"><i class="fa fa-trash"></i></button>
             </td>
             <td>
-                
                 <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                 </select>
                 <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control limp_txt" autocomplete="off" style="margin-top: 5px;" ></textarea>
@@ -662,7 +723,7 @@
                 $(`#descuento${a}`).val(msg.discount);
                 $(`#check_descuento${a}`).val(0);
                 $(`#cantidad${a}`).attr('max', msg.amount );
-                $(`#cantidad`).attr('max', msg.amount );
+                // $(`#cantidad`).attr('max', msg.amount );
                 var separador=" ";
                 var comision = document.querySelector(`#comisionista`).value;
                 document.getElementById(`comision${a}`).value = comision;
@@ -743,6 +804,7 @@
                 // document.getElementById(`precio_unitario_igv${a}`).value = final_decimal;
             }
         }else{
+            document.getElementById(`check_descuento${a}`).value = 0;
             var precio_comi = parseFloat(precio) + (parseFloat(precio) * parseFloat(comision)/ multiplier);
             var end = Math.round(precio_comi * multiplier) / multiplier;
             var final2=cantidad*end;
