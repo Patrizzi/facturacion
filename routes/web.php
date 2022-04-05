@@ -63,6 +63,7 @@ Route::group(
 		Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
 		Route::resource('/cotizacion','CotizacionController');
+		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
 		// Route::put('/cotizacion/store/{id_moneda}','CotizacionController@store')->name('cotizacion.store');
 		Route::resource('/empresa/banco','BancoController'); //Banco
 
