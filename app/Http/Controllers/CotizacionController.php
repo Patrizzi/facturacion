@@ -1477,7 +1477,7 @@ class CotizacionController extends Controller
                     if($request->get('descripcion_item')[$h] == null){
                         $cotizacion_r_update->descripcion_item = null;
                     }else{
-                        $cotizacion_r_update->descripcion_item = $request->get('descripcion_item')[$f];
+                        $cotizacion_r_update->descripcion_item = $request->get('descripcion_item')[$h];
                     }
                     //LOGICA PARA LA MONEDA
                     if($moneda->id == $moneda_registrada){
