@@ -41,6 +41,7 @@
                                     <th>Cliente</th>
                                     <th>N°Documento</th>
                                     <th>Fecha </th>
+                                    <th>Importe T.</th>
                                     <th>Ver</th>
                                 </tr>
                             </thead>
@@ -53,6 +54,8 @@
                                     <td>{{$cotizaciones->cliente->nombre}}</td>
                                     <td>{{$cotizaciones->cliente->numero_documento}}</td>
                                     <td>{{$cotizaciones->fecha_emision }}</td>
+                                    <span hidden>{{$subtotal = $cotizaciones->op_gravada + $cotizaciones->op_inafecta + $cotizaciones->op_exonerada }} </span>
+                                    <td>{{$cotizaciones->moneda->simbolo}} {{number_format(round(($subtotal+($cotizaciones->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     {{-- Ver --}}
                                     <td align="center">
                                         <a href="{{route('manual.show',$cotizaciones->id)}}">

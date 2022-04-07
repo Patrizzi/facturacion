@@ -129,14 +129,14 @@
                                     {{$cotizacion_m_regs->producto->codigo_producto}}
                                 </td>
                                 <td>
-                                    {{$cotizacion_m_regs->producto->nombre}}  <br>{{$cotizacion_m_regs->descripcion_item}} </span>
+                                    {{$cotizacion_m_regs->producto->nombre}} @if(isset($cotizacion_m_regs->descripcion_item)) | {{$cotizacion_m_regs->descripcion_item}} @else @endif </span>
                                 </td>
                             @else
                                 <td>
                                     {{$cotizacion_m_regs->servicio->codigo_servicio}}
                                 </td>
                                 <td>
-                                    {{$cotizacion_m_regs->servicio->nombre}}  <br> {{$cotizacion_m_regs->descripcion_item}} </span>
+                                    {{$cotizacion_m_regs->servicio->nombre}} @if(isset($cotizacion_m_regs->descripcion_item)) | {{$cotizacion_m_regs->descripcion_item}} @else @endif </span>
                                 </td>
                             @endif                        
                             <td>{{$cotizacion_m_regs->cantidad}}</td>
@@ -177,11 +177,10 @@
                 </div>
             </div>
         </div>
-        <span hidden>{{$h = 0}} {{$igv_1 = round( 1 + ($igv_t->igv_total/100),2 )}}</span>
+        <span hidden>{{$h = 0 }} {{$igv_1 =  1 + ($igv_t->igv_total/100)}}</span>
         <div class="div-editar no_mostrar">
             <div class="table-responsive">
                 <form action="{{route('cotizacion_manual.update', $cotizacion->id)}}" method="post">
-                    
                     @csrf
                     <table class="table tables" id="inp_s">
                         <thead>
@@ -218,7 +217,7 @@
                                         <input style="width: 76px" type='number' min="1" id='cantidad{{$h}}' name='cantidad[]' max="" class="cantidad monto0 form-control"  onkeyup="multi({{$h}})"  required  autocomplete="off" value="{{$cotizacion_m_regs->cantidad}}" />
                                     </td>
                                     <td>
-                                        <input style="width: 76px" type='text' id='precio_oficial{{$h}}' name='precio_oficial[]' ondblclick="copy({{$h}})"  class="precio_oficial{{$h}} p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" value=""/>
+                                        <input style="width: 76px" type='text' id='precio_oficial{{$h}}' name='precio_oficial[]' ondblclick="copy({{$h}})"  class="precio_oficial{{$h}} p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                                     </td>
                                     <td>
                                         <input style="width: 76px" type='text' id='precio_s_igv{{$h}}' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio}}" />
@@ -226,10 +225,11 @@
                                     </td>
                                     <td>
                                         
-                                        <input style="width: 76px" type='text' id='precio_c_igv{{$h}}' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$p_igv =  round($cotizacion_m_regs->precio* $igv_1 ,2)}}" />
+                                        <input style="width: 76px" type='text' id='precio_c_igv{{$h}}' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{round($cotizacion_m_regs->precio * $igv_1 ,2)}}" />
+                                        <span hidden {{$p_igv = $cotizacion_m_regs->precio * $igv_1}}></span>
                                     </td> 
                                     <td>
-                                        <input style="width: 76px"  type='text' id='total{{$h}}' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" value="{{$cotizacion_m_regs->cantidad*$p_igv}}"  />
+                                        <input style="width: 76px"  type='text' id='total{{$h}}' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" value="{{round($cotizacion_m_regs->cantidad * $p_igv,2)}}"  />
                                     </td>
                                     
                                 </tr>
@@ -526,15 +526,42 @@
 </script>
 <script >
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
+    var e = {{$h}};
     $(document).ready(function() {
-        articlesSelect2();
-        var e = {{$h}};
-        for (var i=0; i< e ; i++) {
-            ajax(i);
+        console.log("variable h: "+e);
+        // var a
+        for ( var a = 0; a < e ; a++) {
+            prueba_ajax(a);
         }
-        
+        articlesSelect2();
     });
-    
+    function prueba_ajax(a){
+        var articulo = document.getElementById(`articulo${a}`).value;
+            document.getElementById(`input_prod${a}`).value = articulo;
+            
+            var almacen = $('[id="almacen_id"]').val();
+            var moneda = $('[id="moneda_id"]').val();
+            
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.description') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': articulo,
+                    'almacen': almacen,
+                    'moneda': moneda	
+                },
+                success: function (msg2) {
+                    $(`#precio_oficial${a}`).val(msg2.price);
+                },
+                error: function(eject) {
+                    if(eject.status===400){
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache:true
+            });
+    }
 
     var i = {{$h}};
     $(".addmore").on('click', function () {

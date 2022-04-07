@@ -38,12 +38,13 @@ class CotizacionManualController extends Controller
     {
         
         $cotizacion = CotizacionManual::get();
+        $igv = Igv::first();
 
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=Kardex_entrada::where('estado',2)->first();
         if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
-        return view('transaccion.venta.cotizacion.manual.index', compact('cotizacion'));
+        return view('transaccion.venta.cotizacion.manual.index', compact('cotizacion','igv'));
 
     }
 
