@@ -139,7 +139,7 @@
                                             <input id='sub_total' hidden name="costo_sub_total"  readonly="readonly" class="form-control" required />
                                             <input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required />
                                         </td>
-                                    </tr>git
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -150,8 +150,8 @@
                             </div>
                             <div class="col-sm-6" align="right">
                                 <div class="tooltip-demo" align="right">
-                                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" type="submit">Guardar</button>
-                                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="submit">Guardar y Finalizar</button>
+                                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" >Guardar</button>
+                                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button" >Guardar y Finalizar</button>
                                     <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                                     </button>
                                 </div>
@@ -218,7 +218,7 @@
         Ladda.bind( '.ladda-button',{ timeout: 8000 });
     });
 
-    $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    // $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     
     function mostrarMensaje(mensaje){
        $("#divmsg").empty(); //limpiar div

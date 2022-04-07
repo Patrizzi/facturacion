@@ -98,7 +98,7 @@ class NotaVentaController extends Controller
         $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
         $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-
+        $submit = $request->get('submit');
         $nota_venta=new NotaVenta;
         $nota_venta->cod_nota_venta=$cod_nota_venta;
         $nota_venta->cliente_id=$request->cliente;
@@ -109,7 +109,6 @@ class NotaVentaController extends Controller
         $nota_venta->fecha_emision=$request->fecha_emision;
         $nota_venta->observacion=$request->observacion;
         $nota_venta->user_registrado=auth()->user()->id;
-        $submit = $request->get('submit');
         if($submit == 2){
             $nota_venta->estado_vigente = 1;
         }
