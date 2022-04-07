@@ -32,7 +32,7 @@
 @endif
 
 
-@section('content')facturacions
+@section('content')
 
 <span hidden>
     <script>
@@ -80,7 +80,7 @@
                                     <th>Código de Boleta</th>
                                     <th>Cliente </th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha de Vencimiento</th>
+                                    <th>Fecha de Emision</th>
                                     <th>Importe T.</th>
                                     <th></th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>

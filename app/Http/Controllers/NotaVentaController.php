@@ -86,7 +86,8 @@ class NotaVentaController extends Controller
      */
     public function store(Request $request)
     {
-            //contador de valores de articulos
+        // return $request;
+        //contador de valores de articulos
         $articulo = $request->articulo;
         $count_articulo=count($articulo);
 
@@ -108,6 +109,10 @@ class NotaVentaController extends Controller
         $nota_venta->fecha_emision=$request->fecha_emision;
         $nota_venta->observacion=$request->observacion;
         $nota_venta->user_registrado=auth()->user()->id;
+        $submit = $request->get('submit');
+        if($submit == 2){
+            $nota_venta->estado_vigente = 1;
+        }
         $nota_venta->save();
 
         for($i=0;$i<$count_articulo;$i++){
@@ -118,7 +123,8 @@ class NotaVentaController extends Controller
             $reg_nota_v->precio_nacional=$request->get('precio')[$i];
             $reg_nota_v->save();
         }
-
+        
+        
      return redirect()->route('nota_venta.show',$nota_venta->id);
         // return $nota_venta;
     }
@@ -209,7 +215,7 @@ class NotaVentaController extends Controller
     {
         // return $request;
         $nota_venta = NotaVenta::where('id',$id)->first();
-        if($nota_venta->estado == 0){              
+        if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){              
             $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
             // REGISTROS EXISTENTES
             $n_registros_ori = $request->get('n_registros_ori');

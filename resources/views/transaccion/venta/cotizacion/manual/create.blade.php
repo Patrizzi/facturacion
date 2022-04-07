@@ -156,7 +156,7 @@
                         </table>    
                         <div id="resultado_moneda"></div>
                         <div class="table-responsive">
-                            <table cellspacing="0" class="table tables  " >
+                            <table cellspacing="0" class="table tables  " id="inp_s" >
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">
@@ -233,10 +233,13 @@
                             <div class="col-sm-6">
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
-                            <div class="col-sm-6 ">
+                            <div class="col-sm-6 " align="right">
                                 {{-- <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button> --}}
                                 {{-- <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button> --}}
-                                <button type="submit" name="guardar" class="btn btn-success ladda-button float-right" style="margin-right: 5px">Guardar</button>
+                                <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                                <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
+                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -301,6 +304,11 @@
 <!-- Steps -->
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- Sweet alert -->
+<link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
+
+<script>
 
 <script>
     $(function () {
@@ -316,7 +324,51 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.demo3').click(function () {
+            swal({
+                title: "¿Estas seguro que deseas Finalizar?",
+                text: "Una vez Finalizado, no podras modificar la Cotizacion Manual",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3686ff",
+                confirmButtonText: "Si, Finalizar",
+                cancelButtonText: "Cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        document.getElementById("finalizar").click();
+                        swal("Edicion de Cotizacion Manual Finalizada", "Ya no podrás editar", "success");
+                    } else {
+                        swal("Cancelado", "Cancelado la Finalizar", "error");
+                    }
+                });
+        })
+    });
+    $(document).ready(function (){
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 8000 });
+    });
 
+    $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    
+    function mostrarMensaje(mensaje){
+       $("#divmsg").empty(); //limpiar div
+       $("#divmsg").append(mensaje);
+       $("#divmsg").show(200);
+    }
+    /* {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}} */
+    $(".guardar").on('click', function () {
+        var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        $(".demo3").remove();
+    });
+    $(".finalizar").on('click', function () {
+        var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        $(".guardar").remove();
+    });
     $(".select2_demo_almacen").select2({
         placeholder: "Seleccionar Almacen",
     });

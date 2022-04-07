@@ -51,7 +51,6 @@
                        <p class="form-control "  align="center" style="margin-left: 10px;">Fecha de Emision: {{date("d-m-Y")}}</p>
                    </div>
                    <div class="col-sm-6" align="right">
-
                       <div class="dropdown" style="float:right;">
                         <button class="btn btn-info" type="button" > <i class="fa fa-sliders"></i></button>
                         <div class="dropdown-content" align="left">
@@ -89,10 +88,7 @@
                             </div>
                         </div>
                     </div>
-
                     {{-- Cabecera new --}}
-
-
               <style>
                   .col-form-label{margin-top: 15px!important;}
                   .col-sm-5{margin-top: 15px!important;}
@@ -215,7 +211,7 @@
             <div id="resultado_moneda"></div>
 
             <div class="table-responsive">
-                <table cellspacing="0" class="table tables">
+                <table cellspacing="0" class="table tables" id="inp_s">
                     <thead>
                         <tr>
                             <th style="width: 10px"></th>
@@ -315,8 +311,16 @@
                 </table>
             </div>
             &nbsp;
-            <button type="button" class='addmore btn btn-success' disabled > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-            <button class="ladda-button btn btn-primary float-right" id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+            <div class="row">
+                <div class="col-sm-6" align="left">
+                    <button type="button" class='addmore btn btn-success' disabled > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                </div>
+                <div align="right" class="col-sm-6">
+                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
+                    <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" ></button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
@@ -399,42 +403,88 @@
 <script src="{{ asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-          <script>
-                        function ajax_confi(parameters){
-                         var configuracion_seleccionado = parameters.id;
-                         $.ajax({
-                            type: "post",
-                            url: "{{ route('envio_confi_ingresos') }}",
-                            data: {
-                                '_token': $('input[name=_token]').val(),
-                                'tipo_configuracion': configuracion_seleccionado
-                            },
-                            success: function (msg) {
-                                // alert(msg);
-                            }
-                        });
-                     }
+<!-- Sweet alert -->
+<link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
-                     function ConfiguracionSelector(parameters) {
-                         var configuracion_seleccionado = parameters.id;
+<script>
+    function ajax_confi(parameters){
+        var configuracion_seleccionado = parameters.id;
+        $.ajax({
+        type: "post",
+        url: "{{ route('envio_confi_ingresos') }}",
+        data: {
+            '_token': $('input[name=_token]').val(),
+            'tipo_configuracion': configuracion_seleccionado
+            },
+            success: function (msg) {
+                // alert(msg);
+            }
+        });
+    }
 
-                         var data1 = document.getElementById(configuracion_seleccionado+"_1");
-                         var data2 = document.getElementById(configuracion_seleccionado+"_2");
+    function ConfiguracionSelector(parameters) {
+        var configuracion_seleccionado = parameters.id;
 
-                         if( data1.hasAttribute("hidden") )
-                         {
-                            data1.removeAttribute("hidden", "");
-                            data2.removeAttribute("hidden", "");
-                            ajax_confi(parameters);
-                        }
-                        else{
-                          data1.setAttribute("hidden", "");
-                          data2.setAttribute("hidden", "");
-                          ajax_confi(parameters);
-                      }
-                  }
+        var data1 = document.getElementById(configuracion_seleccionado+"_1");
+        var data2 = document.getElementById(configuracion_seleccionado+"_2");
 
-              </script>
+        if( data1.hasAttribute("hidden") ){
+            data1.removeAttribute("hidden", "");
+            data2.removeAttribute("hidden", "");
+            ajax_confi(parameters);
+        }
+        else{
+            data1.setAttribute("hidden", "");
+            data2.setAttribute("hidden", "");
+            ajax_confi(parameters);
+        }
+    }
+    $(document).ready(function () {
+        $('.demo3').click(function () {
+            swal({
+                title: "¿Estas seguro que deseas Finalizar?",
+                text: "Una vez Finalizado, No se podrá editar la Nota de Venta",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3686ff",
+                confirmButtonText: "Si, Finalizar",
+                cancelButtonText: "Cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        document.getElementById("finalizar").click();
+                        swal("Nota de Venta Finalizada", "", "success");
+                    } else {
+                        swal("Cancelado", "Cancelado la Finalizar", "error");
+                    }
+                });
+        })
+    });
+    $(document).ready(function (){
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 8000 });
+    });
+
+    $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    
+    function mostrarMensaje(mensaje){
+       $("#divmsg").empty(); //limpiar div
+       $("#divmsg").append(mensaje);
+       $("#divmsg").show(200);
+    }
+    $(".guardar").on('click', function () {
+        var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        $(".demo3").remove();
+    });
+    $(".finalizar").on('click', function () {
+        var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        $(".guardar").remove();
+    });
+</script>
 
 {{-- Scripts realizados por el desarrollador --}}
 <script type="text/javascript">

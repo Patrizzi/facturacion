@@ -118,9 +118,11 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Codigo</th>
-                                    <th>Almacen</th>
+                                    <th>Cliente</th>
+                                    {{-- <th>Almacen</th> --}}
                                     <th>Fecha Emision</th>
                                     <th>Importe T.</th>
+                                    <th>Forma de Pago</th>
                                     <th>Usuario Registrado</th>
                                     <th></th>
                                     <th>Anular</th>
@@ -131,9 +133,11 @@
                                 <tr class="gradeX">
                                     <td>{{$nota_ventas->id}}</td>
                                     <td>{{$nota_ventas->cod_nota_venta}}</td>
-                                    <td>{{$nota_ventas->almacen->nombre}}</td>
+                                    <td>{{$nota_ventas->cliente->nombre}}</td>
+                                    {{-- <td>{{$nota_ventas->almacen->nombre}}</td> --}}
                                     <td>{{$nota_ventas->fecha_emision}}</td>
                                     <td>{{$nota_ventas->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}</td>
+                                    <td>@if($nota_ventas->forma_pago == 1) Contado @else Credito @endif</td>
                                     <td>{{$nota_ventas->user->personal->nombres}}</td>
                                     <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a></center></td>
                                     <td class=" tooltip-demo"><center>

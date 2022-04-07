@@ -194,6 +194,7 @@ class CotizacionManualController extends Controller
         //MONEDA
         $moneda = $request->get('moneda');
         $moneda_search = Moneda::where('nombre', $moneda)->first();
+        $submit = $request->get('submit');
     //    return $moneda_search; 
 
         $cotizacion_manual = new CotizacionManual;
@@ -209,7 +210,11 @@ class CotizacionManualController extends Controller
         $cotizacion_manual->observacion = $request->get('observacion');
         $cotizacion_manual->user_id = auth()->user()->id;
         $cotizacion_manual->estado = '0';
-        $cotizacion_manual->estado_vigente = '0';
+        if($submit == 2){
+            $cotizacion_manual->estado_vigente = '1';
+        }else{
+            $cotizacion_manual->estado_vigente = '0';
+        }
         $cotizacion_manual->tipo = $tipo_cotizacion; 
         $cotizacion_manual->tipo_operacion_id = $busca_ope->id;
         $cotizacion_manual->tipo_documento_id = $tipo_doc;
@@ -391,25 +396,24 @@ class CotizacionManualController extends Controller
         if(empty($existe_id)){ return redirect()->route('manual.index'); }
 
         $empresa=Empresa::first();
-        $cotizacion_m=CotizacionManual::find($id);
+        $cotizacion=CotizacionManual::find($id);
         $cotizacion_m_reg=CotizacionManual_registros::where('cotizacion_m_id',$id)->get();
         $sum=0;
-        $igv=Igv::first();
+        $igv_t=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $banco_count = count($banco);
         $j = 1;
 
         //SUBTOTAL
-        $sub_total = $cotizacion_m->op_gravada + $cotizacion_m->op_inafecta + $cotizacion_m->op_exonerada;
+        $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
-        $igv = round( $cotizacion_m->op_gravada ,2) * $igv->igv_total/100;
+        $igv = round( $cotizacion->op_gravada ,2) * $igv_t->igv_total/100;
         //TOTAL 
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
-        
-        
-        return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
+    
+        return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2','igv_t'));
         //a
     }
     public function print($id){
@@ -480,7 +484,136 @@ class CotizacionManualController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // return $request;
+        $cotizacion = CotizacionManual::find($id);
+        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
+        //PRODUCTOS POR CODIGOS
+        $art = $request->input('articulo');
+        $count_cantidad_p = count($art);
+        for($i=0 ; $i<$count_cantidad_p;$i++){
+            $articulos[$i]= $request->input('articulo')[$i];
+            $producto_id_name[$i]=strstr($articulos[$i], '|');
+            $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),1);
+            $articulo_cod[$i]=strstr($producto_id_3[$i], ' ', true);
+            
+        }
+        //UPDATE
+        // return $articulo_cod;
+
+        if($cotizacion->estado == 0 && $cotizacion->estado_vigente == 0 ){
+            
+            // REGISTROS EXISTENTES
+            $n_registros_ori = $request->get('n_registros_ori');
+            $n_r_ori_c = count($n_registros_ori);
+
+            $var =$request->get('elem_delete');
+            // ELIMINAR LOS QUE ESTAN DELETE
+            if( isset( $var )){
+                $cotizacion_m_reg_delete = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id) ->whereNotIn('id', $request->get('elem_delete'))->get();
+            }else{
+                $cotizacion_m_reg_delete = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
+            }
+            for ($i=0; $i < count($cotizacion_m_reg_delete) ; $i++) { 
+                CotizacionManual_registros::Destroy($cotizacion_m_reg_delete[$i]->id);
+            }   
+            $cotizacion_m_est_v=CotizacionManual::find($cotizacion->id);
+            $cotizacion_m_est_v->op_gravada = 0;
+            $cotizacion_m_est_v->op_inafecta = 0;
+            $cotizacion_m_est_v->op_exonerada = 0;
+            $cotizacion_m_est_v->save();
+            //nuevos registros
+            for ($h=0; $h < $n_r_ori_c ; $h++) { 
+                $producto = Producto::where('codigo_producto', $articulo_cod[$h])->first();
+                $servicio = Servicios::where('codigo_servicio', $articulo_cod[$h])->first();
+                if($request->get('n_registros_ori')[$h] == "existente"){    
+                    $cotizacion_r_upd_new = CotizacionManual_registros::find($request->get('elem_delete')[$h]);
+                    if(isset($producto)){
+                        $cotizacion_r_upd_new->producto_id= $producto->id;
+                        $cotizacion_r_upd_new->descripcion_item = $request->get('descripcion_item')[$h];
+                        $cotizacion_r_upd_new->cantidad= $request->get('cantidad')[$h];
+                        $cotizacion_r_upd_new->precio= $request->get('precio_s_igv')[$h];
+                        $cotizacion_r_upd_new->save();
+                        //operaciones para SUNAT
+                        $cotizacion_m = CotizacionManual::find($cotizacion->id);
+                        if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                            $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                            $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                            $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        $cotizacion_m->save();
+                    }else{
+                        $cotizacion_r_upd_new->servicio_id = $servicio->id;
+                        $cotizacion_r_upd_new->descripcion_item = $request->get('descripcion_item')[$h];
+                        $cotizacion_r_upd_new->cantidad= $request->get('cantidad')[$h];
+                        $cotizacion_r_upd_new->precio= $request->get('precio_s_igv')[$h];
+                        $cotizacion_r_upd_new->save();
+                        $cotizacion_m = CotizacionManual::find($cotizacion->id);
+                        if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                            $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                            $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                            $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        $cotizacion_m->save();
+                    }
+                    
+                }else{
+                    $cotizacion_r_upd_new = new CotizacionManual_registros;
+                    $cotizacion_r_upd_new->cotizacion_m_id = $cotizacion->id;
+                    if(isset($producto)){
+                        $cotizacion_r_upd_new->producto_id= $producto->id;
+                        $cotizacion_r_upd_new->descripcion_item = $request->get('descripcion_item')[$h];
+                        $cotizacion_r_upd_new->cantidad= $request->get('cantidad')[$h];
+                        $cotizacion_r_upd_new->precio= $request->get('precio_s_igv')[$h];
+                        $cotizacion_r_upd_new->save();
+                        $cotizacion_m = CotizacionManual::find($cotizacion->id);
+                        if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                            $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                            $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                            $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        $cotizacion_m->save();
+                    }else{
+                        $cotizacion_r_upd_new->servicio_id = $servicio->id;
+                        $cotizacion_r_upd_new->descripcion_item = $request->get('descripcion_item')[$h];
+                        $cotizacion_r_upd_new->cantidad= $request->get('cantidad')[$h];
+                        $cotizacion_r_upd_new->precio= $request->get('precio_s_igv')[$h];
+                        $cotizacion_r_upd_new->save();
+                        $cotizacion_m = CotizacionManual::find($cotizacion->id);
+                        if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                            $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                            $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                            $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        }
+                        $cotizacion_m->save();
+                    }
+                    
+                }
+            }
+            $submit=$request->get('submit');
+            if($submit == 2){
+                $cotizacion_m_est_v=CotizacionManual::find($cotizacion->id);
+                $cotizacion_m_est_v->estado_vigente = 1;   
+                $cotizacion_m_est_v->save();
+            }
+        }
+        return back();
     }
 
     /**

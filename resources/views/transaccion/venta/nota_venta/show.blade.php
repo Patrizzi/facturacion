@@ -1,17 +1,19 @@
 @extends('layout')
 @section('title', 'Nota de Venta')
 @section('href_accion', route('nota_venta.index'))
-@section('value_accion', 'Atras')
+@section('value_accion', 'Inicio')
 @section('nombre', 'nueva cotizacion')
-{{-- @section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();") --}}
+
+@section('button2', 'Nueva Nota de Venta')
+@section('onclick',"event.preventDefault();document.getElementById('nueva_nota').submit();")
 
 @section('content')
-{{--
-<form action="{{ route($nueva_cot)}}"enctype="multipart/form-data" method="post" id="nueva_cot">
+
+<form action="{{ route('nota_venta.create')}}"enctype="multipart/form-data" method="post" id="nueva_nota">
     @csrf
-    <input type="text"  hidden="hidden" name="almacen"  value="{{$almacen}}">
+    <input type="text"  hidden="hidden" name="almacen"  value="{{$nota_venta->almacen_id}}">
     <input  hidden="hidden" type="submit"  >
-</form> --}}
+</form> 
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row ibox-title" style="padding-right: 3.1%;margin: 0; padding-bottom: 1px" >
@@ -156,7 +158,7 @@
                                 $end_final_point=strstr($end2, '.', false);
                                 $end_final=str_replace('.', ' ',$end_final_point);
                                 ?>
-                                Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                                Son : {{$letra_final}} con {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
                         </h3>
                     </div>
                     <div class="col-sm-4">
@@ -219,7 +221,7 @@
                             <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
                             <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                             </button>
-                        </div
+                        </div>
                         <br>
                     </form>
                     <div class="row" style="width: 100%">
@@ -235,8 +237,8 @@
                                     $letra_final = ucfirst(strstr($letra, 'soles',true));
                                     $end_final_point=strstr($end2, '.', false);
                                     $end_final=str_replace('.', ' ',$end_final_point);
-                                    ?>
-                                    Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                                ?>
+                                Son : {{$letra_final}} con {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
                             </h3>
                         </div>
                         <div class="col-sm-4">
@@ -372,7 +374,7 @@
         $('.demo3').click(function () {
             swal({
                 title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, no podras modificar el Inventario Inicial",
+                text: "Una vez Finalizado, no podras modificar la Nota de Venta",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3686ff",
@@ -383,7 +385,7 @@
                 function (isConfirm) {
                     if (isConfirm) {
                         document.getElementById("finalizar").click();
-                        swal("Inventario Inicial Finalizado", "Ahora podras facturar...", "success");
+                        swal("Edicion de Nota de Venta Finalizada", "Ya no podrás editar", "success");
                     } else {
                         swal("Cancelado", "Cancelado la Finalizar", "error");
                     }
@@ -446,7 +448,7 @@
             </td>";
             <td>
                 <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
-                <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
+                <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191">
                     <datalist id="browsers2" >
                         @foreach($productos as $index)
                         <option>{{$index->nombre}} / {{$index->descripcion}}</option>

@@ -599,7 +599,8 @@ class CotizacionController extends Controller
         //MONEDA
         $nombre_moneda = $request->get('moneda');
         $id_moneda = Moneda::where('nombre', $nombre_moneda)->first();
-
+        //estdo vigente edicion
+        $submit = $request->get('submit');
         $cotizacion=new Cotizacion;
         $cotizacion->cod_cotizacion=$cotizacion_numero;
         $cotizacion->almacen_id=$request->get('almacen');
@@ -619,7 +620,12 @@ class CotizacionController extends Controller
         }
         $cotizacion->user_id =auth()->user()->id;
         $cotizacion->estado='0';
-        $cotizacion->estado_vigente='0';
+        if($submit == 2){
+            $cotizacion->estado_vigente = '1';
+        }else{
+            $cotizacion->estado_vigente = '0';
+        }
+        
         $cotizacion->tipo= $tipo;
         $cotizacion->tipo_documento_id = $tipo_document;
         $cotizacion->tipo_operacion_id = $busca_ope->id;

@@ -23,6 +23,7 @@ Route::group(
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
 		Route::resource('/cotizacion/manual','CotizacionManualController');
+		Route::post('/cotizacion/manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
 		Route::get('/cotizacion/manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		
 
