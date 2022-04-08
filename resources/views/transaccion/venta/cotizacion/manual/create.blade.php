@@ -25,7 +25,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <form action="{{route('manual.store')}}"  enctype="multipart/form-data" method="post">
+                    <form action="{{route('manual.store')}}"  enctype="multipart/form-data" method="post" id="form_sto" onsubmit="return valida(this)">
                         @csrf
                         {{-- Cabecera --}}
                         <div class="row">
@@ -156,7 +156,7 @@
                         </table>    
                         <div id="resultado_moneda"></div>
                         <div class="table-responsive">
-                            <table cellspacing="0" class="table tables  " id="inp_s" >
+                            <table cellspacing="0" class="table tables" id="inp_s" >
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">
@@ -178,7 +178,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <select class="select2_demo_3 select_change" required="" id="articulo" onchange="inputs_campos(0),ajax(0)" autocomplete="off"></select>
+                                            <select class="select2_demo_3 select_change"  required="true"  id="articulo" onchange="inputs_campos(0),ajax(0)" autocomplete="off" name="select_articulo"></select>
                                             <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
                                             <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
                                         </td>
@@ -191,7 +191,7 @@
                                         </td>
                                         <td>
                                             <input style="width: 76px" type='text' id='precio_s_igv0' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
-                                            <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                            <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)"   autocomplete="off" />
                                         </td>
                                         <td>
                                             <input style="width: 76px" type='text' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
@@ -236,9 +236,9 @@
                             <div class="col-sm-6 " align="right">
                                 {{-- <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button> --}}
                                 {{-- <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button> --}}
-                                <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
-                                <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
-                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
+                                <button  class="guardar ladda-button btn btn-info " type="submit">Guardar</button>
+                                {{-- <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button> --}}
+                                {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" > --}}
                                 </button>
                             </div>
                         </div>
@@ -275,7 +275,7 @@
     }
     input[type=number] { -moz-appearance:textfield; }
     #loaderGif{
-        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
+        /* background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3; */
         background-size: 250px;
         display: none;
         position: fixed;
@@ -285,6 +285,7 @@
         height: 100vh;
         z-index: 20;
     }
+    
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -308,7 +309,6 @@
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
-<script>
 
 <script>
     $(function () {
@@ -320,13 +320,27 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     }
+    function valida(f){
+        // var boton=document.getElementById("guardar");
+		// var completo = true;
+		// var incompleto = false;
+		// if( f.elements[0].value == "" ){ 
+        //     alert(incompleto); 
+        // }else{
+        //     boton.type = 'button';
+        // }
+    }
 </script>
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('.demo3').click(function () {
-            swal({
+    // $(document).ready(function () {
+        $('.demo3').click(function (e) {
+            e.preventDefault();
+            $(".finalizar").click();
+            
+            if(  document.forms['form_sto'].reportValidity()){
+                swal({
                 title: "¿Estas seguro que deseas Finalizar?",
                 text: "Una vez Finalizado, no podras modificar la Cotizacion Manual",
                 type: "warning",
@@ -338,20 +352,26 @@
                 closeOnCancel: false },
                 function (isConfirm) {
                     if (isConfirm) {
-                        document.getElementById("finalizar").click();
+                        document.getElementById("finalizar").submit();
                         swal("Edicion de Cotizacion Manual Finalizada", "Ya no podrás editar", "success");
                     } else {
                         swal("Cancelado", "Cancelado la Finalizar", "error");
                     }
-                });
-        })
+                });    
+            }else{
+                $(".finalizar").click();
+            }
+            // console.log(sol);
+            
+            
+            // })
     });
     $(document).ready(function (){
         // Bind normal buttons
         Ladda.bind( '.ladda-button',{ timeout: 8000 });
     });
 
-    $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    // $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     
     function mostrarMensaje(mensaje){
        $("#divmsg").empty(); //limpiar div
@@ -359,15 +379,17 @@
        $("#divmsg").show(200);
     }
     /* {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}} */
-    $(".guardar").on('click', function () {
-        var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
-        $('#inp_s').append(data);
-        $(".demo3").remove();
-    });
-    $(".finalizar").on('click', function () {
+    // $(".guardar").on('submit', function (e) {
+    //     // e.preventDefault(); 
+    //     var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+    //     $('#inp_s').append(data);
+    //     /* $(".demo3").remove(); */
+    // });
+    $(".finalizar").on('click', function (e) {
+        /* e.preventDefault(); */
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".guardar").remove();
+        /* $(".guardar").remove(); */
     });
     $(".select2_demo_almacen").select2({
         placeholder: "Seleccionar Almacen",
@@ -425,7 +447,7 @@
             </td>
             <td>
                 <input style="width: 76px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
-                <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
                 <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />

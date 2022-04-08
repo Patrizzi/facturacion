@@ -83,14 +83,14 @@
                             {{$cotizacion_registros->producto->codigo_producto}}
                         </td>
                         <td>
-                            {{$cotizacion_registros->producto->nombre}}  <br>{{$cotizacion_registros->descripcion_item}} </span>
+                            {{$cotizacion_registros->producto->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                         </td>
                     @else
                         <td>
                             {{$cotizacion_registros->servicio->codigo_servicio}}
                         </td>
                         <td>
-                            {{$cotizacion_registros->servicio->nombre}}  <br> {{$cotizacion_registros->descripcion_item}} </span>
+                            {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                         </td>
                     @endif                        
                     <td>{{$cotizacion_registros->cantidad}}</td>
