@@ -156,7 +156,7 @@
                         </table>    
                         <div id="resultado_moneda"></div>
                         <div class="table-responsive">
-                            <table cellspacing="0" class="table tables" id="inp_s" >
+                            <table cellspacing="0" class="table_form tables" id="inp_s" >
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">
@@ -178,7 +178,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <select class="select2_demo_3 select_change"  required="true"  id="articulo" onchange="inputs_campos(0),ajax(0)" autocomplete="off" name="select_articulo"></select>
+                                            <select class="select2_demo_3 select_change"  required="" id="articulo" onchange="inputs_campos(0),ajax(0)" name="select_articulo"></select>
                                             <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
                                             <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
                                         </td>
@@ -234,11 +234,9 @@
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
                             <div class="col-sm-6 " align="right">
-                                {{-- <button class="btn btn-primary float-right" name="name" value="print" formtarget="_blank" type="submit" style="margin-right: 5px"><i class="fa fa-print fa-lg" > </i></button> --}}
-                                {{-- <button type="submit" name="name" value="pdf" class="btn btn-info float-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"  style="margin-right: 5px"><i class="fa fa-file-pdf-o fa-lg"></i></button> --}}
-                                <button  class="guardar ladda-button btn btn-info " type="submit">Guardar</button>
-                                {{-- <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button> --}}
-                                {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" > --}}
+                                <button  class="guardar ladda-button btn btn-info " type="submit" >Guardar</button>
+                                <button class="btn btn-warning demo3 float-right"  id="finalizar_button"  style="margin-left: 10px;" type="button">Guardar y Finalizar</button>
+                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                                 </button>
                             </div>
                         </div>
@@ -285,7 +283,15 @@
         height: 100vh;
         z-index: 20;
     }
-    
+    .table_form{
+        width: 100%;
+        max-width: 100%;
+    }
+    .table_form td, .table_form th {
+       padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid rgb(222 226 230);
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -320,51 +326,36 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     }
-    function valida(f){
-        // var boton=document.getElementById("guardar");
-		// var completo = true;
-		// var incompleto = false;
-		// if( f.elements[0].value == "" ){ 
-        //     alert(incompleto); 
-        // }else{
-        //     boton.type = 'button';
-        // }
-    }
+
 </script>
 
 
 <script type="text/javascript">
     // $(document).ready(function () {
-        $('.demo3').click(function (e) {
-            e.preventDefault();
-            $(".finalizar").click();
-            
-            if(  document.forms['form_sto'].reportValidity()){
-                swal({
-                title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, no podras modificar la Cotizacion Manual",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3686ff",
-                confirmButtonText: "Si, Finalizar",
-                cancelButtonText: "Cancelar!",
-                closeOnConfirm: false,
-                closeOnCancel: false },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        document.getElementById("finalizar").submit();
-                        swal("Edicion de Cotizacion Manual Finalizada", "Ya no podrás editar", "success");
-                    } else {
-                        swal("Cancelado", "Cancelado la Finalizar", "error");
-                    }
-                });    
-            }else{
-                $(".finalizar").click();
-            }
-            // console.log(sol);
-            
-            
-            // })
+    $('.demo3').click(function (e) {
+        if(  document.forms['form_sto'].reportValidity()){
+            swal({
+            title: "¿Estas seguro que deseas Finalizar?",
+            text: "Una vez Finalizado, no podras modificar la Cotizacion Manual",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3686ff",
+            confirmButtonText: "Si, Finalizar",
+            cancelButtonText: "Cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: false },
+            function (isConfirm) {
+                if (isConfirm) {
+                    swal("Edicion de Cotizacion Manual Finalizada", "Ya no podrás editar", "success");
+                    $(".finalizar").click();
+                    $(".guardar").attr('disabled', true);
+                } else {
+                    swal("Cancelado", "Cancelado la Finalizar", "error");
+                }
+            });    
+        }else{
+            console.log("campos incompletos");
+        }
     });
     $(document).ready(function (){
         // Bind normal buttons
@@ -379,17 +370,16 @@
        $("#divmsg").show(200);
     }
     /* {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}} */
-    // $(".guardar").on('submit', function (e) {
-    //     // e.preventDefault(); 
-    //     var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
-    //     $('#inp_s').append(data);
-    //     /* $(".demo3").remove(); */
-    // });
+    $(".guardar").on('submit', function (e) {
+        $(".demo3").attr('disabled', true);
+        var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        
+    });
     $(".finalizar").on('click', function (e) {
-        /* e.preventDefault(); */
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        /* $(".guardar").remove(); */
+        //  $(".guardar").dis();
     });
     $(".select2_demo_almacen").select2({
         placeholder: "Seleccionar Almacen",

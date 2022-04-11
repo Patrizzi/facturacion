@@ -3,14 +3,24 @@
 @section('href_accion', route('nota_venta.index') )
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 
+
+@include('layout_agregado_rapido')
+
+{{-- Boton para modal de Clientes --}}
+@section('ruta_retorno', 'cotizacion')
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
+{{--Fin Boton para modal de Clientes --}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <form action="{{route('nota_venta.store')}}"  enctype="multipart/form-data" method="post">
+                    <form action="{{route('nota_venta.store')}}"  enctype="multipart/form-data" method="post" id="nota_venta_store">
                        @csrf
                        {{-- Cabecera --}}
                         <div class="row">
@@ -35,12 +45,7 @@
                                     <td>Cliente</td>
                                     <td>:</td>
                                     <td>
-                                        <select class="select2_demo_3 " name="cliente" required=""  autocomplete="off">
-                                            @foreach($clientes as $index => $cliente)
-                                                <option value=""></option>
-                                                <option value="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
-                                            @endforeach
-                                        </select>
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required></select>
                                     </td>
                                     <td>Forma de pago</td>
                                     <td>:</td>
@@ -150,7 +155,7 @@
                             </div>
                             <div class="col-sm-6" align="right">
                                 <div class="tooltip-demo" align="right">
-                                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" >Guardar</button>
+                                    <button class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
                                     <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button" >Guardar y Finalizar</button>
                                     <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                                     </button>
@@ -168,31 +173,49 @@
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .a{color: red}
-    .select2.select2-container.select2-container--default{width:100%!important}
-    .select2-selection.select2-selection--single{border: 1px solid #c5c5c5;height: 33px;}
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 12px;
+    }
+    .select2-container--default .select2-selection--single {
+        border: none;
+    }
+    span.select2.select2-container.select2-container--default{
+        width: 100%!important;
+        background-color: #FFFFFF;
+        background-image: none;
+        border-radius: 1px;
+        display: block;
+        padding: 3px 12px;
+        border: 1px solid #e5e6e7;
+    }
+    .select2-hidden-accessible{
+        width: 0px;
+        margin: 0px;
+        width: auto;
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>s
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <!-- Steps -->
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
 <!-- Sweet alert -->
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
-
+ 
 <script type="text/javascript">
-    $(".select2_demo_3").select2({
-        placeholder: "Seleccionar Cliente",
-    });
-    $(document).ready(function () {
-        $('.demo3').click(function () {
+  
+    $('.demo3').click(function (e) {
+        if(document.forms['nota_venta_store'].reportValidity()){
             swal({
                 title: "¿Estas seguro que deseas Finalizar?",
                 text: "Una vez Finalizado, No se podrá editar la Nota de Venta",
@@ -205,14 +228,18 @@
                 closeOnCancel: false },
                 function (isConfirm) {
                     if (isConfirm) {
-                        document.getElementById("finalizar").click();
                         swal("Nota de Venta Finalizada", "", "success");
+                        $('.finalizar').click();
+                        $('.gurdar').attr('disabled', true);
                     } else {
                         swal("Cancelado", "Cancelado la Finalizar", "error");
                     }
-                });
-        })
+            });
+        }else{
+            console.log("campos incompletos ");
+        }
     });
+
     $(document).ready(function (){
         // Bind normal buttons
         Ladda.bind( '.ladda-button',{ timeout: 8000 });
@@ -225,15 +252,45 @@
        $("#divmsg").append(mensaje);
        $("#divmsg").show(200);
     }
-    $(".guardar").on('click', function () {
+    $(".guardar").on('submit', function (e) {
+        $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".demo3").remove();
+        
     });
-    $(".finalizar").on('click', function () {
+    $(".finalizar").on('click', function (e) {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".guardar").remove();
+        //  $(".guardar").dis();
+    });
+    $(".select2_demo_client").select2({
+        placeholder: "Seleccionar Cliente",
+        ajax: {
+            minimumInputLength: 1,
+            url: "{{ route('pa.clients') }}",
+            dataType: 'json',
+            type: "POST",
+            delay: 10,
+            data: function (params) {
+                var tipo_coti = 2;
+                return {
+                    _token: "{{ csrf_token() }}",
+                    search: params.term, // search term
+                    tipo_coti: tipo_coti    
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.nombre + ' | ' +  item.numero_documento,
+                        };
+                    })
+                };
+            },
+            cache: true
+        }
     });
 </script>
 

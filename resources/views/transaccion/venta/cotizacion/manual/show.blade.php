@@ -180,7 +180,7 @@
         <span hidden>{{$h = 0 }} {{$igv_1 =  1 + ($igv_t->igv_total/100)}}</span>
         <div class="div-editar no_mostrar">
             <div class="table-responsive">
-                <form action="{{route('cotizacion_manual.update', $cotizacion->id)}}" method="post">
+                <form action="{{route('cotizacion_manual.update', $cotizacion->id)}}" method="post" id="coti_man_update">
                     @csrf
                     <table class="table tables" id="inp_s">
                         <thead>
@@ -221,7 +221,7 @@
                                     </td>
                                     <td>
                                         <input style="width: 76px" type='text' id='precio_s_igv{{$h}}' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio}}" />
-                                        <input hidden type='text' id='precio_s_igv_float{{$h}}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio * $cotizacion_m_regs->cantidad}}" />
+                                        <input hidden type='text' id='precio_s_igv_float{{$h}}' name='precio_s_igv_float'  class=" form-control precio_s_igv_float" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio * $cotizacion_m_regs->cantidad}}" />
                                     </td>
                                     <td>
                                         
@@ -263,7 +263,7 @@
                         </tbody>
                     </table>
                     <div class="col-sm-12" align="right">
-                        <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                        <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
                         <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
                         <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                         </button>
@@ -423,6 +423,11 @@
     .no_mostrar{
         display: none;
     }
+    .select2-hidden-accessible{
+        width: 0px;
+        margin: 0px;
+        width: auto;
+    }
 </style>
 
 <!-- Mainly scripts -->
@@ -448,8 +453,9 @@
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 <script>
-    $(document).ready(function () {
-        $('.demo3').click(function () {
+    
+    $('.demo3').click(function (e) {
+        if(document.forms['coti_man_update'].reportValidity()){
             swal({
                 title: "¿Estas seguro que deseas Finalizar?",
                 text: "Una vez Finalizado, no podras modificar Cotizacion Manual",
@@ -462,14 +468,18 @@
                 closeOnCancel: false },
                 function (isConfirm) {
                     if (isConfirm) {
-                        document.getElementById("finalizar").click();
                         swal("Edicion de Cotizacion Manual Finalizada", "Ya no podrás editar", "success");
+                        $('.finalizar').click();
+                        $('.guardar').attr('disabled', true);
                     } else {
                         swal("Cancelado", "Cancelado la Finalizar", "error");
                     }
-                });
-        })
+            });
+        }else{
+            console.log("campos incompletos")
+        }
     });
+    
     $(document).ready(function (){
         // Bind normal buttons
         Ladda.bind( '.ladda-button',{ timeout: 8000 });
@@ -482,16 +492,17 @@
        $("#divmsg").append(mensaje);
        $("#divmsg").show(200);
     }
-    {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}}
-    $(".guardar").on('click', function () {
+    // {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}}
+    $(".guardar").on('submit', function (e) {
+        $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".demo3").remove();
+        
     });
-    $(".finalizar").on('click', function () {
+    $(".finalizar").on('click', function (e ) {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".guardar").remove();
+        // $(".guardar").remove();
     });
     function click_editar(){
         // MOSTRAR LOS INPUTS
@@ -586,7 +597,7 @@
             </td>
             <td>
                 <input style="width: 76px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
-                <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="form-control precio_s_igv_float" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
                 <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />

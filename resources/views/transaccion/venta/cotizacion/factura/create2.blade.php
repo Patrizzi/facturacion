@@ -67,7 +67,7 @@
         </div>
         <div class="ibox">
             <div class="ibox-content">
-                <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+                <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" id="coti_store_Fac">
                     @csrf
                     @method('put')
                     {{-- Cabecera --}}
@@ -316,7 +316,7 @@
                     <button type="button" class='addmore btn btn-success' disabled > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                 </div>
                 <div align="right" class="col-sm-6">
-                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " type="submit" >Guardar</button>
                     <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
                     <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" ></button>
                 </div>
@@ -384,6 +384,11 @@
     .dropdown-content a:hover {background-color: #f1f1f1;}
     .dropdown:hover .dropdown-content {display: block;}
     .form-check{margin: 20px 12px;}
+    .select2-hidden-accessible{
+        width: 0px;
+        margin: 0px;
+        width: auto;
+    }
 </style>
 
 <!-- Mainly scripts -->
@@ -440,11 +445,11 @@
             ajax_confi(parameters);
         }
     }
-    $(document).ready(function () {
-        $('.demo3').click(function () {
+    $('.demo3').click(function () {
+        if(document.forms['coti_store_Fac'].reportValidity()){
             swal({
                 title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, No se podrá editar la Nota de Venta",
+                text: "Una vez Finalizado, No se podrá editar la Cotizacion",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3686ff",
@@ -455,12 +460,14 @@
                 function (isConfirm) {
                     if (isConfirm) {
                         document.getElementById("finalizar").click();
-                        swal("Nota de Venta Finalizada", "", "success");
+                        swal("Cotizacion Finalizada", "", "success");
                     } else {
                         swal("Cancelado", "Cancelado la Finalizar", "error");
                     }
-                });
-        })
+            });
+        }else{
+
+        }
     });
     $(document).ready(function (){
         // Bind normal buttons
@@ -474,15 +481,16 @@
        $("#divmsg").append(mensaje);
        $("#divmsg").show(200);
     }
-    $(".guardar").on('click', function () {
+    $(".guardar").on('submit', function () {
+        $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".demo3").remove();
+        
     });
     $(".finalizar").on('click', function () {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".guardar").remove();
+        // $(".guardar").remove();
     });
 </script>
 

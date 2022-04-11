@@ -175,7 +175,7 @@
             <span hidden>{{$h=1}}</span>
             @if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
                 <div class="div-editar no_mostrar">
-                    <form action="{{route('nota_venta.update',$nota_venta->id)}}" method="post">
+                    <form action="{{route('nota_venta.update',$nota_venta->id)}}" method="post" id="nota_vent_update">
                         @csrf
                         <table   class="table tables" id="inp_s">
                             <thead>
@@ -217,7 +217,7 @@
                             </tbody>
                         </table>
                         <div class="col-sm-12" align="right">
-                            <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                            <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
                             <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
                             <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                             </button>
@@ -365,32 +365,36 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+<!-- Jquery Validate -->
+<script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
 <!-- Sweet alert -->
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 <script>
-    $(document).ready(function () {
-        $('.demo3').click(function () {
+    $('.demo3').click(function () {
+        if(document.forms['nota_vent_update'].reportValidity()){
             swal({
-                title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, no podras modificar la Nota de Venta",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3686ff",
-                confirmButtonText: "Si, Finalizar",
-                cancelButtonText: "Cancelar!",
-                closeOnConfirm: false,
-                closeOnCancel: false },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        document.getElementById("finalizar").click();
-                        swal("Edicion de Nota de Venta Finalizada", "Ya no podrás editar", "success");
-                    } else {
-                        swal("Cancelado", "Cancelado la Finalizar", "error");
-                    }
-                });
-        })
+            title: "¿Estas seguro que deseas Finalizar?",
+            text: "Una vez Finalizado, no podras modificar la Nota de Venta",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3686ff",
+            confirmButtonText: "Si, Finalizar",
+            cancelButtonText: "Cancelar!",
+            closeOnConfirm: false,
+            closeOnCancel: false },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $(".finalizar").click();
+                    swal("Edicion de Nota de Venta Finalizada", "Ya no podrás editar", "success");
+                } else {
+                    swal("Cancelado", "Cancelado la Finalizar", "error");
+                }
+            });
+        }else{
+            console.log("campos incompletos");
+        }
     });
     $(document).ready(function (){
         // Bind normal buttons
@@ -405,15 +409,16 @@
        $("#divmsg").show(200);
     }
     {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}}
-    $(".guardar").on('click', function () {
+    $(".guardar").on('submit', function () {
+        $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".demo3").remove();
+        
     });
     $(".finalizar").on('click', function () {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".guardar").remove();
+        // $(".guardar").remove();
     });
     function click_editar(){
         // MOSTRAR LOS INPUTS

@@ -226,7 +226,7 @@
         <span hidden> {{$h = 1}} {{ $sume = 0}}</span>
         <div class="table-responsive div-editar no_mostrar">
             @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
-            <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post"  enctype="multipart/form-data">
+            <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post"  enctype="multipart/form-data" id="coti_update">
                 @csrf
                 <table cellspacing="0" class="table " id="inp_s">
                     <thead>
@@ -371,7 +371,7 @@
                     </tfooter>
                 </table>
                 <div class="col-sm-12" align="right">
-                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info " >Guardar</button>
+                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
                     <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
                     <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                     </button>
@@ -453,6 +453,11 @@
     .no_mostrar{
         display: none;
     }
+    .select2-hidden-accessible{
+        width: 0px;
+        margin: 0px;
+        width: auto;
+    }
 </style>
 
 <!-- Mainly scripts -->
@@ -468,17 +473,19 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- Jquery Validate -->
+<script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
 <!-- Sweet alert -->
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 {{-- //TICKET --}}
 {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 <script>
-    $(document).ready(function () {
-        $('.demo3').click(function () {
+    $('.demo3').click(function () {
+        if(document.forms['coti_update'].reportValidity()){
             swal({
                 title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, no podras editar esta Nota de venta",
+                text: "Una vez Finalizado, no podras editar esta Cotizacion",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3686ff",
@@ -488,13 +495,18 @@
                 closeOnCancel: false },
                 function (isConfirm) {
                     if (isConfirm) {
-                        document.getElementById("finalizar").click();
                         swal("Edicion de Cotizacion Cerrado", "No se va a poder editar de nuevo", "success");
+                        $(".finalizar").click();
+                        $(".guardar").attr('disabled', true);
                     } else {
                         swal("Cancelado", "Cancelando el Finalizar", "error");
                     }
                 });
-        })
+        }else{
+            console.log('campos incompletos')
+        }
+    });
+        $(document).ready(function () {
     });
     $(document).ready(function (){
         // Bind normal buttons
@@ -508,16 +520,17 @@
        $("#divmsg").append(mensaje);
        $("#divmsg").show(200);
     }
-    {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}}
-    $(".guardar").on('click', function () {
+    // {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}}
+    $(".guardar").on('submit ', function () {
+        $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".demo3").remove();
+        
     });
     $(".finalizar").on('click', function () {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        $(".guardar").remove();
+        // $(".guardar").remove();
     });
     function click_editar(){
         // MOSTRAR LOS INPUTS
