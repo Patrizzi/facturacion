@@ -201,6 +201,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 10,
             responsive: true,
+            order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
