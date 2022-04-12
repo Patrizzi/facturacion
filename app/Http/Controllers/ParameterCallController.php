@@ -223,6 +223,7 @@ class ParameterCallController extends Controller
                 "nombre"=>$product->nombre,
                 "codigo"=>$product->codigo_producto,
                 "codigo_original"=>$product->codigo_original,
+                "tipo"=>'producto'
            );
         }
 
@@ -233,7 +234,8 @@ class ParameterCallController extends Controller
                  "id"=>$service->id,
                  "nombre"=>$service->nombre,
                  "codigo"=>$service->codigo_servicio,
-                 "codigo_original"=>$service->codigo_original
+                 "codigo_original"=>$service->codigo_original,
+                 "tipo"=>'servicio'
             );
          }
 
