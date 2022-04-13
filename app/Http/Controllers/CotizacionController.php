@@ -1479,7 +1479,7 @@ class CotizacionController extends Controller
 
                     
                     $cotizacion_r_update->cotizacion_id = $cotizacion->id;
-                    $cotizacion_r_update->producto_id = $servicio->id;
+                    $cotizacion_r_update->servicio_id = $servicio->id;
                     if($request->get('descripcion_item')[$h] == null){
                         $cotizacion_r_update->descripcion_item = null;
                     }else{
