@@ -3,150 +3,147 @@
 @section('href_accion', route('nota_venta.index') )
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
+
+
+@include('layout_agregado_rapido')
+
+{{-- Boton para modal de Clientes --}}
+@section('ruta_retorno', 'cotizacion')
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
+{{--Fin Boton para modal de Clientes --}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <form action="{{route('nota_venta.store')}}"  enctype="multipart/form-data" method="post">
+                    <form action="{{route('nota_venta.store')}}"  enctype="multipart/form-data" method="post" id="nota_venta_store">
                        @csrf
                        {{-- Cabecera --}}
-                       <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-4" align="left">
-                                <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
-                            </address>
+                        <div class="row">
+                            <div class="col-sm-4 text-left" align="left">
+                                <address class="col-sm-4" align="left">
+                                    <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
+                                </address>
+                            </div>  
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <div class="form-control" align="center" style="height: auto;">
+                                    <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                                    <h2 style="font-size: 19px">NOTA DE VENTA</h2>
+                                    <h5>{{$cod_nota_venta}}</h5>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-4"></div>
-                        <div class="col-sm-4">
-
-                         <div class="form-control" align="center" style="height: auto;">
-                            <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">NOTA DE VENTA</h2>
-                            <h5>{{$cod_nota_venta}}</h5>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>Cliente</td>
-                            <td>:</td>
-                            <td>
-
-                                <select class="select2_demo_3 " name="cliente" required=""  autocomplete="off">
-                                    @foreach($clientes as $index => $cliente)
-                                    <option value=""></option>
-                                    <option value="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-
-                            <td>Forma de pago</td>
-                            <td>:</td>
-                            <td>
-                                <select class="form-control" name="forma_pago" required="required">
-                                    @foreach($forma_pagos as $forma_pago)
-                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
-                                    @endforeach
-                                    <select>
+                        <br>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>Cliente</td>
+                                    <td>:</td>
+                                    <td>
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required></select>
+                                    </td>
+                                    <td>Forma de pago</td>
+                                    <td>:</td>
+                                    <td>
+                                        <select class="form-control" name="forma_pago" required="required">
+                                            @foreach($forma_pagos as $forma_pago)
+                                                <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                            @endforeach
+                                        <select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Almacen</td>
                                     <td>:<input type="text" class="form-control" value="{{$almacen->id}}" name="almacen" hidden></td>
-                                    <td><input type="text" class="form-control" value="{{$almacen->nombre}}" disabled></td>
-
+                                    <td>
+                                        <input type="text" class="form-control" value="{{$almacen->nombre}}" disabled>
+                                    </td>
                                     <td>Garantia</td>
                                     <td>:</td>
-                                    <td><select class="form-control" name="garantia">
-                                        <option value="0">Sin Garantia</option>
-                                        <option value="6">6 Meses</option>
-                                        <option value="12">12 Meses</option>
-                                        <option value="24">24 Meses</option>
-                                        <option value="36">36 Meses</option>
-                                    </select></td>
+                                    <td>
+                                        <select class="form-control" name="garantia">
+                                            @foreach($garantia as $garantias)
+                                                <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
                                 </tr>
-
                                 <tr>
                                     <td>Moneda</td>
                                     <td>:</td>
                                     <td>
-                                       <select name="moneda" class="form-control" required >
-                                        <option value="">Seleccione Moneda</option>
+                                    <select name="moneda" class="form-control" required >
                                         @foreach($moneda as $monedas)
-                                        <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
+                                            <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
                                         @endforeach
                                     </select>
-
-                                </td>
-                                <td>Fecha de Emision</td>
-                                <td>:</td>
-                                <td>
-                                    <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Observacion</td>
-                                <td>:</td>
-                                <td colspan="4">
-                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Nota de Venta a vuestra solicitud</textarea>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div id="resultado_moneda"></div>
-
-                    <div class="table-responsive">
-                        <table cellspacing="0" class="table tables  " >
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-                                    <th >Articulo</th>
-                                    <th style="width:100px">Cantidad</th>
-                                    <th style="width:100px">Precio</th>
-                                    <th style="width:100px">Total</th>
+                                    </td>
+                                    <td>Fecha de Emision</td>
+                                    <td>:</td>
+                                    <td>
+                                        <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
                                 <tr>
-                                    <td><input type='checkbox' class="case"></td>
-                                    <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
-                                     <datalist id="browsers2" >
-                                        @foreach($productos as $index)
-                                        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
-                                        @endforeach
-                                        @foreach($servicios as $servicio)
-                                        <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
-                                        @endforeach
+                                    <td>Observacion</td>
+                                    <td>:</td>
+                                    <td colspan="4">
+                                        <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Nota de Venta a vuestra solicitud</textarea>
                                     </td>
-                                    <td>
-                                        <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
-                                    </td>
-                                    <td>
-                                        <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                    </td>
-
-                                    <td>
-                                        <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
-                                    </td>
-                                    <span id="spTotal"></span>
                                 </tr>
-
                             </tbody>
-                            <tbody>
+                        </table>
+                        <div id="resultado_moneda"></div>
+                        <div class="table-responsive">
+                            <table cellspacing="0" class="table tables  " id="inp_s" >
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+                                        <th >Articulo</th>
+                                        <th style="width:100px">Cantidad</th>
+                                        <th style="width:100px">Precio</th>
+                                        <th style="width:100px">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type='checkbox' class="case"></td>
+                                        <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191">
+                                        <datalist id="browsers2" >
+                                            @foreach($productos as $index)
+                                            <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                            @endforeach
+                                            @foreach($servicios as $servicio)
+                                            <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off"  />
+                                        </td>
+                                        <td>
+                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                        </td>
 
-
-                                <tr  align="center">
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total :</td>
-                                    <td colspan="2">
-                                        <input id='sub_total' hidden name="costo_sub_total"  readonly="readonly" class="form-control" required />
-                                        <input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required /></td>
+                                        <td>
+                                            <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                        </td>
+                                        <span id="spTotal"></span>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr  align="center">
+                                        <td></td>
+                                        <td></td>
+                                        <td>Total :</td>
+                                        <td colspan="2">
+                                            <input id='sub_total' hidden name="costo_sub_total"  readonly="readonly" class="form-control" required />
+                                            <input id='total_final' name="costo_total"  readonly="readonly" class="form-control" required />
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -157,8 +154,12 @@
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
                             <div class="col-sm-6" align="right">
-                                <button type="submit" class='delete btn btn-info'>Guardar</button>&nbsp;
-
+                                <div class="tooltip-demo" align="right">
+                                    <button class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
+                                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button" >Guardar y Finalizar</button>
+                                    <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -172,25 +173,124 @@
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .a{color: red}
-    .select2.select2-container.select2-container--default{width:100%!important}
-    .select2-selection.select2-selection--single{border: 1px solid #c5c5c5;height: 33px;}
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 12px;
+    }
+    .select2-container--default .select2-selection--single {
+        border: none;
+    }
+    span.select2.select2-container.select2-container--default{
+        width: 100%!important;
+        background-color: #FFFFFF;
+        background-image: none;
+        border-radius: 1px;
+        display: block;
+        padding: 3px 12px;
+        border: 1px solid #e5e6e7;
+    }
+    .select2-hidden-accessible{
+        width: 0px;
+        margin: 0px;
+        width: auto;
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>s
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <!-- Steps -->
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-
+<script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+<!-- Sweet alert -->
+<link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
+ 
 <script type="text/javascript">
-    $(".select2_demo_3").select2({
+  
+    $('.demo3').click(function (e) {
+        if(document.forms['nota_venta_store'].reportValidity()){
+            swal({
+                title: "¿Estas seguro que deseas Finalizar?",
+                text: "Una vez Finalizado, No se podrá editar la Nota de Venta",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3686ff",
+                confirmButtonText: "Si, Finalizar",
+                cancelButtonText: "Cancelar!",
+                closeOnConfirm: false,
+                closeOnCancel: false },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        swal("Nota de Venta Finalizada", "", "success");
+                        $('.finalizar').click();
+                        $('.gurdar').attr('disabled', true);
+                    } else {
+                        swal("Cancelado", "Cancelado la Finalizar", "error");
+                    }
+            });
+        }else{
+            console.log("campos incompletos ");
+        }
+    });
+
+    $(document).ready(function (){
+        // Bind normal buttons
+        Ladda.bind( '.ladda-button',{ timeout: 8000 });
+    });
+
+    // $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    
+    function mostrarMensaje(mensaje){
+       $("#divmsg").empty(); //limpiar div
+       $("#divmsg").append(mensaje);
+       $("#divmsg").show(200);
+    }
+    $(".guardar").on('submit', function (e) {
+        $(".demo3").attr('disabled', true);
+        var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        
+    });
+    $(".finalizar").on('click', function (e) {
+        var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
+        $('#inp_s').append(data);
+        //  $(".guardar").dis();
+    });
+    $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
+        ajax: {
+            minimumInputLength: 1,
+            url: "{{ route('pa.clients') }}",
+            dataType: 'json',
+            type: "POST",
+            delay: 10,
+            data: function (params) {
+                var tipo_coti = 2;
+                return {
+                    _token: "{{ csrf_token() }}",
+                    search: params.term, // search term
+                    tipo_coti: tipo_coti    
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.nombre + ' | ' +  item.numero_documento,
+                        };
+                    })
+                };
+            },
+            cache: true
+        }
     });
 </script>
 
@@ -203,7 +303,7 @@
         <input type='checkbox' class='case'/>
         </td>";
         <td>
-        <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off">
+        <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191">
         </td>
         <td>
         <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>

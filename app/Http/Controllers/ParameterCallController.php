@@ -12,8 +12,8 @@ use App\Stock_almacen;
 use App\Cliente;
 use App\TipoCambio;
 use App\Kardex_entrada;
-
-
+use App\helpers;
+use CifrasEnLetras;
 
 use Illuminate\Http\Request;
 
@@ -22,6 +22,7 @@ class ParameterCallController extends Controller
     // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros  
     public function description(Request $request)
     {
+        // return $request;
         //Obtención de la moneda
         $money=$request->get('moneda');
         $money_id=Moneda::where('id',$money)->first();
@@ -170,13 +171,17 @@ class ParameterCallController extends Controller
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->where(function($query) use ($search){
+                    $query->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%');
+                })->limit(5)->get();
             }
         }else if($tipo == '0'){ //Boleta
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','DNI')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','DNI')->where(function($query) use ($search){
+                    $query->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%');
+                })->limit(5)->get();
             }
         }else{ // TODO : ESTE ELSE ES EXCLUYENTE SI ES UNA BOLETA O FACTURA PARA EL LLAMADO DE RUC O DNI
             if($search == ''){
@@ -194,7 +199,6 @@ class ParameterCallController extends Controller
                 "numero_documento"=>$employee->numero_documento 
            );
         }
-  
         return response()->json($response);
     }
 
@@ -219,6 +223,7 @@ class ParameterCallController extends Controller
                 "nombre"=>$product->nombre,
                 "codigo"=>$product->codigo_producto,
                 "codigo_original"=>$product->codigo_original,
+                "tipo"=>'producto'
            );
         }
 
@@ -229,7 +234,8 @@ class ParameterCallController extends Controller
                  "id"=>$service->id,
                  "nombre"=>$service->nombre,
                  "codigo"=>$service->codigo_servicio,
-                 "codigo_original"=>$service->codigo_original
+                 "codigo_original"=>$service->codigo_original,
+                 "tipo"=>'servicio'
             );
          }
 
@@ -275,4 +281,21 @@ class ParameterCallController extends Controller
         return $var_vuelta;
     }
     
+
+    //* LLamado para convertir de numero a letras con php 
+    public function getNumberLetter(Request $request){
+        $number = $request->numeros;
+        $moneda = $request->moneda;
+        $end2=number_format(round($number, 2),2);
+        $end=round($number, 2);
+
+        $v=new CifrasEnLetras() ;
+        $letra=($v->convertirEurosEnLetras($end));
+        $letra_final = ucfirst(strstr($letra, 'soles',true));
+        $end_final_point=strstr($end2, '.', false);
+        $end_final=str_replace('.', ' ',$end_final_point);
+
+        $convertido = "Son : "."$letra_final"."con"."$end_final"."/100 ".$moneda;
+        return $convertido;
+    }
 }

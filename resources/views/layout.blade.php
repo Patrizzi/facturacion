@@ -119,7 +119,7 @@ $empresa=Empresa::first(); ?>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
                             <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
-                            <li><a href="{{route('otros.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                            <li><a href="{{route('manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
                             {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
                            {{--  <li>
                                 <a href="#"><span  class="nav-label">Cotizaciones</span></a>

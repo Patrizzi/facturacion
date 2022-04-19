@@ -112,9 +112,9 @@
                   </select>
                 </div>
                 @if($servicios->moneda->id==2)
-                <input type="number" min="1" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_extranjero}}" >
+                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_extranjero}}" >
                 @else
-                <input type="number" min="1" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" >
+                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" >
                 @endif
               </div>
             </div>

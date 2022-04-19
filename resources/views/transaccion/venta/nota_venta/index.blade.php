@@ -118,21 +118,60 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Codigo</th>
-                                    <th>Almacen</th>
+                                    <th>Cliente</th>
+                                    {{-- <th>Almacen</th> --}}
                                     <th>Fecha Emision</th>
+                                    <th>Importe T.</th>
+                                    <th>Forma de Pago</th>
                                     <th>Usuario Registrado</th>
                                     <th></th>
+                                    <th>Anular</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($nota_venta as $nota_ventas)
+                                @foreach($nota_venta as $index => $nota_ventas)
                                 <tr class="gradeX">
                                     <td>{{$nota_ventas->id}}</td>
                                     <td>{{$nota_ventas->cod_nota_venta}}</td>
-                                    <td>{{$nota_ventas->almacen->nombre}}</td>
+                                    <td>{{$nota_ventas->cliente->nombre}}</td>
+                                    {{-- <td>{{$nota_ventas->almacen->nombre}}</td> --}}
                                     <td>{{$nota_ventas->fecha_emision}}</td>
+                                    <td>{{$nota_ventas->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}</td>
+                                    <td>@if($nota_ventas->forma_pago == 1) Contado @else Credito @endif</td>
                                     <td>{{$nota_ventas->user->personal->nombres}}</td>
-                                    <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a></center></td>
+                                    <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a></center></td>
+                                    <td class=" tooltip-demo"><center>
+                                        @if($nota_ventas->estado == 0)
+                                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$nota_ventas->id}}"><i class="fa fa-trash" ></i>
+                                            </button>
+                                        @else
+                                            <button class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ya está Anulada"><i class="fa fa-trash" ></i>
+                                        </button>
+                                        @endif
+                                        <div class="modal fade" id="exampleModal{{$nota_ventas->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <form action="{{route('nota_venta.anulacion',$nota_ventas->id)}}" method="post" >
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                        {{-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> --}}
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">        
+                                                            <strong>¿Esta seguro de anula la Nota de Venta N~ {{$nota_ventas->cod_nota_venta}}?</strong>
+                                                            <strong>Observacion:</strong><br>
+                                                            <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control">{{$nota_ventas->observacion}}</textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </center></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -162,6 +201,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 10,
             responsive: true,
+            order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });

@@ -16,10 +16,16 @@ Route::group(
 
 		// Route::view('/' , 'home')->name('inicio');
 		Route::get('/' , 'ViewController@home')->name('inicio');
+
+		Route::post('configuracion_guias_ingresos', 'ConfiguracionGuiaIngresosController@store')->name('envio_confi_ingresos');
+
 		Route::post('/whatsapp','AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
-		Route::resource('/cotizacion/otros','CotizacionOtrosController');
+		Route::resource('/cotizacion/manual','CotizacionManualController');
+		Route::post('/cotizacion/manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		Route::get('/cotizacion/manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
+		
 
 		Route::resource('/categoria','CategoriaController')->only(['index','create','store','update']);;
 		Route::resource('/vendedores','PersonalVentaController');
@@ -58,6 +64,7 @@ Route::group(
 		Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
 		Route::resource('/cotizacion','CotizacionController');
+		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
 		// Route::put('/cotizacion/store/{id_moneda}','CotizacionController@store')->name('cotizacion.store');
 		Route::resource('/empresa/banco','BancoController'); //Banco
 
@@ -91,6 +98,8 @@ Route::group(
 //NOTA VENTA
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
+		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		
 
@@ -189,6 +198,7 @@ Route::group(
 		Route::post('parameter_call/getArticles', 'ParameterCallController@getArticles')->name('pa.articles');
 		Route::post('parameter_call/getMoney', 'ParameterCallController@getMoney')->name('pa.money');
 		Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
+		Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
 
 		Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
@@ -372,6 +382,7 @@ Route::get('boleta/pdf/{id}' , 'BoletaController@pdf')->name('pdf_bol');
 Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
 Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');
+Route::get('/cotizacion/manual/pdf/{id}','CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');

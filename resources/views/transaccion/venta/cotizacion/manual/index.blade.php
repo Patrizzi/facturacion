@@ -1,11 +1,10 @@
 @extends('layout')
-@section('title', 'Factura Manual')
+@section('title', 'Cotizacion Manual')
 @section('atributo_actu', 'hidden')
-@section('href_accion', route('facturacion_manual.create'))
+@section('href_accion', route('manual.create'))
 @section('value_accion', 'Agregar')
 @section('content')
 
-{{-- obtener errores --}}
 @if($errors->any())
 <div style="padding-top: 20px;">
     <div class="alert alert-danger">
@@ -28,7 +27,6 @@
     </div>
 </div>
 @endif
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -39,40 +37,32 @@
                             <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Codigo de Factura</th>
+                                    <th>Codigo de Cotizacion</th>
                                     <th>Cliente</th>
                                     <th>N°Documento</th>
-                                    <th>Fecha Emision</th>
+                                    <th>Fecha </th>
                                     <th>Importe T.</th>
                                     <th>Ver</th>
-                                    <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($facturacion as $facturacions)
+                                @foreach($cotizacion as $cotizaciones)
                                 <tr class="gradeX">
-                                    <td>{{$facturacions->id}}</td>
-                                    <td>{{$facturacions->codigo_fac}}</td>
-                                    <td>{{$facturacions->cliente->nombre}}</td>
-                                    <td>{{$facturacions->cliente->numero_documento}}</td>
-                                    <td>{{$facturacions->fecha_emision }}</td>
-                                    <span hidden>{{$subtotal = $facturacions->op_gravada + $facturacions->op_inafecta + $facturacions->op_exonerada }} </span>
-                                    <td>{{$facturacions->moneda->simbolo}} {{number_format(round(($subtotal+($facturacions->op_gravada*$igv->renta/100)),2),2)}}</td>
+                                    <td>{{$cotizaciones->id}}</td>
+                                    <td>{{$cotizaciones->cod_cotizacion}}</td>
+                                    <td>{{$cotizaciones->cliente->nombre}}</td>
+                                    <td>{{$cotizaciones->cliente->numero_documento}}</td>
+                                    <td>{{$cotizaciones->fecha_emision }}</td>
+                                    <span hidden>{{$subtotal = $cotizaciones->op_gravada + $cotizaciones->op_inafecta + $cotizaciones->op_exonerada }} </span>
+                                    <td>{{$cotizaciones->moneda->simbolo}} {{number_format(round(($subtotal+($cotizaciones->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     {{-- Ver --}}
                                     <td align="center">
-                                        <a href="{{route('facturacion_manual.show',$facturacions->id)}}">
+                                        <a href="{{route('manual.show',$cotizaciones->id)}}">
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                     </td>
                                     {{-- Envio a Sunat --}}
-                                    <td style="text-align:center;">
-                                        @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
-                                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
-                                        @else
-                                        <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
-                                        @endif
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -101,8 +91,8 @@
     $(document).ready(function(){
         $('.dataTables-example').DataTable({
             pageLength: 25,
-            responsive: true,
             order: [[0, "desc"]],
+            responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });

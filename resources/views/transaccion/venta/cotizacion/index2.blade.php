@@ -74,7 +74,8 @@
                                     <th>N° Cotización</th>
                                     <th>Ruc/DNI</th>
                                     <th>Cliente</th>
-                                    <th>Fecha</th>
+                                    <th>Fecha Emision</th>
+                                    <th>Importe T.</th>
                                     <th>Ver</th>
                                     <th>Estado</th>
                                     <th>Estado Aprobado</th>
@@ -84,12 +85,15 @@
                             <tbody>
                                 @foreach($cotizacion as $cotizacions)
                                 <tr class="gradeX">
+                                    <span hidden>{{$subtotal = 0}}</span>
                                     <td>{{$cotizacions->id}}</td>
                                     <td>{{$cotizacions->cod_cotizacion}}</td>
                                     <td>{{$cotizacions->cliente->numero_documento}}</td>
                                     <td>{{$cotizacions->cliente->nombre}}</td>
                                     <td>{{$cotizacions->created_at}}</td>
-                                    <td><center><a href="{{route('cotizacion.show',$cotizacions->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></center></td>
+                                    <span hidden>{{$subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }} </span>
+                                    <td>{{$cotizacions->moneda->simbolo}} {{number_format(round(($subtotal+($cotizacions->op_gravada*$igv->renta/100)),2),2)}}</td>
+                                    <td><center><a href="{{route('cotizacion.show',$cotizacions->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
                                     <td>
                                         @if($cotizacions->estado =='0')
 

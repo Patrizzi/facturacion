@@ -36,7 +36,8 @@ class FacturacionMController extends Controller
     public function index()
     {
         $facturacion=Facturacion_m::all();
-        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion'));
+        $igv = Igv::first();
+        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv'));
     }
 
     /**
@@ -76,7 +77,7 @@ class FacturacionMController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
 
         // Moneda
-        $moneda=Moneda::get();
+        $moneda=Moneda::where('principal','1')->first();
 
         // Número de factura
         $factura_numero="FA01-000001";
@@ -90,7 +91,7 @@ class FacturacionMController extends Controller
         //Almacen
         $almacenes = Almacen::all();
 
-        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes'));
+        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes','sucursal'));
     }
 
     /**
@@ -101,6 +102,7 @@ class FacturacionMController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);
@@ -130,8 +132,8 @@ class FacturacionMController extends Controller
         
         // obtención de Cliente
         $cliente_nombre=$request->get('cliente');
-        $nombre = strstr($cliente_nombre, '-',true);
-        $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
+        // $nombre = strstr($cliente_nombre, '-',true);
+        $cliente_buscador=Cliente::where('id',$cliente_nombre)->first();
 
         // obtención de Código de factura
         // $factura_numero="F001-000001";
@@ -187,6 +189,9 @@ class FacturacionMController extends Controller
         $nombre = strstr($operacion, '-',true);
         $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
 
+        //obtención de moneda
+        $moneda_get=Moneda::where('nombre',$request->moneda)->first();
+
         // Guardado de facturación manual
         $facturacion=new facturacion_m;
         $facturacion->codigo_fac=$factura_numero;
@@ -194,7 +199,7 @@ class FacturacionMController extends Controller
         $facturacion->orden_compra=$request->get('orden_compra');
         $facturacion->guia_remision=$request->get('guia_r');
         $facturacion->cliente_id=$cliente_buscador->id;
-        $facturacion->moneda_id=$request->get('moneda');
+        $facturacion->moneda_id=$moneda_get->id;
         $facturacion->forma_pago_id=$request->get('forma_pago');
         $facturacion->fecha_emision=$request->get('fecha_emision');
         $facturacion->fecha_vencimiento=$nuevafechas;

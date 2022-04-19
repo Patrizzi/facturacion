@@ -58,7 +58,8 @@ class BoletaController extends Controller
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
-        return view('transaccion.venta.boleta.index', compact('boletas','boletas_enviadas','user_login','conteo_almacen','almacen','almacen_primero'));
+        $igv = Igv::first();
+        return view('transaccion.venta.boleta.index', compact('boletas','boletas_enviadas','user_login','conteo_almacen','almacen','almacen_primero','igv'));
     }
 
     /**

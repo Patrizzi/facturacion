@@ -82,7 +82,8 @@
                                     <th>Código de Factura</th>
                                     <th>Cliente</th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha de Vencimiento</th>
+                                    <th>Fecha de Emision</th>
+                                    <th>Importe T.</th>
                                     <th></th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
@@ -99,7 +100,9 @@
                                     <td>{{$facturacions->cotizacion->cliente->nombre}}</td>
                                     <td>{{$facturacions->cotizacion->cliente->numero_documento}}</td>
                                     @endif
-                                    <td>{{$facturacions->fecha_vencimiento }}</td>
+                                    <td>{{$facturacions->fecha_emision }}</td>
+                                    <span hidden>{{$subtotal = $facturacions->op_gravada + $facturacions->op_inafecta + $facturacions->op_exonerada }} </span>
+                                    <td>{{$facturacions->moneda->simbolo}} {{number_format(round(($subtotal+($facturacions->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     <td align="center">
                                         <a href="{{route('facturacion.show',$facturacions->id)}}">
                                           <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
