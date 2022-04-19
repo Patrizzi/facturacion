@@ -126,7 +126,7 @@
 							<tbody>
 								<tr>
 									<td>
-										<button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+										<button type="button" class='delete borrar e btn btn-danger' > <i class="fa fa-trash" aria-hidden="true"></i> </button>
 									</td>
 									<td>
 										<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo1" onchange="select_opt(1)">
@@ -138,9 +138,9 @@
 										<input type="hidden" value="" id="registro_opt1" name="registro_opt[]" class="registro_opt">
 									</td>
 
-									<td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control"  onkeyup="multi(0);"  required/></td>
-									<td><input type='text' id='precio' name='precio[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
-									<td><input type='text' id='total0' name='total[]' class="form-control" required/></td>
+									<td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control clean"  onkeyup="multi(0);"  required/></td>
+									<td><input type='text' id='precio' name='precio[]' class="monto0 form-control clean" onkeyup="multi(0);" required/></td>
+									<td><input type='text' id='total0' name='total[]' class="form-control clean" required/></td>
 									<span id="spTotal"></span>
 								</tr>
 							</tbody>
@@ -314,13 +314,13 @@
         // alert(e);
         var fila = $(this).parents("tr");
         var input_text_opt = fila.find('input[class="registro_opt"]').val();
-        console.log(input_text_opt);
 		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
 		if (e>1) {
         	fila.closest('tr').remove();
-        	$(".borrar").prop("disabled", true);
         	$(".addmore").prop("disabled", false);
         }else{
+			$('.clean').val("");
+            $(".select2_demo_3").val(null).trigger("change");
         	$(".borrar").prop("disabled", false);
 			$(".addmore").prop("disabled", false);
         }
