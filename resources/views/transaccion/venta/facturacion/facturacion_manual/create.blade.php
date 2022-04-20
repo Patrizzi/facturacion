@@ -496,7 +496,11 @@
                         var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
                         for(var y=0;y<data_length;y++){
                             if(selected_ajax == data[y].id+ " | " + data[y].codigo + " | " + data[y].codigo_original + " | " + data[y].nombre){
-                                data[y].disabled=true;
+                                if(data[y].tipo == 'producto'){
+                                    data[y].disabled=true;
+                                }else{
+                                    data[y].disabled=false;
+                                }
                             }
                         }
                     }
