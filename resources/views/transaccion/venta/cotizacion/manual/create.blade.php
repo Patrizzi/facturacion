@@ -39,7 +39,7 @@
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                                    <h5><br></h5>
+                                    <h5 id="codigo_cot_manual">{{$cotizacion_numero_fac}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                                     <td>Almacen</td>
                                     <td>:</td>
                                     <td>
-                                        <select class="select2_demo_almacen" name="almacen_form" required="" value="">
+                                        <select class="select2_demo_almacen" name="almacen_form" required="" value=""  onchange="codigo_numero()">
                                             @foreach($almacen as $almacenes)
                                                 <option value="{{$almacenes->id}}">{{$almacenes->nombre}} - {{$almacenes->abreviatura}}</option>
                                             @endforeach
@@ -77,11 +77,11 @@
                                     <td>:</td>
                                     <td>
                                         <div class="radio">
-                                            <input type="radio" name="tipo_coti" id="radio1" value="1" checked="">
-                                            <label style="padding-right: 5px;" for="radio1" onchange="click_radio_factura()">
+                                            <input type="radio" name="tipo_coti" id="radio1" value="1" checked=""  onchange="click_radio_factura(),codigo_numero()">
+                                            <label style="padding-right: 5px;" for="radio1">
                                                 Factura
                                             </label>
-                                            <input type="radio" name="tipo_coti" id="radio2" value="0" onchange="click_radio_boleta()">
+                                            <input type="radio" name="tipo_coti" id="radio2" value="0" onchange="click_radio_boleta(),codigo_numero()">
                                             <label for="radio2">
                                                 Boleta
                                             </label>
@@ -273,7 +273,7 @@
     }
     input[type=number] { -moz-appearance:textfield; }
     #loaderGif{
-        /* background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3; */
+        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
         background-size: 250px;
         display: none;
         position: fixed;
@@ -784,6 +784,31 @@
             },
         });
     }
+    function disabled_money(){
+        $(`.money_change`).prop('disabled', true);
+        $(`.button_money`).addClass('not-active');
 
+        setTimeout(function(){
+            $(`.money_change`).prop('disabled', false);
+            $(`.button_money`).removeClass('not-active');
+        }, 10000);
+    }
+
+    function codigo_numero(){
+        var almacen = $('.select2_demo_almacen').val();
+        var tipo = $('[name="tipo_coti"]:checked').val();
+        $.ajax({
+            type: "post",
+            url: "{{route('cotizacion_manual.change_almacen_tipo')}}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'tipo': tipo,
+                'almacen': almacen,
+            },
+            success: function(msg){
+                $('#codigo_cot_manual').html(msg)
+            }
+        })
+    }
 </script>
 @stop

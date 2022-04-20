@@ -81,6 +81,27 @@ class CotizacionManualController extends Controller
         $sucursal=Almacen::where('id',$sucursal_1)->first();
         
         $almacen = Almacen::where('estado','!=',1)->get();
+        //Numero de factura 
+        $cotizacion_fact=CotizacionManual::where('almacen_id',$sucursal->id)->where('tipo','factura')->latest()->first();
+        if (empty($cotizacion_fact)) {
+            $numero_serie_fac=$sucursal->id;
+            $correlativo_fac=1;
+        } else{
+            $numero_serie_busqueda_fac=$cotizacion_fact->cod_cotizacion;
+            $numero_serie_1_fac=strstr($numero_serie_busqueda_fac,'0',false);
+            $numero_serie_fac=strstr($numero_serie_1_fac,'-',true);
+            $correlativo_ultimo_fac=substr(strrchr($numero_serie_busqueda_fac, "-"),1);
+            $correlativo_fac = $correlativo_ultimo_fac+1;
+
+            if($correlativo_ultimo_fac == 99999999){
+                $correlativo_fac = 1;
+                $numero_serie_fac = $numero_serie_fac+1;
+            }
+        }
+        $sucursal_nr_fac = str_pad($numero_serie_fac, 3, "0", STR_PAD_LEFT);
+        $correlativo_fac=str_pad($correlativo_fac, 8, "0", STR_PAD_LEFT);        
+        $cotizacion_numero_fac="CMF".$sucursal_nr_fac."-".$correlativo_fac;
+
         $clientes=Cliente::all();
         $moneda=Moneda::where('principal','1')->first();
 
@@ -90,9 +111,44 @@ class CotizacionManualController extends Controller
         $productos=Producto::all();
         $empresa=Empresa::first();
         $tipo_operacion=Tipo_operacion_f::get();
-        return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal'));
+        return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal','cotizacion_numero_fac'));
     }
+    
+    public function change_almacen_tipo(Request $request){
+        // return $request;
+        $almacen = $request->get('almacen');
+        $tipo = $request->get('tipo');
+        if($tipo == "1"){
+            $tipo = "factura";
+        }else{
+            $tipo = "boleta";
+        }
+        $cotizacion_manual = CotizacionManual::where('almacen_id',$almacen)->where('tipo', $tipo)->latest()->first();
+        if (empty($cotizacion_manual)) {
+            $numero_serie=$almacen;
+            $correlativo=1;
+        } else{
+            $numero_serie_busqueda=$cotizacion_manual->cod_cotizacion;
+            $numero_serie_1=strstr($numero_serie_busqueda,'0',false);
+            $numero_serie=strstr($numero_serie_1,'-',true);
+            $correlativo_ultimo=substr(strrchr($numero_serie_busqueda, "-"),1);
+            $correlativo = $correlativo_ultimo+1;
 
+            if($correlativo_ultimo == 99999999){
+                $correlativo = 1;
+                $numero_serie = $numero_serie+1;
+            }
+        }
+        $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
+        $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);        
+        
+        if($tipo == "factura"){
+            $cotizacion_numero="CMF".$sucursal_nr."-".$correlativo;    
+        }else{
+            $cotizacion_numero="CMB".$sucursal_nr."-".$correlativo;
+        }
+        return $cotizacion_numero;
+    }
     /**
      * Store a newly created resource in storage.
      *

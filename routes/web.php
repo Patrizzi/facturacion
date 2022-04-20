@@ -24,6 +24,7 @@ Route::group(
 		Route::resource('/apariencia','ConfigController');
 		Route::resource('/cotizacion/manual','CotizacionManualController');
 		Route::post('/cotizacion/manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		Route::post('/cotizacion/manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
 		Route::get('/cotizacion/manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		
 
@@ -168,6 +169,7 @@ Route::group(
 		//->Vista para facturacion manual próximamente...
 		Route::get('/facturacion_manual/print/{id}','FacturacionMController@print')->name('facturacion_manual.print');
 		Route::post('/facturacion_manual/facturacion_e','FacturacionMController@facturacion_e')->name('facturacion_manual.f_e');
+		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
 		Route::resource('facturacion_manual','FacturacionMController');
 
 

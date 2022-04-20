@@ -45,6 +45,7 @@
                                     <center>
                                         <h3 style="padding-top:10px">{{$empresa->ruc}}</h3>
                                         <h2>FACTURA ELECTRONICA</h2>
+                                        <h3 id="codigo_fac_manual">{{$factura_numero}}</h3>
                                     </center>
                                 </div>
                             </div>
@@ -59,9 +60,9 @@
                                     </td>
                                     <td>Almacen</td><td>:</td>
                                     <td>
-                                        <select class="select2_demo_almacen" name="almacen" required="" value="{{old('almacen')}}">
+                                        <select class="select2_demo_almacen" name="almacen_id_selec" required=""  onchange="codigo_numero()">
                                             @foreach($almacenes as $almacen)
-                                            <option value="{{$almacen->id}}">{{$almacen->nombre}} - {{$almacen->abreviatura}}</option>
+                                                <option value="{{$almacen->id}}">{{$almacen->nombre}} - {{$almacen->abreviatura}}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -147,7 +148,7 @@
                                     <td>:</td>
                                     <td>
                                         <div class="row">
-                                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                                            <input type="hidden" name="almacen" id="_selec" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
                                             <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
                                             <div class="col-sm-5">
                                                 <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
@@ -279,7 +280,7 @@
         </div>
     </div>
 </div>
-
+<div id="loaderGif"></div>
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
@@ -312,6 +313,17 @@
     }
     .slimScrollBar{
         display: none !important;
+    }
+    #loaderGif{
+        /* background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3; */
+        background-size: 250px;
+        display: none;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100vh;
+        z-index: 20;
     }
 </style>
 
@@ -910,9 +922,31 @@
         var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
         $(`#precio${a}`).val(s_igv_redondeo);
         $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
-        
-
     }
+    function disabled_money(){
+        $(`.money_change`).prop('disabled', true);
+        $(`.button_money`).addClass('not-active');
 
+        setTimeout(function(){
+            $(`.money_change`).prop('disabled', false);
+            $(`.button_money`).removeClass('not-active');
+        }, 10000);
+    }
+    
+    function codigo_numero(){
+        var almacen = $('.select2_demo_almacen').val();
+        console.log(almacen);
+        $.ajax({
+            type: "post",
+            url: "{{route('facturacion_manual.change_almacen_tipo')}}",
+            data: {
+                '_token': "{{ csrf_token() }}",
+                'almacen': almacen,
+            },
+            success: function(msg){
+                $('#codigo_fac_manual').html(msg)
+            }
+        })
+    }
     </script>
     @stop
