@@ -137,7 +137,7 @@ class FacturacionMController extends Controller
         $cod_guia_all = Codigo_guia_almacen::where('almacen_id', '!=' ,$sucursal->id)->get();
 
         $last_numb=Facturacion_m::where('almacen_id',$sucursal->id)->latest()->first();
-        if(!isset($last_numb)){
+        if(!isset($last_numb) && !is_numeric($cod_guia->cod_factura_m)){
             $almacen_igual = Codigo_guia_almacen::find($sucursal->id);
             $almacen_igual->cod_factura_m = 0;
             $almacen_igual->save();
