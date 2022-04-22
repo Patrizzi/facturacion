@@ -11,6 +11,7 @@ use App\Empresa;
 use App\Facturacion;
 use App\Facturacion_m;
 use App\Facturacion_registro;
+use App\Facturacion_registro_m;
 use App\Guia_remision;
 use App\Nota_Credito;
 use App\Nota_Credito_registro;
@@ -217,16 +218,21 @@ class FacturacionElectronicaController extends Controller
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
         // return $notas_creditos_registro;  
         //factura - factura registro
-        $factura=Facturacion::where('id',$nota_credito->facturacion_id)->first();
-        $factura_registro=Facturacion_registro::where('facturacion_id',$nota_credito->facturacion_id)->get();
-
+        if ($nota_credito->facturacion_id != null ) {
+            $factura=Facturacion::where('id',$nota_credito->facturacion_id)->first();
+            $factura_registro=Facturacion_registro::where('facturacion_id',$nota_credito->facturacion_id)->get();
+        }else{
+            $factura=Facturacion_m::where('id',$nota_credito->facturacion_m_id)->first();
+            $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$nota_credito->facturacion_m_id)->get();
+        }
+        
         // $n_c_request=array('cantidad' => null,'precio'=>null);
         // return $factura_registro;
         foreach($notas_creditos_registro as $i => $nota_c_registros ){
             $n_c_cantidad[$i] = $nota_c_registros->cantidad;
             $n_c_precio[$i] = $nota_c_registros->precio;
         }
-
+        // return $factura;
         // return $n_c_cantidad[0];
 
         //notas_creditos_count

@@ -7,6 +7,7 @@
 @section('value_accion', 'atras')
 
 @section('content')
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
@@ -31,6 +32,7 @@
                 </div><br>
                 <form action="{{route('nota-credito.store_factura',$facturacion->id)}}"  enctype="multipart/form-data" method="post" >
                     @csrf
+                    <input type="hidden" name="tipo" value="{{$tipo}}">
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
                             <div class="form-control">

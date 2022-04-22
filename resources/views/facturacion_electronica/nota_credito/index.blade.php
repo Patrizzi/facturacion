@@ -39,32 +39,44 @@
                                         @foreach($n_creditos as $n_credito)
                                         <tr class="gradeX">
                                             <td>{{$i++}}</td>
-                                            @if($n_credito->boleta_id==NULL)
+                                            @if($n_credito->facturacion_id !=NULL)
                                                 <td>{{$n_credito->codigo_n_c}}</td>
                                                 <td>{{$n_credito->nota_i_facturacion->cliente->nombre}}</td>
                                                 <td>{{$n_credito->nota_i_facturacion->cliente->numero_documento}}</td>
-                                            @else
+                                            @elseif($n_credito->boleta_id !=NULL)
                                                 <td>{{$n_credito->codigo_n_c}}</td>
                                                 <td>{{$n_credito->nota_i_boleta->cliente->nombre}}</td>
                                                 <td>{{$n_credito->nota_i_boleta->cliente->numero_documento}}</td>
+                                            @else
+                                                <td>{{$n_credito->codigo_n_c}}</td>
+                                                <td>{{$n_credito->nota_i_fac_manual->cliente->nombre}}</td>
+                                                <td>{{$n_credito->nota_i_fac_manual->cliente->numero_documento}}</td>
                                             @endif
                                             <td>
-                                                @if($n_credito->boleta_id==NULL)
+                                                @if($n_credito->facturacion_id !=NULL)
                                                     Factura
-                                                @else
+                                                @elseif($n_credito->boleta_id !=NULL)
                                                     Boleta
+                                                @else
+                                                    Factura Manual
                                                 @endif
                                             </td>
                                             <td>
                                                 <center>
-                                                    @if($n_credito->boleta_id==NULL)
+                                                    @if($n_credito->facturacion_id !=NULL)
                                                         <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="id" value="{{$n_credito->id}}">
                                                             <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
                                                         </form>
-                                                    @else
+                                                    @elseif($n_credito->boleta_id !=NULL)
                                                         <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="id" value="{{$n_credito->id}}">
                                                             <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
@@ -99,20 +111,27 @@
                                     @foreach($n_creditos_enviados as $n_credito_enviado)
                                     <tr class="gradeX">
                                         <td>{{$i++}}</td>
-                                        @if($n_credito_enviado->boleta_id==NULL)
+                                        @if($n_credito_enviado->facturacion_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td>{{$n_credito_enviado->nota_i_facturacion->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_facturacion->cliente->numero_documento}}</td>
-                                        @else
+                                        @elseif($n_credito_enviado->boleta_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
+                                            
+                                        @else
+                                            <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                            <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
+                                            <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->numero_documento}}</td>
                                         @endif
                                         <td>
-                                            @if($n_credito_enviado->boleta_id==NULL)
+                                            @if($n_credito_enviado->facturacion_id !=NULL)
                                                 Factura
-                                            @else
+                                            @elseif($n_credito_enviado->boleta_id !=NULL)
                                                 Boleta
+                                            @else
+                                                Factura Manual
                                             @endif
                                         </td>
                                         <td>
@@ -162,6 +181,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 25,
             responsive: true,
+            order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [ ]
         });

@@ -31,6 +31,7 @@
                 </div><br>
                 <form action="{{route('nota-credito.store_factura',$facturacion->id)}}"  enctype="multipart/form-data" method="post" >
                     @csrf
+                    <input type="hidden" name="tipo" value="{{$tipo}}">
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
                             <div class="form-control">

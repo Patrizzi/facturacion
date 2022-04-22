@@ -53,7 +53,7 @@
                                     <th>Nota de Credito</th>
                                     <th>Documento</th>
                                     <th>DOC</th>
-                                    <th>Tipo</th>
+                                    <th>Motivo</th>
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
                                 </tr>
@@ -65,17 +65,21 @@
                                     <td>{{$nota_credito->id}}</td>
                                     <td>{{$nota_credito->codigo_n_c}}</td>
                                     <td>
-                                        @if($nota_credito->facturacion_id==NULL)
+                                        @if($nota_credito->facturacion_id !=NULL)
+                                            {{$nota_credito->nota_i_facturacion->codigo_fac}}
+                                        @elseif($nota_credito->boleta_id !=NULL)
                                             {{$nota_credito->nota_i_boleta->codigo_boleta}}
                                         @else
-                                            {{$nota_credito->nota_i_facturacion->codigo_fac}}
+                                            {{$nota_credito->nota_i_fac_manual->codigo_fac}}
                                         @endif
                                     </td> 
                                     <td>
-                                        @if($nota_credito->facturacion_id==NULL)
+                                        @if($nota_credito->facturacion_id !=NULL)
+                                            Factura
+                                        @elseif($nota_credito->boleta_id !=NULL)
                                             Boleta
                                         @else
-                                            Factura
+                                            Factura Manual
                                         @endif
                                     </td>
                                     <td>{{$nota_credito->tipo}}</td>
