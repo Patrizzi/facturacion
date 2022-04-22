@@ -125,7 +125,7 @@
                                     @endswitch
                                     <strong>Tipo de sustento:</strong>
                                     {{$notas_credito->tipo}}<br>
-                                    <strong>Fecha Emision:</strong>c
+                                    <strong>Fecha Emision:</strong>
                                     {{$notas_credito->created_at}}<br>
                                 @elseif($estado==1)
                                     <strong>Documento:</strong>
@@ -150,7 +150,7 @@
                                     <strong>Fecha Emision:</strong>
                                     {{$notas_credito->created_at}}<br>
                                 @else
-                                <strong>Documento:</strong>
+                                    <strong>Documento:</strong>
                                     {{$notas_credito->nota_i_fac_manual->codigo_fac}}<br>
                                     <strong>Tipo de operacion:</strong>
                                     @switch($notas_credito->motivo)
