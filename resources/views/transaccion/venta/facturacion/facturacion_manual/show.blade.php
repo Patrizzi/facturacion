@@ -3,7 +3,7 @@
 @section('title', 'Facturación')
 
 @section('href_accion', route('facturacion_manual.index'))
-@section('value_accion', 'Atrás')
+@section('value_accion', 'Inicio')
 
 @section('button2', 'Nueva Facturación')
 @section('config', route('facturacion_manual.create'))

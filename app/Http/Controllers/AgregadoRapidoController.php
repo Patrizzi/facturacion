@@ -18,11 +18,15 @@ class AgregadoRapidoController extends Controller
     public function cliente_store(Request $request){
         // return $request;
         // return "1";
-        $this->validate($request,[
-            'numero_documento' => ['required','unique:clientes,numero_documento'],
-        ],[
-            'numero_documento.unique' => 'El Cliente ya ha sido registrado'
-        ]);
+        if($request->get('numero_documento') == 0000000){
+            
+        }else{
+            $this->validate($request,[
+                'numero_documento' => ['required','unique:clientes,numero_documento'],
+            ],[
+                'numero_documento.unique' => 'El Cliente ya ha sido registrado'
+            ]);
+        }
         $data = $request->all();
 
         // return $request;
@@ -32,7 +36,7 @@ class AgregadoRapidoController extends Controller
         $cliente->empresa=$request->get('nombre');
         $cliente->direccion=$request->get('direccion');
         $cliente->email=$request->get('email');
-        $cliente->telefono=$request->get('telefono');
+        $cliente->telefono=$request->get('telefono ');
         $cliente->celular=$request->get('celular');
         // $cliente->empresa=$request->get('empresa');
         $cliente->documento_identificacion=$request->get('documento_identificacion');

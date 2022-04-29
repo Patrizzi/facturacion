@@ -82,12 +82,12 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Numero de Documento *</label>
-                                                <input list="browserdoc" class="form-control m-b" name="numero_documento" id="numero_ruc_cli" required  autocomplete="off" type="number">
+                                                <input   list="browserdoc" class="form-control m-b" name="numero_documento" id="numero_ruc_cli" required  autocomplete="off"  type="tel" maxlength="11">
                                                 <datalist id="browserdoc" >
                                                     <?php use  App\Cliente; ?>
                                                     <?php $clientes=Cliente::all();?>
                                                     @foreach($clientes as $cliente)
-                                                    <option id="a">{{$cliente->numero_documento}} - existente</option>
+                                                    <option id="a" >{{$cliente->numero_documento}} - existente</option>
                                                     @endforeach
                                                 </datalist>
                                             </div>
@@ -402,29 +402,37 @@
 <script >
     function seleccionado(){
         var opt = $('#cliente_doc').val();
-        if(opt=="DNI" || opt == "pasaporte"){
+        if(opt=="DNI"){
                 // $('#consulta_p_input').prop('disabled', false);
-                $('#botoncito_cliente').prop('disabled', true);
-                $('#numero_ruc_cli').val('');
-                $('#direccion_cli').val('Lima');
-                $('#distrito_cli').val('Lima');
-                $('#razon_social_cli').val('');
-                // $('#consulta_s').hide();
-            }else{
-                // $('#consulta_p_input').prop('disabled', 'disabled');
-                // document.getElementById('credito_pago').style.visibility = "initial";
-                $('#botoncito_cliente').prop('disabled', false);
-                $('#numero_ruc_cli').val('');
-                $('#direccion_cli').val('Lima');
-                $('#distrito_cli').val('Lima');
-                $('#razon_social_cli').val('');
-                // $('#consulta_s').show();
-            }
+            $('#botoncito_cliente').prop('disabled', true);
+            $('#numero_ruc_cli').val('');
+            $('#numero_ruc_cli').attr('maxlength', 7);
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+            // $('#consulta_s').hide();
+        }else if( opt == "pasaporte"){
+            $('#botoncito_cliente').prop('disabled', true);
+            $('#numero_ruc_cli').val('');
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+        }else{
+            // $('#consulta_p_input').prop('disabled', 'disabled');
+            // document.getElementById('credito_pago').style.visibility = "initial";
+            $('#botoncito_cliente').prop('disabled', false);
+            $('#numero_ruc_cli').val('');
+            $('#numero_ruc_cli').attr('maxlength', 11);
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+            // $('#consulta_s').show();
         }
+    }
 
-        $("#form_cliente_modal").submit(function(event) {
-            console.log("a");
-        });
+    $("#form_cliente_modal").submit(function(event) {
+        console.log("a");
+    });
     </script>
     <style>
         .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {

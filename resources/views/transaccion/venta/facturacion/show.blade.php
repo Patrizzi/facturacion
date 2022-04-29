@@ -3,7 +3,7 @@
  @section('title', 'Facturación Ver')
 
  @section('href_accion', route('facturacion.index'))
- @section('value_accion', 'Atrás')
+ @section('value_accion', 'Inicio')
 
  @section('button2', 'Nueva Facturación')
  @section('onclick',"event.preventDefault();document.getElementById('nueva_cots').submit();")

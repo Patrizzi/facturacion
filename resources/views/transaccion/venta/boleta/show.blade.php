@@ -4,7 +4,7 @@
  @section('breadcrumb', 'Boleta')
  @section('breadcrumb2', 'Boleta')
  @section('href_accion', route('boleta.index'))
- @section('value_accion', 'Atrás')
+ @section('value_accion', 'Inicio')
  @section('button2', 'Nueva Boleta')
  @section('onclick',"event.preventDefault();document.getElementById('nueva_cots').submit();")
  @section('content')
