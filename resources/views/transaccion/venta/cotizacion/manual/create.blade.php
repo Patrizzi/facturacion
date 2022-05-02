@@ -190,14 +190,14 @@
                                             <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='precio_s_igv0' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                            <input style="width: 76px" type='number' id='precio_s_igv0' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                             <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)"   autocomplete="off" />
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
+                                            <input style="width: 76px" type='number' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
                                         </td> 
                                         <td>
-                                            <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                            <input style="width: 76px"  type='number' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                         </td>
                                         <span id="spTotal"></span>
                                     </tr>
@@ -433,17 +433,17 @@
                 <input type='number' min='1' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td class="full-height-scroll tooltip-demo">
-                <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                <input type='number' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
-                <input style="width: 76px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input style="width: 76px" type='number' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
-                <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input style="width: 76px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td> 
             <td>
-                <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                <input type='number' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-gitcontrol "  required  autocomplete="off"/>
             </td>
         </tr>
         `;
@@ -604,11 +604,11 @@
         
         document.getElementById(`precio_s_igv_float${a}`).value = final_decimal_sin;
         //CALCULAR PRECIO CON IGV
-        var precio = document.querySelector(`#precio_c_igv${a}`).value;
-        var final=precio*cantidad; 
+        // var precio = document.querySelector(`#precio_c_igv${a}`).value;
+        // var final=precio*cantidad; 
         // var final_decimal = Math.round(final * multiplier) / multiplier;
         //igv calculo
-        var only_igv = final_sin + (parseFloat(final_sin) * (igv/multiplier)) 
+        var only_igv = final_sin + (parseFloat(final_sin) * (igv/multiplier)) ;
         var igv_decimal = Math.round(only_igv * multiplier ) / multiplier;
 
         document.getElementById(`total${a}`).value = igv_decimal;
