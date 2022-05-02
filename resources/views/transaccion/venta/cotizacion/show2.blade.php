@@ -3,7 +3,7 @@
 @section('breadcrumb', 'Cotización')
 @section('breadcrumb2', 'Cotización')
 @section('href_accion', route('cotizacion.index'))
-@section('value_accion', 'Atrás')
+@section('value_accion', 'Inicio')
 
 @section('button2', 'Nueva Cotización')
 @section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();")

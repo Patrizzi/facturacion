@@ -3,7 +3,7 @@
 @section('breadcrumb', 'Cotizacion Manual')
 @section('breadcrumb2', 'Cotizacion Manual')
 @section('href_accion', route('manual.index'))
-@section('value_accion', 'Atras')
+@section('value_accion', 'Inicio')
 
 @section('button2', 'Nueva Cotización')
 @section('config', route('manual.create'))

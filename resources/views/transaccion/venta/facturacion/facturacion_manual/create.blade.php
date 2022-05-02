@@ -219,14 +219,14 @@
                                                 <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                                <input style="width: 76px" type='number' id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                                 <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='text' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control inp" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
+                                                <input style="width: 76px" type='number' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control inp" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
                                             </td> 
                                             <td>
-                                                <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control inp" required  autocomplete="off" />
+                                                <input style="width: 76px"  type='number' id='total0' name='total' disabled="disabled" class="total form-control inp" required  autocomplete="off" />
                                             </td>
                                             <span id="spTotal"></span>
                                         </tr>
@@ -239,7 +239,7 @@
                                             <td></td>
                                             <td>Subtotal :</td>
                                             <td colspan="2">
-                                                <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control inp" required />
+                                                <input id='sub_total' type="number" name="sub_total_sin_igv" readonly class="form-control inp" required />
                                                 <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control inp" required hidden="" />
                                             </td>
                                         </tr>
@@ -250,7 +250,7 @@
                                             <td></td>
                                             <td>IGV :</td>
                                             <td colspan="2">
-                                                <input id='igv' type="text" disabled="disabled" class="form-control inp" required />
+                                                <input id='igv' type="number" disabled="disabled" class="form-control inp" required />
                                             </td>
                                         </tr>
                                         <tr align="center">
@@ -259,7 +259,7 @@
                                             <td></td>
                                             <td></td>
                                             <td>Total :</td>
-                                            <td colspan="2"><input id='total_final' name="costo_total"  readonly="readonly" class="form-control inp" required /></td>
+                                            <td colspan="2"><input id='total_final' type="number" name="costo_total"  readonly="readonly" class="form-control inp" required /></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -444,14 +444,14 @@
                     <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                 </td>
                 <td>
-                    <input type='text' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
+                    <input type='number' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
                     <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
-                    <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                    <input style="width: 76px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
-                    <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control inp"  required  autocomplete="off"/>
+                    <input type='number' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control inp"  required  autocomplete="off"/>
                 </td>
             </tr>
         `;
@@ -583,8 +583,9 @@
         });
     }
 
-
+    
     function multi(a){
+        var igv = 18.00;
         var total = 1;
         var totales=0;
         var change= false; //
@@ -601,38 +602,46 @@
         var precio = document.querySelector(`#precio${a}`).value;
         
         var multiplier = 100;
-        var final=(precio*cantidad);
+        var final= precio * cantidad;
         var final_decimal = Math.round(final * multiplier) / multiplier;
-        
-        document.getElementById(`total${a}`).value = final_decimal;
 
-        var totalInp = $('[name="total"]');
+        document.getElementById(`precio_s_igv_float${a}`).value = final_decimal;
+        var only_igv = final + ( parseFloat(final) * ( igv / multiplier) );
+        var igv_decimal = Math.round(only_igv * multiplier ) / multiplier;
+        document.getElementById(`total${a}`).value = igv_decimal;
+
+         // Operacion para subtotal sin igv
+         var sub_igv = $('[name="precio_s_igv_float"]');
+        var sub_igv_t = 0;
+        sub_igv.each(function(){
+            sub_igv_t += parseFloat($(this).val());
+        });        
+        var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+        $('#sub_total').val(sub_igv_tt);
+        document.getElementById("sub_total").value = sub_igv_tt;
+
+        //OPERACION PARA CALULCAR EL IGV
+        var only_igv = (parseFloat(sub_igv_tt) * (igv/multiplier)) 
+        var igv_decimal = Math.round(only_igv * multiplier ) / multiplier;
+        document.getElementById("igv").value = igv_decimal;
+
+        var end = igv_decimal+parseFloat(sub_igv_tt);
+        var end2 = Math.round(end * multiplier) / multiplier;
+       // Operacion para total
+       var totalInp = $('[name="total"]');
         var total_t = 0;
-
         totalInp.each(function(){
             total_t += parseFloat($(this).val());
         });
-
+        console.log(total_t);
         var multiplier2 = 100;
         var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+        
+        $('#total').val(total_tt);
 
-        $('#sub_total').val(total_tt);
+        // var subtotal = document.querySelector(`#total`).value;
+        document.getElementById("total_final").value = total_tt;
 
-        var igv_valor={{$igv->renta}}; 
-        var subtotal = document.querySelector(`#sub_total`).value;
-        var igv=subtotal*igv_valor/100;
-
-        var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-        var end=igv_decimal+parseFloat(subtotal);
-
-        var end2 = Math.round(end * multiplier2) / multiplier2;
-
-        document.getElementById("igv").value = igv_decimal;
-        document.getElementById("sub_total").value = subtotal;
-
-        var end=parseFloat(igv_decimal)+parseFloat(subtotal);
-        var end3 = Math.round(end * multiplier2) / multiplier2;
-        document.getElementById("total_final").value = end3;
 
         var monto_c = document.getElementsByClassName('monto_pago');
 
@@ -640,7 +649,7 @@
         for (var i = 0; i < inp_mont; i++) {
             var monto = monto_c[i].id;
             var fin = (end2/inp_mont)
-            document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2)/ multiplier2;
+            document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier)/ multiplier;
         }
     }
 

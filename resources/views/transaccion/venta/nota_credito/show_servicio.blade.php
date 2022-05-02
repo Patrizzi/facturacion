@@ -4,7 +4,7 @@
 @section('breadcrumb', 'Nota Credito Servicio')
 @section('breadcrumb2', 'Nota Credito Servicio')
 @section('href_accion', route('nota-credito.index'))
-@section('value_accion', 'atras')
+@section('value_accion', 'Inicio')
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
