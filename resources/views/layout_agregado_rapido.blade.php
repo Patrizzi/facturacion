@@ -398,6 +398,7 @@
 <script>
     function llamado_vuelta(){
         call_wizard();
+        $('#numero_ruc_cli').attr('maxlength', 11);
     }
 </script>
 <script >
