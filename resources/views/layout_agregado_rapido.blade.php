@@ -82,14 +82,15 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Numero de Documento *</label>
-                                                <input   list="browserdoc" class="form-control m-b" name="numero_documento" id="numero_ruc_cli" required  autocomplete="off"  type="tel" maxlength="11">
+                                                <input type="tel"  list="browserdoc" class="form-control m-b" name="numero_documento" id="numero_ruc_cli" required  autocomplete="off"   maxlength="11" onkeypress="return valideKey(event);">
                                                 <datalist id="browserdoc" >
                                                     <?php use  App\Cliente; ?>
                                                     <?php $clientes=Cliente::all();?>
                                                     @foreach($clientes as $cliente)
-                                                    <option id="a" >{{$cliente->numero_documento}} - existente</option>
+                                                    <option id="a"  value=" " readonly>{{$cliente->numero_documento}} - existente</option>
                                                     @endforeach
                                                 </datalist>
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <label>Dirección *</label>
@@ -433,20 +434,40 @@
     $("#form_cliente_modal").submit(function(event) {
         console.log("a");
     });
+    $(document).ready(function(){
+        $( "#numero_ruc_cli" ).change(function() {
+            var opt = $('#numero_ruc_cli').val();
+            if(opt == " "){
+                $('#numero_ruc_cli').val('');
+            }
+        });
+    });
+    function valideKey(evt){   
+        // code is the decimal ASCII representation of the pressed key.
+        var code = (evt.which) ? evt.which : evt.keyCode;
+        
+        if(code==8) { // backspace.
+        return true;
+        } else if(code>=48 && code<=57) { // is a number.
+        return true;
+        } else{ // other keys.
+        return false;
+        }
+    }
     </script>
     <style>
-        .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
-            background: #23c6c8!important;
-            color: #fff;
-            cursor: default;}
-            .wizard > .steps .done a, .wizard > .steps .done a:hover, .wizard > .steps .done a:active {
-                background: #23c6c8ab!important;
-                color: #fff;}
-                .wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active {
-                    background: #23c6c8!important;
-                }
-                .wizard > .actions .disabled a, .wizard > .actions .disabled a:hover, .wizard > .actions .disabled a:active {
-                    color: #fff!important;
-                }
+    .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
+        background: #23c6c8!important;
+        color: #fff;
+        cursor: default;}
+    .wizard > .steps .done a, .wizard > .steps .done a:hover, .wizard > .steps .done a:active {
+        background: #23c6c8ab!important;
+        color: #fff;}
+    .wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active {
+        background: #23c6c8!important;
+    }
+    .wizard > .actions .disabled a, .wizard > .actions .disabled a:hover, .wizard > .actions .disabled a:active {
+        color: #fff!important;
+    }
 
-            </style>
+    </style>

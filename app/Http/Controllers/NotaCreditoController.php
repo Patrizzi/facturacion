@@ -236,14 +236,13 @@ class NotaCreditoController extends Controller
         $notas_creditos_count=Nota_Credito_registro::count();
         $notas_creditos_count++;
 
-        if($tipo == "factura"){
+        if($tipo == "factura_origi"){
             $factura=Facturacion::where('id',$id)->first();
             $factura_registro=Facturacion_registro::where('facturacion_id',$id)->get();
         }else{
             $factura=Facturacion_m::where('id',$id)->first();
             $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         }
-
         // obtencion de la sucursal
         $almacen=$factura->almacen_id;
 
@@ -290,7 +289,7 @@ class NotaCreditoController extends Controller
         }
 
         $contadores=count($factura_registro);
-        if($tipo == "factura"){
+        if($tipo == "factura_origi"){
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
                 $cantidad="input_cantidad_".$string;
@@ -352,7 +351,7 @@ class NotaCreditoController extends Controller
 
         $nota_credito=new Nota_Credito();
         $nota_credito->codigo_n_c=$nota_credito_numero;
-        if($tipo == "factura"){
+        if($tipo == "factura_origi"){
             $nota_credito->facturacion_id=$factura->id;
         }else{
             $nota_credito->facturacion_m_id=$factura->id;

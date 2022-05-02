@@ -480,7 +480,7 @@
                     let data_length = data.length;
                     let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
                     let articles_selected_count_ajax = articles_selected_ajax.length; 
-                    // for(var z=0;z<articles_selected_count_ajax;z++){
+                    // for(var z=0;z<ar ticles_selected_count_ajax;z++){
                     //     var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
                     //     for(var y=0;y<data_length;y++){
                     //         if(selected_ajax == data[y].id+ " | " + data[y].codigo + " | " + data[y].codigo_original + " | " + data[y].nombre){
