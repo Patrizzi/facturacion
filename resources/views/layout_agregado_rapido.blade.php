@@ -408,7 +408,7 @@
                 // $('#consulta_p_input').prop('disabled', false);
             $('#botoncito_cliente').prop('disabled', true);
             $('#numero_ruc_cli').val('');
-            $('#numero_ruc_cli').attr('maxlength', 7);
+            $('#numero_ruc_cli').attr('maxlength', 8);
             $('#direccion_cli').val('Lima');
             $('#distrito_cli').val('Lima');
             $('#razon_social_cli').val('');
