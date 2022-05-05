@@ -219,11 +219,11 @@
                                                 <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='number' id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                                <input style="width: 76px" type='number' step="0.0000001" id='precio0' name='precio[]'  class="monto0 form-control inp" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                                 <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 76px" type='number' id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control inp" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
+                                                <input style="width: 76px" type='number' step="0.0000001" id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control inp" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
                                             </td> 
                                             <td>
                                                 <input style="width: 76px"  type='number' id='total0' name='total' disabled="disabled" class="total form-control inp" required  autocomplete="off" />
@@ -444,11 +444,11 @@
                     <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                 </td>
                 <td>
-                    <input type='number' style="width: 76px"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
+                    <input type='number' style="width: 76px"step="0.0000001"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
                     <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
-                    <input style="width: 76px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                    <input style="width: 76px" type='number' step="0.0000001"id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
                     <input type='number' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control inp"  required  autocomplete="off"/>
