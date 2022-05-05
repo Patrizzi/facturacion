@@ -30,6 +30,8 @@
                                  <table class="table table-striped table-bordered table-hover dataTables-example" >
                                     <thead>
                                         <tr>
+                                            {{-- Seleccion all --}}
+                                            <th><input class='check_all' type='checkbox' onclick="select_all()" /></th>
                                             <th>Item</th>
                                             <th>Codigo</th>
                                             <th>Cliente</th>
@@ -38,31 +40,38 @@
                                             <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <span hidden>{{$a=1}}</span>
-                                        @foreach($facturacion as $facturaciones)
-                                        <tr class="gradeX">
-                                            <td>{{$a++}}</td>
-                                            <td>{{$facturaciones->codigo_fac}}</td>
-                                            @if(isset($facturaciones->cliente_id))
-                                            <td>{{$facturaciones->cliente->nombre}}</td>
-                                            <td>{{$facturaciones->cliente->numero_documento}}</td>
-                                            @else
-                                            <td>{{$facturaciones->cotizacion->cliente->nombre}}</td>
-                                            <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
-                                            @endif
-                                            <td>{{$facturaciones->fecha_vencimiento }}</td>
-                                            <td>
-                                                <center>
-                                                    <form action="{{route('facturacion_electronica.factura_sunat')}}" method="POST">@csrf
-                                                        <input type="hidden" name="factura_id" value="{{$facturaciones->id}}">
-                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                    </form>
-                                                </center>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
+                                    {{-- <form action="{{route('facturacion_electronica.')}}" method="POST" id=""> --}}
+                                        <tbody>
+                                            <span hidden>{{$a=1}}</span>
+                                            @foreach($facturacion as $facturaciones)
+                                            <tr class="gradeX">
+                                                <td><input type='checkbox' class='case' value="{{$facturaciones->codigo_fac}}" /></td>
+                                                <td>{{$a++}}</td>
+                                                <td>{{$facturaciones->codigo_fac}}</td>
+                                                @if(isset($facturaciones->cliente_id))
+                                                <td>{{$facturaciones->cliente->nombre}}</td>
+                                                <td>{{$facturaciones->cliente->numero_documento}}</td>
+                                                @else
+                                                <td>{{$facturaciones->cotizacion->cliente->nombre}}</td>
+                                                <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
+                                                @endif
+                                                <td>{{$facturaciones->fecha_vencimiento }}</td>
+                                                <td>
+                                                    <center>
+                                                        <form action="{{route('facturacion_electronica.factura_sunat')}}" method="POST">@csrf
+                                                            <input type="hidden" name="factura_id" value="{{$facturaciones->id}}">
+                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                        </form>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                            <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all" onclick="submit_factura_click()">Enviar</button></td>
+                                        </tfoot>
+                                    {{-- </form> --}}
                                 </table>
                             </div>
 
@@ -214,6 +223,29 @@
  </div>
 </div>
 <!-- Mod4 -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="msg_c">
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div>
 
 </div>
 </div>
@@ -221,6 +253,8 @@
 </div>
 </div>
 </div>
+</div>
+
 <!-- scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -234,6 +268,7 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+
 <!-- Page Scripts -->
 <script>
     $(document).ready(function(){
@@ -245,5 +280,52 @@
             buttons: []
         });
     });
+</script>
+<script>
+    function select_all() {
+        $('input[class=case]:checkbox').each(function () {
+            // console.log($('input[class=check_all]:checkbox:checked'));
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                // console.log("a");
+                $(this).prop("checked", false);
+            } else {
+                // console.log("b");
+                $(this).prop("checked", true);
+            }
+        });
+    }
+    function submit_factura_click(){
+        var cant_checks =  $('input[class=case]:checkbox:checked').length;
+        
+        if(cant_checks == 0){
+            console.log("ninguno marcado");
+        }else{
+            $("#exampleModal").modal("show");
+            //CODIGO PARA EL ENVIO A AJAX
+            for(var i = 0 ; i < cant_checks; i++){
+                var value_check =  $('input[class=case]:checkbox:checked')[i].value;        
+                setTimeout(function(){
+                    ajax_factura_all(value_check);
+                }, 4000);
+                
+            }
+            
+        }
+    }
+    function ajax_factura_all(value){
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.factura_elec_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_fac': value,
+            },
+            success: function (msg) {
+                var data = '<p>'+msg+'</p><br>' 
+                $('#msg_c').append(data );
+
+            }
+        });
+    }
 </script>
 @endsection

@@ -108,12 +108,46 @@ class FacturacionElectronicaController extends Controller
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
         //cambio de factura electronica - en caso sea todo exitoso
-        $factura->f_electronica=1;
-        $factura->save();
+        // $factura->f_electronica=1;
+        // $factura->save();
 
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$msg);
     }
 
+    public function fac_elec_all(Request $request){
+        $factura_codigo = $request->get('codigo_fac');
+        $factura=Facturacion::where('f_electronica',0)->where('codigo_fac',$factura_codigo)->first();
+        $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
+        if($factura->guia_remision=="0"){
+            $guia=0;
+        }else{
+            $guia=1;
+        }
+        //configuracion de conexion
+        $see=config_acceso_sunat::facturacion_electronica();
+        //invoce
+        $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+        
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        
+        $status = $result->getStatus();
+        return $status;
+        //cambio de factura electronica - en caso sea todo exitoso
+        // $factura->f_electronica=1;
+        // $factura->save();
+        // $msg_html = '<p>'. $msg .'</p> <br>';
+        // var_dump($msg);
+        // return gettype($result->getCdrResponse());
+        // if($msg == 'ESTADO: ACEPTADA La Factura numero F001-00000092, ha sido aceptada'){
+        //     return $msg;
+        // }else{
+        //     return $msg;
+        // }
+        
+    }
     
     public function boleta(Request $request)
     {

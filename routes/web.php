@@ -127,6 +127,7 @@ Route::group(
 		Route::get('/facturacion_electronica_guia_remision','FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
 
 		Route::resource('/facturacion_electronica','FacturacionElectronicaController');
+		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
 
 		Route::post('/nota-credito/motivo','NotaCreditoController@motivo')->name('nota-credito.motivo');
 
