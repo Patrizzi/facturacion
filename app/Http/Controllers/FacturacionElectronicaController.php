@@ -31,6 +31,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use Greenter\Ws\Services\SunatEndpoints;
+use Greenter\See;
+use Greenter\XMLSecLibs\Certificate\X509Certificate;
+use Greenter\XMLSecLibs\Certificate\X509ContentType;
+
 class FacturacionElectronicaController extends Controller
 {
     /**
@@ -124,17 +129,17 @@ class FacturacionElectronicaController extends Controller
             $guia=1;
         }
         //configuracion de conexion
-        $see=config_acceso_sunat::facturacion_electronica();
+        $see= config_acceso_sunat::facturacion_electronica();
         //invoce
         $invoice=Config_fe::factura($factura, $factura_registro,$guia);
         //envio a SUNAT    
-        $result=config_acceso_sunat::send($see, $invoice);
+        $result=$this->send($see, $invoice);
         
         //lectura CDR
-        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        $msg = $this->lectura_cdr($result->getCdrResponse());
         
-        $status = $result->getStatus();
-        return $status;
+        // $status = $result->getStatus();
+        return $msg;
         //cambio de factura electronica - en caso sea todo exitoso
         // $factura->f_electronica=1;
         // $factura->save();
@@ -148,7 +153,49 @@ class FacturacionElectronicaController extends Controller
         // }
         
     }
-    
+    public static function send($see, $invoice){
+
+        $result = $see->send($invoice);
+
+        // Guardar XML firmado digitalmente.
+        Storage::disk('facturas_electronicas')->put($invoice->getName().'.xml',$see->getFactory()->getLastXml());
+
+        // Verificamos que la conexión con SUNAT fue exitosa.
+        if (!$result->isSuccess()) {
+            // Mostrar error al conectarse a SUNAT.
+            return 'Codigo Error: '.$result->getError()->getCode();
+            return 'Mensaje Error: '.$result->getError()->getMessage();
+            exit();
+        }
+
+        // Guardamos el CDR [pregunats si se guardan las boletas]
+        Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $result->getCdrZip());
+
+        return $result;
+    }
+
+    public static function lectura_cdr($cdr){
+
+        $code = (int)$cdr->getCode();
+
+        if ($code === 0) {
+            return 'ESTADO: ACEPTADA'.PHP_EOL;
+            if (count($cdr->getNotes()) > 0) {
+                return 'OBSERVACIONES:'.PHP_EOL;
+            // Corregir estas observaciones en siguientes emisiones.
+                var_dump($cdr->getNotes());
+            }
+        }else if ($code >= 2000 && $code <= 3999) {
+            return 'ESTADO: RECHAZADA'.PHP_EOL;
+        }else{
+            /* Esto no debería darse, pero si ocurre, es un CDR inválido que debería tratarse como un error-excepción. */
+            /*code: 0100 a 1999 */
+            return 'Excepción';
+        }
+
+        return $cdr->getDescription().PHP_EOL;
+    }
+
     public function boleta(Request $request)
     {
         //boletas a buscar
