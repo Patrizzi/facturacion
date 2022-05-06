@@ -20,21 +20,37 @@ use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\g_remision_registro;
 use DateTime;
-use Greenter\Model\Client\Client;
-use Greenter\Model\Company\Address;
-use Greenter\Model\Company\Company;
-use Greenter\Model\Sale\FormaPagos\FormaPagoContado;
-use Greenter\Model\Sale\Invoice;
-use Greenter\Model\Sale\Legend;
-use Greenter\Model\Sale\SaleDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+
+use Illuminate\Database\Eloquent\Model;
+
+use Greenter\Model\Client\Client;
+use Greenter\Model\Company\Company;
+use Greenter\Model\Company\Address;
+use Greenter\Model\Sale\FormaPagos\FormaPagoContado;
+use Greenter\Model\Sale\Invoice;
+use Greenter\Model\Sale\SaleDetail;
+use Greenter\Model\Sale\Legend;
+use Greenter\Model\Response\BillResult;
+use Greenter\Model\Sale\Cuota;
+use Greenter\Model\Sale\FormaPagos\FormaPagoCredito;
+use Greenter\Model\Sale\Document;
+use Greenter\Model\Despatch\Despatch;
+use Greenter\Model\Despatch\DespatchDetail;
+use Greenter\Model\Despatch\Direction;
+use Greenter\Model\Despatch\Shipment;
+use Greenter\Model\Despatch\Transportist;
+use Greenter\Model\Sale\Note;
+
 use Greenter\Ws\Services\SunatEndpoints;
 use Greenter\See;
+
 use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
+
 
 class FacturacionElectronicaController extends Controller
 {
@@ -133,12 +149,13 @@ class FacturacionElectronicaController extends Controller
         //invoce
         $invoice=Config_fe::factura($factura, $factura_registro,$guia);
         //envio a SUNAT    
-        $result=$this->send($see, $invoice);
+        $result = $this->send_e($see, $invoice);
         
         //lectura CDR
-        $msg = $this->lectura_cdr($result->getCdrResponse());
+        $msg = $this->lectura_cdr_e($result->getCdrResponse());
         
         // $status = $result->getStatus();
+        sleep(2);
         return $msg;
         //cambio de factura electronica - en caso sea todo exitoso
         // $factura->f_electronica=1;
@@ -153,7 +170,7 @@ class FacturacionElectronicaController extends Controller
         // }
         
     }
-    public static function send($see, $invoice){
+    public static function send_e($see, $invoice){
 
         $result = $see->send($invoice);
 
@@ -163,8 +180,8 @@ class FacturacionElectronicaController extends Controller
         // Verificamos que la conexión con SUNAT fue exitosa.
         if (!$result->isSuccess()) {
             // Mostrar error al conectarse a SUNAT.
-            return 'Codigo Error: '.$result->getError()->getCode();
-            return 'Mensaje Error: '.$result->getError()->getMessage();
+            echo 'Codigo Error: '.$result->getError()->getCode();
+            echo 'Mensaje Error: '.$result->getError()->getMessage();
             exit();
         }
 
@@ -174,23 +191,23 @@ class FacturacionElectronicaController extends Controller
         return $result;
     }
 
-    public static function lectura_cdr($cdr){
+    public static function lectura_cdr_e($cdr){
 
         $code = (int)$cdr->getCode();
 
         if ($code === 0) {
-            return 'ESTADO: ACEPTADA'.PHP_EOL;
+            echo 'ESTADO: ACEPTADA'.PHP_EOL;
             if (count($cdr->getNotes()) > 0) {
-                return 'OBSERVACIONES:'.PHP_EOL;
+                echo 'OBSERVACIONES:'.PHP_EOL;
             // Corregir estas observaciones en siguientes emisiones.
                 var_dump($cdr->getNotes());
             }
         }else if ($code >= 2000 && $code <= 3999) {
-            return 'ESTADO: RECHAZADA'.PHP_EOL;
+            echo 'ESTADO: RECHAZADA'.PHP_EOL;
         }else{
             /* Esto no debería darse, pero si ocurre, es un CDR inválido que debería tratarse como un error-excepción. */
             /*code: 0100 a 1999 */
-            return 'Excepción';
+            echo 'Excepción';
         }
 
         return $cdr->getDescription().PHP_EOL;
