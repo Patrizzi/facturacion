@@ -443,7 +443,7 @@
                 <input style="width: 76px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td> 
             <td>
-                <input type='number' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-gitcontrol "  required  autocomplete="off"/>
+                <input type='number' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
             </td>
         </tr>
         `;
