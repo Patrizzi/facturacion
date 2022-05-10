@@ -129,13 +129,14 @@ class FacturacionElectronicaController extends Controller
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
         //cambio de factura electronica - en caso sea todo exitoso
-        // $factura->f_electronica=1;
-        // $factura->save();
+        $factura->f_electronica=1;
+        $factura->save();
 
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$msg);
     }
 
     public function fac_elec_all(Request $request){
+        // return $request;
         $factura_codigo = $request->get('codigo_fac');
         $factura=Facturacion::where('f_electronica',0)->where('codigo_fac',$factura_codigo)->first();
         $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
@@ -146,73 +147,24 @@ class FacturacionElectronicaController extends Controller
         }
         //configuracion de conexion
         $see= config_acceso_sunat::facturacion_electronica();
+        
         //invoce
         $invoice=Config_fe::factura($factura, $factura_registro,$guia);
         //envio a SUNAT    
-        $result = $this->send_e($see, $invoice);
+        $result = config_acceso_sunat::send($see, $invoice);
         
         //lectura CDR
-        $msg = $this->lectura_cdr_e($result->getCdrResponse());
+        $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
         
-        // $status = $result->getStatus();
-        sleep(2);
-        return $msg;
         //cambio de factura electronica - en caso sea todo exitoso
-        // $factura->f_electronica=1;
-        // $factura->save();
-        // $msg_html = '<p>'. $msg .'</p> <br>';
-        // var_dump($msg);
-        // return gettype($result->getCdrResponse());
-        // if($msg == 'ESTADO: ACEPTADA La Factura numero F001-00000092, ha sido aceptada'){
-        //     return $msg;
-        // }else{
-        //     return $msg;
-        // }
+        $factura->f_electronica=1;
+        $factura->save();
+
+        return $msg;
         
     }
-    public static function send_e($see, $invoice){
-
-        $result = $see->send($invoice);
-
-        // Guardar XML firmado digitalmente.
-        Storage::disk('facturas_electronicas')->put($invoice->getName().'.xml',$see->getFactory()->getLastXml());
-
-        // Verificamos que la conexión con SUNAT fue exitosa.
-        if (!$result->isSuccess()) {
-            // Mostrar error al conectarse a SUNAT.
-            echo 'Codigo Error: '.$result->getError()->getCode();
-            echo 'Mensaje Error: '.$result->getError()->getMessage();
-            exit();
-        }
-
-        // Guardamos el CDR [pregunats si se guardan las boletas]
-        Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $result->getCdrZip());
-
-        return $result;
-    }
-
-    public static function lectura_cdr_e($cdr){
-
-        $code = (int)$cdr->getCode();
-
-        if ($code === 0) {
-            echo 'ESTADO: ACEPTADA'.PHP_EOL;
-            if (count($cdr->getNotes()) > 0) {
-                echo 'OBSERVACIONES:'.PHP_EOL;
-            // Corregir estas observaciones en siguientes emisiones.
-                var_dump($cdr->getNotes());
-            }
-        }else if ($code >= 2000 && $code <= 3999) {
-            echo 'ESTADO: RECHAZADA'.PHP_EOL;
-        }else{
-            /* Esto no debería darse, pero si ocurre, es un CDR inválido que debería tratarse como un error-excepción. */
-            /*code: 0100 a 1999 */
-            echo 'Excepción';
-        }
-
-        return $cdr->getDescription().PHP_EOL;
-    }
-
+   
+   
     public function boleta(Request $request)
     {
         //boletas a buscar

@@ -499,7 +499,42 @@ class FacturacionMController extends Controller
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
 
     }
+    public function fac_elec_man_all(Request $request){
+        // return $request;
+        $factura_codigo = $request->get('codigo_fac');
+        // Obtención de facturación y facturacion registro
+        $factura=Facturacion_m::where('codigo_fac', $factura_codigo)->first();
+        $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();
 
+        if($factura->guia_remision=="0"){
+            $guia=0;
+        }else{
+            $guia=1;
+        }
+
+        $facturacion_manual=1;
+
+        foreach($factura_registro as $facturas_registros){
+            $facturas_registros->precio_unitario_comi=$facturas_registros->precio;
+        }
+        //configuracion de conexion
+        $see= config_acceso_sunat::facturacion_electronica();
+        
+        //invoce
+        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
+        //envio a SUNAT    
+        $result = config_acceso_sunat::send($see, $invoice);
+        
+        //lectura CDR
+        $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        
+        //cambio de factura electronica - en caso sea todo exitoso
+        $factura->f_electronica=1;
+        $factura->save();
+
+        return $msg;
+        
+    }
     /**
      * Show the form for editing the specified resource.
      *
