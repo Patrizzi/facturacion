@@ -107,7 +107,7 @@ class NotaCreditoController extends Controller
                 return redirect()->route('nota-credito.index')->withErrors(['codigo de factura no encontrado!']);
             }
         }
-
+        
         if($tipo_nota_credito == 01){//anulación de la operación
             return view('transaccion.venta.nota_credito.tipos.anulacion_operacion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC

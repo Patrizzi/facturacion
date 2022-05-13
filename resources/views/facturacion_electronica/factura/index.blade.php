@@ -249,7 +249,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Enviando Facturas a Sunat</h5>
             </div>
             <div class="modal-body">
-                <div id="msg_c_fac">
+                <div id="msg_c_bol">
                     {{-- Contenido del ajax --}}
                 </div>
             </div>
@@ -369,7 +369,7 @@
                             </div>
                         `;
                     }
-                    $('#msg_c_fac').append( data );
+                    $('#msg_c_bol').append( data );
                     repetir++;
                     submit_factura_click(repetir, maximo);
                 }    

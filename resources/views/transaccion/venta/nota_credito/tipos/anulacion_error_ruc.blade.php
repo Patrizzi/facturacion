@@ -138,11 +138,19 @@
                                                 <input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$facturacion_registros->servicio->nombre}}" readonly>
                                             @endif
                                         </td>
-
-                                        <td>{{$facturacion_registros->precio}}</td> {{--Precio Unitario--}}
-                                        <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$facturacion_registros->precio}}" readonly></td> {{--Nuevo Precio--}}
+                                        @if($tipo == "factura_origi")
+                                            <td>{{$facturacion_registros->precio_unitario_comi}}</td> {{--Precio Unitario--}}
+                                            <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$facturacion_registros->precio_unitario_comi}}" readonly></td> {{--Nuevo Precio--}}
+                                        @else
+                                            <td>{{$facturacion_registros->precio}}</td> {{--Precio Unitario--}}
+                                            <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$facturacion_registros->precio}}" readonly></td> {{--Nuevo Precio--}}
+                                        @endif
                                         <td><input required="required" class="form-control" type="text" id="input_descuento_{{$e}}" name="input_descuento_{{$e}}" value="0" readonly></td> {{--Nuevo Descuento--}}
-                                        <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td> {{--Total--}}
+                                        @if($tipo == "factura_origi")
+                                            <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td> {{--Total--}}
+                                        @else
+                                            <td>{{$facturacion_registros->precio* $facturacion_registros->cantidad }}</td> {{--Total--}}
+                                        @endif
                                         <td style="display: none">
                                             {{$sub_total=($facturacion_registros->factura_ids->op_gravada)+($facturacion_registros->factura_ids->op_inafecta)+($facturacion_registros->factura_ids->op_exonerada)}}
                                             {{$sub_total_gravado=($facturacion_registros->factura_ids->op_gravada)}}
