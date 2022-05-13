@@ -90,7 +90,7 @@ class ParameterCallController extends Controller
                 $identifier= 'service';
                 $utility= $utilidad_serv;
                 $price=$array2;
-                $amount=10;
+                $amount=100;
                 $average=$array_promedio_serv;
                 $description= $service->descripcion;
                 $discount=$service->descuento;
@@ -138,7 +138,7 @@ class ParameterCallController extends Controller
                 $identifier= 'service';
                 $utility= $utilidad_serv;
                 $price=$array2;
-                $amount=10;
+                $amount=100;
                 $average=$array_promedio_serv;
                 $description= $service->descripcion;
                 $discount=$service->descuento;
