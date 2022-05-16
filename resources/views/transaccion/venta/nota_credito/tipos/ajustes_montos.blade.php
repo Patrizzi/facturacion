@@ -70,9 +70,10 @@
                                     <strong>Guia de Remision:</strong>
                                     {{$facturacion->guia_remision}} <br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$facturacion->fecha_emision}} <br>
+                                    {{$fecha_emision}}<br>
+                                    <input type="hidden" name="fecha_emision" id="fecha_emision" value="{{$fecha_emision}}">
                                     <strong>Fecha de Vencimiento:</strong>
-                                    {{$facturacion->fecha_vencimiento }} <br>
+                                    {{$fecha_emision}} <br>
 
                                     <strong>Tipo de nota de credito:</strong>
                                     <input required="required" class="form-control" type="text" id="motivo" name="motivo" value="{{$tipo_nota_credito}}" readonly style="display: none">

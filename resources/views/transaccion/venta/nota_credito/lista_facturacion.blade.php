@@ -112,6 +112,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 25,
             responsive: true,
+            order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
 
@@ -119,6 +120,7 @@
         $('.dataTables-example_m').DataTable({
             pageLength: 25,
             responsive: true,
+            order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
 

@@ -303,6 +303,10 @@ class FacturacionElectronicaController extends Controller
         // return 1;
         //configuración
         $nota_credito=Nota_Credito::where('id',$request->id)->first();
+        if(isset($nota_credito->fecha_emision)){
+            $fecha_emi = $nota_credito->fecha_emision;
+        }
+            $fecha_emi = $nota_credito->created_at;
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
         // return $notas_creditos_registro;  
         //factura - factura registro
@@ -344,7 +348,7 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();    
 
 
-        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento);
+        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR

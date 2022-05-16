@@ -170,7 +170,11 @@
                                     <strong>Tipo de sustento:</strong>
                                     {{$notas_credito->tipo}}<br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$notas_credito->created_at}}<br>
+                                    @if(isset($notas_credito->fecha_emision))
+                                        {{$notas_credito->fecha_emision}}
+                                    @else
+                                        {{$notas_credito->created_at}}<br>
+                                    @endif
                                 @endif
                             </div>
                         </div>

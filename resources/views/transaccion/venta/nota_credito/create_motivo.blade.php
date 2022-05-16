@@ -37,9 +37,10 @@
                     <div class="row">
                         <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Emisión de Nota de credito</h3>
                         @if(isset($facturacion->codigo_fac))
+                            {{-- FACTURA Y FACTURA MANUAL --}}
                             <form method="POST" action="{{route('nota-credito.create_nota_credito')}}">
                             @csrf
-                                <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision" required></div>
+                                <div class="form-group"><label>Fecha de emisión</label><input type="date"  class="form-control" name="fecha_emision" id="fecha_emision" required></div>
                                 <input type="hidden" name="tipo" id="" value="factura_origi">
                                 <div class="form-group"><label>Tipo de nota de credito</label> 
                                     <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()" required>
@@ -70,10 +71,11 @@
                                 </div>
                             </form>
                         @else
+                            {{-- BOLETA --}}
                             <form method="POST" action="{{route('nota-credito.create_nota_credito')}}">
                             @csrf
                                 <input type="hidden" name="tipo" id="" value="factura_manual">
-                                <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" required name="fecha_emision" id="fecha_emision"></div>
+                                <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" required name="fecha_emision" value="" id="fecha_emision"></div>
                                 <div class="form-group"><label>Tipo de nota de credito</label> 
                                     <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()" required >
                                         <option></option>
@@ -130,9 +132,33 @@
             $('.div3').hide();
         }
     }
+    $( document ).ready(function() {
+        document.getElementById('fecha_emision').max = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
+        // var f = new Date().toISOString().split("T")[0];
+        var today = new Date();
+        var dd = today.getDate() - 2;
+        var mm = today.getMonth(); //January is 0 so need to add 1 to make it 1!
+        var new_m = parseInt(mm)+1;
+        var n_m = '0'+ new_m;
+        var yyyy = today.getFullYear();
+        var min = yyyy+'-'+n_m+'-'+dd;
+
+        document.getElementById('fecha_emision').min = min;
+    });
+        // $('.fecha_emision').max = new Date().toISOString().split("T")[0];
+    window.onload = function(){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth(); //January is 0 so need to add 1 to make it 1!
+        var new_m = parseInt(mm)+1;
+        var n_m = '0'+ new_m;
+        var yyyy = today.getFullYear();
+        var hoy = yyyy+'-'+n_m+'-'+dd;
+        document.getElementById('fecha_emision').value = hoy;
+    }
 </script>
 
-<!-- Mainly scripts -->
+<!-- Mainly scripts --> 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>

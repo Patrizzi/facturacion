@@ -1044,7 +1044,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - FACTURA
 
-    public static function nota_credito($factura, $factura_registro, $cantidad,$precio_credito,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento){
+    public static function nota_credito($factura, $factura_registro, $cantidad,$precio_credito,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi){
         // return $precio[0];
         $empresa=Empresa::first();
         $igv=Igv::first();
@@ -1164,7 +1164,7 @@ class Config_fe extends Model
             ->setTipoDoc('07')
             ->setSerie($serie)
             ->setCorrelativo($correlativo)
-            ->setFechaEmision($factura->created_at)
+            ->setFechaEmision($fecha_emi)
             ->setTipDocAfectado('01') // Tipo Doc: Factura
             ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
             ->setCodMotivo($motivo) // Catalogo. 09

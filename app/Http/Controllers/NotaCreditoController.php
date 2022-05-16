@@ -15,6 +15,7 @@ use App\Nota_Credito;
 use App\Nota_Credito_registro;
 use App\Codigo_guia_almacen;
 use App\Almacen;
+use DateTime;
 
 use Illuminate\Http\Request;
 
@@ -54,7 +55,14 @@ class NotaCreditoController extends Controller
     public function create_nota_credito(Request $request){
 
         // return $request;
-        $fecha_emision=$request->fecha_emision;
+        $fecha=$request->fecha_emision;
+        $date_format = date("d-m-Y", strtotime($fecha));
+        // return $fecha;
+        $time = date('h:i:s', time());  
+        $fecha_emision = $date_format.' '.$time;
+        // return $fecha_emision;
+        
+    
         $tipo_nota_credito=$request->tipo_nota_credito;
 
         if($tipo_nota_credito == 2 ){
@@ -211,7 +219,7 @@ class NotaCreditoController extends Controller
      */
     public function store_factura(Request $request,$id)
     {
-        
+        // return $request;
         // return $ultima_nota_c;
         $tipo = $request->get('tipo');
         if($request->motivo==2){
@@ -356,6 +364,7 @@ class NotaCreditoController extends Controller
         }else{
             $nota_credito->facturacion_m_id=$factura->id;
         }
+        $nota_credito->fecha_emision=$request->fecha_emision;
         $nota_credito->tipo=$request->sustento;
         $nota_credito->almacen_id=$factura->almacen_id;
         $nota_credito->motivo=$request->motivo;
