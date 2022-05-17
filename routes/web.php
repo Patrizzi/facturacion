@@ -138,6 +138,8 @@ Route::group(
 
 		Route::post('/nota-credito-create-nc','NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
 		Route::post('/nota-credito-create_boleta-nc','NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
+		Route::get('/nota-credito/print/{id}','NotaCreditoController@print')->name('nota_credito.print');
+		Route::get('/nota-credito/pdf/{id}','NotaCreditoController@pdf')->name('nota_credito.pdf');
 
 		Route::get('/nota-credito/create_boleta','NotaCreditoController@create_boleta')->name('nota-credito.create_boleta');
 		Route::post('/nota-credito/store-boleta/{id}','NotaCreditoController@store_boleta')->name('nota-credito.store_boleta');
@@ -392,6 +394,7 @@ Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('per
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
 Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');
 Route::get('/cotizacion/manual/pdf/{id}','CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
+Route::get('/nota-credito/pdf/{id}','NotaCreditoController@pdf')->name('nota_credito.pdf');
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');

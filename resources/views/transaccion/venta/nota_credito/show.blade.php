@@ -10,15 +10,25 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
+            <div class="ibox-title">
+                <div class="row tooltip-demo">
+                    <div class="col-sm-6">
+                        
+                    </div>
+                    <div class="col-sm-6" align="right"> 
+                        <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_credito.pdf' ,$notas_credito->id)}}">
+                            <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_credito->codigo_n_c}}"  >
+                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                        </form>
+                        <a class="btn btn-success" href="{{route('nota_credito.print',$notas_credito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                        {{-- <button class="btn btn-primary"></button> --}}
+                        {{-- <button class="btn btn-success"></button> --}}
+                    </div>
+                </div>
+            </div>
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
-                    <div class="col-sm-4 text-left" align="left">
-                        <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
-                        </address>
-                    </div>
-                    <div class="col-sm-4">
-                    </div>
+                    @include('layout_cabecera_ventas')
                     <div class="col-sm-4 ">
                         <div class="form-control ruc" style="height: 125px">
                             <center>
@@ -191,12 +201,12 @@
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th>ITEM</th>
-                                    <th>Codigo Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Descripción</th>
-                                    <th>Precio unitario</th>
-                                    <th>Total</th>
+                                    <th >ITEM</th>
+                                    <th style="width: 10%">Codigo Producto</th>
+                                    <th >Descripción</th>
+                                    <th style="width: 10%" >Cantidad</th>
+                                    <th style="width: 10%">Precio unitario</th>
+                                    <th style="width: 10%">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -210,18 +220,20 @@
                                             @else
                                                 <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
                                             @endif
-                                            <td>{{$notas_credito_registro->cantidad}}</td>
+                                            
 
                                             <td>
-                                                @if(isset($notas_credito_registro->producto_id))
+                                                {{-- @if(isset($notas_credito_registro->producto_id))
                                                     {{$notas_credito_registro->producto->nombre}} 
                                                 @else
                                                     {{$notas_credito_registro->servicio->nombre}} 
-                                                @endif
-                                                <br><strong>N/S:</strong>
-                                                {{$notas_credito_registro->numero_serie}}
+                                                @endif --}}
+                                                {{$notas_credito_registro->descripcion}} 
+                                                {{$doc_reg[$e]->descripcion_item}}
+                                                {{-- <br><strong>N/S:</strong>
+                                                {{$notas_credito_registro->numero_serie}} --}}
                                             </td>
-
+                                            <td>{{$notas_credito_registro->cantidad}}</td>
                                             <td>{{$notas_credito_registro->precio}}</td>
                                             <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
                                             <td style="display: none">
