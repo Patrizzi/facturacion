@@ -69,9 +69,9 @@
                                     <strong>Guia de Remision:</strong>
                                     {{$boleta->guia_remision}} <br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$boleta->fecha_emision}} <br>
+                                    {{$fecha_emision}} <br>
                                     <strong>Fecha de Vencimiento:</strong>
-                                    {{$boleta->fecha_vencimiento }} <br>
+                                    {{$fecha_emision}}  <br>
 
                                     <strong>Tipo de nota de credito:</strong>
                                     <input required="required" class="form-control" type="text" id="motivo" name="motivo" value="{{$tipo_nota_credito}}" readonly style="display: none">

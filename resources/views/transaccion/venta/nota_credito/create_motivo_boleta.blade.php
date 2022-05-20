@@ -94,6 +94,30 @@
             $('.div3').hide();
         }
     }
+    $( document ).ready(function() {
+        document.getElementById('fecha_emision').max = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
+        // var f = new Date().toISOString().split("T")[0];
+        var today = new Date();
+        var dd = today.getDate() - 2;
+        var mm = today.getMonth(); //January is 0 so need to add 1 to make it 1!
+        var new_m = parseInt(mm)+1;
+        var n_m = '0'+ new_m;
+        var yyyy = today.getFullYear();
+        var min = yyyy+'-'+n_m+'-'+dd;
+
+        document.getElementById('fecha_emision').min = min;
+    });
+        // $('.fecha_emision').max = new Date().toISOString().split("T")[0];
+    window.onload = function(){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth(); //January is 0 so need to add 1 to make it 1!
+        var new_m = parseInt(mm)+1;
+        var n_m = '0'+ new_m;
+        var yyyy = today.getFullYear();
+        var hoy = yyyy+'-'+n_m+'-'+dd;
+        document.getElementById('fecha_emision').value = hoy;
+    }
 </script>
 
 <!-- Mainly scripts -->

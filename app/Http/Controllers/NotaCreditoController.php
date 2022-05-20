@@ -57,10 +57,10 @@ class NotaCreditoController extends Controller
 
         // return $request;
         $fecha=$request->fecha_emision;
-        $date_format = date("d-m-Y", strtotime($fecha));
+        // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
         $time = date('h:i:s', time());  
-        $fecha_emision = $date_format.' '.$time;
+        $fecha_emision = $fecha.' '.$time;
         // return $fecha_emision;
         
     
@@ -134,8 +134,13 @@ class NotaCreditoController extends Controller
     public function create_boleta_nota_credito(Request $request){
         
         
-        //return $request;
-        $fecha_emision=$request->fecha_emision;
+        // return $request;
+        $fecha=$request->fecha_emision;
+        // $date_format = date("d-m-Y", strtotime($fecha));
+        // return $fecha;
+        $time = date('h:i:s', time());  
+        $fecha_emision = $fecha.' '.$time;
+        // return $fecha_emision;
         $tipo_nota_credito=$request->tipo_nota_credito;
 
         if($tipo_nota_credito == 2 ){
@@ -199,6 +204,7 @@ class NotaCreditoController extends Controller
     }
 
     public function motivo(Request $request){
+        // return $request;
         if(isset($request->factura_id)){
             $facturacion=Facturacion::find($request->factura_id);
             return view('transaccion.venta.nota_credito.create_motivo',compact('facturacion'));
@@ -426,7 +432,7 @@ class NotaCreditoController extends Controller
 
     public function store_boleta(Request $request,$id)
     {
-        
+        // return $request;
         if($request->motivo==2){
             $sustento=$request->sustento;
             $nueva_boleta=$request->nueva_boleta;
@@ -540,6 +546,7 @@ class NotaCreditoController extends Controller
         $nota_credito->boleta_id=$boleta->id;
         $nota_credito->tipo="producto";
         $nota_credito->almacen_id=$boleta->almacen_id;
+        $nota_credito->fecha_emision=$request->fecha_emision;
         $nota_credito->motivo=$request->motivo;
         $nota_credito->op_gravada=$gravada;
         $nota_credito->op_inafecta=$inafecta;
@@ -583,8 +590,8 @@ class NotaCreditoController extends Controller
             $nc_primera->cod_nota_credito_b='NN';
             $nc_primera->save();
         }
-
-        $boleta->nota_credito=1;
+        $boleta=Boleta::where('id',$id)->first();
+        $boleta->nota_credito=2;
         $boleta->save();
         
      return redirect()->route('nota-credito.show',$nota_credito->id);

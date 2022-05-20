@@ -31,7 +31,7 @@ use App\Igv;
 use App\Cuotas_Credito;
 use App\Guia_remision;
 use App\TransportePublico;
-
+use PDO;
 use App\config_acceso_sunat;
 
 use Greenter\XMLSecLibs\Certificate\X509Certificate;
@@ -1044,7 +1044,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - FACTURA
 
-    public static function nota_credito($factura, $factura_registro, $cantidad,$precio_credito,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi){
+    public static function nota_credito($factura, $factura_registro, $cantidad,$precio_credito,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emision){
         // return $precio[0];
         $empresa=Empresa::first();
         $igv=Igv::first();
@@ -1158,13 +1158,16 @@ class Config_fe extends Model
         $correlativo=$serie[1];
         $serie=$serie[0];
         // $serie;
+        // $date = date_create($fecha_emision);
+        // $fecha_conv = date_format($date, 'yyyy-MM-dd HH:mm:ss');
+        // return $fecha_conv;
 
         $note = new Note();
         $note->setUblVersion('2.1')
             ->setTipoDoc('07')
             ->setSerie($serie)
             ->setCorrelativo($correlativo)
-            ->setFechaEmision($fecha_emi)
+            ->setFechaEmision($fecha_emision)
             ->setTipDocAfectado('01') // Tipo Doc: Factura
             ->setNumDocfectado($factura->codigo_fac) // Factura: Serie-Correlativo
             ->setCodMotivo($motivo) // Catalogo. 09
@@ -1329,7 +1332,7 @@ class Config_fe extends Model
 
     //NOTA DE CREDITO - BOLETA
 
-    public static function nota_credito_boleta($boleta,$boleta_registro,$precio_credito,$cantidad,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento){
+    public static function nota_credito_boleta($boleta,$boleta_registro,$precio_credito,$cantidad,$notas_creditos_count,$nota_credito_code,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emision){
         // return $boleta;
         
         $empresa=Empresa::first();
@@ -1368,8 +1371,8 @@ class Config_fe extends Model
             $string=(string)$p;
             
             // $cantidad="input_cantidad_".$string;
-            $input_precio="input_precio_".$string;
-            $descripcion="input_descripcion_".$string;
+            // $input_precio="input_precio_".$string;
+            // $descripcion="input_descripcion_".$string;
 
             if(isset($boleta_registro[$p]->producto->codigo_producto)){
                 $item_nombre = $boleta_registro[$p]->producto->codigo_producto;
@@ -1427,14 +1430,16 @@ class Config_fe extends Model
                     $cont++;
                 }
 
-                if($precio_credito[$p]*$cantidad[$p]*(($igv->igv_total)/100) != 0){
-                    $gravada=$gravada+$precio_credito[$p]*$cantidad[$p];
+                if($precio_credito[$p]*$cantidad[$p]*(($igv->igv_total)/100) != 0){ //IGV
+                    $op_g=$op_g+($precio_credito[$p]*$cantidad[$p]);
                 }
-                
+                // $sol = ($precio_credito[$p]*$cantidad[$p]);
             }
         }
-
+        
+        
         $total=$igv_f+$precio;
+        // die($sol);
 
         //CODIGO NOTA
         $codigo_nota=$nota_credito_code;
@@ -1442,14 +1447,14 @@ class Config_fe extends Model
 
         $correlativo=$serie[1];
         $serie=$serie[0];
-
+       
         $note = new Note();
         $note
             ->setUblVersion('2.1')
             ->setTipoDoc('07')
             ->setSerie($serie)
             ->setCorrelativo($correlativo)
-            ->setFechaEmision($boleta->created_at)
+            ->setFechaEmision($fecha_emision)
             ->setTipDocAfectado('03') // Tipo Doc: boleta
             ->setNumDocfectado($boleta->codigo_boleta) // boleta: Serie-Correlativo
             ->setCodMotivo('07') // Catalogo. 09
