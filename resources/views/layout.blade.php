@@ -135,7 +135,7 @@ $empresa=Empresa::first(); ?>
                             <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>
                             <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
                             <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
-                            <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li>
+                            {{-- <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li> --}}
                             @endif
                         </ul>
                     </li>

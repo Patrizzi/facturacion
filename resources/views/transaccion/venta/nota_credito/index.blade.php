@@ -51,9 +51,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nota de Credito</th>
+                                    <th>Nro Documento</th>
                                     <th>Documento</th>
-                                    <th>DOC</th>
-                                    <th>Motivo</th>
+                                    <th>Cliente</th>
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
                                 </tr>
@@ -64,25 +64,20 @@
                                 <tr class="gradeX">
                                     <td>{{$nota_credito->id}}</td>
                                     <td>{{$nota_credito->codigo_n_c}}</td>
-                                    <td>
-                                        @if($nota_credito->facturacion_id !=NULL)
-                                            {{$nota_credito->nota_i_facturacion->codigo_fac}}
-                                        @elseif($nota_credito->boleta_id !=NULL)
-                                            {{$nota_credito->nota_i_boleta->codigo_boleta}}
-                                        @else
-                                            {{$nota_credito->nota_i_fac_manual->codigo_fac}}
-                                        @endif
-                                    </td> 
-                                    <td>
-                                        @if($nota_credito->facturacion_id !=NULL)
-                                            Factura
-                                        @elseif($nota_credito->boleta_id !=NULL)
-                                            Boleta
-                                        @else
-                                            Factura Manual
-                                        @endif
-                                    </td>
-                                    <td>{{$nota_credito->tipo}}</td>
+                                    @if($nota_credito->facturacion_id !=NULL)
+                                        <td>{{$nota_credito->nota_i_facturacion->codigo_fac}}</td> 
+                                        <td>Factura</td>
+                                        <td>{{$nota_credito->nota_i_facturacion->cliente->nombre}}</td>
+                                    @elseif($nota_credito->boleta_id !=NULL)
+                                        <td>{{$nota_credito->nota_i_boleta->codigo_boleta}}</td> 
+                                        <td>Boleta</td>
+                                        <td>{{$nota_credito->nota_i_boleta->cliente->nombre}}</td>
+                                    @else
+                                        <td>{{$nota_credito->nota_i_fac_manual->codigo_fac}}</td> 
+                                        <td>Factura Manual</td>
+                                        <td>{{$nota_credito->nota_i_fac_manual->cliente->nombre}}</td>
+                                    @endif
+                                    {{-- <td>{{$nota_credito->cliente->id}}</td> --}}
                                     <td>{{$nota_credito->created_at}}</td>
                                     <td><a href="{{route('nota-credito.show',$nota_credito->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
                                 </tr>

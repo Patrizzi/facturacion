@@ -90,8 +90,8 @@
                                                 <th>Item</th>
                                                 <th>Codigo</th>
                                                 <th>Cliente</th>
-                                                <th>N°Documento</th>
-                                                <th>Fecha Vencimiento</th>
+                                                <th>N° Doc</th>
+                                                <th>Fecha de Emision</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                                 <th>XML</th>
                                                 <th>ZIP</th>
@@ -112,7 +112,7 @@
                                                 <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
                                                 @endif
 
-                                                <td>{{$facturaciones->fecha_vencimiento }}</td>
+                                                <td>{{$facturaciones->created_at}}</td>
                                                 <td align="center">
                                                     <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                                 </td>
@@ -198,7 +198,7 @@
                                                 <th>Codigo</th>
                                                 <th>Cliente</th>
                                                 <th>N°Documento</th>
-                                                <th>Fecha Vencimiento</th>
+                                                <th>Fecha de Emision</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                                 <th>XML</th>
                                                 <th>ZIP</th>
@@ -217,7 +217,7 @@
                                                 <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
                                                 <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
                                                 @endif
-                                                <td>{{$facturaciones_m->fecha_vencimiento }}</td>
+                                                <td>{{$facturaciones_m->created_at }}</td>
                                                 <td align="center">
                                                     <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                                 </td>
