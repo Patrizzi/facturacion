@@ -80,7 +80,7 @@ class FacturacionMController extends Controller
         $moneda=Moneda::where('principal','1')->first();
 
         // Número de factura
-        $factura_numero="FA01-000001";
+        // $factura_numero="FA01-000001";
 
         // Empresa
         $empresa=Empresa::first();
@@ -197,7 +197,7 @@ class FacturacionMController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        return $request;
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);

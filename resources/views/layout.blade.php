@@ -130,6 +130,7 @@ $empresa=Empresa::first(); ?>
                                 </ul>
                             </li> --}}
                             <li><a href="{{route('boleta.index')}}">Boleta</a></li>
+                            <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>
                             <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
                             <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
                             <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>

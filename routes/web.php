@@ -181,6 +181,9 @@ Route::group(
 		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
 		Route::resource('facturacion_manual','FacturacionMController');
 
+		//boleta manual manual
+		Route::resource('boleta_manual','BoletaMController');
+		Route::post('/boleta_manual/codigo','BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
 
 		Route::post('/boleta/create_ms','BoletaController@create_ms')->name('boleta.create_ms');
 		Route::get('/boleta/print/{id}','BoletaController@print')->name('boleta.print');
