@@ -52,7 +52,7 @@
                                 @foreach($boleta as $boletas)
                                 <tr class="gradeX">
                                     <td>{{$boletas->id}}</td>
-                                    <td>{{$boletas->codigo_fac}}</td>
+                                    <td>{{$boletas->codigo_bol}}</td>
                                     <td>{{$boletas->cliente->nombre}}</td>
                                     <td>{{$boletas->cliente->numero_documento}}</td>
                                     <td>{{$boletas->fecha_emision }}</td>
@@ -60,7 +60,7 @@
                                     <td>{{$boletas->moneda->simbolo}} {{number_format(round(($subtotal+($boletas->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     {{-- Ver --}}
                                     <td align="center">
-                                        <a href="{{route('facturacion_manual.show',$boletas->id)}}">
+                                        <a href="{{route('boleta_manual.show',$boletas->id)}}">
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                     </td>

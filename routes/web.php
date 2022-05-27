@@ -184,6 +184,8 @@ Route::group(
 		//boleta manual manual
 		Route::resource('boleta_manual','BoletaMController');
 		Route::post('/boleta_manual/codigo','BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
+		Route::get('/boleta_manual/print/{id}','BoletaMController@print')->name('boleta_manual.print');
+		
 
 		Route::post('/boleta/create_ms','BoletaController@create_ms')->name('boleta.create_ms');
 		Route::get('/boleta/print/{id}','BoletaController@print')->name('boleta.print');
@@ -393,6 +395,7 @@ Route::get('guia_remision/pdf/{id}' , 'GuiaRemisionController@pdf')->name('pdf_g
 Route::get('facturacion/pdf/{id}' , 'FacturacionController@pdf')->name('pdf_fac');
 Route::get('facturacion_manual/pdf/{id}' , 'FacturacionMController@pdf')->name('pdf_fac_m');
 Route::get('boleta/pdf/{id}' , 'BoletaController@pdf')->name('pdf_bol');
+Route::get('/boleta_manual/pdf/{id}','BoletaMController@pdf')->name('boleta_manual.pdf');
 Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
 Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');

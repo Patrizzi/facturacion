@@ -81,7 +81,7 @@ class Config_fe extends Model
         ->setUrbanizacion('-')
         ->setDireccion($empresa->calle)
         ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
-
+        
         $company = (new Company())
         ->setRuc($empresa->ruc)
         ->setRazonSocial($empresa->razon_social)
