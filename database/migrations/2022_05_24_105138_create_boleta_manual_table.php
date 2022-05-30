@@ -15,7 +15,7 @@ class CreateBoletaMTable extends Migration
     {
         Schema::create('boleta_m', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('codigo_bol');
+            $table->string('codigo_boleta');
 
             $table->unsignedBigInteger('almacen_id');
             $table->foreign('almacen_id')->references('id')->on('almacen')->onDelete('cascade');

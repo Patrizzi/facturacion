@@ -109,9 +109,16 @@ Route::group(
 //FACTURACION ELECTRONICA
 		//factura
 		Route::post('/facturacion_electronica_factura','FacturacionElectronicaController@factura')->name('facturacion_electronica.factura_sunat');
+		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
+		//factura manual
+		Route::post('/facturacion_electronica_factura_m','FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
+		Route::post('/facturacion_electronica_factura_m/send_all','FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');
 		//boleta
 		Route::post('/facturacion_electronica_boleta','FacturacionElectronicaController@boleta')->name('facturacion_electronica.boleta_sunat');
 		Route::post('/facturacion_electronica_boleta/send_all','FacturacionElectronicaController@boleta_elec_all')->name('facturacion_electronica.boleta_elec_all');
+		//boleta manual
+		Route::post('/facturacion_electronica_boleta_m','FacturacionElectronicaController@boleta_m_e')->name('facturacion_electronica.boleta_m_e');
+		Route::post('/facturacion_electronica_boleta_m/send_all','FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
 		//guia remision
 		Route::post('/facturacion_electronica_guia_remision_prueba','FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
 		Route::post('/facturacion_electronica_guia_remision_prueba/send_all','FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
@@ -131,7 +138,7 @@ Route::group(
 		Route::get('/facturacion_electronica_guia_remision','FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
 
 		Route::resource('/facturacion_electronica','FacturacionElectronicaController');
-		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
+		
 		
 
 		Route::post('/nota-credito/motivo','NotaCreditoController@motivo')->name('nota-credito.motivo');
@@ -176,8 +183,7 @@ Route::group(
 		//facturacion manual
 		//->Vista para facturacion manual próximamente...
 		Route::get('/facturacion_manual/print/{id}','FacturacionMController@print')->name('facturacion_manual.print');
-		Route::post('/facturacion_manual/facturacion_e','FacturacionMController@facturacion_e')->name('facturacion_manual.f_e');
-		Route::post('/facturacion_manual/facturacion_e_send_all','FacturacionMController@fac_elec_man_all')->name('facturacion_manual.fac_elec_man_all');
+		
 		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
 		Route::resource('facturacion_manual','FacturacionMController');
 

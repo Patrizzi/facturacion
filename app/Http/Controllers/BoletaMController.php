@@ -99,7 +99,7 @@ class BoletaMController extends Controller
             //GENERACION DEL N BOLETA
             $ultima_boleta = Boleta_m::where('almacen_id',$sucursal->id)->latest()->first();
             // return $ultima_boleta;
-            $boleta_num = $ultima_boleta->codigo_bol;
+            $boleta_num = $ultima_boleta->codigo_boleta;
             $boleta_num_string = explode("-", $boleta_num);
             $boleta_num_str = $boleta_num_string[1];
             $boleta_num = (int)$boleta_num_str;
@@ -157,7 +157,7 @@ class BoletaMController extends Controller
                 // expresión del numero de boleta
                 // GENERACIÓN DE NUMERO DE boleta
             $ultima_boleta = Boleta_m::where('almacen_id',$sucursal->id)->latest()->first();
-            $boleta_num=$ultima_boleta->codigo_bol;
+            $boleta_num=$ultima_boleta->codigo_boleta;
             $boleta_num_string_porcion= explode("-", $boleta_num);
             $boleta_num_string=$boleta_num_string_porcion[1];
             $boleta_num=(int)$boleta_num_string;
@@ -237,7 +237,7 @@ class BoletaMController extends Controller
                 // expresión del numero de boleta
                 // GENERACIÓN DE NUMERO DE boleta
             $ultima_boleta = Boleta_m::where('almacen_id',$sucursal->id)->latest()->first();
-            $boleta_num=$ultima_boleta->codigo_bol;
+            $boleta_num=$ultima_boleta->codigo_boleta;
             $boleta_num_string_porcion= explode("-", $boleta_num);
             $boleta_num_string=$boleta_num_string_porcion[1];
             $boleta_num=(int)$boleta_num_string;
@@ -267,7 +267,7 @@ class BoletaMController extends Controller
         $moneda_get=Moneda::where('nombre',$request->moneda)->first();
 
         $boleta = new Boleta_m;
-        $boleta->codigo_bol = $boleta_numa;
+        $boleta->codigo_boleta = $boleta_numa;
         $boleta->almacen_id = $almacen;
         $boleta->orden_compra=$request->get('orden_compra');
         $boleta->guia_remision=$request->get('guia_r');
@@ -459,7 +459,7 @@ class BoletaMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
 
-        $archivo=$name.'_'.$boleta->codigo_bol;
+        $archivo=$name.'_'.$boleta->codigo_boleta;
         // return View('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
         $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
         return $pdf->download('Boleta Manual - '.$archivo.'.pdf');

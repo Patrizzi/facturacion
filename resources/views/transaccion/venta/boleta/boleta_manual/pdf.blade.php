@@ -32,7 +32,7 @@
         <center>
             <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
             <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >BOLETA ELECTRÓNICA</h2><br>
-            <h5 style="text-align: center;margin-bottom: -1px" >{{$boleta->codigo_fac}}</h5>
+            <h5 style="text-align: center;margin-bottom: -1px" >{{$boleta->codigo_boleta}}</h5>
         </center>
     </td>
 </tr>

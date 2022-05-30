@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Almacen;
 use App\Boleta;
 use App\Boleta_registro;
+use App\Boleta_m;
+use App\Boleta_registros_m;
 use App\Codigo_guia_almacen;
 use App\Config_fe;
 use App\Empresa;
@@ -75,7 +77,10 @@ class FacturacionElectronicaController extends Controller
 
         $boletas_enviadas=Boleta::where('b_electronica',1)->get();
         $boletas=Boleta::where('b_electronica',0)->get();
-        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas'));
+
+        $boletas_enviadas_m=Boleta_m::where('b_electronica',1)->get();
+        $boletas_m=Boleta_m::where('b_electronica',0)->get();
+        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas','boletas_m','boletas_enviadas_m'));
     }
 
     public function index_guia_remision(){
@@ -164,7 +169,81 @@ class FacturacionElectronicaController extends Controller
         
     }
    
-   
+    public function facturacion_m_e(Request $request){
+
+        // Obtención de facturación y facturacion registro
+        $factura=Facturacion_m::find($request->id);
+        $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$request->id)->get();
+
+        if($factura->guia_remision=="0"){
+            $guia=0;
+        }else{
+            $guia=1;
+        }
+
+        $facturacion_manual=1;
+
+        foreach($factura_registro as $facturas_registros){
+            $facturas_registros->precio_unitario_comi=$facturas_registros->precio;
+        }
+
+        
+        //configuración de conexión
+        $see=config_acceso_sunat::facturacion_electronica();
+
+        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
+
+        $result=config_acceso_sunat::send($see, $invoice);
+
+        //lectura CDR
+        $mensaje=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+
+        // $mensaje="La factura fue enviada exitosamente";
+
+        //cambio de factura electronica - en caso sea todo exitoso
+        $factura->f_electronica=1;
+        $factura->save();
+
+        return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
+
+    }
+    public function fac_elec_man_all(Request $request){
+        // return $request;
+        $factura_codigo = $request->get('codigo_fac');
+        // Obtención de facturación y facturacion registro
+        $factura=Facturacion_m::where('codigo_fac', $factura_codigo)->first();
+        $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();
+
+        if($factura->guia_remision=="0"){
+            $guia=0;
+        }else{
+            $guia=1;
+        }
+
+        $facturacion_manual=1;
+
+        foreach($factura_registro as $facturas_registros){
+            $facturas_registros->precio_unitario_comi=$facturas_registros->precio;
+        }
+        //configuracion de conexion
+        $see= config_acceso_sunat::facturacion_electronica();
+        
+        //invoce
+        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
+        //envio a SUNAT    
+        $result = config_acceso_sunat::send($see, $invoice);
+        
+        //lectura CDR
+        $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        
+        //cambio de factura electronica - en caso sea todo exitoso
+        $factura->f_electronica=1;
+        $factura->save();
+
+        return $msg;
+        
+    }
+
     public function boleta(Request $request)
     {
         //boletas a buscar
@@ -205,6 +284,51 @@ class FacturacionElectronicaController extends Controller
         //boletas a buscar
         $boleta=Boleta::where('b_electronica',0)->where('codigo_boleta',$boleta_codigo)->first();
         $boleta_registro=Boleta_registro::where('boleta_id',$boleta->id)->get();
+        //configuracion
+        $see=config_acceso_sunat::facturacion_electronica();
+        $invoice=Config_fe::boleta($boleta, $boleta_registro);
+        $result=config_acceso_sunat::send($see, $invoice);
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        //cambio de boleta electronica - en caso sea todo exitoso
+        $boleta->b_electronica=1;
+        $boleta->save();
+        return $msg;
+    }
+
+    public function boleta_m_e(Request $request){
+
+        ///boletas a buscar
+        $boleta=Boleta_m::where('b_electronica',0)->where('id',$request->boleta_id)->first();
+        $boleta_registro=Boleta_registros_m::where('boleta_m_id',$request->boleta_id)->get();
+        
+        foreach($boleta_registro as $boleta_registros){
+            $boleta_registros->precio_unitario_comi=$boleta_registros->precio;
+        }
+        // return $boleta_registro;
+        //configuracion
+        $see=config_acceso_sunat::facturacion_electronica();
+
+        //boleta
+        $invoice=Config_fe::boleta($boleta, $boleta_registro);            
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+
+        //cambio de boleta electronica - en caso sea todo exitoso
+        $boleta->b_electronica=1;
+        $boleta->save();
+        return redirect()->route('facturacion_electronica.index_boleta')->with('successMsg',$msg);
+    }
+
+    public function boleta_m_e_all(Request $request){
+        $boleta_codigo = $request->get('codigo_bol');
+        //boletas a buscar
+        $boleta=Boleta_m::where('b_electronica',0)->where('codigo_boleta',$boleta_codigo)->first();
+        $boleta_registro=Boleta_registros_m::where('boleta_m_id',$boleta->id)->get();
+        foreach($boleta_registro as $boleta_registros){
+            $boleta_registros->precio_unitario_comi=$boleta_registros->precio;
+        }
         //configuracion
         $see=config_acceso_sunat::facturacion_electronica();
         $invoice=Config_fe::boleta($boleta, $boleta_registro);

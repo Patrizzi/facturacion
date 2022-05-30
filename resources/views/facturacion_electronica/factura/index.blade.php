@@ -347,7 +347,7 @@
             var value_check =  $('input[class=case]:checkbox:checked')[repetir].value;
             $.ajax({
                 type: "post",
-                url: "{{ route('facturacion_electronica.factura_elec_all') }}",
+                url: "{{ route('facturacion_electronica.facturacion_m_e') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'codigo_fac': value_check,
@@ -416,7 +416,7 @@
             var value_check =  $('input[class=case_m]:checkbox:checked')[repetir].value;
             $.ajax({
                 type: "post",
-                url: "{{ route('facturacion_manual.fac_elec_man_all') }}",
+                url: "{{ route('facturacion_electronica.fac_elec_man_all') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'codigo_fac': value_check,

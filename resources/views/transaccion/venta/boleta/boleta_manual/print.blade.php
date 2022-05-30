@@ -37,7 +37,7 @@
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{ $empresa->ruc }}</h3>
                                 <h2>BOLETA ELECTRONICA</h2>
-                                <h5> {{ $boleta->codigo_bol }}</h5>
+                                <h5> {{ $boleta->codigo_boleta }}</h5>
                             </center>
                         </div>
                     </div>
