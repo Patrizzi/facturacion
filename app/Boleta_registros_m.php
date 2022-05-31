@@ -16,8 +16,7 @@ class Boleta_registros_m extends Model
     public function servicio(){
         return $this->belongsTo(Servicios::class,'servicio_id');
     }
-    public function boleta_ids()
-    {
+    public function boleta_i(){
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
     }
 }

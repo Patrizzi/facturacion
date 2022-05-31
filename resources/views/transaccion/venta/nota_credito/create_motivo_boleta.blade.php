@@ -33,47 +33,87 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="row">
-                        <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Emisión de Nota de credito</h3>
-                            <form method="POST" action="{{route('nota-credito.create_nota_credito_boleta')}}">
+                    <div class="">
+                        @if(isset($boleta->codigo_boleta))
+                            <form method="POST" action="{{route('nota-credito.create_nota_credito_boleta')}}" class="row">
                                 @csrf
-                                <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision"></div>
-                                <div class="form-group"><label>Tipo de nota de credito</label> 
-                                    <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
-                                        <option value="0"></option>
-                                        <option value="01">Anulacion de la operacion</option>
-                                        <option value="02">Anulacion por error en el RUC</option>
-                                        <option value="03">Correcion por error en la descripcion</option>
-                                        <option value="06">Devolucion Total</option>
-
-                                        {{-- <option value="8">Otros conceptos</option>
-                                        <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
-                                    </select>
+                                <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Emisión de Nota de credito</h3>
+                                    <input type="hidden" name="tipo" id="" value="boleta_origi">
+                                    <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision"></div>
+                                    <div class="form-group"><label>Tipo de nota de credito</label> 
+                                        <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
+                                            <option value="0"></option>
+                                            <option value="01">Anulacion de la operacion</option>
+                                            <option value="02">Anulacion por error en el RUC</option>
+                                            <option value="03">Correcion por error en la descripcion</option>
+                                            <option value="06">Devolucion Total</option>
+                                            {{-- <option value="8">Otros conceptos</option>
+                                            <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><label>Número de BE respecto de la cual se emite la Nota de Crédito	</label> 
+                                        <input type="text" class="form-control" name="boleta_id" id="boleta_id" required value="{{$boleta->codigo_boleta}}" readonly>
+                                    </div>
                                 </div>
-                                <div class="form-group"><label>Número de BE respecto de la cual se emite la Nota de Crédito	</label> <input type="text" class="form-control" name="boleta_id" id="boleta_id" required value="{{$boleta->codigo_boleta}}" readonly></div>
-
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="div1">
-                                <div class="form-group"><label>Motivo o sustento por el cual se emitirá la Nota de Crédito </label> <input type="text" class="form-control" name="sustento" id="sustento"></div>
-                            </div>
-                            <div class="div2">
-                                <div class="form-group"><label>Número de la Nueva Boleta Electrónica </label> <input type="text" class="form-control" name="nueva_boleta" id="nueva_boleta"></div>
-                            </div>
-                            <div class="div3">
-                                <div class="form-group"><label>Descuento Global </label> <input type="text" class="form-control" name="descuento_global" id="descuento_global"></div>
-                            </div>
-                            <div>
-                                <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Enviar</strong></button>
-                            </div>
+                                <div class="col-sm-6 b-r">
+                                    <div class="div1">
+                                        <div class="form-group"><label>Motivo o sustento por el cual se emitirá la Nota de Crédito </label> <input type="text" class="form-control" name="sustento" id="sustento"></div>
+                                    </div>
+                                    <div class="div2">
+                                        <div class="form-group"><label>Número de la Nueva Boleta Electrónica </label> <input type="text" class="form-control" name="nueva_boleta" id="nueva_boleta"></div>
+                                    </div>
+                                    <div class="div3">
+                                        <div class="form-group"><label>Descuento Global </label> <input type="text" class="form-control" name="descuento_global" id="descuento_global"></div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Enviar</strong></button>
+                                    </div>
+                                </div>
                             </form>
-                        </div>
+                        @else
+                            <form method="POST" action="{{route('nota-credito.create_nota_credito_boleta')}}" class="row">
+                                @csrf
+                                <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Emisión de Nota de credito</h3>   
+                                    <input type="hidden" name="tipo" id="" value="boleta_manual">
+                                    <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision"></div>
+                                    <div class="form-group"><label>Tipo de nota de credito</label> 
+                                        <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
+                                            <option value="0"></option>
+                                            <option value="01">Anulacion de la operacion</option>
+                                            <option value="02">Anulacion por error en el RUC</option>
+                                            <option value="03">Correcion por error en la descripcion</option>
+                                            <option value="06">Devolucion Total</option>
+                                            {{-- <option value="8">Otros conceptos</option>
+                                            <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><label>Número de BE respecto de la cual se emite la Nota de Crédito	</label> <input type="text" class="form-control" name="boleta_id" id="boleta_id" required value="{{$boleta_m->codigo_boleta}}" readonly></div>
+                                    
+                                </div>
+                                <div class="col-sm-6 b-r">
+                                    <div class="div1">
+                                        <div class="form-group"><label>Motivo o sustento por el cual se emitirá la Nota de Crédito </label> <input type="text" class="form-control" name="sustento" id="sustento"></div>
+                                    </div>
+                                    <div class="div2">
+                                        <div class="form-group"><label>Número de la Nueva Boleta Electrónica </label> <input type="text" class="form-control" name="nueva_boleta" id="nueva_boleta"></div>
+                                    </div>
+                                    <div class="div3">
+                                        <div class="form-group"><label>Descuento Global </label> <input type="text" class="form-control" name="descuento_global" id="descuento_global"></div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Enviar</strong></button>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+ 
 
 <script>
     seleccion_motivo();

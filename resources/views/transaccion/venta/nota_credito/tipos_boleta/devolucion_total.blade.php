@@ -31,6 +31,7 @@
                 </div><br>
                 <form action="{{route('nota-credito.store_boleta',$boleta->id)}}"  enctype="multipart/form-data" method="post" >
                     @csrf
+                    <input type="hidden" name="tipo" value="{{$tipo}}">
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
                             <div class="form-control">
@@ -70,6 +71,7 @@
                                     {{$boleta->guia_remision}} <br>
                                     <strong>Fecha Emision:</strong>
                                     {{$fecha_emision}} <br>
+                                    <input type="hidden" name="fecha_emision" id="fecha_emision" value="{{$fecha_emision}}">
                                     <strong>Fecha de Vencimiento:</strong>
                                     {{$fecha_emision}}  <br>
 
@@ -138,14 +140,21 @@
                                             <input required="required" class="form-control" type="text" id="input_descripcion_{{$e}}" name="input_descripcion_{{$e}}" value="{{$boleta_registros->servicio->nombre}}" readonly>
                                         @endif
                                         </td>
-                                        <td>{{$boleta_registros->precio}}</td>
-                                        <td>
-                                            <input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$boleta_registros->precio}}" readonly>
-                                        </td>
+                                        @if($tipo == "boleta_origi")
+                                            <td>{{$boleta_registros->precio_unitario_comi}}</td> {{--Precio Unitario--}}
+                                            <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$boleta_registros->precio_unitario_comi}}" readonly></td> {{--Nuevo Precio--}}
+                                        @else
+                                            <td>{{$boleta_registros->precio}}</td> {{--Precio Unitario--}}
+                                            <td><input required="required" class="form-control" type="text" id="input_precio_{{$e}}" name="input_precio_{{$e}}" value="{{$boleta_registros->precio}}" readonly></td> {{--Nuevo Precio--}}
+                                        @endif
                                         <td>
                                             <input required="required" class="form-control" type="text" id="input_descuento_{{$e}}" name="input_descuento_{{$e}}" value="0" readonly>
                                         </td>
-                                        <td>{{$boleta_registros->precio_unitario_comi* $boleta_registros->cantidad }}</td>
+                                        @if($tipo == "boleta_origi")
+                                            <td>{{$boleta_registros->precio_unitario_comi* $boleta_registros->cantidad }}</td> {{--Total--}}
+                                        @else
+                                            <td>{{$boleta_registros->precio* $boleta_registros->cantidad }}</td> {{--Total--}}
+                                        @endif
                                         <td style="display: none">
                                             {{$sub_total=($boleta_registros->boleta_i->op_gravada)+($boleta_registros->boleta_i->op_inafecta)+($boleta_registros->boleta_i->op_exonerada)}}
                                             {{$sub_total_gravado=($boleta_registros->boleta_i->op_gravada)}}

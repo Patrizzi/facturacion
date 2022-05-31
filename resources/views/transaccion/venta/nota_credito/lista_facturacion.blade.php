@@ -55,36 +55,38 @@
                         </div>
                         <div role="tabpanel" id="tab-2" class="tab-pane">
                             <div class="panel-body">
-                                <table class="table table-striped table-bordered table-hover dataTables-example_m" >
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Codigo de Guia</th>
-                                            <th>Cliente</th>
-                                            <th>Ruc/DNI</th>
-                                            <th>Fecha emision</th>
-                                            <th>Opciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($facturas_manuales as $factura_m)
-                                        <tr class="gradeX">
-                                            <td>{{$factura_m->id}}</td>
-                                            <td>{{$factura_m->codigo_fac}}</td>
-                                            <td>{{$factura_m->cliente->nombre}}</td>
-                                            <td>{{$factura_m->cliente->numero_documento}}</td>
-                                            <td>{{$factura_m->fecha_emision}}</td>
-                                            <td>
-                                                <form method="POST" action="{{route('nota-credito.motivo')}}">
-                                                    @csrf
-                                                    <input type="hidden" name="factura_manual_id" value="{{$factura_m->id}}">
-                                                    <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach 
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example_m" >
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Codigo de Guia</th>
+                                                <th>Cliente</th>
+                                                <th>Ruc/DNI</th>
+                                                <th>Fecha emision</th>
+                                                <th>Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($facturas_manuales as $factura_m)
+                                            <tr class="gradeX">
+                                                <td>{{$factura_m->id}}</td>
+                                                <td>{{$factura_m->codigo_fac}}</td>
+                                                <td>{{$factura_m->cliente->nombre}}</td>
+                                                <td>{{$factura_m->cliente->numero_documento}}</td>
+                                                <td>{{$factura_m->fecha_emision}}</td>
+                                                <td>
+                                                    <form method="POST" action="{{route('nota-credito.motivo')}}">
+                                                        @csrf
+                                                        <input type="hidden" name="factura_manual_id" value="{{$factura_m->id}}">
+                                                        <button type="submit" class="btn btn-sm btn-primary">Aplicar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @endforeach 
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

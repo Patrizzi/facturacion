@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Facturacion;
 use App\Facturacion_registro;
 use App\Facturacion_m;
+use App\Boleta_m;
+use App\Boleta_registros_m;
 use App\Facturacion_registro_m;
 use App\Boleta;
 use App\Boleta_registro;
@@ -50,7 +52,8 @@ class NotaCreditoController extends Controller
     {
         //cambiar de 0 a 1 en f_electronica
         $boletas=Boleta::where('b_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
-        return view('transaccion.venta.nota_credito.lista_boleta',compact('boletas'));
+        $boletas_manuales=Boleta_m::where('b_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
+        return view('transaccion.venta.nota_credito.lista_boleta',compact('boletas','boletas_manuales'));
     }
 
     public function create_nota_credito(Request $request){
@@ -165,9 +168,15 @@ class NotaCreditoController extends Controller
             $nueva_boleta="- - -";
             $descuento_global="- - -";
         }
-
-        $boleta=Boleta::where('codigo_boleta',$request->boleta_id)->first();
-        $boleta_registro=Boleta_registro::where('boleta_id',$boleta->id)->get();
+        $tipo = $request->get('tipo');
+        if($tipo == "boleta_origi"){
+            $boleta=Boleta::where('codigo_boleta',$request->boleta_id)->first();
+            $boleta_registro=Boleta_registro::where('boleta_id',$boleta->id)->get();
+        }else{
+            $boleta=Boleta_m::where('codigo_boleta',$request->boleta_id)->first();
+            $boleta_registro=Boleta_registros_m::where('boleta_m_id',$boleta->id)->get();
+        }
+        // return $boleta;        
 
         $empresa=Empresa::first();
         $sum=0;
@@ -178,7 +187,11 @@ class NotaCreditoController extends Controller
         
         //validación por boleta no encontrada
         if($request->tipo_nota_credito == 02){
-            $boleta_buscada=Boleta::where('codigo_boleta',$request->nueva_boleta)->first();
+            if($tipo == "boleta_origi"){
+                $boleta_buscada=Boleta::where('codigo_boleta',$request->nueva_boleta)->first();
+            }else{
+                $boleta_buscada=Boleta_m::where('codigo_boleta',$request->nueva_boleta)->first();
+            }
             if(isset($boleta_buscada)){
 
             }else{
@@ -186,15 +199,14 @@ class NotaCreditoController extends Controller
             }
         }
         
-        
         if($tipo_nota_credito == 01){//anulación de la operación
-            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
-            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_error_ruc',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_error_ruc',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 03){//Corrección por error en la descripcion
-            return view('transaccion.venta.nota_credito.tipos_boleta.correccion_error_descripcion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.correccion_error_descripcion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 06){//devolucion total
-            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_total',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_total',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 07){//devolucion por el item
             //return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_item',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
         }
@@ -211,7 +223,9 @@ class NotaCreditoController extends Controller
         }elseif(isset($request->factura_manual_id)){
             $facturacion_m=Facturacion_m::find($request->factura_manual_id);
             return view('transaccion.venta.nota_credito.create_motivo',compact('facturacion_m'));
-
+        }elseif(isset($request->boleta_manual_id)){
+            $boleta_m=Boleta_m::find($request->boleta_manual_id);
+            return view('transaccion.venta.nota_credito.create_motivo_boleta',compact('boleta_m'));
         }else{
             $boleta=Boleta::find($request->boleta_id);
             return view('transaccion.venta.nota_credito.create_motivo_boleta',compact('boleta'));
@@ -433,6 +447,7 @@ class NotaCreditoController extends Controller
     public function store_boleta(Request $request,$id)
     {
         // return $request;
+        $tipo = $request->get('tipo');
         if($request->motivo==2){
             $sustento=$request->sustento;
             $nueva_boleta=$request->nueva_boleta;
@@ -450,8 +465,14 @@ class NotaCreditoController extends Controller
         //contador nota de creditos
         $notas_creditos_count=Nota_Credito_registro::count();
         $notas_creditos_count++;
-        $boleta=Boleta::where('id',$id)->first();
-        $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
+        if($tipo == "factura_origi"){
+            $boleta=Boleta::where('id',$id)->first();
+            $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
+        }else{
+            $boleta=Boleta_m::where('id',$id)->first();
+            $boleta_registro=Boleta_registros_m::where('boleta_m_id',$id)->get();
+        }
+        
 
         $gravada=0;
         $exonerada=0;
@@ -477,8 +498,8 @@ class NotaCreditoController extends Controller
             $nota_credito_nr=str_pad($nota_cod_n_credito, 8, "0", STR_PAD_LEFT);
         }else{
                 // exprecion del numero de Nota de credito
-                // GENERACION DE NUMERO DE Nota de credito
-                $ultima_nota_c=Nota_Credito::where('almacen_id',$almacen_id->id)->whereNotNull('boleta_id')->latest()->first();
+                // GENERACION DE NUMERO DE Nota de credito->whereNotNull('facturacion_id')->orWhereNotNull('facturacion_m_id')->latest()->first();
+                $ultima_nota_c=Nota_Credito::where('almacen_id',$almacen_id->id)->whereNotNull('boleta_id')->orWhereNotNull('boleta_m_id')->latest()->first();
                 $nota_credito_num=$ultima_nota_c->codigo_n_c;
                 $nota_credito_num_string_porcion= explode("-", $nota_credito_num);
                 $nota_credito_num_string=$nota_credito_num_string_porcion[1];
@@ -508,43 +529,82 @@ class NotaCreditoController extends Controller
         }
 
         $contadores=count($boleta_registro);
-        for($a=0;$a<$contadores;$a++){
-            $string=(string)$a;
-            $cantidad="input_cantidad_".$string;
-            if($request->$cantidad==NULL){
-            }else{
-                if(isset($boleta_registro[$a]->producto_id)){
-                    if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        
-                    }
-                    if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                    }
-                    if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                    }
+        if($tipo == "boleta_origi" ){
+            for($a=0;$a<$contadores;$a++){
+                $string=(string)$a;
+                $cantidad="input_cantidad_".$string;
+                if($request->$cantidad==NULL){
                 }else{
-                    if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        
-                    }
-                    if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                    }
-                    if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                    if(isset($boleta_registro[$a]->producto_id)){
+                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                            $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            
+                        }
+                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                            $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                        }
+                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                            $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                        }
+                    }else{
+                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                            $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            
+                        }
+                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                            $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                        }
+                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                            $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                        }
                     }
                 }
+                // return $request;
             }
-            // return $request;
+        }else{
+            for($a=0;$a<$contadores;$a++){
+                $string=(string)$a;
+                $cantidad="input_cantidad_".$string;
+                if($request->$cantidad==NULL){
+                }else{
+                    if(isset($boleta_registro[$a]->producto_id)){
+                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                            $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                            
+                        }
+                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                            $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                        }
+                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                            $inafecta += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                        }
+                    }else{
+                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                            $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                            
+                        }
+                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                            $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                        }
+                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                            $inafecta += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                        }
+                    }
+                }
+                // return $request;
+            }
         }
+        
         // return $boleta_registro[$a]->precio_unitario_comi
 
         $nota_credito=new Nota_Credito();
         $nota_credito->codigo_n_c=$nota_credito_numero;
-        $nota_credito->boleta_id=$boleta->id;
-        $nota_credito->tipo="producto";
+        if($tipo == "boleta_origi"){
+            $nota_credito->boleta_id=$boleta->id;
+        }else{
+            $nota_credito->boleta_m_id=$boleta->id;
+        }
+        $nota_credito->tipo=$request->sustento;
         $nota_credito->almacen_id=$boleta->almacen_id;
         $nota_credito->fecha_emision=$request->fecha_emision;
         $nota_credito->motivo=$request->motivo;
@@ -590,10 +650,11 @@ class NotaCreditoController extends Controller
             $nc_primera->cod_nota_credito_b='NN';
             $nc_primera->save();
         }
-        $boleta=Boleta::where('id',$id)->first();
+        // $boleta=Boleta::where('id',$id)->first();
         $boleta->nota_credito=2;
         $boleta->save();
         
+        return "exito";
      return redirect()->route('nota-credito.show',$nota_credito->id);
         // return redirect()->route('nota-credito.index');
     }

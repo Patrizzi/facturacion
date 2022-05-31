@@ -72,13 +72,21 @@
                                         <td>{{$nota_credito->nota_i_boleta->codigo_boleta}}</td> 
                                         <td>Boleta</td>
                                         <td>{{$nota_credito->nota_i_boleta->cliente->nombre}}</td>
+                                    @elseif($nota_credito->boleta_m_id !=NULL)
+                                        <td>{{$nota_credito->nota_i_boleta_manual->codigo_boleta}}</td> 
+                                        <td>Boleta Manual</td>
+                                        <td>{{$nota_credito->nota_i_boleta_manual->cliente->nombre}}</td>
                                     @else
                                         <td>{{$nota_credito->nota_i_fac_manual->codigo_fac}}</td> 
                                         <td>Factura Manual</td>
                                         <td>{{$nota_credito->nota_i_fac_manual->cliente->nombre}}</td>
                                     @endif
                                     {{-- <td>{{$nota_credito->cliente->id}}</td> --}}
-                                    <td>{{$nota_credito->created_at}}</td>
+                                    @if(isset($nota_credito->fecha_emision))
+                                        <td>{{$nota_credito->fecha_emision}}</td>
+                                    @else
+                                        <td>{{$nota_credito->created_at}}</td>
+                                    @endif
                                     <td><a href="{{route('nota-credito.show',$nota_credito->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
                                 </tr>
                                 @endforeach 
