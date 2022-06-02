@@ -443,7 +443,7 @@ class FacturacionElectronicaController extends Controller
         if ($nota_credito->facturacion_id != null ) {
             $factura=Facturacion::where('id',$nota_credito->facturacion_id)->first();
             $factura_registro=Facturacion_registro::where('facturacion_id',$nota_credito->facturacion_id)->get();
-        }else{
+        }elseif( $nota_credito->facturacion_m_id != null ){
             $factura=Facturacion_m::where('id',$nota_credito->facturacion_m_id)->first();
             $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$nota_credito->facturacion_m_id)->get();
         }
@@ -515,8 +515,14 @@ class FacturacionElectronicaController extends Controller
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
         // return $notas_creditos_registro;  
         //factura - factura registro
-        $boleta=Boleta::where('id',$nota_credito->boleta_id)->first();
-        $boleta_registro=Boleta_registro::where('boleta_id',$nota_credito->boleta_id)->get();
+        if ($nota_credito->boleta_id != null ) {
+            $boleta=Boleta::where('id',$nota_credito->boleta_id)->first();
+            $boleta_registro=Boleta_registro::where('boleta_id',$nota_credito->boleta_id)->get();
+        }elseif( $nota_credito->boleta_m_id != null ){
+            $boleta=Boleta_m::where('id',$nota_credito->boleta_m_id)->first();
+            $boleta_registro=Boleta_registros_m::where('boleta_m_id',$nota_credito->boleta_m_id)->get();
+        }
+        
 
         // $n_c_request=array('cantidad' => null,'precio'=>null);
         // return $factura_registro;
@@ -679,6 +685,52 @@ class FacturacionElectronicaController extends Controller
             $boleta=Boleta::where('id',$nota_credito->boleta_id)->first();
             // return $boleta;
             $boleta_registro=Boleta_registro::where('boleta_id',$boleta->id)->get();
+            foreach($notas_creditos_registro as $i => $nota_c_registros ){
+                $n_c_cantidad[$i] = $nota_c_registros->cantidad;
+                $n_c_precio[$i] = $nota_c_registros->precio;
+            }
+            // $msg = $n_c_precio;
+            // return $msg;
+            $notas_creditos_count=Nota_Credito_registro::count();
+            $notas_creditos_count++;
+            
+            //nota_Credito_numero
+            $nota_credito_numero=$nota_credito->codigo_n_c;
+    
+            //gravada
+            $gravada=$nota_credito->op_gravada;
+            //exonerada
+            $exonerada=$nota_credito->op_inafecta;
+            //inafecta
+            $inafecta=$nota_credito->op_exonerada;
+            //request->motivo
+            $motivo=$nota_credito->motivo;
+            //sustento
+            $sustento=$nota_credito->tipo;
+    
+            $see=config_acceso_sunat::facturacion_electronica();   
+    
+            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+            
+            //envio a SUNAT    
+            $result=config_acceso_sunat::send($see, $invoice);
+            //lectura CDR
+            $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+    
+            //contador
+            $contador=count($notas_creditos_registro);
+    
+            //codigo
+            $codigo=$boleta->codigo_boleta;
+            nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+    
+            $nota_credito->n_electronica=1;
+            $nota_credito->save();
+        }elseif($nota_credito->boleta_m_id != null){
+            //* BOLETA MANUAL
+            $boleta=Boleta_m::where('id',$nota_credito->boleta_m_id)->first();
+            // return $boleta;
+            $boleta_registro=Boleta_registros_m::where('boleta_m_id',$boleta->id)->get();
             foreach($notas_creditos_registro as $i => $nota_c_registros ){
                 $n_c_cantidad[$i] = $nota_c_registros->cantidad;
                 $n_c_precio[$i] = $nota_c_registros->precio;

@@ -151,9 +151,18 @@
     window.onload = function(){
         var today = new Date();
         var dd = today.getDate();
+        if(dd < 10){
+            var dd = '0'+dd;
+        }else{
+            var dd = dd;
+        }
         var mm = today.getMonth(); //January is 0 so need to add 1 to make it 1!
         var new_m = parseInt(mm)+1;
-        var n_m = '0'+ new_m;
+        if(new_m < 10){
+            var n_m = '0'+ new_m;
+        }else{
+            var n_m = new_m;
+        }
         var yyyy = today.getFullYear();
         var hoy = yyyy+'-'+n_m+'-'+dd;
         document.getElementById('fecha_emision').value = hoy;

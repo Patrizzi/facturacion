@@ -197,7 +197,7 @@ class BoletaMController extends Controller
             $producto_id[$i]=explode(" ",$articulos[$i]); //separador del articulo por espacio
             
         }
-        // return  $producto_id[0][2];
+        
         // obtención de forma de pago
         $forma_pago_id=$request->get('forma_pago');
         if($forma_pago_id == 1){
@@ -308,11 +308,11 @@ class BoletaMController extends Controller
         //contador de valores de cantidad
         $cantidad = $request->input('cantidad');
         $count_cantidad=count($cantidad);
-
+        
         //contador de valores de articulo
         $articulo = $request->input('articulo');
         $count_articulo=count($articulo);
-       
+        
         if($count_articulo = $count_cantidad){
             // Bucle para registro de productos o servicios 
             for($i=0;$i<$count_articulo;$i++){
@@ -345,8 +345,8 @@ class BoletaMController extends Controller
                     }
                     $boleta_m->save();
                 }else{ // Guardado para servicios
-                    $boleta_registo = new Boleta_registros_m();
-                    $boleta_registo->boleta_m_id = $boleta->id;
+                    $boleta_registro = new Boleta_registros_m();
+                    $boleta_registro->boleta_m_id = $boleta->id;
                     $boleta_registro->servicio_id= $servicio->id;
                     $boleta_registro->numero_serie=$request->get('numero_serie')[$i];
                     if($request->get('descripcion_item')[$i] == null){ 

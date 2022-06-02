@@ -75,7 +75,7 @@
                             <form method="POST" action="{{route('nota-credito.create_nota_credito')}}">
                             @csrf
                                 <input type="hidden" name="tipo" id="" value="factura_manual">
-                                <div class="form-group"><label>Fecha de emisión</label><input type="date" placeholder="Ingrese Fecha" class="form-control" required name="fecha_emision" value="" id="fecha_emision"></div>
+                                <div class="form-group"><label>Fecha de emisión</label><input type="date"  class="form-control" required name="fecha_emision"  id="fecha_emision"></div>
                                 <div class="form-group"><label>Tipo de nota de credito</label> 
                                     <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()" required >
                                         <option></option>
@@ -149,9 +149,18 @@
     window.onload = function(){
         var today = new Date();
         var dd = today.getDate();
+        if(dd < 10){
+            var dd = '0'+dd;
+        }else{
+            var dd = dd;
+        }
         var mm = today.getMonth(); //January is 0 so need to add 1 to make it 1!
         var new_m = parseInt(mm)+1;
-        var n_m = '0'+ new_m;
+        if(new_m < 10){
+            var n_m = '0'+ new_m;
+        }else{
+            var n_m = new_m;
+        }
         var yyyy = today.getFullYear();
         var hoy = yyyy+'-'+n_m+'-'+dd;
         document.getElementById('fecha_emision').value = hoy;

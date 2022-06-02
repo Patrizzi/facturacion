@@ -168,8 +168,8 @@
                                     <td style="text-align:center">{{number_format( $boletas_registros->precio * $boletas_registros->cantidad - ($boletas_registros->precio * $boletas_registros->cantidad * $boletas_registros->descuento/100),2) }}</td>
 
                                 <td style="display: none">
-                                    {{ $sub_total =$boletas_registros->boleta_ids->op_gravada + $boletas_registros->boleta_ids->op_inafecta +$boletas_registros->boleta_ids->op_exonerada }}
-                                    {{ $sub_total_gravado = $boletas_registros->boleta_ids->op_gravada }}
+                                    {{ $sub_total =$boletas_registros->boleta_i->op_gravada + $boletas_registros->boleta_i->op_inafecta +$boletas_registros->boleta_i->op_exonerada }}
+                                    {{ $sub_total_gravado = $boletas_registros->boleta_i->op_gravada }}
                                     {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
                                     {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
                                     {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}

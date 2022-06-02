@@ -55,6 +55,10 @@
                                                     <td>{{$n_credito->codigo_n_c}}</td>
                                                     <td>{{$n_credito->nota_i_boleta->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_boleta->cliente->numero_documento}}</td>
+                                                @elseif($n_credito->boleta_m_id !=NULL)
+                                                    <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta_manual->cliente->nombre}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta_manual->cliente->numero_documento}}</td>
                                                 @else
                                                     <td>{{$n_credito->codigo_n_c}}</td>
                                                     <td>{{$n_credito->nota_i_fac_manual->cliente->nombre}}</td>
@@ -65,6 +69,8 @@
                                                         Factura
                                                     @elseif($n_credito->boleta_id !=NULL)
                                                         Boleta
+                                                    @elseif($n_credito->boleta_m_id !=NULL)
+                                                        Boleta Manual
                                                     @else
                                                         Factura Manual
                                                     @endif
@@ -78,6 +84,12 @@
                                                                 <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
                                                             </form>
                                                         @elseif($n_credito->boleta_id !=NULL)
+                                                            <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                            </form>
+                                                        @elseif($n_credito->boleta_m_id !=NULL)
                                                             <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="id" value="{{$n_credito->id}}">
@@ -132,7 +144,10 @@
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
-                                            
+                                        @elseif($n_credito_enviado->boleta_m_id !=NULL)
+                                            <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                            <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->nombre}}</td>
+                                            <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento}}</td>
                                         @else
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
@@ -143,6 +158,8 @@
                                                 Factura
                                             @elseif($n_credito_enviado->boleta_id !=NULL)
                                                 Boleta
+                                            @elseif($n_credito_enviado->boleta_m_id !=NULL)
+                                                Boleta Manual
                                             @else
                                                 Factura Manual
                                             @endif

@@ -654,7 +654,7 @@ class NotaCreditoController extends Controller
         $boleta->nota_credito=2;
         $boleta->save();
         
-        return "exito";
+        // return "exito";
      return redirect()->route('nota-credito.show',$nota_credito->id);
         // return redirect()->route('nota-credito.index');
     }
@@ -681,9 +681,13 @@ class NotaCreditoController extends Controller
             $document=Boleta::where('id',$notas_credito->boleta_id)->first();
             $doc_reg=Boleta_registro::where('boleta_id',$document->id)->get();
             $estado=1;
+        }elseif($notas_credito->boleta_m_id != NULL){
+            $document=Boleta_m::where('id',$notas_credito->boleta_m_id)->first();
+            $doc_reg=Boleta_registros_m::where('boleta_m_id',$document->id)->get();
+            $estado=3;
         }else{
             $document = Facturacion_m::where('id',$notas_credito->facturacion_m_id)->first();
-            $doc_reg = Facturacion_registro_m::where('facturacion_id',$documenta->id)->get();
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id',$document->id)->get();
             $estado=2;
         }
         $igv=Igv::first();
@@ -705,6 +709,10 @@ class NotaCreditoController extends Controller
             $document=Boleta::where('id',$notas_credito->boleta_id)->first();
             $doc_reg=Boleta_registro::where('boleta_id',$document->id)->get();
             $estado=1;
+        }elseif($notas_credito->boleta_m_id != NULL){
+            $document=Boleta_m::where('id',$notas_credito->boleta_m_id)->first();
+            $doc_reg=Boleta_registros_m::where('boleta_m_id',$document->id)->get();
+            $estado=3;
         }else{
             $document = Facturacion_m::where('id',$notas_credito->facturacion_m_id)->first();
             $doc_reg = Facturacion_registro_m::where('facturacion_id',$documenta->id)->get();
@@ -720,7 +728,7 @@ class NotaCreditoController extends Controller
         $notas_credito_registros=Nota_Credito_registro::where('nota_credito_id',$id)->get();
 
         $empresa=Empresa::first();
-        //* FACTURA 0 - BOLETA  1 - FAC MANUAL 2
+        //* FACTURA 0 - BOLETA  1 - FAC MANUAL 2 -  BOL MANUAL 3
         if($notas_credito->facturacion_id != NULL){
             $document = Facturacion::where('id',$notas_credito->facturacion_id)->first();
             $doc_reg = Facturacion_registro::where('facturacion_id',$document->id)->get();
@@ -729,6 +737,10 @@ class NotaCreditoController extends Controller
             $document=Boleta::where('id',$notas_credito->boleta_id)->first();
             $doc_reg=Boleta_registro::where('boleta_id',$document->id)->get();
             $estado=1;
+        }elseif($notas_credito->boleta_m_id != NULL){
+            $document=Boleta_m::where('id',$notas_credito->boleta_m_id)->first();
+            $doc_reg=Boleta_registros_m::where('boleta_m_id',$document->id)->get();
+            $estado=3;
         }else{
             $document = Facturacion_m::where('id',$notas_credito->facturacion_m_id)->first();
             $doc_reg = Facturacion_registro_m::where('facturacion_id',$documenta->id)->get();
