@@ -472,7 +472,8 @@
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term // search term 
+                        search: params.term, // search term 
+                        almacen: 0
                     };
                 },
                 processResults: function (data) {
