@@ -38,8 +38,7 @@
                     <div class="image-imitation" style="padding:0px">
                      <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
                      <div id="visorArchivo">
-
-                       <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicios->foto}}" style="width:100%;padding: 30px;">
+                       <img @if($servicios->foto == "defecto.png" || $servicios->foto == "servicio.png" ) src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" @else src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicios->foto}}" @endif style="width:100%;padding: 30px;">
                        <input type="text" hidden="hidden" name="foto_original" value="{{$servicios->foto}}">
                      </div>
                    </div>

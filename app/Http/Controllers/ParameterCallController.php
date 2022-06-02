@@ -211,6 +211,8 @@ class ParameterCallController extends Controller
     // * Llamado de la tabla artículos (PRODUCTOS - SERVICIOS)
     public function getArticles(Request $request){
         $search = $request->search;
+        $almacen = $request->almacen;
+
         if($search == ''){
             $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
@@ -220,18 +222,34 @@ class ParameterCallController extends Controller
         }
 
         //Productos a array
-        $products_array = array();
-        foreach($products as $product){
-           $products_array[] = array(
-                "id"=>$product->id,
-                "nombre"=>$product->nombre,
-                "codigo"=>$product->codigo_producto,
-                "codigo_original"=>$product->codigo_original,
-                "tipo"=>'producto'
-           );
+        if($almacen != 0){
+            $products_array = array();
+            foreach($products as $product){
+                $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id',$product->id)->first();
+                if($stock_almacen->stock > "0"){
+                    $products_array[] = array(
+                        "id"=>$product->id,
+                        "nombre"=>$product->nombre,
+                        "codigo"=>$product->codigo_producto,
+                        "codigo_original"=>$product->codigo_original,
+                        "tipo"=>'producto'
+                    );
+                }
+            }
+        }else{
+            $products_array = array();
+            foreach($products as $product){
+                $products_array[] = array(
+                    "id"=>$product->id,
+                    "nombre"=>$product->nombre,
+                    "codigo"=>$product->codigo_producto,
+                    "codigo_original"=>$product->codigo_original,
+                    "tipo"=>'producto'
+                );
+            }
         }
 
-        //Servicios a array
+        //Servicios a arraygit
         $services_array = array();
         foreach($services as $service){
             $services_array[] = array(
