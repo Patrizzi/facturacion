@@ -10,6 +10,7 @@ use App\Empresa;
 use App\Forma_pago;
 use App\Garantia;
 use App\Igv;
+use App\Facturacion_m;
 use App\Kardex_entrada;
 use App\CotizacionManual;
 use App\CotizacionManual_registros;
@@ -359,7 +360,7 @@ class CotizacionManualController extends Controller
             }
         }
 
-        return redirect()->route('manual.show',$cotizacion_manual->id);
+        return redirect()->route('cotizacion_manual.show',$cotizacion_manual->id);
     //     /*IMPRENSION*/
     //    //  if($print==1){
     //     $name = $request->get('name');
@@ -450,7 +451,7 @@ class CotizacionManualController extends Controller
         
         // Redirección para mostrar el inventario inicial
         $existe_id=CotizacionManual::where('id',$id)->first();
-        if(empty($existe_id)){ return redirect()->route('manual.index'); }
+        if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
 
         $empresa=Empresa::first();
         $cotizacion=CotizacionManual::find($id);
@@ -673,6 +674,49 @@ class CotizacionManualController extends Controller
         return back();
     }
 
+    public function facturar(Request $request,$id){
+        $cotizacion = CotizacionManual::where('id',$id)->first();
+        $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
+
+        $cod_guia= Codigo_guia_almacen::where('almacen_id',$cotizacion->almacen_id)->first();
+        $factura_cod_fac=$cod_guia->cod_factura_m;
+        if (is_numeric($factura_cod_fac)) {
+            // expresión del numero de factura
+            $factura_cod_fac++;
+            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+                // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_factura=Facturacion_m::where('almacen_id',$cotizacion->almacen_id)->latest()->first();
+            $factura_num=$ultima_factura->codigo_fac;
+            $factura_num_string_porcion= explode("-", $factura_num);
+            $factura_num_string=$factura_num_string_porcion[1];
+            $factura_num=(int)$factura_num_string;
+
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($factura_num == 99999999){
+                $ultima_factura = $almacen_codigo->serie_factura_m+1;
+                $factura_num = 00000000;
+
+            }else{
+                $ultima_factura = $cod_guia->serie_factura_m;
+            }
+            $factura_num++;
+            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+        }
+
+        $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+        $forma_pagos = FormaPago::get();
+        $empresa = Empresa::first();
+        // $bancos = Bancos::all();
+        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','formas_pagos'));
+    }
+    public function boletar(Request $request){
+
+    }
     /**
      * Remove the specified resource from storage.
      *

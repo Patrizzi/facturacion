@@ -2,31 +2,32 @@
 @section('title', 'Cotizacion Manual')
 @section('breadcrumb', 'Cotizacion Manual')
 @section('breadcrumb2', 'Cotizacion Manual')
-@section('href_accion', route('manual.index'))
+@section('href_accion', route('cotizacion_manual.index'))
 @section('value_accion', 'Inicio')
 
 @section('button2', 'Nueva Cotización')
-@section('config', route('manual.create'))
+@section('config', route('cotizacion_manual.create'))
 
 @section('content')
 
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox-title" style="padding-right: 3.1%">
+    <div class="ibox-title" style="padding-right: 3.1%;padding-left: 3.1%">
         <div class="row tooltip-demo">
-             <div class="col-sm-6">
-                {{-- @if ($regla=='factura')
-                    <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Facturar</a>
-                @elseif(($regla=='boleta'))
-                    <a class="btn btn-success" href="{{route('cotizacion.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
-                @endif --}}
+             <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
+                @if ($cotizacion->tipo =='factura')
+                    {{-- <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Facturar</a> --}}
+                    <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
+                @else
+                    <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Boletear</a>
+                @endif
             </div>
-             <div class="col-sm-6" align="right">
+            <div class="col-sm-6" align="right">
                 <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}">
                     <input type="text" name="name" maxlength="50" hidden="" value="CotizacionManual_{{$cotizacion->tipo}}"  >
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
-                <a class="btn btn-success" href="{{route('cotizacion_manual.print',$cotizacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                <a class="btn btn-success" href="{{route('cotizacion_manual.print',$cotizacion->id)}}" target="_blank"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
                     @csrf
                      <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}" hidden="" />

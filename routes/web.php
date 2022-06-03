@@ -22,11 +22,12 @@ Route::group(
 		Route::post('/whatsapp','AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
-		Route::resource('/cotizacion/manual','CotizacionManualController');
-		Route::post('/cotizacion/manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
-		Route::post('/cotizacion/manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
-		Route::get('/cotizacion/manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
-		
+		Route::resource('/cotizacion_manual','CotizacionManualController');
+		Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		Route::post('/cotizacion_manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
+		Route::get('/cotizacion_manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
+		Route::get('/cotizacion_manual/facturar/{id}','CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
+		Route::post('/cotizacion_manual/facturar_store' , 'CotizacionManualController@facturar_store')->name('cotizacion_manual.facturar_store');
 
 		Route::resource('/categoria','CategoriaController')->only(['index','create','store','update']);;
 		Route::resource('/vendedores','PersonalVentaController');
@@ -406,7 +407,7 @@ Route::get('/boleta_manual/pdf/{id}','BoletaMController@pdf')->name('boleta_manu
 Route::post('periodo_consulta/pdf' , 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
 Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
 Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');
-Route::get('/cotizacion/manual/pdf/{id}','CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
+Route::get('/cotizacion_manual/pdf/{id}','CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
 Route::get('/nota-credito/pdf/{id}','NotaCreditoController@pdf')->name('nota_credito.pdf');
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');

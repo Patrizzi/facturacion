@@ -1,7 +1,7 @@
 @extends('layout')
 @section('title', 'Cotizacion Manual')
 @section('atributo_actu', 'hidden')
-@section('href_accion', route('manual.create'))
+@section('href_accion', route('cotizacion_manual.create'))
 @section('value_accion', 'Agregar')
 @section('content')
 
@@ -58,7 +58,7 @@
                                     <td>{{$cotizaciones->moneda->simbolo}} {{number_format(round(($subtotal+($cotizaciones->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     {{-- Ver --}}
                                     <td align="center">
-                                        <a href="{{route('manual.show',$cotizaciones->id)}}">
+                                        <a href="{{route('cotizacion_manual.show',$cotizaciones->id)}}">
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                     </td>
