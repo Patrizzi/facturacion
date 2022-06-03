@@ -167,7 +167,7 @@
                                                     <td>{{$facturaciones_m->fecha_vencimiento }}</td>
                                                     <td>
                                                         <center>
-                                                        <form action="{{route('facturacion_manual.f_e')}}" method="POST" enctype="multipart/form-data">@csrf
+                                                        <form action="{{route('facturacion_electronica.facturacion_m_e')}}" method="POST" enctype="multipart/form-data">@csrf
                                                             <input type="text" style="display: none" value="{{$facturaciones_m->id}}" name="id">
                                                             <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
                                                             </form>
@@ -347,7 +347,7 @@
             var value_check =  $('input[class=case]:checkbox:checked')[repetir].value;
             $.ajax({
                 type: "post",
-                url: "{{ route('facturacion_electronica.facturacion_m_e') }}",
+                url: "{{ route('facturacion_electronica.factura_elec_all') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'codigo_fac': value_check,
