@@ -715,7 +715,7 @@ class NotaCreditoController extends Controller
             $estado=3;
         }else{
             $document = Facturacion_m::where('id',$notas_credito->facturacion_m_id)->first();
-            $doc_reg = Facturacion_registro_m::where('facturacion_id',$documenta->id)->get();
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id',$document->id)->get();
             $estado=2;
         }
         $igv=Igv::first();
@@ -743,7 +743,7 @@ class NotaCreditoController extends Controller
             $estado=3;
         }else{
             $document = Facturacion_m::where('id',$notas_credito->facturacion_m_id)->first();
-            $doc_reg = Facturacion_registro_m::where('facturacion_id',$documenta->id)->get();
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id',$document->id)->get();
             $estado=2;
         }
         $archivo=$name;
