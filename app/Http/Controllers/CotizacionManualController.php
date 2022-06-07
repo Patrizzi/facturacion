@@ -11,6 +11,7 @@ use App\Forma_pago;
 use App\Garantia;
 use App\Igv;
 use App\Facturacion_m;
+use App\Facturacion_registro_m;
 use App\Kardex_entrada;
 use App\CotizacionManual;
 use App\CotizacionManual_registros;
@@ -675,6 +676,12 @@ class CotizacionManualController extends Controller
     }
 
     public function facturar(Request $request,$id){
+
+        
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=CotizacionManual::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
+
         $cotizacion = CotizacionManual::where('id',$id)->first();
         $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
 
@@ -709,10 +716,171 @@ class CotizacionManualController extends Controller
         }
 
         $factura_numero="FA".$sucursal_nr."-".$factura_nr;
-        $forma_pagos = FormaPago::get();
+        $forma_pagos = Forma_pago::get();
         $empresa = Empresa::first();
+        $igv = Igv::first();
         // $bancos = Bancos::all();
-        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','formas_pagos'));
+        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','forma_pagos','igv'));
+    }
+    
+    public function facturar_store(Request $request){
+        
+        // return $request;
+        $id = $request->get('id_cotizador');
+        $cotizacion = CotizacionManual::where('id',$id)->first();
+        $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
+
+        $cod_guia= Codigo_guia_almacen::where('almacen_id',$cotizacion->almacen_id)->first();
+        $factura_cod_fac=$cod_guia->cod_factura_m;
+        if (is_numeric($factura_cod_fac)) {
+            // expresión del numero de factura
+            $factura_cod_fac++;
+            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+                // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_factura=Facturacion_m::where('almacen_id',$cotizacion->almacen_id)->latest()->first();
+            $factura_num=$ultima_factura->codigo_fac;
+            $factura_num_string_porcion= explode("-", $factura_num);
+            $factura_num_string=$factura_num_string_porcion[1];
+            $factura_num=(int)$factura_num_string;
+
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($factura_num == 99999999){
+                $ultima_factura = $almacen_codigo->serie_factura_m+1;
+                $factura_num = 00000000;
+
+            }else{
+                $ultima_factura = $cod_guia->serie_factura_m;
+            }
+            $factura_num++;
+            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+        }
+
+        $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+
+        // obtención de forma de pago
+        $forma_pago_id=$request->get('forma_pago');
+        if($forma_pago_id == 1){
+            $val = $request->get('fecha_vencimiento');
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }else{
+            $fecha_pago_forma = $request->input('fecha_pago');
+            $contador_for_1 = count($fecha_pago_forma);
+            for($c = 0; $c<$contador_for_1;$c++ ){
+                $val = $fecha_pago_forma[$c];
+            }
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }
+
+        $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
+        if(!$cambio){
+            return "error por no hacer el cambio diario";
+        }
+
+        
+        //Store en FacturacionmMnual
+        $facturacion=new Facturacion_m;
+        $facturacion->codigo_fac=$factura_numero;
+        $facturacion->almacen_id=$cotizacion->almacen_id;
+        $facturacion->cotizador_id=$cotizacion->id;
+        $facturacion->orden_compra=$request->get('orden_compra');
+        $facturacion->guia_remision=$request->get('guia_remision');
+        $facturacion->cliente_id=$cotizacion->cliente_id;
+        $facturacion->moneda_id=$cotizacion->moneda_id;
+        $facturacion->forma_pago_id=$request->get('forma_pago');
+        $facturacion->fecha_emision=$request->get('fecha_emision');
+        $facturacion->fecha_vencimiento=$nuevafechas;
+        $facturacion->cambio=$cambio->paralelo;
+        $facturacion->observacion=$request->get('observacion');
+        $facturacion->user_id =auth()->user()->id;
+        $facturacion->estado='0';
+        $facturacion->tipo_operacion_id= $cotizacion->tipo_operacion_id;
+        $facturacion->tipo_documento_id = $cotizacion->tipo_documento_id;
+        $facturacion->save();
+
+        //CAMBIAR EL ESTADO DE LA COTIZACION 
+        $cotizacion=CotizacionManual::where('id',$cotizacion->id)->first();
+        $cotizacion->estado=1;
+        $cotizacion->save();
+
+        // modificación para que se cierre el codigo en almacen
+        $factura_primera=Codigo_guia_almacen::where('id', $cotizacion->almacen_id)->first();
+        if(is_numeric($factura_primera->cod_factura_m)){
+            $factura_primera->cod_factura_m='NN';
+            $factura_primera->save();
+        }
+ 
+         //Registro de forma de pago
+        if($facturacion->forma_pago_id == 2){
+
+            $fecha_pago = $request->input('fecha_pago');
+            $contador_for = count($fecha_pago);
+            $monto_pago = $request->input('monto_pago');
+                    // foreach($contador_for as $cuotas => $index ){
+            for($c = 0; $c<$contador_for;$c++ ){
+                $cuota_cred = new Cuotas_credito;
+                $cuota_cred->facturacion_m_id = $facturacion->id;
+                $cuota_cred->numero_cuota = $c+1;
+                $cuota_cred->monto = $monto_pago[$c];
+                $cuota_cred->fecha_pago = $fecha_pago[$c];
+                $cuota_cred->save();
+            }
+        }
+
+        //GUARDADO DE REGISTROS
+        foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
+            $producto = Producto::where('id',$cotizacion_registros2->producto_id)->first();
+            
+            if(isset($producto->id)){
+                $factura_registro = new Facturacion_registro_m;
+                $factura_registro->facturacion_m_id = $facturacion->id;
+                $factura_registro->producto_id = $cotizacion_registros2->producto_id;
+                $factura_registro->descripcion_item = $request->get('descripcion_item')[$index_val];
+                $factura_registro->numero_serie = $request->get('numero_serie')[$index_val];
+                $factura_registro->cantidad = $cotizacion_registros2->cantidad;
+                $factura_registro->precio = $cotizacion_registros2->precio;
+                $factura_registro->save();
+
+                $facturacion_2=Facturacion_m::find($facturacion->id);
+                if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                    $facturacion_2->op_gravada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                }
+                if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                    $facturacion_2->op_exonerada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                }
+                if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                    $facturacion_2->op_inafecta += round($factura_registro->precio*$factura_registro->cantidad,2);
+                }
+                $facturacion_2->save();
+            }else{
+                $servicio=Servicios::where('id',$cotizacion_registros2->servicio_id)->where('estado_anular',0)->first();
+                $factura_registro = new Facturacion_registro_m;
+                $factura_registro->facturacion_m_id = $facturacion->id;
+                $factura_registro->servicio_id = $cotizacion_registros2->servicio_id;
+                $factura_registro->descripcion_item = $request->get('descripcion_item')[$index_val];
+                $factura_registro->numero_serie = $request->get('numero_serie')[$index_val];
+                $factura_registro->cantidad = $cotizacion_registros2->cantidad;
+                $factura_registro->precio = $cotizacion_registros2->precio;
+                $factura_registro->save();
+
+                $facturacion_2=Facturacion_m::find($facturacion->id);
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                    $facturacion_2->op_gravada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                }
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                    $facturacion_2->op_exonerada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                }
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                    $facturacion_2->op_inafecta += round($factura_registro->precio*$factura_registro->cantidad,2);
+                }
+                $facturacion_2->save();
+            }
+        }
+        return redirect()->route('facturacion_manual.show',$facturacion->id);
     }
     public function boletar(Request $request){
 

@@ -15,11 +15,16 @@
     <div class="ibox-title" style="padding-right: 3.1%;padding-left: 3.1%">
         <div class="row tooltip-demo">
              <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
-                @if ($cotizacion->tipo =='factura')
-                    {{-- <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Facturar</a> --}}
+                @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
                 @else
+                    
+                @endif
+
+                @if ($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Boletear</a>
+                @else
+                
                 @endif
             </div>
             <div class="col-sm-6" align="right">

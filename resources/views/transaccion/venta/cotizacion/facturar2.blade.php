@@ -323,6 +323,7 @@
                         </div>
                     </div>
                     <br>
+                    
                     @include('layout_bancos')
                 </div>
             </div>

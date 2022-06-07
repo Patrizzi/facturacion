@@ -25,7 +25,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <form action="{{route('cotizacion_  manual.store')}}"  enctype="multipart/form-data" method="post" id="form_sto" onsubmit="return valida(this)">
+                    <form action="{{route('cotizacion_manual.store')}}"  enctype="multipart/form-data" method="post" id="form_sto" onsubmit="return valida(this)">
                         @csrf
                         {{-- Cabecera --}}
                         <div class="row">
