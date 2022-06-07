@@ -22,7 +22,7 @@
                 @endif
 
                 @if ($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
-                    <a class="btn btn-success" href="{{route('cotizacion.facturar',$cotizacion->id)}}" target="_blank">Boletear</a>
+                    <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
                 @else
                 
                 @endif

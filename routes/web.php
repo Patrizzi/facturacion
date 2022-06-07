@@ -28,6 +28,8 @@ Route::group(
 		Route::get('/cotizacion_manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		Route::get('/cotizacion_manual/facturar/{id}','CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
 		Route::post('/cotizacion_manual/facturar_store' , 'CotizacionManualController@facturar_store')->name('cotizacion_manual.facturar_store');
+		Route::get('/cotizacion_manual/boletear/{id}','CotizacionManualController@boletear')->name('cotizacion_manual.boletear');
+		Route::post('/cotizacion_manual/boletear_store' , 'CotizacionManualController@boletear_store')->name('cotizacion_manual.boletear_store');
 
 		Route::resource('/categoria','CategoriaController')->only(['index','create','store','update']);;
 		Route::resource('/vendedores','PersonalVentaController');

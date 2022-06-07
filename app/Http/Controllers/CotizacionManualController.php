@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
+use App\Boleta_m;
+use App\Boleta_registros_m;
 use App\Cliente;
 use App\Empresa;
 use App\Forma_pago;
@@ -750,6 +752,9 @@ class CotizacionManualController extends Controller
                 //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
             if($factura_num == 99999999){
                 $ultima_factura = $almacen_codigo->serie_factura_m+1;
+                $almacen_save_last = Codigo_guia_almacen::find($cotizacion->almacen_id);
+                $almacen_save_last->serie_factura_m = $almacen_codigo->serie_factura_m+1;
+                $almacen_save_last->save();
                 $factura_num = 00000000;
 
             }else{
@@ -882,8 +887,200 @@ class CotizacionManualController extends Controller
         }
         return redirect()->route('facturacion_manual.show',$facturacion->id);
     }
-    public function boletar(Request $request){
+    public function boletear(Request $request,$id){
+        // return $request;
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=CotizacionManual::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
 
+        $cotizacion = CotizacionManual::where('id',$id)->first();
+        $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
+
+        $cod_guia= Codigo_guia_almacen::where('almacen_id',$cotizacion->almacen_id)->first();
+        $boleta_cod_bol=$cod_guia->cod_boleta_m;
+        if (is_numeric($boleta_cod_bol)) {
+            // expresión del numero de factura
+            $boleta_cod_bol++;
+            $sucursal_nr = str_pad($cod_guia->serie_boleta_m, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($boleta_cod_bol, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+                // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_boleta=Boleta_m::where('almacen_id',$cotizacion->almacen_id)->latest()->first();
+            $boleta_num=$ultima_boleta->codigo_boleta;
+            $boleta_num_string_porcion= explode("-", $boleta_num);
+            $boleta_num_string=$boleta_num_string_porcion[1];
+            $boleta_num=(int)$boleta_num_string;
+
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_boleta_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($boleta_num == 99999999){
+                $ultima_boleta = $almacen_codigo->serie_boleta_m+1;
+                $boleta_num = 00000000;
+
+            }else{
+                $ultima_boleta = $cod_guia->serie_boleta_m;
+            }
+            $boleta_num++;
+            $sucursal_nr = str_pad($ultima_boleta, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($boleta_num, 8, "0", STR_PAD_LEFT);
+        }
+
+        $boleta_numero="BA".$sucursal_nr."-".$factura_nr;
+        $forma_pagos = Forma_pago::get();
+        $empresa = Empresa::first();
+        $igv = Igv::first();
+        // return $cotizacion;
+        return view('transaccion.venta.cotizacion.manual.boletear', compact('cotizacion','cotizacion_registros','empresa','boleta_numero','forma_pagos','igv'));
+    }
+    public function boletear_store(Request $request){
+        // return $request;
+        $id  = $request->get('id_cotizador');
+        $cotizacion = CotizacionManual::where('id', $id)->first();
+        $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+
+        $cod_guia = Codigo_guia_almacen::where('almacen_id', $cotizacion->almacen_id)->first();
+        $boleta_cod_bol = $cod_guia->cod_boleta_m;
+        if(is_numeric($boleta_cod_bol)){
+            $boleta_cod_bol++;
+            $sucursal_nr = str_pad($cod_guia->serie_boleta_m, 2, "0", STR_PAD_LEFT);
+            $boleta_nr = str_pad($boleta_cod_bol, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+            // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_boleta=Boleta_m::where('almacen_id',$cotizacion->almacen_id)->latest()->first();
+            $boleta_num=$ultima_boleta->codigo_boleta;
+            $boleta_num_string_porcion= explode("-", $boleta_num);
+            $boleta_num_string=$boleta_num_string_porcion[1];
+            $boleta_num=(int)$boleta_num_string;
+
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_boleta_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($boleta_num == 99999999){
+                
+                $ultima_boleta = $almacen_codigo->serie_boleta_m+1;
+                $almacen_save_last = Codigo_guia_almacen::find($cotizacion->almacen_id);
+                $almacen_save_last->serie_boleta_m = $almacen_codigo->serie_boleta_m+1;
+                $almacen_save_last->save();
+                $boleta_num = 00000000;
+            }else{
+                $ultima_boleta = $cod_guia->serie_boleta_m;
+            }
+            $boleta_num++;
+            $sucursal_nr = str_pad($ultima_boleta, 2, "0", STR_PAD_LEFT);
+            $boleta_nr=str_pad($boleta_num, 8, "0", STR_PAD_LEFT);
+        }
+        $boleta_numero="BA".$sucursal_nr."-".$boleta_nr;
+        // obtención de forma de pago
+        $forma_pago_id=$request->get('forma_pago');
+        if($forma_pago_id == 1){
+            $val = $request->get('fecha_vencimiento');
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }else{
+            $fecha_pago_forma = $request->input('fecha_pago');
+            $contador_for_1 = count($fecha_pago_forma);
+            for($c = 0; $c<$contador_for_1;$c++ ){
+                $val = $fecha_pago_forma[$c];
+            }
+            $nuevafechas = date('d-m-Y', strtotime(($val)));
+        }
+
+        $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
+        if(!$cambio){
+            return "error por no hacer el cambio diario";
+        }
+        $boleta = new Boleta_m; 
+        $boleta->codigo_boleta = $boleta_numero;
+        $boleta->cotizador_id=$cotizacion->id;
+        $boleta->almacen_id = $cotizacion->almacen_id;
+        $boleta->cliente_id = $cotizacion->cliente_id;
+        $boleta->orden_compra = $request->get('orden_compra');
+        $boleta->guia_remision = $request->get('guia_remision');
+        $boleta->moneda_id = $cotizacion->moneda_id;
+        $boleta->forma_pago_id = $cotizacion->forma_pago_id;
+        $boleta->fecha_emision = $request->get('fecha_emision');
+        $boleta->fecha_vencimiento = $nuevafechas;
+        $boleta->cambio = $cambio->paralelo;
+        $boleta->observacion = $request->get('observacion');
+        $boleta->user_id =auth()->user()->id;
+        $boleta->estado='0';
+        $boleta->tipo_operacion_id= $cotizacion->tipo_operacion_id;
+        $boleta->tipo_documento_id = $cotizacion->tipo_documento_id;
+        $boleta->save();
+        // modificación para que se cierre el codigo en almacen
+        $boleta_primera=Codigo_guia_almacen::where('id', $cotizacion->almacen_id)->first();
+        if(is_numeric($boleta_primera->cod_boleta_m)){
+            $boleta_primera->cod_boleta_m='NN';
+            $boleta_primera->save();
+        }
+ 
+         //Registro de forma de pago
+        if($boleta->forma_pago_id == 2){
+
+            $fecha_pago = $request->input('fecha_pago');
+            $contador_for = count($fecha_pago);
+            $monto_pago = $request->input('monto_pago');
+                    // foreach($contador_for as $cuotas => $index ){
+            for($c = 0; $c<$contador_for;$c++ ){
+                $cuota_cred = new Cuotas_credito;
+                $cuota_cred->boleta_m_id = $boleta->id;
+                $cuota_cred->numero_cuota = $c+1;
+                $cuota_cred->monto = $monto_pago[$c];
+                $cuota_cred->fecha_pago = $fecha_pago[$c];
+                $cuota_cred->save();
+            }
+        }
+
+        //GUARDADO DE REGISTROS
+        foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
+            $producto = Producto::where('id',$cotizacion_registros2->producto_id)->first();
+            
+            if(isset($producto->id)){
+                $boleta_registro = new Boleta_registros_m;
+                $boleta_registro->boleta_m_id = $boleta->id;
+                $boleta_registro->producto_id = $cotizacion_registros2->producto_id;
+                $boleta_registro->descripcion_item = $request->get('descripcion_item')[$index_val];
+                $boleta_registro->numero_serie = $request->get('numero_serie')[$index_val];
+                $boleta_registro->cantidad = $cotizacion_registros2->cantidad;
+                $boleta_registro->precio = $cotizacion_registros2->precio;
+                $boleta_registro->save();
+
+                $boleta_2=Boleta_m::find($boleta->id);
+                if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                    $boleta_2->op_gravada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                }
+                if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                    $boleta_2->op_exonerada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                }
+                if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                    $boleta_2->op_inafecta += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                }
+                $boleta_2->save();
+            }else{
+                $servicio=Servicios::where('id',$cotizacion_registros2->servicio_id)->where('estado_anular',0)->first();
+                $boleta_registro = new Boleta_registros_m;
+                $boleta_registro->boleta_m_id = $boleta->id;
+                $boleta_registro->servicio_id = $cotizacion_registros2->servicio_id;
+                $boleta_registro->descripcion_item = $request->get('descripcion_item')[$index_val];
+                $boleta_registro->numero_serie = $request->get('numero_serie')[$index_val];
+                $boleta_registro->cantidad = $cotizacion_registros2->cantidad;
+                $boleta_registro->precio = $cotizacion_registros2->precio;
+                $boleta_registro->save();
+
+                $boleta_2=Boleta_m::find($boleta->id);
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                    $boleta_2->op_gravada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                }
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                    $boleta_2->op_exonerada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                }
+                if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                    $boleta_2->op_inafecta += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                }
+                $boleta_2->save();
+            }
+        }
+        return redirect()->route('boleta_manual.show',$boleta->id);
     }
     /**
      * Remove the specified resource from storage.
