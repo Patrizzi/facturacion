@@ -1031,6 +1031,11 @@ class CotizacionManualController extends Controller
             }
         }
 
+        //CAMBIAR EL ESTADO DE LA COTIZACION 
+        $cotizacion=CotizacionManual::where('id',$cotizacion->id)->first();
+        $cotizacion->estado=1;
+        $cotizacion->save();
+        
         //GUARDADO DE REGISTROS
         foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
             $producto = Producto::where('id',$cotizacion_registros2->producto_id)->first();

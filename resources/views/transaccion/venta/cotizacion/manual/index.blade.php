@@ -43,6 +43,7 @@
                                     <th>Fecha </th>
                                     <th>Importe T.</th>
                                     <th>Ver</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
 
@@ -62,7 +63,13 @@
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                     </td>
-                                    {{-- Envio a Sunat --}}
+                                    <td>
+                                        @if($cotizaciones->estado =='0')
+                                            <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
+                                        @else
+                                            <button type="button" class="btn btn-w-m btn-default">Procesado</button>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
