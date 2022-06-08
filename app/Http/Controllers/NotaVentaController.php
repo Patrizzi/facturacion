@@ -30,7 +30,7 @@ class NotaVentaController extends Controller
     {
 
         $nota_venta=NotaVenta::all();
-        
+        $totales = [];
         foreach($nota_venta as $index =>  $nota_ventas){    
             $total = 0;
             $suma = 0;
