@@ -369,9 +369,11 @@
                             </div>
                         `;
                     }
+                    revision(value_check, response);
                     $('#msg_c_bol').append( data );
                     repetir++;
                     submit_factura_click(repetir, maximo);
+                    
                 }    
             });
         }else{
@@ -396,7 +398,23 @@
     $('#cerrar_factura').on('click', function(){
         location.reload();
     });
+    function revision(codigo, msg){
+        $.ajax({
+                type: "post",
+                url: "{{ route('facturacion_electronica.validacion_sunat') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'tipo': 'factura',
+                    'codigo_fac': codigo,
+                    'msg': msg,
+                },
+                success: function (response) {
+                    console.log(response);
+                }    
+            });
+    }
     //
+
     //FUNCIONES PARA FACTURA MANUAL
     function select_all_fact_man() {
         $('input[class=case_m]:checkbox').each(function () {

@@ -113,6 +113,7 @@ Route::group(
 		//factura
 		Route::post('/facturacion_electronica_factura','FacturacionElectronicaController@factura')->name('facturacion_electronica.factura_sunat');
 		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
+		Route::post('/facturacion_electronica/validacion','FacturacionElectronicaController@validacion_sunat')->name('facturacion_electronica.validacion_sunat');
 		//factura manual
 		Route::post('/facturacion_electronica_factura_m','FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
 		Route::post('/facturacion_electronica_factura_m/send_all','FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');

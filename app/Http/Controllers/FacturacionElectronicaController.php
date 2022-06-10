@@ -161,14 +161,51 @@ class FacturacionElectronicaController extends Controller
         //lectura CDR
         $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
         
+        // if(gettype($result) == "object"){
+        //     $retorno = $msg;
+        // }else{
+        //     $retorno = $msg;
+        // }
         //cambio de factura electronica - en caso sea todo exitoso
-        $factura->f_electronica=1;
-        $factura->save();
-
+        // $factura->f_electronica=1;
+        // $factura->save();
+        //
+        // $array = explode(" ",$msg);
         return $msg;
         
     }
-   
+    public function validacion_sunat(Request $request){
+        
+        $tipo = $request->tipo;
+        $msg_r = $request->msg;
+
+        // $factura = Facturacion::where('codigo_fac'.$request->codigo_fac)->first();
+        //BUSCA EL CODIGO ERROR
+        $explod = explode(" ",$msg_r);
+        $n_error = substr($explod[2], 0, 4) ;
+        
+        $explod = explode(" ",$msg_r);
+        $n_acept = substr($explod[1], 0, 8);
+        // return $n_acept;
+        // return $explod;
+        if(is_numeric($n_error) ){
+            if($n_error > 1999){
+                return "factura para volver a enviar ";
+                git
+            }elseif($n_error  > 2000 && $n_error <  3999 ){
+                return "error (1)";
+            }else{
+                
+            }
+        }elseif($n_acept == "ACEPTADA"){
+            
+            // $factura->f_electronica = 1;
+            // $factur->save();
+            return "Esta guardado";
+        }else {
+            return "Error no identificado en la factura";
+        }
+    }
     public function facturacion_m_e(Request $request){
 
         // Obtención de facturación y facturacion registro
