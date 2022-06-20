@@ -68,9 +68,14 @@
                                     {{-- Envio a Sunat --}}
                                     <td style="text-align:center;">
                                         @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
-                                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                        <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>Aceptada</span>
+                                        @elseif($facturacions->f_electronica==2)
+                                            <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="Anulada"><i class="fa fa-times-circle"></i></button>
+                                            <span hidden>Anulada</span>
                                         @else
-                                        <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
+                                            <button class="btn btn-info btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="En Espera"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>En Espera</span>
                                         @endif
                                     </td>
                                 </tr>

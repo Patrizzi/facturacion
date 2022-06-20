@@ -44,7 +44,13 @@
 </table>
 
 <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
+    @if($facturacion->f_electronica == 2)
+        <div id="watermark">
+            <p>Anulado</p>
+        </div>    
+    @else
 
+    @endif
     <table style="width: 100%;border-collapse:separate;margin-top: -20px">
         <tr >
             <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
@@ -208,5 +214,27 @@
         background-color: transparent;
         border-top-width: 0px;
 
+    }
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+        font-weight: bolder;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 35%;
+        right: 35%;
+        z-index: 0;
+    }
+    .form-control {
+        background-color: transparent !important;
     }
 </style>

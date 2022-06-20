@@ -12,6 +12,10 @@
                     <a class="alert-link" href="#">{{ session('successMsg') }}</a>
                 </div>
                 @endif
+                {{-- MENSAJE DEL AJAX PARA LAS FACTURAS INDIVIDUALES --}}
+                <div id="msg_individual" class="">
+
+                </div>
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
                         <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Facturas</a></li>
@@ -60,10 +64,10 @@
                                                     <td>{{$facturaciones->fecha_vencimiento }}</td>
                                                     <td>
                                                         <center>
-                                                            <form action="{{route('facturacion_electronica.factura_sunat')}}" method="POST">@csrf
-                                                                <input type="hidden" name="factura_id" value="{{$facturaciones->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            {{-- <form action="{{route('facturacion_electronica.factura_elec_all')}}" method="POST">@csrf --}}
+                                                                {{-- <input type="hidden" name="codigo_fac" value="{{$facturaciones->codigo_fac}}"> --}}
+                                                                <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="factura_ind" value="{{$facturaciones->codigo_fac}}" onclick="envio_factura(this)"><i class="fa fa-cloud-upload" ></i></button>
+                                                            {{-- </form> --}}
                                                         </center>
                                                     </td>
                                                 </tr>
@@ -132,7 +136,7 @@
                         <!-- Mod3 FACTURA MANUAL-->
                         <div role="tabpanel" id="tab-3" class="tab-pane">
                             <div class="panel-body">
-                                <div class="table-responsive">
+                                <div class="table-responsive" id="ibox2">
                                     <div class="ibox-content">
                                         <div class="sk-spinner sk-spinner-double-bounce">
                                             <div class="sk-double-bounce1"></div>
@@ -167,10 +171,11 @@
                                                     <td>{{$facturaciones_m->fecha_vencimiento }}</td>
                                                     <td>
                                                         <center>
-                                                        <form action="{{route('facturacion_electronica.facturacion_m_e')}}" method="POST" enctype="multipart/form-data">@csrf
+                                                        {{-- <form action="{{route('facturacion_electronica.facturacion_m_e')}}" method="POST" enctype="multipart/form-data">@csrf
                                                             <input type="text" style="display: none" value="{{$facturaciones_m->id}}" name="id">
-                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
+                                                            <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="factura_ind" value="{{$facturaciones_m->codigo_fac}}" onclick="envio_factura_manual(this)"><i class="fa fa-cloud-upload" ></i></button>
+                                                            {{-- </form> --}}
                                                         </center>
                                                     </td>
                                                 </tr>
@@ -319,16 +324,124 @@
 <script>
     $(document).ready(function(){
         $('.dataTables-example').DataTable({
-            pageLength: 20,
+            pageLength: 15,
             order: [[0, "desc"]],
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
+            buttons: [],
+            aoColumnDefs : [ { 'bSortable' : false, 'aTargets' : [ 0 ] } ]
         });
     });
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+
+    function toggle(){
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+    }
 </script>
 <script>
     //FUNCIONES PARA FACTURA NORMAL
+        //FACTURAS INDIVIVUALES
+    function inv_close(){
+        $(document).ready(function(){
+            $("#myAlert").bind('closed.bs.alert', function(){
+                location.reload();
+            })
+        });  
+        $('[data-toggle="popover"]').popover();
+        const myTimeout = setTimeout(click, 5000);
+    }
+
+    function click(){
+        console.log("click");
+        $('[data-toggle="popover"]').popover();
+        $('#cerrar_popup').trigger('click');
+    }
+    function envio_factura(codigo){
+        // console.log(codigo.val());
+        $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+        $('.nav-link').addClass('disabled');
+        var value_check =  codigo.value;
+        console.log(value_check);
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.factura_elec_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_fac': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                revision(value_check, response, 'factura');
+                inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+    }
+
+    function envio_factura_manual(codigo){
+        // console.log(codigo.val());
+        $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+        $('.nav-link').addClass('disabled');
+        var value_check =  codigo.value;
+        console.log(value_check);
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.fac_elec_man_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_fac': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                revision(value_check, response, 'factura_manual');
+                inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+    }
+    //  FUNCION PARASELECCION MUILTIPLE 
     function select_all_fact() {
         $('input[class=case]:checkbox').each(function () {
             // console.log($('input[class=check_all]:checkbox:checked'));
@@ -341,6 +454,7 @@
             }
         });
     }
+        //Facturas masivas
     function submit_factura_click(repetir,maximo)
     {
         if ( repetir < maximo ){
@@ -355,25 +469,22 @@
                 success: function (response) {
                     var salt = response. replace(/(\r\n|\n|\r)/gm, "") 
                     var result = salt.substr(0,13);
-                    console.log(result);
+                    // console.log(result);
                     if(result  == "Codigo Error:"){
                         var data = `
                             <div class="alert alert-danger">
-                                <a class="alert-link" href="#">Error N°  `+value_check+' <br> '+response+`</a>
-                            </div>
-                        `;
+                                <a class="alert-link" href="#" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</a>
+                            </div>`;
                     }else{
                         var data = `
                             <div class="alert alert-success">
-                                <a class="alert-link" href="#">`+response+`</a>
-                            </div>
-                        `;
+                                <a class="alert-link" href="#" id="`+value_check+`">`+response+`</a>
+                            </div>`;
                     }
-                    revision(value_check, response);
+                    revision(value_check, response, 'factura');
                     $('#msg_c_bol').append( data );
                     repetir++;
                     submit_factura_click(repetir, maximo);
-                    
                 }    
             });
         }else{
@@ -393,25 +504,28 @@
             $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
             submit_factura_click(0,cant_checks);
         }
-        
     });
+
     $('#cerrar_factura').on('click', function(){
         location.reload();
     });
-    function revision(codigo, msg){
+    
+    function revision(codigo, msg, tipo){
         $.ajax({
-                type: "post",
-                url: "{{ route('facturacion_electronica.validacion_sunat') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'tipo': 'factura',
-                    'codigo_fac': codigo,
-                    'msg': msg,
-                },
-                success: function (response) {
-                    console.log(response);
-                }    
-            });
+            type: "post",
+            url: "{{ route('facturacion_electronica.validacion_sunat') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'tipo': tipo,
+                'codigo_fac': codigo,
+                'msg': msg,
+            },
+            success: function (response) {
+                // console.log(response);
+                var data2 = `<p style="margin-bottom: 0px">`+response+`</p>`
+                $(`#`+codigo+``).append( data2 );
+            }    
+        });
     }
     //
 
@@ -456,6 +570,7 @@
                             </div>
                         `;
                     }
+                    revision(value_check, response, 'factura_manual');
                     $('#msg_c_fac_m').append( data );
                     repetir++;
                     submit_factura_manual_click(repetir, maximo);
@@ -482,5 +597,8 @@
     $('#cerrar_factura_m').on('click', function(){
         location.reload();
     });
+    // Mensaje para que cierre x
 </script>
+
+
 @endsection

@@ -27,7 +27,7 @@
 
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-
+    
    <div class="row">
     <div class="col-lg-12">
         <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
@@ -47,6 +47,13 @@
         </div><br>
 
         <div class="row" align="center" style="padding-bottom: 5px">
+            @if($facturacion->f_electronica == 2)
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>    
+            @else
+
+            @endif
             <div class="col-sm-6" align="center">
                 <div class="form-control">
                     <!-- <h3> Datos Generales</h3> -->
@@ -205,6 +212,28 @@
     .ibox-tools a{color: white !important}
     .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
     .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #808080}
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+        font-weight: bolder;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 35%;
+        right: 35%;
+        z-index: 0;
+    }
+    .form-control {
+        background-color: transparent !important;
+    }
 </style>
 
 <!-- Mainly scripts -->

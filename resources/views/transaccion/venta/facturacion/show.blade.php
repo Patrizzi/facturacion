@@ -23,7 +23,6 @@
         content: "Ver";
     }
 </style>
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title" style="padding-right: 3.1%">
         <div class="row tooltip-demo">
@@ -68,8 +67,15 @@
             </div>
         </div> --}}
 
-        <div class="row">
-            <div class="col-lg-12" style="margin-top: -5px;">
+        <div class="row " >
+            <div class="col-lg-12" style="margin-top: -5px;" >
+                @if($facturacion->f_electronica == 2)
+                    <div id="watermark">
+                        <p>Anulado</p>
+                    </div>    
+                @else
+
+                @endif
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                     <div class="row">
                         @include('layout_cabecera_ventas')
@@ -239,12 +245,7 @@
 
 
 
-    <style type="text/css">
-        .ruc{border-radius: 10px; height: 150px;}
-        .form-control{border-radius: 10px;}
-        .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-
-    </style>
+    
     {{-- Modal Configuracion --}}
     <div class="modal fade" id="config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -334,7 +335,10 @@
             </div>
         </div>
         {{-- Fin de modal configuracion --}}
-        <style>
+        <style type="text/css">
+            .ruc{border-radius: 10px; height: 150px;}
+            .form-control{border-radius: 10px;}
+            .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
 
             #auto{
                 /*padding: -100px;*/
@@ -367,6 +371,28 @@
             }
             #auto:hover + #div-mostrar{
                 height: 50px;
+            }
+            #watermark {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 0;
+            }
+            #watermark p {
+                position: absolute;
+                color:   rgba(120, 120, 120, 0.31);
+                font-weight: bolder;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                font-size: 95px;
+                pointer-events: none;
+                -webkit-transform: rotate(-45deg);
+                -moz-transform: rotate(-45deg);
+                top: 45%;
+                right: 40%;
+                z-index: 0;
+            }
+            .form-control {
+                background-color: transparent !important;
             }
         </style>
 

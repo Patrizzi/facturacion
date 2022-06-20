@@ -134,12 +134,13 @@ class FacturacionElectronicaController extends Controller
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
         //cambio de factura electronica - en caso sea todo exitoso
-        $factura->f_electronica=1;
-        $factura->save();
+        // $factura->f_electronica=1;
+        // $factura->save();
 
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$msg);
     }
 
+    // * factura envio sunat 
     public function fac_elec_all(Request $request){
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
@@ -174,41 +175,11 @@ class FacturacionElectronicaController extends Controller
         return $msg;
         
     }
-    public function validacion_sunat(Request $request){
-        
-        $tipo = $request->tipo;
-        $msg_r = $request->msg;
-
-        // $factura = Facturacion::where('codigo_fac'.$request->codigo_fac)->first();
-        //BUSCA EL CODIGO ERROR
-        $explod = explode(" ",$msg_r);
-        $n_error = substr($explod[2], 0, 4) ;
-        
-        $explod = explode(" ",$msg_r);
-        $n_acept = substr($explod[1], 0, 8);
-        // return $n_acept;
-        // return $explod;
-        if(is_numeric($n_error) ){
-            if($n_error > 1999){
-                return "factura para volver a enviar ";
-                git
-            }elseif($n_error  > 2000 && $n_error <  3999 ){
-                return "error (1)";
-            }else{
-                
-            }
-        }elseif($n_acept == "ACEPTADA"){
-            
-            // $factura->f_electronica = 1;
-            // $factur->save();
-            return "Esta guardado";
-        }else {
-            return "Error no identificado en la factura";
-        }
-    }
+    
     public function facturacion_m_e(Request $request){
 
         // Obtención de facturación y facturacion registro
+
         $factura=Facturacion_m::find($request->id);
         $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$request->id)->get();
 
@@ -244,6 +215,7 @@ class FacturacionElectronicaController extends Controller
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
 
     }
+    // * factura envio sunat 
     public function fac_elec_man_all(Request $request){
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
@@ -280,7 +252,60 @@ class FacturacionElectronicaController extends Controller
         return $msg;
         
     }
+    public function validacion_sunat(Request $request){
+        
+        $tipo = $request->tipo;
+        $msg_r = $request->msg;
+        $codigo = $request->codigo_fac;
+        // $factura = Facturacion::where('codigo_fac'.$request->codigo_fac)->first();
+        //BUSCA EL CODIGO ERROR
+        $explod = explode(" ",$msg_r);
+        $n_error = substr($explod[2], 0, 4) ;
+        
+        // $explod = explode(" ",$msg_r);
+        $n_acept = substr($explod[1], 0, 8);
 
+        // $explod = explode(" ",$msg_r);
+        $xml = substr($explod[1], 0);
+        // return $xml;
+        $document = Facturacion::where('codigo_fac', $codigo)->first();
+        switch ($tipo) {
+            case 'factura':
+                $document = Facturacion::where('codigo_fac', $codigo)->first();
+                break;
+            case 'factura_manual':
+                $document = Facturacion_m::where('codigo_fac', $codigo)->first();
+                break;
+        }
+        // return $document;
+        // return $explod;
+        if(is_numeric($n_error) ){
+            if($n_error < 1999){
+                // $document->f_electronica = 2; //2 para estado anulado
+                // $document->save();
+                $retorno = "La ".$tipo." tiene un error, en caso salga error de nuevo contactar a soporte";
+            }elseif($n_error  > 2000 && $n_error <  3999 ){
+                // $document->f_electronica = 2; //2 para estado anulado
+                // $document->save();
+                $retorno =  "La ".$tipo." no ha podido ser enviada, verifique el contenido ";
+
+            }else{ //ERROR >  4000
+                $document->f_electronica = 2; //2 para estado anulado
+                $document->save();
+                $retorno =  "La ".$tipo." error en contenido de Observacion";
+            }
+        }elseif($xml == "XML"){
+            //RETORNO XML ES POR ERROR VACIO O NO VALIDO EN ALGUNA PARTE, SE PUEDE MODIFICAR Y VOLVER A ENVIAR
+            $retorno = "Intente volver a enviar la ".$tipo;
+        }elseif($n_acept == "ACEPTADA"){
+            $document->f_electronica = 1;
+            $document->save();
+            $retorno =  "Enviado correctamente";
+        }else{
+            $retorno = "Error no identificado en la ".$tipo.", no se registró, verifique en la Sunat";
+        }
+        return $retorno;
+    }
     public function boleta(Request $request)
     {
         //boletas a buscar
@@ -313,7 +338,6 @@ class FacturacionElectronicaController extends Controller
         //cambio de boleta electronica - en caso sea todo exitoso
         $boleta->b_electronica=1;
         $boleta->save();
-
         return redirect()->route('facturacion_electronica.index_boleta')->with('successMsg',$msg);
     }
     public function boleta_elec_all(Request $request){
