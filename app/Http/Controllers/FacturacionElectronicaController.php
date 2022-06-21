@@ -262,10 +262,10 @@ class FacturacionElectronicaController extends Controller
         $explod = explode(" ",$msg_r);
         $n_error = substr($explod[2], 0, 4) ;
         
-        // $explod = explode(" ",$msg_r);
+        //Estado Aceptada
         $n_acept = substr($explod[1], 0, 8);
 
-        // $explod = explode(" ",$msg_r);
+        //XML ERRORES
         $xml = substr($explod[1], 0);
         // return $xml;
         $document = Facturacion::where('codigo_fac', $codigo)->first();

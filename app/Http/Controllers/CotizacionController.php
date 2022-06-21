@@ -1892,36 +1892,51 @@ public function facturar_store(Request $request)
     $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$cotizacion->id)->get();
     // $almacen_producto_validacion=$request->get('almacen');
     
+    // foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
+    //     $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
+    //     if(isset($producto_servicio->id)){
+    //         $kardex_entrada_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->get();
+    //         $kardex_entrada_count_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->count();
+
+    //         //return $kardex_entrada;
+    //         foreach($kardex_entrada_v as $kardex_entradas_v){
+    //             $kadex_entrada_id_v[]=$kardex_entradas_v->id;
+    //         }
+    //         // return $kadex_entrada_id_v;
+    //         for($x=0;$x<$kardex_entrada_count_v;$x++){
+    //             $var [] = Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
+    //             // if(Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first()){
+    //             //     $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
+    //             // }else{
+    //             //     $nueva_v = [];
+    //             // }
+    //         }
+    //         return $var;
+    //         $comparacion_v=$nueva_v;
+    //         //buble para la cantidad
+    //         $cantidad_v=0;
+    //         foreach($comparacion_v as $comparaciones_v){
+    //             $cantidad_v=$comparaciones_v->cantidad+$cantidad_v;
+    //         }
+    //         $cantidad_entrada=$cotizacion_registros2->cantidad;
+    //         if($cantidad_v<$cantidad_entrada){
+    //             // return $cantidad_v;
+    //            // return back()->with('repite',);
+    //             return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
+    //         }
+    //      }
+    // }
+    // * COMPARARA CON STOCK ALMACEN Y RETORNAR SI NO TIENE STOCK
     foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
         $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
         if(isset($producto_servicio->id)){
-            $kardex_entrada_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->get();
-            $kardex_entrada_count_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->count();
-
-            //return $kardex_entrada;
-            foreach($kardex_entrada_v as $kardex_entradas_v){
-                $kadex_entrada_id_v[]=$kardex_entradas_v->id;
-            }
-            // return $kardex_entrada;
-            for($x=0;$x<$kardex_entrada_count_v;$x++){
-                if(Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first()){
-                    $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
-                }
-            }
-            $comparacion_v=$nueva_v;
-            //buble para la cantidad
-            $cantidad_v=0;
-            foreach($comparacion_v as $comparaciones_v){
-                $cantidad_v=$comparaciones_v->cantidad+$cantidad_v;
-            }
+            $stock_almacen = Stock_almacen::where('producto_id', $producto_servicio->id)->where('almacen_id', $cotizacion->almacen_id)->first();
             $cantidad_entrada=$cotizacion_registros2->cantidad;
-            if($cantidad_v<$cantidad_entrada){
-               // return back()->with('repite',);
-             return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
-         }
-     }
- }
-    // return $cantidad_entrada;
+            if($stock_almacen->stock < $cantidad_entrada){
+                return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');  
+            }
+        }
+    }
     //LLAMDO AL DIA ACTUAL Y CONVERSION DE SIMBOLOS
  $date_sp = Carbon::now();
  $data_g = str_replace(' ', '_',$date_sp);
@@ -2528,35 +2543,46 @@ public function boletear_store(Request $request)
     $id = $request->get('id');
     $cotizacion=Cotizacion::where('id',$id)->first();
     $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+    // foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
+    //     $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
+    //     if(isset($producto_servicio->id)){
+    //         $kardex_entrada_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->get();
+    //         $kardex_entrada_count_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->count();
+
+    //             //return $kardex_entrada;
+    //         foreach($kardex_entrada_v as $kardex_entradas_v){
+    //             $kadex_entrada_id_v[]=$kardex_entradas_v->id;
+    //         }
+    //             // return $kardex_entrada;
+    //         for($x=0;$x<$kardex_entrada_count_v;$x++){
+    //             if(Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first()){
+    //                 $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
+    //             }
+    //         }
+    //         $comparacion_v=$nueva_v;
+    //             //buble para la cantidad
+    //         $cantidad_v=0;
+    //         foreach($comparacion_v as $comparaciones_v){
+    //             $cantidad_v=$comparaciones_v->cantidad+$cantidad_v;
+    //         }
+    //         $cantidad_entrada=$cotizacion_registros2->cantidad;
+    //         if($cantidad_v<$cantidad_entrada){
+    //                // return back()->with('repite',);
+    //             return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
+    //         }
+    //     }
+    // }
+    // * COMPARARA CON STOCK ALMACEN Y RETORNAR SI NO TIENE STOCK
     foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
         $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
         if(isset($producto_servicio->id)){
-            $kardex_entrada_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->get();
-            $kardex_entrada_count_v=Kardex_entrada::where('almacen_id',$cotizacion->almacen_id)->count();
-
-                //return $kardex_entrada;
-            foreach($kardex_entrada_v as $kardex_entradas_v){
-                $kadex_entrada_id_v[]=$kardex_entradas_v->id;
-            }
-                // return $kardex_entrada;
-            for($x=0;$x<$kardex_entrada_count_v;$x++){
-                if(Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first()){
-                    $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
-                }
-            }
-            $comparacion_v=$nueva_v;
-                //buble para la cantidad
-            $cantidad_v=0;
-            foreach($comparacion_v as $comparaciones_v){
-                $cantidad_v=$comparaciones_v->cantidad+$cantidad_v;
-            }
+            $stock_almacen = Stock_almacen::where('producto_id', $producto_servicio->id)->where('almacen_id', $cotizacion->almacen_id)->first();
             $cantidad_entrada=$cotizacion_registros2->cantidad;
-            if($cantidad_v<$cantidad_entrada){
-                   // return back()->with('repite',);
-             return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
-         }
-     }
- }
+            if($stock_almacen->stock < $cantidad_entrada){
+                return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la boleta');  
+            }
+        }
+    }
         //buscador al cambio
  $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
  $tipo_cambio=TipoCambio::latest('created_at')->first();
