@@ -17,18 +17,14 @@
              <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
                 @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
-                @else
-                    
-                @endif
-
-                @if ($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
+                @elseif($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
                 @else
                 
                 @endif
             </div>
             <div class="col-sm-6" align="right">
-                <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}">
+                <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}">@csrf
                     <input type="text" name="name" maxlength="50" hidden="" value="CotizacionManual_{{$cotizacion->tipo}}"  >
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
@@ -36,16 +32,7 @@
                 <div id="auto" onclick="divAuto()">
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
                 </div>
-                <div id="div-mostrar">
-                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                         @csrf
-                         <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}"   />
-                         <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                         <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$cotizacion->id)}}?archivo=">
-                         <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
-                         <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                     </form>
-                </div>
+                
                          {{-- </a> --}}
                 {{-- @if(Auth::user()->email_creado == 0)
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#config" ><i class="fa fa-envelope fa-lg " ></i>  </button>
@@ -63,10 +50,20 @@
                     <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i class="fa fa-pencil"></i></button>
                     <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i class="fa fa-times"></i></button>
                 @else
+
                 @endif
+                <div id="div-mostrar">
+                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
+                         @csrf
+                         <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}"   />
+                         <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                         <input type="text" hidden="" name="url" value="{{route('pdf_cotizacion' ,$cotizacion->id)}}?archivo=">
+                         <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
+                         <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                     </form>
+                </div>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -381,6 +378,7 @@
         </div>
     </div> --}}
 {{-- Fin de modal configuracion --}}
+
 <style>
     #auto{
         cursor: pointer;
@@ -567,26 +565,28 @@
         })
     }
 </script>
-<script >
-    var clic = 1;
+<script>
+    
     function divAuto(){
+        var clic = 1;
        if(clic==1){
-       document.getElementById("div-mostrar").style.height = "50px";
-       clic = clic + 1;
+            document.getElementById("div-mostrar").style.height = "50px";
+            clic = clic + 1;
        } else{
-        document.getElementById("div-mostrar").style.height = "0px";
-        clic = 1;
+            document.getElementById("div-mostrar").style.height = "0px";
+            clic = 1;
        }
-    //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
-    var e = {{$h}};
-    $(document).ready(function() {
-        console.log("variable h: "+e);
-        // var a
-        for ( var a = 0; a < e ; a++) {
-            prueba_ajax(a);
-        }
-        articlesSelect2();
-    });
+    }
+        //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
+        var e = {{$h}};
+        $(document).ready(function() {
+            console.log("variable h: "+e);
+            // var a
+            for ( var a = 0; a < e ; a++) {
+                prueba_ajax(a);
+            }
+            articlesSelect2();
+        });
     function prueba_ajax(a){
         var articulo = document.getElementById(`articulo${a}`).value;
             document.getElementById(`input_prod${a}`).value = articulo;
@@ -899,7 +899,7 @@
             $('#total').val(total_tt);
 
             var subtotal = document.querySelector(`#total`).value;
-        document.getElementById("total_final").value = subtotal;
+            document.getElementById("total_final").value = subtotal;
         }else{
             limpiar_inputs();
             $(".select2_demo_3").val(null).trigger("change");
@@ -920,32 +920,6 @@
         $(`.p_inp`).val("");
         $(`.txt-limp`).val("");
         
-    }
-</script>
-<script type="text/javascript">
-    // {{-- Fotooos --}}
-    function validarExt()
-    {
-        var archivoInput = document.getElementById('archivoInput');
-        var archivoRuta = archivoInput.value;
-        var extPermitidas = /(.jpg|.png|.jfif)$/i;
-        if(!extPermitidas.exec(archivoRuta)){
-            alert('Asegurese de haber seleccionado una Imagen');
-            archivoInput.value = '';
-            return false;
-        }else{
-            //PRevio del PDF
-            if (archivoInput.files && archivoInput.files[0])
-            {
-                var visor = new FileReader();
-                visor.onload = function(e)
-                {
-                    document.getElementById('visorArchivo').innerHTML =
-                    '<img name="firma" src="'+e.target.result+'"width="390px" height="200px" />';
-                };
-                visor.readAsDataURL(archivoInput.files[0]);
-            }
-        }
     }
 </script>
 @endsection
