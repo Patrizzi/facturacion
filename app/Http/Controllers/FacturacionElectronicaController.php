@@ -308,10 +308,11 @@ class FacturacionElectronicaController extends Controller
     }
     public function boleta(Request $request)
     {
+        // return $request;
         //boletas a buscar
-        $boleta=Boleta::where('b_electronica',0)->where('id',$request->factura_id)->first();
-        $boleta_registro=Boleta_registro::where('boleta_id',$request->factura_id)->get();
-        
+        $boleta=Boleta::where('b_electronica',0)->where('id',$request->boleta_id)->first();
+        $boleta_registro=Boleta_registro::where('boleta_id',$request->boleta_id)->get();
+        // return $boleta; 
         //configuracion
         $see=config_acceso_sunat::facturacion_electronica();
 
