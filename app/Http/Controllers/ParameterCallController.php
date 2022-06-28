@@ -14,6 +14,9 @@ use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
 use CifrasEnLetras;
+use Swift_SmtpTransport;
+use Swift_Mailer;
+use Swift_TransportException;
 
 use Illuminate\Http\Request;
 
@@ -283,6 +286,29 @@ class ParameterCallController extends Controller
         }
         
         return $money;
+    }
+
+    //* Verificacion de credenciales para el usuario en correo
+    public function checkEmailCredential(Request $request){
+        // return $request;
+        $smtpAddress = $request->smtpAddress;
+        $port = $request->port;
+        $encryption = $request->encryption;
+        $yourEmail = $request->yourEmail;
+        $yourPassword = $request->yourPassword;
+
+        try{
+            $transport = (new Swift_SmtpTransport($smtpAddress, $port, $encryption)) 
+            ->setUsername($yourEmail) 
+            ->setPassword($yourPassword);
+            $mailer = new Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+        }catch(Swift_TransportException $e){
+            return 1;
+        }catch(Exception $e){
+            return 1;
+        }
+        return 0;
     }
     public function getNFactura(Request $request){
         $search = $request->n_factura;

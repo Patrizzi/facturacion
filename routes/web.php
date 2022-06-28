@@ -223,6 +223,7 @@ Route::group(
 		Route::post('parameter_call/getClients', 'ParameterCallController@getClients')->name('pa.clients');
 		Route::post('parameter_call/getArticles', 'ParameterCallController@getArticles')->name('pa.articles');
 		Route::post('parameter_call/getMoney', 'ParameterCallController@getMoney')->name('pa.money');
+		Route::post('parameter_call/checkEmailCredential', 'ParameterCallController@checkEmailCredential')->name('pa.check_email');
 		Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
 		Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
 
