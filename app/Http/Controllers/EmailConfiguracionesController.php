@@ -24,8 +24,15 @@ class EmailConfiguracionesController extends Controller
     {
         $id_usuario=auth()->user()->id;
         $user=User::where('id',$id_usuario)->first();
-        $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->get();
-        return view('mailbox.configuracion.index',compact('config_email','user'));
+        $verificacion_mail=EmailConfiguraciones::where('id_usuario',$user->id)->first();
+        if(isset($verificacion_mail)){
+            $validacion = 'MAIL';
+            $config_email = EmailConfiguraciones::where('id_usuario',$user->id)->first();
+        }else{
+            $validacion = 'DISMAIL';
+            $config_email = 'DISMAIL';
+        }
+        return view('mailbox.configuracion.index',compact('config_email','user','validacion'));
 
     }
     /**
@@ -147,6 +154,7 @@ class EmailConfiguracionesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return $request;
         $this->validate($request,[
             'email' => ['required','email','unique:email_configuraciones,email,'.$id],
         ],[

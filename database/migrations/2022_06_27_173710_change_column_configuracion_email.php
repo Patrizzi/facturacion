@@ -15,6 +15,8 @@ class ChangeColumnConfiguracionEmail extends Migration
     {
         Schema::table('email_configuraciones', function (Blueprint $table) {
             $table->string('email_backup')->nullable()->change();
+            $table->dropUnique('email_configuraciones_email_unique');
+            // $table->string('email')->dropUnique()->change();
       });
     }
 

@@ -131,9 +131,9 @@ class EmailBandejaEnviosController extends Controller
           }
         }
       }else{
-        $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup ])->setBody($mensaje, 'text/html');
+        $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup => '?????? asd' ])->setBody($mensaje, 'text/html');
       }
-      return "1";
+      // return "1";
       if($mailer->send($message)){
         $mensaje =$request->get('mensaje') ;
         $texto= strip_tags($mensaje);

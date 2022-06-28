@@ -327,7 +327,7 @@
                                 '<img name="firma_digital" src="'+e.target.result+'"width="300px" height="120px" />';
                             };
                             visor.readAsDataURL(archivoInput{{$config_emails->id}}.files[0]);
-                        }
+                        } 
                         }
                         }
                         </script>

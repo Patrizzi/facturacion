@@ -254,7 +254,7 @@ $empresa=Empresa::first(); ?>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('email.index')}}">Bandeja de Entrada</a></li>
-                        {{-- <li><a href="{{route('configuracion_email.index')}}">Configuración</a></li> --}}
+                        <li><a href="{{route('configuracion_email.index')}}">Configuración</a></li>
                         <li><a href="{{route('email.trash')}}">Papelera</a></li>
 
                     </ul>
