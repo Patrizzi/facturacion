@@ -51,9 +51,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nota de Credito</th>
+                                    <th>Nro Documento</th>
                                     <th>Documento</th>
-                                    <th>DOC</th>
-                                    <th>Tipo</th>
+                                    <th>Cliente</th>
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
                                 </tr>
@@ -64,22 +64,29 @@
                                 <tr class="gradeX">
                                     <td>{{$nota_credito->id}}</td>
                                     <td>{{$nota_credito->codigo_n_c}}</td>
-                                    <td>
-                                        @if($nota_credito->facturacion_id==NULL)
-                                            {{$nota_credito->nota_i_boleta->codigo_boleta}}
-                                        @else
-                                            {{$nota_credito->nota_i_facturacion->codigo_fac}}
-                                        @endif
-                                    </td> 
-                                    <td>
-                                        @if($nota_credito->facturacion_id==NULL)
-                                            Boleta
-                                        @else
-                                            Factura
-                                        @endif
-                                    </td>
-                                    <td>{{$nota_credito->tipo}}</td>
-                                    <td>{{$nota_credito->created_at}}</td>
+                                    @if($nota_credito->facturacion_id !=NULL)
+                                        <td>{{$nota_credito->nota_i_facturacion->codigo_fac}}</td> 
+                                        <td>Factura</td>
+                                        <td>{{$nota_credito->nota_i_facturacion->cliente->nombre}}</td>
+                                    @elseif($nota_credito->boleta_id !=NULL)
+                                        <td>{{$nota_credito->nota_i_boleta->codigo_boleta}}</td> 
+                                        <td>Boleta</td>
+                                        <td>{{$nota_credito->nota_i_boleta->cliente->nombre}}</td>
+                                    @elseif($nota_credito->boleta_m_id !=NULL)
+                                        <td>{{$nota_credito->nota_i_boleta_manual->codigo_boleta}}</td> 
+                                        <td>Boleta Manual</td>
+                                        <td>{{$nota_credito->nota_i_boleta_manual->cliente->nombre}}</td>
+                                    @else
+                                        <td>{{$nota_credito->nota_i_fac_manual->codigo_fac}}</td> 
+                                        <td>Factura Manual</td>
+                                        <td>{{$nota_credito->nota_i_fac_manual->cliente->nombre}}</td>
+                                    @endif
+                                    {{-- <td>{{$nota_credito->cliente->id}}</td> --}}
+                                    @if(isset($nota_credito->fecha_emision))
+                                        <td>{{$nota_credito->fecha_emision}}</td>
+                                    @else
+                                        <td>{{$nota_credito->created_at}}</td>
+                                    @endif
                                     <td><a href="{{route('nota-credito.show',$nota_credito->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
                                 </tr>
                                 @endforeach 
@@ -110,6 +117,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 25,
             responsive: true,
+            order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [
             { extend: 'copy'},

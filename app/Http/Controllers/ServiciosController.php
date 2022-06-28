@@ -208,8 +208,12 @@ class ServiciosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $servicio = Servicios::find($request->id_servicio);
+        $servicio->estado_anular = '1';
+        $servicio->save();
+        return back();
+        // $
     }
 }

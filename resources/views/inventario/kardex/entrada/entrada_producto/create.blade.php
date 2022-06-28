@@ -4,7 +4,7 @@
 @section('value_accion', 'Atras')
 
 @section('content')
-<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+<!-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> -->
 
 @if (session('repite'))
 <div class="alert alert-danger">
@@ -39,7 +39,7 @@
 		<div class="col-lg-12">
 			<div class="ibox">
 				<div class="ibox-content">
-					<form action="{{ route('kardex-entrada.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+					<form action="{{ route('kardex-entrada.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="kardex_submit" >
 						@csrf
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Motivos:</label>
@@ -61,12 +61,12 @@
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Factura:</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" name="factura" id="factura"  value="0">
+								<input type="text" class="form-control " name="factura" id="factura"  value="0" >
 							</div>
 
 							<label class="col-sm-2 col-form-label"> Provedor:</label>
 							<div class="col-sm-4">
-								<select class="form-control" name="provedor" required="required">
+								<select class="form-control " name="provedor" required="required">
 									@foreach($provedores as $provedor)
 									<option value="{{$provedor->empresa}}" >{{$provedor->empresa}}</option>
 									@endforeach
@@ -126,7 +126,7 @@
 							<tbody>
 								<tr>
 									<td>
-										<button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+										<button type="button" class='delete borrar e btn btn-danger' > <i class="fa fa-trash" aria-hidden="true"></i> </button>
 									</td>
 									<td>
 										<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo1" onchange="select_opt(1)">
@@ -138,16 +138,16 @@
 										<input type="hidden" value="" id="registro_opt1" name="registro_opt[]" class="registro_opt">
 									</td>
 
-									<td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control"  onkeyup="multi(0);"  required/></td>
-									<td><input type='text' id='precio' name='precio[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
-									<td><input type='text' id='total0' name='total[]' class="form-control" required/></td>
+									<td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control clean"  onkeyup="multi(0);"  required/></td>
+									<td><input type='text' id='precio' name='precio[]' class="monto0 form-control clean" onkeyup="multi(0);" required/></td>
+									<td><input type='text' id='total0' name='total[]' class="form-control clean" required/></td>
 									<span id="spTotal"></span>
 								</tr>
 							</tbody>
 						</table>
 
 						<button type="button" class='addmore btn btn-success' disabled="" > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-						<button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+						<button class="ladda-button btn btn-primary float-right" type="submit" id="boton"  ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
 					</form>
 					<tr>
 						<style type="text/css">
@@ -160,18 +160,25 @@
 </div>
 </div>
 <style type="text/css">
-.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
-.select2-container--default .select2-selection--single { border: none;}
-.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
-span.select2.select2-container.select2-container--default{
-	width: 100% !important;
-	background-color: #FFFFFF;
-	background-image: none;
-	border-radius: 1px;
-	display: block;
-	padding: 3px 12px;
-	border: 1px solid #e5e6e7;
-}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
+	.select2-container--default .select2-selection--single { border: none;}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
+	span.select2.select2-container.select2-container--default{
+		width: 100% !important;
+		background-color: #FFFFFF;
+		background-image: none;
+		border-radius: 1px;
+		display: block;
+		padding: 3px 12px;
+		border: 1px solid #e5e6e7;
+	}
+	.input_red{
+		border-color: red;
+	}
+	.input_red::before{
+		content: "El Numero de Factura ya esta en uso";
+		font-size: 11px;
+	}
 </style>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -247,7 +254,44 @@ span.select2.select2-container.select2-container--default{
 		});
 	});
 </script>
-
+ 
+<script>
+	function valid_factura(){
+		// e.preventDefault();
+		var n_factura = $('[id="factura"]').val();
+		$.ajax({
+			type: "post",
+			url: "{{ route('pa.nfactura') }}",
+			data: {
+				'_token': $('input[name=_token]').val(),
+				'n_factura': n_factura
+			},
+			success: function(msg){
+				if(msg == 1){
+					toastr.error("Error en el Registro",
+                            'N de Factura ya en uso', {
+                                timeOut: 3000
+                            });
+					$('[id="factura"]').addClass('input_red');
+					// $('[id="boton"]').prop("disabled", true);
+				}else{
+					$('[id="factura"]').removeClass('input_red');
+					$('[id="boton"]').prop("disabled", false);
+				}				
+			}
+		});
+	}
+	var  timeout;
+	$("#factura").on('keydown', () => {
+		$('[id="boton"]').prop("disabled", true);
+		clearTimeout(timeout)
+		timeout = setTimeout(() => {
+			valid_factura();
+			clearTimeout(timeout)
+		},400)
+	})
+	
+</script>
 <script>
 	function multi(a){
 		console.log(a);
@@ -270,13 +314,13 @@ span.select2.select2-container.select2-container--default{
         // alert(e);
         var fila = $(this).parents("tr");
         var input_text_opt = fila.find('input[class="registro_opt"]').val();
-        console.log(input_text_opt);
 		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
 		if (e>1) {
         	fila.closest('tr').remove();
-        	$(".borrar").prop("disabled", true);
         	$(".addmore").prop("disabled", false);
         }else{
+			$('.clean').val("");
+            $(".select2_demo_3").val(null).trigger("change");
         	$(".borrar").prop("disabled", false);
 			$(".addmore").prop("disabled", false);
         }
@@ -312,4 +356,5 @@ span.select2.select2-container.select2-container--default{
 
 	}
 </script>
+
 @endsection

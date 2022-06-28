@@ -86,7 +86,6 @@
 $(document).ready(function(){
     $('#table_cliente').DataTable({
         "serverSide":true,
-        "order": [[0, "desc"]],
         "ajax":"{{url('api/clientes')}}",
         "columns":[
             {data : 'id'},

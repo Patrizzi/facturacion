@@ -31,30 +31,18 @@
         <div class="col-lg-12">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
-                    <div class="col-sm-4 text-left" align="left">
-                        <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
-                        </address>
-                    </div>
-                    <div class="col-sm-4 text-center" style="font-size: 15px">
-                    <strong>{{$empresa->razon_social}}</strong>
-                    <br>
-                    Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
-                    <br>
-                    {{$empresa->correo}}
-                    <br>
-                    {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-                    </div>
+                    @include('layout_cabecera_ventas')
                     <div class="col-sm-4">
-                    <div class="form-control ruc" style="height: 125px">
-                        <center>
-                            <h3 style="padding-top:10px ">RUC : {{$empresa->ruc}}</h3>
-                            <h2>BOLETA ELECTRÓNICA</h2>
-                            <h5> {{$boleta->codigo_boleta}}</h5>
-                        </center>
+                        <div class="form-control ruc" style="height: 125px">
+                            <center>
+                                <h3 style="padding-top:10px ">RUC : {{$empresa->ruc}}</h3>
+                                <h2>BOLETA ELECTRÓNICA</h2>
+                                <h5> {{$boleta->codigo_boleta}}</h5>
+                            </center>
+                        </div>
                     </div>
                 </div>
-            </div><br>
+                <br>
             <div class="row" align="center" style="padding-bottom: 5px">
                 <div class="col-sm-6" align="center">
                     <div class="form-control">

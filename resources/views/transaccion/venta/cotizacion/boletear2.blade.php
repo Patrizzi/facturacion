@@ -1,6 +1,6 @@
  @extends('layout')
 
- @section('title', 'Boletear 2 Cotización')
+ @section('title', 'Boletear Cotización')
  @section('breadcrumb', 'Boletear')
  @section('breadcrumb2', 'Boletear')
  @section('href_accion', route('cotizacion.show',$cotizacion->id))
@@ -217,9 +217,10 @@
                                          <td>{{$cotizacion_registro->cantidad}}</td>
                                          <td>
 
-                                             {{$cotizacion_registro->producto->nombre}} / {{$cotizacion_registro->producto->descripcion}}
-                                             <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
-                                             <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° de Serie">
+                                            {{$cotizacion_registro->producto->nombre}}
+                                             {{-- / {{$cotizacion_registro->producto->descripcion}} --}}
+                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
+                                            <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° de Serie">
                                          </td>
                                          <div style="display: none">
                                              @if(strpos($cotizacion_registro->producto->tipo_afec_i_producto->informacion,'Gravado') !== false)
@@ -260,7 +261,12 @@
                                     <td>{{$cotizacion->moneda->simbolo}}. {{round(($comis_array),2)}}</td>
                                     <td>{{$cotizacion->moneda->simbolo}}. {{round($comis_array,2)*$cotizacion_registro->cantidad}}</td>
 
-                                    <td style="display: none">{{$sub_total=$cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta}}
+                                    <td style="display: none">
+                                        {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
+                                        {{$sub_total_gravado=($cotizacion->op_gravada)}}
+                                        S/.{{$igv_p=round($sub_total_gravado, 2)*($igv->igv_total/100)}}
+                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                     </td>
                                  </tr>
                                  {{-- @endif --}}
@@ -271,19 +277,41 @@
                      </div>
                      <div class="row">
                         <div class="col-sm-8">
-                            <!-- <h3>
-                                 <?php $v=new CifrasEnLetras() ;
-                                 $letra=($v->convertirEurosEnLetras($sub_total));
-                                 $letra_final = strstr($letra, 'soles',true);
-                                 $end_final=strstr($sub_total, '.');
-                                 ?>
-                                 {{$letra_final}} {{$end_final}}/100 {{$cotizacion->moneda->nombre }}
-                             </h3> -->
+                            <h3 >
+                                <?php $v=new CifrasEnLetras() ;
+                                $letra=($v->convertirEurosEnLetras($end));
+                                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                $end_final_point=strstr($end2, '.',false);
+                                $end_final=str_replace('.', '',$end_final_point);
+                                ?>
+                                Son: {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre}}
+                                <!-- {{-- {{$end2}} --}} -->
+                            </h3>
                         </div>
-                        <div class="col-sm-4 form-control">
+                        {{-- <div class="col-sm-4 form-control">
                             <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
                             <span style="display: block;float: right"> {{$cotizacion->moneda->simbolo}} {{round($sub_total, 2)}}</span>
                             <input type="text" name="total" hidden="hidden" value="{{number_format(round($sub_total, 2),2)}}"id="total" >
+                        </div> --}}
+                        <div class="col-sm-4 form-control" >
+                            <span style="display: block;float: left"> Subtotal:</span>
+                            <span style="display: block;float: right;"> {{$simbologia = $cotizacion->moneda->simbolo}} {{number_format(round($sub_total, 2),2)}}</span><br>
+                            <input type="text" hidden="" name="sub_total_sin_igv" value="{{number_format(round($sub_total, 2),2)}}" >
+                            <span style="display: block;float: left"> Op. Agravada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Inafecta: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Exonerada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}}</span><br>
+                            <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv">
+                            <span style="display: block;float: left"> I.G.V.: </span>
+                            <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                            <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv">
+                            <span style="display: block;float: left"> Importe Total: </span>
+                            <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format($end,2)}}</span>
+                            <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv" id="total">
+                            <input type="text" name="total" hidden="hidden" value="{{number_format(round($sub_total, 2),2)}}"id="total" >
+                            <br>
                         </div>
                      </div>
                      <input type="text" name="name" maxlength="50" hidden="" value="{{$cotizacion->cod_cotizacion}}"  >

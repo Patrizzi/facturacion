@@ -18,6 +18,13 @@ class Nota_Credito extends Model
     public function nota_i_boleta(){
         return $this->belongsTo(Boleta::class,'boleta_id');
     } 
+    
+    public function nota_i_fac_manual(){
+        return $this->belongsTo(Facturacion_m::class,'facturacion_m_id');
+    } 
+    public function nota_i_boleta_manual(){
+        return $this->belongsTo(Boleta_m::class,'boleta_m_id');
+    } 
 
     // public function nota_i_factura_boleta($estado){
     //     if($estado==0){

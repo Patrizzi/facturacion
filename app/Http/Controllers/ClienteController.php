@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Cliente;
+use App\ClienteRetenedores;
 use App\Contacto;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,9 @@ class ClienteController extends Controller
       $contactos=Contacto::all();
       foreach ($clientes as  $cliente) {
         if($cliente->empresa == null){
-            $cliente = Cliente::find($cliente->id);
-            $cliente->empresa = $cliente->nombre;
-            $cliente->save();
+          $cliente = Cliente::find($cliente->id);
+          $cliente->empresa = $cliente->nombre;
+          $cliente->save();
         }
       }
       return view('auxiliar.cliente.index',compact('clientes','contactos'));
@@ -49,13 +50,13 @@ class ClienteController extends Controller
      if(strstr($documento_identificacion,' ',true) == true){
       $doc_ruc = strstr($documento_identificacion,' ',true);
       // return "1";
-     }else{
+    }else{
       $doc_ruc = $documento_identificacion;
       // return "2";
-     }
-     $cliente_existe=Cliente::where('numero_documento',$doc_ruc)->count();
+    }
+    $cliente_existe=Cliente::where('numero_documento',$doc_ruc)->count();
 
-     if ($cliente_existe==1) {
+    if ($cliente_existe==1) {
       return redirect()->route('cliente.index')->withErrors(['Cliente ya Agregado!']);
     }else{
      $cliente= new Cliente;
@@ -104,11 +105,12 @@ class ClienteController extends Controller
 
     public function show($id)
     {
+      $cliente_rete=ClienteRetenedores::where('cliente_id',$id)->first();
       $cliente_show=Cliente::find($id);
       $contacto_show=Contacto::where('clientes_id','=',$id)->orderBy('primer_contacto','DESC')->get();
       $contacto_cantidad=Contacto::where('clientes_id',$id)->count();
       $contacto_cantidad_estado=Contacto::where('clientes_id',$id)->where('estado',0)->count();
-      return view('auxiliar.cliente.show',compact('cliente_show','contacto_show','contacto_cantidad','contacto_cantidad_estado'));
+      return view('auxiliar.cliente.show',compact('cliente_show','contacto_show','contacto_cantidad','contacto_cantidad_estado','cliente_rete'));
     }
 
     /**

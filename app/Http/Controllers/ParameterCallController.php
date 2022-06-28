@@ -11,6 +11,9 @@ use App\Stock_producto;
 use App\Stock_almacen;
 use App\Cliente;
 use App\TipoCambio;
+use App\Kardex_entrada;
+use App\helpers;
+use CifrasEnLetras;
 use Swift_SmtpTransport;
 use Swift_Mailer;
 use Swift_TransportException;
@@ -22,6 +25,7 @@ class ParameterCallController extends Controller
     // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros  
     public function description(Request $request)
     {
+        // return $request;
         //Obtención de la moneda
         $money=$request->get('moneda');
         $money_id=Moneda::where('id',$money)->first();
@@ -42,6 +46,10 @@ class ParameterCallController extends Controller
         //Obtención de los datos del articulo (producto-servicio)
         $product=Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
         $service=Servicios::where('id',$id[0])->where('codigo_servicio',$id[2])->where('codigo_original',$id[4])->first();
+
+        // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS 
+        // $product=Producto::where('codigo_producto',$id[2])->first();
+        // $service=Servicios::where('codigo_servicio',$id[2])->first();
 
         //Obtención del tipo de cambio
         $tipo_cambio=TipoCambio::latest('created_at')->first();
@@ -89,7 +97,7 @@ class ParameterCallController extends Controller
                 $identifier= 'service';
                 $utility= $utilidad_serv;
                 $price=$array2;
-                $amount=10;
+                $amount=100;
                 $average=$array_promedio_serv;
                 $description= $service->descripcion;
                 $discount=$service->descuento;
@@ -137,7 +145,7 @@ class ParameterCallController extends Controller
                 $identifier= 'service';
                 $utility= $utilidad_serv;
                 $price=$array2;
-                $amount=10;
+                $amount=100;
                 $average=$array_promedio_serv;
                 $description= $service->descripcion;
                 $discount=$service->descuento;
@@ -170,13 +178,17 @@ class ParameterCallController extends Controller
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->where(function($query) use ($search){
+                    $query->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%');
+                })->limit(5)->get();
             }
         }else if($tipo == '0'){ //Boleta
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->limit(5)->get();
             }else{
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','DNI')->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','DNI')->where(function($query) use ($search){
+                    $query->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%');
+                })->limit(5)->get();
             }
         }else{ // TODO : ESTE ELSE ES EXCLUYENTE SI ES UNA BOLETA O FACTURA PARA EL LLAMADO DE RUC O DNI
             if($search == ''){
@@ -194,7 +206,6 @@ class ParameterCallController extends Controller
                 "numero_documento"=>$employee->numero_documento 
            );
         }
-  
         return response()->json($response);
     }
 
@@ -203,6 +214,8 @@ class ParameterCallController extends Controller
     // * Llamado de la tabla artículos (PRODUCTOS - SERVICIOS)
     public function getArticles(Request $request){
         $search = $request->search;
+        $almacen = $request->almacen;
+
         if($search == ''){
             $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
@@ -212,24 +225,42 @@ class ParameterCallController extends Controller
         }
 
         //Productos a array
-        $products_array = array();
-        foreach($products as $product){
-           $products_array[] = array(
-                "id"=>$product->id,
-                "nombre"=>$product->nombre,
-                "codigo"=>$product->codigo_producto,
-                "codigo_original"=>$product->codigo_original,
-           );
+        if($almacen != 0){
+            $products_array = array();
+            foreach($products as $product){
+                $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id',$product->id)->first();
+                if($stock_almacen->stock > "0"){
+                    $products_array[] = array(
+                        "id"=>$product->id,
+                        "nombre"=>$product->nombre,
+                        "codigo"=>$product->codigo_producto,
+                        "codigo_original"=>$product->codigo_original,
+                        "tipo"=>'producto'
+                    );
+                }
+            }
+        }else{
+            $products_array = array();
+            foreach($products as $product){
+                $products_array[] = array(
+                    "id"=>$product->id,
+                    "nombre"=>$product->nombre,
+                    "codigo"=>$product->codigo_producto,
+                    "codigo_original"=>$product->codigo_original,
+                    "tipo"=>'producto'
+                );
+            }
         }
 
-        //Servicios a array
+        //Servicios a arraygit
         $services_array = array();
         foreach($services as $service){
             $services_array[] = array(
                  "id"=>$service->id,
                  "nombre"=>$service->nombre,
                  "codigo"=>$service->codigo_servicio,
-                 "codigo_original"=>$service->codigo_original
+                 "codigo_original"=>$service->codigo_original,
+                 "tipo"=>'servicio'
             );
          }
 
@@ -278,5 +309,41 @@ class ParameterCallController extends Controller
             return 1;
         }
         return 0;
+    }
+    public function getNFactura(Request $request){
+        $search = $request->n_factura;
+        
+
+        // search 0 = no existe
+        // search 1 = existe
+    
+        $n_factura = Kardex_entrada::where('factura', $search)->first();
+        if($search == "0"){
+            $var_vuelta = 0;
+        }elseif( isset($n_factura) ){
+            $var_vuelta = 1;
+        }else{
+            $var_vuelta = 0;
+        }
+            
+        return $var_vuelta;
+    }
+    
+
+    //* LLamado para convertir de numero a letras con php 
+    public function getNumberLetter(Request $request){
+        $number = $request->numeros;
+        $moneda = $request->moneda;
+        $end2=number_format(round($number, 2),2);
+        $end=round($number, 2);
+
+        $v=new CifrasEnLetras() ;
+        $letra=($v->convertirEurosEnLetras($end));
+        $letra_final = ucfirst(strstr($letra, 'soles',true));
+        $end_final_point=strstr($end2, '.', false);
+        $end_final=str_replace('.', ' ',$end_final_point);
+
+        $convertido = "Son : "."$letra_final"."con"."$end_final"."/100 ".$moneda;
+        return $convertido;
     }
 }

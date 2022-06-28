@@ -1,21 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Almacen;
+use App\Banco;
 use App\Cliente;
 use App\Empresa;
+use App\Forma_pago;
+use App\Garantia;
+use App\Moneda;
 use App\NotaVenta;
+use App\NotaVentaRegistro;
 use App\Personal;
-use App\Almacen;
 use App\Producto;
 use App\Servicios;
-use App\Banco;
-use App\Moneda;
-use App\Forma_pago;
 use App\kardex_entrada;
-use App\NotaVentaRegistro;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Storage;
 
 class NotaVentaController extends Controller
@@ -27,12 +28,26 @@ class NotaVentaController extends Controller
      */
     public function index()
     {
+
         $nota_venta=NotaVenta::all();
+        $totales = [];
+        foreach($nota_venta as $index =>  $nota_ventas){    
+            $total = 0;
+            $suma = 0;
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+            foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $suma += $total;
+            $totales[$index] = $suma;
+        }
+        
+        // return $totales;
         $almacen =Almacen::all();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen_primero =Almacen::first();
         $user_login =auth()->user();
-        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen'));
+        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen','totales'));
     }
 
     /**
@@ -51,6 +66,7 @@ class NotaVentaController extends Controller
 
 
       $clientes=Cliente::all();
+      $garantia=Garantia::where('estado',0)->get();
       $moneda=Moneda::all();
       $forma_pagos= Forma_pago::all();
       $servicios = Servicios::all();
@@ -58,7 +74,7 @@ class NotaVentaController extends Controller
       $user_login =auth()->user();
 
       $empresa=Empresa::first();
-      return view('transaccion.venta.nota_venta.create',compact('empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen'));
+      return view('transaccion.venta.nota_venta.create',compact('garantia','empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen'));
 
   }
 
@@ -70,7 +86,8 @@ class NotaVentaController extends Controller
      */
     public function store(Request $request)
     {
-            //contador de valores de articulos
+        // return $request;
+        //contador de valores de articulos
         $articulo = $request->articulo;
         $count_articulo=count($articulo);
 
@@ -81,7 +98,7 @@ class NotaVentaController extends Controller
         $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
         $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-
+        $submit = $request->get('submit');
         $nota_venta=new NotaVenta;
         $nota_venta->cod_nota_venta=$cod_nota_venta;
         $nota_venta->cliente_id=$request->cliente;
@@ -92,6 +109,9 @@ class NotaVentaController extends Controller
         $nota_venta->fecha_emision=$request->fecha_emision;
         $nota_venta->observacion=$request->observacion;
         $nota_venta->user_registrado=auth()->user()->id;
+        if($submit == 2){
+            $nota_venta->estado_vigente = 1;
+        }
         $nota_venta->save();
 
         for($i=0;$i<$count_articulo;$i++){
@@ -102,7 +122,8 @@ class NotaVentaController extends Controller
             $reg_nota_v->precio_nacional=$request->get('precio')[$i];
             $reg_nota_v->save();
         }
-
+        
+        
      return redirect()->route('nota_venta.show',$nota_venta->id);
         // return $nota_venta;
     }
@@ -115,13 +136,15 @@ class NotaVentaController extends Controller
      */
     public function show(Request $request, $id)
     {
+        $servicios = Servicios::all();
+        $productos=Producto::all();
         $empresa=Empresa::first();
         $nota_venta=NotaVenta::where('id',$id)->first();
         $nota_venta_re=NotaVentaRegistro::where('nota_venta_id',$id)->get();
         $banco=Banco::where('estado',0)->get();
         $banco_count=$banco->count();
 
-      return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
+      return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count','servicios','productos'));
 
     }
     /**
@@ -189,9 +212,59 @@ class NotaVentaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        // return $request;
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){              
+            $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
+            // REGISTROS EXISTENTES
+            $n_registros_ori = $request->get('n_registros_ori');
+            $n_r_ori_c = count($n_registros_ori);
 
+            $var =$request->get('elem_delete');
+            // return array_count_values();
+            // ELIMINAR LOS QUE ESTAN DELETE
+            if( isset( $var )){
+                $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->whereNotIn('id', $request->get('elem_delete'))->get();
+            }else{
+                $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
+            }
+            // return $nota_registros_delete;
+            for ($i=0; $i < count($nota_registros_delete) ; $i++) { 
+                NotaVentaRegistro::Destroy($nota_registros_delete[$i]->id);
+            }   
+            //nuevos registros
+            for ($h=0; $h < $n_r_ori_c ; $h++) { 
+                if($request->get('n_registros_ori')[$h] == "existente"){
+                    $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
+                    $nota_venta_upd_new->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd_new->cantidad= $request->get('cantidad')[$h];
+                    $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
+                    $nota_venta_upd_new->save();
+                }else{
+                    $nota_venta_upd =new NotaVentaRegistro;
+                    $nota_venta_upd->nota_venta_id = $nota_venta->id;
+                    $nota_venta_upd->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd->cantidad= $request->get('cantidad')[$h];
+                    $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
+                    $nota_venta_upd->save();
+                }
+            }
+            $submit=$request->get('submit');
+            if($submit == 2){
+                $nota_venta_esta_v=NotaVenta::find($nota_venta->id);
+                $nota_venta_esta_v->estado_vigente = 1;   
+                $nota_venta_esta_v->save();
+            }
+        }
+        return back();
+    }
+    public function anulacion(Request $request, $id){
+        $nota_venta = NotaVenta::find($id);
+        $nota_venta->observacion =  $request->get('observacion');
+        $nota_venta->estado = 1;
+        $nota_venta->save();
+        return back();
+    }
     /**
      * Remove the specified resource from storage.
      *

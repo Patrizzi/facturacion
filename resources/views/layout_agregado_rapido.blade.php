@@ -82,14 +82,15 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Numero de Documento *</label>
-                                                <input list="browserdoc" class="form-control m-b" name="numero_documento" id="numero_ruc_cli" required  autocomplete="off" type="number">
+                                                <input type="tel"  list="browserdoc" class="form-control m-b" name="numero_documento" id="numero_ruc_cli" required  autocomplete="off"   maxlength="11" onkeypress="return valideKey(event);">
                                                 <datalist id="browserdoc" >
                                                     <?php use  App\Cliente; ?>
                                                     <?php $clientes=Cliente::all();?>
                                                     @foreach($clientes as $cliente)
-                                                    <option id="a">{{$cliente->numero_documento}} - existente</option>
+                                                    <option id="a"  value=" " readonly>{{$cliente->numero_documento}} - existente</option>
                                                     @endforeach
                                                 </datalist>
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <label>Dirección *</label>
@@ -397,48 +398,77 @@
 <script>
     function llamado_vuelta(){
         call_wizard();
+        $('#numero_ruc_cli').attr('maxlength', 11);
     }
 </script>
 <script >
     function seleccionado(){
         var opt = $('#cliente_doc').val();
-        if(opt=="DNI" || opt == "pasaporte"){
+        if(opt=="DNI"){
                 // $('#consulta_p_input').prop('disabled', false);
-                $('#botoncito_cliente').prop('disabled', true);
-                $('#numero_ruc_cli').val('');
-                $('#direccion_cli').val('Lima');
-                $('#distrito_cli').val('Lima');
-                $('#razon_social_cli').val('');
-                // $('#consulta_s').hide();
-            }else{
-                // $('#consulta_p_input').prop('disabled', 'disabled');
-                // document.getElementById('credito_pago').style.visibility = "initial";
-                $('#botoncito_cliente').prop('disabled', false);
-                $('#numero_ruc_cli').val('');
-                $('#direccion_cli').val('Lima');
-                $('#distrito_cli').val('Lima');
-                $('#razon_social_cli').val('');
-                // $('#consulta_s').show();
-            }
+            $('#botoncito_cliente').prop('disabled', true);
+            $('#numero_ruc_cli').val('');
+            $('#numero_ruc_cli').attr('maxlength', 8);
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+            // $('#consulta_s').hide();
+        }else if( opt == "pasaporte"){
+            $('#botoncito_cliente').prop('disabled', true);
+            $('#numero_ruc_cli').val('');
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+        }else{
+            // $('#consulta_p_input').prop('disabled', 'disabled');
+            // document.getElementById('credito_pago').style.visibility = "initial";
+            $('#botoncito_cliente').prop('disabled', false);
+            $('#numero_ruc_cli').val('');
+            $('#numero_ruc_cli').attr('maxlength', 11);
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+            // $('#consulta_s').show();
         }
+    }
 
-        $("#form_cliente_modal").submit(function(event) {
-            console.log("a");
+    $("#form_cliente_modal").submit(function(event) {
+        console.log("a");
+    });
+    $(document).ready(function(){
+        $( "#numero_ruc_cli" ).change(function() {
+            var opt = $('#numero_ruc_cli').val();
+            if(opt == " "){
+                $('#numero_ruc_cli').val('');
+            }
         });
+    });
+    function valideKey(evt){   
+        // code is the decimal ASCII representation of the pressed key.
+        var code = (evt.which) ? evt.which : evt.keyCode;
+        
+        if(code==8) { // backspace.
+        return true;
+        } else if(code>=48 && code<=57) { // is a number.
+        return true;
+        } else{ // other keys.
+        return false;
+        }
+    }
     </script>
     <style>
-        .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
-            background: #23c6c8!important;
-            color: #fff;
-            cursor: default;}
-            .wizard > .steps .done a, .wizard > .steps .done a:hover, .wizard > .steps .done a:active {
-                background: #23c6c8ab!important;
-                color: #fff;}
-                .wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active {
-                    background: #23c6c8!important;
-                }
-                .wizard > .actions .disabled a, .wizard > .actions .disabled a:hover, .wizard > .actions .disabled a:active {
-                    color: #fff!important;
-                }
+    .wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
+        background: #23c6c8!important;
+        color: #fff;
+        cursor: default;}
+    .wizard > .steps .done a, .wizard > .steps .done a:hover, .wizard > .steps .done a:active {
+        background: #23c6c8ab!important;
+        color: #fff;}
+    .wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active {
+        background: #23c6c8!important;
+    }
+    .wizard > .actions .disabled a, .wizard > .actions .disabled a:hover, .wizard > .actions .disabled a:active {
+        color: #fff!important;
+    }
 
-            </style>
+    </style>

@@ -82,14 +82,15 @@
                                     <th>Código de Factura</th>
                                     <th>Cliente</th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha de Vencimiento</th>
+                                    <th>Fecha de Emision</th>
+                                    <th>Importe T.</th>
                                     <th></th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($facturacion as $facturacions)
-                                <tr class="gradeX">
+                                <tr class="gradeX tooltip-demo">
                                     <td>{{$facturacions->id}}</td>
                                     <td>{{$facturacions->codigo_fac}}</td>
                                     @if(empty($facturacions->id_cotizador)) <!-- Nombre del cliente -->
@@ -99,7 +100,9 @@
                                     <td>{{$facturacions->cotizacion->cliente->nombre}}</td>
                                     <td>{{$facturacions->cotizacion->cliente->numero_documento}}</td>
                                     @endif
-                                    <td>{{$facturacions->fecha_vencimiento }}</td>
+                                    <td>{{$facturacions->fecha_emision }}</td>
+                                    <span hidden>{{$subtotal = $facturacions->op_gravada + $facturacions->op_inafecta + $facturacions->op_exonerada }} </span>
+                                    <td>{{$facturacions->moneda->simbolo}} {{number_format(round(($subtotal+($facturacions->op_gravada*$igv->renta/100)),2),2)}}</td>
                                     <td align="center">
                                         <a href="{{route('facturacion.show',$facturacions->id)}}">
                                           <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -107,13 +110,16 @@
                                   </td>
                                   <td style="text-align:center;">
                                     @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
-                                    <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                        <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
+                                        <span hidden>Aceptada</span>
+                                    @elseif($facturacions->f_electronica==2)
+                                        <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="Anulada"><i class="fa fa-times-circle"></i></button>
+                                        <span hidden>Anulada</span>
                                     @else
-                                    <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
+                                        <button class="btn btn-warning btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="En Espera"><i class="fa fa-check-circle"></i></button>
+                                        <span hidden>En Espera</span>
                                     @endif
                                 </td>
-
-
                             </tr>
                             @endforeach
                         </tbody>

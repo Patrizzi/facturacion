@@ -52,12 +52,13 @@ class FacturacionController extends Controller
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         $facturacion=Facturacion::all();
+        $igv = Igv::first();
         $user_login =auth()->user();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
         // return $facturacion;
-        return view('transaccion.venta.facturacion.index', compact('facturacion','user_login','conteo_almacen','almacen','almacen_primero'));
+        return view('transaccion.venta.facturacion.index', compact('facturacion','user_login','conteo_almacen','almacen','almacen_primero','igv'));
     }
 
     /**

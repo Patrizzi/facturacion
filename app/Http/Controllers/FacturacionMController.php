@@ -36,7 +36,8 @@ class FacturacionMController extends Controller
     public function index()
     {
         $facturacion=Facturacion_m::all();
-        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion'));
+        $igv = Igv::first();
+        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv'));
     }
 
     /**
@@ -76,10 +77,10 @@ class FacturacionMController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
 
         // Moneda
-        $moneda=Moneda::get();
+        $moneda=Moneda::where('principal','1')->first();
 
         // Número de factura
-        $factura_numero="FA01-000001";
+        // $factura_numero="FA01-000001";
 
         // Empresa
         $empresa=Empresa::first();
@@ -89,10 +90,105 @@ class FacturacionMController extends Controller
 
         //Almacen
         $almacenes = Almacen::all();
+        //cODIGO
+        $sucursal =Almacen::where('id', '1')->first();
+            // return $sucursal;
+        $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
+        $factura_cod_fac=$cod_guia->cod_factura_m;
+        if (is_numeric($factura_cod_fac)) {
+            // expresión del numero de factura
+            $factura_cod_fac++;
+            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+                // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_factura=Facturacion_m::where('almacen_id',$sucursal->id)->latest()->first();
+            $factura_num=$ultima_factura->codigo_fac;
+            $factura_num_string_porcion= explode("-", $factura_num);
+            $factura_num_string=$factura_num_string_porcion[1];
+            $factura_num=(int)$factura_num_string;
 
-        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes'));
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($factura_num == 99999999){
+                $ultima_factura = $almacen_codigo->serie_factura_m+1;
+                $factura_num = 00000000;
+
+            }else{
+                $ultima_factura = $cod_guia->serie_factura_m;
+            }
+            $factura_num++;
+            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+        }
+
+        $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+
+        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes','sucursal','factura_numero'));
     }
 
+    public function change_almacen_tipo(Request $request){
+        // return $request;
+        $almacen = $request->get('almacen');
+        $sucursal =Almacen::where('id', $almacen)->first();
+            // return $sucursal;
+        $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
+        $cod_guia_all = Codigo_guia_almacen::where('almacen_id', '!=' ,$sucursal->id)->get();
+
+        $last_numb=Facturacion_m::where('almacen_id',$sucursal->id)->latest()->first();
+        if(!isset($last_numb) && !is_numeric($cod_guia->cod_factura_m)){
+            $almacen_igual = Codigo_guia_almacen::find($sucursal->id);
+            $almacen_igual->cod_factura_m = 0;
+            $almacen_igual->save();
+        }
+        foreach($cod_guia_all as $cod_gui){
+            $serie_fac_m = $cod_gui->serie_factura_m;
+            if($cod_guia->serie_factura_m == $serie_fac_m ){
+                // $var[] = $cod_guia->serie_factura_m+1;
+                $almacen_igual = Codigo_guia_almacen::find($sucursal->id);
+                $almacen_igual->serie_factura_m = $cod_guia->serie_factura_m+1;
+                $almacen_igual->save();
+            }else{
+                // $var[] = 0;
+            }
+        }
+
+        $factura_cod_fac=$cod_guia->cod_factura_m;
+        if (is_numeric($factura_cod_fac)) {
+            // expresión del numero de factura
+            $factura_cod_fac++;
+            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+        }else{
+                // expresión del numero de factura
+                // GENERACIÓN DE NUMERO DE FACTURA
+            $ultima_factura=Facturacion_m::where('almacen_id',$sucursal->id)->latest()->first();
+            $factura_num=$ultima_factura->codigo_fac;
+            $factura_num_string_porcion= explode("-", $factura_num);
+            $factura_num_string=$factura_num_string_porcion[1];
+            $factura_num=(int)$factura_num_string;
+
+            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
+                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
+            if($factura_num == 99999999){
+                $ultima_factura = $almacen_codigo->serie_factura_m+1;
+                // $almacen_save_last = Codigo_guia_almacen::find($sucursal->id);
+                // $almacen_save_last->serie_factura_m = $almacen_codigo->serie_factura_m+1;
+                // $almacen_save_last->save();
+                $factura_num = 00000000;
+
+            }else{
+                $ultima_factura = $cod_guia->serie_factura_m;
+            }
+            $factura_num++;
+            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
+            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+        }
+
+        $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+        return $factura_numero;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -101,6 +197,7 @@ class FacturacionMController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);
@@ -130,12 +227,12 @@ class FacturacionMController extends Controller
         
         // obtención de Cliente
         $cliente_nombre=$request->get('cliente');
-        $nombre = strstr($cliente_nombre, '-',true);
-        $cliente_buscador=Cliente::where('numero_documento',$nombre)->first();
+        // $nombre = strstr($cliente_nombre, '-',true);
+        $cliente_buscador=Cliente::where('id',$cliente_nombre)->first();
 
         // obtención de Código de factura
         // $factura_numero="F001-000001";
-        $almacen=$request->get('almacen');
+        $almacen=$request->get('almacen_id_selec');
         $sucursal =Almacen::where('id', $almacen)->first();
         
         $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
@@ -160,7 +257,7 @@ class FacturacionMController extends Controller
             if($factura_num == 99999999){
                 $ultima_factura = $almacen_codigo->serie_factura_m+1;
                 $almacen_save_last = Codigo_guia_almacen::find($sucursal->id);
-                $almacen_save_last->serie_factura = $almacen_codigo->serie_factura_m+1;
+                $almacen_save_last->serie_factura_m = $almacen_codigo->serie_factura_m+1;
                 $almacen_save_last->save();
                 $factura_num = 00000000;
     
@@ -187,14 +284,17 @@ class FacturacionMController extends Controller
         $nombre = strstr($operacion, '-',true);
         $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
 
+        //obtención de moneda
+        $moneda_get=Moneda::where('nombre',$request->moneda)->first();
+
         // Guardado de facturación manual
         $facturacion=new facturacion_m;
         $facturacion->codigo_fac=$factura_numero;
-        $facturacion->almacen_id =$request->get('almacen');
+        $facturacion->almacen_id =$request->get('almacen_id_selec');
         $facturacion->orden_compra=$request->get('orden_compra');
         $facturacion->guia_remision=$request->get('guia_r');
         $facturacion->cliente_id=$cliente_buscador->id;
-        $facturacion->moneda_id=$request->get('moneda');
+        $facturacion->moneda_id=$moneda_get->id;
         $facturacion->forma_pago_id=$request->get('forma_pago');
         $facturacion->fecha_emision=$request->get('fecha_emision');
         $facturacion->fecha_vencimiento=$nuevafechas;
@@ -361,44 +461,6 @@ class FacturacionMController extends Controller
         return $pdf->download('Facturacion - '.$archivo.'.pdf');
     }
 
-    public function facturacion_e(Request $request){
-
-        // Obtención de facturación y facturacion registro
-        $factura=Facturacion_m::find($request->id);
-        $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$request->id)->get();
-
-        if($factura->guia_remision=="0"){
-            $guia=0;
-        }else{
-            $guia=1;
-        }
-
-        $facturacion_manual=1;
-
-        foreach($factura_registro as $facturas_registros){
-            $facturas_registros->precio_unitario_comi=$facturas_registros->precio;
-        }
-
-        
-        //configuración de conexión
-        $see=config_acceso_sunat::facturacion_electronica();
-
-        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
-
-        $result=config_acceso_sunat::send($see, $invoice);
-
-        //lectura CDR
-        $mensaje=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-
-        // $mensaje="La factura fue enviada exitosamente";
-
-        //cambio de factura electronica - en caso sea todo exitoso
-        $factura->f_electronica=1;
-        $factura->save();
-
-        return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
-
-    }
 
     /**
      * Show the form for editing the specified resource.

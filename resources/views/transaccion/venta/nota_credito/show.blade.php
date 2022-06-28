@@ -4,26 +4,36 @@
 @section('breadcrumb', 'Nota Credito')
 @section('breadcrumb2', 'Nota Credito')
 @section('href_accion', route('nota-credito.index'))
-@section('value_accion', 'atras')
+@section('value_accion', 'Inicio')
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
+            <div class="ibox-title">
+                <div class="row tooltip-demo">
+                    <div class="col-sm-6">
+                        
+                    </div>
+                    <div class="col-sm-6" align="right"> 
+                        <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_credito.pdf' ,$notas_credito->id)}}">
+                            <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_credito->codigo_n_c}}"  >
+                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                        </form>
+                        <a class="btn btn-success" href="{{route('nota_credito.print',$notas_credito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                        {{-- <button class="btn btn-primary"></button> --}}
+                        {{-- <button class="btn btn-success"></button> --}}
+                    </div>
+                </div>
+            </div>
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
-                    <div class="col-sm-4 text-left" align="left">
-                        <address class="col-sm-4" align="left">
-                            <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
-                        </address>
-                    </div>
-                    <div class="col-sm-4">
-                    </div>
+                    @include('layout_cabecera_ventas')
                     <div class="col-sm-4 ">
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE CREDITsssO</h2>
+                                <h2>NOTA DE CREDITO</h2>
                                 {{$notas_credito->codigo_n_c}}
                             </center>
                         </div>
@@ -55,7 +65,7 @@
                                     @if(isset($notas_credito->nota_i_facturacion->cliente_id)){{$notas_credito->nota_i_facturacion->moneda->nombre }}
                                     @else{{$notas_credito->nota_i_facturacion->cotizacion->moneda->nombre }}
                                     @endif<br>
-                                @else
+                                @elseif($estado==1)
                                     <strong>Cliente:</strong>
                                     @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->cliente->nombre}}
                                     @else{{$notas_credito->nota_i_boleta->cotizacion->cliente->nombre}}
@@ -75,6 +85,48 @@
                                     <strong>Tipo de Moneda:</strong>
                                     @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->moneda->nombre }}
                                     @else{{$notas_credito->nota_i_boleta->cotizacion->moneda->nombre }}
+                                    @endif<br>
+                                @elseif($estado==3)
+                                    <strong>Cliente:</strong>
+                                    @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->cliente->nombre}}
+                                    @else{{$notas_credito->nota_i_boleta_manual->cotizacion->cliente->nombre}}
+                                    @endif <br>
+                                    <strong>R.U.C:</strong>
+                                    @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->cliente->numero_documento}}
+                                    @else{{$notas_credito->nota_i_boleta_manual->cotizacion->cliente->numero_documento}}
+                                    @endif <br>
+                                    <strong>Direccion:</strong>
+                                    @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->cliente->direccion}}
+                                    @else{{$notas_credito->nota_i_boleta_manual->cotizacion->cliente->direccion}}
+                                    @endif <br>
+                                    <strong>Condiciones de Pago:</strong>
+                                    @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->forma_pago->nombre }}
+                                    @else{{$notas_credito->nota_i_boleta_manual->cotizacion->forma_pago->nombre }}
+                                    @endif  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Tipo de Moneda:</strong>
+                                    @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->moneda->nombre }}
+                                    @else{{$notas_credito->nota_i_boleta_manual->cotizacion->moneda->nombre }}
+                                    @endif<br>
+                                @else
+                                    <strong>Cliente:</strong>
+                                    @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->cliente->nombre}}
+                                    @else{{$notas_credito->nota_i_fac_manual->cotizacion->cliente->nombre}}
+                                    @endif <br>
+                                    <strong>R.U.C:</strong>
+                                    @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->cliente->numero_documento}}
+                                    @else{{$notas_credito->nota_i_fac_manual->cotizacion->cliente->numero_documento}}
+                                    @endif <br>
+                                    <strong>Direccion:</strong>
+                                    @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->cliente->direccion}}
+                                    @else{{$notas_credito->nota_i_fac_manual->cotizacion->cliente->direccion}}
+                                    @endif <br>
+                                    <strong>Condiciones de Pago:</strong>
+                                    @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->forma_pago->nombre }}
+                                    @else{{$notas_credito->nota_i_fac_manual->cotizacion->forma_pago->nombre }}
+                                    @endif  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Tipo de Moneda:</strong>
+                                    @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->moneda->nombre }}
+                                    @else{{$notas_credito->nota_i_fac_manual->cotizacion->moneda->nombre }}
                                     @endif<br>
                                 @endif
                             </div>
@@ -98,15 +150,13 @@
                                         @case(03)
                                         Correcion por error en la descripcion<br>
                                         @break
-                                        @case(04)
+                                        @case(06)
                                         Devolucion total<br>
                                         @break
                                     @endswitch
                                     <strong>Tipo de sustento:</strong>
                                     {{$notas_credito->tipo}}<br>
-                                    <strong>Fecha Emision:</strong>c
-                                    {{$notas_credito->created_at}}<br>
-                                @else
+                                @elseif($estado==1)
                                     <strong>Documento:</strong>
                                     {{$notas_credito->nota_i_boleta->codigo_boleta}}<br>
                                     <strong>Tipo de operacion:</strong>
@@ -120,14 +170,58 @@
                                         @case(03)
                                         Correcion por error en la descripcion<br>
                                         @break
-                                        @case(04)
+                                        @case(06)
                                         Devolucion total<br>
                                         @break
                                     @endswitch
                                     <strong>Tipo de sustento:</strong>
                                     {{$notas_credito->tipo}}<br>
-                                    <strong>Fecha Emision:</strong>
-                                    {{$notas_credito->created_at}}<br><br>
+                                @elseif($estado==3) {{--boleta manual--}}
+                                    <strong>Documento:</strong>
+                                    {{$notas_credito->nota_i_boleta_manual->codigo_boleta}}<br>
+                                    <strong>Tipo de operacion:</strong>
+                                    @switch($notas_credito->motivo)
+                                        @case(01)
+                                        Anulacion de la operacion<br>
+                                        @break
+                                        @case(02)
+                                        Anulacion por error en el ruc<br>
+                                        @break
+                                        @case(03)
+                                        Correcion por error en la descripcion<br>
+                                        @break
+                                        @case(06)
+                                        Devolucion total<br>
+                                        @break
+                                    @endswitch
+                                    <strong>Tipo de sustento:</strong>
+                                    {{$notas_credito->tipo}}<br> 
+                                @else
+                                    <strong>Documento:</strong>
+                                    {{$notas_credito->nota_i_fac_manual->codigo_fac}}<br>
+                                    <strong>Tipo de operacion:</strong>
+                                    @switch($notas_credito->motivo)
+                                        @case(01)
+                                        Anulacion de la operacion<br>
+                                        @break
+                                        @case(02)
+                                        Anulacion por error en el ruc<br>
+                                        @break
+                                        @case(03)
+                                        Correcion por error en la descripcion<br>
+                                        @break
+                                        @case(06)
+                                        Devolucion total<br>
+                                        @break
+                                    @endswitch
+                                    <strong>Tipo de sustento:</strong>
+                                    {{$notas_credito->tipo}}<br>
+                                @endif
+                                <strong>Fecha Emision:</strong>
+                                @if(isset($notas_credito->fecha_emision))
+                                    {{$notas_credito->fecha_emision}}<br>
+                                @else
+                                {{$notas_credito->created_at}}<br>
                                 @endif
                             </div>
                         </div>
@@ -144,12 +238,12 @@
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th>ITEM</th>
-                                    <th>Codigo Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Descripción</th>
-                                    <th>Precio unitario</th>
-                                    <th>Total</th>
+                                    <th >ITEM</th>
+                                    <th style="width: 10%">Codigo Producto</th>
+                                    <th >Descripción</th>
+                                    <th style="width: 10%" >Cantidad</th>
+                                    <th style="width: 10%">Precio unitario</th>
+                                    <th style="width: 10%">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,18 +257,20 @@
                                             @else
                                                 <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
                                             @endif
-                                            <td>{{$notas_credito_registro->cantidad}}</td>
+                                            
 
                                             <td>
-                                                @if(isset($notas_credito_registro->producto_id))
+                                                {{-- @if(isset($notas_credito_registro->producto_id))
                                                     {{$notas_credito_registro->producto->nombre}} 
                                                 @else
                                                     {{$notas_credito_registro->servicio->nombre}} 
-                                                @endif
-                                                <br><strong>N/S:</strong>
-                                                {{$notas_credito_registro->numero_serie}}
+                                                @endif --}}
+                                                {{$notas_credito_registro->descripcion}} 
+                                                {{$doc_reg[$e]->descripcion_item}}
+                                                {{-- <br><strong>N/S:</strong>
+                                                {{$notas_credito_registro->numero_serie}} --}}
                                             </td>
-
+                                            <td>{{$notas_credito_registro->cantidad}}</td>
                                             <td>{{$notas_credito_registro->precio}}</td>
                                             <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
                                             <td style="display: none">
@@ -210,8 +306,12 @@
                         Son: {{$letra_final}} con {{$end_final}}/100
                         @if(isset($notas_credito->facturacion_id))
                             {{$notas_credito->nota_i_facturacion->moneda->nombre}}
-                        @else
+                        @elseif(isset($notas_credito->boleta_id))
                             {{$notas_credito->nota_i_boleta->moneda->nombre}}
+                        @elseif(isset($notas_credito->boleta_m_id))
+                            {{$notas_credito->nota_i_boleta_manual->moneda->nombre}}
+                        @else
+                            {{$notas_credito->nota_i_fac_manual->moneda->nombre}}
                         @endif
                         {{-- {{$end2}} --}}
                     </h3>
@@ -222,8 +322,12 @@
                         <span style="display: block;float: right;"> 
                             @if(isset($notas_credito->facturacion_id))
                                 {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}} 
-                            @else
+                            @elseif(isset($notas_credito->boleta_id))
                                 {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}} 
+                            @elseif(isset($notas_credito->boleta_m_id))
+                                {{$simbologia=$notas_credito->nota_i_boleta_manual->moneda->simbolo}}
+                            @else
+                                {{$simbologia=$notas_credito->nota_i_fac_manual->moneda->simbolo}} 
                             @endif 
                                 {{number_format($sub_total, 2)}}</span>
                         <br>

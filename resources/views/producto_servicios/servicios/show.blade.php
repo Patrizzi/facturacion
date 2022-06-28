@@ -38,8 +38,7 @@
                     <div class="image-imitation" style="padding:0px">
                      <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
                      <div id="visorArchivo">
-
-                       <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicios->foto}}" style="width:100%;padding: 30px;">
+                       <img @if($servicios->foto == "defecto.png" || $servicios->foto == "servicio.png" ) src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" @else src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicios->foto}}" @endif style="width:100%;padding: 30px;">
                        <input type="text" hidden="hidden" name="foto_original" value="{{$servicios->foto}}">
                      </div>
                    </div>
@@ -112,9 +111,9 @@
                   </select>
                 </div>
                 @if($servicios->moneda->id==2)
-                <input type="number" min="1" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_extranjero}}" >
+                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_extranjero}}" >
                 @else
-                <input type="number" min="1" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" >
+                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" >
                 @endif
               </div>
             </div>

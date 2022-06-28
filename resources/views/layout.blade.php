@@ -119,7 +119,7 @@ $empresa=Empresa::first(); ?>
                             <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
                             @else
                             <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
-                            <li><a href="{{route('otros.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                            <li><a href="{{route('cotizacion_manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
                             {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
                            {{--  <li>
                                 <a href="#"><span  class="nav-label">Cotizaciones</span></a>
@@ -130,12 +130,13 @@ $empresa=Empresa::first(); ?>
                                 </ul>
                             </li> --}}
                             <li><a href="{{route('boleta.index')}}">Boleta</a></li>
+                            <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>
                             <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
                             <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
                             <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>
                             <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
                             <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
-                            <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li>
+                            {{-- <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li> --}}
                             @endif
                         </ul>
                     </li>
@@ -235,6 +236,7 @@ $empresa=Empresa::first(); ?>
                         @endcan
                         {{-- @can('consulta.cantidad_precio.index') --}}
                         <li><a href="{{route('cantidad_precio.index')}}">Productos</a></li>
+                        <li><a href="{{route('cantidad_precio.index_servicio')}}">Servicios</a></li>
                         {{-- @endcan --}}
                     </ul>
                 </li>

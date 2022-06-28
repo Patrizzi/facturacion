@@ -28,45 +28,58 @@
                             <div class="panel-body">
 
                              <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover dataTables-example" >
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Codigo de Guia</th>
-                                            <th>Fecha emision</th>
-                                            <th>Fecha entrega</th>
-                                            <th>Tipo Transporte</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($guia_remisiones as $guia_remision)
-                                        <tr class="gradeX">
-                                            <td>{{$a++}}</td>
-                                            <td>{{$guia_remision->cod_guia}}</td>
-                                            <td>{{$guia_remision->fecha_emision}}</td>
-                                            <td>{{$guia_remision->fecha_entrega}}</td>
-
-                                            @if($guia_remision->tipo_transporte==0)
-                                            <td>Sin Trasporte</td>
-                                            @elseif($guia_remision->tipo_transporte==1)
-                                            <td>Trasporte Publico</td>
-                                            @else
-                                            <td>Trasporte Privado</td>
-                                            @endif
-                                            <td>
-                                                <center>
-                                                    <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
-                                                        <button type="submit" class="btn btn-w-m btn-primary">Enviar</button>
-                                                    </form>
-                                                </center>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                <div class="ibox-content">
+                                    <div class="sk-spinner sk-spinner-double-bounce">
+                                        <div class="sk-double-bounce1"></div>
+                                        <div class="sk-double-bounce2"></div>
+                                    </div>
+                                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                        <thead>
+                                            <tr>
+                                                <th><input class='check_all_boleta' type='checkbox' onclick="select_all_remision()" /></th>
+                                                <th>ID</th>
+                                                <th>Codigo de Guia</th>
+                                                <th>Fecha emision</th>
+                                                <th>Fecha entrega</th>
+                                                <th>Tipo Transporte</th>
+                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                            </tr>
+                                        </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+                                        <tbody>
+                                            @foreach($guia_remisiones as $guia_remision)
+                                            <tr class="gradeX">
+                                                <td><input type='checkbox' class='case' value="{{$guia_remision->cod_guia}}" /></td>
+                                                <td>{{$a++}}</td>
+                                                <td>{{$guia_remision->cod_guia}}</td>
+                                                <td>{{$guia_remision->fecha_emision}}</td>
+                                                <td>{{$guia_remision->fecha_entrega}}</td>
+    
+                                                @if($guia_remision->tipo_transporte==0)
+                                                <td>Sin Trasporte</td>
+                                                @elseif($guia_remision->tipo_transporte==1)
+                                                <td>Trasporte Publico</td>
+                                                @else
+                                                <td>Trasporte Privado</td>
+                                                @endif
+                                                <td>
+                                                    <center>
+                                                        <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
+                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                        </form>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfooter >
+                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                            <td align="center"><button type="button" class="btn btn-primary" id="remision_elec_all">Enviar</button></td>
+                                        </tfooter>
+                                    </table>
+                                </div>
                             </div>
 
                         </div>
@@ -156,10 +169,41 @@
     </div>
 </div>
 </div>
-
+<!-- Modal para Guia de Remision  -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="exampleModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Enviando Boletas a Sunat</h5>
+            </div>
+            <div class="modal-body">
+                <div id="msg_remision_el">
+                    {{-- Contenido del ajax --}}
+                </div>
+            </div>
+            <div class="modal-footer" style="display: none;">
+                <div class="row">
+                    <div class="col-sm-6" >
+                        *En caso de algún error al enviar la Guia de Remision, por favor comunicarse de manera inmediata.
+                    </div>
+                    <div class="col-sm-6" style="padding-right: 30px;text-align: right">
+                        <button type="button" class="btn btn-primary" id="cerrar_modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {{-- ESTILOS --}}
 <style type="text/css">
 .a{width: 200px}
+.ibox-content{
+        padding: 0px;
+        border: none;
+    }
+    .model-footer{
+        > :not(:last-child) { margin-right: .0rem; }
+    }
 </style>
 
 <!-- scripts -->
@@ -179,11 +223,77 @@
 <script>
     $(document).ready(function(){
         $('.dataTables-example').DataTable({
-            pageLength: 25,
+            pageLength: 20,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
+    });
+    function select_all_remision() {
+        $('input[class=case]:checkbox').each(function () {
+            // console.log($('input[class=check_all]:checkbox:checked'));
+            if ($('input[class=check_all_boleta]:checkbox:checked').length == 0) {
+                // console.log("a");
+                $(this).prop("checked", false);
+            } else {
+                // console.log("b");
+                $(this).prop("checked", true);
+            }
+        });
+    }
+    function submit_remision_click(repetir,maximo)
+    {
+        if ( repetir < maximo ){
+            var value_check =  $('input[class=case]:checkbox:checked')[repetir].value;
+            $.ajax({
+                type: "post",
+                url: "{{ route('facturacion_electronica.guia_remision_elec_all') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'codigo_remision': value_check,
+                },
+                success: function (response) {
+                    var salt = response. replace(/(\r\n|\n|\r)/gm, "") 
+                    var result = salt.substr(0,13);
+                    console.log(result);
+                    if(result  == "Codigo Error:"){
+                        var data = `
+                            <div class="alert alert-danger">
+                                <a class="alert-link" href="#">Error N°  `+value_check+' <br> '+response+`</a>
+                            </div>
+                        `;
+                    }else{
+                        var data = `
+                            <div class="alert alert-success">
+                                <a class="alert-link" href="#">`+response+`</a>
+                            </div>
+                        `;
+                    }
+                    $('#msg_remision_el').append( data );
+                    repetir++;
+                    submit_remision_click(repetir, maximo);
+                }    
+            });
+        }else{
+            $('.modal-footer').removeAttr( 'style' );
+        }
+    }
+    $('#remision_elec_all').on('click', function(){
+        var cant_checks =  $('input[class=case]:checkbox:checked').length;
+        console.log(cant_checks)
+        // var max_menos = cant_checks -1;
+        if(cant_checks == 0){
+            console.log("ninguno marcado");
+        }else{
+            $('#exampleModal').modal({backdrop: 'static', keyboard: false});
+            $("#exampleModal").modal("show");
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            submit_remision_click(0,cant_checks);
+        }
+        
+    });
+    $('#cerrar_modal').on('click', function(){
+        location.reload();
     });
 </script>
 @endsection
