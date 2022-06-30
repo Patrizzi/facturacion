@@ -49,12 +49,18 @@ class EmailBandejaEnviosController extends Controller
 
       // return view('email_html.email_send_layout',compact('empresa'));
       $id_usuario=auth()->user()->id;
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->get();
+      // if(count($config_email) == 0){
+      //   return view('mailbox.configuracion.index',compact('config_email','user','validacion'));
+      // }
+      
       $user=User::where('id',$id_usuario)->first();
       $clientes=Cliente::all();
       $mailbox =EmailBandejaEnvios::where('estado','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $count_mailbox =  count(EmailBandejaEnvios::where('estado','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get());
       $mailbox_file =EmailBandejaEnviosArchivos::all();
-      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->get();
-      return view('mailbox.index',compact('mailbox','user','clientes','mailbox_file','config_email'));
+      
+      return view('mailbox.index',compact('mailbox','user','clientes','mailbox_file','config_email','count_mailbox'));
     }
     /**
      * Show the form for creating a new resource.

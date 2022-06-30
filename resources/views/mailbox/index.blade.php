@@ -3,26 +3,9 @@
 @section('breadcrumb', 'Email')
 @section('breadcrumb2', 'Email')
 
-@if( $user->email_creado==0)
-    @section('data-toggle', 'modal')
-    @section('href_accion', '#configu')
-    @section('value_accion', 'Redactar')
-    @section('data-config', 'modal')
-    @section('config', '#configu')
-    @section('nombre', '')
-    @section('class', 'btn btn-primary fa fa-gear')
-
-@elseif( $user->email_creado==1)
-    @section('data-toggle', 'modal')
-    @section('href_accion', '#redactar')
-    @section('value_accion', 'Redactar')
-
-    @section('data-config', 'modal')
-    @section('config', '#edits')
-    @section('nombre', '')
-    @section('class', 'btn btn-primary fa fa-gear')
-
-@endif
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
+@section('content')
 @section('content')
 
 @if (session('error_email'))
@@ -33,7 +16,7 @@
         </a>
     </div>
 </div>
-    @endif
+@endif
 
 @if($errors->any())
 <div style="padding-top: 10px">
@@ -46,24 +29,54 @@
       </div>
  </div>
 @endif
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox ">
+				<div class="">
+					{{-- 2 Columnas --}}
+					<div class="row">
+						@include('layout_mail')
+                        <div class="col-lg-9">
+                            <div class="ibox-content" style="padding: 1em 4em">
+                                @if($count_mailbox > 0)
+                                    @foreach($mailbox as $mailboxs)
+                                    <p>{{$mailboxs->id}}</p>
+                                    @endforeach
+                                @else
+                                    <div style="width: 100%; height: 100%;">
+                                        Vacio
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {{-- Modal Configuracion --}}
-<div class="modal fade bd-example-modal-lg" id="configu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade bd-example-modal-lg" id="configu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
 
             </div>
-            <div style="padding-left: 15px;padding-right: 15px;">
+            <div style="padding-left: 15px;padding-right: 15px;"> --}}
                 {{-- ccccccccccccccccc --}}
-                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+                {{-- <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
 
                     <form action="{{route('email.configstore')}}"  enctype="multipart/form-data" method="post">
                         @csrf
                         <div class="row">
                             <fieldset style="width: 100%">
-                                <legend> Agregar Configuracion </legend>
+                                <legend> Agregar Configuracion </legend> --}}
                                 {{-- <div> --}}
-                                    <div class="panel-body" align="left">
+                                    {{-- <div class="panel-body" align="left">
                                         <div class="row">
                                             <label class="col-sm-2 col-form-label">Email:</label>
                                             <div class="col-sm-4"><input type="email" class="form-control" name="email" required="">
@@ -89,11 +102,11 @@
 
                                             <label class="col-sm-1 col-form-label">PORT:</label>
                                             <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="port" value="110 " >
-                                            </div>
+                                                <input type="text" class="form-control" name="port" value="110 " > --}}
+                                            {{-- </div> --}}
                                         {{-- </div> --}}
                                         {{-- <div class="row"> --}}
-                                            <label class="col-sm-2 col-form-label" >Encryption:</label>
+                                            {{-- <label class="col-sm-2 col-form-label" >Encryption:</label>
                                             <div class="col-sm-3">
                                                 <select class="form-control" name="encryp" >
                                                     <option value="">Ninguno</option>
@@ -127,10 +140,10 @@
                                             </div>
                                             <label class="col-sm-1 col-form-label">Firma Digital:</label>
                                             <div class="col-sm-5">
-                                                <input type="file" id="archivoInputF" name="firma_digital" onchange="return validarExtF()"  />
-                                                <span id="visorArchivoF">
+                                                <input type="file" id="archivoInputF" name="firma_correo" onchange="return validarExtF()"  />
+                                                <span id="visorArchivoF"> --}}
                                                     <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma_digital"  src="" width="300px" height="120px" />
+                                                    {{-- <img name="firma_correo"  src="" width="300px" height="120px" />
                                                 </span>
                                             </div>
 
@@ -164,12 +177,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 {{-- Fin de modal configuracion --}}
 
 
 {{-- Modal Editar Configuracion --}}
-@foreach($config_email as $config_emails)
+{{-- @foreach($config_email as $config_emails)
 <div class="modal fade" id="edits" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -179,9 +192,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div style="padding-left: 15px;padding-right: 15px;">
+            <div style="padding-left: 15px;padding-right: 15px;"> --}}
                 {{-- ccccccccccccccccc --}}
-                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+                {{-- <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
 
                     <form action="{{route('email.configupdate',$config_emails->id)}}"  enctype="multipart/form-data" method="post">
                         @csrf
@@ -217,10 +230,10 @@
                                             <label class="col-sm-1 col-form-label">PORT:</label>
                                             <div class="col-sm-2">
                                                 <input type="text" class="form-control" id="port_editar" name="port" value="{{$config_emails->port}} " >
-                                            </div>
+                                            </div> --}}
                                         {{-- </div>
                                         <div class="row"> --}}
-                                            <label class="col-sm-2 col-form-label">Encryption:</label>
+                                            {{-- <label class="col-sm-2 col-form-label">Encryption:</label>
                                             <div class="col-sm-3">
                                                 <select class="form-control" name="encryp" id="encryption_editar">
                                                     <option value="{{$config_emails->encryption}}">{{$config_emails->encryption}}</option>
@@ -233,19 +246,19 @@
                                         <div class="row">
                                             <label class="col-sm-1 col-form-label">Firma (opcional):</label>
                                             <div class="col-sm-5">
-                                                <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0 ;" id="archivoInput{{$config_emails->id}}" name="firma" onchange="return validarExt{{$config_emails->id}}()"  />
-                                                <span id="visorArchivo{{$config_emails->id}}">
+                                                <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0 ;" id="archivoInput{{$config_emails->id}}" name="firma" onchange="return validarExt{{$config_emails->id}}()"  /> --}}
+                                                {{-- <span id="visorArchivo{{$config_emails->d}}"> --}}
                                                     <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_emails->firma}}" width="300px" height="120px" />
+                                                    {{-- <img name="firma" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_emails->firma}}" width="300px" height="120px" />
                                                     <input type="text" name="firma_nombre" hidden="hidden" value="{{$config_emails->firma}}">
                                                 </span>
                                             </div>
                                             <label class="col-sm-1 col-form-label">Firma Digital</label>
                                             <div class="col-sm-5">
                                                 <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0 ;" id="archivoInputF{{$config_emails->id}}" name="firma_digital" onchange="return validarExtF{{$config_emails->id}}()"  />
-                                                <span id="visorArchivoF{{$config_emails->id}}">
+                                                <span id="visorArchivoF{{$config_emails->id}}"> --}}
                                                     <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma_digital" src="{{asset('/archivos/imagenes/firma_digital/')}}/{{$config_emails->firma_digital}}" width="300px" height="120px" />
+                                                    {{-- <img name="firma_digital" src="{{asset('/archivos/imagenes/firma_digital/')}}/{{$config_emails->firma_digital}}" width="300px" height="120px" />
                                                     <input type="text" name="firma_digital_nombre" hidden="hidden" value="{{$config_emails->firma_digitals}}">
                                                 </span>
                                             </div>
@@ -333,7 +346,7 @@
                         </script>
                         <script type="text/javascript">
                         {{-- scrpti de ver y ocultar contraseña del Foreach --}}
-                        function mostrarPassword{{$config_emails->id}}(){
+                        {{-- function mostrarPassword{{$config_emails->id}}(){
                         var cambio = document.getElementById("txtPassword{{$config_emails->id}}");
                         if(cambio.type == "password"){
                             cambio.type = "text";
@@ -351,17 +364,17 @@
         </div>
     </div>
 </div>
-@endforeach
+@endforeach --}} 
 
 {{-- Modal Editar Confg¿figuracion Fin --}}
 
 
 <!-- Modal Create Redactar  -->
-<div class="modal fade" id="redactar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="redactar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="width: 700px;margin-left: 400px;">
         <div class="modal-content" style="width: 702px;">
             <div class="modal-header" style="width: 700px;padding-left: 0px;padding-right: 0px;">
-                {{--  --}}
+            
                 <div class="col-lg-10 container animated fadeInRight" style="width: 600px;padding-left: 0px;padding-right: 0px;margin-right: 30px;margin-left: 60px;">
                     <div class="mail-box">
                         @foreach($config_email as $config_emails)
@@ -393,9 +406,9 @@
                                     <span class="btn btn-default btn-file" style="left: 20px !important;">
                                         <span class="fileinput-new">Seleccionar</span>
                                         <span class="fileinput-exists">Cambiar</span>
-                                        <input  type="file" name="archivos[]" multiple="" />
+                                        <input  type="file" name="archivos[]" multiple="" /> --}}
                                         {{-- <input type="file" name="archivo"> --}}
-                                    </span>
+                                    {{-- </span>
                                     <span class="fileinput-filename" style="padding-left: 30px"></span>
                                     <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
                                 </div>
@@ -411,14 +424,13 @@
                             </form>
                         </div>
                     </div>
-                    {{--  --}}
                     @endforeach
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- / Modal Create  -->
-
+{{-- 
 
 
 
@@ -457,11 +469,11 @@
                     <div id="tab-{{$row->id}}" class="tab-pane">
 
                         <div class="float-right">
-                            <div class="tooltip-demo">
+                            <div class="tooltip-demo"> --}}
                             {{-- <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="left" title="Plug this message"><i class="fa fa-plug"></i> Plug it</button>
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="Mark as read"><i class="fa fa-eye"></i> </button>
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark as important"><i class="fa fa-exclamation"></i> </button> --}}
-                            <form action="{{route('email.delete')}}" method="post">
+                            {{-- <form action="{{route('email.delete')}}" method="post">
                                 @csrf
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Move to trash"><i class="fa fa-trash-o"></i> </button>
                             <input type="hidden" name="id" value="{{$row->id}}" />
@@ -483,16 +495,16 @@
                        </div>
 
                    </div></h1>
-                   {{-- <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->personal->foto)" style="width: 50px" /> --}}
+                   <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->personal->foto)" style="width: 50px" />
                    <h5>De: {{$row->remitente}}</h5>
-                   <hr>
-                   {!!$row->mensaje!!}
+                   <hr> --}}
+                   {{-- {!!$row->mensaje!!} --}}
                    {{-- <p class="small"> --}}
                     {{-- Firma --}}
                     {{-- <strong>Best regards, Anthony Smith </strong>
                 </p> --}}
 
-                <div class="m-t-lg">
+                {{-- <div class="m-t-lg">
                     <p>
                         <span><i class="fa fa-paperclip"></i> Archivos </span>
                         </p>
@@ -503,14 +515,14 @@
                                     <div class="file-box" style="width: 170px">
                                         <div class="file" style="width: 150px;margin: 0px 0px 0px 0px">
                                             {{-- {{storage_path('app/public/'.$mailbox_files->archivo)}} --}}
-                                            <a href="{{asset('/archivos/'.$mailbox_files->fecha_hora.$mailbox_files->archivo)}}"
-                                            download="{{$mailbox_files->archivo}}" >
+                                            {{-- <a href="{{asset('/archivos/'.$mailbox_files->fecha_hora.$mailbox_files->archivo)}}"
+                                            download="{{$mailbox_files->archivo}}" > --}}
                                             {{-- <a href="{{route('descarga')}}" target="_blank"> --}}
                                                 {{-- <span class="corner"></span> --}}
                                                 {{-- <div class="icon">
                                                     <p><i class="fa fa-file"></i></p>
                                                 </div> --}}
-                                                <div class="file-name" style="background-color: white">
+                                                {{-- <div class="file-name" style="background-color: white">
                                                     <center>
                                                         <i class="fa fa-file" style="font-size:  60px"></i>
                                                     </center>
@@ -524,8 +536,8 @@
                                         </div>
                                     </div>
                                     @endif
-                                @endif
-                            @endforeach
+                                @endif --}}
+                            {{-- @endforeach --}} 
 
                            {{--  @foreach($mailbox_file as $mailbox_files)
                                 @if($mailbox_files->id_bandeja_envios ==  $row->id)
@@ -550,7 +562,7 @@
                                     @endif
                                 @endif
                             @endforeach --}}
-                            <div class="clearfix"></div>
+                            {{-- <div class="clearfix"></div>
                         </div>
                     </div>
 
@@ -561,13 +573,13 @@
         </div>
 
     </div>
-</div>
+</div> --}}
 
-</div>
-<div id="loaderGif"></div>
+{{-- </div> --}}
+{{-- <div id="loaderGif"></div> --}}
 <!-- Mainly scripts -->
-</br>
-<style>
+{{-- </br> --}}
+{{-- <style>
     #actualizar{
         height: 33px; padding-top: 10px;
     }
@@ -633,7 +645,7 @@ span.fileinput-filename{
         pointer-events: none; 
         cursor: default; 
     }  */
-</style>
+</style> --}}
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>

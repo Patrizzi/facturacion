@@ -52,54 +52,50 @@ class EmailConfiguracionesController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'email' => ['required','email','unique:email_configuraciones,email'],
-        ],[
-            'email.unique' => 'El correo ya existe',
-        ]);
+        return $request;
 
         $correo = $request->get('email');
-        // firna para outlook
-        if($request->hasfile('firma')){
-            $image1 =$request->file('firma');
+
+        //* firma para outlook
+        if($request->hasfile('firma_correo')){
+            $image1 =$request->file('firma_digital_add');
             $name =time().$image1->getClientOriginalName();
             $destinationPath = public_path('/archivos/imagenes/firmas/');
             $image1->move($destinationPath,$name);
+            $ancho = '100';
+            $alto = '400';
         }else{
             $name="";
         }
 
-        $ancho=$request->get('ancho_firma');
-        $alto =$request->get('alto_firma');
+        $ancho = '100';
+        $alto = '400';
 
-        if( $ancho == "" || $alto  == ""){
-            $ancho = '150';
-            $alto = '100';
-
-        }
-
-        if($request->hasfile('firma_digital')){
-            $image2 =$request->file('firma_digital');
-            $firma_d=time().$image2->getClientOriginalName();
-            $destinationPath = public_path('/archivos/imagenes/firma_digital/');
-            $image2->move($destinationPath,$firma_d);
-        }else{
-            $firma_d="";
-        }
+        //* FIRMA PARA LOS DOCUMENTOS
+        // if($request->hasfile('firma_digital')){
+        //     $image2 =$request->file('firma_digital');
+        //     $firma_d=time().$image2->getClientOriginalName();
+        //     $destinationPath = public_path('/archivos/imagenes/firma_digital/');
+        //     $image2->move($destinationPath,$firma_d);
+        // }else{
+        //     $firma_d="";
+        // }
 
         $id_usuario=auth()->user()->id;
         $configmail = new EmailConfiguraciones;
         $configmail->id_usuario =auth()->user()->id;
-        $configmail->email =$correo ;
-        $configmail->password = $request->get('password') ;
-        $configmail->email_backup = 'desarrollo@jypsac.com';
-        $configmail->smtp =$request->get('smtp') ;
+        $configmail->email =$correo;
+        $configmail->password = $request->get('password');
+        $configmail->email_backup = $request->get('backup_mail');
+        $configmail->encryption= $request->get('encryp');
+        $configmail->smtp =$request->get('smtp');
         $configmail->port = $request->get('port');
+        // FIRMA PARA CORREO
         $configmail->firma = $name;
         $configmail->ancho_firma= $ancho;
         $configmail->alto_firma= $alto;
-        $configmail->encryption= $request->get('encryp') ;
-        $configmail->firma_digital = $firma_d;
+        // FIRMA PARA DOCUMENTOS
+        // $configmail->firma_digital = $firma_d;
         $configmail-> save();
 
         $user=User::find($id_usuario);
