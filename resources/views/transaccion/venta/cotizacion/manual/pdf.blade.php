@@ -145,9 +145,9 @@
                     <p><u>Atendido por: </u></p>
 
                     Teléfono : {{$empresa->telefono}}<br>
-                    Celular : {{auth()->user()->celular}}<br>
-                    Email : {{auth()->user()->email_user}}<br>
-                    Web : {{$empresa->pagina_web}} <br>
+                    Celular : {{$cotizacion_m->user_personal->celular }}<br>
+                    Email : {{$cotizacion_m->user_personal->email_user}}<br>
+                    Web : {{$empresa->pagina_web}} <>
                 </td>
                 <td style="border: none">
                     <br>
@@ -161,7 +161,7 @@
                         <br>
                     @endif
                     <hr style="width:250px">
-                    <center>{{auth()->user()->nombre}}</center>
+                    <center>{{$cotizacion_m->user_personal->nombre}}</center>
                 </td>
             </tr>
         </table>
