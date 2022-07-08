@@ -6,7 +6,7 @@
 @section('atributo_1', 'hidden')
 @section('atributo_actu', 'hidden')
 @section('content')
-@section('content')
+{{-- @section('content') --}}
 
 @if (session('error_email'))
 <div style="padding-top: 10px">
@@ -39,14 +39,75 @@
 					<div class="row">
 						@include('layout_mail')
                         <div class="col-lg-9">
-                            <div class="ibox-content" style="padding: 1em 4em">
+                            <div class="ibox-content" style="padding: 1em 1em">
+                                <div class="mail-box-header ">
+                                    <h2>
+                                        Enviados ({{$count_mailbox}})
+                                    </h2>
+                                    <div class="mail-tools tooltip-demo m-t-md" align="right    ">
+                                        {{-- <div class="btn-group float-left"> --}}
+                                            <button class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Recargar" ><i class="fa fa-refresh"></i>Recargar</button>
+                                            <button class="btn btn-danger btn-sm" id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                        {{-- </div> --}}
+                                    </div>
+                                </div>
                                 @if($count_mailbox > 0)
-                                    @foreach($mailbox as $mailboxs)
-                                    <p>{{$mailboxs->id}}</p>
-                                    @endforeach
+                                    <div class="mail-box  tabs-container">
+                                        <form action="{{route('email.delete')}}" method="post">
+                                        @csrf 
+                                            <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
+                                                <thead style="display: none">
+                                                    <tr>
+                                                        <td>a</td>
+                                                        <td>cb</td>
+                                                        <td>c</td>
+                                                        <td>d</td>
+                                                        <td>r</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($mailbox as $mailboxs)
+                                                    <tr class="read" >
+                                                        <td class="check-mail" >
+                                                            <input type="checkbox" class="select_id" id="{{$mailboxs->id}}" value="{{$mailboxs->id}}" name="check_input[]">
+                                                        </td>
+                                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+                                                        <td class="mail-contact" style="width: 40%;cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'" >
+                                                            {{$mailboxs->remitente}}
+                                                        </td>
+                                                        <td class="mail-subject" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            @if(strlen($mailboxs->asunto) > 34)
+                                                                {{substr($mailboxs->asunto, 0, 35)}}...
+                                                            @else
+                                                                {{$mailboxs->asunto}}
+                                                            @endif
+                                                        </td>
+                                                        <td style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            @if( count($mailbox_file->where('id_bandeja_envios', $mailboxs->id )) > 0 )
+                                                                <i class="fa fa-paperclip"></i>
+                                                            @endif
+                                                        </td>
+                                                        <td style="width: 10%" class="text-right mail-date" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            <span hidden="hidden">{{$dias =  date('d/m/y',strtotime($mailboxs->fecha_hora))}}</span>
+                                                            <span hidden="hidden">{{$hoy =  date("d/m/y")}}</span>
+                                                            <span hidden="hidden">{{$hora =  date('H:i:s', strtotime($mailboxs->fecha_hora))}}</span>
+                                                            @if($hoy > $dias)
+                                                                {{ date('d/m/y',strtotime($mailboxs->fecha_hora))}}
+                                                            @else
+                                                               {{date('H:i:s', strtotime($mailboxs->fecha_hora) )}}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <button type="submit" style="display: none" id="submit_eliminar"></button>
+                                        </form>
+                                    </div>
+                                    <br>
                                 @else
                                     <div style="width: 100%; height: 100%;">
-                                        Vacio
+                                        No hay elementos enviados
                                     </div>
                                 @endif
                             </div>
@@ -57,7 +118,6 @@
         </div>
     </div>
 </div>
-
 
 {{-- Modal Configuracion --}}
 {{-- <div class="modal fade bd-example-modal-lg" id="configu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -646,6 +706,26 @@ span.fileinput-filename{
         cursor: default; 
     }  */
 </style> --}}
+<style>
+    .select-id{
+        display: inline-block;
+        /* *display: inline; */
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        border: none;
+        cursor: pointer;
+        /* ins { */
+        background-color: rgb(198 255 198);
+        text-decoration: none;
+    /* } */
+    }
+    .dataTables_wrapper.container-fluid.dt-bootstrap4.no-footer{
+        padding: 0px;
+    }
+</style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -665,6 +745,68 @@ span.fileinput-filename{
 <script src="{{asset('js/plugins/summernote/summernote-bs4.js')}}"></script>
 <!-- Jasny -->
 <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
+
+{{-- <link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet"> --}}
+<script>
+    $('#click_eliminar').on('click', function(){
+        // var check = ;
+        // return check;
+        if($('.select_id').is(':checked')){
+            $('#submit_eliminar').click();
+        }
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            order: [[0, "desc"]],
+            responsive: true,
+            // dom: '<"html5buttons"B>lTfgitp',
+            buttons: [],
+            bFilter: false,
+            bInfo: false,
+            bLengthChange : false,
+            aoColumnDefs : [ { 'bSortable' : false} ]
+        });
+        
+    });
+</script>
+<script>
+    function doAction(ele, param1, param2) {
+      var a = document.getElementById(param1).innerHTML;
+      var b = document.getElementById(param2).innerHTML;
+      ele.innerHTML = a + " " + b;
+  }</script>
+  <script type="text/javascript">
+    $(function() {
+      $('.summernote').summernote({
+        height: 200,
+       
+    });
+
+  });
+</script>
+
+<script>
+    function opentab(evt, cityName) {
+        console.log('a');
+    //   var i, tabcontent, tablinks;
+    //   tabcontent = document.getElementsByClassName("tab-content");
+    //   for (i = 0; i < tabcontent.length; i++) {
+    //     tabcontent[i].style.display = "none";
+    //   }
+    //   tablinks = document.getElementsByClassName("tablinks");
+    //   for (i = 0; i < tablinks.length; i++) {
+    //     tablinks[i].className = tablinks[i].className.replace(" active", "");
+    //   }
+    //   document.getElementById(cityName).style.display = "block";
+    //   evt.currentTarget.className += " active";
+    }
+    </script>
+       
 <script>
     function doAction(ele, param1, param2) {
       var a = document.getElementById(param1).innerHTML;
@@ -715,7 +857,7 @@ function mostrarPassword(){
 }
 </script>
 <script type="text/javascript">
-        {{-- Fotooos --}}
+        // {{-- Fotooos --}}
 function validarExt(){
     var archivoInput = document.getElementById('archivoInput');
     var archivoRuta = archivoInput.value;
@@ -818,11 +960,13 @@ function checkEmail(my_callback){
         return global_editar;
     })
 }
-
-
 </script>
-<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
-
-<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+<script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>
 @endsection

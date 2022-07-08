@@ -6,6 +6,7 @@ use App;
 use App\EmailConfiguraciones;
 use App\Permiso;
 use App\User;
+use App\Cliente;
 use Illuminate\Http\Request;
 use Swift_Attachment;
 use Swift_MailTransport;
@@ -32,7 +33,8 @@ class EmailConfiguracionesController extends Controller
             $validacion = 'DISMAIL';
             $config_email = 'DISMAIL';
         }
-        return view('mailbox.configuracion.index',compact('config_email','user','validacion'));
+        $clientes=Cliente::all();
+        return view('mailbox.configuracion.index',compact('config_email','user','validacion','clientes'));
 
     }
     /**
@@ -66,10 +68,11 @@ class EmailConfiguracionesController extends Controller
             $alto = '400';
         }else{
             $name="";
+            $ancho = '';
+            $alto = '';
         }
 
-        $ancho = '100';
-        $alto = '400';
+        
 
         //* FIRMA PARA LOS DOCUMENTOS
         // if($request->hasfile('firma_digital')){
@@ -150,34 +153,45 @@ class EmailConfiguracionesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $request;
-        $this->validate($request,[
-            'email' => ['required','email','unique:email_configuraciones,email,'.$id],
-        ],[
-            'email.unique' => 'El correo ya existe',
-        ]);
+        // return $request;
+        // $this->validate($request,[
+        //     'email' => ['required','email','unique:email_configuraciones,email,'.$id],
+        // ],[
+        //     'email.unique' => 'El correo ya existe',
+        // ]);
 
 
         $correo = $request->get('email');
-         if($request->hasfile('firma')){
-            $image1 =$request->file('firma');
+        if ($request->get('backup_mail') == null) {
+            $backup_mail = null;
+        }else{
+            $backup_mail = $request->get('backup_mail');
+        }
+        
+        //* firma para outlook
+        if($request->hasfile('firma_correo')){
+            $image1 =$request->file('firma_digital_add');
             $name =time().$image1->getClientOriginalName();
             $destinationPath = public_path('/archivos/imagenes/firmas/');
             $image1->move($destinationPath,$name);
+            $ancho = '100';
+            $alto = '400';
         }else{
-            $name=$request->get('firma_nombre') ;
+            $name="";
+            $ancho = '';
+            $alto = '';
         }
-        $ancho=$request->get('ancho_firma');
-        $alto =$request->get('alto_firma');
+        // $ancho=$request->get('ancho_firma');
+        // $alto =$request->get('alto_firma');
 
-        if($request->hasfile('firma_digital')){
-            $image2 =$request->file('firma_digital');
-            $firma_digital =time().$image1->getClientOriginalName();
-            $destinationPath = public_path('/archivos/imagenes/firmas_digitales/');
-            $image2->move($destinationPath,$firma_digital);
-        }else{
-            $firma_digital=$request->file('firma_digital');;
-        }
+        // if($request->hasfile('firma_digital')){
+        //     $image2 =$request->file('firma_digital');
+        //     $firma_digital =time().$image1->getClientOriginalName();
+        //     $destinationPath = public_path('/archivos/imagenes/firmas_digitales/');
+        //     $image2->move($destinationPath,$firma_digital);
+        // }else{
+        //     $firma_digital=$request->file('firma_digital');;
+        // }
 
         // }
         $configmail=EmailConfiguraciones::find($id);
@@ -185,13 +199,16 @@ class EmailConfiguracionesController extends Controller
         $configmail->password = $request->get('password') ;
         $configmail->smtp =$request->get('smtp') ;
         $configmail->port = $request->get('port');
-        $configmail->encryption= $request->get('encryp') ;
+        $configmail->encryption= $request->get('encryp');
+        $configmail->email_backup = $backup_mail;
+        // FIRMA PARA CORREO
         $configmail->firma = $name;
         $configmail->ancho_firma= $ancho;
         $configmail->alto_firma= $alto;
-        $configmail->firma_digital = $firma_digital;
+        // FIRMA PARA DOCUMENTOS
+        // $configmail->firma_digital = $firma_d;
         $configmail->save();
-        return redirect()->route('configuracion_email.index');
+        return redirect()->route('configuracion_email.index')->with('success', 'Cambios realizados correctamente');
     }
 
     /**

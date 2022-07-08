@@ -2,11 +2,108 @@
 @section('title', 'Papelera Email')
 @section('breadcrumb', 'Papelera')
 @section('breadcrumb2', 'Papelera')
-@section('data-toggle', '#')
-@section('href_accion', '#')
-@section('value_accion', '#')
+
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
+@section('content')
+@section('content')
 @section('content') 
+
        
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox ">
+				<div class="">
+					{{-- 2 Columnas --}}
+					<div class="row">
+						@include('layout_mail')
+                        <div class="col-lg-9">
+                            <div class="ibox-content" style="padding: 1em 1em">
+                                <div class="mail-box-header ">
+                                    <h2>
+                                        Eliminados ({{$count_mailbox}})
+                                    </h2>
+                                </div>
+                                @if($count_mailbox > 0)
+                                    <div class="mail-box  tabs-container">
+                                        <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
+                                            <thead style="display: none">
+                                                <tr>
+                                                    <td>a</td>
+                                                    <td>cb</td>
+                                                    <td>c</td>
+                                                    <td>d</td>
+                                                    <td>r</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($mailbox as $mailboxs)
+                                                <tr class="read">
+                                                    <td class="check-mail " >
+                                                        <input type="checkbox" class="i-checks">
+                                                    </td>
+                                                    <td class="mail-contact">
+                                                        {{-- <ul class="nav nav-tabs">
+                                                            <li> --}}
+                                                                <a class="tab-link"  href="#tab-{{$mailboxs->id}}" onclick="opentab(event,{{$mailboxs->id}})" >{{$mailboxs->remitente}}</a>
+                                                            {{-- </li>
+                                                        </ul> --}}
+                                                    </td>
+                                                    <td class="mail-subject">
+                                                        <a data-toggle="tab"  href="#tab-{{$mailboxs->id}}" >{{substr($mailboxs->asunto, 0, 25)}}...</a>
+                                                    </td>
+                                                    @if( count($mailbox_file->where('id_bandeja_envios', $mailboxs->id )) > 0 )
+                                                        <td class=""><i class="fa fa-paperclip"></i></td>
+                                                    @else
+                                                        <td class=""></td>
+                                                    @endif
+                                                    <td style="width: 10%" class="text-right mail-date">
+                                                        <span hidden="hidden">{{$dias =  date('d/m/y',strtotime($mailboxs->fecha_hora))}}</span>
+                                                        <span hidden="hidden">{{$hoy =  date("d/m/y")}}</span>
+                                                        <span hidden="hidden">{{$hora =  date('H:i:s', strtotime($mailboxs->fecha_hora))}}</span>
+                                                        @if($hoy > $dias)
+                                                            {{ date('d/m/y',strtotime($mailboxs->fecha_hora))}}
+                                                        @else
+                                                           {{date('H:i:s', strtotime($mailboxs->fecha_hora) )}}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                    <br>
+                                    {{-- TABS PARA QUE SE ABRAN LOS MAILS --}}
+                                    <div class="tab-content">
+                                        @foreach($mailbox as $row)
+                                        <div id="tab-{{$row->id}}" class="tab-pane">
+                                            <div class="panel-body">
+                                                {{$row->id}}
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    <br>
+                                @else
+                                    <div class="mail-box tabs-container">
+                                        <div class="table-mail">
+                                            <h3><center>No hay elementos eliminados</center></h3>
+                                            <br>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- 
 <div class="fh-breadcrumb">
     @if($count == 0)
     <div class="fh-column">        
@@ -39,21 +136,21 @@
                 @endforeach     
             </ul>
         </div>
-    </div>
+    </div> --}}
         
             
-    <div class="full-height">
+    {{-- <div class="full-height">
         <div class="full-height-scroll white-bg border-left">
             <div class="element-detail-box">
                 <div class="tab-content">
                     @foreach($mailbox as $row)
                     <div id="tab-{{$row->id}}" class="tab-pane">
                         <div class="float-right">
-                            <div class="tooltip-demo">
+                            <div class="tooltip-demo"> --}}
                             {{-- <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="left" title="Plug this message"><i class="fa fa-plug"></i> Plug it</button>
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="Mark as read"><i class="fa fa-eye"></i> </button>
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark as important"><i class="fa fa-exclamation"></i> </button> --}}
-                            <form action="{{route('email.destroy')}}" method="post">    
+                            {{-- <form action="{{route('email.destroy')}}" method="post">    
                                 @csrf
                                 <input type="hidden" name="id" value="{{$row->id}}" /> 
                                 <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Move to trash"><i class="fa fa-trash-o"></i> </button>
@@ -73,21 +170,21 @@
                                {{$row->asunto}}
                            </div>
 
-                        </div></h1>
+                        </div></h1> --}}
                    {{-- <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->personal->foto)" style="width: 50px" /> --}}
-                   <h5>to: {{$row->remitente}}</h5>
-                   <hr>
-                   {!!$row->mensaje!!}
-                   <p class="small">
+                   {{-- <h5>to: {{$row->remitente}}</h5>
+                   <hr> --}}
+                   {{-- {!!$row->mensaje!!}
+                   <p class="small"> --}}
                     {{-- Firma --}}
-                    <strong>Best regards, Anthony Smith </strong>
-                    </p>
+                    {{-- <strong>Best regards, Anthony Smith </strong> --}}
+                    {{-- </p>
                     <div class="m-t-lg">
-                            <span><i class="fa fa-paperclip"></i> Archivos </span>
+                            <span><i class="fa fa-paperclip"></i> Archivos </span> --}}
                                 {{-- <a href="#">Download all</a>
                                 |
                                 <a href="#">View all images</a> --}}
-                            <div class="attachment">
+                            {{-- <div class="attachment">
                                 @foreach($mailbox_file as $mailbox_files)
                                 @if($mailbox_files->id_bandeja_envios ==  $row->id)
                                 @if( isset($mailbox_files->archivo) )
@@ -144,29 +241,13 @@
         </div>
     </div>
     @endif
-</div>
+</div> --}}
 <!-- Mainly scripts -->
 
 <style>
-/*#page-wrapper{height: 500px;}*/
-.note-toolbar-wrapper{
-    height: 0% !important;
-}
-div.note-editable.card-block{
-    max-height: 2% !important;
-}
- table.table.table-bordered, td, th {
-  border: 1px solid black !important;
-} 
-div.form-group.note-form-group.note-group-select-from-files{
-    display: none !important;
-}
-div.fileinput.fileinput-exists{
-    left: 25px !important;
-}
-span.fileinput-filename{
-    left: 25px !importants;
-}
+    .dataTables_wrapper.container-fluid.dt-bootstrap4.no-footer{
+        padding: 0px;
+    }
 </style>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -188,6 +269,26 @@ span.fileinput-filename{
 <script src="{{asset('js/plugins/summernote/summernote-bs4.js')}}"></script>
 <!-- Jasny -->
 <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
+
+<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            order: [[0, "desc"]],
+            responsive: true,
+            // dom: '<"html5buttons"B>lTfgitp',
+            buttons: [],
+            bFilter: false,
+            bInfo: false,
+            bLengthChange : false,
+            aoColumnDefs : [ { 'bSortable' : false} ]
+        });
+        
+    });
+</script>
 <script>
     function doAction(ele, param1, param2) {
       var a = document.getElementById(param1).innerHTML;
@@ -203,8 +304,5 @@ span.fileinput-filename{
 
   });
 </script>
-<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
 
-<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
 @endsection

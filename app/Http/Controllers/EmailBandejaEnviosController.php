@@ -49,7 +49,7 @@ class EmailBandejaEnviosController extends Controller
 
       // return view('email_html.email_send_layout',compact('empresa'));
       $id_usuario=auth()->user()->id;
-      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->get();
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
       // if(count($config_email) == 0){
       //   return view('mailbox.configuracion.index',compact('config_email','user','validacion'));
       // }
@@ -58,7 +58,8 @@ class EmailBandejaEnviosController extends Controller
       $clientes=Cliente::all();
       $mailbox =EmailBandejaEnvios::where('estado','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
       $count_mailbox =  count(EmailBandejaEnvios::where('estado','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get());
-      $mailbox_file =EmailBandejaEnviosArchivos::all();
+      $mailbox_file =EmailBandejaEnviosArchivos::get();
+      // return $mailbox_file;
       
       return view('mailbox.index',compact('mailbox','user','clientes','mailbox_file','config_email','count_mailbox'));
     }
@@ -78,6 +79,7 @@ class EmailBandejaEnviosController extends Controller
     */
     public function store(Request $request){
 
+      // return $request;
       $date_sp = Carbon::now();
       $data_g = str_replace(' ', '_',$date_sp);
       $carbon_sp = str_replace(':','-',$data_g);
@@ -91,6 +93,7 @@ class EmailBandejaEnviosController extends Controller
       $mensaje_html = $request->get('mensaje');
 
       $correo=$correo_busqueda->email;
+      
 
       /////////ENVIO DE CORREO/////// https://myaccount.google.com/u/0/lesssecureapps?pli=1 <--- VAINA DE AUTORIZACION PARA EL GMAIL
 
@@ -99,45 +102,35 @@ class EmailBandejaEnviosController extends Controller
       $encryption = $correo_busqueda->encryption;
       $yourEmail = $correo;
       $estado = '0';
-      //$mailbackup =  ; // = $request->yourmail
       $yourPassword = $correo_busqueda->password;
       $sendto = $request->get('remitente')  ;
       $titulo = $request->get('asunto');
       $mensaje = view('email_html.email_send_layout',compact('empresa','mensaje_html','firma','alto','ancho'));
-      $bakcup = $correo_busqueda->email_backup ;
+      $correos_envios = [$sendto, $correo_busqueda->email_backup];
+      //* FILTRO PARA ELIMINAR LOS VACIOS EN ARRAY
+      $mails_array = array_filter($correos_envios);
 
-      try{
-        $transport = (new Swift_SmtpTransport($smtpAddress, $port, $encryption)) 
+
+      // return $correos_envios;
+      // * VALIDACION PARA VERIFICAR LA CONFIGURACION 
+      $transport = (new Swift_SmtpTransport($smtpAddress, $port, $encryption)) 
         ->setUsername($yourEmail) 
         ->setPassword($yourPassword);
-        $mailer = new Swift_Mailer($transport);
-        $mailer->getTransport()->start();
-      }catch(Swift_TransportException $e){
-        return redirect()->route('email.index')->with('error_email', $e->getMessage());
-        // return $e->getMessage();
-      }catch(Exception $e){
-        return redirect()->route('email.index')->with('error_email', $e->getMessage());
-        // return $e->getMessage();
-      }
+      $mailer = new Swift_Mailer($transport);
+      $mailer->getTransport()->start();
       
-      // $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
-      // $mailer = new \Swift_Mailer($transport);
-
+      $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo($mails_array)->setBody($mensaje, 'text/html');
       $newfile = $request->file('archivos');
       if($request->hasfile('archivos')){
         foreach ($newfile as $file) {
           $nombre =  $file->getClientOriginalName();
           $especif = $carbon_sp.$nombre;
           \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-
           $news[] = public_path().'/archivos/'.$especif;
-          $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup])->setBody($mensaje, 'text/html');
           foreach ($news as $attachment) {
             $message->attach(\Swift_Attachment::fromPath($attachment));
           }
         }
-      }else{
-        $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup => '?????? asd' ])->setBody($mensaje, 'text/html');
       }
       // return "1";
       if($mailer->send($message)){
@@ -512,39 +505,41 @@ class EmailBandejaEnviosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request){
-      $id = $request->get('id');
-      $mail =EmailBandejaEnvios::find($id);
-      $mail ->id_usuario=$mail->id_usuario;
-      $mail->destinatario=$mail->destinatario;
-      $mail->remitente=$mail->remitente;
-      $mail->asunto =$mail->asunto;
-      $mail->mensaje=$mail->mensaje;
-      $mail->mensaje_sin_html=$mail->mensaje_sin_html;
-      $mail->fecha_hora=$mail->fecha_hora;
-      $mail->estado = '1';
-      $mail->save();
-      return back();
-    }
-
+    // * Vista de enviar a a la papelera
     public function trash()
     {
       $id_usuario=auth()->user()->id;
       $user=User::where('id',$id_usuario)->first();
       $clientes=Cliente::all();
       $mailbox =EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('updated_at','desc')->get();
-      $count = count($mailbox);
+      $count_mailbox = count($mailbox);
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
 
       $mailbox_file =EmailBandejaEnviosArchivos::all();
-      return view('mailbox.delete',compact('mailbox','user','clientes','mailbox_file','count'));
+      return view('mailbox.delete',compact('mailbox','user','clientes','mailbox_file','count_mailbox','config_email'));
 
     }
 
+    public function delete(Request $request){
+      $check_ids =  $request->get('check_input'); 
+      // * Estado '1' = Papelera
+      foreach($check_ids as $ids){
+        $mail =EmailBandejaEnvios::find($ids);
+        $mail->estado = '1';
+        $mail->save();
+      }
+      
+      return back();
+    }
+    
+
     public function show($id)
     {
-
+      // return $id;
       $mail=EmailBandejaEnvios::find($id);
-      return view('mailbox.show',compact('mail'));
+      $clientes=Cliente::all();
+      $archivos=EmailBandejaEnviosArchivos::where('id_bandeja_envios', $mail->id)->get();
+      return view('mailbox.show',compact('mail','archivos','clientes'));
     }
 
     /**
@@ -578,6 +573,7 @@ class EmailBandejaEnviosController extends Controller
      */
     public function destroy(Request $request)
     {
+      
         $id = $request->get('id');
         // $archivos =EmailBandejaEnviosArchivos::findOrFail('id_bandeja_envios',$id)->get();
         // $archivos->delete();
