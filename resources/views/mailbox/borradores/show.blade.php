@@ -1,7 +1,7 @@
 @extends('layout')
-@section('title', 'Ver Correo')
-@section('breadcrumb', 'Ver Correo')
-@section('breadcrumb2', 'Ver Correo')
+@section('title', 'Ver Borrador Correo')
+@section('breadcrumb', 'Ver Borrador Correo')
+@section('breadcrumb2', 'Ver Borrador Correo')
 
 @section('atributo_1', 'hidden')
 @section('atributo_actu', 'hidden')
@@ -18,12 +18,11 @@
                         <div class="col-lg-9">
                             <div class="mail-box-header">
                                 <div class="float-right tooltip-demo">
-                                    <a href="mail_compose.html" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Reply"><i class="fa fa-reply"></i> Reenviar</a>
-                                    {{-- <a href="#" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Print email"><i class="fa fa-print"></i> </a> --}}
+                                    <a href="mail_compose.html" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Reply"><i class="fa fa-reply"></i> Enviar</a>
                                     <a href="mailbox.html" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i> </a>
                                 </div>
                                 <h2>
-                                    Ver Correo
+                                    Ver Borrador 
                                 </h2>
                                 <div class="mail-tools tooltip-demo m-t-md">
                                     <h3>
@@ -69,10 +68,8 @@
                                 @endif
                                     
                                 <div class="mail-body text-right tooltip-demo">
-                                    <a class="btn btn-sm btn-white" href="mail_compose.html"><i class="fa fa-reply"></i> Reply</a>
-                                    {{-- <a class="btn btn-sm btn-white" href="mail_compose.html"><i class="fa fa-arrow-right"></i> Forward</a> --}}
-                                    {{-- <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Print</button> --}}
-                                    <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Remove</button>
+                                    <a href="mail_compose.html" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Reply"><i class="fa fa-reply"></i> Enviar</a>
+                                    <a href="mailbox.html" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i> </a>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>

@@ -44,10 +44,10 @@
                                     <h2>
                                         Enviados ({{$count_mailbox}})
                                     </h2>
-                                    <div class="mail-tools tooltip-demo m-t-md" align="right    ">
+                                    <div class="mail-tools tooltip-demo m-t-md" align="right">
                                         {{-- <div class="btn-group float-left"> --}}
-                                            <button class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="Recargar" ><i class="fa fa-refresh"></i>Recargar</button>
-                                            <button class="btn btn-danger btn-sm" id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                            <button class="btn btn-primary " data-toggle="tooltip" data-placement="left" title="Recargar" ><i class="fa fa-refresh"></i> Recargar</button>
+                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
                                         {{-- </div> --}}
                                     </div>
                                 </div>
@@ -106,8 +106,10 @@
                                     </div>
                                     <br>
                                 @else
-                                    <div style="width: 100%; height: 100%;">
-                                        No hay elementos enviados
+                                    <div class="mail-box  tabs-container">
+                                        <div  style="padding-bottom: 1em">
+                                            <center>No hay elementos enviados</center>
+                                        </div>
                                     </div>
                                 @endif
                             </div>
@@ -746,9 +748,9 @@ span.fileinput-filename{
 <!-- Jasny -->
 <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
 
-{{-- <link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
 <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet"> --}}
+<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
 <script>
     $('#click_eliminar').on('click', function(){
         // var check = ;

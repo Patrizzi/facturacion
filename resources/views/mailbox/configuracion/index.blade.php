@@ -64,7 +64,7 @@
 											<label class="col-sm-2 col-form-label">Contraseña:</label>
 											<div class="col-sm-10">
 												<div class="input-group m-b">
-													<input type="password" class="form-control" name="password" id="txtPassword" required="" id="password" >
+													<input type="password" class="form-control password	" name="password" id="txtPassword" required="" id="password" >
 													<div class="input-group-prepend">
 														<span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
 															<i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
@@ -81,7 +81,7 @@
 
 											<label class="col-sm-2 col-form-label">PORT:</label>
 											<div class="col-sm-4">
-												<input type="text" class="form-control" name="port" value="110" >
+												<input type="text" class="form-control" name="port" placeholder="25" id="port" >
 											</div>
 										</div>
 										<div class="row">

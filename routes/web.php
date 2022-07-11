@@ -254,11 +254,14 @@ Route::group(
 
 		Route::post('agregado_rapido/personal_store','AgregadoRapidoController@personal_store')->name('agregado_rapido.personal_store');
 
-		//MailBox
-		Route::resource('/email','EmailBandejaEnviosController');
+		//MailBox Configuracion
 		Route::resource('/configuracion_email','EmailConfiguracionesController');
+		Route::get('/email_backup','EmailConfiguracionesController@email_backup')->name('email_backup');
+		Route::post('/email_backup/save','EmailConfiguracionesController@backup_save')->name('backup_save');
 		Route::post('/configuracion_email/update/{id}','EmailConfiguracionesController@update')->name('configuracion_email.update');
 		Route::post('/email/config/pdf','EmailConfiguracionesController@store')->name('email.config');
+		//MailBox Envios
+		Route::resource('/email','EmailBandejaEnviosController');
 		Route::post('/email/save','EmailBandejaEnviosController@save')->name('email.save');
 		Route::post('email/send','EmailBandejaEnviosController@send')->name('email.send');
 		Route::post('email/delete','EmailBandejaEnviosController@delete')->name('email.delete');
@@ -266,8 +269,8 @@ Route::group(
 		Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
 		Route::post('/email/config','EmailBandejaEnviosController@configstore')->name('email.configstore');
 		Route::post('/email/config/{id}','EmailBandejaEnviosController@configupdate')->name('email.configupdate');
-		Route::get('/email_backup','EmailConfiguracionesController@email_backup')->name('email_backup');
-		Route::post('/email_backup/save','EmailConfiguracionesController@backup_save')->name('backup_save');
+		//MailBox Borradores
+		Route::resource('/borradores_email','EmailBorradoresController');
 
 		//Garantias
 		Route::get('contacto_cliente','GarantiaGuiaIngresoController@contacto_cliente');

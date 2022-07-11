@@ -6,7 +6,9 @@ use App;
 use App\EmailConfiguraciones;
 use App\Permiso;
 use App\User;
+use App\EmailBandejaEnvios;
 use App\Cliente;
+use App\EmailBandejaEnviosArchivos;
 use Illuminate\Http\Request;
 use Swift_Attachment;
 use Swift_MailTransport;
@@ -34,7 +36,16 @@ class EmailConfiguracionesController extends Controller
             $config_email = 'DISMAIL';
         }
         $clientes=Cliente::all();
-        return view('mailbox.configuracion.index',compact('config_email','user','validacion','clientes'));
+        //* INVOCAR Y CONTAR PARA EL LAYOUT DE MAILBOX
+        $mailbox = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+        $borradores = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+        $eliminados = EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+        $count_mailbox = count($mailbox);
+        $count_borradores = count($borradores);
+        $count_eliminados = count($eliminados);
+        $mailbox_file =EmailBandejaEnviosArchivos::get();
+        
+        return view('mailbox.configuracion.index',compact('config_email','user','validacion','clientes','user','clientes','mailbox_file','config_email','count_mailbox','count_borradores','count_eliminados'));
 
     }
     /**
@@ -54,7 +65,7 @@ class EmailConfiguracionesController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        // return $request;
 
         $correo = $request->get('email');
 
