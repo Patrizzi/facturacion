@@ -23,57 +23,69 @@
                             <div class="ibox-content" style="padding: 1em 1em">
                                 <div class="mail-box-header ">
                                     <h2>
-                                        Eliminados ({{$count_mailbox}})
+                                        Papelera ({{$count_eliminados}})
                                     </h2>
+                                    <div class="row">
+                                        <div class="col-sm-6 mail-tools tooltip-demo m-t-md" align="left" style="align-self: self-end">
+                                            <input type="checkbox" class="check_all" data-toggle="tooltip" data-placement="top" title="Seleccionar todo"  onclick="select_all_mail()">
+                                        </div>
+                                        <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
+                                            <button class="btn btn-primary " onclick=" location.reload();"><i class="fa fa-refresh"></i> Recargar</button>
+                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
-                                @if($count_mailbox > 0)
+                                @if($count_eliminados > 0)
                                     <div class="mail-box  tabs-container">
-                                        <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
-                                            <thead style="display: none">
-                                                <tr>
-                                                    <td>a</td>
-                                                    <td>cb</td>
-                                                    <td>c</td>
-                                                    <td>d</td>
-                                                    <td>r</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($mailbox as $mailboxs)
-                                                <tr class="read">
-                                                    <td class="check-mail " >
-                                                        <input type="checkbox" class="i-checks">
-                                                    </td>
-                                                    <td class="mail-contact">
-                                                        {{-- <ul class="nav nav-tabs">
-                                                            <li> --}}
-                                                                <a class="tab-link"  href="#tab-{{$mailboxs->id}}" onclick="opentab(event,{{$mailboxs->id}})" >{{$mailboxs->remitente}}</a>
-                                                            {{-- </li>
-                                                        </ul> --}}
-                                                    </td>
-                                                    <td class="mail-subject">
-                                                        <a data-toggle="tab"  href="#tab-{{$mailboxs->id}}" >{{substr($mailboxs->asunto, 0, 25)}}...</a>
-                                                    </td>
-                                                    @if( count($mailbox_file->where('id_bandeja_envios', $mailboxs->id )) > 0 )
-                                                        <td class=""><i class="fa fa-paperclip"></i></td>
-                                                    @else
-                                                        <td class=""></td>
-                                                    @endif
-                                                    <td style="width: 10%" class="text-right mail-date">
-                                                        <span hidden="hidden">{{$dias =  date('d/m/y',strtotime($mailboxs->fecha_hora))}}</span>
-                                                        <span hidden="hidden">{{$hoy =  date("d/m/y")}}</span>
-                                                        <span hidden="hidden">{{$hora =  date('H:i:s', strtotime($mailboxs->fecha_hora))}}</span>
-                                                        @if($hoy > $dias)
-                                                            {{ date('d/m/y',strtotime($mailboxs->fecha_hora))}}
+                                        <form action="{{route('email.destroy')}}" method="post">
+                                            @csrf
+                                            <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
+                                                <thead style="display: none">
+                                                    <tr>
+                                                        <td>a</td>
+                                                        <td>cb</td>
+                                                        <td>c</td>
+                                                        <td>d</td>
+                                                        <td>r</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($eliminados as $mailboxs)
+                                                    <tr class="read">
+                                                        <td class="check-mail " >
+                                                            <input type="checkbox" class="select_id" id="{{$mailboxs->id}}" value="{{$mailboxs->id}}" name="check_input[]">
+                                                        </td>
+                                                        <td class="mail-contact" style="width: 40%;cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            @if(substr($mailboxs->remitente, -1) == ']')
+                                                                {{json_decode($mailboxs->remitente)[0]}}...
+                                                            @else
+                                                                {{$mailboxs->remitente}}
+                                                            @endif
+                                                        </td>
+                                                        <td class="mail-subject" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            {{substr($mailboxs->asunto, 0, 25)}}...
+                                                        </td>
+                                                        @if( count($mailbox_file->where('id_bandeja_envios', $mailboxs->id )) > 0 )
+                                                            <td class=""><i class="fa fa-paperclip"></i></td>
                                                         @else
-                                                           {{date('H:i:s', strtotime($mailboxs->fecha_hora) )}}
+                                                            <td class=""></td>
                                                         @endif
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        
+                                                        <td style="width: 10%" class="text-right mail-date" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            <span hidden="hidden">{{$dias =  date('d/m/y',strtotime($mailboxs->fecha_hora))}}</span>
+                                                            <span hidden="hidden">{{$hoy =  date("d/m/y")}}</span>
+                                                            <span hidden="hidden">{{$hora =  date('H:i:s', strtotime($mailboxs->fecha_hora))}}</span>
+                                                            @if($hoy > $dias)
+                                                                {{ date('d/m/y',strtotime($mailboxs->fecha_hora))}}
+                                                            @else
+                                                               {{date('H:i:s', strtotime($mailboxs->fecha_hora) )}}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <button type="submit" style="display: none" id="submit_eliminar"></button>
+                                        </form>
                                     </div>
                                     <br>
                                     {{-- TABS PARA QUE SE ABRAN LOS MAILS --}}
@@ -289,13 +301,7 @@
         
     });
 </script>
-<script>
-    function doAction(ele, param1, param2) {
-      var a = document.getElementById(param1).innerHTML;
-      var b = document.getElementById(param2).innerHTML;
-      ele.innerHTML = a + " " + b;
-  }</script>
-  <script type="text/javascript">
+<script type="text/javascript">
     $(function() {
       $('.summernote').summernote({
         height: 200,
@@ -304,5 +310,28 @@
 
   });
 </script>
-
+<script>
+    function select_all_mail() {
+        $('input[class=select_id]:checkbox').each(function () {
+            // console.log($('input[class=check_all]:checkbox:checked'));
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                // console.log("a");
+                $(this).prop("checked", false);
+            } else {
+                // console.log("b");
+                $(this).prop("checked", true);
+            }
+        });
+    }
+    $('#click_eliminar').on('click', function(){
+        // var check = ;
+        // return check;
+        if($('.select_id').is(':checked')){
+            $('#submit_eliminar').click();
+        }
+    });
+</script>
+<script>
+    document.getElementById('papelera_mail').style.fontWeight = '800';
+</script>
 @endsection

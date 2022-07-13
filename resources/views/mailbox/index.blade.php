@@ -44,17 +44,20 @@
                                     <h2>
                                         Enviados ({{$count_mailbox}})
                                     </h2>
-                                    <div class="mail-tools tooltip-demo m-t-md" align="right">
-                                        {{-- <div class="btn-group float-left"> --}}
-                                            <button class="btn btn-primary " data-toggle="tooltip" data-placement="left" title="Recargar" ><i class="fa fa-refresh"></i> Recargar</button>
+                                    <div class="row">
+                                        <div class="col-sm-6 mail-tools tooltip-demo m-t-md" align="left" style="align-self: self-end">
+                                            <input type="checkbox" class="check_all" data-toggle="tooltip" data-placement="top" title="Seleccionar todo"  onclick="select_all_mail()">
+                                        </div>
+                                        <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
+                                            <button class="btn btn-primary " onclick=" location.reload();"><i class="fa fa-refresh"></i> Recargar</button>
                                             <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
-                                        {{-- </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                                 @if($count_mailbox > 0)
                                     <div class="mail-box  tabs-container">
                                         <form action="{{route('email.delete')}}" method="post">
-                                        @csrf 
+                                            @csrf 
                                             <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
                                                 <thead style="display: none">
                                                     <tr>
@@ -73,7 +76,11 @@
                                                         </td>
                                                         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                                         <td class="mail-contact" style="width: 40%;cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'" >
-                                                            {{$mailboxs->remitente}}
+                                                            @if(substr($mailboxs->remitente, -1) == ']')
+                                                                {{json_decode($mailboxs->remitente)[0]}}...
+                                                            @else
+                                                                {{$mailboxs->remitente}}
+                                                            @endif
                                                         </td>
                                                         <td class="mail-subject" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
                                                             @if(strlen($mailboxs->asunto) > 34)
@@ -91,10 +98,10 @@
                                                             <span hidden="hidden">{{$dias =  date('d/m/y',strtotime($mailboxs->fecha_hora))}}</span>
                                                             <span hidden="hidden">{{$hoy =  date("d/m/y")}}</span>
                                                             <span hidden="hidden">{{$hora =  date('H:i:s', strtotime($mailboxs->fecha_hora))}}</span>
-                                                            @if($hoy > $dias)
-                                                                {{ date('d/m/y',strtotime($mailboxs->fecha_hora))}}
+                                                            @if($dias != $hoy)
+                                                                {{date('d/m/y',strtotime($mailboxs->fecha_hora))}}
                                                             @else
-                                                               {{date('H:i:s', strtotime($mailboxs->fecha_hora) )}}
+                                                                {{date('H:i:s', strtotime($mailboxs->fecha_hora))}}
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -777,53 +784,17 @@ span.fileinput-filename{
     });
 </script>
 <script>
-    function doAction(ele, param1, param2) {
-      var a = document.getElementById(param1).innerHTML;
-      var b = document.getElementById(param2).innerHTML;
-      ele.innerHTML = a + " " + b;
-  }</script>
-  <script type="text/javascript">
-    $(function() {
-      $('.summernote').summernote({
-        height: 200,
-       
-    });
-
-  });
+    // Marcar con strong el layout mail
+    document.getElementById('index_mail').style.fontWeight = '800';
 </script>
-
-<script>
-    function opentab(evt, cityName) {
-        console.log('a');
-    //   var i, tabcontent, tablinks;
-    //   tabcontent = document.getElementsByClassName("tab-content");
-    //   for (i = 0; i < tabcontent.length; i++) {
-    //     tabcontent[i].style.display = "none";
-    //   }
-    //   tablinks = document.getElementsByClassName("tablinks");
-    //   for (i = 0; i < tablinks.length; i++) {
-    //     tablinks[i].className = tablinks[i].className.replace(" active", "");
-    //   }
-    //   document.getElementById(cityName).style.display = "block";
-    //   evt.currentTarget.className += " active";
-    }
-    </script>
-       
-<script>
-    function doAction(ele, param1, param2) {
-      var a = document.getElementById(param1).innerHTML;
-      var b = document.getElementById(param2).innerHTML;
-      ele.innerHTML = a + " " + b;
-  }</script>
-  <script type="text/javascript">
+<script type="text/javascript">
     $(function() {
       $('.summernote').summernote({
         height: 200,
-
+       
     });
 
   });
-
 </script>
 {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
@@ -834,141 +805,24 @@ span.fileinput-filename{
         if( f.elements[0].value == "" )
            { alert(incompleto); }
        else{boton.type = 'button';}
-   }
-</script>
-{{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-<script type="text/javascript">
-        // <div class="col-sm-10">
-        // <div class="input-group m-b">
-        // <input type="password" class="form-control" name="password" id="txtPassword">
-        // <div class="input-group-prepend">
-        // <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
-        // <i class="fa fa-eye " id="ojo" onclick="mostrarPassword()"></i></span>
-        // </div>
-        // </div>
-        // </div>
-function mostrarPassword(){
-    var cambio = document.getElementById("txtPassword");
-    if(cambio.type == "password"){
-        cambio.type = "text";
-        $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-    }else{
-        cambio.type = "password";
-        $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
     }
-}
-</script>
-<script type="text/javascript">
-        // {{-- Fotooos --}}
-function validarExt(){
-    var archivoInput = document.getElementById('archivoInput');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-    if(!extPermitidas.exec(archivoRuta)){
-        alert('Asegurese de haber seleccionado una Imagen');
-        archivoInput.value = '';
-        return false;
-    }else{
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivo').innerHTML =
-                '<img name="firma" src="'+e.target.result+'"width="300px" height="120px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
-        }
-    }
-}
-function validarExtF(){
-    var archivoInput = document.getElementById('archivoInputF');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-    if(!extPermitidas.exec(archivoRuta)){
-        alert('Asegurese de haber seleccionado una Imagen');
-        archivoInput.value = '';
-        return false;
-    }else{
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivoF').innerHTML =
-                '<img name="firma_digital" src="'+e.target.result+'"width="300px" height="120px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
-        }
-    }
-}
-
-//funcion para validar las credenciales del usuario
-$("#grabar_actualizar").on("click" ,function(){
-    checkEmail(function(resp) {
-        if(resp){
-            alert("las credenciales son incorrectas");
-        }else{
-            alert("las credenciales son correctas");
-            $("#submit_actualizar").click();
-        }
-    });
-});
-
-
-function checkEmail(my_callback){
-    var global_editar=false;
-
-    var smtpAddress = $('[id="smtp_editar"]').val();
-    var port = $('[id="port_editar"]').val();
-    var encryption = $('[id="encryption_editar"]').val();
-    var yourEmail = $('[id="email_editar"]').val();
-    var yourPassword = $('.password_editar').val();
-    $(document).ready(function() {
-        $.ajax({
-            type: "post",
-            url: "{{ route('pa.check_email') }}",
-            processData: true,
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'smtpAddress': smtpAddress,
-                'port': port,
-                'encryption': encryption,
-                'yourEmail': yourEmail,
-                'yourPassword': yourPassword,
-            },
-            beforeSend: function(){
-                $('#loaderGif').show(); 							
-            },
-            complete:function(data){
-                /*
-                * Se ejecuta al termino de la petición
-                * */
-            },
-            success: function (msg) {
-                console.log(msg);
-                // global_editar=msg;
-                if(msg == 0){
-                    global_editar = false;
-                }
-                if(msg == 1){
-                    global_editar = true;
-                }
-                my_callback(global_editar); //AQUI
-            },
-        });
-        return global_editar;
-    })
-}
-</script>
-<script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
     });
+    function select_all_mail() {
+        $('input[class=select_id]:checkbox').each(function () {
+            // console.log($('input[class=check_all]:checkbox:checked'));
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                // console.log("a");
+                $(this).prop("checked", false);
+            } else {
+                // console.log("b");
+                $(this).prop("checked", true);
+            }
+        });
+    }
 </script>
 @endsection

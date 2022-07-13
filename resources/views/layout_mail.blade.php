@@ -10,25 +10,25 @@
                 <h5>Folders</h5>
                 <ul class="folder-list m-b-md" style="padding: 0">
                     <li>
-                        <a href="{{route('email.index')}}">
+                        <a href="{{route('email.index')}}" id="index_mail">
                             <i class="fa fa-inbox"></i>Enviados
                             <span class="label label-primary float-right">{{$count_mailbox}}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{route('borradores_email.index')}}">
+                        <a href="{{route('borradores_email.index')}}" id="borradores_mail">
                             <i class="fa fa-envelope-o"></i>Borradores
                             <span class="label label-warning float-right">{{$count_borradores}}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{route('configuracion_email.index')}}">
+                        <a href="{{route('configuracion_email.index')}}" id="configuracion_mail">
                             <i class="fa fa-gear"></i>Configuracion
                             {{-- <span class="label label-primary float-right"></span> --}}
                         </a>
                     </li>
                     <li>
-                        <a href="{{route('email.trash')}}">
+                        <a href="{{route('email.trash')}}" id="papelera_mail">
                             <i class="fa fa-trash-o"></i>Papelera
                             <span class="label label-danger float-right">{{$count_eliminados}}</span>
                         </a>
@@ -83,7 +83,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <span>Para:</span>
-                                            <input type="email" required="" class="form-control" name="remitente" list="browsers" autocomplete="off" >
+                                            <input type="email" required="" class="form-control" name="remitente" list="browsers" autocomplete="off" id="clientes_cc">
                                             <datalist id="browsers">
                                                 @foreach($clientes as $cliente )
                                                     <option value="{{$cliente->email}}"></option>
@@ -107,7 +107,7 @@
                                         @endif
                                             <div class="col-sm-12">
                                                 <span>Asunto:</span>
-                                                <input type="text" required="" class="form-control" name="asunto" >
+                                                <input type="text" required="" class="form-control" name="asunto" id="asunto" >
                                             </div>
                                     </div>
                                 </div>
@@ -119,8 +119,7 @@
                                     <span class="btn btn-default btn-file" style="left: 20px !important;">
                                         <span class="fileinput-new">Seleccionar</span>
                                         <span class="fileinput-exists">Cambiar</span>
-                                        <input  type="file" name="archivos[]" multiple="" />
-                                        <input type="file" name="archivo">
+                                        <input  type="file" name="archivos[]" multiple="" id="file_input"/>
                                     </span>
                                     <span class="fileinput-filename" style="padding-left: 30px"></span>
                                     <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
@@ -136,7 +135,7 @@
                                         <button type="submit" class="btn  btn-primary ladda-button" name="boton_send" value="boton_send">
                                             <i class="fa fa-reply"></i> Enviar
                                         </button>
-                                        <button type="button" class="btn btn-secondary" name="boton_close" value="boton_close"> Close</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limpiar_modal()">Limpiar</button>
                                     </div>
                                 </div>
                             </form>
@@ -147,7 +146,16 @@
             </div>
         </div>
     </div>
-    <script></script>
+    <script>
+        function limpiar_modal(){
+            $('#clientes_cc').val('');
+            $('#cc').val('');
+            $('#asunto').val('');
+            $('.summernote').summernote('code', '');
+            $(".fileinput-exists").fileinput("clear");
+            
+        }
+    </script>
 @else
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script>

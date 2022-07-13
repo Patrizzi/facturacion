@@ -45,17 +45,22 @@
                                         Borradores ({{$count_borradores}})
                                     </h2>
                                     <div class="mail-tools tooltip-demo m-t-md" align="right">
-                                        {{-- <div class="btn-group float-left"> --}}
-                                            <button class="btn btn-primary " data-toggle="tooltip" data-placement="left" title="Recargar" ><i class="fa fa-refresh"></i> Recargar</button>
-                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
-                                        {{-- </div> --}}
+                                        <div class="row">
+                                            <div class="col-sm-6 mail-tools tooltip-demo m-t-md" align="left" style="align-self: self-end">
+                                                <input type="checkbox" class="check_all" data-toggle="tooltip" data-placement="top" title="Seleccionar todo"  onclick="select_all_mail()">
+                                            </div>
+                                            <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
+                                                <button class="btn btn-primary" onclick=" location.reload();" ><i class="fa fa-refresh"></i> Recargar</button>
+                                                <button class="btn btn-danger" id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 @if($count_borradores > 0)
                                     <div class="mail-box  tabs-container">
                                         <form action="{{route('email.delete')}}" method="post">
                                         @csrf 
-                                            <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
+                                            <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding: 0px">
                                                 <thead style="display: none">
                                                     <tr>
                                                         <td>a</td>
@@ -73,7 +78,11 @@
                                                         </td>
                                                         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                                         <td class="mail-contact" style="width: 40%;cursor: pointer;" onclick="location.href='{{route('borradores_email.show', $borrador->id)}}'" >
-                                                            {{$borrador->remitente}}
+                                                            @if(substr($borrador->remitente, -1) == ']')
+                                                                {{json_decode($borrador->remitente)[0]}}...
+                                                            @else
+                                                                {{$borrador->remitente}}
+                                                            @endif
                                                         </td>
                                                         <td class="mail-subject" style="cursor: pointer;" onclick="location.href='{{route('borradores_email.show', $borrador->id)}}'">
                                                             @if(strlen($borrador->asunto) > 34)
@@ -120,6 +129,11 @@
         </div>
     </div>
 </div>
+<style>
+    .dataTables_wrapper.container-fluid.dt-bootstrap4.no-footer{
+        padding: 0px;
+    }
+</style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -143,6 +157,22 @@
 <link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
 <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
 <link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            order: [[0, "desc"]],
+            responsive: true,
+            // dom: '<"html5buttons"B>lTfgitp',
+            buttons: [],
+            bFilter: false,
+            bInfo: false,
+            bLengthChange : false,
+            aoColumnDefs : [ { 'bSortable' : false} ]
+        });
+        
+    });
+</script>
 <script type="text/javascript">
     $(function() {
       $('.summernote').summernote({
@@ -150,5 +180,28 @@
        
     });
   });
+  function select_all_mail() {
+        $('input[class=select_id]:checkbox').each(function () {
+            // console.log($('input[class=check_all]:checkbox:checked'));
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                // console.log("a");
+                $(this).prop("checked", false);
+            } else {
+                // console.log("b");
+                $(this).prop("checked", true);
+            }
+        });
+    }
+    $('#click_eliminar').on('click', function(){
+        // var check = ;
+        // return check;
+        if($('.select_id').is(':checked')){
+            $('#submit_eliminar').click();
+        }
+    });
 </script>
+<script>
+    document.getElementById('borradores_mail').style.fontWeight = '800';
+</script>
+
 @endsection

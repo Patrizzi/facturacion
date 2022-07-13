@@ -18,8 +18,12 @@
                         <div class="col-lg-9">
                             <div class="mail-box-header">
                                 <div class="float-right tooltip-demo">
-                                    <a href="mail_compose.html" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Reply"><i class="fa fa-reply"></i> Enviar</a>
-                                    <a href="mailbox.html" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i> </a>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#enviar"><i class="fa fa-reply"></i> Enviar</button>
+                                    <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
+                                        @csrf
+                                        <input type="hidden" name="check_input[]" value="{{$mail->id}}">
+                                        <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                    </form>
                                 </div>
                                 <h2>
                                     Ver Borrador 
@@ -30,7 +34,14 @@
                                     </h3>
                                     <h5>
                                         <span class="float-right font-normal">{{$mail->fecha_hora}}</span>
-                                        <span class="font-normal">Para: </span>{{$mail->destinatario}}
+                                        <span class="font-normal">Para: </span>
+                                        @if(substr($mail->remitente, -1) == ']')
+                                            @foreach (json_decode($mail->remitente) as $key => $value)
+                                                {{ $value }},    
+                                            @endforeach
+                                        @else
+                                            {{$mail->remitente}}
+                                        @endif
                                     </h5>
                                 </div>
                             </div>
@@ -41,7 +52,7 @@
                                     <p>
                                 </div>
                                 @if (count($archivos) > 0)
-                                    <div class="mail-attachment">
+                                    <div class="mail-attachment" style="display: flow-root">
                                         <div class="file-box">
                                             @foreach ($archivos as $archivo)
                                                 <div class="file">
@@ -76,6 +87,111 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Enviar Redactar  -->
+<div class="modal fade bd-example-modal-lg" id="enviar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-lg-12 container animated fadeInRight" >
+                    <div class="mail-box">
+                        {{-- @foreach($config_email as $config_emails) --}}
+                        <form action ="{{route('email.store')}}" method="POST" enctype="multipart/form-data" onsubmit="return valida(this)">
+                            @csrf
+                            <div class="mail-body">
+                                <div class=" row">
+                                    <div class="col-sm-6">
+                                        <span>De:</span>
+                                        <input type="text" class="form-control" value="{{$config_email->email}}" disabled id="">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span>Para:</span>
+                                        <input type="email" required="" class="form-control" name="remitente" list="browsers" autocomplete="off" >
+                                        <datalist id="browsers">
+                                            @foreach($clientes as $cliente )
+                                                <option value="{{$cliente->email}}"></option>
+                                            @endforeach
+                                        </datalist>
+                                    </div>
+                                    @if(isset($config_email->email_backup))
+                                        <div class="col-sm-6">
+                                            <span>CC:</span>
+                                            <input type="email" class="form-control" name="cc_email" id="cc">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <span>BCC:</span>
+                                            <input type="text" class="form-control" value="{{$config_email->email_backup}}" disabled id="email_backup">
+                                        </div>
+                                    @else
+                                        <div class="col-sm-12">
+                                            <span>CC:</span>
+                                            <input type="text" class="form-control" name="cc_email" id="cc">
+                                        </div>
+                                    @endif
+                                        <div class="col-sm-12">
+                                            <span>Asunto:</span>
+                                            <input type="text" required="" class="form-control" name="asunto" value="{{$mail->asunto}}" >
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="mail-text h-200">
+                                {{-- Mensaje --}}
+                                <textarea name="mensaje" required="" class="summernote" id="contents" >
+                                    <span><br></span>
+                                    <strong>---------- Mensaje reenviado ---------</strong><br>
+                                    De: {{$mail->destinatario}}<br>
+                                    Date: {{$mail->fecha_hora}}<br>
+                                    Asunto: {{$mail->asunto}}<br>
+                                    Para: {{$mail->remitente}}<br>
+                                    {{$mail->mensaje}}
+                                </textarea>
+                            </div>
+                            <br/>
+                            @if(count($archivos) > 0 )
+                                <div class="file-box" style="display: flex">
+                                    @foreach ($archivos as $archivo)
+                                        <div class="file archivo_flex" id="file_r_{{$archivo->id}}">
+                                            <button type="button" class="close" id="eliminar_archivo_reenvio" onclick="archivo_reenvio_close({{$archivo->id}})">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <div class="file-name" style="">
+                                                {{$archivo->archivo}}
+                                                <input type="hidden" id="archivo_{{$archivo->id}}" value="{{$archivo->fecha_hora}}{{$archivo->archivo}}" name="archivo_reenvio[]">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                <span class="btn btn-default btn-file" style="left: 20px !important;">
+                                    <span class="fileinput-new">Seleccionar</span>
+                                    <span class="fileinput-exists">Cambiar</span>
+                                    <input  type="file" name="archivos[]" multiple="" value="[]" />
+                                </span>
+                                <span class="fileinput-filename" style="padding-left: 30px"></span>
+                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+                            </div>
+                            <hr style="margin-bottom: 0px">
+                            <div class="row" style="padding: 1em">
+                                <div class="col-sm-6" align="left">
+                                    <button type="submit" class="btn  btn-warning ladda-button" name="boton_draft" value="boton_draft">
+                                        <i class="fa fa-pencil"></i> Borrador
+                                    </button>
+                                </div>
+                                <div class="col-sm-6" align="right"> 
+                                    <button type="submit" class="btn  btn-primary ladda-button" name="boton_send" value="boton_send">
+                                        <i class="fa fa-reply"></i> Enviar
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" name="boton_close" value="boton_close"> Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                    {{-- @endforeach --}}
             </div>
         </div>
     </div>

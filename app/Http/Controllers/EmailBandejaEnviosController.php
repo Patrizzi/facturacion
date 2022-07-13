@@ -83,7 +83,7 @@ class EmailBandejaEnviosController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function store(Request $request){
-
+      return $request;
       // *  Estados 0 = enviado; 1 = Eliminado 2 = borrador
       $date_sp = Carbon::now();
       $data_g = str_replace(' ', '_',$date_sp);
@@ -92,27 +92,37 @@ class EmailBandejaEnviosController extends Controller
 
       $id_usuario=auth()->user()->id;
       $correo_busqueda=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
-      $firma=$correo_busqueda->firma;
-      $ancho= $correo_busqueda->ancho_firma;
-      $alto = $correo_busqueda->alto_firma;
-      $mensaje_html = $request->get('mensaje');
-
       $correo=$correo_busqueda->email;
-      
+
       $smtpAddress = $correo_busqueda->smtp; // = $request->smtp
       $port = $correo_busqueda->port;
       $encryption = $correo_busqueda->encryption;
       $yourEmail = $correo;
       $yourPassword = $correo_busqueda->password;
-      $sendto = $request->get('remitente')  ;
+      $firma=$correo_busqueda->firma;
+      $ancho= $correo_busqueda->ancho_firma;
+      $alto = $correo_busqueda->alto_firma;
+      $sendto = $request->get('remitente');
+      $cc_email = $request->get('cc_email');
       $titulo = $request->get('asunto');
+      $mensaje_html = $request->get('mensaje');
       $mensaje = view('email_html.email_send_layout',compact('empresa','mensaje_html','firma','alto','ancho'));
-      $correos_envios = [$sendto, $correo_busqueda->email_backup];
+      $correos_envios = [$sendto, $cc_email,$correo_busqueda->email_backup];
       //* FILTRO PARA ELIMINAR LOS VACIOS EN ARRAY
       $mails_array = array_filter($correos_envios);
-
+      //* Archivos
+      $newfile = $request->file('archivos');
+      //* Cuando se reenvia
+      $reenvios = $request->get('archivo_reenvio');
+      if(isset($reenvios)){
+          // return $old_file;
+        foreach($reenvios as $name){
+          $var = str_replace(':', '-',$name);
+          $old_file[] = substr_replace($var,'_',10,1);
+        }
+        // return $old_file;
+      }
       
-      // return $correos_envios;
       if ( $request->get('boton_send') == true) {
         // * VALIDACION PARA VERIFICAR LA CONFIGURACION 
         $transport = (new Swift_SmtpTransport($smtpAddress, $port, $encryption)) 
@@ -122,7 +132,7 @@ class EmailBandejaEnviosController extends Controller
         $mailer->getTransport()->start();
         
         $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo($mails_array)->setBody($mensaje, 'text/html');
-        $newfile = $request->file('archivos');
+        
         if($request->hasfile('archivos')){
           foreach ($newfile as $file) {
             $nombre =  $file->getClientOriginalName();
@@ -134,6 +144,24 @@ class EmailBandejaEnviosController extends Controller
             }
           }
         }
+        
+        //* Archivos que se reenvian
+        // $news2[] = Storage::disk('mailbox')->exists($request->get('archivo_reenvio')[0]);
+        // return $request->get('archivo_reenvio');
+        if($request->get('archivo_reenvio')){
+          // return $old_file;
+          foreach ($old_file as $file_old) {
+            // $especif = $file_old;
+            // $news2[] = Storage::disk('mailbox')->exists($file_old);
+            // return $news2;
+            $news2[] = public_path().'/archivos/'.$file_old;
+            foreach ($news2 as $attachment2) {
+              $message->attach(\Swift_Attachment::fromPath($attachment2));
+            }
+          }
+          // return $news2;
+        }
+        
         // return "1";
         if($mailer->send($message)){
           $mensaje =$request->get('mensaje') ;
@@ -141,7 +169,7 @@ class EmailBandejaEnviosController extends Controller
           $mail = new EmailBandejaEnvios;
           $mail->id_usuario =auth()->user()->id;
           $mail->destinatario =$correo;
-          $mail->remitente =$request->get('remitente') ;
+          $mail->remitente = json_encode($mails_array) ;
           $mail->asunto =$request->get('asunto') ;
           $mail->mensaje =$mensaje;
           $mail->mensaje_sin_html =$texto ;
@@ -149,9 +177,9 @@ class EmailBandejaEnviosController extends Controller
           $mail->fecha_hora =Carbon::now() ;
           $mail-> save();
           
-          $newfile2 = $request->file('archivos');
+          // $newfile2 = $request->file('archivos');
           if($request->hasfile('archivos')){
-            foreach ($newfile2 as $file2) {
+            foreach ($newfile as $file2) {
               $guardar_email_archivo=new EmailBandejaEnviosArchivos;
               $guardar_email_archivo->id_bandeja_envios=$mail->id;
               $guardar_email_archivo->archivo= $file2->getClientOriginalName();
@@ -159,29 +187,47 @@ class EmailBandejaEnviosController extends Controller
               $guardar_email_archivo->save();
             }
           }
+          if($request->get('archivo_nombre')){
+            foreach ($old_file as $file2) {
+              $guardar_email_archivo=new EmailBandejaEnviosArchivos;
+              $guardar_email_archivo->id_bandeja_envios=$mail->id;
+              $guardar_email_archivo->archivo= $file2;
+              $guardar_email_archivo->fecha_hora = $carbon_sp;
+              $guardar_email_archivo->save();
+            }
+          }
           return redirect()->route('email.index');
         }
-      }else{
+        return $request;
+      }else{ //* GUARDAR COMO BORRADOR
         $mensaje =$request->get('mensaje') ;
         $texto= strip_tags($mensaje);
         $mail = new EmailBandejaEnvios;
-        $mail->id_usuario =auth()->user()->id;
-        $mail->destinatario =$correo;
-        $mail->remitente =$request->get('remitente') ;
-        $mail->asunto =$request->get('asunto') ;
-        $mail->mensaje =$mensaje;
-        $mail->mensaje_sin_html =$texto ;
+        $mail->id_usuario = auth()->user()->id;
+        $mail->destinatario = $correo;
+        $mail->remitente = json_encode($mails_array) ;
+        $mail->asunto = $request->get('asunto') ;
+        $mail->mensaje = $mensaje;
+        $mail->mensaje_sin_html = $texto ;
         $mail->estado = '0';
         $mail->estado_borrador = '1';
         $mail->fecha_hora =Carbon::now() ;
         $mail-> save();
         
-        $newfile2 = $request->file('archivos');
         if($request->hasfile('archivos')){
-          foreach ($newfile2 as $file2) {
+          foreach ($newfile as $file2) {
             $guardar_email_archivo=new EmailBandejaEnviosArchivos;
             $guardar_email_archivo->id_bandeja_envios=$mail->id;
             $guardar_email_archivo->archivo= $file2->getClientOriginalName();
+            $guardar_email_archivo->fecha_hora = $carbon_sp;
+            $guardar_email_archivo->save();
+          }
+        }
+        if($request->get('archivo_nombre')){
+          foreach ($old_file as $file2) {
+            $guardar_email_archivo=new EmailBandejaEnviosArchivos;
+            $guardar_email_archivo->id_bandeja_envios=$mail->id;
+            $guardar_email_archivo->archivo= $file2;
             $guardar_email_archivo->fecha_hora = $carbon_sp;
             $guardar_email_archivo->save();
           }
@@ -438,6 +484,7 @@ class EmailBandejaEnviosController extends Controller
   }
 
   public function send(Request $request){
+    return $request;
     $date_sp = Carbon::now();
     $data_g = str_replace(' ', '_',$date_sp);
     $carbon_sp = str_replace(':','-',$data_g);
@@ -538,8 +585,6 @@ class EmailBandejaEnviosController extends Controller
       $id_usuario=auth()->user()->id;
       $user=User::where('id',$id_usuario)->first();
       $clientes=Cliente::all();
-      $mailbox =EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('updated_at','desc')->get();
-      $count_mailbox = count($mailbox);
       $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
       $verificacion_mail=EmailConfiguraciones::where('id_usuario',$user->id)->first();
       if(isset($verificacion_mail)){
@@ -556,21 +601,21 @@ class EmailBandejaEnviosController extends Controller
       $count_borradores = count($borradores);
       $count_eliminados = count($eliminados);
       $mailbox_file =EmailBandejaEnviosArchivos::get();
-      
-      return view('mailbox.delete',compact('mailbox','user','clientes','mailbox_file','count_mailbox','config_email','user','validacion','clientes','user','clientes','mailbox_file','config_email','count_mailbox','count_borradores','count_eliminados'));
+      return view('mailbox.delete',compact('mailbox','mailbox_file','count_mailbox','config_email','user','validacion','clientes','count_borradores','count_eliminados','eliminados'));
 
     }
 
     public function delete(Request $request){
+      // return $request;
       $check_ids =  $request->get('check_input'); 
       // * Estado '1' = Papelera
       foreach($check_ids as $ids){
-        $mail =EmailBandejaEnvios::find($ids);
+        $mail = EmailBandejaEnvios::find($ids);
         $mail->estado = '1';
         $mail->save();
       }
       
-      return back();
+      return redirect()->route('email.index');
     }
     
 
@@ -627,16 +672,22 @@ class EmailBandejaEnviosController extends Controller
      */
     public function destroy(Request $request)
     {
-      
-        $id = $request->get('id');
-        // $archivos =EmailBandejaEnviosArchivos::findOrFail('id_bandeja_envios',$id)->get();
-        // $archivos->delete();
-        $email=EmailBandejaEnvios::findOrFail($id);
-         $email->delete();
+      // return $request;
+      $check_ids = $request->get('check_input');
 
-
-        return back() ;
+      foreach($check_ids as $ids){
+        $email_busq=EmailBandejaEnvios::find($ids);
+        $email_files=EmailBandejaEnviosArchivos::where('id_bandeja_envios',$email_busq->id)->get();
+        //* ELIMNAR ARCHIVOS DE LA CARPETA PUBLIC
+        foreach($email_files as $files ){
+          Storage::disk('mailbox')->delete($files->fecha_hora.$files->archivo);
+        }
+        $email=EmailBandejaEnvios::findOrFail($email_busq->id);
+        $email->delete();
+      }
+      return redirect()->route('email.trash');
     }
+
     public function configstore(Request $request){
         $this->validate($request,[
             'email' => ['required','email','unique:email_configuraciones,email'],
