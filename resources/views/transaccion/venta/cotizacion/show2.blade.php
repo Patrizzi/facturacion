@@ -61,13 +61,21 @@
                 <input type="text" value="{{$cotizacion->id}}" name="id" id="id" hidden="">
                 <a class="btn btn-success" href="{{route('cotizacion.print',$cotizacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 @if(Auth::user()->email_creado == 1)
-                    <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
+                    {{-- <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
                         @csrf
-                        <input type="text" hidden="hidden"  name="tipo" value="App\Cotizacion"/>
-                        <input type="text" hidden="hidden"  name="id" value="{{$cotizacion->id}}"/>
-                        <input type="text" hidden="hidden"  name="redict" value="cotizacion_factura"/>
-                        <input type="text" hidden="hidden"  name="cliente" value=" {{$cotizacion->cliente->email}}"/>
-                       <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
+                        <input type="text"   name="tipo" value="App\Cotizacion"/><br>
+                        <input type="text"   name="id" value="{{$cotizacion->id}}"/><br>
+                        <input type="text"   name="redict" value="cotizacion_factura"/><br>
+                        <input type="text"   name="ruta" value="{{$ruta}}"/><br>
+                        <input type="text"   name="compact" value="{{$compact}}"/><br>
+                        <input type="text"   name="cliente" value=" {{$cotizacion->cliente->email}}"/><br>
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i> 
+                        </button>
+                    </form> --}}
+                    <form action="{{ route('email.cotizacion', $cotizacion->id )}}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Snf</button>
                     </form>
                 @endif
                 <div id="auto" onclick="divAuto()">

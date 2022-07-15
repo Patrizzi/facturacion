@@ -105,10 +105,10 @@
                                                 <input type="text" class="form-control" name="cc_email" id="cc">
                                             </div>
                                         @endif
-                                            <div class="col-sm-12">
-                                                <span>Asunto:</span>
-                                                <input type="text" required="" class="form-control" name="asunto" id="asunto" >
-                                            </div>
+                                        <div class="col-sm-12">
+                                            <span>Asunto:</span>
+                                            <input type="text" required="" class="form-control" name="asunto" id="asunto" >
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="mail-text h-200">

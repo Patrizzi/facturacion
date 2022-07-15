@@ -76,11 +76,11 @@
                                     <td>Validez</td>
                                     <td><a class="btn btn-primary" href="{{route('validez.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
-                                <tr class="gradeX">
+                                {{-- <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/backup_mail.svg')}}" width="20px" alt=""></td>
                                     <td>Backup de Email</td>
                                     <td><a class="btn btn-primary" href="{{route('email_backup')}}"><i class="fa fa-gear"></i></a></td>
-                                </tr>
+                                </tr> --}}
                             </tbody>
                         </table>
                     </div>

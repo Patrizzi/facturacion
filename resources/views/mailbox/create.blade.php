@@ -1,4 +1,4 @@
-
+{{-- Para el envio de facturas, boletas, etc --}}
 @extends('layout')
 
 @section('title','Enviar - '.$archivo )
@@ -12,18 +12,38 @@
     <div class="col-lg-10 container animated fadeInRight" >
         <div class="mail-box">
             <form action ="{{route('email.send')}}" method="POST" enctype="multipart/form-data" onsubmit="return valida(this)" >
-                <input type="text" hidden=""  name="dates" value="{{$date}}" id="">
-                <input type="text" hidden="" name="redict" value="{{$redic}}">
+                <input type="text"   name="dates" value="{{$date}}" id="">
+                <input type="text"  name="redict" value="{{$redic}}">
                 @csrf
                 <div class="mail-body">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Para:</label>
-                        <div class="col-sm-10">
-                            <input type="email" required="" value="{{$clientes}}" class="form-control" name="remitente" >
+                        <div class="col-sm-6">
+                            <span>De:</span>
+                            <input type="text" class="form-control" value="{{$config_email->email}}" disabled id="">
                         </div>
-                    </div>
-                    <div class="form-group row"><label class="col-sm-2 col-form-label">Asunto:</label>
-                        <div class="col-sm-10"><input type="text" required="" class="form-control" name="asunto" ></div>
+                        <div class="col-sm-6">
+                            <span>Para:</span>
+                            <input type="email" required="" class="form-control" name="remitente" value="{{$clientes}}" autocomplete="off" id="clientes_cc">
+                        </div>
+                        @if(isset($config_email->email_backup))
+                            <div class="col-sm-6">
+                                <span>CC:</span>
+                                <input type="email" class="form-control" name="cc_email" id="cc">
+                            </div>
+                            <div class="col-sm-6">
+                                <span>BCC:</span>
+                                <input type="text" class="form-control" value="{{$config_email->email_backup}}" disabled id="email_backup">
+                            </div>
+                        @else
+                            <div class="col-sm-12">
+                                <span>CC:</span>
+                                <input type="text" class="form-control" name="cc_email" id="cc">
+                            </div>
+                        @endif
+                        <div class="col-sm-12">
+                            <span>Asunto:</span>
+                            <input type="text" required="" class="form-control" name="asunto" id="asunto" >
+                        </div>
                     </div>
                 </div>
                 <div class="mail-text h-200">

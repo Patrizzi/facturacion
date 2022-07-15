@@ -236,7 +236,13 @@ class EmailBandejaEnviosController extends Controller
       return redirect()->route('email.index');
     }
 
+    //* FUNCION PARA LA CREACION DEL ENVIO CON PDFS
     public function save(Request $request){
+      $ruta =   $request->get('ruta');
+      $compact =   $request->get('compact');
+      
+      
+      $id_usuario = auth()->user()->id;
       $date_sp = Carbon::now();
       $data_g = str_replace(' ', '_',$date_sp);
       $carbon_sp = str_replace(':','-',$data_g);
@@ -244,7 +250,7 @@ class EmailBandejaEnviosController extends Controller
       $id =$request->get('id');
       $redic=$request->get('redict');
       $clientes=$request->get('cliente');
-
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
     if($tipo == 'App\Cotizacion'){
 
       $rutapdf = 'transaccion.venta.cotizacion.pdf2';
@@ -284,13 +290,16 @@ class EmailBandejaEnviosController extends Controller
         // return $cotizacion;
       // $archivo=$cotizacion->cod_cotizacion.
       $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
+      // return $compact;
       $pdf=PDF::loadView($rutapdf,compact($redic,'cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'));
+      // return var_dump($pdf);
       $content = $pdf->download();
+      
       $especif = $carbon_sp.$archivo;
       Storage::disk('mailbox')->put($especif,$content);
       $date = $carbon_sp;
       
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
+      return view('mailbox.create',compact('archivo','clientes','redic','date','config_email'));
 
     }else if ($tipo=='App\Cotizacion_Servicios'){
 
@@ -586,10 +595,10 @@ class EmailBandejaEnviosController extends Controller
       $user=User::where('id',$id_usuario)->first();
       $clientes=Cliente::all();
       $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
-      $verificacion_mail=EmailConfiguraciones::where('id_usuario',$user->id)->first();
+      // $verificacion_mail=EmailConfiguraciones::where('id_usuario',$user->id)->first();
       if(isset($verificacion_mail)){
           $validacion = 'MAIL';
-          $config_email = EmailConfiguraciones::where('id_usuario',$user->id)->first();
+          // $config_email = EmailConfiguraciones::where('id_usuario',$user->id)->first();
       }else{
           $validacion = 'DISMAIL';
       }
