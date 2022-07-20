@@ -25,14 +25,12 @@
         </form>
 
         @if(Auth::user()->email_creado == 1)
-        <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
-            @csrf
-            <input type="text" hidden="hidden"  name="tipo" value="App\GarantiaGuiaEgreso"/>
-            <input type="text" hidden="hidden"  name="id" value="{{$garantias_guias_egreso->id}}"/>
-            <input type="text" hidden="hidden"  name="redict" value="garantias_guias_egreso"/>
-            <input type="text" hidden="hidden"  name="cliente" value="{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->email}}"/>
-            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-        </form>
+            <form action="{{ route('email.guia_egreso', $garantias_guias_egreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                @csrf
+                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                    <i class="fa fa-envelope fa-lg" ></i> 
+                </button>
+            </form>
         @endif
         <a href="{{route('impresiones_egreso' ,$garantias_guias_egreso->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
         <div id="auto" onclick="divAuto()">

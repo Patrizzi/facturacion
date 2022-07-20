@@ -29,23 +29,17 @@
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
                 <a class="btn btn-success" href="{{route('cotizacion_manual.print',$cotizacion->id)}}" target="_blank"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                @if(Auth::user()->email_creado == 1)
+                    <form action="{{ route('email.cotizacion_manual', $cotizacion->id )}}" method="post" style="text-align: none;padding: 0;" class="btn"  >
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i> 
+                        </button>
+                    </form>
+                @endif
                 <div id="auto" onclick="divAuto()">
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
                 </div>
-                
-                         {{-- </a> --}}
-                {{-- @if(Auth::user()->email_creado == 0)
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#config" ><i class="fa fa-envelope fa-lg " ></i>  </button>
-                @else
-                    <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
-                        @csrf
-                        <input type="text" hidden="hidden"  name="tipo" value="App\Cotizacion"/>
-                        <input type="text" hidden="hidden"  name="id" value="{{$cotizacion->id}}"/>
-                        <input type="text" hidden="hidden"  name="redict" value="cotizacion_factura"/>
-                        <input type="text" hidden="hidden"  name="cliente" value=" {{$cotizacion->cliente->email}}"/>
-                       <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-                    </form>
-                @endif --}}
                 @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
                     <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i class="fa fa-pencil"></i></button>
                     <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i class="fa fa-times"></i></button>

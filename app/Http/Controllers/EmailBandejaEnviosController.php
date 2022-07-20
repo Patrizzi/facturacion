@@ -35,6 +35,10 @@ use DB;
 use App\Servicios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Swift_SmtpTransport;
+use Swift_Mailer;
+use Swift_TransportException;
+
 class EmailBandejaEnviosController extends Controller
 {
     /**
@@ -43,15 +47,26 @@ class EmailBandejaEnviosController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function index(){
-
       // return view('email_html.email_send_layout',compact('empresa'));
       $id_usuario=auth()->user()->id;
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
+      // if(count($config_email) == 0){
+      //   return view('mailbox.configuracion.index',compact('config_email','user','validacion'));
+      // }
+      
       $user=User::where('id',$id_usuario)->first();
       $clientes=Cliente::all();
-      $mailbox =EmailBandejaEnvios::where('estado','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
-      $mailbox_file =EmailBandejaEnviosArchivos::all();
-      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->get();
-      return view('mailbox.index',compact('mailbox','user','clientes','mailbox_file','config_email'));
+      //* INVOCAR Y CONTAR PARA EL LAYOUT DE MAILBOX
+      $mailbox = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $borradores = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $eliminados = EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $count_mailbox =  count($mailbox);
+      $count_borradores =  count($borradores);
+      $count_eliminados =  count($eliminados);
+      $mailbox_file =EmailBandejaEnviosArchivos::get();
+      // return $mailbox_file;
+      
+      return view('mailbox.index',compact('mailbox','user','clientes','mailbox_file','config_email','count_mailbox','count_borradores','count_eliminados'));
     }
     /**
      * Show the form for creating a new resource.
@@ -59,7 +74,7 @@ class EmailBandejaEnviosController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function create(){
-     return view('mailbox.create');
+      return view('mailbox.create');
     }
     /**
      * Store a newly created resource in storage.
@@ -68,7 +83,8 @@ class EmailBandejaEnviosController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function store(Request $request){
-
+      // return $request;
+      // *  Estados 0 = enviado; 1 = Eliminado 2 = borrador
       $date_sp = Carbon::now();
       $data_g = str_replace(' ', '_',$date_sp);
       $carbon_sp = str_replace(':','-',$data_g);
@@ -76,64 +92,115 @@ class EmailBandejaEnviosController extends Controller
 
       $id_usuario=auth()->user()->id;
       $correo_busqueda=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
-      $firma=$correo_busqueda->firma;
-      $ancho= $correo_busqueda->ancho_firma;
-      $alto = $correo_busqueda->alto_firma;
-      $mensaje_html = $request->get('mensaje');
-
       $correo=$correo_busqueda->email;
-
-      /////////ENVIO DE CORREO/////// https://myaccount.google.com/u/0/lesssecureapps?pli=1 <--- VAINA DE AUTORIZACION PARA EL GMAIL
 
       $smtpAddress = $correo_busqueda->smtp; // = $request->smtp
       $port = $correo_busqueda->port;
       $encryption = $correo_busqueda->encryption;
       $yourEmail = $correo;
-      $estado = '0';
-      //$mailbackup =  ; // = $request->yourmail
       $yourPassword = $correo_busqueda->password;
-      $sendto = $request->get('remitente')  ;
+      $firma=$correo_busqueda->firma;
+      $ancho= $correo_busqueda->ancho_firma;
+      $alto = $correo_busqueda->alto_firma;
+      $sendto = $request->get('remitente');
+      $cc_email = $request->get('cc_email');
       $titulo = $request->get('asunto');
+      $mensaje_html = $request->get('mensaje');
       $mensaje = view('email_html.email_send_layout',compact('empresa','mensaje_html','firma','alto','ancho'));
-      $bakcup = $correo_busqueda->email_backup ;
-
-      $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
-      $mailer = new \Swift_Mailer($transport);
-
+      $correos_envios = [$sendto, $cc_email,$correo_busqueda->email_backup];
+      //* FILTRO PARA ELIMINAR LOS VACIOS EN ARRAY
+      $mails_array = array_filter($correos_envios);
+      //* Archivos
       $newfile = $request->file('archivos');
-      if($request->hasfile('archivos')){
-        foreach ($newfile as $file) {
-          $nombre =  $file->getClientOriginalName();
-          $especif = $carbon_sp.$nombre;
-          \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-
-          $news[] = public_path().'/archivos/'.$especif;
-          $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup])->setBody($mensaje, 'text/html');
-          foreach ($news as $attachment) {
-            $message->attach(\Swift_Attachment::fromPath($attachment));
+      //* Cuando se reenvia
+      $reenvios = $request->get('archivo_reenvio');
+      if(isset($reenvios)){
+          // return $old_file;
+        foreach($reenvios as $name){
+          $var = str_replace(':', '-',$name);
+          $old_file[] = substr_replace($var,'_',10,1);
+        }
+        // return $old_file;
+      }
+      
+      if ( $request->get('boton_send') == true) {
+        // * VALIDACION PARA VERIFICAR LA CONFIGURACION 
+        $transport = (new Swift_SmtpTransport($smtpAddress, $port, $encryption)) 
+          ->setUsername($yourEmail) 
+          ->setPassword($yourPassword);
+        $mailer = new Swift_Mailer($transport);
+        $mailer->getTransport()->start();
+        
+        $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo($mails_array)->setBody($mensaje, 'text/html');
+        
+        if($request->hasfile('archivos')){
+          foreach ($newfile as $file) {
+            $nombre =  $file->getClientOriginalName();
+            $especif = $carbon_sp.$nombre;
+            \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
+            $news = public_path().'/archivos/'.$especif;
+            $message->attach(\Swift_Attachment::fromPath($news));
           }
         }
-      }else{
-        $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup ])->setBody($mensaje, 'text/html');
-      }
-
-      if($mailer->send($message)){
+        //* Archivos que se reenvian
+        if($request->get('archivo_reenvio')){
+          foreach ($old_file as $file_old) {
+            $news2 = public_path().'/archivos/'.$file_old;
+            $message->attach(\Swift_Attachment::fromPath($news2));
+          }
+        }
+        if($mailer->send($message)){
+          $mensaje = $request->get('mensaje') ;
+          $texto = strip_tags($mensaje);
+          $mail = new EmailBandejaEnvios;
+          $mail->id_usuario = auth()->user()->id;
+          $mail->destinatario = $correo;
+          $mail->remitente = json_encode($mails_array) ;
+          $mail->asunto = $request->get('asunto') ;
+          $mail->mensaje = $mensaje;
+          $mail->mensaje_sin_html =$texto ;
+          $mail->estado = '0';
+          $mail->fecha_hora =Carbon::now() ;
+          $mail-> save();
+          
+          // $newfile2 = $request->file('archivos');
+          if($request->hasfile('archivos')){
+            foreach ($newfile as $file2) {
+              $guardar_email_archivo= new EmailBandejaEnviosArchivos;
+              $guardar_email_archivo->id_bandeja_envios = $mail->id;
+              $guardar_email_archivo->archivo = $file2->getClientOriginalName();
+              $guardar_email_archivo->fecha_hora = $carbon_sp;
+              $guardar_email_archivo->save();
+            }
+          }
+          if($request->get('archivo_nombre')){
+            foreach ($old_file as $file2) {
+              $guardar_email_archivo= new EmailBandejaEnviosArchivos;
+              $guardar_email_archivo->id_bandeja_envios = $mail->id;
+              $guardar_email_archivo->archivo = $file2;
+              $guardar_email_archivo->fecha_hora = $carbon_sp;
+              $guardar_email_archivo->save();
+            }
+          }
+          return redirect()->route('email.index');
+        }
+      }else{ //* GUARDAR COMO BORRADOR
         $mensaje =$request->get('mensaje') ;
         $texto= strip_tags($mensaje);
         $mail = new EmailBandejaEnvios;
-        $mail->id_usuario =auth()->user()->id;
-        $mail->destinatario =$correo;
-        $mail->remitente =$request->get('remitente') ;
-        $mail->asunto =$request->get('asunto') ;
-        $mail->mensaje =$mensaje;
-        $mail->mensaje_sin_html =$texto ;
+        $mail->id_usuario = auth()->user()->id;
+        $mail->destinatario = $correo;
+        $mail->remitente = json_encode($mails_array) ;
+        $mail->asunto = $request->get('asunto') ;
+        $mail->mensaje = $mensaje;
+        $mail->mensaje_sin_html = $texto ;
         $mail->estado = '0';
+        $mail->estado_borrador = '1';
         $mail->fecha_hora =Carbon::now() ;
         $mail-> save();
-
-        $newfile2 = $request->file('archivos');
+        
         if($request->hasfile('archivos')){
-          foreach ($newfile2 as $file2) {
+          foreach ($newfile as $file2) {
             $guardar_email_archivo=new EmailBandejaEnviosArchivos;
             $guardar_email_archivo->id_bandeja_envios=$mail->id;
             $guardar_email_archivo->archivo= $file2->getClientOriginalName();
@@ -141,386 +208,196 @@ class EmailBandejaEnviosController extends Controller
             $guardar_email_archivo->save();
           }
         }
+        if($request->get('archivo_nombre')){
+          foreach ($old_file as $file2) {
+            $guardar_email_archivo=new EmailBandejaEnviosArchivos;
+            $guardar_email_archivo->id_bandeja_envios=$mail->id;
+            $guardar_email_archivo->archivo= $file2;
+            $guardar_email_archivo->fecha_hora = $carbon_sp;
+            $guardar_email_archivo->save();
+          }
+        }
+      }
+      return redirect()->route('email.index');
+    }
+
+   
+    public function send(Request $request){
+      // return $request;
+      $cancelar = $request->get('boton_cancelar');
+      $pdf = $request->get('pdf');
+      $dates = $request->get('dates');
+      // return $pdf;
+      if(isset($cancelar)){
+        $retorno = $request->get('retorno');
+        $id = $request->get('id');
+        Storage::disk('mailbox')->delete($dates.$pdf);
+        return redirect()->route(''.$retorno.'',$id);
+        // return redirect()->route('cotizacion.show',$cotizacion->id);
+      }
+      // return $request;
+      $id_usuario=auth()->user()->id;
+      $date_sp = Carbon::now();
+      $data_g = str_replace(' ', '_',$date_sp);
+      $carbon_sp = str_replace(':','-',$data_g);
+      $empresa = Empresa::first();
+      
+      $config_mail = EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
+      $yourEmail = $config_mail->email;
+      $cc_email  = $request->get('cc_email');
+
+      $firma=$config_mail->firma;
+      $alto = $config_mail->alto;
+      $ancho = $config_mail->ancho;
+      $mensaje_html = $request->get('mensaje');
+      /////////ENVIO DE CORREO/////// https://myaccount.google.com/u/0/lesssecureapps?pli=1 <--- VAINA DE AUTORIZACION PARA EL GMAIL
+
+      $sendto = $request->get('remitente');
+      $titulo = $request->get('asunto');
+      $mensaje = view('email_html.email_send_layout',compact('empresa','mensaje_html','firma','alto','ancho'));
+      //* ARRAY PARA ENVIOS CON MULTIPLES CC
+      $correos_envios = [$sendto , $cc_email , $config_mail->email_backup];
+      $mails_array = array_filter($correos_envios);
+      
+      //* ARCHIVOS
+      $pdf = $request->get('pdf');
+      
+      $pdfile = public_path().'/archivos/'.$dates.$pdf;
+      $newfile = $request->file('archivos');
+      
+      //* VALIDACION PARA EL ENVIO
+      $transport = (new \Swift_SmtpTransport($config_mail->smtp, $config_mail->port, $config_mail->encryption)) 
+        -> setUsername($config_mail->email) 
+        -> setPassword($config_mail->password);
+      $mailer = new \Swift_Mailer($transport);
+      $mailer->getTransport()->start();
+      
+      $message = (new \Swift_Message($yourEmail)) -> setFrom([ $yourEmail => $titulo]) -> setTo($mails_array) -> setBody($mensaje, 'text/html');
+      
+      $message->attach(\Swift_Attachment::fromPath($pdfile));
+      
+      if($request->hasfile('archivos')){
+        foreach ($newfile as $file) {
+          $nombre =  $file->getClientOriginalName();
+          $especif = $carbon_sp.$nombre;
+          \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
+          $news = public_path().'/archivos/'.$especif;
+          $message->attach(\Swift_Attachment::fromPath($news));
+        }
+      }
+      //*xml
+      if($request->get('archivo_nombre')){
+        $xml = $request->get('archivo_nombre');
+        $news2 = public_path().'/facturas_electronicas/'.$xml;
+        $message->attach(\Swift_Attachment::fromPath($news2));
+      }
+      if($mailer->send($message)){
+        $mensaje =$request->get('mensaje') ;
+        $texto= strip_tags($mensaje);
+        $mail = new EmailBandejaEnvios;
+        $mail->id_usuario = auth()->user()->id;
+        $mail->destinatario = $yourEmail;
+        $mail->remitente = $request->get('remitente') ;
+        $mail->asunto = $request->get('asunto') ;
+        $mail->mensaje = $mensaje;
+        $mail->mensaje_sin_html = $texto ;
+        $mail->estado= '0';
+        $mail->fecha_hora =Carbon::now();
+        $mail->save();
+
+        $newfile2 = $request->file('archivos');
+        if($request->hasfile('archivos')){
+          foreach ($newfile2 as $file2) {
+            $guardar_email_archivo=new EmailBandejaEnviosArchivos;
+            $guardar_email_archivo->id_bandeja_envios=$mail->id;
+            $guardar_email_archivo->archivo= $file2->getClientOriginalName();
+            $guardar_email_archivo->fecha_hora= $carbon_sp;
+            $guardar_email_archivo->save();
+          }
+        }
+        if($request->get('archivo_nombre')){
+          $guardar_email_archivo=new EmailBandejaEnviosArchivos;
+          $guardar_email_archivo->id_bandeja_envios=$mail->id;
+          $guardar_email_archivo->archivo= $xml;
+          $guardar_email_archivo->fecha_hora = $carbon_sp;
+          $guardar_email_archivo->save();
+        }
+        $archivo_pdf = new EmailBandejaEnviosArchivos;
+        $archivo_pdf->id_bandeja_envios=$mail->id;
+        $archivo_pdf->archivo=$pdf;
+        $archivo_pdf->fecha_hora= $dates;
+        $archivo_pdf->save();
+
         return redirect()->route('email.index');
       }
       return "Something went wrong :(";
     }
-
-    public function save(Request $request){
-      $date_sp = Carbon::now();
-      $data_g = str_replace(' ', '_',$date_sp);
-      $carbon_sp = str_replace(':','-',$data_g);
-      $tipo = $request->get('tipo');
-      $id =$request->get('id');
-      $redic=$request->get('redict');
-      $clientes=$request->get('cliente');
-
-    if($tipo == 'App\Cotizacion'){
-
-      $rutapdf = 'transaccion.venta.cotizacion.pdf2';
-      $name = 'Cotizacion_Producto_';
-      $banco=Banco::where('estado','0')->get();
-      $banco_count=Banco::where('estado','0')->count();
-      $cotizacion=Cotizacion::find($id);
-      $regla=$cotizacion->tipo;
-      $sub_total=0;
-      $igv=Igv::first();
-      /*registros boleta y factura*/
-      // if($regla=='factura'){
-        $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
-      // }elseif($regla=='boleta'){
-        // $cotizacion_registro=Cotizacion_boleta_registro::where('cotizacion_id',$id)->get();
-      // }
-      /* FIN registros boleta y factura*/
-
-      /*de numeros a Letras*/
-      $sub_total = $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
-      $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
-      if ($regla=='factura') {
-        $end=round($sub_total, 2)+round($igv_p, 2);
-        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
-      }elseif ($regla=='boleta'){
-        $end=round($sub_total, 2);
-        $end2=number_format(round($sub_total, 2),2);
-
-      }
-      /* Finde numeros a Letras*/
-      $firma = EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
-      $empresa=Empresa::first();
-      $sum=0;
-      $i=1;
-      $regla=$cotizacion->tipo;
-      $cotizacion_factura = ' ';
-        // return $cotizacion;
-      // $archivo=$cotizacion->cod_cotizacion.
-      $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
-      $pdf=PDF::loadView($rutapdf,compact($redic,'cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'));
-      $content = $pdf->download();
-      $especif = $carbon_sp.$archivo;
-      Storage::disk('mailbox')->put($especif,$content);
-      $date = $carbon_sp;
-      
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }else if ($tipo=='App\Cotizacion_Servicios'){
-
-      $rutapdf = 'transaccion.venta.servicios.cotizacion.print';
-      $name = 'Cotizacion_Servicio_';
-
-      $banco=Banco::where('estado','0')->get();
-      $banco_count=Banco::where('estado','0')->count();
-      $moneda=Moneda::where('principal',1)->first();
-      $cotizacion=Cotizacion_Servicios::find($id);
-      $regla=$cotizacion->tipo;
-      $sub_total=0;
-      $igv=Igv::first();
-      $empresa=Empresa::first();
-      $sum=0;
-      $i=1;
-      $regla=$cotizacion->tipo;
-      /*registros boleta y factura*/
-      if($cotizacion->tipo=="factura"){
-        //FACTURA
-        $cotizacion_registro=Cotizacion_Servicios_factura_registro::where('cotizacion_servicio_id',$id)->get();
-        foreach ($cotizacion_registro as $cotizacion_registros) {
-           $array[]=Servicios::where('id',$cotizacion_registros->servicio_id)->first();
-        }
-
-      }else{
-        //BOLETA
-        $cotizacion_registro=Cotizacion_Servicios_boleta_registro::where('cotizacion_servicio_id',$id)->get();
-        foreach ($cotizacion_registro as $cotizacion_registros) {
-            $array[]=Servicios::where('id',$cotizacion_registros->servicio_id)->first();
-        }
-      }
-      $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
-
-      // $archivo=$cotizacion->cod_cotizacion.'.pdf';
-      $regla=$cotizacion->tipo;
-
-      $pdf=PDF::loadView('transaccion.venta.servicios.cotizacion.pdf',compact('cotizacion','empresa','cotizacion_registro','cotizacion_registro2','sum','igv',"array","sub_total","moneda","regla",'banco','facturacion','boleta','i','banco_count'));
-       $content = $pdf->download();
-       // $especif = $carbon_sp.$nombre;
-      // \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-      $especif = $carbon_sp.$archivo;
-      Storage::disk('mailbox')->put($especif,$content);
-      $date = $carbon_sp;
-      
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }else if($tipo=='App\Guia_remision'){
-
-      $banco_count=Banco::where('estado','0')->count();
-      $guia_remision=Guia_remision::find($id);
-      $guia_registro=g_remision_registro::where('guia_remision_id',$guia_remision->id)->get();
-      $banco=Banco::where('estado','0')->get();
-      $empresa=Empresa::first();
-      $name = 'Guia_Remision';
-
-      // $archivo=$guia_remision->cod_guia.".pdf";
-      $archivo='PDF-DOC-'.$guia_remision->cod_guia.'-'.$empresa->ruc.".pdf";
-
-      $pdf=PDF::loadView('transaccion.venta.guia_remision.pdf',compact('guia_remision','guia_registro','banco','empresa','banco_count'));
-      $content = $pdf->download();
-      $date = $carbon_sp;
-      $especif = $carbon_sp.$archivo;
-      Storage::disk('mailbox')->put($especif,$content);
-
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }elseif ($tipo == 'App\Facturacion') {
-
-      $name = 'Factura';
-      $empresa=Empresa::first();
-      $facturacion=Facturacion::find($id);
-      $facturacion_registro=Facturacion_registro::where('facturacion_id',$id)->get();
-      $sum=0;
-      $igv=Igv::first();
-      $sub_total=0;
-      $banco=Banco::where('estado',0)->get();
-      $banco_count=Banco::where('estado','0')->count();
-      $i = 1;
-
-      // $archivo=$facturacion->codigo_fac.".pdf";
-      $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
-
-      $pdf=PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
-      $content = $pdf->download();
-      $date = $carbon_sp;
-      $especif = $carbon_sp.$archivo;
-      Storage::disk('mailbox')->put($especif,$content);
-
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }elseif ($tipo == 'App\Boleta') {
-
-      $name = 'Boleta';
-      // $name = $request->get('name');
-      // $regla=$cotizacion->tipo;
-      $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
-      $igv=Igv::first();
-      $banco=Banco::all();
-      $banco_count=Banco::where('estado','0')->count();
-      $empresa=Empresa::first();
-      $sub_total=0;
-      $boleta=Boleta::find($id);
-      $i = 1;
-
-      // $archivo=$boleta->codigo_boleta.".pdf";
-      $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
-
-      $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
-      $content = $pdf->download();
-      $date = $carbon_sp;
-      $especif = $carbon_sp.$archivo;
-      Storage::disk('mailbox')->put($especif,$content);
-
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }elseif ($tipo == 'App\NotaVenta') {
-
-      $name = 'Nota_Venta';
-
-      $empresa=Empresa::first();
-      $nota_venta = NotaVenta::where('id',$id)->first();
-      $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
-      $banco=Banco::where('estado',0)->get();
-      $banco_count=$banco->count();
-
-      $archivo = 'PDF-DOC-'.$nota_venta->cod_nota_venta.'-'.$empresa->ruc.'.pdf';
-
-      $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
-      $content = $pdf->download();
-      $date = $carbon_sp;
-      $especif = $carbon_sp.$archivo;
-      Storage::disk('mailbox')->put($especif,$content);
-
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }else{
-      $mi_empresa=Empresa::first();
-      if($tipo == 'App\GarantiaGuiaIngreso'){
-        
-        $rutapdf= 'transaccion.garantias.guia_ingreso.show_pdf';
-        $garantia_guia_ingreso = $tipo::find($id);
-
-        $name = 'PDF-DOC-'.$garantia_guia_ingreso->orden_servicio.'-'.$mi_empresa->ruc;
-
-        // $name = 'Guia_Ingreso_';
-
-      }elseif($tipo == 'App\GarantiaGuiaEgreso'){
-
-        $rutapdf= 'transaccion.garantias.guia_egreso.show_pdf';
-        $garantias_guias_egreso = $tipo::find($id);
-        // $name = 'Guia_Egreso_';
-        $name = 'PDF-DOC-'.$garantias_guias_egreso->orden_servicio.'-'.$mi_empresa->ruc;
-
-
-      }elseif($tipo == 'App\GarantiaInformeTecnico'){
-
-        $rutapdf= 'transaccion.garantias.informe_tecnico.show_pdf';
-        $garantias_informe_tecnico = $tipo::find($id);
-        // $name = 'Informe_Tecnico_';
-        $name = 'PDF-DOC-'.$garantias_informe_tecnico->orden_servicio.'-'.$mi_empresa->ruc;
-        
-        $contacto = Contacto::all();
-        $archivo_informe_tecnico  = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico',$garantias_informe_tecnico)->get();
-        $archivo=$name.".pdf";
-        $pdf=PDF::loadView($rutapdf,compact($redic,'mi_empresa','contacto','archivo_informe_tecnico'));
-        $content=$pdf->download();
-
-        $especif = $carbon_sp.$archivo;
-        Storage::disk('mailbox')->put($especif,$content);
-        $date = $carbon_sp;
-
-        return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-      }
-
-      $contacto = Contacto::all();
-      $archivo=$name.".pdf";
-      $pdf=PDF::loadView($rutapdf,compact($redic,'mi_empresa','contacto'));
-      $content=$pdf->download();
-
-      $especif = $carbon_sp.$archivo;
-      // $archivo=$especif;
-      // \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-      Storage::disk('mailbox')->put($especif,$content);
-      $date = $carbon_sp;
-
-      return view('mailbox.create',compact('archivo','clientes','redic','date'));
-
-    }
-  }
-
-  public function send(Request $request){
-    $date_sp = Carbon::now();
-    $data_g = str_replace(' ', '_',$date_sp);
-    $carbon_sp = str_replace(':','-',$data_g);
-    $dates = $request->get('dates');
-    $empresa = Empresa::first();
-    $id_usuario=auth()->user()->id;
-    $correo_busqueda=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
-    $correo=$correo_busqueda->email;
-
-    $firma=$correo_busqueda->firma;
-    $alto = $correo_busqueda->alto;
-    $ancho = $correo_busqueda->ancho;
-    $mensaje_html = $request->get('mensaje');
-    /////////ENVIO DE CORREO/////// https://myaccount.google.com/u/0/lesssecureapps?pli=1 <--- VAINA DE AUTORIZACION PARA EL GMAIL
-
-        $smtpAddress = $correo_busqueda->smtp; // = $request->smtp
-        $port = $correo_busqueda->port;
-        $encryption = $correo_busqueda->encryption;
-        $yourEmail = $correo;
-        $estado = '0';
-        //$mailbackup =  ; // = $request->yourmail
-        $yourPassword = $correo_busqueda->password;
-        $sendto = $request->get('remitente')  ;
-        $titulo = $request->get('asunto');
-        $mensaje = view('email_html.email_send_layout',compact('empresa','mensaje_html','firma','alto','ancho'));;
-        $bakcup =   $correo_busqueda->email_backup ;
-
-        // $file = $request->archivo;
-        $pdf=$request->get('pdf');
-        $carpet =$request->get('redict');
-        $pdfile = public_path().'/archivos/'.$dates.$pdf;
-
-        $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
-        $mailer =new \Swift_Mailer($transport);
-
-        $newfile = $request->file('archivos');
-        if($request->hasfile('archivos')){
-          foreach ($newfile as $file) {
-            $nombre =  $file->getClientOriginalName();
-            $especif = $carbon_sp.$nombre;
-            \Storage::disk('mailbox')->put( $especif ,  \File::get($file));
-
-            $news[] = public_path().'/archivos/'.$especif;
-            $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup])->setBody($mensaje, 'text/html');
-            $message->attach(\Swift_Attachment::fromPath($pdfile));
-            foreach ($news as $attachment) {
-              $message->attach(\Swift_Attachment::fromPath($attachment));
-            }
-          }
-        }else{
-          $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup ])->setBody($mensaje, 'text/html');
-          $message->attach(\Swift_Attachment::fromPath($pdfile));
-
-        }
-        if($mailer->send($message)){
-          $mensaje =$request->get('mensaje') ;
-          $texto= strip_tags($mensaje);
-          $mail = new EmailBandejaEnvios;
-          $mail->id_usuario =auth()->user()->id;
-          $mail->destinatario =$correo;
-          $mail->remitente =$request->get('remitente') ;
-          $mail->asunto =$request->get('asunto') ;
-          $mail->mensaje =$mensaje;
-          $mail->mensaje_sin_html =$texto ;
-          $mail->estado= $estado;
-          $mail->fecha_hora =Carbon::now() ;
-          $mail-> save();
-
-          $newfile2 = $request->file('archivos');
-          if($request->hasfile('archivos')){
-            foreach ($newfile2 as $file2) {
-              $guardar_email_archivo=new EmailBandejaEnviosArchivos;
-              $guardar_email_archivo->id_bandeja_envios=$mail->id;
-              $guardar_email_archivo->archivo= $file2->getClientOriginalName();
-              $guardar_email_archivo->fecha_hora= $carbon_sp;
-              $guardar_email_archivo->save();
-            }
-          }
-          $archivo_pdf = new EmailBandejaEnviosArchivos;
-          $archivo_pdf->id_bandeja_envios=$mail->id;
-          $archivo_pdf->archivo=$pdf;
-          $archivo_pdf->fecha_hora= $dates;
-          $archivo_pdf->save();
-
-          return redirect()->route('email.index');
-        }
-        return "Something went wrong :(";
-      }
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request){
-      $id = $request->get('id');
-      $mail =EmailBandejaEnvios::find($id);
-      $mail ->id_usuario=$mail->id_usuario;
-      $mail->destinatario=$mail->destinatario;
-      $mail->remitente=$mail->remitente;
-      $mail->asunto =$mail->asunto;
-      $mail->mensaje=$mail->mensaje;
-      $mail->mensaje_sin_html=$mail->mensaje_sin_html;
-      $mail->fecha_hora=$mail->fecha_hora;
-      $mail->estado = '1';
-      $mail->save();
-      return back();
-    }
-
+    // * Vista de enviar a a la papelera
     public function trash()
     {
       $id_usuario=auth()->user()->id;
       $user=User::where('id',$id_usuario)->first();
       $clientes=Cliente::all();
-      $mailbox =EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('updated_at','desc')->get();
-      $count = count($mailbox);
-
-      $mailbox_file =EmailBandejaEnviosArchivos::all();
-      return view('mailbox.delete',compact('mailbox','user','clientes','mailbox_file','count'));
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
+      // $verificacion_mail=EmailConfiguraciones::where('id_usuario',$user->id)->first();
+      if(isset($verificacion_mail)){
+          $validacion = 'MAIL';
+          // $config_email = EmailConfiguraciones::where('id_usuario',$user->id)->first();
+      }else{
+          $validacion = 'DISMAIL';
+      }
+      //* INVOCAR Y CONTAR PARA EL LAYOUT DE MAILBOX
+      $mailbox = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $borradores = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $eliminados = EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $count_mailbox = count($mailbox);
+      $count_borradores = count($borradores);
+      $count_eliminados = count($eliminados);
+      $mailbox_file =EmailBandejaEnviosArchivos::get();
+      return view('mailbox.delete',compact('mailbox','mailbox_file','count_mailbox','config_email','user','validacion','clientes','count_borradores','count_eliminados','eliminados'));
 
     }
 
+    public function delete(Request $request){
+      // return $request;
+      $check_ids =  $request->get('check_input'); 
+      // * Estado '1' = Papelera
+      foreach($check_ids as $ids){
+        $mail = EmailBandejaEnvios::find($ids);
+        $mail->estado = '1';
+        $mail->save();
+      }
+      
+      return redirect()->route('email.index');
+    }
+    
+
     public function show($id)
     {
-
+      // return $id;
+      $id_usuario=auth()->user()->id;
       $mail=EmailBandejaEnvios::find($id);
-      return view('mailbox.show',compact('mail'));
+      $clientes=Cliente::all();
+      $archivos=EmailBandejaEnviosArchivos::where('id_bandeja_envios', $mail->id)->get();
+      $config_email=EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
+      //* INVOCAR Y CONTAR PARA EL LAYOUT DE MAILBOX
+      $mailbox = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','0')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $borradores = EmailBandejaEnvios::where('estado','0')->where('estado_borrador','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $eliminados = EmailBandejaEnvios::where('estado','1')->where('id_usuario',$id_usuario)->OrderBy('id','desc')->get();
+      $count_mailbox =  count($mailbox);
+      $count_borradores =  count($borradores);
+      $count_eliminados =  count($eliminados);
+      $mailbox_file =EmailBandejaEnviosArchivos::get();
+      // return $mailbox_file;
+      
+      // return view('mailbox.index',compact('mailbox','user','clientes','mailbox_file','config_email','count_mailbox','count_borradores','count_eliminados'));
+      return view('mailbox.show',compact('mail','archivos','clientes','mailbox_file','config_email','count_mailbox','count_borradores','count_eliminados'));
     }
 
     /**
@@ -554,15 +431,22 @@ class EmailBandejaEnviosController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = $request->get('id');
-        // $archivos =EmailBandejaEnviosArchivos::findOrFail('id_bandeja_envios',$id)->get();
-        // $archivos->delete();
-        $email=EmailBandejaEnvios::findOrFail($id);
-         $email->delete();
+      // return $request;
+      $check_ids = $request->get('check_input');
 
-
-        return back() ;
+      foreach($check_ids as $ids){
+        $email_busq=EmailBandejaEnvios::find($ids);
+        $email_files=EmailBandejaEnviosArchivos::where('id_bandeja_envios',$email_busq->id)->get();
+        //* ELIMNAR ARCHIVOS DE LA CARPETA PUBLIC
+        foreach($email_files as $files ){
+          Storage::disk('mailbox')->delete($files->fecha_hora.$files->archivo);
+        }
+        $email=EmailBandejaEnvios::findOrFail($email_busq->id);
+        $email->delete();
+      }
+      return redirect()->route('email.trash');
     }
+
     public function configstore(Request $request){
         $this->validate($request,[
             'email' => ['required','email','unique:email_configuraciones,email'],

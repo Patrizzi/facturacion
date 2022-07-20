@@ -79,61 +79,50 @@
 </div>
 </div>
 {{-- fimodal --}}
- <div class="wrapper wrapper-content animated fadeInRight">
+
+<div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title" style="padding-right: 3.1%">
         <div class="row tooltip-demo">
-         <div class="col-sm-6">
-
-         </div>
-
-         <div class="col-sm-6" align="right">
-            <a href="{{route('pdf_guia' ,$guia_remision->id)}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </a>
-         {{--   <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button> --}}
-
-
-
-           @if(Auth::user()->email_creado == 1)
-                <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
-                    @csrf
-                    <input type="text" hidden="hidden" name="tipo" value="App\Guia_remision"/>
-                    <input type="text" hidden="hidden" name="id" value="{{$guia_remision->id}}"/>
-                    <input type="text" hidden="hidden" name="redict" value="guia_remision">
-                    <input type="text" hidden="hidden" name="cliente" value="{{$guia_remision->cliente->email}}">
-                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-                </form>
-            @endif
-
-           <a class="btn btn-success" href="{{route('guia_remision.print' , $guia_remision->id)}}"target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
-           <div id="auto" onclick="divAuto()">
-                <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
-            </div>
-            <div id="div-mostrar">
-               <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                @csrf
-                 <input type="tel" name="numero"  value="{{$guia_remision->cliente->celular}}"   />
-                 <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                 <input type="text" hidden="" name="url" value="{{route('pdf_guia' ,$guia_remision->id)}}?archivo=">
-                 <input type="text" name="name_sin_cambio" hidden="" value="{{$guia_remision->cod_guia}}" />
-                <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-            </form>
-            </div>
-       </div>
-   </div>
-
-</div>
-<div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6" align="right">
+                <a href="{{route('pdf_guia' ,$guia_remision->id)}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  
+                </a>
+                @if(Auth::user()->email_creado == 1)
+                    <form action="{{ route('email.guia_remision', $guia_remision->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i> 
+                        </button>
+                    </form>
+                @endif
+                <a class="btn btn-success" href="{{route('guia_remision.print' , $guia_remision->id)}}"target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                <div id="auto" onclick="divAuto()">
+                    <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
+                </div>
+                <div id="div-mostrar">
+                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
+                        @csrf
+                        <input type="tel" name="numero"  value="{{$guia_remision->cliente->celular}}"   />
+                        <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                        <input type="text" hidden="" name="url" value="{{route('pdf_guia' ,$guia_remision->id)}}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden="" value="{{$guia_remision->cod_guia}}" />
+                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                    </form>
+                </div>
+            </div>  
+        </div>
+    </div>
+    <div class="row">
     <div class="col-lg-12" style="margin-top: -2px">
         <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
             <div class="row">
                 <div class="col-sm-4 text-left" align="left">
-
                     <address class="col-sm-4" align="left">
                         <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
                     </address>
                 </div>
                 <div class="col-sm-4">
                 </div>
-
                 <div class="col-sm-4 ">
                     <div class="form-control" align="center" style="height: auto;">
                         <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
@@ -141,7 +130,8 @@
                         <h5>{{$guia_remision->cod_guia}} </h5>
                     </div>
                 </div>
-            </div><br>
+            </div>
+            <br>
             <div class="row" align="center" style="padding-bottom: 5px">
                 <div class="col-sm-6" align="center">
                     <div class="form-control"><h3>Domicilio De Partida</h3>
@@ -158,7 +148,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row" align="center">
                 <div class="col-sm-6" align="center">
                     <div class="form-control"><h3>Destinario</h3>
@@ -172,35 +161,34 @@
                     <div class="form-control" ><h3>Unidad de Transporte/Conductor</h3>
                         <div align="left" style="font-size: 13px">
                             @if(isset($guia_remision->vehiculo_id))
-                            <p>
-                                <b>Placa del Vehiculo : </b>{{$guia_remision->vehiculo->placa}}<br>
-                                <b>Marca del Vehiculo : </b>{{$guia_remision->vehiculo->marca}}<br>
-                                <b>Conductor : </b>{{$guia_remision->personal->nombres}}
-                            </p>
+                                <p>
+                                    <b>Placa del Vehiculo : </b>{{$guia_remision->vehiculo->placa}}<br>
+                                    <b>Marca del Vehiculo : </b>{{$guia_remision->vehiculo->marca}}<br>
+                                    <b>Conductor : </b>{{$guia_remision->personal->nombres}}
+                                </p>
                             @elseif(isset($guia_remision->vehiculo_publico))
-                             <p>
-                                <b>Empresa:</b> {{$guia_remision->vehiculo_publicos->nombre}}<br>
-                                <b>Ruc: </b> {{$guia_remision->vehiculo_publicos->ruc}}<br>
-                                <b>Nota:</b>Esta Empresa es Publica
+                                <p>
+                                    <b>Empresa:</b> {{$guia_remision->vehiculo_publicos->nombre}}<br>
+                                    <b>Ruc: </b> {{$guia_remision->vehiculo_publicos->ruc}}<br>
+                                    <b>Nota:</b>Esta Empresa es Publica
 
-                            </p>
+                                </p>
                             @else
-                            <p>
-                                <b>Placa del Vehiculo : </b>No Hay Vehiculo<br>
-                                <b>Marca del Vehiculo : </b>No Hay Vehiculo<br>
-                                @if(isset($guia_remision->conductor_id))
-                                <b>Conductor : </b>{{$guia_remision->personal->nombres}}
-                                @else
-                                <b>Conductor : </b> No Hay Conductor
-                                @endif
-                            </p>
-
+                                <p>
+                                    <b>Placa del Vehiculo : </b>No Hay Vehiculo<br>
+                                    <b>Marca del Vehiculo : </b>No Hay Vehiculo<br>
+                                    @if(isset($guia_remision->conductor_id))
+                                    <b>Conductor : </b>{{$guia_remision->personal->nombres}}
+                                    @else
+                                    <b>Conductor : </b> No Hay Conductor
+                                    @endif
+                                </p>
                             @endif
                         </div>
                     </div>
                 </div>
-            </div><br>
-
+            </div>
+            <br>
             <div class="table-responsive">
                 <table class="table " >
                     <thead>

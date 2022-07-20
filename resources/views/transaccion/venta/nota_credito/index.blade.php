@@ -56,6 +56,7 @@
                                     <th>Cliente</th>
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
+                                    <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
                             </thead>
 
@@ -87,7 +88,21 @@
                                     @else
                                         <td>{{$nota_credito->created_at}}</td>
                                     @endif
-                                    <td><a href="{{route('nota-credito.show',$nota_credito->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
+                                    <td>
+                                        <a href="{{route('nota-credito.show',$nota_credito->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a>
+                                    </td>
+                                    <td style="text-align:center;">
+                                        @if($nota_credito->n_electronica==1) <!-- Nombre del cliente -->
+                                            <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>Aceptada</span>
+                                        @elseif($nota_credito->n_electronica==2)
+                                            <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="Anulada"><i class="fa fa-times-circle"></i></button>
+                                            <span hidden>Anulada</span>
+                                        @else
+                                            <button class="btn btn-warning btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="En Espera"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>En Espera</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach 
                             </tbody>

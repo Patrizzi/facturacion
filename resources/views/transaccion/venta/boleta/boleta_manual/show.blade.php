@@ -43,6 +43,14 @@
                     class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
                     data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i>
                 </a>
+                @if(Auth::user()->email_creado == 1)
+                    <form action="{{ route('email.boleta_manual', $boleta->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i> 
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>

@@ -3,27 +3,20 @@
 @section('breadcrumb', 'Email')
 @section('breadcrumb2', 'Email')
 
-@if( $user->email_creado==0)
-    @section('data-toggle', 'modal')
-    @section('href_accion', '#configu')
-    @section('value_accion', 'Redactar')
-    @section('data-config', 'modal')
-    @section('config', '#configu')
-    @section('nombre', '')
-    @section('class', 'btn btn-primary fa fa-gear')
-
-@elseif( $user->email_creado==1)
-    @section('data-toggle', 'modal')
-    @section('href_accion', '#redactar')
-    @section('value_accion', 'Redactar')
-
-    @section('data-config', 'modal')
-    @section('config', '#edits')
-    @section('nombre', '')
-    @section('class', 'btn btn-primary fa fa-gear')
-
-@endif
+@section('atributo_1', 'hidden')
+@section('atributo_actu', 'hidden')
 @section('content')
+{{-- @section('content') --}}
+
+@if (session('error_email'))
+<div style="padding-top: 10px">
+    <div class="alert alert-danger">
+        <a class="alert-link" href="#">
+            <li style="color: red">{{ session('error_email') }}</li>
+        </a>
+    </div>
+</div>
+@endif
 
 @if($errors->any())
 <div style="padding-top: 10px">
@@ -36,24 +29,123 @@
       </div>
  </div>
 @endif
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox ">
+				<div class="">
+					{{-- 2 Columnas --}}
+					<div class="row">
+						@include('layout_mail')
+                        <div class="col-lg-9">
+                            <div class="ibox-content" style="padding: 1em 1em">
+                                <div class="mail-box-header ">
+                                    <h2>
+                                        Enviados ({{$count_mailbox}})
+                                    </h2>
+                                    <div class="row">
+                                        <div class="col-sm-6 mail-tools tooltip-demo m-t-md" align="left" style="align-self: self-end">
+                                            <input type="checkbox" class="check_all" data-toggle="tooltip" data-placement="top" title="Seleccionar todo"  onclick="select_all_mail()">
+                                        </div>
+                                        <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
+                                            <button class="btn btn-primary " onclick=" location.reload();"><i class="fa fa-refresh"></i> Recargar</button>
+                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if($count_mailbox > 0)
+                                    <div class="mail-box  tabs-container">
+                                        <form action="{{route('email.delete')}}" method="post">
+                                            @csrf 
+                                            <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
+                                                <thead style="display: none">
+                                                    <tr>
+                                                        <td>a</td>
+                                                        <td>cb</td>
+                                                        <td>c</td>
+                                                        <td>d</td>
+                                                        <td>r</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($mailbox as $mailboxs)
+                                                    <tr class="read" >
+                                                        <td class="check-mail" >
+                                                            <input type="checkbox" class="select_id" id="{{$mailboxs->id}}" value="{{$mailboxs->id}}" name="check_input[]">
+                                                        </td>
+                                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+                                                        <td class="mail-contact" style="width: 40%;cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'" >
+                                                            @if(substr($mailboxs->remitente, -1) == ']')
+                                                                {{json_decode($mailboxs->remitente)[0]}}...
+                                                            @else
+                                                                {{$mailboxs->remitente}}
+                                                            @endif
+                                                        </td>
+                                                        <td class="mail-subject" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            @if(strlen($mailboxs->asunto) > 34)
+                                                                {{substr($mailboxs->asunto, 0, 35)}}...
+                                                            @else
+                                                                {{$mailboxs->asunto}}
+                                                            @endif
+                                                        </td>
+                                                        <td style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            @if( count($mailbox_file->where('id_bandeja_envios', $mailboxs->id )) > 0 )
+                                                                <i class="fa fa-paperclip"></i>
+                                                            @endif
+                                                        </td>
+                                                        <td style="width: 10%" class="text-right mail-date" style="cursor: pointer;" onclick="location.href='{{route('email.show', $mailboxs->id)}}'">
+                                                            <span hidden="hidden">{{$dias =  date('d/m/y',strtotime($mailboxs->fecha_hora))}}</span>
+                                                            <span hidden="hidden">{{$hoy =  date("d/m/y")}}</span>
+                                                            <span hidden="hidden">{{$hora =  date('H:i:s', strtotime($mailboxs->fecha_hora))}}</span>
+                                                            @if($dias != $hoy)
+                                                                {{date('d/m/y',strtotime($mailboxs->fecha_hora))}}
+                                                            @else
+                                                                {{date('H:i:s', strtotime($mailboxs->fecha_hora))}}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <button type="submit" style="display: none" id="submit_eliminar"></button>
+                                        </form>
+                                    </div>
+                                    <br>
+                                @else
+                                    <div class="mail-box  tabs-container">
+                                        <div  style="padding-bottom: 1em">
+                                            <center>No hay elementos enviados</center>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- Modal Configuracion --}}
-<div class="modal fade bd-example-modal-lg" id="configu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade bd-example-modal-lg" id="configu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
 
             </div>
-            <div style="padding-left: 15px;padding-right: 15px;">
+            <div style="padding-left: 15px;padding-right: 15px;"> --}}
                 {{-- ccccccccccccccccc --}}
-                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+                {{-- <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
 
                     <form action="{{route('email.configstore')}}"  enctype="multipart/form-data" method="post">
                         @csrf
                         <div class="row">
                             <fieldset style="width: 100%">
-                                <legend> Agregar Configuracion </legend>
+                                <legend> Agregar Configuracion </legend> --}}
                                 {{-- <div> --}}
-                                    <div class="panel-body" align="left">
+                                    {{-- <div class="panel-body" align="left">
                                         <div class="row">
                                             <label class="col-sm-2 col-form-label">Email:</label>
                                             <div class="col-sm-4"><input type="email" class="form-control" name="email" required="">
@@ -74,16 +166,16 @@
                                         <div class="row">
                                             <label class="col-sm-1 col-form-label">SMPT:</label>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" required="">
+                                                <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" id="" required="">
                                             </div>
 
                                             <label class="col-sm-1 col-form-label">PORT:</label>
                                             <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="port" value="110 " >
-                                            </div>
+                                                <input type="text" class="form-control" name="port" value="110 " > --}}
+                                            {{-- </div> --}}
                                         {{-- </div> --}}
                                         {{-- <div class="row"> --}}
-                                            <label class="col-sm-2 col-form-label" >Encryption:</label>
+                                            {{-- <label class="col-sm-2 col-form-label" >Encryption:</label>
                                             <div class="col-sm-3">
                                                 <select class="form-control" name="encryp" >
                                                     <option value="">Ninguno</option>
@@ -117,10 +209,10 @@
                                             </div>
                                             <label class="col-sm-1 col-form-label">Firma Digital:</label>
                                             <div class="col-sm-5">
-                                                <input type="file" id="archivoInputF" name="firma_digital" onchange="return validarExtF()"  />
-                                                <span id="visorArchivoF">
+                                                <input type="file" id="archivoInputF" name="firma_correo" onchange="return validarExtF()"  />
+                                                <span id="visorArchivoF"> --}}
                                                     <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma_digital"  src="" width="300px" height="120px" />
+                                                    {{-- <img name="firma_correo"  src="" width="300px" height="120px" />
                                                 </span>
                                             </div>
 
@@ -154,12 +246,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 {{-- Fin de modal configuracion --}}
 
 
 {{-- Modal Editar Configuracion --}}
-@foreach($config_email as $config_emails)
+{{-- @foreach($config_email as $config_emails)
 <div class="modal fade" id="edits" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -169,9 +261,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div style="padding-left: 15px;padding-right: 15px;">
+            <div style="padding-left: 15px;padding-right: 15px;"> --}}
                 {{-- ccccccccccccccccc --}}
-                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+                {{-- <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
 
                     <form action="{{route('email.configupdate',$config_emails->id)}}"  enctype="multipart/form-data" method="post">
                         @csrf
@@ -182,13 +274,13 @@
                                     <div class="panel-body" align="left">
                                         <div class="row">
                                             <label class="col-sm-2 col-form-label">Email:</label>
-                                            <div class="col-sm-4"><input type="text" class="form-control" name="email" value="{{$config_emails->email}}">
+                                            <div class="col-sm-4"><input type="text" class="form-control" name="email" id="email_editar" value="{{$config_emails->email}}">
                                             </div>
 
                                             <label class="col-sm-2 col-form-label">Contraseña:</label>
                                             <div class="col-sm-4">
                                                 <div class="input-group m-b">
-                                                    <input type="password" class="form-control" value="{{$config_emails->password}}" name="password" id="txtPassword{{$config_emails->id}}">
+                                                    <input type="password" class="form-control password_editar" value="{{$config_emails->password}}" name="password" id="txtPassword{{$config_emails->id}}">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
                                                             <i class="fa fa-eye-slash "  id="ojo{{$config_emails->id}}" onclick="mostrarPassword{{$config_emails->id}}()"></i>
@@ -201,18 +293,18 @@
                                             <label class="col-sm-1 col-form-label">SMPT:</label>
                                             <div class="col-sm-3">
 
-                                                <input type="text" class="form-control" name="smtp" value="{{$config_emails->smtp}}">
+                                                <input type="text" class="form-control" id="smtp_editar" name="smtp" value="{{$config_emails->smtp}}">
                                             </div>
 
                                             <label class="col-sm-1 col-form-label">PORT:</label>
                                             <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="port" value="{{$config_emails->port}} " >
-                                            </div>
+                                                <input type="text" class="form-control" id="port_editar" name="port" value="{{$config_emails->port}} " >
+                                            </div> --}}
                                         {{-- </div>
                                         <div class="row"> --}}
-                                            <label class="col-sm-2 col-form-label">Encryption:</label>
+                                            {{-- <label class="col-sm-2 col-form-label">Encryption:</label>
                                             <div class="col-sm-3">
-                                                <select class="form-control" name="encryp">
+                                                <select class="form-control" name="encryp" id="encryption_editar">
                                                     <option value="{{$config_emails->encryption}}">{{$config_emails->encryption}}</option>
                                                     <option value="">Ninguno</option>
                                                     <option value="SSL">SSL</option>
@@ -223,19 +315,19 @@
                                         <div class="row">
                                             <label class="col-sm-1 col-form-label">Firma (opcional):</label>
                                             <div class="col-sm-5">
-                                                <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0 ;" id="archivoInput{{$config_emails->id}}" name="firma" onchange="return validarExt{{$config_emails->id}}()"  />
-                                                <span id="visorArchivo{{$config_emails->id}}">
+                                                <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0 ;" id="archivoInput{{$config_emails->id}}" name="firma" onchange="return validarExt{{$config_emails->id}}()"  /> --}}
+                                                {{-- <span id="visorArchivo{{$config_emails->d}}"> --}}
                                                     <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_emails->firma}}" width="300px" height="120px" />
+                                                    {{-- <img name="firma" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_emails->firma}}" width="300px" height="120px" />
                                                     <input type="text" name="firma_nombre" hidden="hidden" value="{{$config_emails->firma}}">
                                                 </span>
                                             </div>
                                             <label class="col-sm-1 col-form-label">Firma Digital</label>
                                             <div class="col-sm-5">
                                                 <input type="file" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;opacity: 0 ;" id="archivoInputF{{$config_emails->id}}" name="firma_digital" onchange="return validarExtF{{$config_emails->id}}()"  />
-                                                <span id="visorArchivoF{{$config_emails->id}}">
+                                                <span id="visorArchivoF{{$config_emails->id}}"> --}}
                                                     <!--Aqui se desplegará el fichero-->
-                                                    <img name="firma_digital" src="{{asset('/archivos/imagenes/firma_digital/')}}/{{$config_emails->firma_digital}}" width="300px" height="120px" />
+                                                    {{-- <img name="firma_digital" src="{{asset('/archivos/imagenes/firma_digital/')}}/{{$config_emails->firma_digital}}" width="300px" height="120px" />
                                                     <input type="text" name="firma_digital_nombre" hidden="hidden" value="{{$config_emails->firma_digitals}}">
                                                 </span>
                                             </div>
@@ -262,7 +354,8 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <button class="btn btn-primary" type="submit">Grabar</button>
+                        <button class="btn btn-primary" id="submit_actualizar" type="submit" style="display:none">Grabarrr</button>
+                        <button class="btn btn-primary" id="grabar_actualizar" type="button">Grabarrr</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <script type="text/javascript">
                         function validarExt{{$config_emails->id}}()
@@ -316,13 +409,13 @@
                                 '<img name="firma_digital" src="'+e.target.result+'"width="300px" height="120px" />';
                             };
                             visor.readAsDataURL(archivoInput{{$config_emails->id}}.files[0]);
-                        }
+                        } 
                         }
                         }
                         </script>
                         <script type="text/javascript">
                         {{-- scrpti de ver y ocultar contraseña del Foreach --}}
-                        function mostrarPassword{{$config_emails->id}}(){
+                        {{-- function mostrarPassword{{$config_emails->id}}(){
                         var cambio = document.getElementById("txtPassword{{$config_emails->id}}");
                         if(cambio.type == "password"){
                             cambio.type = "text";
@@ -340,17 +433,17 @@
         </div>
     </div>
 </div>
-@endforeach
+@endforeach --}} 
 
 {{-- Modal Editar Confg¿figuracion Fin --}}
 
 
 <!-- Modal Create Redactar  -->
-<div class="modal fade" id="redactar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="redactar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="width: 700px;margin-left: 400px;">
         <div class="modal-content" style="width: 702px;">
             <div class="modal-header" style="width: 700px;padding-left: 0px;padding-right: 0px;">
-                {{--  --}}
+            
                 <div class="col-lg-10 container animated fadeInRight" style="width: 600px;padding-left: 0px;padding-right: 0px;margin-right: 30px;margin-left: 60px;">
                     <div class="mail-box">
                         @foreach($config_email as $config_emails)
@@ -382,9 +475,9 @@
                                     <span class="btn btn-default btn-file" style="left: 20px !important;">
                                         <span class="fileinput-new">Seleccionar</span>
                                         <span class="fileinput-exists">Cambiar</span>
-                                        <input  type="file" name="archivos[]" multiple="" />
+                                        <input  type="file" name="archivos[]" multiple="" /> --}}
                                         {{-- <input type="file" name="archivo"> --}}
-                                    </span>
+                                    {{-- </span>
                                     <span class="fileinput-filename" style="padding-left: 30px"></span>
                                     <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
                                 </div>
@@ -400,14 +493,13 @@
                             </form>
                         </div>
                     </div>
-                    {{--  --}}
                     @endforeach
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- / Modal Create  -->
-
+{{-- 
 
 
 
@@ -446,11 +538,11 @@
                     <div id="tab-{{$row->id}}" class="tab-pane">
 
                         <div class="float-right">
-                            <div class="tooltip-demo">
+                            <div class="tooltip-demo"> --}}
                             {{-- <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="left" title="Plug this message"><i class="fa fa-plug"></i> Plug it</button>
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="Mark as read"><i class="fa fa-eye"></i> </button>
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark as important"><i class="fa fa-exclamation"></i> </button> --}}
-                            <form action="{{route('email.delete')}}" method="post">
+                            {{-- <form action="{{route('email.delete')}}" method="post">
                                 @csrf
                             <button class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="top" title="" data-original-title="Move to trash"><i class="fa fa-trash-o"></i> </button>
                             <input type="hidden" name="id" value="{{$row->id}}" />
@@ -472,16 +564,16 @@
                        </div>
 
                    </div></h1>
-                   {{-- <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->personal->foto)" style="width: 50px" /> --}}
+                   <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->personal->foto)" style="width: 50px" />
                    <h5>De: {{$row->remitente}}</h5>
-                   <hr>
-                   {!!$row->mensaje!!}
+                   <hr> --}}
+                   {{-- {!!$row->mensaje!!} --}}
                    {{-- <p class="small"> --}}
                     {{-- Firma --}}
                     {{-- <strong>Best regards, Anthony Smith </strong>
                 </p> --}}
 
-                <div class="m-t-lg">
+                {{-- <div class="m-t-lg">
                     <p>
                         <span><i class="fa fa-paperclip"></i> Archivos </span>
                         </p>
@@ -492,14 +584,14 @@
                                     <div class="file-box" style="width: 170px">
                                         <div class="file" style="width: 150px;margin: 0px 0px 0px 0px">
                                             {{-- {{storage_path('app/public/'.$mailbox_files->archivo)}} --}}
-                                            <a href="{{asset('/archivos/'.$mailbox_files->fecha_hora.$mailbox_files->archivo)}}"
-                                            download="{{$mailbox_files->archivo}}" >
+                                            {{-- <a href="{{asset('/archivos/'.$mailbox_files->fecha_hora.$mailbox_files->archivo)}}"
+                                            download="{{$mailbox_files->archivo}}" > --}}
                                             {{-- <a href="{{route('descarga')}}" target="_blank"> --}}
                                                 {{-- <span class="corner"></span> --}}
                                                 {{-- <div class="icon">
                                                     <p><i class="fa fa-file"></i></p>
                                                 </div> --}}
-                                                <div class="file-name" style="background-color: white">
+                                                {{-- <div class="file-name" style="background-color: white">
                                                     <center>
                                                         <i class="fa fa-file" style="font-size:  60px"></i>
                                                     </center>
@@ -513,8 +605,8 @@
                                         </div>
                                     </div>
                                     @endif
-                                @endif
-                            @endforeach
+                                @endif --}}
+                            {{-- @endforeach --}} 
 
                            {{--  @foreach($mailbox_file as $mailbox_files)
                                 @if($mailbox_files->id_bandeja_envios ==  $row->id)
@@ -539,7 +631,7 @@
                                     @endif
                                 @endif
                             @endforeach --}}
-                            <div class="clearfix"></div>
+                            {{-- <div class="clearfix"></div>
                         </div>
                     </div>
 
@@ -550,12 +642,13 @@
         </div>
 
     </div>
-</div>
+</div> --}}
 
-</div>
+{{-- </div> --}}
+{{-- <div id="loaderGif"></div> --}}
 <!-- Mainly scripts -->
-</br>
-<style>
+{{-- </br> --}}
+{{-- <style>
     #actualizar{
         height: 33px; padding-top: 10px;
     }
@@ -606,6 +699,41 @@ span.fileinput-filename{
         height:100%;
         opacity: 0  ;
     }
+    /* #loaderGif{
+        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
+        background-size: 250px;
+        display: none;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100vh;
+        z-index: 20;
+    }
+    .not-active { 
+        pointer-events: none; 
+        cursor: default; 
+    }  */
+</style> --}}
+<style>
+    .select-id{
+        display: inline-block;
+        /* *display: inline; */
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        border: none;
+        cursor: pointer;
+        /* ins { */
+        background-color: rgb(198 255 198);
+        text-decoration: none;
+    /* } */
+    }
+    .dataTables_wrapper.container-fluid.dt-bootstrap4.no-footer{
+        padding: 0px;
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -626,21 +754,47 @@ span.fileinput-filename{
 <script src="{{asset('js/plugins/summernote/summernote-bs4.js')}}"></script>
 <!-- Jasny -->
 <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
+
+<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
+<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
 <script>
-    function doAction(ele, param1, param2) {
-      var a = document.getElementById(param1).innerHTML;
-      var b = document.getElementById(param2).innerHTML;
-      ele.innerHTML = a + " " + b;
-  }</script>
-  <script type="text/javascript">
+    $('#click_eliminar').on('click', function(){
+        // var check = ;
+        // return check;
+        if($('.select_id').is(':checked')){
+            $('#submit_eliminar').click();
+        }
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            order: [[0, "desc"]],
+            responsive: true,
+            // dom: '<"html5buttons"B>lTfgitp',
+            buttons: [],
+            bFilter: false,
+            bInfo: false,
+            bLengthChange : false,
+            aoColumnDefs : [ { 'bSortable' : false} ]
+        });
+        
+    });
+</script>
+<script>
+    // Marcar con strong el layout mail
+    document.getElementById('index_mail').style.fontWeight = '800';
+</script>
+<script type="text/javascript">
     $(function() {
       $('.summernote').summernote({
         height: 200,
-
+       
     });
 
   });
-
 </script>
 {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
@@ -651,79 +805,24 @@ span.fileinput-filename{
         if( f.elements[0].value == "" )
            { alert(incompleto); }
        else{boton.type = 'button';}
-   }
-</script>
-{{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-<script type="text/javascript">
-        // <div class="col-sm-10">
-        // <div class="input-group m-b">
-        // <input type="password" class="form-control" name="password" id="txtPassword">
-        // <div class="input-group-prepend">
-        // <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
-        // <i class="fa fa-eye " id="ojo" onclick="mostrarPassword()"></i></span>
-        // </div>
-        // </div>
-        // </div>
-function mostrarPassword(){
-    var cambio = document.getElementById("txtPassword");
-    if(cambio.type == "password"){
-        cambio.type = "text";
-        $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-    }else{
-        cambio.type = "password";
-        $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
     }
-}
-</script>
-<script type="text/javascript">
-        {{-- Fotooos --}}
-function validarExt(){
-    var archivoInput = document.getElementById('archivoInput');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-    if(!extPermitidas.exec(archivoRuta)){
-        alert('Asegurese de haber seleccionado una Imagen');
-        archivoInput.value = '';
-        return false;
-    }else{
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivo').innerHTML =
-                '<img name="firma" src="'+e.target.result+'"width="300px" height="120px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
-        }
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+    function select_all_mail() {
+        $('input[class=select_id]:checkbox').each(function () {
+            // console.log($('input[class=check_all]:checkbox:checked'));
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                // console.log("a");
+                $(this).prop("checked", false);
+            } else {
+                // console.log("b");
+                $(this).prop("checked", true);
+            }
+        });
     }
-}
-function validarExtF(){
-    var archivoInput = document.getElementById('archivoInputF');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-    if(!extPermitidas.exec(archivoRuta)){
-        alert('Asegurese de haber seleccionado una Imagen');
-        archivoInput.value = '';
-        return false;
-    }else{
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivoF').innerHTML =
-                '<img name="firma_digital" src="'+e.target.result+'"width="300px" height="120px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
-        }
-    }
-}
 </script>
-<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
-
-<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
 @endsection

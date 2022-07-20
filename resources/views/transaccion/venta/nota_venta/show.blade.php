@@ -32,18 +32,15 @@
             <!-- Impresion -->
             <a class="btn btn-success" href="{{route('nota_venta.print',$nota_venta->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
             <!-- Email -->
-            @if(Auth::user()->email_creado == 0)
-                
-            @else
-                <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
+            @if(Auth::user()->email_creado == 1)
+                <form action="{{ route('email.nota_venta', $nota_venta->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                     @csrf
-                    <input type="text" hidden="hidden"  name="tipo" value="App\NotaVenta"/>
-                    <input type="text" hidden="hidden"  name="id" value="{{$nota_venta->id}}"/>
-                    <input type="text" hidden="hidden"  name="redict" value="nota_venta"/>
-                    <input type="text" hidden="hidden"  name="cliente" value=" {{$nota_venta->cliente->email}}"/>
-                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
+                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                        <i class="fa fa-envelope fa-lg" ></i> 
+                    </button>
                 </form>
             @endif
+            
             <!-- Whatsapp -->
             <div id="auto" onclick="divAuto()">
                 <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>

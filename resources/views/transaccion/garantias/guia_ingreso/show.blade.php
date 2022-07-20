@@ -74,14 +74,12 @@
         <input type="text" value="{{$garantia_guia_ingreso->id}}" name="id" id="id" hidden="">
 
         @if(Auth::user()->email_creado == 1)
-        <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
-            @csrf
-            <input type="text" hidden="hidden" name="tipo" value="App\GarantiaGuiaIngreso"/>
-            <input type="text" hidden="hidden" name="id" value="{{$garantia_guia_ingreso->id}}"/>
-            <input type="text" hidden="hidden" name="redict" value="garantia_guia_ingreso">
-            <input type="text" hidden="hidden" name="cliente" value="{{$garantia_guia_ingreso->clientes_i->email}}">
-            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-        </form>
+            <form action="{{ route('email.guia_ingreso', $garantia_guia_ingreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                @csrf
+                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                    <i class="fa fa-envelope fa-lg" ></i> 
+                </button>
+            </form>
         @endif
         <a href="{{route('impresiones_ingreso' ,$garantia_guia_ingreso->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
         <div id="auto" onclick="divAuto()">
