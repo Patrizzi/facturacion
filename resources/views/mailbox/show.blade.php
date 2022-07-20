@@ -30,7 +30,7 @@
                                         <form action="{{route('email.destroy')}}" method="post" style="display: inline-flex">
                                             @csrf
                                             <input type="hidden" name="id" value="{{$mail->id}}">
-                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar para Siempre"><i class="fa fa-trash-o"></i></button>
+                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar permanentemente"><i class="fa fa-trash-o"></i></button>
                                         </form>
                                     @endif
                                 </div>
@@ -72,10 +72,13 @@
                                         <div class="file-box">
                                             @foreach ($archivos as $archivo)
                                                 <div class="file archivo_flex ">
-                                                    <a href="{{asset('/archivos/'.$mail->fecha_hora.$archivo->archivo)}}" download="{{$archivo->archivo}}">
-                                                    <a href="{{asset('/archivos/'.$archivo->fecha_hora.$archivo->archivo)}}" download="{{$archivo->archivo}}" >
+                                                    @if(substr($archivo->archivo, -3) == 'xml')
+                                                        <a href="{{asset('/facturas_electronicas/'.$archivo->archivo)}}" download="{{$archivo->archivo}}">
+                                                    @else   
+                                                        <a href="{{asset('/archivos/'.$archivo->fecha_hora.$archivo->archivo)}}" download="{{$archivo->archivo}}">
+                                                    @endif
                                                     <div class="icon">
-                                                        <span class="corner"></span>                                                    
+                                                        <span class="corner"></span>
                                                         <i class="fa fa-file"></i>
                                                     </div>
                                                     <div class="file-name" style="overflow-wrap: break-word;">
@@ -291,7 +294,7 @@
         document.getElementById('nombre_'+value+'').value = '';
         console.log(value);
     }
-    
+    Ladda.bind('button[type=submit]', {timeout: 20000});
 </script>
 @if($mail->estado == 0)
     <script>

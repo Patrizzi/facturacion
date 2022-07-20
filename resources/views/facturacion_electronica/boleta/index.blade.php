@@ -89,6 +89,8 @@
                                                 <th>Ruc/DNI</th>
                                                 <th>Fecha Vencimiento</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                                <th>XML</th>
+                                                <th>ZIP</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -109,6 +111,12 @@
                                                     <center>
                                                         <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                                     </center>
+                                                </td>
+                                                <td align="center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-03-{{$boleta_env->codigo_boleta}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                                </td>
+                                                <td align="center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-03-{{$boleta_env->codigo_boleta}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -181,6 +189,8 @@
                                                 <th>Ruc/DNI</th>
                                                 <th>Fecha Vencimiento</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                                <th>XML</th>
+                                                <th>ZIP</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -196,6 +206,12 @@
                                                     <center>
                                                         <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                                     </center>
+                                                </td>
+                                                <td align="center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-03-{{$boleta_env_m->codigo_boleta}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                                </td>
+                                                <td align="center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-03-{{$boleta_env_m->codigo_boleta}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
                                             @endforeach

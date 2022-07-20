@@ -23,14 +23,20 @@
                 <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
             </form>
             @if(Auth::user()->email_creado ==1)
-            <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                @csrf
-                <input type="text" hidden="hidden" name="tipo" value="App\GarantiaInformeTecnico"/>
-                <input type="text" hidden="hidden" name="id" value="{{$garantias_informe_tecnico->id}}"/>
-                <input type="text" hidden="hidden" name="redict" value="garantias_informe_tecnico">
-                <input type="text" hidden="hidden" name="cliente" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}">
-                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-            </form>
+                {{-- <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                    @csrf
+                    <input type="text" hidden="hidden" name="tipo" value="App\GarantiaInformeTecnico"/>
+                    <input type="text" hidden="hidden" name="id" value="{{$garantias_informe_tecnico->id}}"/>
+                    <input type="text" hidden="hidden" name="redict" value="garantias_informe_tecnico">
+                    <input type="text" hidden="hidden" name="cliente" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}">
+                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
+                </form> --}}
+                <form action="{{ route('email.informe_tecnico', $garantias_informe_tecnico->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                    @csrf
+                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                        <i class="fa fa-envelope fa-lg" ></i> 
+                    </button>
+                </form>
             @endif
             <a href="{{route('impresiones_informe' ,$garantias_informe_tecnico->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
             <div id="auto" onclick="divAuto()">

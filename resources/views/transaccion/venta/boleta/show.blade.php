@@ -27,14 +27,12 @@
                 <input type="text" value="{{$boleta->id}}" name="id" id="id" hidden="">
                 <a class="btn btn-success" href="{{route('boleta.print',$boleta->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 @if(Auth::user()->email_creado == 1)
-                <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
-                    @csrf
-                    <input type="text" hidden="hidden"  name="tipo" value="App\Boleta"/>
-                    <input type="text" hidden="hidden"  name="id" value="{{$boleta->id}}"/>
-                    <input type="text" hidden="hidden"  name="redict" value="cotizacion_boleta"/>
-                    <input type="text" hidden="hidden"  name="cliente" value=" {{$boleta->cliente->email}}"/>
-                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-                </form>
+                    <form action="{{ route('email.boleta', $boleta->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i> 
+                        </button>
+                    </form>
                 @endif
                 <div id="auto" onclick="divAuto()">
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>

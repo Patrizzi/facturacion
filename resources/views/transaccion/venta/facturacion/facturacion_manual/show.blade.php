@@ -39,22 +39,17 @@
                         class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
                         data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
                     @if (Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.save') }}" method="post"
-                            style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                        <form action="{{ route('email.factura_manual', $facturacion->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                             @csrf
-                            <input type="text" hidden="hidden" name="tipo" value="App\Facturacion" />
-                            <input type="text" hidden="hidden" name="id" value="{{ $facturacion->id }}" />
-                            <input type="text" hidden="hidden" name="redict" value="cotizacion_factura" />
-                            <input type="text" hidden="hidden" name="cliente" value=" {{ $facturacion->cliente->email }}" />
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                title="" formtarget="_blank" data-original-title="Enviar por correo"><i
-                                    class="fa fa-envelope fa-lg"></i> </button>
+                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                                <i class="fa fa-envelope fa-lg" ></i> 
+                            </button>
                         </form>
                     @endif
                     <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg"
-                                style="color: white"></i> </a>
+                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a">
+                            <i class="fa fa-whatsapp fa-lg" style="color: white"></i> 
+                        </a>
                     </div>
                     <div id="div-mostrar">
                         <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"

@@ -75,26 +75,29 @@ class FacturacionElectronicaController extends Controller
 
     public function index_boleta(){
 
+        $empresa=Empresa::first();
         $boletas_enviadas=Boleta::where('b_electronica',1)->get();
         $boletas=Boleta::where('b_electronica',0)->get();
 
         $boletas_enviadas_m=Boleta_m::where('b_electronica',1)->get();
         $boletas_m=Boleta_m::where('b_electronica',0)->get();
-        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas','boletas_m','boletas_enviadas_m'));
+        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas','boletas_m','boletas_enviadas_m','empresa'));
     }
 
     public function index_guia_remision(){
 
+        $empresa=Empresa::first();
         $guia_remisiones=Guia_remision::where('g_electronica',0)->where('estado_anulado',0)->get();
         $guia_remision_anulado=Guia_remision::where('g_electronica',1)->where('estado_anulado',1)->get();
         $guia_remision_enviados=Guia_remision::where('g_electronica',1)->where('estado_anulado',0)->get();
-        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado'));
+        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','empresa'));
     }
-
+    
     public function index_nota_credito(){
+        $empresa=Empresa::first();
         $n_creditos_enviados=Nota_Credito::where('n_electronica',1)->get();
         $n_creditos=Nota_Credito::where('n_electronica',0)->get();
-        return view('facturacion_electronica.nota_credito.index',compact('n_creditos_enviados','n_creditos'));
+        return view('facturacion_electronica.nota_credito.index',compact('n_creditos_enviados','n_creditos','empresa'));
     }
     /**
      * Show the form for creating a new resource.

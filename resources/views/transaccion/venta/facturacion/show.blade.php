@@ -1,16 +1,16 @@
- @extends('layout')
+@extends('layout')
 
- @section('title', 'Facturación Ver')
+@section('title', 'Facturación Ver')
 
- @section('href_accion', route('facturacion.index'))
- @section('value_accion', 'Inicio')
+@section('href_accion', route('facturacion.index'))
+@section('value_accion', 'Inicio')
 
- @section('button2', 'Nueva Facturación')
- @section('onclick',"event.preventDefault();document.getElementById('nueva_cots').submit();")
+@section('button2', 'Nueva Facturación')
+@section('onclick',"event.preventDefault();document.getElementById('nueva_cots').submit();")
 
- @section('content')
+@section('content')
 
- <form action="{{ route('facturacion.create')}}"enctype="multipart/form-data" method="post" id="nueva_cots">
+<form action="{{ route('facturacion.create')}}"enctype="multipart/form-data" method="post" id="nueva_cots">
     @csrf
     <input type="text"  hidden="hidden" name="almacen"  value="{{$facturacion->almacen_id}}">
     <input  hidden="hidden" type="submit"  />
@@ -37,14 +37,12 @@
                 <input type="text" value="{{$facturacion->id}}" name="id" id="id" hidden="">
                 <a class="btn btn-success" href="{{route('facturacion.print', $facturacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 @if(Auth::user()->email_creado == 1)
-                <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn" >
-                    @csrf
-                    <input type="text" hidden="hidden"  name="tipo" value="App\Facturacion"/>
-                    <input type="text" hidden="hidden"  name="id" value="{{$facturacion->id}}"/>
-                    <input type="text" hidden="hidden"  name="redict" value="cotizacion_factura"/>
-                    <input type="text" hidden="hidden"  name="cliente" value=" {{$facturacion->cliente->email}}"/>
-                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-                </form>
+                    <form action="{{ route('email.factura', $facturacion->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i> 
+                        </button>
+                    </form>
                 @endif
                 <div id="auto" onclick="divAuto()">
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>

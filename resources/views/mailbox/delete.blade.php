@@ -31,7 +31,7 @@
                                         </div>
                                         <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
                                             <button class="btn btn-primary " onclick=" location.reload();"><i class="fa fa-refresh"></i> Recargar</button>
-                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar Permanentemente" ><i class="fa fa-trash-o"></i></button>
                                         </div>
                                     </div>
                                 </div>
