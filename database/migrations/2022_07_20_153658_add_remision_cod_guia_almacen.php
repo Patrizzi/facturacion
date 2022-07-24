@@ -13,7 +13,10 @@ class AddRemisionCodGuiaAlmacen extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('cod_guia_almacen', function (Blueprint $table) {
+            $table->integer('serie_remision_m')->after('cod_boleta_m')->default(0);
+            $table->string('cod_remision_m')->after('serie_remision_m')->default(0);
+        });
     }
 
     /**
@@ -23,9 +26,6 @@ class AddRemisionCodGuiaAlmacen extends Migration
      */
     public function down()
     {
-        Schema::table('cod_guia_almacen', function (Blueprint $table) {
-            $table->integer('serie_remision_m')->after('cod_boleta_m')->default(0);
-            $table->string('cod_remision_m')->after('serie_remision_m')->default(0);
-        });
+        
     }
 }

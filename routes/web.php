@@ -211,6 +211,8 @@ Route::group(
 		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
 
 		Route::resource('/guia_remision_manual','GuiaRemisionManualController');
+		Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
+		Route::post('/guia_remision_manual/peso','GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
 
 
 		Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');

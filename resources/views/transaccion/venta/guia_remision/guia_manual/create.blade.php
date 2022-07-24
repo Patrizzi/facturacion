@@ -19,13 +19,12 @@
     });
 </script>
 @section('content')
-@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
-@section('ruta_retorno', 'guia_remision')
+
+@include('layout_agregado_rapido')
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
-
-<form action="">
+<form action="{{route('guia_remision_manual.store')}}" method="POST" enctype="multipart/form-data" >
     @csrf
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -44,7 +43,7 @@
                                 <center>
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                    {{-- <h5>{{$codigo_guia}} <input type="text" name="almacen" value="{{$almacen}}" hidden="hidden"> </h5> --}}
+                                    <h5>{{$codigo_guia}}</h5>
                                 </center>
                             </div>
                         </div>
@@ -88,13 +87,13 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="row">
-                                <label class="col-sm-2">F. Emision</label>  
+                                <label class="col-sm-2">F. Emision:</label>  
                                 <div class="col-sm-4">
-                                    <input type="date" class="form-control" name="fecha_emision" id="" readonly value="{{date("Y/m/d")}}">
+                                    <input type="text" style="font-size: 12px" name="fecha_emision" class="form-control" value="{{date("d/m/Y")}}" readonly="readonly">
                                 </div>
-                                <label class="col-sm-2">F. Emision</label>
+                                <label class="col-sm-2">F. Entrega:</label>
                                 <div class="col-sm-4">
-                                    <input type="date" class="form-control" name="fecha_entrega" id="">
+                                    <input type="date" class="form-control" name="fecha_entrega" id="" required>
                                 </div>
                             </div>
                         </div>
@@ -129,8 +128,8 @@
                     <div class="row" id="transporte_privado" hidden="hidden">
                         <div class="col-sm-6">
                             <div class="row">
-                                <label class="col-sm-1">Vehiculo Privado:</label>
-                                <div class="col-sm-5">
+                                <label class="col-sm-2">Vehiculo Privado:</label>
+                                <div class="col-sm-10">
                                     <select class="form-control m-b" name="vehiculo" autocomplete="off" id="vehiculo_privado">
                                         <option value="">Ningún Vehículo</option>
                                         @foreach($vehiculo as $vehiculos)
@@ -142,8 +141,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="row">
-                                <label class="col-sm-1">Conductor:</label>
-                                <div class="col-sm-5">
+                                <label class="col-sm-2">Conductor:</label>
+                                <div class="col-sm-10">
                                     <select class="form-control m-b" name="conductor" autocomplete="off" id="conductor">
                                         <option value="">Ningún Conductor</option>
                                         <option disabled="disabled">------------------------------</option>
@@ -168,49 +167,48 @@
                     <br>
                     <div class="row">
                         <div class="table-responsive">
-                            <table cellspacing="0" class="table table-striped ">
+                            <table cellspacing="0" class="tables table table-striped ">
                                 <thead>
                                     <tr>
-                                        <th style="">
-                                            {{-- <input class='check_all' type='checkbox' onclick="select_all()" /> --}}
-                                            <button class="btn btn-primary" type="button">
+                                        <th style="width:2em">
+                                            <button type="button" class="addmore btn btn-primary" id="addmore">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </th>
                                         <th style="font-size: 13px;">Articulo</th>
                                         <th style="font-size: 13px; width:10%">Cantidad</th>
-                                        <th style="font-size: 13px; width:16%">N° Series</th>
+                                        <th style="font-size: 13px; width:16%">N° de Serie</th>
                                         <th style="font-size: 13px; width:11%">Peso</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button class="btn btn-danger" type="button">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
+                                            <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </td>
                                         <td>
-                                            <select class="select2_demo_productos" name="" id="">
-                                                @foreach($productos as $index => $producto)
-                                                    <option value="{{$producto->id}}">
-                                                        {{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                            <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0)" required></select>
                                         </td>
                                         <td>
-                                            <input type="text" name="cantidad[]" id="cantidad" class="form-control">
+                                            <input type="text" name="cantidad[]" id="cantidad" class="form-control" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="serie[]" id="n_serie" class="form-control">
+                                            <input type="text" name="serie[]" id="n_serie" class="form-control" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="serie[]" id="n_serie" class="form-control">
+                                            <input type="text" name="peso[]" id="peso0" class="form-control" required>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                        </div>
+                        <div class="col-sm-6" align="right">
+                            <button class="ladda-button btn btn-primary" type="submit" id="boton" name="boton" ></i>Guardar</button>&nbsp;
                         </div>
                     </div>
                 </div>
@@ -219,6 +217,9 @@
     </div>
 </form>
 <style>
+    label.col-form-label::marker{
+        list-style:none;
+    }
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         font-size: 12px;
     }
@@ -233,6 +234,10 @@
         display: block;
         padding: 3px 12px;
         border: 1px solid #e5e6e7;
+    }
+    .select2-hidden-accessible{
+        width: auto !important;
+        
     }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -256,8 +261,8 @@
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 <script>
     $(document).ready(function() {
+        articlesSelect2();
         $('.select2_demo_almacen').select2();
-        $('.select2_demo_productos').select2();
     });
     
     $(".select2_demo_client").select2({
@@ -269,7 +274,7 @@
             type: "POST",
             delay: 10,
             data: function (params) {
-                var tipo_coti = 1;
+                var tipo_coti = 2;
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
@@ -289,6 +294,142 @@
             cache: true
         }
     });
-    
+    function articlesSelect2() {
+        $(".select2_demo_productos").select2({
+            placeholder: "Seleccionar Producto",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('remision_m.ajax_producto') }}",
+                dataType: 'json',
+                type: "POST",
+                // delay: 1500,
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        id: params.id,
+                        search: params.term // search term 
+                        
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id:  item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
+                                text: item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
+                            };
+                        })
+                    };
+                },
+                cache: true,
+                passive: true
+            }
+        });
+    }
+    function ajax(a){
+        if(a==0){
+            var articulo = document.getElementById(`articulo`).value;
+        }else{
+            var articulo = document.getElementById(`articulo${a}`).value;
+        }
+        $.ajax({
+            type: "post",
+            url: "{{ route('remision_m.peso_ajax') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'articulo': articulo
+            },
+            success: function (msg) {
+                $(`#peso${a}`).val(msg);
+                console.log(msg);
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+    }
+    //
+    var i = 2;
+    $(".addmore").on('click', function () {
+        var data = `[
+            <tr>
+                <td>
+                    <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                </td>
+                <td>
+                    <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i})" required></select>
+                </td>
+                <td>
+                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required>
+                </td>
+                <td>
+                    <input type="text" name="serie[]" id="n_serie${i}" class="form-control" required>
+                </td>
+                <td>
+                    <input type="text" name="peso[]" id="peso${i}" class="form-control" required>
+                </td>
+            </tr>
+        ]`;
+        $('.tables').append(data);
+        articlesSelect2();
+        i++
+    });
+    $(document).on('click', '.borrar', function (event) {
+        event.preventDefault();
+        var e = document.getElementsByClassName("e").length;
+        var fila = $(this).parents("tr");
+        // ELIMINAR TR
+        if (e>1) {
+            fila.closest('tr').remove();
+            $(".borrar").prop("disabled", false);
+            $(".addmore").prop("disabled", false);
+        }else{
+            $(".borrar").prop("disabled", true);
+            $(".addmore").prop("disabled", false);
+        }
+    });
+    function test(a) {
+        var x = (a.value || a.options[a.selectedIndex].value);  //crossbrowser solution =)
+        if (x ==2)/*Transaporte Privado*/
+        {
+            document.getElementById("transporte_privado").removeAttribute("hidden");
+            document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
+
+            document.getElementById("vehiculo_privado").setAttribute("required", "required");
+            document.getElementById("conductor").setAttribute("required", "required");
+            document.getElementById("vehiculo_publico").removeAttribute("required");
+
+
+        }
+        if(x==0)/*Sin Transporte*/
+        {
+            document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
+            document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
+
+            document.getElementById("vehiculo_publico").removeAttribute("required");
+            document.getElementById("vehiculo_privado").removeAttribute("required");
+            document.getElementById("conductor").removeAttribute("required");
+
+
+        }
+        if(x==1)/*Transporte Público*/
+        {
+            document.getElementById("transporte_publico").removeAttribute("hidden");
+            document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
+
+            document.getElementById("vehiculo_publico").setAttribute("required", "required");
+            document.getElementById("vehiculo_privado").removeAttribute("required");
+            document.getElementById("conductor").removeAttribute("required");
+        }
+    }
+    // $('.demo3').click(function () {
+    //     if(document.forms['form_guia_manual'].reportValidity()){
+    //         document.getElementById("submit").click();
+    //     }
+
+    // });
 </script>
 @endsection
