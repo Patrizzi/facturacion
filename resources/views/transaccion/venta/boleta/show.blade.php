@@ -310,7 +310,7 @@
     }
 }
 </script> --}}
-{{-- <script>
+<script>
     var clic = 1;
     function divAuto(){
        if(clic==1){
@@ -321,7 +321,7 @@
         clic = 1;
        }
     }
-</script> --}}
+</script>
 <style type="text/css">
     .ruc{border-radius: 10px; height: 125px;}
     .form-control{border-radius: 10px;}
