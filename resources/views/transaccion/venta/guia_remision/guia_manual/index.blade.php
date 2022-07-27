@@ -39,7 +39,7 @@
                                     <td>{{$guias_remision->fecha_emision}}</td>
                                     <td>
                                         <center>
-                                            <a href="{{route('guia_remision.show' , $guias_remision->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a>
+                                            <a href="{{route('guia_remision_manual.show' , $guias_remision->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a>
                                         </center>
                                     </td>
                                 </tr>

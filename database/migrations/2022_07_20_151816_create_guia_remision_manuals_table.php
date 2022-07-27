@@ -17,8 +17,8 @@ class CreateGuiaRemisionManualsTable extends Migration
             $table->bigIncrements('id');
             $table->string('cod_guia');
 
-            $table->unsignedBigInteger('cotizadorm_m_id')->nullable();
-            $table->foreign('cotizadorm_m_id')->references('id')->on('cotizacion_manual')->onDelete('cascade');
+            $table->unsignedBigInteger('cotizador_m_id')->nullable();
+            $table->foreign('cotizador_m_id')->references('id')->on('cotizacion_manual')->onDelete('cascade');
 
             $table->unsignedBigInteger('almacen_id');
             $table->foreign('almacen_id')->references('id')->on('almacen')->onDelete('cascade');

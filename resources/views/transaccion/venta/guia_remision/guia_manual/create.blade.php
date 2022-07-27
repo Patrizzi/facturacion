@@ -8,7 +8,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $("#pro").keypress(function(e) {
+        $(".pro").keypress(function(e) {
             if (e.which == 13) {
                 setTimeout(function() {
                     e.target.value += ' | ';
@@ -24,7 +24,7 @@
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
-<form action="{{route('guia_remision_manual.store')}}" method="POST" enctype="multipart/form-data" >
+<form action="{{route('guia_remision_manual.store')}}" method="POST" enctype="multipart/form-data"  class="pro">
     @csrf
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -43,7 +43,7 @@
                                 <center>
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                    <h5>{{$codigo_guia}}</h5>
+                                    <h5 id="cod_guia">{{$codigo_guia}}</h5>
                                 </center>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Almacen:</label>
                                 <div class="col-sm-10">
-                                    <select class="select2_demo_almacen" name="almacen" id="almacen" required="">
+                                    <select class="select2_demo_almacen" name="almacen" id="almacen" required="" onchange="almacen_cod()">
                                         @foreach($almacen as $almacenes)
                                             <option value="{{$almacenes->id}}">{{$almacenes->abreviatura}} - {{$almacenes->nombre}}</option>
                                         @endforeach
@@ -167,7 +167,7 @@
                     <br>
                     <div class="row">
                         <div class="table-responsive">
-                            <table cellspacing="0" class="tables table table-striped ">
+                            <table cellspacing="0" class="tables table">
                                 <thead>
                                     <tr>
                                         <th style="width:2em">
@@ -187,19 +187,33 @@
                                             <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </td>
                                         <td>
-                                            <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0)" required></select>
+                                            <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
                                         </td>
                                         <td>
-                                            <input type="text" name="cantidad[]" id="cantidad" class="form-control" required>
+                                            <input type="text" name="cantidad[]" id="cantidad" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         </td>
                                         <td>
-                                            <input type="text" name="serie[]" id="n_serie" class="form-control" required>
+                                            <input type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required>
                                         </td>
                                         <td>
-                                            <input type="text" name="peso[]" id="peso0" class="form-control" required>
+                                            <div class="input-group">
+                                                <input type="text" name="peso[]" step="0.01"  id="peso0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-addon">KG</span>
+                                                </div>
+                                                <input type="hidden" name="peso_view" id="peso_view0" onkeyup="sum_total()">
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" align="right"><span style="font-size: 0.8em">Peso Total(KGM):</span></td>
+                                        <td>
+                                            <input type="text" class="form-control" id="peso_total" disabled value="0">
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -239,6 +253,12 @@
         width: auto !important;
         
     }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] { -moz-appearance:textfield; }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -274,7 +294,7 @@
             type: "POST",
             delay: 10,
             data: function (params) {
-                var tipo_coti = 2;
+                var tipo_coti = 0;
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
@@ -325,6 +345,7 @@
                 passive: true
             }
         });
+        
     }
     function ajax(a){
         if(a==0){
@@ -341,7 +362,7 @@
             },
             success: function (msg) {
                 $(`#peso${a}`).val(msg);
-                console.log(msg);
+                sum_total();
             },
             error: function(eject) {
                 if(eject.status===400){
@@ -350,6 +371,7 @@
             },
             cache:true
         });
+        
     }
     //
     var i = 2;
@@ -363,13 +385,19 @@
                     <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i})" required></select>
                 </td>
                 <td>
-                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required>
+                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </td>
                 <td>
-                    <input type="text" name="serie[]" id="n_serie${i}" class="form-control" required>
+                    <input type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
                 </td>
                 <td>
-                    <input type="text" name="peso[]" id="peso${i}" class="form-control" required>
+                    <div class="input-group">
+                        <input type="text" name="peso[]" id="peso${i}" class="form-control" required step="0.01" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
+                        <div class="input-group-append">
+                            <span class="input-group-addon">KG</span>
+                        </div>
+                        <input type="hidden" name="peso_view" id="peso_view${i}" onkeyup="sum_total()">
+                    </div>
                 </td>
             </tr>
         ]`;
@@ -402,7 +430,6 @@
             document.getElementById("conductor").setAttribute("required", "required");
             document.getElementById("vehiculo_publico").removeAttribute("required");
 
-
         }
         if(x==0)/*Sin Transporte*/
         {
@@ -425,11 +452,47 @@
             document.getElementById("conductor").removeAttribute("required");
         }
     }
-    // $('.demo3').click(function () {
-    //     if(document.forms['form_guia_manual'].reportValidity()){
-    //         document.getElementById("submit").click();
-    //     }
-
-    // });
+    function almacen_cod(){
+        var almacen = $('#almacen').val();
+        console.log(almacen);
+        $.ajax({
+            type: "post",
+            url: "{{ route('remision_m.almacen_remision_m') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'almacen': almacen
+            },
+            success: function (msg) {
+                $('#cod_guia').html(msg);
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+        
+    }
+    function peso_view_p(a){
+        var peso = $(`#peso${a}`).val();
+        console.log(peso);
+        $(`#peso_view${a}`).val(peso);
+    }
+    function sum_total(){
+        var total_t = 0;
+        var totalInp = $('[name="peso_view"]');
+        console.log(totalInp)
+        // console.log(totalInp);
+        totalInp.each(function(){
+            if (!isNaN(parseFloat($(this).val()))) {
+            total_t += parseFloat($(this).val());
+            }
+        });
+        var tot = total_t;
+        console.log(tot);
+        $('#peso_total').val(tot);
+        
+    }
 </script>
 @endsection
