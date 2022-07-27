@@ -15,12 +15,15 @@ use App\Facturacion_m;
 use App\Facturacion_registro;
 use App\Facturacion_registro_m;
 use App\Guia_remision;
+use App\g_remision_registro;
+use App\GuiaRemisionManual;
+use App\GuiaRemisionMRegistros;
 use App\Nota_Credito;
 use App\Nota_Credito_registro;
 use App\Nota_Debito;
 use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
-use App\g_remision_registro;
+
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -90,7 +93,12 @@ class FacturacionElectronicaController extends Controller
         $guia_remisiones=Guia_remision::where('g_electronica',0)->where('estado_anulado',0)->get();
         $guia_remision_anulado=Guia_remision::where('g_electronica',1)->where('estado_anulado',1)->get();
         $guia_remision_enviados=Guia_remision::where('g_electronica',1)->where('estado_anulado',0)->get();
-        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','empresa'));
+
+        $remision_m = GuiaRemisionManual::where('g_electronica',0)->where('estado_anulado',0)->get();
+        $remision_m_anulado = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',1)->get();
+        $remision_m_enviados = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',0)->get();
+
+        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','remision_m','remision_m_anulado','remision_m_enviados','empresa'));
     }
     
     public function index_nota_credito(){
@@ -256,7 +264,7 @@ class FacturacionElectronicaController extends Controller
         
     }
     public function validacion_sunat(Request $request){
-        
+        //* SOLO FACTURA POR AHORA
         $tipo = $request->tipo;
         $msg_r = $request->msg;
         $codigo = $request->codigo_fac;
@@ -486,7 +494,84 @@ class FacturacionElectronicaController extends Controller
         return redirect()->route('facturacion_electronica.index_guia_remision')->with('successMsg',$msg);
 
     }
+    public function guia_remision_m(Request $request){
+        $guia = GuiaRemisionManual::where('g_electronica',0)->where('id',$request->remision_id)->first();
+        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$request->remision_id)->get();
+        $tipo_transporte=$guia->tipo_transporte;
 
+        //configuracion
+        $see=config_acceso_sunat::guia_electronica();
+
+        //guia
+        $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
+        // dd($invoice);
+        // return response()->json($invoice);
+        
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+
+        //cambio de guia electronica - en caso sea exitodo
+        $guia->g_electronica=1;
+        $guia->save();
+
+        return redirect()->route('facturacion_electronica.index_guia_remision')->with('successMsg',$msg);
+    }
+    public function guia_remision_m_all(Request $request){
+        $remision_codigo = $request->get('codigo_remision');
+        $guia = GuiaRemisionManual::where('g_electronica',0)->where('id',$remision_codigo)->first();
+        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$remision_codigo)->get();
+        $tipo_transporte=$guia->tipo_transporte;
+
+        //configuracion
+        $see=config_acceso_sunat::guia_electronica();
+
+        //guia
+        $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
+        // dd($invoice);
+        // return response()->json($invoice);
+        
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+
+        //cambio de guia electronica - en caso sea exitodo
+        $guia->g_electronica=1;
+        $guia->save();
+        return $msg;
+    }
+    public function guia_remision_m_baja_sunat(Request $request){   
+
+        $guia=GuiaRemisionManual::where('g_electronica',1)->where('id',$request->guia_m_id)->first();
+        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$request->guia_m_id)->get();
+        $tipo_transporte=$guia->tipo_transporte;
+
+        //configuracion
+        $see=config_acceso_sunat::guia_electronica();
+
+        //guia
+        $invoice=Config_fe::guia_remision_baja($guia,$guias_registros,$tipo_transporte);
+        // dd($invoice);
+        // return response()->json($invoice);
+        
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        // return $msg;
+
+
+        //cambio de guia electronica - en caso sea exitodo
+        $guia->estado_anulado=1;
+        $guia->save();
+
+        return redirect()->route('facturacion_electronica.index_guia_remision')->with('successMsg',$msg);
+
+    }
     public function nota_credito(Request $request)
     {   
         // return 1;

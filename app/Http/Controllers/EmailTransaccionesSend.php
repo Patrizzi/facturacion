@@ -29,6 +29,8 @@ use App\CotizacionManual_registros;
 use App\kardex_entrada_registro;
 use App\Guia_remision;
 use App\g_remision_registro;
+use App\GuiaRemisionManual;
+use App\GuiaRemisionMRegistros;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaGuiaEgreso;
 use App\GarantiaInformeTecnico;
@@ -163,9 +165,49 @@ class EmailTransaccionesSend extends Controller
         // $archivo=$guia_remision->cod_guia.".pdf";
         $archivo='PDF-DOC-'.$guia_remision->cod_guia.'-'.$empresa->ruc.".pdf";
         //* xml
-        $xml_file = ''.$empresa->ruc.'-09-'.$guia_remision->cod_guia.'.xml';
+        if($guia_remision->g_electronica == 1){
+            $xml_file = ''.$empresa->ruc.'-09-'.$guia_remision->cod_guia.'.xml';
+        }else{
+            $xml_file = null;
+        }
 
         $pdf=PDF::loadView('transaccion.venta.guia_remision.pdf',compact('guia_remision','guia_registro','banco','empresa','banco_count'));
+        $content = $pdf->download();
+        $especif = $date.$archivo;
+        Storage::disk('mailbox')->put($especif,$content);
+
+        return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id','xml_file'));
+    }
+    //*
+    public function guia_remision_m(Request $request, $id){
+        $id_usuario = auth()->user()->id;
+        $config_email = EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
+        $redic = "cotizacion_manual";
+        // Fecha conversion
+        $fecha = Carbon::now();
+        $data_g = str_replace(' ', '_',$fecha);
+        $date = str_replace(':','-',$data_g);
+        // $banco=Banco::where('estado','0')->get();
+        // $banco_count=Banco::where('estado','0')->count();
+        $empresa = Empresa::first();
+        $guia_remision_m = GuiaRemisionManual::find($id);
+        $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
+        $i = 1;
+        
+        $id = $guia_remision_m->id;
+        $ruta_retorno = 'guia_remision_m.show';
+        $clientes = $guia_remision_m->cliente->email;  
+
+        $archivo='PDF-DOC-'.$guia_remision_m->cod_guia.'-'.$empresa->ruc.".pdf";
+
+        //* xml
+        if($guia_remision_m->g_electronica == 1){
+            $xml_file = ''.$empresa->ruc.'-09-'.$guia_remision_m->cod_guia.'.xml';
+        }else{
+            $xml_file = null;
+        }
+
+        $pdf=PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',compact('guia_remision_m','guia_remision_m_reg','empresa','i'));
         $content = $pdf->download();
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
@@ -200,6 +242,8 @@ class EmailTransaccionesSend extends Controller
         $i = 1;
         if($facturacion->f_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-01-'.$facturacion->codigo_fac.'.xml';
+        }else{
+            $xml_file = null;
         }
         // $archivo=$facturacion->codigo_fac.".pdf";
         $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
@@ -238,6 +282,8 @@ class EmailTransaccionesSend extends Controller
 
         if($facturacion->f_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-01-'.$facturacion->codigo_fac.'.xml';
+        }else{
+            $xml_file = null;
         }
         // $archivo=$facturacion->codigo_fac.".pdf";
         $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
@@ -277,6 +323,8 @@ class EmailTransaccionesSend extends Controller
         //* XML
         if($boleta->b_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-03-'.$boleta->codigo_boleta.'.xml'; 
+        }else{
+            $xml_file = null;
         }
         // $archivo=$boleta->codigo_boleta.".pdf";
         $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
@@ -313,6 +361,8 @@ class EmailTransaccionesSend extends Controller
 
         if($boleta->b_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-03-'.$boleta->codigo_boleta.'.xml'; 
+        }else{
+            $xml_file = null;
         }
         $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
 
@@ -396,7 +446,10 @@ class EmailTransaccionesSend extends Controller
         // return  $document;
         if($notas_credito->n_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-07-'.$notas_credito->codigo_n_c.'.xml'; 
+        }else{
+            $xml_file = null;
         }
+        
         $archivo='PDF-DOC-'.$notas_credito->codigo_n_c.'-'.$empresa->ruc.".pdf";
 
         $u=1;

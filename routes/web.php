@@ -125,10 +125,15 @@ Route::group(
 		Route::post('/facturacion_electronica_boleta_m/send_all','FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
 		//guia remision
 		Route::post('/facturacion_electronica_guia_remision_prueba','FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
-		Route::post('/facturacion_electronica_guia_remision_prueba/send_all','FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
-
+		Route::post('/facturacion_electronica_guia_remision_prueba_all/send_all','FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
+		// * Guia Remision Manual
+		Route::post('/facturacion_electronica_guia_remision_m_prueba','FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
+		Route::post('/facturacion_electronica_guia_remision_m_prueba_all/send_all','FacturacionElectronicaController@guia_remision_m_all')->name('facturacion_electronica.guia_remision_m_all');
+		
 		//guia remision baja
 		Route::post('/facturacion_electronica_guia_remision_baja_prueba','FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
+		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_sunat');
+		
 		//Nota Credito
 		Route::post('/facturacion_electronica_nota_credito','FacturacionElectronicaController@nota_credito')->name('facturacion_electronica.nota_credito');
 		Route::post('/facturacion_electronica_nota_credito/send_all','FacturacionElectronicaController@nota_credito_all')->name('facturacion_electronica.nota_credito_all');
@@ -209,6 +214,13 @@ Route::group(
 
 		Route::resource('/guia_remision','GuiaRemisionController');
 		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
+		/* REMISION MANUAL */
+		Route::resource('/guia_remision_manual','GuiaRemisionManualController');
+		Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
+		Route::post('/guia_remision_manual/peso','GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
+		Route::post('/guia_remision_manual/almacen_guia','GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
+		
+		Route::get('/guia_remision_manual/print/{id}','GuiaRemisionManualController@print')->name('remision_m.print');
 
 
 		Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
@@ -286,7 +298,8 @@ Route::group(
 		Route::post('/email/guia_ingreso/{id}','EmailTransaccionesSend@guia_ingreso')->name('email.guia_ingreso');
 		Route::post('/email/guia_egreso/{id}','EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
 		Route::post('/email/informe_tecnico/{id}','EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
-
+		Route::post('/email/guia_remision_m/{id}','EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
+		
 		//Garantias
 		Route::get('contacto_cliente','GarantiaGuiaIngresoController@contacto_cliente');
 		Route::get('contacto_cliente_actualizar','GarantiaGuiaIngresoController@contacto_cliente_actualizar');
@@ -432,6 +445,7 @@ Route::post('movimiento-consulta/pdf' , 'Consulta_MovimientoController@pdf')->na
 Route::get('/nota_venta/pdf/{id}' , 'NotaVentaController@pdf')->name('nota_venta_pdf');
 Route::get('/cotizacion_manual/pdf/{id}','CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
 Route::get('/nota-credito/pdf/{id}','NotaCreditoController@pdf')->name('nota_credito.pdf');
+Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')->name('remision_m.pdf');
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');

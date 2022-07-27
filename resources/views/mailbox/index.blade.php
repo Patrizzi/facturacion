@@ -68,7 +68,7 @@
                                                         <td>r</td>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody> 
                                                     @foreach($mailbox as $mailboxs)
                                                     <tr class="read" >
                                                         <td class="check-mail" >

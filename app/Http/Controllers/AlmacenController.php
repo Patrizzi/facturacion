@@ -63,6 +63,8 @@ class AlmacenController extends Controller
             'serie_boleta' => ['required','unique:cod_guia_almacen'],
             'serie_remision' => ['required','unique:cod_guia_almacen'],
             'serie_factura_m' => ['required','unique:cod_guia_almacen'],
+            'serie_boleta_m' => ['required','unique:cod_guia_almacen'],
+            'serie_remision_m' => ['required','unique:cod_guia_almacen'],
             'responsable' => ['required'],
             'direccion' => ['required'],
             'descripcion' => ['required'],
@@ -119,6 +121,12 @@ class AlmacenController extends Controller
         // factura manual
         $cod_guia_almacen->serie_factura_m = $request->get('serie_factura_m');
         $cod_guia_almacen->cod_factura_m = $request->get('cod_factura_m');
+        // boleta manual
+        $cod_guia_almacen->serie_boleta_m = $request->get('serie_boleta_m');
+        $cod_guia_almacen->cod_boleta_m = $request->get('cod_boleta_m');
+        // remision  manual
+        $cod_guia_almacen->serie_remision_m = $request->get('serie_remision_m');
+        $cod_guia_almacen->cod_remision_m = $request->get('cod_remision_m');
         $cod_guia_almacen->save();
 
         $productos= Producto::get();
@@ -187,6 +195,8 @@ class AlmacenController extends Controller
         $nr_nota_c_b=$request->get('cod_credito_b');
         $nr_nota_d=$request->get('cod_debito');
         $nr_factura_m=$request->get('cod_factura_m');
+        $nr_boletaa_m=$request->get('cod_boleta_m');
+        $nr_remision_m=$request->get('cod_remision_m');
         // $almacen=Almacen::where('id', $id)->first();
         $almacen=Almacen::find($id);
         $almacen->nombre=$request->get('nombre');
@@ -224,11 +234,21 @@ class AlmacenController extends Controller
             $cod_guia_almacen->serie_nota_debito=$request->get('serie_debito');
             $cod_guia_almacen->cod_nota_debito=$request->get('cod_debito');
         }
-
-
         if(is_numeric($cod_guia_almacen->cod_factura_m) and is_numeric($nr_factura_m)){
             $cod_guia_almacen->serie_factura_m=$request->get('serie_factura_m');
             $cod_guia_almacen->cod_factura_m=$request->get('cod_factura_m');
+        }
+        if(is_numeric($cod_guia_almacen->cod_boleta_m) and is_numeric($nr_boletaa_m)){
+            $cod_guia_almacen->serie_boleta_m=$request->get('serie_boleta_m');
+            $cod_guia_almacen->cod_boleta_m=$request->get('cod_boleta_m');
+        }
+        if(is_numeric($cod_guia_almacen->cod_boleta_m) and is_numeric($nr_boletaa_m)){
+            $cod_guia_almacen->serie_boleta_m=$request->get('serie_boleta_m');
+            $cod_guia_almacen->cod_boleta_m=$request->get('cod_boleta_m');
+        }
+        if(is_numeric($cod_guia_almacen->cod_remision_m) and is_numeric($nr_boletaa_m)){
+            $cod_guia_almacen->serie_remision_m=$request->get('serie_remision_m');
+            $cod_guia_almacen->cod_remision_m=$request->get('cod_remision_m');
         }
         $cod_guia_almacen->save();
         return redirect()->route('almacen.index');
