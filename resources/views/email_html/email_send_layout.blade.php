@@ -43,7 +43,7 @@
 					<br>
             	@if($firma != null)
 	          	<footer>
-	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px" height="{{$alto}}px" />
+	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px"/>
 	          	</footer>
             	@endif
 			</div>
