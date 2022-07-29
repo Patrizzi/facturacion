@@ -31,7 +31,7 @@
 	<div class="col-sm-4" align="center">
 		<br>
 		<center >
-      		<img src="{{asset('img/logos/'.$empresa->foto)}}" style="width: 300px;margin-bottom: 15px;">
+      		<img src="{{asset('img/logos/'.$empresa->foto)}}" style="width: 150px;margin-bottom: 15px;">
       	</center>
 	</div>
 	<div class="col-sm-12">
@@ -43,7 +43,7 @@
 					<br>
             	@if($firma != null)
 	          	<footer>
-	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px" height=" '{{$alto}}px" />
+	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px" height="{{$alto}}px" />
 	          	</footer>
             	@endif
 			</div>
