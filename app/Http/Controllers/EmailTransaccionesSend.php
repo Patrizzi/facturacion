@@ -82,7 +82,7 @@ class EmailTransaccionesSend extends Controller
         $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
 
         /* Finde numeros a Letras*/
-        // $firma = EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
+        $firma = EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
         $sum=0;
         $i=1;
         $regla=$cotizacion->tipo;
