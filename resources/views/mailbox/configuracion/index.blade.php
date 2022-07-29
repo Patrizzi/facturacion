@@ -204,8 +204,8 @@
 												<input type="file" class="input_file" id="firma_correo_upd_id" name="firma_correo" onchange="return firma_correo_upd()"  />
 												<span id="visor_span_firma_correo">
 													<!--Aqui se desplegará el fichero-->
-													<img name="firma_correo" src="{{asset('/archivos/imagenes/firma_correo/')}}/{{$config_email->firma_correo}}" width="300px" height="120px" />
-													<input type="text" name="firma_correo_nombre" hidden="hidden" value="{{$config_email->firma_correo}}">
+													<img name="firma_correo" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_email->firma}}" width="300px" height="120px" />
+													<input type="text" name="firma_correo_nombre" hidden="hidden" value="{{$config_email->firma}}">
 												</span>
 											</div>
 											{{-- <label class="col-sm-2 col-form-label">Firma (opcional):</label>

@@ -39,6 +39,8 @@
 			<div>
 				<h2 align="center"></h2>
 					{!!$mensaje_html!!}
+					<br>
+					<br>
             	@if($firma != null)
 	          	<footer>
 	          		<img name="firma" src=" '.url('/').'/archivos/imagenes/firmas/'.$firma.'" width="{{$ancho}}px" height=" '{{$alto}}px" />

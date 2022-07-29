@@ -181,11 +181,11 @@ class EmailConfiguracionesController extends Controller
         
         //* firma para outlook
         if($request->hasfile('firma_correo')){
-            $image1 =$request->file('firma_digital_add');
+            $image1 =$request->file('firma_correo');
             $name =time().$image1->getClientOriginalName();
             $destinationPath = public_path('/archivos/imagenes/firmas/');
             $image1->move($destinationPath,$name);
-            $ancho = '100';
+            $ancho = '150';
             $alto = '400';
         }else{
             $name="";
