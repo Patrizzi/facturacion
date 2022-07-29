@@ -43,7 +43,7 @@
 					<br>
             	@if($firma != null)
 	          	<footer>
-	          		<img name="firma" src=" '.url('/').'/archivos/imagenes/firmas/'.$firma.'" width="{{$ancho}}px" height=" '{{$alto}}px" />
+	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px" height=" '{{$alto}}px" />
 	          	</footer>
             	@endif
 			</div>
@@ -51,7 +51,7 @@
 	</div>
 
 	<div align="center" style="padding-top: 10px">
-		<a href="https://jypsac.com" target="_blank"><img src="https://www.jypsac.com/wp-content/uploads/2020/04/logo_jypsac_png.png"  width="70px"></a>
+		<a href="{{$empresa->pagina_web}}" target="_blank"><img src="{{asset('img/logos/'.$empresa->foto)}}"  width="70px"></a>
 	</div>
 </body>
 @endsection
