@@ -247,8 +247,8 @@ class EmailBandejaEnviosController extends Controller
       $cc_email  = $request->get('cc_email');
 
       $firma=$config_mail->firma;
-      $alto = $config_mail->alto;
-      $ancho = $config_mail->ancho;
+      $alto = $config_mail->alto_firma;
+      $ancho = $config_mail->ancho_firma;
       $mensaje_html = $request->get('mensaje');
       /////////ENVIO DE CORREO/////// https://myaccount.google.com/u/0/lesssecureapps?pli=1 <--- VAINA DE AUTORIZACION PARA EL GMAIL
 
