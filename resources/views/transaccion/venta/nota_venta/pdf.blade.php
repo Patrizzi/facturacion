@@ -38,7 +38,11 @@
             </td>
             <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
                 <strong>{{$empresa->razon_social}}</strong>
-                <br>
+                <br><p><u>Atendido Por: </u></p>
+                Teléfono :  {{$empresa->telefono}}<br>
+                Celular : {{$nota_venta->user->celular }}<br>
+                Email : {{$nota_venta->user->email_user}}<br>
+                Web : {{$empresa->pagina_web}} <br>
                 Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                 <br>
                 {{$empresa->correo}}
@@ -150,12 +154,12 @@
     <table style="border:  0px solid white">
         <tr style="border:  0px solid white">
             <td>
-                <p><u>Centro de Atencion : </u></p>
-                Telefono : {{$nota_venta->user->personal->telefono }}<br>
-                Celular : {{$nota_venta->user->personal->celular }}<br>
-                Email : {{$nota_venta->user->personal->email }}<br>
+                <p><u>Atendido Por: </u></p>
+                Teléfono :  {{$empresa->telefono}}<br>
+                Celular : {{$nota_venta->user->celular }}<br>
+                Email : {{$nota_venta->user->email_user}}<br>
                 Web : {{$empresa->pagina_web}} <br>
-            </td>
+                </td>
             <td >
                 <br>
                 <br>

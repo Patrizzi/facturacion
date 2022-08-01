@@ -78,7 +78,7 @@ class FacturacionController extends Controller
         $inventario_inicial=Kardex_entrada::first();
         if (isset($inventario_inicial)) {
             if ( $inventario_inicial->estado==1) {
-                return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
+                // return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
             }
         }
 
@@ -102,9 +102,18 @@ class FacturacionController extends Controller
                 }
             }
         }
+        $servicios=Servicios::where('estado_anular',0)->get();
         //validacion si hay prductos en el almacen
         if(!isset($prod)){
-            return redirect()->route('facturacion.index')->with('repite', 'No hay productos en el almacen seleccionado');
+            // return back()->withErrors(['No hay productos en el Almacen con nombre: '.$sucursal->nombre.'']);
+            $prod = [0,0];
+        }
+        if(count($servicios) == 0){
+            // return back()->withErrors(['No hay Servicios Agregados: '.$sucursal->nombre.'']);
+            $servicios == null;
+        }
+        if(!isset($prod) && count($servicios) == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados: '.$sucursal->nombre.'']);
         }
 
         // return $nueva;
@@ -128,21 +137,21 @@ class FacturacionController extends Controller
     $moneda=Moneda::where('principal','1')->first();
 
     $tipo_cambio=TipoCambio::latest('created_at')->first();
-    if ($moneda->tipo == 'nacional') {
-        foreach ($productos as $index => $producto) {
-            $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
-            $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')+$utilidad[$index]),2);
-            $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
-            $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'),2);
-        }
-    }else{
-        foreach ($productos as $index => $producto) {
-            $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
-            $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')+$utilidad[$index]),2);
-            $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
-            $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'),2);
-        }
-    }
+    // if ($moneda->tipo == 'nacional') {
+    //     foreach ($productos as $index => $producto) {
+    //         $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
+    //         $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')+$utilidad[$index]),2);
+    //         $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
+    //         $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'),2);
+    //     }
+    // }else{
+    //     foreach ($productos as $index => $producto) {
+    //         $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
+    //         $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')+$utilidad[$index]),2);
+    //         $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
+    //         $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'),2);
+    //     }
+    // }
 
     $forma_pagos=Forma_pago::all();
     $clientes=Cliente::where('documento_identificacion','ruc')->get();
@@ -194,7 +203,7 @@ class FacturacionController extends Controller
     $factura_numero="F".$sucursal_nr."-".$factura_nr;
 
     /*Servicio*/
-    $servicios=Servicios::where('estado_anular',0)->get();
+    
 
     $sucursal=$request->get('almacen');
     $sucursal=Almacen::where('id',$sucursal)->first();
@@ -224,7 +233,7 @@ class FacturacionController extends Controller
     /*Servicio*/
 
     // return $array2;
-    return view('transaccion.venta.facturacion.create',compact('productos','servicios','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ,'precio_prom','array2'));
+    return view('transaccion.venta.facturacion.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ,'precio_prom','array2'));
 }
 
 public function create_ms(Request $request){
@@ -861,7 +870,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Facturacion::where('id',$id)->first();
@@ -888,7 +897,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
     function print($id){
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Facturacion::where('id',$id)->first();

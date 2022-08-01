@@ -261,10 +261,10 @@
     <br>
     <div class="row">
         <div class="col-sm-3">
-            <p><u>Centro de Atencion : </u></p>
-            Telefono : {{$nota_venta->user->personal->telefono }}<br>
-            Celular : {{$nota_venta->user->personal->celular }}<br>
-            Email : {{$nota_venta->user->personal->email }}<br>
+            <p><u>Atendido Por: </u></p>
+            Teléfono :  {{$empresa->telefono}}<br>
+            Celular : {{$nota_venta->user->celular }}<br>
+            Email : {{$nota_venta->user->email_user}}<br>
             Web : {{$empresa->pagina_web}} <br>
         </div>
         <div class="col-sm-3"></div>

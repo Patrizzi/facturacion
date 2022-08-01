@@ -242,13 +242,16 @@ class ParameterCallController extends Controller
         }else{
             $products_array = array();
             foreach($products as $product){
-                $products_array[] = array(
-                    "id"=>$product->id,
-                    "nombre"=>$product->nombre,
-                    "codigo"=>$product->codigo_producto,
-                    "codigo_original"=>$product->codigo_original,
-                    "tipo"=>'producto'
-                );
+                $stock_almacen = Stock_almacen::where('producto_id',$product->id)->first();
+                if($stock_almacen->stock > "0"){
+                    $products_array[] = array(
+                        "id"=>$product->id,
+                        "nombre"=>$product->nombre,
+                        "codigo"=>$product->codigo_producto,
+                        "codigo_original"=>$product->codigo_original,
+                        "tipo"=>'producto'
+                    );
+                }
             }
         }
 

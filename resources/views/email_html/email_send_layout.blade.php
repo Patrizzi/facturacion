@@ -21,17 +21,17 @@
 	      padding: 15px;
 	      border: 1px solid black;
 	      border-collapse: collapse;
-	        }
+		}
 	    table{
 	      width:100%;
 	    }
-      </style>
+    </style>
 </head>
 <body class="row" style="text-align: justify;">
 	<div class="col-sm-4" align="center">
 		<br>
 		<center >
-      		<img src="{{asset('img/logos/'.$empresa->foto)}}" style="width: 150px;margin-bottom: 15px;">
+      		{{-- <img src="{{asset('img/logos/'.$empresa->foto)}}" style="width: 150px;margin-bottom: 15px;"> --}}
       	</center>
 	</div>
 	<div class="col-sm-12">
@@ -43,15 +43,15 @@
 					<br>
             	@if($firma != null)
 	          	<footer>
-	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px"/>
+	          		<img name="firma" src="http://via.placeholder.com/300x150"  width="{{$ancho}}px"/>
 	          	</footer>
             	@endif
 			</div>
 		</div>
 	</div>
 
-	<div align="center" style="padding-top: 10px">
+	{{-- <div align="center" style="padding-top: 10px">
 		<a href="{{$empresa->pagina_web}}" target="_blank"><img src="{{asset('img/logos/'.$empresa->foto)}}"  width="70px"></a>
-	</div>
+	</div> --}}
 </body>
 @endsection

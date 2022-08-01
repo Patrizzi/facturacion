@@ -107,36 +107,31 @@ $empresa=Empresa::first(); ?>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/comercializacion.svg')}}" class="iconos"> <span class="nav-label">Comercialización</span></a>
                         <ul class="nav nav-second-level collapse">
                             @if(empty($inventario_inicial))
-                            @if($conteo_almacen==1)
-                            <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
-                            <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
-                            @else
-                            <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
-                            <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
-                            @endif
+                                @if($conteo_almacen==1)
+                                    <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
+                                    <li><a href="{{route('cotizacion_manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                                    <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
+                                    <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
+                                    <li><a href="{{route('boleta.index')}}">Boleta</a></li>
+                                    <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>    
+                                    <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
+                                    <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
+                                @endif
                             @elseif($inventario_inicial->estado==1)
-                            <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
-                            <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
+                                <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
+                                <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li>
+                                
                             @else
-                            <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
-                            <li><a href="{{route('cotizacion_manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
-                            {{-- <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li> --}}
-                           {{--  <li>
-                                <a href="#"><span  class="nav-label">Cotizaciones</span></a>
-                                <ul class="nav nav-second-level collapse">
-                                    <li><a href="{{route('cotizacion.index')}}"  style="padding-left: 80px;">C.Productos</a></li>
-                                    <li><a href="{{route('cotizacion_servicio.index')}}"  style="padding-left: 80px;">C.Servicios</a></li>
-                                    <li><a href="{{route('otros.index')}}"  style="padding-left: 80px;">C.Manual</a></li>
-                                </ul>
-                            </li> --}}
-                            <li><a href="{{route('boleta.index')}}">Boleta</a></li>
-                            <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>
-                            <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
-                            <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
-                            <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>
-                            <li><a href="{{route('guia_remision_manual.index')}}">Guía Remisión M.</a></li>
-                            <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
-                            <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
+                                <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
+                                <li><a href="{{route('cotizacion_manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
+                                <li><a href="{{route('boleta.index')}}">Boleta</a></li>
+                                <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>
+                                <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
+                                <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
+                                <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>
+                                <li><a href="{{route('guia_remision_manual.index')}}">Guía Remisión M.</a></li>
+                                <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
+                                <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
                             {{-- <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li> --}}
                             @endif
                         </ul>

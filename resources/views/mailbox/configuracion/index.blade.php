@@ -201,13 +201,16 @@
 										<div class="row">
 											<label class="col-sm-12 col-form-label">Firma Correo:</label><br>
 											<div class="col-sm-5">
+												<div class="line">150px</div>
 												<input type="file" class="input_file" id="firma_correo_upd_id" name="firma_correo" onchange="return firma_correo_upd()"  />
 												<span id="visor_span_firma_correo">
 													<!--Aqui se desplegará el fichero-->
-													<img name="firma_correo" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_email->firma}}" width="300px" height="120px" />
+													<img name="firma_correo" src="{{asset('/archivos/imagenes/firmas/')}}/{{$config_email->firma}}" width="300px" height="150px" />
 													<input type="text" name="firma_correo_nombre" hidden="hidden" value="{{$config_email->firma}}">
 												</span>
+												<div class="separator">300px</div>
 											</div>
+											
 											{{-- <label class="col-sm-2 col-form-label">Firma (opcional):</label>
 											<div class="col-sm-4">
 												<input type="file" id="archivoInput" name="firma" onchange="return validarExt()"  />
@@ -224,7 +227,9 @@
 													<img name="firma"  src="" width="390px" height="200px" />
 												</span>
 											</div> --}}
+											
 										</div>
+										<br>
 										<br>
 										<button class="btn btn-primary" id="submit_button" type="submit" style="display:none">Grabar</button>
 										<button class="btn btn-primary ladda-button" id="grabar_button" type="button">Grabar</button>
@@ -266,11 +271,53 @@
 		right:0px;
 		bottom:0px;
 		width:300px;
-		height:120px;
+		height:150px;
 		opacity: 0;
 		border: 1px black solid;
 	}
-	
+	.separator {
+		display: flex;
+		align-items: center;
+		text-align: center;
+		width: 300px;
+	}
+
+	.separator::before,
+	.separator::after {
+		content: '';
+		flex: 1;
+		border-bottom: 1px solid gray;
+	}
+
+	.separator:not(:empty)::before {
+		margin-right: .25em;
+	}
+
+	.separator:not(:empty)::after {
+		margin-left: .25em;
+	}
+	.line{
+		display: flex;
+		position: absolute;
+		color: grey;
+		background-color: transparent;
+		/* height: -webkit-fill-available; */
+		align-items: center;
+		margin-left: -43px;
+		width: 40px;
+		height: 150px;
+		border-right: 1px solid grey;
+	}
+	.line::before{
+		
+	}
+	.line::after{
+		content: '';
+		color: rgb(255 0 0);
+		border-right: 1px solid grey;
+		flex: 0;
+		margin-right: 5px;
+	}
 </style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -366,7 +413,7 @@
 				visor.onload = function(e)
 				{
 					document.getElementById('visor_span_firma_correo').innerHTML =
-					'<img name="firma_correo" src="'+e.target.result+'"width="300px" height="120px" />';
+					'<img name="firma_correo" src="'+e.target.result+'"width="300px" height="150px" />';
 				};
 				visor.readAsDataURL(archivoInput.files[0]);
 			} 

@@ -46,7 +46,7 @@ class CotizacionManualController extends Controller
 
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=Kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         return view('transaccion.venta.cotizacion.manual.index', compact('cotizacion','igv'));
 
@@ -77,9 +77,9 @@ class CotizacionManualController extends Controller
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         // * CAMBIAR POR VERIFICACION DE CANTIDAD DE PRODUCTOS Y SERVICIOS PRODUCTOS??
         $existe_id=Kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ 
-            return redirect()->route('kardex-entrada.index'); 
-        }
+        // if(empty($existe_id)){ 
+        //     return redirect()->route('kardex-entrada.index'); 
+        // }
         // Sucursal
         $sucursal_1=1;
         $sucursal=Almacen::where('id',$sucursal_1)->first();
