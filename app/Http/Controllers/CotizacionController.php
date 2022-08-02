@@ -270,23 +270,23 @@ class CotizacionController extends Controller
         // return $servicios;
         
 
-        if($moneda->tipo =='nacional'){
-            foreach ($servicios as $index2 => $servicio) {
-                $utilidad_serv[]=$servicio->precio_nacional*($servicio->utilidad)/100;
-                $array2[]=round($servicio->precio_nacional+$utilidad_serv[$index2],2);
-                $array_promedio_serv[]=($servicio->precio_nacional);
-            }
-        }else{
-            foreach ($servicios as $index2 => $servicio) {
-                $utilidad_serv[]=$servicio->precio_extranjero*($servicio->utilidad)/100;
-                $array2[]=round($servicio->precio_extranjero+$utilidad_serv[$index2],2);
-                $array_promedio_serv[]=($servicio->precio_extranjero);
-            }
-        }
+        // if($moneda->tipo =='nacional'){
+        //     foreach ($servicios as $index2 => $servicio) {
+        //         $utilidad_serv[]=$servicio->precio_nacional*($servicio->utilidad)/100;
+        //         $array2[]=round($servicio->precio_nacional+$utilidad_serv[$index2],2);
+        //         $array_promedio_serv[]=($servicio->precio_nacional);
+        //     }
+        // }else{
+        //     foreach ($servicios as $index2 => $servicio) {
+        //         $utilidad_serv[]=$servicio->precio_extranjero*($servicio->utilidad)/100;
+        //         $array2[]=round($servicio->precio_extranjero+$utilidad_serv[$index2],2);
+        //         $array_promedio_serv[]=($servicio->precio_extranjero);
+        //     }
+        // }
         // r
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
 
-        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','productos','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','array2','array_promedio_serv','cotizacion_numero_boleta','config_create'));
+        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','productos','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','servicios','cotizacion_numero_boleta','config_create'));
     }
 
     public function create_factura_ms(Request $request){

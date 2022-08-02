@@ -209,7 +209,7 @@ class FacturacionController extends Controller
     $sucursal=Almacen::where('id',$sucursal)->first();
 
     if(count($servicios) == 0){
-        return redirect()->route('servicios.index');
+        // return redirect()->route('servicios.index');
     }
     if(count($servicios) == 0){
         return back()->withErrors(['No hay Servicios Agregados: '.$sucursal->nombre.'']);
@@ -217,23 +217,23 @@ class FacturacionController extends Controller
     $tipo_cambio=TipoCambio::latest('created_at')->first();
     $moneda=Moneda::where('principal','1')->first();
 
-    if($moneda->tipo =='nacional'){
-        foreach ($servicios as $index2 => $servicio) {
-            $precio_prom[]=$servicio->precio_nacional;
-            $utilidad_Serv[]=$servicio->precio_nacional*($servicio->utilidad/100);
-            $array2[]=round($servicio->precio_nacional+$utilidad_Serv[$index2],2);
-        }
-    }else{
-        foreach ($servicios as $index2 => $servicio) {
-            $precio_prom[]=$servicio->precio_extranjero;
-            $utilidad_Serv[]=$servicio->precio_extranjero*($servicio->utilidad/100);
-            $array2[]=round($servicio->precio_extranjero+$utilidad_Serv[$index2],2);
-        }
-    }
+    // if($moneda->tipo =='nacional'){
+    //     foreach ($servicios as $index2 => $servicio) {
+    //         $precio_prom[]=$servicio->precio_nacional;
+    //         $utilidad_Serv[]=$servicio->precio_nacional*($servicio->utilidad/100);
+    //         $array2[]=round($servicio->precio_nacional+$utilidad_Serv[$index2],2);
+    //     }
+    // }else{
+    //     foreach ($servicios as $index2 => $servicio) {
+    //         $precio_prom[]=$servicio->precio_extranjero;
+    //         $utilidad_Serv[]=$servicio->precio_extranjero*($servicio->utilidad/100);
+    //         $array2[]=round($servicio->precio_extranjero+$utilidad_Serv[$index2],2);
+    //     }
+    // }
     /*Servicio*/
 
     // return $array2;
-    return view('transaccion.venta.facturacion.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ,'precio_prom','array2'));
+    return view('transaccion.venta.facturacion.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ));
 }
 
 public function create_ms(Request $request){

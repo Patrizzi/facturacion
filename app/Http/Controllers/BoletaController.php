@@ -114,46 +114,46 @@ class BoletaController extends Controller
 
     $igv=Igv::where('id','1')->first();
 
-    $tipo_cambio=TipoCambio::latest('created_at')->first();
-    if ($moneda->tipo == 'nacional') {
-        foreach ($productos as $index => $producto) {
-            $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
-            $igv_p[]=(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')+$utilidad[$index]);
+    // $tipo_cambio=TipoCambio::latest('created_at')->first();
+    // if ($moneda->tipo == 'nacional') {
+    //     foreach ($productos as $index => $producto) {
+    //         $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
+    //         $igv_p[]=(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')+$utilidad[$index]);
 
-            $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')+$utilidad[$index]),2);
-            $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
-            $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'),2);
-        }
-    }else{
-        foreach ($productos as $index => $producto) {
-            $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
-            $igv_p[]=(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')+$utilidad[$index]);
-            $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')+$utilidad[$index]),2);
-            $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
-            $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'),2);
-        }
-    }
+    //         $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional')+$utilidad[$index]),2);
+    //         $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
+    //         $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'),2);
+    //     }
+    // }else{
+    //     foreach ($productos as $index => $producto) {
+    //         $utilidad[]=Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
+    //         $igv_p[]=(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')+$utilidad[$index]);
+    //         $array[]=round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero')+$utilidad[$index]),2);
+    //         $array_cantidad[]=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$almacen_p)->sum('stock');
+    //         $array_promedio[]=round(Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'),2);
+    //     }
+    // }
     $servicios=Servicios::where('estado_anular',0)->get();
     $igv_proceso=Igv::first();
     $igv_total=$igv_proceso->igv_total;
 
-    if($moneda->tipo =='nacional'){
-        foreach ($servicios as $index2 => $servicio) {
-            $utilidad2[]=$servicio->precio_nacional*($servicio->utilidad)/100;
-            $igv_precio[]=$servicio->precio_nacional;
-            $igv2[]=$igv_precio[$index2]*$igv_total/100;
-            $array2[]=round(($servicio->precio_nacional+$utilidad2[$index2]),2);
+    // if($moneda->tipo =='nacional'){
+    //     foreach ($servicios as $index2 => $servicio) {
+    //         $utilidad2[]=$servicio->precio_nacional*($servicio->utilidad)/100;
+    //         $igv_precio[]=$servicio->precio_nacional;
+    //         $igv2[]=$igv_precio[$index2]*$igv_total/100;
+    //         $array2[]=round(($servicio->precio_nacional+$utilidad2[$index2]),2);
 
-        }
-    }else{
-        foreach ($servicios as $index2 => $servicio) {
-            $utilidad2[]=$servicio->precio_extranjero*($servicio->utilidad)/100;
-            $igv_precio[]=$servicio->precio_extranjero;
-            $igv2[]=$igv_precio[$index2]*$igv_total/100;
-            $array2[]=round($servicio->precio_extranjero+$utilidad2[$index2],2);
+    //     }
+    // }else{
+    //     foreach ($servicios as $index2 => $servicio) {
+    //         $utilidad2[]=$servicio->precio_extranjero*($servicio->utilidad)/100;
+    //         $igv_precio[]=$servicio->precio_extranjero;
+    //         $igv2[]=$igv_precio[$index2]*$igv_total/100;
+    //         $array2[]=round($servicio->precio_extranjero+$utilidad2[$index2],2);
 
-        }
-    }
+    //     }
+    // }
     $forma_pagos=Forma_pago::all();
     $clientes=Cliente::where('documento_identificacion', '!=' ,'ruc')->where('documento_identificacion', '!=' ,'RUC')->get();
     $moneda=Moneda::where('principal','1')->first();
@@ -195,7 +195,7 @@ class BoletaController extends Controller
     }
     $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
 
-    return view('transaccion.venta.boleta.create',compact('productos','forma_pagos','clientes','personales','array','array_cantidad','igv','moneda','p_venta','array_promedio','empresa','sucursal','boleta_numero','tipo_operacion','servicios','array2','igv_precio'));
+    return view('transaccion.venta.boleta.create',compact('productos','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','sucursal','boleta_numero','tipo_operacion'));
 
 }
 
