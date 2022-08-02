@@ -197,7 +197,7 @@
                                         </td>
                                         <td>
                                             <div class="input-group">
-                                                <input type="text" name="peso[]" step="0.01"  id="peso0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
+                                                <input type="text" name="peso[]" step="0.01"  id="peso0" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
                                                 <div class="input-group-append">
                                                     <span class="input-group-addon">KG</span>
                                                 </div>
@@ -385,7 +385,7 @@
                     <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i})" required></select>
                 </td>
                 <td>
-                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57">
                 </td>
                 <td>
                     <input type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
