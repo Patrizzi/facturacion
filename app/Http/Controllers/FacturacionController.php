@@ -988,15 +988,14 @@ return redirect()->route('facturacion.show',$facturacion->id);
 
         return redirect()->route('facturacion.index');
     }
-    public function ticket_ajax(Request $request){
-
-        $ids = $request->get('id');
-        $facturacion=Facturacion::find($ids);
-        $facturacion_registro=Facturacion_registro::where('facturacion_id',$ids)->get();
+    public function ticket(Request $request,$id){
+        
+        $facturacion=Facturacion::find($id);
+        $facturacion_registro=Facturacion_registro::where('facturacion_id',$id)->get();
         $empresa=Empresa::first();
         $moneda = Moneda::where('id',$facturacion->moneda_id)->first();
         $igv=Igv::first();
-
+        return view('transaccion.venta.facturacion.ticket',compact('facturacion','facturacion_registro','empresa'));
         $nombre_impresora = "EPSONTICKET";
 
         $connector = new WindowsPrintConnector($nombre_impresora);

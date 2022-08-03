@@ -176,6 +176,7 @@ Route::group(
 		// Route::get('facturacion/boleta/{id}' , 'FacturacionController@show_boleta')->name('boleta');
 		// Route::get('facturacion/create_boleta/' , 'FacturacionController@create_boleta')->name('create.boleta');
 		Route::get('/facturacion/print/{id}','FacturacionController@print')->name('facturacion.print');
+		Route::get('/facturacion/ticket/{id}','FacturacionController@ticket')->name('facturacion.ticket');
 		Route::post('/facturacion/create/ajax','FacturacionController@ajax')->name('facturacion.ajax');
 		// Route::post('/facturacion/create/sss','FacturacionController@ajax')->name('facturacion.ajax');
 		Route::post('/facturacion/create_ajax','FacturacionController@create_ajax')->name('facturacion.create_ajax');
