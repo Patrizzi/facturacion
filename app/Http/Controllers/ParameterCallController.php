@@ -290,13 +290,15 @@ class ParameterCallController extends Controller
         //Servicios a arraygit
         $services_array = array();
         foreach($services as $service){
-            $services_array[] = array(
-                 "id"=>$service->id,
-                 "nombre"=>$service->nombre,
-                 "codigo"=>$service->codigo_servicio,
-                 "codigo_original"=>$service->codigo_original,
-                 "tipo"=>'servicio'
-            );
+            if($service->estado_anular == "1"){
+                $services_array[] = array(
+                    "id"=>$service->id,
+                    "nombre"=>$service->nombre,
+                    "codigo"=>$service->codigo_servicio,
+                    "codigo_original"=>$service->codigo_original,
+                    "tipo"=>'servicio'
+               ); 
+            }
          }
 
         $articles = array();
