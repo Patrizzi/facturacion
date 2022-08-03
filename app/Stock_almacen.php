@@ -11,6 +11,10 @@ class Stock_almacen extends Model
 
     protected $guarded = [];
 
+    public function producto_ids(){
+        return $this->belongsTo(Producto::class,'producto_id');
+    }
+
     public static function ingreso($almacen,$producto,$cantidad){
         $stock_almacen=Stock_almacen::where('almacen_id',$almacen)->where('producto_id',$producto)->first();
         if(empty($stock_almacen)){

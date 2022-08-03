@@ -215,7 +215,7 @@ class ParameterCallController extends Controller
     public function getArticles(Request $request){
         $search = $request->search;
         $almacen = $request->almacen;
-
+        $tipo_doc = $request->tipo_doc;
         if($search == ''){
             $products = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
@@ -223,34 +223,66 @@ class ParameterCallController extends Controller
             $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->orWhere('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
         }
-
+        // return $products;
         //Productos a array
         if($almacen != 0){
-            $products_array = array();
-            foreach($products as $product){
-                $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id',$product->id)->first();
-                if($stock_almacen->stock > "0"){
-                    $products_array[] = array(
-                        "id"=>$product->id,
-                        "nombre"=>$product->nombre,
-                        "codigo"=>$product->codigo_producto,
-                        "codigo_original"=>$product->codigo_original,
-                        "tipo"=>'producto'
-                    );
+            if ($tipo_doc == 'manual') {
+                $products_array = array();
+                foreach($products as $product){
+                    $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id',$product->id)->first();
+                    if($stock_almacen->producto_ids->estado_anular == "1"){
+                        $products_array[] = array(
+                            "id"=>$product->id,
+                            "nombre"=>$product->nombre,
+                            "codigo"=>$product->codigo_producto,
+                            "codigo_original"=>$product->codigo_original,
+                            "tipo"=>'producto'
+                        );
+                    }
+                }
+            }else{
+                $products_array = array();
+                foreach($products as $product){
+                    $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id',$product->id)->first();
+                    if($stock_almacen->stock > "0"){
+                        $products_array[] = array(
+                            "id"=>$product->id,
+                            "nombre"=>$product->nombre,
+                            "codigo"=>$product->codigo_producto,
+                            "codigo_original"=>$product->codigo_original,
+                            "tipo"=>'producto'
+                        );
+                    }
                 }
             }
         }else{
-            $products_array = array();
-            foreach($products as $product){
-                $stock_almacen = Stock_almacen::where('producto_id',$product->id)->first();
-                if($stock_almacen->stock > "0"){
-                    $products_array[] = array(
-                        "id"=>$product->id,
-                        "nombre"=>$product->nombre,
-                        "codigo"=>$product->codigo_producto,
-                        "codigo_original"=>$product->codigo_original,
-                        "tipo"=>'producto'
-                    );
+            if($tipo_doc == 'manual'){
+                $products_array = array();
+                foreach($products as $product){
+                    $stock_almacen = Stock_almacen::where('producto_id',$product->id)->first();
+                    if($stock_almacen->producto_ids->estado_anular == "1"){
+                        $products_array[] = array(
+                            "id"=>$product->id,
+                            "nombre"=>$product->nombre,
+                            "codigo"=>$product->codigo_producto,
+                            "codigo_original"=>$product->codigo_original,
+                            "tipo"=>'producto'
+                        );
+                    }                    
+                }
+            }else{
+                $products_array = array();
+                foreach($products as $product){
+                    $stock_almacen = Stock_almacen::where('producto_id',$product->id)->first();
+                    if($stock_almacen->stock > "0"){
+                        $products_array[] = array(
+                            "id"=>$product->id,
+                            "nombre"=>$product->nombre,
+                            "codigo"=>$product->codigo_producto,
+                            "codigo_original"=>$product->codigo_original,
+                            "tipo"=>'producto'
+                        );
+                    }
                 }
             }
         }

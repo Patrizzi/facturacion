@@ -485,7 +485,8 @@
                     return {
                         _token: "{{ csrf_token() }}",
                         search: params.term, // search term 
-                        almacen: 0 
+                        almacen: 0,
+                        tipo_doc: 'manual' 
                     };
                 },
                 processResults: function (data) {

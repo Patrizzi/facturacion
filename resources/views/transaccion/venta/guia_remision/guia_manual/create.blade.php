@@ -327,7 +327,8 @@
                     return {
                         _token: "{{ csrf_token() }}",
                         id: params.id,
-                        search: params.term // search term 
+                        search: params.term, // search term 
+                        tipo_doc: 'manual'
                         
                     };
                 },
