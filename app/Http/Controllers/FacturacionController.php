@@ -995,7 +995,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $empresa=Empresa::first();
         $moneda = Moneda::where('id',$facturacion->moneda_id)->first();
         $igv=Igv::first();
-        return view('transaccion.venta.facturacion.ticket',compact('facturacion','facturacion_registro','empresa'));
+        return view('transaccion.venta.facturacion.ticket',compact('facturacion','facturacion_registro','empresa','igv','moneda'));
         $nombre_impresora = "EPSONTICKET";
 
         $connector = new WindowsPrintConnector($nombre_impresora);

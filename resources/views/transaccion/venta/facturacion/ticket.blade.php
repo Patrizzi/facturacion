@@ -7,15 +7,20 @@
     <title>Ticket Factura</title>
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <script LANGUAGE="JavaScript">
+        function cerrar() {
+            window.close();
+        }
+    </script>
 </head>
-<body >
+<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="contenedor-impresion-ticket">
         <div class="row">
             <div class="col-lg-12" align="center">
-                <span>Facturacion Electronica</span><br>
+                <strong><span>Facturacion Electronica</span></strong><br>
                 <span>{{$facturacion->codigo_fac}}</span>
             </div>
-            <hr st>
+            <hr>
             <div class="col-lg-12" align="center">
                 <span>{{$facturacion->created_at}}</span><br>
                 <span>{{$empresa->razon_social}}</span><br>
@@ -24,16 +29,103 @@
                 <span>Telefono: {{$empresa->telefono}}</span>
             </div>
             <hr>
-            <div class="col-lg12">
-                
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Cliente <br>
+                        {{$facturacion->cliente->documento_identificacion}} <br>
+                    </div>
+                    <div class="col-sm-2">
+                        : <br>
+                        : <br>
+                    </div>
+                    <div class="col-sm-6">
+                        {{$facturacion->cliente->nombre}} <br>
+                        {{$facturacion->numero_documento}} <br>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="col-lg-12">
+                <table class="table" style="font-size: 14px">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%">Articulo</th>
+                            <th style="width: 14%">Cant.</th>
+                            <th style="width: 24%">P. Unit</th>
+                            <th style="width: 22%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($facturacion_registro as $item)
+                            <tr>
+                                @if(isset($item->producto_id))
+                                    <td style="font-size: 12px">{{$item->producto->nombre}}</td>
+                                @else
+                                    <td>{{$item->servicio->nombre}}</td>
+                                @endif
+                                <td>{{$item->cantidad}}</td>
+                                <td>{{$item->precio_unitario_comi}}</td>
+                                <td>{{$item->precio_unitario_comi* $item->cantidad}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        <div class="row" >
+            <div class="col-sm-6">
+                Subtotal <br>
+                Op. Gravada <br>
+                Op. Inafecta<br>
+                Op. Exonerada<br>
+                I.G.V<br>
+                Total<br>
+            </div>
+            <div class="col-sm-2">
+                : <br>
+                : <br>
+                : <br>
+                : <br>
+                : <br>
+                : <br>
+            </div>
+            <div class="col-sm-4" align="right">
+                {{$simbolo  = $moneda->simbolo }}{{$subtotal = number_format($facturacion->op_gravada+$facturacion->op_inafecta + $facturacion->op_exonerada,2)}} <br>
+                {{$simbolo}}. {{number_format($facturacion->op_gravada,2)}} <br>
+                {{$simbolo}}. {{number_format($facturacion->op_inafecta,2)}} <br>
+                {{$simbolo}}. {{number_format($facturacion->op_exonerada,2)}} <br>
+                {{$simbolo}}. {{$igv = round($facturacion->op_gravada * $igv->igv_total/100,2)}} <br>
+                {{$simbolo}}. {{$total = round($subtotal + $igv,2)}} <br>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-sm-12" align="center">
+                <span>Atendido por {{auth()->user()->nombre}}</span><br>
+                <span>Autorizado mediante resolucion</span><br>
+                <span>N° RS 018-005-0002243/SUNAT</span><br>
+                <span>Representación impresa de la</span><br>
+                <span>Factura de Venta Electronica</span><br>
+                <span>Para consultar el documento</span><br>
+                <span>Ingrese a:</span><br>
+                <span>https://ww2.todasmisfacturas.com.pe</span><br>
             </div>
         </div>
     </div>
 </body>
 <style>
+    html {
+        font-size: 90%;
+        max-width: 300px;
+        padding: 0px 8px 0px 8px;
+    }
     .contenedor-impresion-ticket{
-        width: 260px;
-        max-width: 260px;
+        width: 300px;
+        max-width: 300px;
     }
 </style>
+<script type="text/javascript">
+    window.print();
+</script>
 </html>
