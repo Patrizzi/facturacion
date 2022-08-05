@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-sm-6">
                         {{$facturacion->cliente->nombre}} <br>
-                        {{$facturacion->numero_documento}} <br>
+                        {{$facturacion->cliente->numero_documento}} <br>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                 <span>Factura de Venta Electronica</span><br>
                 <span>Para consultar el documento</span><br>
                 <span>Ingrese a:</span><br>
-                <span>https://ww2.todasmisfacturas.com.pe</span><br>
+                <span>{{$empresa->pagina_web}}</span><br>
             </div>
         </div>
     </div>

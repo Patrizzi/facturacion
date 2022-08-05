@@ -34,7 +34,7 @@
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
                 {{-- <button id="btn_ticket" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button> --}}
-                <a href="{{route('facturacion.ticket', $facturacion->id)}}" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></a>
+                <a href="{{route('facturacion.ticket', $facturacion->id)}}" class="btn btn-info" target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
                 <input type="text" value="{{$facturacion->id}}" name="id" id="id" hidden="">
                 <a class="btn btn-success" href="{{route('facturacion.print', $facturacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 @if(Auth::user()->email_creado == 1)
