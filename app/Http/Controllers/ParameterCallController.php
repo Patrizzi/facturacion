@@ -221,9 +221,9 @@ class ParameterCallController extends Controller
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
         }else{
             $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
-            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre')->where('nombre', 'like', '%' .$search . '%')->orWhere('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
+            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre','estado_anular')->where('nombre', 'like', '%' .$search . '%')->orWhere('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
         }
-        // return $products;
+        // return $services;
         //Productos a array
         if($almacen != 0){
             if ($tipo_doc == 'manual') {
@@ -290,7 +290,7 @@ class ParameterCallController extends Controller
         //Servicios a arraygit
         $services_array = array();
         foreach($services as $service){
-            if($service->estado_anular == "1"){
+            if($service->estado_anular == "0"){
                 $services_array[] = array(
                     "id"=>$service->id,
                     "nombre"=>$service->nombre,
@@ -299,8 +299,8 @@ class ParameterCallController extends Controller
                     "tipo"=>'servicio'
                ); 
             }
-         }
-
+        }
+        // return $services; 
         $articles = array();
         $articles = array_merge($products_array,$services_array);
 
