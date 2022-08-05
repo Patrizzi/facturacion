@@ -1021,7 +1021,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $printer->text("\n===============================\n");
 
     //Cliente    
-        $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $facturacion->cliente->nombre);
+        $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $facturacion->ara->nombre);
         $printer->text($cliente_dato."\n");
         $cliente_id= sprintf('%-15.20s %-2.2s %-21.21s', $facturacion->cliente->documento_identificacion, ':', $facturacion->cliente->numero_documento);
         $printer->text($cliente_id);

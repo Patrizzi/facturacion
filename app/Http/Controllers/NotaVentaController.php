@@ -69,8 +69,8 @@ class NotaVentaController extends Controller
       $garantia=Garantia::where('estado',0)->get();
       $moneda=Moneda::all();
       $forma_pagos= Forma_pago::all();
-      $servicios = Servicios::all();
-      $productos=Producto::all();
+      $servicios = Servicios::where('estado_anular', 0)->get();
+      $productos=Producto::where('estado_anular', 1)->get();
       $user_login =auth()->user();
 
       $empresa=Empresa::first();
