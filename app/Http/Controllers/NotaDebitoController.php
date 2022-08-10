@@ -12,6 +12,8 @@ use App\Empresa;
 use App\Igv;
 use App\Banco;
 use App\Nota_Debito;
+use App\Facturacion_m;
+use App\Facturacion_registro_m;
 use App\Nota_Debito_registro;
 
 
@@ -37,7 +39,9 @@ class NotaDebitoController extends Controller
     {
         //cambiar de 0 a 1 en f_electronica
         $facturas=Facturacion::where('f_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
-        return view('transaccion.venta.nota_debito.lista_facturacion',compact('facturas'));
+
+        $factura_manual=Facturacion_m::where('f_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
+        return view('transaccion.venta.nota_debito.lista_facturacion',compact('facturas','factura_manual'));
     }
 
     public function create_boleta()
@@ -49,19 +53,28 @@ class NotaDebitoController extends Controller
 
     public function create_nota_debito(Request $request){
 
-        $facturacion=Facturacion::find($request->factura_id);
-        $facturacion_registro=Facturacion_registro::where('facturacion_id',$request->factura_id)->get();
+        // return $request;
+        $tipo = $request->get('tipo');
+        if($tipo == "normal"){
+            $facturacion=Facturacion::find($request->factura_id);
+            $facturacion_registro=Facturacion_registro::where('facturacion_id',$request->factura_id)->get();
+        }else{
+            $facturacion=Facturacion_m::find($request->factura_id);
+            $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$request->factura_id)->get();
+        }
+        
         
         $empresa=Empresa::first();
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
-        if($facturacion->tipo=="producto"){
+        // return $facturacion;
+        // if($facturacion->tipo=="producto"){
             return view('transaccion.venta.nota_debito.create',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco'));
-        }else{
-            return view('transaccion.venta.nota_debito.create_servicio',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco'));
-        }
+        // }else{
+            // return view('transaccion.venta.nota_debito.create_servicio',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco'));
+        // }
         
     }
 

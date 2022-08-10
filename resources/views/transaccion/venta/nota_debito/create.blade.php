@@ -24,7 +24,7 @@
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
                                 <h2>NOTA DE DEBITO</h2>
-                                <h5> {{$facturacion->codigo_fac}}</h5>
+                                {{-- <h5> {{$facturacion->codigo_fac}}</h5> --}}
                             </center>
                         </div>
                     </div>
@@ -105,18 +105,17 @@
                     </div>
                 </div>
                 <br>
-                
                     <div class="table-responsive">
                         <table class="table ">
                             <thead>
                                 <tr>
                                     <th></th>
                                     <th>ITEM</th>
-                                    <th>Codigo Producto</th>
-                                    <th style="width:30px">Cantidad</th>
+                                    <th>Codigo Item</th>
                                     <th>Descripción</th>
+                                    <th >Cantidad</th>
                                     <th>Precio unitario</th>
-                                    <th style="width:30px">Precio unitario Nuevo</th>
+                                    <th >Precio unitario Nuevo</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -127,9 +126,15 @@
                                     <tr>
                                         <td><input class="form-check-input" type="checkbox" id="inlineCheckbox_{{$e}}" name="inlineCheckbox_{{$e}}"  onclick="check('{{$e}}')"></td>
                                         <td >{{$u++}}</td>
-                                        <td>{{$facturacion_registros->producto->codigo_producto}}</td>
+                                        @if(isset($facturacion_registros->producto_id))
+                                            <td>{{$facturacion_registros->producto->codigo_producto}}</td>    
+                                            <td>{{$facturacion_registros->producto->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
+                                        @else
+                                            <td>{{$facturacion_registros->servicio->codigo_servicio}}</td>    
+                                            <td>{{$facturacion_registros->servicio->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
+                                        @endif
                                         <td>{{$facturacion_registros->cantidad}}</td>
-                                        <td>{{$facturacion_registros->producto->nombre}} <br><strong>N/S:</strong> {{$facturacion_registros->numero_serie}}</td>
+                                        
                                         <td>{{$facturacion_registros->precio}}</td>
                                         <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
                                         <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td>

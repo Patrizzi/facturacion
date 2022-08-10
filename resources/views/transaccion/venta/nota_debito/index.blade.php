@@ -52,14 +52,18 @@
                                 <tr class="gradeX">
                                     <td>{{$nota_debitos->id}}</td>
                                     <td>
-                                        @if($nota_debitos->facturacion_id==NULL)
-                                            Boleta
-                                        @else
+                                        @if($nota_debitos->facturacion_id != NULL)
                                             Factura
+                                        @elseif($nota_debitos->boleta_id != NULL)
+                                            Boleta
+                                        @elseif($nota_debitos->facturacion_m_id!=NULL)
+                                            Factura Manual
+                                        @else
+                                            Boleta Manual
                                         @endif
                                     </td>
                                     <td>{{$nota_debitos->tipo}}</td>
-                                    <td>{{$nota_debitos->created_at}}</td>
+                                    <td>{{$nota_debitos->fecha_emision}}</td>
                                     <td><a href="{{route('nota-debito.show',$nota_debitos->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
                                 </tr>
                                 @endforeach 
