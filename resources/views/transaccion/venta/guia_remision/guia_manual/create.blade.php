@@ -294,11 +294,9 @@
             type: "POST",
             delay: 10,
             data: function (params) {
-                var tipo_coti = 0;
                 return {
                     _token: "{{ csrf_token() }}",
-                    search: params.term, // search term
-                    tipo_coti: tipo_coti    
+                    search: params.term // search term
                 };
             },
             processResults: function (data) {
