@@ -132,7 +132,7 @@ $empresa=Empresa::first(); ?>
                                 <li><a href="{{route('guia_remision_manual.index')}}">Guía Remisión M.</a></li>
                                 <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
                                 <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
-                            {{-- <li><a href="{{route('nota-credito.index')}}">Nota Débito</a></li> --}}
+                                <li><a href="{{route('nota-debito.index')}}">Nota Débito</a></li>
                             @endif
                         </ul>
                     </li>
@@ -244,6 +244,7 @@ $empresa=Empresa::first(); ?>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
                         <li><a href="{{route('facturacion_electronica.index_guia_remision')}}">Guía Remisión</a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_credito')}}">Nota de créditos</a></li>
+                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}">Nota de débitos</a></li>
                     </ul>
                 </li>
                 <li>

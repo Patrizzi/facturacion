@@ -166,11 +166,7 @@
                                         </td>
                                         <td>
                                             <center>
-                                                <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="factura_id" value="{{$n_credito_enviado->id}}">
-                                                    <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
-                                                </form>
+                                                <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
                                             </center>
                                         </td>
                                     </tr>

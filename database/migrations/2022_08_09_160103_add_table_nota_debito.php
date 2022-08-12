@@ -18,7 +18,9 @@ class AddTableNotaDebito extends Migration
             $table->foreign('facturacion_m_id')->references('id')->on('facturacion_m')->onDelete('cascade');
             $table->unsignedBigInteger('boleta_m_id')->nullable()->after('facturacion_m_id');
             $table->foreign('boleta_m_id')->references('id')->on('boleta_m')->onDelete('cascade');
-            $table->string('fecha_emision');
+            $table->string('fecha_emision')->nullable()->after('boleta_m_id');
+            $table->integer('estado')->after('fecha_emision')->default(0);
+            $table->integer('n_electronica')->after('estado')->default(0);
         });
     }
 

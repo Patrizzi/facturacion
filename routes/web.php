@@ -118,12 +118,14 @@ Route::group(
 		Route::post('/facturacion_electronica_factura_m','FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
 		Route::post('/facturacion_electronica_factura_m/send_all','FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');
 		//boleta
+		Route::get('/facturacion_electronica_boleta','FacturacionElectronicaController@index_boleta')->name('facturacion_electronica.index_boleta');
 		Route::post('/facturacion_electronica_boleta','FacturacionElectronicaController@boleta')->name('facturacion_electronica.boleta_sunat');
 		Route::post('/facturacion_electronica_boleta/send_all','FacturacionElectronicaController@boleta_elec_all')->name('facturacion_electronica.boleta_elec_all');
 		//boleta manual
 		Route::post('/facturacion_electronica_boleta_m','FacturacionElectronicaController@boleta_m_e')->name('facturacion_electronica.boleta_m_e');
 		Route::post('/facturacion_electronica_boleta_m/send_all','FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
 		//guia remision
+		Route::get('/facturacion_electronica_guia_remision','FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
 		Route::post('/facturacion_electronica_guia_remision_prueba','FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
 		Route::post('/facturacion_electronica_guia_remision_prueba_all/send_all','FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
 		// * Guia Remision Manual
@@ -135,21 +137,23 @@ Route::group(
 		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_sunat');
 		
 		//Nota Credito
+		Route::get('/facturacion_electronica_nota_credito','FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
 		Route::post('/facturacion_electronica_nota_credito','FacturacionElectronicaController@nota_credito')->name('facturacion_electronica.nota_credito');
 		Route::post('/facturacion_electronica_nota_credito/send_all','FacturacionElectronicaController@nota_credito_all')->name('facturacion_electronica.nota_credito_all');
 		Route::post('/facturacion_electronica_nota_credito_boleta','FacturacionElectronicaController@nota_credito_boleta')->name('facturacion_electronica.nota_credito_bol');
 		//Nota Debito
-		Route::post('/facturacion_electronica_nota_debito/{id}','FacturacionElectronicaController@nota_debito')->name('facturacion_electronica.nota_debito');
-		Route::post('/facturacion_electronica_nota_debito_boleta/{id}','FacturacionElectronicaController@nota_debito_boleta')->name('facturacion_electronica.nota_debito_bol');
+		Route::get('/facturacion_electronica_nota_debito','FacturacionElectronicaController@index_nota_debito')->name('facturacion_electronica.index_nota_debito');
+		Route::post('/facturacion_electronica_nota_debito','FacturacionElectronicaController@nota_debito')->name('facturacion_electronica.nota_debito');
 
-		Route::get('/facturacion_electronica_boleta','FacturacionElectronicaController@index_boleta')->name('facturacion_electronica.index_boleta');
-		Route::get('/facturacion_electronica_nota_credito','FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
-		Route::get('/facturacion_electronica_guia_remision','FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
+		
+		
+		
 
 		Route::resource('/facturacion_electronica','FacturacionElectronicaController');
 		
 		
 
+		//NOTA DE CREDITO
 		Route::post('/nota-credito/motivo','NotaCreditoController@motivo')->name('nota-credito.motivo');
 
 		Route::post('/nota-credito-create-nc','NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
@@ -166,6 +170,9 @@ Route::group(
 		Route::post('/nota-debito-create-nc','NotaDebitoController@create_nota_debito')->name('nota-debito.create_nota_debito');
 		Route::post('/nota-debito-create_boleta-nc','NotaDebitoController@create_boleta_nota_debito')->name('nota-debito.create_nota_debito_boleta');
 
+		Route::post('/nota_debito_store_factura/{id}','NotaDebitoController@store')->name('nota-debito.nota_debito_store_factura');
+		Route::post('/nota_debito_store_boleta/{id}','NotaDebitoController@store_boleta')->name('nota-debito.nota_debito_bol');
+		
 		Route::get('/nota-debito/create_boleta','NotaDebitoController@create_boleta')->name('nota-debito.create_boleta');
 		Route::resource('/nota-debito','NotaDebitoController');
 		

@@ -44,6 +44,7 @@
                                     <th>Tipo</th>
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
+                                    <th></th>
                                 </tr>
                             </thead>
 
@@ -64,7 +65,21 @@
                                     </td>
                                     <td>{{$nota_debitos->tipo}}</td>
                                     <td>{{$nota_debitos->fecha_emision}}</td>
-                                    <td><a href="{{route('nota-debito.show',$nota_debitos->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></td>
+                                    <td><center><a href="{{route('nota-debito.show',$nota_debitos->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></center></td>
+                                    <td>
+                                        <center>
+                                            @if($nota_debitos->n_electronica==1)
+                                                <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
+                                                <span hidden>Aceptada</span>
+                                            @elseif($nota_debitos->n_electronica==2)
+                                                <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="Anulada"><i class="fa fa-times-circle"></i></button>
+                                                <span hidden>Anulada</span>
+                                            @else
+                                                <button class="btn btn-warning btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="En Espera"><i class="fa fa-check-circle"></i></button>
+                                                <span hidden>En Espera</span>
+                                            @endif
+                                        </center>
+                                    </td>
                                 </tr>
                                 @endforeach 
                             </tbody>

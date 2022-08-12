@@ -107,6 +107,12 @@ class FacturacionElectronicaController extends Controller
         $n_creditos=Nota_Credito::where('n_electronica',0)->get();
         return view('facturacion_electronica.nota_credito.index',compact('n_creditos_enviados','n_creditos','empresa'));
     }
+    public function index_nota_debito(){
+        $empresa=Empresa::first();
+        $n_debitos_enviados=Nota_Debito::where('n_electronica',1)->get();
+        $n_debitos=Nota_Debito::where('n_electronica',0)->get();
+        return view('facturacion_electronica.nota-debito.index',compact('n_debitos_enviados','n_debitos','empresa'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -927,197 +933,38 @@ class FacturacionElectronicaController extends Controller
     }
     // nota de debito
 
-    public function nota_debito(Request $request, $id)
+    public function nota_debito(Request $request)
     {   
-        //contador nota de creditos
-        $notas_debitos_count=Nota_Debito_registro::count();
-        $notas_debitos_count++;
-        $factura=Facturacion::where('id',$id)->first();
-        $factura_registro=Facturacion_registro::where('facturacion_id',$id)->get();
-        //configuracion
-        $see=config_acceso_sunat::facturacion_electronica();
 
-        $gravada=0;
-        $exonerada=0;
-        $inafecta=0;
+        // return $request;
+        $nota_debito = Nota_Debito::where('id',$request->id)->first();
+        $nota_debito_registros = Nota_Debito_registro::where('nota_debito_id',$nota_debito->id)->get();
+        
 
-        $gravada_s=0;
-        $exonerada_s=0;
-        $inafecta_s=0;
+        $factura=Facturacion::where('id',$nota_debito->facturacion_id)->first();
+        $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
 
-        // code nota_c
-        // obtencion de la sucursal
-        $almacen=$factura->almacen_id;
+        $nota_debito_code = $nota_debito->codigo_n_d;
+        //gravada
+        $gravada=$nota_debito->op_gravada;
+        //exonerada
+        $exonerada=$nota_debito->op_inafecta;
+        //inafecta
+        $inafecta=$nota_debito->op_exonerada;
+        //request->motivo
+        $motivo=$nota_debito->motivo;
+        //sustento
+        $see=config_acceso_sunat::facturacion_electronica();   
 
-        //obtencion del almacen
-        $almacen_id =Almacen::where('id', $almacen)->first();
-        $sucursal = Codigo_guia_almacen::where('almacen_id',$almacen_id->id)->first();
-        $nota_cod_n_debito=$sucursal->cod_nota_debito;
-        if (is_numeric($nota_cod_n_debito)) {
-            // exprecion del numero de la nota de debito
-            $nota_cod_n_debito++;
-            $sucursal_nr = str_pad($sucursal->serie_nota_debito, 2, "0", STR_PAD_LEFT);
-            $nota_debito_nr=str_pad($nota_cod_n_debito, 8, "0", STR_PAD_LEFT);
-        }else{
-                
-            // Exprecion del numero de nota de debito
-            // Generacion de numero de nota de debito
-            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->latest()->first();
-            $nota_debito_num=$ultima_nota_c->codigo_n_d;
-            $nota_debito_num_string_porcion= explode("-", $nota_debito_num);
-            $nota_debito_num_string=$nota_debito_num_string_porcion[1];
-            $nota_debito_num=(int)$nota_debito_num_string;
+        // return $nota_debito_registros;
+        $invoice=Config_fe::nota_debito($factura,$factura_registro,$request,$nota_debito_code,$gravada,$exonerada,$inafecta,$motivo,$nota_debito_registros);
 
-            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_nota_debito','DESC')->latest()->first();
-            if($nota_debito_num == 99999999){
-                $ultima_nota_c = $almacen_codigo->serie_nota_debito+1;
-                $almacen_save_last = Codigo_guia_almacen::find($sucursal->id);
-                $almacen_save_last->serie_nota_debito = $almacen_codigo->serie_nota_debito+1;
-                $almacen_save_last->save();
-                $nota_debito_num = 00000000;
-            }else{
-                $ultima_nota_c = $sucursal->serie_nota_debito;
-            }
-            $nota_debito_num++;
-            $sucursal_nr = str_pad($ultima_nota_c, 2, "0", STR_PAD_LEFT);
-            $nota_debito_nr=str_pad($nota_debito_num, 8, "0", STR_PAD_LEFT);
-        }
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
-        $nota_debito_numero="FF".$sucursal_nr."-".$nota_debito_nr;
-
-        if($factura->tipo=="producto"){
-
-            $contadores=count($factura_registro);
-            for($a=0;$a<$contadores;$a++){
-                $string=(string)$a;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $gravada += round($request->$nombre_precio*$factura_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $exonerada += round($request->$nombre_precio*$factura_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $inafecta += round($request->$nombre_precio*$factura_registro[$a]->cantidad,2);
-                    }
-                }
-            }
-
-            $invoice=Config_fe::nota_debito($factura,$factura_registro,$request,$notas_debitos_count,$nota_debito_numero,$gravada,$exonerada,$inafecta,$request->motivo);
-            //envio a SUNAT    
-            $result=config_acceso_sunat::send($see, $invoice);
-            //lectura CDR
-            $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-
-            $nota_debito=new Nota_Debito();
-            $nota_debito->codigo_n_d=$nota_debito_numero;
-            $nota_debito->facturacion_id=$factura->id;
-            $nota_debito->tipo="producto";
-            $nota_debito->almacen_id=$factura->almacen_id;
-            $nota_debito->motivo=$request->motivo;
-            $nota_debito->op_gravada=$gravada;
-            $nota_debito->op_inafecta=$inafecta;
-            $nota_debito->op_exonerada=$exonerada;
-            $nota_debito->save();
-
-            $codigo=$factura->codigo_fac;
-            $contar=0;
-            $contador=count($factura_registro);
-            for($p=0;$p<$contador;$p++){
-                $string=(string)$p;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    $nota_debitos_r=new Nota_Debito_registro();
-                    $nota_debitos_r->nota_debito_id=$nota_debito->id;
-                    $nota_debitos_r->producto_id=$factura_registro[$p]->producto_id;
-                    $nota_debitos_r->precio=$request->$nombre_precio;
-                    $nota_debitos_r->cantidad=$factura_registro[$p]->cantidad;
-                    $nota_debitos_r->save();
-                    $contar++;
-                }
-            }
-
-            $contador=$contar;
-
-        }else if($factura->tipo=="servicio"){
-
-            $contadores=count($factura_registro);
-            for($a=0;$a<$contadores;$a++){
-                $string=(string)$a;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-
-                    if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $gravada_s += round($request->$nombre_precio*$factura_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $exonerada_s += round($request->$nombre_precio*$factura_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $inafecta_s += round($request->$nombre_precio*$factura_registro[$a]->cantidad,2);
-                    }
-                }
-            }
-            
-            $invoice=Config_fe::nota_debito_servicio($factura,$factura_registro,$request,$notas_debitos_count,$nota_debito_numero,$gravada_s,$exonerada_s,$inafecta_s,$request->motivo);
-            //envio a SUNAT    
-            $result=config_acceso_sunat::send($see, $invoice);
-            //lectura CDR
-            $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-            
-            $nota_debito=new Nota_Debito();
-            $nota_debito->codigo_n_d=$nota_debito_numero;
-            $nota_debito->facturacion_id=$factura->id;
-            $nota_debito->tipo="servicio";
-            $nota_debito->almacen_id=$factura->almacen_id;
-            $nota_debito->motivo=$request->motivo;
-            $nota_debito->op_gravada=$gravada;
-            $nota_debito->op_inafecta=$inafecta;
-            $nota_debito->op_exonerada=$exonerada;
-            $nota_debito->save();
-
-            // $codigo=$factura->cod_fac;
-            $contar=0;
-            $contador=count($factura_registro);
-            
-            for($p=0;$p<$contador;$p++){
-                $string=(string)$p;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    $nota_debitos_r=new Nota_Debito_registro();
-                    $nota_debitos_r->nota_debito_id=$nota_debito->id;
-                    $nota_debitos_r->servicio_id=$factura_registro[$p]->servicio_id;
-                    $nota_debitos_r->precio=$request->$nombre_precio;
-                    $nota_debitos_r->cantidad=$factura_registro[$p]->cantidad;
-                    $nota_debitos_r->save();
-                    $contar++;
-                }
-            }
-
-            $contador=$contar;
-        }
-
-        // modificacion para que se cierre el codigo en almacen
-        $nd_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
-        if(is_numeric($nd_primera->cod_nota_debito)){
-            $nd_primera->cod_nota_debito='NN';
-            $nd_primera->save();
-        }
-
-        $factura->nota_debito=1;
-        $factura->save();
-
-        return redirect()->route('nota-debito.show',$nota_debito->id);
-
+        return $msg;
     }
 
     public function nota_debito_boleta(Request $request, $id)

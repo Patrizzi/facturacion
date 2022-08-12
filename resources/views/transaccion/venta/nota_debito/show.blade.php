@@ -136,9 +136,15 @@
                                     @foreach($notas_debito_registros as $e => $notas_debito_registro)
                                         <tr>
                                             <td>{{$u++}}</td>
-                                            <td>{{$notas_debito_registro->producto->codigo_producto}}</td>
-                                            <td>{{$notas_debito_registro->cantidad}}</td>
-                                            <td>{{$notas_debito_registro->producto->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
+                                            @if (isset($notas_debito_registro->producto_id))
+                                                <td>{{$notas_debito_registro->producto->codigo_producto}}</td>
+                                                <td>{{$notas_debito_registro->cantidad}}</td>
+                                                <td>{{$notas_debito_registro->producto->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
+                                            @else
+                                                <td>{{$notas_debito_registro->producto->codigo_servicio}}</td>
+                                                <td>{{$notas_debito_registro->cantidad}}</td>
+                                                <td>{{$notas_debito_registro->servicio->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
+                                            @endif
                                             <td>{{$notas_debito_registro->precio}}</td>
                                             <td>{{$notas_debito_registro->precio_unitario_comi* $notas_debito_registro->cantidad }}</td>
                                             <td style="display: none">
@@ -146,16 +152,12 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                               </tr>
-
-                               <tr>
-                                
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 <br><br><br><br>
+            </div>
         </div>
     </div>
 </div>

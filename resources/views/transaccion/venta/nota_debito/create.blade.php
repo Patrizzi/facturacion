@@ -24,16 +24,13 @@
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
                                 <h2>NOTA DE DEBITO</h2>
-                                {{-- <h5> {{$facturacion->codigo_fac}}</h5> --}}
+                                <h5> {{$nota_debito_numero}}</h5>
                             </center>
                         </div>
                     </div>
                 </div><br>
-                <form action="{{route('facturacion_electronica.nota_debito',$facturacion->id)}}"  enctype="multipart/form-data" method="post" >
+                <form action="{{route('nota-debito.nota_debito_store_factura',$facturacion->id)}}"  enctype="multipart/form-data" method="post" >
                     @csrf
-
-
-                
                 <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
 
@@ -55,8 +52,8 @@
                                 <strong>Condiciones de Pago:</strong>
                                 @if(isset($facturacion->cliente_id)){{$facturacion->forma_pago->nombre }}
                                 @else{{$facturacion->cotizacion->forma_pago->nombre }}
-                                @endif  <br>
-                                <strong>Tipo de Moneda:</strong>
+                                @endif 
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Tipo de Moneda:</strong>
                                 @if(isset($facturacion->cliente_id)){{$facturacion->moneda->nombre }}
                                 @else{{$facturacion->cotizacion->moneda->nombre }}
                                 @endif <br>
@@ -64,7 +61,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6" align="center">
+                    <div class="col-sm-6" align="center" >
                         <div class="form-control" >
                             <h3>Condiciones Generales</h3>
                             <div align="left">
@@ -77,32 +74,61 @@
                                         <strong>Fecha Emision:</strong>
                                         {{$facturacion->fecha_emision}} 
                                     </div>
-                                    <div class="cool-sm-6">
+                                    <div class="col-sm-6">
                                         <strong>Fecha de Vencimiento:</strong>
                                         {{$facturacion->fecha_vencimiento }} <br>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 10px ;margin-bottom: 10px">
-                                    <div class="col-sm-2" style="padding-right: 0px">
-                                        <strong>Motivo:</strong>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-12" style="padding-top: 10px">
+                        <div class="form-control">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-2">Tipo:</div>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="tipo">
+                                                <option >Interes por mora</option>
+                                                <option >Aumentos en el valor</option>
+                                                <option >Penalidades</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-10" style="padding-left: 0px">
-                                        <select class="form-control" name="motivo">
-                                            <option >Interes por mora</option>
-                                            <option >Aumentos en el valor</option>
-                                            <option >Penalidades</option>
-                                        </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-2">Motivo:</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="motivo" id="" class="form-control" required>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" align="center">
-                        <div class="form-control" style="border: none;height: auto" >
-                            <div align="left">
+                    {{-- <div class="row" align="" style="padding-top: 10px;">
+                        <div  class="form-control " align="left">
+                            <div class="col-sm-6 " >
+                                <div class="col-sm-4" >
+                                    <strong>Motivo:</strong>
+                                </div>
+                                <div class="col-sm-8" >
+                                    <select class="form-control" name="motivo">
+                                        <option >Interes por mora</option>
+                                        <option >Aumentos en el valor</option>
+                                        <option >Penalidades</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <br>
                     <div class="table-responsive">
@@ -161,6 +187,7 @@
             </form>
         </div>
     </div>
+</div>
 </div>
 
 <!-- Mainly scripts -->
