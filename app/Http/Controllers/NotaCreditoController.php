@@ -465,14 +465,14 @@ class NotaCreditoController extends Controller
         //contador nota de creditos
         $notas_creditos_count=Nota_Credito_registro::count();
         $notas_creditos_count++;
-        if($tipo == "factura_origi"){
+        if($tipo == "boleta_origi"){
             $boleta=Boleta::where('id',$id)->first();
             $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
         }else{
             $boleta=Boleta_m::where('id',$id)->first();
             $boleta_registro=Boleta_registros_m::where('boleta_m_id',$id)->get();
         }
-        
+        // return $request;
 
         $gravada=0;
         $exonerada=0;

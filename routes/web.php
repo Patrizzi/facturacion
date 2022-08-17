@@ -144,6 +144,7 @@ Route::group(
 		//Nota Debito
 		Route::get('/facturacion_electronica_nota_debito','FacturacionElectronicaController@index_nota_debito')->name('facturacion_electronica.index_nota_debito');
 		Route::post('/facturacion_electronica_nota_debito','FacturacionElectronicaController@nota_debito')->name('facturacion_electronica.nota_debito');
+		Route::post('/facturacion_electronica_nota_debito_boleta','FacturacionElectronicaController@nota_debito_boleta')->name('facturacion_electronica.nota_debito_bol');
 
 		
 		

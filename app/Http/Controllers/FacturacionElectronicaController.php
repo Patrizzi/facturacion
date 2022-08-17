@@ -610,8 +610,27 @@ class FacturacionElectronicaController extends Controller
             $n_c_cantidad[$i] = $nota_c_registros->cantidad;
             $n_c_precio[$i] = $nota_c_registros->precio;
         }
-        // return $factura;
-        // return $n_c_cantidad[0];
+
+        switch ($nota_credito->motivo) {
+            case 01:
+                $des_mot = 'Anulacion de la operacion';
+                break;
+            case 02:
+                $des_mot = 'Anulacion por error en el ruc';
+                break;
+            case 03:
+                $des_mot = 'Correcion por error en la descripcion';
+                break;
+            case 06:
+                $des_mot = 'Devolucion total';
+                break;
+        }
+        // case($nota_credito->motivo == 1){
+
+        // }
+        // if($nota_credito->motivo == 01){
+            
+        // }
 
         //notas_creditos_count
         $notas_creditos_count=Nota_Credito_registro::count();
@@ -634,7 +653,7 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();    
 
 
-        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
@@ -658,6 +677,7 @@ class FacturacionElectronicaController extends Controller
     
     public function nota_credito_boleta(Request $request)
     {   
+        
         // return 'nota de credito boleta';
         $nota_credito=Nota_Credito::where('id',$request->id)->first();
         if(isset($nota_credito->fecha_emision)){
@@ -669,6 +689,20 @@ class FacturacionElectronicaController extends Controller
         }
         // return var_dump($fecha_emi);
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
+        switch ($nota_credito->motivo) {
+            case 01:
+                $des_mot = 'Anulacion de la operacion';
+                break;
+            case 02:
+                $des_mot = 'Anulacion por error en el ruc';
+                break;
+            case 03:
+                $des_mot = 'Correcion por error en la descripcion';
+                break;
+            case 06:
+                $des_mot = 'Devolucion total';
+                break;
+        }
         // return $notas_creditos_registro;  
         //factura - factura registro
         if ($nota_credito->boleta_id != null ) {
@@ -705,7 +739,7 @@ class FacturacionElectronicaController extends Controller
 
         $see=config_acceso_sunat::facturacion_electronica();   
 
-        $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+        $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
         
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
@@ -739,7 +773,20 @@ class FacturacionElectronicaController extends Controller
             $fecha_emi = date_create($date);
         }
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$nota_credito->id)->get();
-        
+        switch ($nota_credito->motivo) {
+            case 01:
+                $des_mot = 'Anulacion de la operacion';
+                break;
+            case 02:
+                $des_mot = 'Anulacion por error en el ruc';
+                break;
+            case 03:
+                $des_mot = 'Correcion por error en la descripcion';
+                break;
+            case 06:
+                $des_mot = 'Devolucion total';
+                break;
+        }
         // return $notas_creditos_registro;
         if ($nota_credito->facturacion_id != null ) {
             // return "factura";
@@ -771,7 +818,7 @@ class FacturacionElectronicaController extends Controller
             $see=config_acceso_sunat::facturacion_electronica();    
 
 
-            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
@@ -818,7 +865,7 @@ class FacturacionElectronicaController extends Controller
             $see=config_acceso_sunat::facturacion_electronica();    
 
 
-            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
@@ -866,7 +913,7 @@ class FacturacionElectronicaController extends Controller
     
             $see=config_acceso_sunat::facturacion_electronica();   
     
-            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
             
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
@@ -893,7 +940,7 @@ class FacturacionElectronicaController extends Controller
             }
             // $msg = $n_c_precio;
             // return $msg;
-            $notas_creditos_count=Nota_Credito_registro::count();
+            $Tecnologia20notas_creditos_count=Nota_Credito_registro::count();
             $notas_creditos_count++;
             
             //nota_Credito_numero
@@ -912,7 +959,7 @@ class FacturacionElectronicaController extends Controller
     
             $see=config_acceso_sunat::facturacion_electronica();   
     
-            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi);
+            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
             
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
@@ -940,9 +987,16 @@ class FacturacionElectronicaController extends Controller
         $nota_debito = Nota_Debito::where('id',$request->id)->first();
         $nota_debito_registros = Nota_Debito_registro::where('nota_debito_id',$nota_debito->id)->get();
         
+        $date = $nota_debito->fecha_emision;
+        $fecha_emi = date_create($date);
 
-        $factura=Facturacion::where('id',$nota_debito->facturacion_id)->first();
-        $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
+        if(isset($nota_debito->facturacion_id)){
+            $factura=Facturacion::where('id',$nota_debito->facturacion_id)->first();
+            $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
+        }else{
+            $factura=Facturacion_m::where('id',$nota_debito->facturacion_m_id)->first();
+            $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();    
+        }
 
         $nota_debito_code = $nota_debito->codigo_n_d;
         //gravada
@@ -952,210 +1006,79 @@ class FacturacionElectronicaController extends Controller
         //inafecta
         $inafecta=$nota_debito->op_exonerada;
         //request->motivo
-        $motivo=$nota_debito->motivo;
+        $tipo=$nota_debito->tipo;
+        if($tipo == 01){
+            $motivo = 'Interes por mora';
+        }elseif ($tipo == 02) {
+            $motivo = 'Aumentos en el valor';
+        }else{
+            $motivo = 'Penalidades';
+        }
         //sustento
         $see=config_acceso_sunat::facturacion_electronica();   
 
         // return $nota_debito_registros;
-        $invoice=Config_fe::nota_debito($factura,$factura_registro,$request,$nota_debito_code,$gravada,$exonerada,$inafecta,$motivo,$nota_debito_registros);
+        $invoice=Config_fe::nota_debito($factura,$factura_registro,$request,$nota_debito_code,$gravada,$exonerada,$inafecta,$tipo,$motivo,$nota_debito_registros,$fecha_emi);
 
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
-        return $msg;
+        $nota_debito->n_electronica=1;
+        $nota_debito->save();
+
+        return redirect()->route('facturacion_electronica.index_nota_debito')->with('successMsg',$msg);
     }
 
-    public function nota_debito_boleta(Request $request, $id)
+    public function nota_debito_boleta(Request $request)
     {   
-        //contador nota de debitos
-        $notas_debitos_count=Nota_Debito_registro::count();
-        $notas_debitos_count++;
-        $boleta=Boleta::where('id',$id)->first();
-        $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
-        //configuracion
-        $see=config_acceso_sunat::facturacion_electronica();
+        
+        $nota_debito = Nota_Debito::where('id',$request->id)->first();
+        $nota_debito_registros = Nota_Debito_registro::where('nota_debito_id',$nota_debito->id)->get();
 
-        $gravada=0;
-        $exonerada=0;
-        $inafecta=0;
+        $date = $nota_debito->fecha_emision;
+        $fecha_emi = date_create($date);
 
-        $gravada_s=0;
-        $exonerada_s=0;
-        $inafecta_s=0;
-
-
-        // code nota_d
-        // obtencion de la sucursal
-        $almacen=$boleta->almacen_id;
-
-        //obtencion del almacen
-        $almacen_id =Almacen::where('id', $almacen)->first();
-        $sucursal = Codigo_guia_almacen::where('almacen_id',$almacen_id->id)->first();
-        $nota_cod_n_debito=$sucursal->cod_nota_debito;
-        if (is_numeric($nota_cod_n_debito)) {
-            // exprecion del numero de la nota de debito
-            $nota_cod_n_debito++;
-            $sucursal_nr = str_pad($sucursal->serie_nota_debito, 2, "0", STR_PAD_LEFT);
-            $nota_debito_nr=str_pad($nota_cod_n_debito, 8, "0", STR_PAD_LEFT);
+        if(isset($nota_debito->boleta_id)){
+            $boleta = Boleta::where('id',$nota_debito->boleta_id)->first();
+            $boleta_registro = Boleta_registro::where('boleta_id',$boleta->id)->get();
+            
         }else{
-                // exprecion del numero de Nota de DEBITO
-                // GENERACION DE NUMERO DE Nota de DEBITO
-                $ultima_nota_d=Nota_Debito::where('almacen_id',$almacen_id->id)->latest()->first();
-                $nota_debito_num=$ultima_nota_d->codigo_n_d;
-                $nota_debito_num_string_porcion= explode("-", $nota_debito_num);
-                $nota_debito_num_string=$nota_debito_num_string_porcion[1];
-                $nota_debito_num=(int)$nota_debito_num_string;
-                
-                $almacen_codigo = Codigo_guia_almacen::orderBy('serie_nota_debito','DESC')->latest()->first();
-                if($nota_debito_num == 99999999){
-                    $ultima_nota_d = $almacen_codigo->serie_nota_debito+1;
-                    $almacen_save_last = Codigo_guia_almacen::find($sucursal->id);
-                    $almacen_save_last->serie_nota_debito = $almacen_codigo->serie_nota_debito+1;
-                    $almacen_save_last->save();
-                    $nota_debito_num = 00000000;
-                }else{
-                    $ultima_nota_d = $sucursal->serie_nota_debito;
-                }
-                $nota_debito_num++;
-                $sucursal_nr = str_pad($ultima_nota_d, 2, "0", STR_PAD_LEFT);
-                $nota_debito_nr=str_pad($nota_debito_num, 8, "0", STR_PAD_LEFT);
+            $boleta = Boleta_m::where('id',$nota_debito->boleta_m_id)->first();
+            $boleta_registro = Boleta_registros_m::where('boleta_m_id',$boleta->id)->get();
         }
-
-        $nota_debito_numero="BB".$sucursal_nr."-".$nota_debito_nr;
-
-        if($boleta->tipo=="producto"){
-
-            $contadores=count($boleta_registro);
-            for($a=0;$a<$contadores;$a++){
-                $string=(string)$a;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $gravada += round($request->$nombre_precio*$boleta_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $exonerada += round($request->$nombre_precio*$boleta_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $inafecta += round($request->$nombre_precio*$boleta_registro[$a]->cantidad,2);
-                    }
-                }
-            }
-
-
-            $nota_debito=new Nota_Debito();
-            $nota_debito->codigo_n_d=$nota_debito_numero;
-            $nota_debito->boleta_id=$boleta->id;
-            $nota_debito->tipo="producto";
-            $nota_debito->almacen_id=$boleta->almacen_id;
-            $nota_debito->motivo=$request->motivo;
-            $nota_debito->op_gravada=$gravada;
-            $nota_debito->op_inafecta=$inafecta;
-            $nota_debito->op_exonerada=$exonerada;
-            $nota_debito->save();
-            
-            $codigo=$boleta->codigo_boleta;
-
-            
-            $invoice=Config_fe::nota_debito_boleta($boleta,$boleta_registro,$request,$notas_debitos_count,$nota_debito_numero,$gravada,$exonerada,$inafecta,$request->motivo);
-            //envio a SUNAT    
-            $result=config_acceso_sunat::send($see, $invoice);
-            //lectura CDR
-            $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-
-            $contar=0;
-            $contador=count($boleta_registro);
-            for($p=0;$p<$contador;$p++){
-                $string=(string)$p;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    $nota_debitos_r=new Nota_Debito_registro();
-                    $nota_debitos_r->nota_debito_id=$nota_debito->id;
-                    $nota_debitos_r->producto_id=$boleta_registro[$p]->producto_id;
-                    $nota_debitos_r->precio=$request->$nombre_precio;
-                    $nota_debitos_r->cantidad=$boleta_registro[$p]->cantidad;
-                    $nota_debitos_r->save();
-                    $contar++;
-                }
-            }
-            $contador=$contar;
-
-        }else if($boleta->tipo=="servicio"){
-
-            $contadores=count($boleta_registro);
-            for($a=0;$a<$contadores;$a++){
-                $string=(string)$a;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $gravada_s += round($request->$nombre_precio*$boleta_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $exonerada_s += round($request->$nombre_precio*$boleta_registro[$a]->cantidad,2);
-                    }
-                    if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $inafecta_s += round($request->$nombre_precio*$boleta_registro[$a]->cantidad,2);
-                    }
-                }
-            }
-
-
-            $nota_debito=new Nota_Debito();
-            $nota_debito->codigo_n_d=$nota_debito_numero;
-            $nota_debito->boleta_id=$boleta->id;
-            $nota_debito->tipo="servicio";
-            $nota_debito->almacen_id=$boleta->almacen_id;
-            $nota_debito->motivo=$request->motivo;
-            $nota_debito->op_gravada=$gravada;
-            $nota_debito->op_inafecta=$inafecta;
-            $nota_debito->op_exonerada=$exonerada;
-            $nota_debito->save();
-            
-            $invoice=Config_fe::nota_debito_boleta_servicio($boleta,$boleta_registro,$request,$notas_debitos_count,$nota_debito_numero,$gravada_s,$exonerada_s,$inafecta_s,$request->motivo);
-            //envio a SUNAT    
-            $result=config_acceso_sunat::send($see, $invoice);
-            //lectura CDR
-            $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-
-            $contar=0;
-            $contador=count($boleta_registro);
-            for($p=0;$p<$contador;$p++){
-                $string=(string)$p;
-                $nombre="input_disabled_".$string;
-                $nombre_precio="input_disabled_precio_".$string;
-                if($request->$nombre_precio==NULL){
-                }else{
-                    $nota_debitos_r=new Nota_Debito_registro();
-                    $nota_debitos_r->nota_debito_id=$nota_debito->id;
-                    $nota_debitos_r->servicio_id=$boleta_registro[$p]->servicio_id;
-                    $nota_debitos_r->precio=$request->$nombre_precio;
-                    $nota_debitos_r->cantidad=$boleta_registro[$p]->cantidad;
-                    $nota_debitos_r->save();
-                    $contar++;
-                }
-            }
-            $contador=$contar;
+        // return $boleta;
+        $nota_debito_code = $nota_debito->codigo_n_d;
+        //gravada
+        $gravada=$nota_debito->op_gravada;
+        //exonerada
+        $exonerada=$nota_debito->op_inafecta;
+        //inafecta
+        $inafecta=$nota_debito->op_exonerada;
+        //request->motivo
+        $tipo=$nota_debito->tipo;
+        if($tipo == 01){
+            $motivo = 'Interes por mora';
+        }elseif ($tipo == 02) {
+            $motivo = 'Aumentos en el valor';
+        }else{
+            $motivo = 'Penalidades';
         }
+        $see=config_acceso_sunat::facturacion_electronica();   
+        
+        $invoice=Config_fe::nota_debito_boleta($boleta,$boleta_registro,$request,$nota_debito_code,$gravada,$exonerada,$inafecta,$tipo,$motivo,$nota_debito_registros,$fecha_emi);
+        //envio a SUNAT    
+        $result=config_acceso_sunat::send($see, $invoice);
+        //lectura CDR
+        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
 
-        // modificacion para que se cierre el codigo en almacen
-        $nd_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
-        if(is_numeric($nd_primera->cod_nota_debito)){
-            $nd_primera->cod_nota_debito='NN';
-            $nd_primera->save();
-        }
+        $nota_debito->n_electronica=1;
+        $nota_debito->save();
 
-        $boleta->nota_debito=1;
-        $boleta->save();
+        return redirect()->route('facturacion_electronica.index_nota_debito')->with('successMsg',$msg);
 
-        return redirect()->route('nota-debito.show',$nota_debito->id);
+
     }
 
     /**

@@ -69,39 +69,32 @@
                                 {{$facturacion->orden_compra}} <br>
                                 <strong>Guia de Remision:</strong>
                                 {{$facturacion->guia_remision}} <br>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <strong>Fecha Emision:</strong>
-                                        {{$facturacion->fecha_emision}} 
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <strong>Fecha de Vencimiento:</strong>
-                                        {{$facturacion->fecha_vencimiento }} <br>
-                                    </div>
-                                </div>
-                                
-                            </div>
+                                <strong>Fecha Emision:</strong>
+                                {{$facturacion->fecha_emision}} <br>
+                                <strong>Fecha de Vencimiento:</strong>
+                                {{$facturacion->fecha_vencimiento }} <br>
+                            </div>                                
                         </div>
                     </div>
-                    <br>
-                    <div class="col-lg-12" style="padding-top: 10px">
+                    <div class="col-sm-12" style="padding-top: 10px">
                         <div class="form-control">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <div class="col-sm-2">Tipo:</div>
+                                        <div class="col-sm-2"><strong>Tipo:</strong></div>
                                         <div class="col-sm-10">
+                                            
                                             <select class="form-control" name="tipo">
-                                                <option >Interes por mora</option>
-                                                <option >Aumentos en el valor</option>
-                                                <option >Penalidades</option>
+                                                <option value="01" >Interes por mora</option>
+                                                <option value="02">Aumentos en el valor</option>
+                                                <option value="03">Penalidades</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <div class="col-sm-2">Motivo:</div>
+                                        <div class="col-sm-2"><strong>Motivo:</strong></div>
                                         <div class="col-sm-10">
                                             <input type="text" name="motivo" id="" class="form-control" required>
                                         </div>
@@ -110,6 +103,9 @@
                             </div>
                         </div>
                     </div>
+                {{-- </div> --}}
+                    <br>
+                    
                     {{-- <div class="row" align="" style="padding-top: 10px;">
                         <div  class="form-control " align="left">
                             <div class="col-sm-6 " >
@@ -138,15 +134,16 @@
                                     <th></th>
                                     <th>ITEM</th>
                                     <th>Codigo Item</th>
-                                    <th>Descripción</th>
+                                    <th style="width: 40%;">Descripción</th>
                                     <th >Cantidad</th>
                                     <th>Precio unitario</th>
-                                    <th >Precio unitario Nuevo</th>
-                                    <th>Total</th>
+                                    <th style="width: 12%;">Precio unitario Nuevo</th>
+                                    <th style="width: 12%;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <span hidden="hidden">{{$u=0}} </span>
+                                <span hidden="hidden">{{$u=1}} </span>
+                                <span hidden="hidden"><input type="hidden" name="tipo_nota" value="{{$tipo}}"></span>
                                 <tr>
                                     @foreach($facturacion_registro as $e => $facturacion_registros)
                                     <tr>

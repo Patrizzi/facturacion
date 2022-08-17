@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div><br>
-                <form action="{{route('facturacion_electronica.nota_debito_bol',$boleta->id)}}"  enctype="multipart/form-data" method="post" >
+                <form action="{{route('nota-debito.nota_debito_bol',$boleta->id)}}"  enctype="multipart/form-data" method="post" >
                 @csrf
                 <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
@@ -51,7 +51,7 @@
                                 <strong>Condiciones de Pago:</strong>
                                 @if(isset($boleta->cliente_id)){{$boleta->forma_pago->nombre }}
                                 @else{{$boleta->cotizacion->forma_pago->nombre }}
-                                @endif  <br>
+                                @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Tipo de Moneda:</strong>
                                 @if(isset($boleta->cliente_id)){{$boleta->moneda->nombre }}
                                 @else{{$boleta->cotizacion->moneda->nombre }}
@@ -68,26 +68,34 @@
                                 {{$boleta->orden_compra}} <br>
                                 <strong>Guia de Remision:</strong>
                                 {{$boleta->guia_remision}} <br>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <strong>Fecha Emision:</strong>
-                                        {{$boleta->fecha_emision}} 
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <strong>Fecha de Vencimiento:</strong> 
-                                        {{$boleta->fecha_vencimiento }}
+                                <strong>Fecha Emision:</strong>
+                                {{$boleta->fecha_emision}} <br>
+                                <strong>Fecha de Vencimiento:</strong> 
+                                {{$boleta->fecha_vencimiento }}
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" style="padding-top: 10px">
+                        <div class="form-control">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-2"><strong>Tipo:</strong></div>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="tipo">
+                                                <option value="01" >Interes por mora</option>
+                                                <option value="02">Aumentos en el valor</option>
+                                                <option value="03">Penalidades</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 10px ;margin-bottom: 10px">
-                                    <div class="col-sm-2" style="padding-right: 0px">
-                                        <strong>Motivo:</strong>
-                                    </div>
-                                    <div class="col-sm-10" style="padding-left: 0px">
-                                        <select class="form-control" name="motivo">
-                                            <option >Interes por mora</option>
-                                            <option >Aumentos en el valor</option>
-                                            <option >Penalidades</option>
-                                        </select>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-2"><strong>Motivo:</strong></div>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="motivo" id="" class="form-control" required>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +107,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                    
                 <br>
                 
                     
@@ -109,24 +117,30 @@
                                 <tr>
                                     <th></th>
                                     <th>ITEM</th>
-                                    <th>Codigo Producto</th>
-                                    <th  style="width:30px">Cantidad</th>
-                                    <th>Descripción</th>
+                                    <th>Codigo Item</th>
+                                    <th style="width: 40%;">Descripción</th>
+                                    <th >Cantidad</th>
                                     <th>Precio unitario</th>
-                                    <th style="width:30px">Precio unitario nuevo</th>
-                                    <th>Total</th>
+                                    <th style="width: 12%;">Precio unitario Nuevo</th>
+                                    <th style="width: 12%;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <span hidden="hidden">{{$u=0}} </span>
+                                <span hidden="hidden">{{$u=1}} </span>
+                                <span hidden="hidden"><input type="hidden" name="tipo_nota" value="{{$tipo}}"></span>
                                 <tr>
                                     @foreach($boleta_registro as $e => $boleta_registros)
                                     <tr>
                                         <td><input class="form-check-input" type="checkbox" id="inlineCheckbox_{{$e}}" name="inlineCheckbox_{{$e}}"  onclick="check('{{$e}}')"></td>
                                         <td >{{$u++}}</td>
-                                        <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                                        @if (isset($boleta_registros->producto_id))
+                                            <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                                            <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
+                                        @else
+                                            <td>{{$boleta_registros->servicio->codigo_producto}}</td>
+                                            <td>{{$boleta_registros->servicio->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
+                                        @endif
                                         <td>{{$boleta_registros->cantidad}}</td>
-                                        <td>{{$boleta_registros->producto->nombre}} <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}</td>
                                         <td>{{$boleta_registros->precio}}</td>
                                         <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
                                         <td>{{$boleta_registros->precio_unitario_comi* $boleta_registros->cantidad }}</td>
@@ -153,6 +167,7 @@
             </form>
         </div>
     </div>
+</div>
 </div>
 
 <!-- Mainly scripts -->

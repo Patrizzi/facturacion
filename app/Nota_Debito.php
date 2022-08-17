@@ -14,7 +14,14 @@ class Nota_Debito extends Model
         return $this->belongsTo(Facturacion::class,'facturacion_id');
     }  
 
+    public function nota_i_fac_manual(){
+        return $this->belongsTo(Facturacion::class,'facturacion_m_id');
+    }  
+
     public function nota_i_boleta(){
         return $this->belongsTo(Boleta::class,'boleta_id');
     } 
+    public function nota_i_boleta_manual(){
+        return $this->belongsTo(Facturacion::class,'boleta_m_id');
+    }  
 }

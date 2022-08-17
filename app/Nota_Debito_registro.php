@@ -21,4 +21,7 @@ class Nota_Debito_registro extends Model
     public function factura_ids(){
         return $this->belongsTo(Facturacion::class,'facturacion_id');
     }
+    public function nota_id(){
+        return $this->belongsTo(Nota_Debito::class,'nota_debito_id');
+    }
 }

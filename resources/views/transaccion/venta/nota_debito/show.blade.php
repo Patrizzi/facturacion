@@ -24,11 +24,7 @@
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
                                 <h2>NOTA DE debito</h2>
-                                @if($estado==0)
-                                    <h5>{{$notas_debito->nota_i_facturacion->codigo_fac}}</h5>
-                                @else
-                                    <h5>{{$notas_debito->nota_i_boleta->codigo_fac}}</h5>
-                                @endif
+                                <h5>{{$notas_debito->codigo_n_d}}</h5>
                             </center>
                         </div>
                     </div>
@@ -38,7 +34,41 @@
                         <div class="form-control">
                             <h3> Datos Generales</h3>
                             <div align="left">
-                                @if($estado==0)
+                                {{-- @if (isset($notas_debito->facturacion_id) || $notas_debito->facturacion_m_id) --}}
+                                    <strong>Cliente:</strong>
+                                    @if(isset($document->cliente_id))
+                                        {{$document->cliente->nombre}}
+                                    @else
+                                        {{$document->cotizacion->cliente->nombre}}
+                                    @endif <br>
+                                    <strong>R.U.C:</strong>
+                                    @if(isset($document->cliente_id))
+                                        {{$document->cliente->numero_documento}}
+                                    @else
+                                        {{$document->cotizacion->cliente->numero_documento}}
+                                    @endif<br>
+                                    <strong>Direccion:</strong>
+                                    @if(isset($document->cliente_id))
+                                        {{$document->cliente->direccion}}
+                                    @else
+                                        {{$document->cotizacion->cliente->direccion}}
+                                    @endif <br>
+                                    <strong>Condiciones de Pago:</strong>
+                                    @if(isset($document->cliente_id))
+                                        {{$document->forma_pago->nombre }}
+                                    @else
+                                        {{$document->cotizacion->forma_pago->nombre }}
+                                    @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Tipo de Moneda:</strong>
+                                    @if(isset($document->cliente_id))
+                                        {{$document->moneda->nombre }}
+                                    @else
+                                        {{$document->cotizacion->moneda->nombre }}
+                                    @endif<br>
+                                {{-- @else
+                                    HOlaas
+                                @endif --}}
+                                {{-- @if(isset($notas_debito->facturacion_id))
                                     <strong>Cliente:</strong>
                                     @if(isset($notas_debito->nota_i_facturacion->cliente_id)){{$notas_debito->nota_i_facturacion->cliente->nombre}}
                                     @else{{$notas_debito->nota_i_facturacion->cotizacion->cliente->nombre}}
@@ -80,7 +110,7 @@
                                     @if(isset($notas_debito->nota_i_boleta->cliente_id)){{$notas_debito->nota_i_boleta->moneda->nombre }}
                                     @else{{$notas_debito->nota_i_boleta->cotizacion->moneda->nombre }}
                                     @endif<br>
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
                     </div>
@@ -88,25 +118,47 @@
                         <div class="form-control" >
                             <h3>Condiciones Generales</h3>
                             <div align="left">
-                                @if($estado==0)
+                                {{-- @if($notas_debito->facturacion_id || $notas_debito->facturacion_m_id) --}}
                                     <strong>Orden de Compra:</strong>
-                                    {{$notas_debito->nota_i_facturacion->orden_compra}}<br>
+                                    {{$document->orden_compra}}<br>
                                     <strong>Guia de Remision:</strong>
-                                    {{$notas_debito->nota_i_facturacion->guia_remision}}<br>
+                                    {{$document->guia_remision}}<br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$notas_debito->nota_i_facturacion->fecha_emision}}<br>
+                                    {{$document->fecha_emision}}<br>
                                     <strong>Fecha de Vencimiento:</strong>
-                                    {{$notas_debito->nota_i_facturacion->fecha_vencimiento}}<br>
-                                @else
+                                    {{$document->fecha_vencimiento}}<br>
+                                {{-- @else
                                     <strong>Orden de Compra:</strong>
-                                    {{$notas_debito->nota_i_boleta->orden_compra}}<br>
+                                    {{$document->orden_compra}}<br>
                                     <strong>Guia de Remision:</strong>
-                                    {{$notas_debito->nota_i_boleta->guia_remision}}<br>
+                                    {{$document->guia_remision}}<br>
                                     <strong>Fecha Emision:</strong>
-                                    {{$notas_debito->nota_i_boleta->fecha_emision}}<br>
+                                    {{$document->fecha_emision}}<br>
                                     <strong>Fecha de Vencimiento:</strong>
-                                    {{$notas_debito->nota_i_boleta->fecha_vencimiento}}<br>
-                                @endif
+                                    {{$document->fecha_vencimiento}}<br>
+                                @endif --}}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-sm-12" style="padding-top: 15px">
+                        <div class="form-control">
+                            <h3>Tipo</h3>
+                            <div align="left" class="row">
+                                <div class="col-sm-6">
+                                    <strong>Tipo:</strong>
+                                    @if ($notas_debito->tipo == 01)
+                                        Interes por mora
+                                    @elseif($notas_debito->tipo == 02)
+                                        Aumentos en el valor
+                                    @else
+                                        Penalidade
+                                    @endif
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Motivo:</strong>
+                                    {{$notas_debito->motivo}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -122,39 +174,75 @@
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th>ITEM</th>
-                                    <th>Codigo Producto</th>
+                                    <th style="width: 5%;">ITEM</th>
+                                    <th style="width: 15%;">Codigo Producto</th>
+                                    <th style="width: 45%;">Descripción</th>
                                     <th>Cantidad</th>
-                                    <th>Descripción</th>
                                     <th>Precio unitario</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <span hidden="hidden">{{$u=0}} </span>
+                                <span hidden="hidden">{{$u=1}} </span>
                                 <tr>
                                     @foreach($notas_debito_registros as $e => $notas_debito_registro)
                                         <tr>
                                             <td>{{$u++}}</td>
                                             @if (isset($notas_debito_registro->producto_id))
                                                 <td>{{$notas_debito_registro->producto->codigo_producto}}</td>
-                                                <td>{{$notas_debito_registro->cantidad}}</td>
                                                 <td>{{$notas_debito_registro->producto->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
                                             @else
                                                 <td>{{$notas_debito_registro->producto->codigo_servicio}}</td>
-                                                <td>{{$notas_debito_registro->cantidad}}</td>
                                                 <td>{{$notas_debito_registro->servicio->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
                                             @endif
+                                            <td>{{$notas_debito_registro->cantidad}}</td>
                                             <td>{{$notas_debito_registro->precio}}</td>
-                                            <td>{{$notas_debito_registro->precio_unitario_comi* $notas_debito_registro->cantidad }}</td>
+                                            <td>{{$notas_debito_registro->precio* $notas_debito_registro->cantidad }}</td>
                                             <td style="display: none">
-
+                                                {{$sub_total=($notas_debito_registro->nota_id->op_gravada)+($notas_debito_registro->nota_id->op_inafecta)+($notas_debito_registro->nota_id->op_exonerada)}}
+                                                {{$sub_total_gravado=($notas_debito_registro->nota_id->op_gravada)}}
+                                                {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
+                                                {{$end= round($sub_total, 2)+round($igv_p, 2)}} 
+                                                {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 align="left">
+                                <?php $v=new CifrasEnLetras() ;
+                                $letra=($v->convertirEurosEnLetras($end));
+                                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                $end_final_point=strstr($end2, '.',false);
+                                $end_final=str_replace('.', '',$end_final_point);
+                            ?>
+                            Son: {{$letra_final}} con {{$end_final}}/100
+                            {{$document->moneda->nombre}}
+                        </h3>
+                    </div>
+                    <div class="col-sm-4 form-control">
+                        {{-- <div class="col-sm-4 form-control" > --}}
+                            <span style="display: block;float: left"> Subtotal:</span>
+                            <span style="display: block;float: right;"> 
+                                    {{$simbologia=$document->moneda->simbolo}}. 
+                                    {{number_format($sub_total, 2)}}</span>
+                            <br>
+                            <span style="display: block;float: left"> Op. Gravada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($notas_debito->op_gravada,2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Inafecta: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{ number_format($notas_debito->op_inafecta,2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Exonerada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($notas_debito->op_exonerada,2)}} </span><br>
+                            <span style="display: block;float: left"> I.G.V.: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                            <span style="display: block;float: left"> Importe Total: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format(round($end, 2),2)}}</span>
+        
+                        </div>
                     </div>
                 <br><br><br><br>
             </div>

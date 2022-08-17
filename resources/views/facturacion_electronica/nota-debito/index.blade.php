@@ -30,7 +30,7 @@
                                         <table class="table table-striped table-bordered table-hover dataTables-example">
                                             <thead>
                                                 <tr>
-                                                    <th><input class='check_all_boleta' type='checkbox' onclick="select_all_nota_credito()" /></th>
+                                                    {{-- <th><input class='check_all_boleta' type='checkbox' onclick="select_all_nota_credito()" /></th> --}}
                                                     <th>Item</th>
                                                     <th>Codigo de NC</th>
                                                     <th>Cliente</th>
@@ -44,7 +44,7 @@
                                                 <span hidden>{{$i=1}}</span>
                                                 @foreach ($n_debitos as $nota_d)
                                                 <tr>
-                                                    <td><input type='checkbox' class='case' value="{{$nota_d->codigo_n_d}}" /></td>
+                                                    {{-- <td><input type='checkbox' class='case' value="{{$nota_d->codigo_n_d}}" /></td> --}}
                                                     <td>{{$i++}}</td>
                                                     <td>{{$nota_d->codigo_n_d}}</td>
                                                     @if($nota_d->facturacion_id !=NULL)
