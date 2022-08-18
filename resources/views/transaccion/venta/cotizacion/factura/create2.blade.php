@@ -32,12 +32,10 @@
 @include('layout_agregado_rapido')
 
 {{-- Boton para modal de Clientes --}}
-@section('ruta_retorno', 'cotizacion')
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
 {{--Fin Boton para modal de Clientes --}}
-
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -56,7 +54,12 @@
                         <div class="dropdown-content" align="left">
                             @foreach($config_create as $index => $lista)
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="{{$lista['id_input']}}" @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre== $lista["nombre"] && $confi_create_blade->estado=='1') checked @endif @endforeach >
+                                <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="{{$lista['id_input']}}" 
+                                @foreach($config as $confi_create_blade) 
+                                    @if($confi_create_blade->nombre== $lista["nombre"] && $confi_create_blade->estado=='1') 
+                                        checked 
+                                    @endif 
+                                @endforeach>
                                 <label class="form-check-label" for="{{$lista['id_input']}}">  {{$lista["input_value"]}}</label>
                             </div>
                             @endforeach
@@ -89,19 +92,15 @@
                         </div>
                     </div>
                     {{-- Cabecera new --}}
-              <style>
-                  .col-form-label{margin-top: 15px!important;}
-                  .col-sm-5{margin-top: 15px!important;}
-              </style>
                     <div class="form-group row">
+                        {{-- Clientes --}}
                         <label class="col-sm-1 col-form-label">Cliente:</label>
                         <div class="col-sm-5">
                             <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
                         </div>
-
+                        {{-- Tipo de Cotizacion --}}
                         <label  class="col-sm-1 col-form-label">T.Cotización:</label>
-                        <div class="col-sm-5">
-
+                        <div class="col-sm-5 col-form-label" style="padding-bottom: 0px !important" >
                             <div class="radio">
                                 <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
                                 <label style="padding-right: 5px;" for="radio1">
@@ -113,98 +112,151 @@
                                 </label>
                             </div>
                         </div>
-
-                        <label  id="validez_1"  class="col-sm-1 col-form-label"  @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>Validez:</label>
-                        <div   id="validez_2"class="col-sm-5"  @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>
+                        {{-- Validez --}}
+                        <label id="validez_1" class="col-sm-1 col-form-label"  
+                            @foreach($config as $confi_create_blade)  
+                                @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')  
+                                    hidden="hidden" 
+                                @endif  
+                            @endforeach>
+                            Validez:
+                        </label>
+                        <div id="validez_2" class="col-sm-5" 
+                            @foreach($config as $confi_create_blade)  
+                                @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0') 
+                                    hidden="hidden" 
+                                @endif  
+                            @endforeach>
                             <select  class="form-control" name="validez" required="required">
                                 @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
                             </select>
                         </div>
-
-                        <label   id="garantia_1" class="col-sm-1 col-form-label" @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>Garantía:</label>
-                        <div  id="garantia_2" class="col-sm-5"  @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach>
+                        {{-- Garantía --}}
+                        <label id="garantia_1" class="col-sm-1 col-form-label" 
+                            @foreach($config as $confi_create_blade)  
+                                @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  
+                                    hidden="hidden" 
+                                @endif  
+                            @endforeach>
+                            Garantía:
+                        </label>
+                        <div id="garantia_2" class="col-sm-5"  
+                            @foreach($config as $confi_create_blade)  
+                                @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  
+                                    hidden="hidden" 
+                                @endif  
+                            @endforeach>
                             <select class="form-control" name="garantia">
-                                @foreach($garantia as $garantias) <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> @endforeach
+                                @foreach($garantia as $garantias) 
+                                    <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> 
+                                @endforeach
                             </select>
                         </div>
-{{--
-                    </div>
+                        {{-- Comision --}}
+                        <label id="personalcomision_1"  class="col-sm-1 col-form-label"
+                            @foreach($config as $confi_create_blade)  
+                                @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0')  
+                                    hidden="hidden" 
+                                @endif  
+                            @endforeach>
+                            Comisionista:
+                        </label>
+                        <div class="col-sm-5" id="personalcomision_2"  
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach>
+                            <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
+                            <datalist id="browsersc2" >
+                                <option id="">Sin comision - 0 </option>
+                                @foreach($p_venta as $p_ventas)
+                                    <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
+                                @endforeach
+                            </datalist>
+                        </div>
+                        {{-- Forma de pago --}}
+                        <label  id="forma_pago_1" class="col-sm-1 col-form-label"
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach>
+                            F. Pago:
+                        </label>
+                        <div class="col-sm-5" id="forma_pago_2" 
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach>
+                            <select class="form-control" name="forma_pago" required="required">
+                                @foreach($forma_pagos as $forma_pago) 
+                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> 
+                                @endforeach
+                            </select>
+                        </div>
+                        {{-- Moneda --}}
+                        <label id="moneda_1" class="col-sm-1 col-form-label"
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach>
+                            Moneda:
+                        </label>
+                        <div class="col-sm-5" id="moneda_2" 
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach >
+                            <div class="row" >
+                                <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                                <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                                <div class="col-sm-5" style="margin-top: 0px !important" >
+                                    <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                                </div>
 
-              <div class="form-group row"> --}}
-
-                <label @foreach($config as $confi_create_blade)  @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0')  hidden="hidden" @endif  @endforeach id="personalcomision_1"  class="col-sm-1 col-form-label">Comisionista:</label>
-                <div class="col-sm-5" id="personalcomision_2"  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach  >
-                    <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
-                    <datalist id="browsersc2" >
-                        <option id="">Sin comision - 0 </option>
-                        @foreach($p_venta as $p_ventas)
-                        <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
-                        @endforeach
-                    </datalist>
-                </div>
-
-                {{-- <div id="forma_pago_view"> --}}
-                    <label  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach id="forma_pago_1" class="col-sm-1 col-form-label" >F.Pago:</label>
-                    <div class="col-sm-5" id="forma_pago_2"  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach>
-                        <select class="form-control" name="forma_pago" required="required">
-                            @foreach($forma_pagos as $forma_pago) <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> @endforeach
-                        </select>
-                    </div>
-                {{-- </div> --}}
-
-
-                {{-- <div id="moneda_view"> --}}
-                    <label  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach id="moneda_1" class="col-sm-1 col-form-label">Moneda:</label>
-                    <div class="col-sm-5" id="moneda_2" @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach >
-                        <div class="row">
-                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
-                            <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
-                            <div class="col-sm-5">
-                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                                <div class="col-sm-5 button_money" style="margin-top: 0px !important">
+                                    <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney" onclick="changeMoney()">
+                                        @if($moneda->tipo=='nacional')Dolares
+                                        @elseif($moneda->tipo=='extranjera')Soles
+                                        @endif
+                                    </button>
+                                </div>
                             </div>
-
-                            <a class="col-sm-5 button_money" onclick="changeMoney()">
-                                <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
-                                    @if($moneda->tipo=='nacional')Dolares
-                                    @elseif($moneda->tipo=='extranjera')Soles
-                                    @endif
-                                </button>
-                            </a>
+                        </div>
+                        {{-- Tipo de Operacion --}}
+                        <label id="tipo_operacion_1" class="col-sm-1 col-form-label"
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach >
+                            T.Operación:
+                        </label>
+                        <div class="col-sm-5" id="tipo_operacion_2" 
+                            @foreach($config as $confi_create_blade) 
+                                @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') 
+                                    hidden 
+                                @endif 
+                            @endforeach>
+                            <select class="form-control" name="tipo_operacion" >
+                                @foreach($tipo_operacion as $t_op)
+                                <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                {{-- </div> --}}
-
-
-                {{-- <div id="tipo_operacion_view"> --}}
-                    <label  @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach id="tipo_operacion_1" class="col-sm-1 col-form-label">T.Operación:</label>
-                    <div class="col-sm-5" id="tipo_operacion_2" @foreach($config as $confi_create_blade) @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') hidden @endif @endforeach >
-
-                        <select class="form-control" name="tipo_operacion" >
-                            @foreach($tipo_operacion as $t_op)
-                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
-                            @endforeach
-                        </select>
+                    {{-- Observacion --}}
+                    <div class="form-group row">
+                        <label class="col-sm-1 col-form-label">Observación:</label>
+                        <div class="col-sm-11">
+                            <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
+                        </div>
                     </div>
-                {{-- </div> --}}
-
-            </div>
-
-            <div class="form-group row">
-                <label class="col-sm-1 col-form-label">Observación:</label>
-
-                <div class="col-sm-11">
-                    <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
-                </div>
-            </div>
-
-
-
-
             {{-- Cabecera new --}}
-
-            <style type="text/css">
-                label{font-size: 14px !important;}
-            </style>
 
 
 
@@ -330,6 +382,8 @@
 <div id="loaderGif"></div>
 
 <style>
+    .col-form-label{margin-top: 15px!important;}
+    .col-sm-5{margin-top: 15px!important;}
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .check{-webkit-appearance: none;height: 34px;background-color: #ffffff00;-moz-appearance: none;border: none;appearance: none;width: 80px;border-radius: 10px;}

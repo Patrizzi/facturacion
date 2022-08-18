@@ -4,33 +4,34 @@
 @section('atributo_actu', 'hidden')
 
 @if($conteo_almacen==1)
-@section('value_accion', 'Agregar')
-@section('onclick1', 'Enviar_create()')
+    @section('value_accion', 'Agregar')
+    @section('onclick1', 'Enviar_create()')
 @else
-@section('atributo_1', 'hidden')
-@section('boton_opcional')
-@if($user_login->name=='Administrador')
-<span class="dropdown ">
-  <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
-  <ul class="dropdown-menu animated fadeInRight m-t-xs">
-    <span style="margin-left:12px;"><b>Almacenes:</b></span>
-    @foreach($almacen as $almacens)
-    <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
-    <form action="{{ route('cotizacion.create_factura')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
-        @csrf
-        <input type="text" value="{{$almacens->id}}" hidden="hidden" name="almacen">
-    </form>
-    <script>
-        console.log({{$almacens->id}});
-        function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
-    </script>
-    @endforeach
-</ul>
-</span>
-@elseif($user_login->name=='Colaborador')
-<button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
-@endif
-@endsection
+    @section('atributo_1', 'hidden')
+    @section('boton_opcional')
+    @if($user_login->name=='Administrador')
+        <span class="dropdown ">
+            <button  class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" >Agregar</button>
+            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                @foreach($almacen as $almacens)
+                    <li><a class="dropdown-item" onclick="alm_adm_{{$almacens->id}}()">{{$almacens->nombre}}</a></li>
+                    <form action="{{ route('cotizacion.create_factura')}}" id="alm_adm_{{$almacens->id}}" enctype="multipart/form-data" method="post">
+                    @csrf
+                        <input type="text" value="{{$almacens->id}}" hidden="hidden" name="almacen">
+                    </form>
+                    <script>
+                        console.log({{$almacens->id}});
+                        function alm_adm_{{$almacens->id}}(){document.getElementById('alm_adm_{{$almacens->id}}').submit();}
+                    </script>
+                @endforeach
+            </ul>
+        </span>
+        @endsection
+    @elseif($user_login->name=='Colaborador')
+        <button  class="btn btn-primary" type="button" onclick="Enviar_create2()">Agregar</button>
+        @endsection
+    @endif
 @endif
 
 @section('content')
@@ -49,19 +50,16 @@
     </form>
 </span>
 @if($errors->any())
-<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
-    <a class="alert-link" href="#">
-        @foreach ($errors->all() as $error)
-        <li class="error" style="color: red">{{ $error }}</li>
-        @endforeach
-    </a>
-</div>
+    <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+        <a class="alert-link" href="#">
+            @foreach ($errors->all() as $error)
+                <li class="error" style="color: red">{{ $error }}</li>
+            @endforeach
+        </a>
+    </div>
 @endif
-<style> .dropdown-menu{left: 70px; padding: 20px 0;}</style>
-
 
 <div class="wrapper wrapper-content animated fadeInRight">
-
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -91,56 +89,59 @@
                                     <td>{{$cotizacions->cliente->numero_documento}}</td>
                                     <td>{{$cotizacions->cliente->nombre}}</td>
                                     <td>{{$cotizacions->created_at}}</td>
-                                    <span hidden>{{$subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }} </span>
+                                    <span hidden>
+                                        {{$subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }} 
+                                    </span>
                                     <td>{{$cotizacions->moneda->simbolo}} {{number_format(round(($subtotal+($cotizacions->op_gravada*$igv->renta/100)),2),2)}}</td>
-                                    <td><center><a href="{{route('cotizacion.show',$cotizacions->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
+                                    <td>
+                                        <center><a href="{{route('cotizacion.show',$cotizacions->id)}}"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a></center>
+                                    </td>
                                     <td>
                                         @if($cotizacions->estado =='0')
-
-                                        <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
-
+                                            <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
                                         @else
-                                        <button type="button" class="btn btn-w-m btn-default">Procesado</button>
+                                            <button type="button" class="btn btn-w-m btn-default">Procesado</button>
                                         @endif
                                     </td>
-
                                     <td>
                                         @if($cotizacions->estado_aprovar =='0')
-
-                                        <form action="{{ route('cotizacion.aprobar', $cotizacions->id)}}" method="POST">
-                                          @csrf
-                                          @method('put')
-                                          <center>
-                                             <button type="submit" class="btn btn-w-m btn-info">Aprobar</button>
-                                         </form>
+                                            <form action="{{ route('cotizacion.aprobar', $cotizacions->id)}}" method="POST">
+                                                @csrf
+                                                @method('put')
+                                                <button type="submit" class="btn btn-w-m btn-info">Aprobar</button>
+                                            </form>
 
                                          @else
-                                         <button type="button" class="btn btn-w-m btn-default">Aprobado por <br>
-                                           @if($cotizacions->aprobado->personal->nombres==auth()->user()->personal->nombres)
-                                           usted
-                                           @else
-                                           {{$cotizacions->aprobado->personal->nombres}}
-                                           @endif
-                                       </button>
-                                       @endif
-                                   </td>
-                                   <td>
-                                     @if($cotizacions->user_personal->personal->nombres==auth()->user()->personal->nombres)
-                                     Creado por usted
-                                     @else
-                                     Creado por  {{$cotizacions->user_personal->personal->nombres}}
-                                     @endif
-                                 </td>
-                             </tr>
-                             @endforeach
-                         </tbody>
-                     </table>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
+                                            <button type="button" class="btn btn-w-m btn-default">Aprobado por <br>
+                                            @if($cotizacions->aprobado->personal->nombres==auth()->user()->personal->nombres)
+                                                usted
+                                            @else
+                                                {{$cotizacions->aprobado->personal->nombres}}
+                                            @endif
+                                            </button>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($cotizacions->user_personal->personal->nombres==auth()->user()->personal->nombres)
+                                            Creado por usted
+                                        @else
+                                            Creado por  {{$cotizacions->user_personal->personal->nombres}}
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<style> 
+    .dropdown-menu{left: 70px; padding: 20px 0;}
+
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

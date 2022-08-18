@@ -35,9 +35,15 @@ class AgregadoRapidoController extends Controller
         $cliente->email=$request->get('email');
         $cliente->telefono=$request->get('telefono');
         $cliente->celular=$request->get('celular');
-        // $cliente->empresa=$request->get('empresa');
         $cliente->documento_identificacion=$request->get('documento_identificacion');
         $cliente->numero_documento=$request->get('numero_documento');
+        $cliente->ciudad=$request->get('ciudad');
+        $cliente->departamento=$request->get('departamento');
+        $cliente->pais=$request->get('pais');
+        $cliente->tipo_cliente=$request->get('tipo_cliente');
+        $cliente->aniversario=$request->get('aniversario');
+        $cliente->cod_postal=$request->get('cod_postal');
+        $cliente->fecha_registro=$request->get('fecha_registro');
         $cliente->save();
 
         $idCliente=$cliente->id;

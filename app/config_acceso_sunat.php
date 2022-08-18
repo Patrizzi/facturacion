@@ -58,7 +58,7 @@ class config_acceso_sunat extends Model
         //$see->setCertificate(file_get_contents(public_path('certificado/certificado.p12')));
 
         $pfx = file_get_contents(public_path('certificado/certificado.p12')); 
-        $password = 'Tecnologia20';
+        $password = 'Ndalmaten81';
 
         $certificate = new X509Certificate($pfx, $password);
 
