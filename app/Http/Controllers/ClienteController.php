@@ -136,20 +136,22 @@ class ClienteController extends Controller
     {
       $cliente= Cliente::find($id);
       $cliente->nombre=$request->get('nombre');
-      $cliente->ciudad=$request->get('ciudad');
       $cliente->direccion=$request->get('direccion');
-      $cliente->pais=$request->get('pais');
-      $cliente->pais=$request->get('pais');
       $cliente->email=$request->get('email');
-      $cliente->departamento=$request->get('departamento');
       $cliente->telefono=$request->get('telefono');
-      $cliente->tipo_cliente=$request->get('tipo_cliente');
+      $cliente->anexo=$request->get('anexo');
       $cliente->celular=$request->get('celular');
       $cliente->empresa=$request->get('empresa');
-      $cliente->fecha_registro=$request->get('fecha_registro');
-      $cliente->aniversario=$request->get('aniversario');
       $cliente->documento_identificacion=$request->get('documento_identificacion');
       $cliente->numero_documento=$request->get('numero_documento');
+      $cliente->ciudad=$request->get('ciudad');
+      $cliente->departamento=$request->get('departamento');
+      $cliente->pais=$request->get('pais');
+      $cliente->tipo_cliente=$request->get('tipo_cliente');
+      $cliente->cod_postal=$request->get('ubigeo');
+      $cliente->aniversario=$request->get('aniversario');
+      $cliente->fecha_registro=$request->get('fecha_registro');
+      
       $cliente->save();
       return redirect()->route('cliente.show',$cliente->id);
     }
