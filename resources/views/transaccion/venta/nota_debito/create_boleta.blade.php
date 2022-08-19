@@ -94,7 +94,7 @@
                                     <div class="row">
                                         <div class="col-sm-2"><strong>Motivo:</strong></div>
                                         <div class="col-sm-10">
-                                            <input type="text" name="motivo" id="" class="form-control" required>
+                                            <input type="text" name="motivo" id="mot" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                                         @endif
                                         <td>{{$boleta_registros->cantidad}}</td>
                                         <td>{{$boleta_registros->precio}}</td>
-                                        <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
+                                        <td><input required="required" class="form-control" type="ni,number" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" step="0.01" min="0.01" disabled></td>
                                         <td>{{$boleta_registros->precio_unitario_comi* $boleta_registros->cantidad }}</td>
                                         <td style="display: none">
                                             {{-- {{$sub_total=($boleta_registros->factura_ids->op_gravada)+($boleta_registros->factura_ids->op_inafecta)+($boleta_registros->factura_ids->op_exonerada)}}
@@ -157,7 +157,8 @@
                                </tr>
 
                                <tr>
-                                <td colspan="13" align="right"><button type="submit" class="btn btn-w-m btn-primary">Enviar</button>
+                                <td colspan="13" align="right"><button type="button" class="btn btn-w-m btn-primary">Enviar</button>
+                                    <button type="submit" id="submit_pt" style="display: none">enviar </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -169,7 +170,14 @@
     </div>
 </div>
 </div>
-
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] { -moz-appearance:textfield; }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -197,5 +205,20 @@
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
         }
     }
+    $("#enviar_pt").click(function(e){
+            var hola =  $('#mot').val();
+            console.log(hola);
+            e.preventDefault();
+            if ($('.check_2:checked').length == 0 && $('#mot').val() ==  "") {
+                $('#submit_pt').click();
+            }else if($('.check_2:checked').length == 0 && $('#mot').val() != ""){
+                toastr.warning("Seleccionar al menos 1 producto para la Nota de Debito",
+                'Verifique si ha seleccionado al menos 1 producto', {
+                    timeOut: 3000
+                });
+            }else{
+                $('#submit_pt').click();
+            }
+        });
 </script>
 @endsection

@@ -451,7 +451,7 @@ class NotaCreditoController extends Controller
         if($request->motivo==2){
             $sustento=$request->sustento;
             $nueva_boleta=$request->nueva_boleta;
-            $descuento_global=NULL;
+            $descuento_global=NULL; 
         }else if($request->motivo==3){
             $sustento=$request->sustento;
             $nueva_boleta=NULL;

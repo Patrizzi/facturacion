@@ -940,7 +940,7 @@ class FacturacionElectronicaController extends Controller
             }
             // $msg = $n_c_precio;
             // return $msg;
-            $Tecnologia20notas_creditos_count=Nota_Credito_registro::count();
+            $notas_creditos_count=Nota_Credito_registro::count();
             $notas_creditos_count++;
             
             //nota_Credito_numero

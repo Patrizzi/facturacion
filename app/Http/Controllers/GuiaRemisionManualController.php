@@ -14,6 +14,7 @@ use App\Vehiculo;
 use App\TransportePublico;
 use App\Personal;
 use App\Producto;
+use App\Stock_almacen;
 use Barryvdh\DomPDF\Facade as PDF;
 
 use Illuminate\Http\Request;
@@ -104,8 +105,8 @@ class GuiaRemisionManualController extends Controller
         $product = Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
 
         $sep_esc = explode(' ',$product->peso);
-        $peso_pr = $sep_esc[0];
 
+        $peso_pr = $sep_esc[0];
         return $peso_pr;
     }
     public function almacen_remision_m(Request $request){
@@ -167,7 +168,7 @@ class GuiaRemisionManualController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        // return $request
         $almacen = $request->get('almacen');
         $cliente = $request->get('cliente');
         $motivo = $request->get('motivo_traslado');
@@ -220,7 +221,7 @@ class GuiaRemisionManualController extends Controller
             $guia_remision_m->vehiculo_publico=$request->get('vehiculo_publico');
         }elseif ($tipo_transporte==2) {
             $guia_remision_m->vehiculo_id=$request->get('vehiculo');
-            $guia_remision->conductor_id=$request->get('conductor');
+            $guia_remision_m->conductor_id=$request->get('conductor');
         }
         $guia_remision_m->tipo_transporte = $tipo_transporte;
         $guia_remision_m->tipo_transporte = $tipo_transporte;
@@ -245,6 +246,7 @@ class GuiaRemisionManualController extends Controller
             $remision_reg->guia_remision_m_id = $guia_remision_m->id;
             $remision_reg->producto_id = $prod_id[$i];
             $remision_reg->cantidad = $request->get('cantidad')[$i];
+            $remision_reg->descripcion = $request->get('descripcion')[$i];
             $remision_reg->numero_serie = $request->get('serie')[$i];
             $remision_reg->peso = $request->get('peso')[$i];
             $remision_reg->estado = 1;

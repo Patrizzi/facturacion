@@ -85,9 +85,9 @@ class FacturacionController extends Controller
         // $kardex_prod=kardex_entrada_registro::join("productos","kardex_entrada_registro.producto_id","productos.id")
         // ->where('estado',1)->get();
 
-        $almacen_p=$request->get('almacen');
-        $kardex_entrada=Kardex_entrada::where('almacen_id',$almacen_p)->get();
-        $kardex_entrada_count=Kardex_entrada::where('almacen_id',$almacen_p)->count();
+        $almacen=$request->get('almacen');
+        $kardex_entrada=Kardex_entrada::where('almacen_id',$almacen)->get();
+        $kardex_entrada_count=Kardex_entrada::where('almacen_id',$almacen)->count();
 
         //return $kardex_entrada;
         foreach($kardex_entrada as $kardex_entradas){
@@ -102,6 +102,7 @@ class FacturacionController extends Controller
                 }
             }
         }
+        $sucursal =Almacen::where('id', $almacen)->first();
         $servicios=Servicios::where('estado_anular',0)->get();
         //validacion si hay prductos en el almacen
         if(!isset($prod)){
@@ -165,7 +166,6 @@ class FacturacionController extends Controller
         $tipo_operacion = Tipo_operacion_f::all();
             // $empresa = Empresa::all();
             // obtencion de la sucursal
-        $almacen=$request->get('almacen');
 
             //obtencion del almacen
         $sucursal =Almacen::where('id', $almacen)->first();

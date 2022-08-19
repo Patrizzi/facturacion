@@ -134,7 +134,8 @@
                              <tr>
                                 <td>{{$i++}}</td>
                                 <td>{{$guia_registros->producto->codigo_producto}}</td>
-                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} N/S: {{$guia_registros->numero_serie}}</td>
+                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}} <br>{{$guia_registros->descripcion}}
+                                 </td>
                                 <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                                 <td>{{$guia_registros->cantidad}}</td>
                                 <td>{{$guia_registros->peso}}</td>

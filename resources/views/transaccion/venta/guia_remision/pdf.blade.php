@@ -105,6 +105,7 @@
                 <table class="table " style="text-align: left;border-top: 0px" >
                     <thead style="text-align: left;">
                      <tr align="left" style="text-align: left;font-weight: bold;border-top-width:  0px ">
+                        <th>Item</th>
                         <th>Codigo Producto </th>
                         <th>Marca / Descripcion</th>
                         <th>Unid.Medida</th>
@@ -116,8 +117,10 @@
                 <tbody>
                  @foreach($guia_registro as $guia_registros)
                  <tr style="border-bottom-width:   0px white ">
-                    <td>{{$guia_registros->id}}</td>
-                    <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} N/S: {{$guia_registros->numero_serie}}</td>
+                    <td>{{$y++}}</td>
+                    <td>{{$guia_registros->producto->codigo_original}}</td>
+                    <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S:</strong>{{$guia_registros->numero_serie}}<br>
+                        {{$guia_registros->descripcion}}</td>
                     <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                     <td>{{$guia_registros->cantidad}}</td>
                     <td>{{$guia_registros->producto->peso}}</td>

@@ -20,9 +20,9 @@
     <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
     {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
     <SCRIPT LANGUAGE="JavaScript">
-        function cerrar() {
-            window.close();
-        }
+        // function cerrar() {
+        //     window.close();
+        // }
     </SCRIPT>
 
 </head>
@@ -123,7 +123,8 @@
                              @foreach($guia_registro as $guia_registros)
                              <tr>
                                 <td>{{$guia_registros->id}}</td>
-                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} N/S {{$guia_registros->numero_serie}}</td>
+                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S</strong>{{$guia_registros->numero_serie}}<br>
+                                    {{$guia_registros->descripcion}}</td>
                                 <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                                 <td>{{$guia_registros->cantidad}}</td>
                                 <td>{{$guia_registros->producto->peso}}</td>
@@ -135,7 +136,7 @@
                             </tr>
                             <tr>
                                 <td colspan="4" align="right">Peso Total:</td>
-                                <td>{{$guia_registro->sum('peso')}}KL</td>
+                                <td>{{$guia_registro->sum('peso')}} KGM</td>
                             </tr>
                         </tbody>
                     </table>

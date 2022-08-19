@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div><br>
-                <form action="{{route('nota-debito.nota_debito_store_factura',$facturacion->id)}}"  enctype="multipart/form-data" method="post" >
+                <form action="{{route('nota-debito.nota_debito_store_factura',$facturacion->id)}}"  enctype="multipart/form-data" method="post" id="post_form" >
                     @csrf
                 <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
@@ -96,7 +96,7 @@
                                     <div class="row">
                                         <div class="col-sm-2"><strong>Motivo:</strong></div>
                                         <div class="col-sm-10">
-                                            <input type="text" name="motivo" id="" class="form-control" required>
+                                            <input type="text" name="motivo" id="mot" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                                 <tr>
                                     @foreach($facturacion_registro as $e => $facturacion_registros)
                                     <tr>
-                                        <td><input class="form-check-input" type="checkbox" id="inlineCheckbox_{{$e}}" name="inlineCheckbox_{{$e}}"  onclick="check('{{$e}}')"></td>
+                                        <td><input class="form-check-input check_2" type="checkbox" id="inlineCheckbox_{{$e}}" name="inlineCheckbox_{{$e}}"  onclick="check('{{$e}}')" ></td>
                                         <td >{{$u++}}</td>
                                         @if(isset($facturacion_registros->producto_id))
                                             <td>{{$facturacion_registros->producto->codigo_producto}}</td>    
@@ -159,7 +159,7 @@
                                         <td>{{$facturacion_registros->cantidad}}</td>
                                         
                                         <td>{{$facturacion_registros->precio}}</td>
-                                        <td><input required="required" class="form-control" type="text" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" disabled></td>
+                                        <td><input required="required" class="form-control" type="number" id="input_disabled_precio_{{$e}}" name="input_disabled_precio_{{$e}}" value="0" step="0.01" min="0.01" disabled></td>
                                         <td>{{$facturacion_registros->precio_unitario_comi* $facturacion_registros->cantidad }}</td>
                                         <td style="display: none">
                                             {{$sub_total=($facturacion_registros->factura_ids->op_gravada)+($facturacion_registros->factura_ids->op_inafecta)+($facturacion_registros->factura_ids->op_exonerada)}}
@@ -174,7 +174,9 @@
                                </tr>
 
                                <tr>
-                                <td colspan="13" align="right"><button type="submit" class="btn btn-w-m btn-primary">Enviar</button>
+                                <td colspan="13" align="right">
+                                    <button type="button" id="enviar_pt"  class="btn btn-w-m btn-primary">Enviar</button>
+                                    <button type="submit" id="submit_pt" style="display: none">enviar </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -186,7 +188,14 @@
     </div>
 </div>
 </div>
-
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] { -moz-appearance:textfield; }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -199,7 +208,7 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
+<script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
 <script>
     var estado=1;
@@ -214,5 +223,22 @@
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
         }
     }
+    // function grabar(){
+        $("#enviar_pt").click(function(e){
+            var hola =  $('#mot').val();
+            console.log(hola);
+            e.preventDefault();
+            if ($('.check_2:checked').length == 0 && $('#mot').val() ==  "") {
+                $('#submit_pt').click();
+            }else if($('.check_2:checked').length == 0 && $('#mot').val() != ""){
+                toastr.warning("Seleccionar al menos 1 producto para la Nota de Debito",
+                'Verifique si ha seleccionado al menos 1 producto', {
+                    timeOut: 3000
+                });
+            }else{
+                $('#submit_pt').click();
+            }
+        });
+    // }
 </script>
 @endsection

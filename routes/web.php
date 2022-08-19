@@ -223,6 +223,8 @@ Route::group(
 
 		Route::resource('/guia_remision','GuiaRemisionController');
 		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
+		Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
+		Route::post('/guia_remision/peso_stock','GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
 		/* REMISION MANUAL */
 		Route::resource('/guia_remision_manual','GuiaRemisionManualController');
 		Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');

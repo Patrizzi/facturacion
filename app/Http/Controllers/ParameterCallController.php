@@ -221,7 +221,7 @@ class ParameterCallController extends Controller
             $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre','estado_anular')->where('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
         }else{
             $products = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
-            $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre','estado_anular')->where('nombre', 'like', '%' .$search . '%')->orWhere('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
+        $services = Servicios::orderby('nombre','asc')->select('id','codigo_servicio','codigo_original','nombre','estado_anular')->where('nombre', 'like', '%' .$search . '%')->orWhere('codigo_servicio', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
         }
         //Productos a array
         if($almacen != 0){

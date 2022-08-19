@@ -188,6 +188,7 @@
                                         </td>
                                         <td>
                                             <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
+                                            <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                                         </td>
                                         <td>
                                             <input type="text" name="cantidad[]" id="cantidad" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
@@ -382,6 +383,7 @@
                 </td>
                 <td>
                     <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i})" required></select>
+                    <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                 </td>
                 <td>
                     <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57">

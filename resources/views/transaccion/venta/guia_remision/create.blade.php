@@ -48,26 +48,21 @@
                                 <center>
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                    <h5>{{$codigo_guia}} <input type="text" name="almacen" value="{{$almacen}}" hidden="hidden"> </h5>
+                                    <h5>{{$codigo_guia}} <input type="text" id="almacen_in" name="almacen" value="{{$almacen}}" hidden="hidden"> </h5>
                                 </center>
                             </div>
                         </div>
                     </div><br>
                     {{--  Cabecera --}}
                     <div class="row">
-                        <div class="col-sm-6" >
+                        <div class="col-sm-6" style="margin-bottom: 5px" >
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Cliente:</label>
                                 <div class="col-sm-10">
-                                    <input placeholder="Selecione Cliente" list="browsersc1" class="form-control m-b" name="cliente" required value="{{ old('nombre')}}" autocomplete="off">
-                                    <datalist id="browsersc1" >
-                                        @foreach($clientes as $cliente)
-                                        <option id="{{$cliente->id}}">{{$cliente->numero_documento}} - {{$cliente->nombre}}</option>
-                                        @endforeach
-                                    </datalist>
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
                                 </div>
                             </div>
-                        </div>
+                        </div  >
                         <div class="col-sm-6" >
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">F.Emision:</label>
@@ -168,12 +163,14 @@
                         <input type='checkbox' class="case">
                     </td>
                     <td>
-                        <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
+                        {{-- <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
                         <datalist id="browsers2" >
                             @foreach($productos as $index => $producto)
                             <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$producto->peso}} {{$producto->peso}} {{$array_cantidad[$index]}} {{$array_cantidad[$index]}}">
                                 @endforeach
-                            </datalist>
+                            </datalist> --}}
+                            <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
+                            <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                         </td>
                         <td>
                             <input type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
@@ -213,6 +210,25 @@
 <style type="text/css">
 .ruc{border-radius: 10px; height: 150px;}
 .form-control{border-radius: 10px;}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 12px;
+    }
+    .select2-container--default .select2-selection--single {
+        border: none;
+    }
+    span.select2.select2-container.select2-container--default{
+        width: 100%!important;
+        background-color: #FFFFFF;
+        background-image: none;
+        border-radius: 1px;
+        display: block;
+        padding: 3px 12px;
+        border: 1px solid #e5e6e7;
+    }
+    .select2-hidden-accessible{
+        width: auto !important;
+        
+    }
 </style>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -230,8 +246,13 @@
 
 <!-- Jquery Validate -->
 <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
+    $(document).ready(function() {
+        articlesSelect2();
+        // $('.select2_demo_almacen').select2();
+    });
     function valida(f) {
         var boton=document.getElementById("boton");
         var completo = true;
@@ -251,14 +272,9 @@
         <input type='checkbox' class='case'/>
         </td>";
         <td>
-        <input list="browsers" class="form-control " name="articulo[]" required id='articulo${i}' onkeyup="calcular(this,${i})" onclick="Clear(this);" autocomplete="off">
-        <datalist id="browsers" >
-        @foreach($productos as $index => $producto)
-        <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$producto->peso}} {{$producto->peso}} {{$array_cantidad[$index]}} {{$array_cantidad[$index]}}">
-        @endforeach
-        </datalist>
+        <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i});" required></select>
+        <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
         </td>
-
         <td>
         <input type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
         </td>
@@ -271,70 +287,105 @@
         <td>
         <input id='peso${i}' name='peso[]' type="text" class="form-control" value="0"  readonly="readonly">
         </td>
-
-
         </tr>`;
         $('table').append(data);
+        articlesSelect2();
         i++;
     });
 </script>
-
-
-
 <script>
-    function reverseString(str) {
-        return str.split("").reverse().join("");;
-    }
-
-    function calcular(input,a)
-    {
-        var id = input.id;
-        var caracteres = input.value;
-        var caracteres_reverse=reverseString(caracteres);
-        var cadena=input.value;
-        var separador=" ";
-        var seprador_total= " / ";
-        var id=cadena.split(separador,1);
-            //revirtiendo la cadena
-            var reverse=reverseString(caracteres);//devuelve toda la cadena articulo al reves
-            //para precio
-            var precio_v_r=reverse.split(separador,1); //devuelve el precio en objeto al revez
-            var precio_r=precio_v_r[0];//obtiene el precio del objeto [0] al revez
-            var precio_v =reverseString(precio_v_r[0]);//convierte el precio al revez a la normalidad
-
-            var caracteres_space=caracteres_reverse.replace(precio_r,"");//obtiene la cadena articulo sin precio,pero con un espacio en blanco
-            var reverse2=caracteres_space.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para descuento
-            var descuento_v_r=reverse2.split(separador,1);////obtiene el descuento del objeto [0] al revez
-            var descuento_r=descuento_v_r[0];//obtiene el descuento del objeto [0] al revez
-            var descuento_v =reverseString(descuento_v_r[0]);//convierte el descuento al revez a la normalidad
-
-            var caracteres_space_2=reverse2.replace(descuento_r,"");//obtiene la cadena articulo sin precio,descuento,con un espacio en blanco
-            var reverse3=caracteres_space_2.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para stock
-            var stock_v_r=reverse3.split(separador,1);
-            var stock_r=stock_v_r[0];
-            var stock_v =reverseString(stock_v_r[0]);
-
-            var caracteres_space_3=reverse3.replace(stock_r,"");//obtiene la cadena articulo sin precio,descuento,con un espacio en blanco
-            var reverse4=caracteres_space_3.slice(1);//elimina el espacion en blanco de la cadena articulo sin precio
-            //para promedio_original
-            var prom_v_r=reverse4.split(separador,1);
-            var prom_r=prom_v_r[0];
-            var prom_v =reverseString(prom_v_r[0]);
-
-            var peso=prom_v;
-            console.log("el promedio original es: "+prom_v);
-            console.log("el strock es: "+stock_v+"-------------")
-
-            document.getElementById(`stock${a}`).value = precio_v;
-            document.getElementById(`peso${a}`).value = peso;
-
-
-
-
+    $(".select2_demo_client").select2({
+        placeholder: "Seleccionar Cliente",
+        ajax: {
+            minimumInputLength: 1,
+            url: "{{ route('pa.clients') }}",
+            dataType: 'json',
+            type: "POST",
+            delay: 10,
+            data: function (params) {
+                return {
+                    _token: "{{ csrf_token() }}",
+                    search: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.nombre + ' | ' +  item.numero_documento,
+                        };
+                    })
+                };
+            },
+            cache: true
         }
-    </script>
+    });
+    function articlesSelect2() {
+        $(".select2_demo_productos").select2({
+            placeholder: "Seleccionar Producto",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('remision.ajax_producto') }}",
+                dataType: 'json',
+                type: "POST",
+                // delay: 1500,
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        id: params.id,
+                        search: params.term // search term 
+                        
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id:  item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
+                                text: item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
+                            };
+                        })
+                    };
+                },
+                cache: true,
+                passive: true
+            }
+        });
+        
+    }
+    function ajax(a){
+        if(a==0){
+            var articulo = document.getElementById(`articulo`).value;
+        }else{
+            var articulo = document.getElementById(`articulo${a}`).value;
+        }
+        var almacen =  document.getElementById(`almacen_in`).value;
+        $.ajax({
+            type: "post",
+            url: "{{ route('guia_remision.peso_stock') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'almacen' : almacen, 
+                'articulo': articulo
+            },
+            success: function (msg) {
+                $(`#peso${a}`).val(msg.peso);
+                $(`#stock${a}`).val(msg.stock);
+                // sum_total();
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+        
+    }
+</script>
+
+
 
     <script>
         $(".delete").on('click', function () {

@@ -85,7 +85,7 @@ class NotaDebitoController extends Controller
                 
             // Exprecion del numero de nota de debito
             // Generacion de numero de nota de debito
-            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->latest()->first();
+            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->whereNotNull('facturacion_id')->orWhereNotNull('facturacion_m_id')->latest()->first();
             $nota_debito_num=$ultima_nota_c->codigo_n_d;
             $nota_debito_num_string_porcion= explode("-", $nota_debito_num);
             $nota_debito_num_string=$nota_debito_num_string_porcion[1];
@@ -143,7 +143,7 @@ class NotaDebitoController extends Controller
                 
             // Exprecion del numero de nota de debito
             // Generacion de numero de nota de debito
-            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->latest()->first();
+            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->whereNotNull('boleta_id')->orWhereNotNull('boleta_m_id')->latest()->first();
             $nota_debito_num=$ultima_nota_c->codigo_n_d;
             $nota_debito_num_string_porcion= explode("-", $nota_debito_num);
             $nota_debito_num_string=$nota_debito_num_string_porcion[1];
@@ -222,7 +222,7 @@ class NotaDebitoController extends Controller
                 
             // Exprecion del numero de nota de debito
             // Generacion de numero de nota de debito
-            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->latest()->first();
+            $ultima_nota_c=Nota_debito::where('almacen_id',$almacen_id->id)->whereNotNull('facturacion_id')->orWhereNotNull('facturacion_m_id')->latest()->first();
             $nota_debito_num=$ultima_nota_c->codigo_n_d;
             $nota_debito_num_string_porcion= explode("-", $nota_debito_num);
             $nota_debito_num_string=$nota_debito_num_string_porcion[1];
@@ -383,7 +383,7 @@ class NotaDebitoController extends Controller
         }else{
                 // exprecion del numero de Nota de DEBITO
                 // GENERACION DE NUMERO DE Nota de DEBITO
-                $ultima_nota_d=Nota_Debito::where('almacen_id',$almacen_id->id)->latest()->first();
+                $ultima_nota_d=Nota_Debito::where('almacen_id',$almacen_id->id)->whereNotNull('boleta_id')->orWhereNotNull('boleta_m_id')->latest()->first();
                 $nota_debito_num=$ultima_nota_d->codigo_n_d;
                 $nota_debito_num_string_porcion= explode("-", $nota_debito_num);
                 $nota_debito_num_string=$nota_debito_num_string_porcion[1];
