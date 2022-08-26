@@ -13,7 +13,7 @@
         }
     </script>
 </head>
-<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
+<body class="" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="contenedor-impresion-ticket">
         <div class="row">
             <div class="col-lg-12" align="center">
@@ -47,7 +47,7 @@
             </div>
             <hr>
             <div class="col-lg-12">
-                <table class="table" style="font-size: 14px">
+                <table class="table">
                     <thead>
                         <tr>
                             <th style="width: 40%">Articulo</th>
@@ -60,7 +60,7 @@
                         @foreach ($facturacion_registro as $item)
                             <tr>
                                 @if(isset($item->producto_id))
-                                    <td style="font-size: 12px">{{$item->producto->nombre}}</td>
+                                    <td >{{$item->producto->nombre}}</td>
                                 @else
                                     <td>{{$item->servicio->nombre}}</td>
                                 @endif
@@ -114,17 +114,18 @@
         </div>
     </div>
 </body>
-<style>
-    html {
-        font-size: 90%;
-        max-width: 300px;
-        padding: 0px 8px 0px 8px;
+
+<style type="text/css" >
+   *{
+    font-size: 30px;
+    margin: 5px;
+   }
+    @page{
+        
+       
     }
-    .contenedor-impresion-ticket{
-        width: 300px;
-        max-width: 300px;
-    }
-</style>
+    </style>
+    
 <script type="text/javascript">
     window.print();
 </script>

@@ -27,8 +27,7 @@
 
 </head>
 
-<?php use App\Empresa;
-$empresa=Empresa::first(); ?>
+{{--  --}}
 <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
     body {font:@yield('tamano_letra', auth()->user()->config->tamano_letra) @yield('Letra', auth()->user()->config->letra);}
@@ -96,12 +95,8 @@ $empresa=Empresa::first(); ?>
                     @can('inicio')
                     <li><a href="{{route('inicio')}}"><img src="{{ asset('/archivos/imagenes/layout/inicio.svg')}}" class="iconos"> <span class="nav-label">Inicio</span></a></li>
                     @endcan
-                    {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL --}}
-                    <?php use App\Kardex_entrada ; use App\Almacen; ?>
-                    <span hidden="">{{$inventario_inicial=Kardex_entrada::first()}} </span>
-                    <span hidden="">{{$almacen=Almacen::all()}} </span>
-                    <span hidden="">{{$conteo_almacen=Almacen::count()}} </span>
-                    <span hidden="">{{$almacen_primero=Almacen::first()}} </span>
+                    {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
+
                     @can('transacciones')
                     <li>
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/comercializacion.svg')}}" class="iconos"> <span class="nav-label">Comercialización</span></a>
@@ -311,14 +306,39 @@ $empresa=Empresa::first(); ?>
     <div class="row border-bottom">
         <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                
                         {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
                         <div class="form-group">
                         <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
                         </div>
                     </form> --}}
+                    
+                </div>
+                <div class="nav-bar navbar-center">
+                    <div class=" minimalize-style-3 " style="vertical-align: middle;width: 13em">
+                        <p class="col-lg-12">
+                            <div class="row">
+                                @if (isset($tipo_cambio->fecha))
+                                    <div class="col-sm-6">
+                                        <center style="font-size: 14px;color: black">
+                                            <strong>Compra :</strong><br>{{$tipo_cambio->compra}}
+                                        </center>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <center style="font-size: 14px;color: black">
+                                            <strong>Venta :</strong><br>{{$tipo_cambio->venta}}
+                                        </center>
+                                    </div>
+                                @endif
+                            </div>
+                        </p>
+                    </div>  
                 </div>
                 <ul class="nav navbar-top-links navbar-right" style="padding: 10px 0">
+                    <li>
+                        <span></span>
+                    </li>
                     <li>
                         <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
                     </li>

@@ -15,174 +15,115 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h5 style="color:#0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</h5>
+                    <h5 style="color:#0073c1">Control de Eventos</h5>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                     <div class="col-lg-3">
-                        <div class="ibox ">
-                            <div class="ibox-title" style="border-top:none">
-                                <span class="label label-success float-right">18%</span>
-                                <h5>IGV </h5>
-                            </div>
-                            <div class="ibox-content" align="center">
-                                <h1>{{$moneda_nacional->simbolo.round($igv_nacional,2)}}</h1>
-                                <small >Calculo aproximado del impuesto a pagar</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox ">
-                            <div class="ibox-title" style="border-top:none" >
-                                <span class="label label-info float-right">{{strftime('%B')}}</span>
-                                <h5>Facturas del Mes</h5>
-                            </div>
-                            <div class="ibox-content" align="center">
-                                <h1 > {{$coun_fac_mes}} </h1>
-                                <small>Calculo Exacto de Facturas Creadas</small>
+                        <div class="col-lg-6">
+                            <div class="ibox">
+                                <div class="ibox-title" style="border-top:none">
+                                    <h5>Compra</h5>
+                                    <span class="label label-success float-right">{{ucfirst(strftime('%B'))}}</span>
+                                </div>
+                                <div class="ibox-content" align="center">
+                                    <strong>Entrada por kardex</strong>
+                                    <h1>{{$return_kardex}}</h1>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox ">
-                            <div class="ibox-title" style="border-top:none">
-                                <span class="label label-info float-right">{{strftime('%B')}}</span>
-                                <h5>Boletas Del Mes</h5>
-                            </div>
-                            <div class="ibox-content" align="center">
-                                <h1>{{$coun_bol_mes}}</h1>
-                                <small>Calculo Exacto de Boletas Creadas</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="ibox ">
-                            <div class="ibox-title" style="border-top:none">
-                                <span class="label label-success float-right">{{date('d-m-Y')}}</span>
-                                <h5>Tipo de Cambio</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <div class="row">
-                                    <div class="col-sm-6"><small>Compra :</small><h1>{{$consulta->compra}}</h1> </div>
-                                    <div class="col-sm-6"><small>Venta :</small><h1>{{$consulta->venta}}</h1></div>
+                        <div class="col-lg-6">
+                            <div class="ibox">
+                                <div class="ibox-title" style="border-top:none">
+                                    <img src="{{asset('sunat.png')}}" width="25px"> <h5>Ventas</h5>
+                                    <span class="label label-success float-right">{{ucfirst(strftime('%B'))}}</span>
+                                </div>
+                                <div class="ibox-content" align="center">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <strong>Facturas</strong>
+                                            <h1>{{$return_tot_fact}}</h1>
+                                            <small>*Incluye Facturas Manuales</small>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <strong>Boletas</strong>
+                                            <h1>{{$return_tot_bol}}</h1>
+                                            <small>*Incluye Boletas Manuales</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
-</div>
-
-
-<div class="row">
-    <div class="col-lg-4">
-        <div class="ibox ">
-            <div class="ibox-title">
-                <h5>Alertas</h5>
-            </div>
-            <div class="ibox-content">
-                <div>
-                    <div class="ibox-content no-padding" align="center" style="border-top-width: 0px;">
-                    <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Alertas</h5>
                 </div>
-                <div class="ibox-content profile-content">
-                    <h4><strong> {{$empresa->nombre}}</strong></h4>
-                    <p><i class="fa fa-map-marker"></i>{{$empresa->calle}}</p>
-                    <h5>Sobre mi:</h5>
-                    <p>{{$empresa->descripcion}}</p>
-                       {{--  <div class="row m-t-lg">
-                            <div class="col-md-4">
-                                <span class="bar">5,3,9,6,5,9,7,3,5,2</span>
-                                <h5><strong>169</strong> Posts</h5>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="line">5,3,9,6,5,9,7,3,5,2</span>
-                                <h5><strong>28</strong> Following</h5>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
-                                <h5><strong>240</strong> Followers</h5>
-                            </div>
-                        </div> --}}
+                <div class="ibox-content">
+                    <div>
+                        <div class="ibox-content no-padding" align="center" style="border-top-width: 0px;">
+                        <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
+                    </div>
+                    <div class="ibox-content profile-content">
+                        <h4><strong> {{$empresa->nombre}}</strong></h4>
+                        <p><i class="fa fa-map-marker"></i>{{$empresa->calle}}</p>
+                        <h5>Sobre mi:</h5>
+                        <p>{{$empresa->descripcion}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
     <div class="col-lg-8">
-
         <div class="row">
-
             <div class="col-lg-6">
                 <div class="ibox ">
                     <div class="ibox-title">
-                        <h5>Destacados (próximamente)</h5>
+                        <h5>Los 5 productos mas vendido del Mes</h5>
                     </div>
                     <div class="ibox-content">
-
-                     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-
-                                <div class="ibox-content text-center">
-                                    <h1>Producto mas vendido del Día</h1>
-                                    <div class="m-b-sm">
-                                        <img alt="image" style="width:250px; height: 200px;padding: 20px; border:3px solid #2196f3; border-radius: 5px;"  src="https://definicion.de/wp-content/uploads/2009/06/producto.png">
-                                    </div>
-                                    <p class="font-bold">Producto1</p>
-
-                                    <div class="text-center">
-                                        <span   class="btn btn-xs btn-white">5 veces vendido  </span>
-                                        <span  class="btn btn-xs btn-primary">S/.50 aproximados</span>
-                                    </div>
+                        @if($array_prod_all[0]['cantidad'] != 0)
+                            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    @foreach ($array_prod_all as $item => $array_prod)       
+                                        @if($item == 0)
+                                        <div class="carousel-item active">
+                                        @else
+                                        <div class="carousel-item">
+                                        @endif        
+                                            <div class=" text-center">
+                                                <img src="{{ asset('/archivos/imagenes/productos/')}}/{{$array_prod_all[$item]["imagen"]}}" style="width:200px; height: 200px;padding: 20px; border:3px solid #2196f3; border-radius: 5px;">
+                                            </div>
+                                            <center><p class="font-bold">{{$array_prod_all[$item]["nombre"]}}</p></center>
+                                            <div class="text-center">
+                                                <span class="btn btn-xs btn-white">{{$array_prod_all[$item]["cantidad"]}} veces vendido  </span><br><br>
+                                                <span class="btn btn-xs btn-primary">{{$array_prod_all[$item]["precio"]}} aproximados</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
                             </div>
-                            <div class="carousel-item">
-                              <div class="ibox-content text-center">
-                                <h1>Producto mas vendido del Mes</h1>
-                                <div class="m-b-sm">
-                                    <img alt="image" style="width:250px; height: 200px;padding: 20px; border:3px solid #f39f21; border-radius: 5px;"  src="https://definicion.de/wp-content/uploads/2009/06/producto.png">
-                                </div>
-                                <p class="font-bold">Producto 2</p>
-
-                                <div class="text-center">
-                                    <span   class="btn btn-xs btn-white">30 veces vendido</span>
-                                    <span class="btn btn-xs btn-primary">S/.800 aproximados</span>
-                                </div>
+                        @else
+                            <div class="">
+                                <h3>No hay Facturas creadas este mes</h3>
                             </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="ibox-content text-center">
-                                <h1>Servicio mas vendido del Mes</h1>
-                                <div class="m-b-sm">
-                                    <img alt="image" style="width:250px; height: 200px;padding: 20px; border:3px solid #21f3c3; border-radius: 5px;"  src="https://www.estrategiaynegocios.net/csp/mediapool/sites/dt.common.streams.StreamServer.cls?STREAMOID=1YbfCffBXOPF85InC$mO7M$daE2N3K4ZzOUsqbU5sYs6IYaZ64t25ttE0D51pJSc6FB40xiOfUoExWL3M40tfzssyZqpeG_J0TFo7ZhRaDiHC9oxmioMlYVJD0A$3RbIiibgT65kY_CSDiCiUzvHvODrHApbd6ry6YGl5GGOZrs-&CONTENTTYPE=image/jpeg">
-                                </div>
-                                <p class="font-bold">Servicio 1</p>
-
-                                <div class="text-center">
-                                    <span class="btn btn-xs btn-white">30 veces vendido</span>
-                                    <span class="btn btn-xs btn-primary">S/.3000 aproximados</span>
-                                </div>
-                            </div>
-                        </div>
+                        @endif
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
                 </div>
             </div>
-        </div>
-    </div>
     <div class="col-lg-6">
         <div class="ibox ">
             <div class="ibox-title">
