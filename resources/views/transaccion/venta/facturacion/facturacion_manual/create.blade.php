@@ -19,8 +19,8 @@
 </div>
 @endif
 
-@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
-@section('ruta_retorno', 'facturacion')
+{{-- @section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado')) --}}
+{{-- @section('ruta_retorno', 'facturacion') --}}
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>Cliente</a>
 </div>

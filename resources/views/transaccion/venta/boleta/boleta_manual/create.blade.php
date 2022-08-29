@@ -3,6 +3,8 @@
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('boleta_manual.create'))
 @section('value_accion', 'Agregar')
+@extends('layout_agregado_rapido')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 
 {{-- obtener errores --}}
@@ -29,8 +31,8 @@
 </div>
 @endif
 
-@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
-@section('ruta_retorno', 'boleta_manual')
+{{-- @section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado')) --}}
+{{-- @section('ruta_retorno', 'boleta_manual') --}}
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>Cliente</a>
 </div>
