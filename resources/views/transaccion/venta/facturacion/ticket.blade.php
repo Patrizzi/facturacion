@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ticket Factura</title>
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
     <script LANGUAGE="JavaScript">
         function cerrar() {
-            window.close();
+            // window.close();
         }
     </script>
+    
 </head>
 <body class="" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="contenedor-impresion-ticket">
@@ -30,6 +32,22 @@
             </div>
             <hr>
             <div class="col-lg-12">
+                <table class="table" style="border-color: white">
+                    <tbody>
+                        <tr style="border-color: white">
+                            <td>Cliente</td>
+                            <td>:</td>
+                            <td>{{$facturacion->cliente->nombre}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{$facturacion->cliente->documento_identificacion}}</td>
+                            <td>:</td>
+                            <td>{{$facturacion->cliente->numero_documento}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {{-- <div class="col-lg-12">
                 <div class="row">
                     <div class="col-sm-4">
                         Cliente <br>
@@ -44,7 +62,7 @@
                         {{$facturacion->cliente->numero_documento}} <br>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <hr>
             <div class="col-lg-12">
                 <table class="table">
@@ -115,16 +133,23 @@
     </div>
 </body>
 
-<style type="text/css" >
-   *{
-    font-size: 30px;
-    margin: 5px;
-   }
-    @page{
+<style>
+    *{ 
+        margin: 0mm;
+        padding: 0mm;
+        /* size: 297mm 70mm landscape;  */
+        font-size: 100%;
         
-       
     }
-    </style>
+    html{
+        margin: 0mm;
+        padding: 0mm;
+    }
+
+    table{
+        border: none;
+    }
+</style>
     
 <script type="text/javascript">
     window.print();
