@@ -39,6 +39,7 @@
                     <input type="text" name="name" maxlength="50" hidden="" value="{{ $boleta->codigo_boleta }}">
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i> </button>
                 </form>
+                <a href="{{route('boleta_manual.ticket', $boleta->id)}}" class="btn btn-info" target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
                 <a class="btn btn-success" href="{{ route('boleta_manual.print', $boleta->id) }}" target="_blank"
                     class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
                     data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i>

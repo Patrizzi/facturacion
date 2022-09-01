@@ -105,6 +105,7 @@ Route::group(
 		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
 		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
+		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
 		
 
 //NOTA VENTA
@@ -194,13 +195,14 @@ Route::group(
 		Route::resource('/facturacion','FacturacionController')->except(['store','create']);
 		Route::post('/facturacion/create','FacturacionController@create')->name('facturacion.create');
 		Route::put('/facturacion/store/{id_moneda}','FacturacionController@store')->name('facturacion.store');
-		Route::post('ticket_ajax', 'FacturacionController@ticket_ajax')->name('ticket_ajax');
-		Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
+		// Route::post('ticket_ajax', 'FacturacionController@ticket_ajax')->name('ticket_ajax');
+		// Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 
 
 		//facturacion manual
 		//->Vista para facturacion manual próximamente...
 		Route::get('/facturacion_manual/print/{id}','FacturacionMController@print')->name('facturacion_manual.print');
+		Route::get('/facturacion_manual/ticket/{id}','FacturacionMController@ticket')->name('facturacion_manual.ticket');
 		
 		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
 		Route::resource('facturacion_manual','FacturacionMController');
@@ -209,6 +211,7 @@ Route::group(
 		Route::resource('boleta_manual','BoletaMController');
 		Route::post('/boleta_manual/codigo','BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
 		Route::get('/boleta_manual/print/{id}','BoletaMController@print')->name('boleta_manual.print');
+		Route::get('/boleta_manual/ticket/{id}','BoletaMController@ticket')->name('boleta_manual.ticket');
 		
 
 		Route::post('/boleta/create_ms','BoletaController@create_ms')->name('boleta.create_ms');
@@ -216,7 +219,7 @@ Route::group(
 		Route::resource('/boleta','BoletaController')->except(['store','create']);
 		Route::post('/boleta/create','BoletaController@create')->name('boleta.create');
 		Route::put('/boleta/store/{id_moneda}','BoletaController@store')->name('boleta.store');
-
+		Route::get('/boleta/ticket/{id}','BoletaController@ticket')->name('boleta.ticket');
 		/*Guia Remision*/
 		//para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
 		Route::get('/guia_remision/print/{id}' , 'GuiaRemisionController@print')->name('guia_remision.print');

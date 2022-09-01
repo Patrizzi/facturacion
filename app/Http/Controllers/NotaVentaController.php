@@ -13,6 +13,7 @@ use App\NotaVentaRegistro;
 use App\Personal;
 use App\Producto;
 use App\Servicios;
+use App\Igv;
 use App\kardex_entrada;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -274,5 +275,14 @@ class NotaVentaController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function ticket(Request $request, $id)
+    {
+        $nota_venta=NotaVenta::find($id);
+        $nota_registro=NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $empresa=Empresa::first();
+        $moneda = Moneda::where('id',$nota_venta->moneda_id)->first();
+        $igv=Igv::first();
+        return view('transaccion.venta.nota_venta.ticket',compact('nota_venta','nota_registro','empresa','igv','moneda'));
     }
 }
