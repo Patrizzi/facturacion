@@ -463,7 +463,7 @@ class BoletaMController extends Controller
         // return View('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
         $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
         return $pdf->download('Boleta Manual - '.$archivo.'.pdf');
-    }git
+    }
 
     /**
      * Remove the specified resource from storage.
