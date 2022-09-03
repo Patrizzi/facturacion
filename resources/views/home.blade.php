@@ -84,7 +84,7 @@
             <div class="col-lg-6">
                 <div class="ibox ">
                     <div class="ibox-title">
-                        <h5>Los 5 productos mas vendido del Mes</h5>
+                        <h5>Los 5 productos mas vendido del Mes  </h5><small> Solo Facturas </small>
                     </div>
                     <div class="ibox-content">
                         @if($array_prod_all[0]['cantidad'] != 0)

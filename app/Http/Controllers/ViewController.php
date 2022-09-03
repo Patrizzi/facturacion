@@ -207,7 +207,7 @@ class ViewController extends Controller
       $cantidad = 0;
     }
     
-    if(count($fac_mes) == 0 && count($fac_ma_mes) == 0){
+    if(count($fac_mes) == 0 && count($fac_ma_mes) == 0 || count($var) == 0 ){
       $array_prod_all[] = array("cantidad" => 0);
     }else{
       array_multisort(array_column($array_prod_all, "cantidad"), SORT_DESC, $array_prod_all);
