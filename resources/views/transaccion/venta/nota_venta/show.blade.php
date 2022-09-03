@@ -29,6 +29,8 @@
         <div class="col-sm-6 tooltip-demo "align="right"  > 
             <!-- PDF -->
             <a href="{{route('nota_venta_pdf' ,$nota_venta->id)}}"class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i></a>
+            <!-- Ticket -->
+            <a href="{{route('nota_venta.ticket', $nota_venta->id)}}" class="btn btn-info" target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
             <!-- Impresion -->
             <a class="btn btn-success" href="{{route('nota_venta.print',$nota_venta->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
             <!-- Email -->

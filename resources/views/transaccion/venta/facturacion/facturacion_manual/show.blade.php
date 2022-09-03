@@ -33,7 +33,7 @@
                         <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title=""
                             data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i> </button>
                     </form>
-                    <button id="btn_ticket" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button>
+                    <a href="{{route('facturacion_manual.ticket', $facturacion->id)}}" class="btn btn-info" target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
                     <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden="">
                     <a class="btn btn-success" href="{{ route('facturacion_manual.print', $facturacion->id) }}" target="_blank"
                         class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
@@ -523,28 +523,6 @@
                 }
             </script>
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $('#btn_ticket').click(function() {
-                        var id_fac = $(`[id='id']`).val();
-                        $.ajax({
-                            type: "post",
-                            url: "{{ route('ticket_ajax_ingreso') }}",
-                            data: {
-                                '_token': $('input[name=_token]').val(),
-                                'id': id_fac
-                            },
-                            success: function(response) {
-                                if (response == 1) {
-                                    // alert('Imprimiendo Ticket');
-                                } else {
-                                    alert('Error');
-                                }
-                            }
-                        });
-                    });
-                });
-            </script>
             <!-- Mainly scripts -->
             <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
             <script src="{{ asset('js/popper.min.js') }}"></script>

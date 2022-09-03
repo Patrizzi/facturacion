@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ticket Factura</title>
+    <title>Ticket Nota de Venta</title>
     {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"> --}}
     {{-- <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -19,12 +19,12 @@
     <div class="contenedor-impresion-ticket">
         <div class="row">
             <div class="col-lg-12" align="center">
-                <strong><span>Factura Electronica</span></strong><br>
-                <span>{{$facturacion->codigo_fac}}</span>
+                <strong><span>Nota de Venta Electronica</span></strong><br>
+                <span>{{$nota_venta->codigo_bol}}</span>
             </div>
             <hr>
             <div class="col-lg-12" align="center">
-                <span>{{$facturacion->created_at}}</span><br>
+                <span>{{$nota_venta->created_at}}</span><br>
                 <span>{{$empresa->razon_social}}</span><br>
                 <span><strong>R.U.C:</strong> {{$empresa->ruc}}</span><br>
                 <span>{{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}}</span><br>
@@ -37,32 +37,16 @@
                         <tr style="border-color: white;width: 100%">
                             <td>Cliente</td>
                             <td>:</td>
-                            <td>{{$facturacion->cliente->nombre}}</td>
+                            <td>{{$nota_venta->cliente->nombre}}</td>
                         </tr>
                         <tr>
-                            <td>{{$facturacion->cliente->documento_identificacion}}</td>
+                            <td>{{$nota_venta->cliente->documento_identificacion}}</td>
                             <td>:</td>
-                            <td>{{$facturacion->cliente->numero_documento}}</td>
+                            <td>{{$nota_venta->cliente->numero_documento}}</td>
                         </tr>
                     {{-- </tbody> --}}
                 </table>
             </div>
-            {{-- <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-sm-4">
-                        Cliente <br>
-                        {{$facturacion->cliente->documento_identificacion}} <br>
-                    </div>
-                    <div class="col-sm-2">
-                        : <br>
-                        : <br>
-                    </div>
-                    <div class="col-sm-6">
-                        {{$facturacion->cliente->nombre}} <br>
-                        {{$facturacion->cliente->numero_documento}} <br>
-                    </div>
-                </div>
-            </div> --}}
             <hr>
             <div class="col-lg-12">
                 <table class="table">
@@ -74,17 +58,14 @@
                             <th style="width: 22%">Total</th>
                         </tr>
                     </thead>
-                    <tbody  >
-                        @foreach ($facturacion_registro as $item)
+                    <tbody  > <span hidden><{{$sume = 0}}/span>
+                        @foreach ($nota_registro as $item)
                             <tr class="body_table">
-                                @if(isset($item->producto_id))
-                                    <td>{{$item->producto->nombre}}</td>
-                                @else
-                                    <td>{{$item->servicio->nombre}}</td>
-                                @endif
+                                <td>{{$item->producto}}</td>
                                 <td >{{$item->cantidad}}</td>
-                                <td class="mont">{{number_format($item->precio_unitario_comi,2)}}</td>
-                                <td class="mont">{{number_format($item->precio_unitario_comi* $item->cantidad,2)}}</td>
+                                <td class="mont">{{number_format($item->precio_nacional,2)}}</td>
+                                <td class="mont">{{number_format($item->precio_nacional* $item->cantidad,2)}}</td>
+                                <span hidden>{{$sume=$item->cantidad*$item->precio_nacional+$sume}}</span>
                             </tr>
                         @endforeach
                     </tbody>
@@ -92,37 +73,14 @@
             </div>
             
         </div>
+            <hr>
+
         <table style="width: 100%">
             <tbody>
                 <tr>
-                    <td>Subtotal</td>
+                    <td>Importe Total</td>
                     <td>:</td>
-                    <td align="right">{{$simbolo  = $moneda->simbolo }}{{$subtotal = number_format($facturacion->op_gravada+$facturacion->op_inafecta + $facturacion->op_exonerada,2)}} </td>
-                </tr>
-                <tr>
-                    <td>Op. Gravada</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{number_format($facturacion->op_gravada,2)}}</td>
-                </tr>
-                <tr>
-                    <td>Op. Inafecta</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{number_format($facturacion->op_inafecta,2)}} </td>
-                </tr>
-                <tr>
-                    <td>Op. Exonerada</td>
-                    <td>:</td> 
-                    <td align="right">{{$simbolo}}. {{number_format($facturacion->op_exonerada,2)}}  </td>
-                </tr>
-                <tr>
-                    <td>I.G.V</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{$igv = number_format(round($facturacion->op_gravada * $igv->igv_total/100,2),2)}}</td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{$total = number_format(round($subtotal + $igv,2),2)}}</td>
+                    <td align="right">{{$simbolo  = $moneda->simbolo }}{{$subtotal = number_format($sume,2)}} </td>
                 </tr>
             </tbody>
         </table>
@@ -132,7 +90,7 @@
                 <span>Autorizado mediante resolucion</span><br>
                 <span>N° RS 018-005-0002243/SUNAT</span><br>
                 <span>Representación impresa de la</span><br>
-                <span>Factura de Venta Electronica</span><br>
+                <span>Nota de Venta Electronica</span><br>
                 <span>Para consultar el documento</span><br>
                 <span>Ingrese a:</span><br>
                 <span>{{$empresa->pagina_web}}</span><br>
@@ -143,8 +101,8 @@
 
 <style>
     *{ 
-        margin: 0mm;
-        padding: 0mm;
+        /* margin: 0mm; */
+        /* padding: 0mm; */
         /* size: 297mm 70mm landscape;  */
         font-size: 13px;
         
@@ -159,7 +117,7 @@
     }
     .body_table > td{
         
-        font-size: 12px;
+        font-size: 11px;
     } 
     .mont{
         text-align: right;

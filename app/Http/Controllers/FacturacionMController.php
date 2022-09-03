@@ -22,7 +22,7 @@ use App\Tipo_operacion_f;
 use App\Banco;  
 use App\Cuotas_credito;
 use App\Codigo_guia_almacen;
-
+use App\Facturacion_registro;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 
@@ -484,7 +484,15 @@ class FacturacionMController extends Controller
         
         return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }
-
+    public function ticket(Request $request,$id){
+        
+        $facturacion=Facturacion_m::find($id);
+        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
+        $empresa=Empresa::first();
+        $moneda = Moneda::where('id',$facturacion->moneda_id)->first();
+        $igv=Igv::first();
+        return view('transaccion.venta.facturacion.facturacion_manual.ticket',compact('facturacion','facturacion_registro','empresa','igv','moneda'));
+    }
     public function edit($id)
     {
         //

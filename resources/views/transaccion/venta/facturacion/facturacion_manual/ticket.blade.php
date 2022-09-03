@@ -83,8 +83,8 @@
                                     <td>{{$item->servicio->nombre}}</td>
                                 @endif
                                 <td >{{$item->cantidad}}</td>
-                                <td class="mont">{{number_format($item->precio_unitario_comi,2)}}</td>
-                                <td class="mont">{{number_format($item->precio_unitario_comi* $item->cantidad,2)}}</td>
+                                <td class="mont">{{number_format($item->precio,2)}}</td>
+                                <td class="mont">{{number_format($item->precio* $item->cantidad,2)}}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -97,7 +97,7 @@
                 <tr>
                     <td>Subtotal</td>
                     <td>:</td>
-                    <td align="right">{{$simbolo  = $moneda->simbolo }}{{$subtotal = number_format($facturacion->op_gravada+$facturacion->op_inafecta + $facturacion->op_exonerada,2)}} </td>
+                    <td align="right">{{$simbolo  = $moneda->simbolo }}. {{$subtotal = number_format($facturacion->op_gravada+$facturacion->op_inafecta + $facturacion->op_exonerada,2)}} </td>
                 </tr>
                 <tr>
                     <td>Op. Gravada</td>
