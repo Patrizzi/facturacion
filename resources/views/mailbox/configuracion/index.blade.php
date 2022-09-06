@@ -81,7 +81,7 @@
 
 											<label class="col-sm-2 col-form-label">PORT:</label>
 											<div class="col-sm-4">
-												<input type="text" class="form-control" name="port" placeholder="25" id="port" >
+												<input type="text" class="form-control" name="port" placeholder="25" id="port" required >
 											</div>
 										</div>
 										<div class="row">
@@ -512,6 +512,7 @@
 	});
 	//* FUNCION AJAX PARA VERIFICAR EMAIL EN AJAX -> ParametersControls
 	function checkEmail(my_callback){
+		var l = Ladda.create(document.querySelector('.ladda-button'));
 		var global_editar=false;
 
 		var smtpAddress = $('[id="smtp"]').val();
@@ -550,6 +551,7 @@
 						global_editar = true;
 					}
 					my_callback(global_editar); //AQUI
+					l.stop();
 				},
 			});
 			return global_editar;
