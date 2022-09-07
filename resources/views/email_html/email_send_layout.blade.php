@@ -44,7 +44,7 @@
 	          		<img name="firma" src="{{asset('/archivos/imagenes/firmas/'.$firma)}}"  width="{{$ancho}}px"/>
 	          	</footer>
             	@endif
-			</div>
+			</div>gi
 		</div>
 	</div>
 

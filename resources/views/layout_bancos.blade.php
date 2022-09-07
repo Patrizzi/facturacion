@@ -32,7 +32,7 @@
         display: flex ;
         justify-content: center ;
         align-items: center ;
-        border-color: #C4C4C4;
+        border-color: #3D3D3D;
     }
     .lol{
         font-size: 12px;

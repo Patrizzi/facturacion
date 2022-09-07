@@ -28,7 +28,7 @@
 <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
     <tr>
         @include('layout_cabecera_ventas_pdf')
-       <td style="width: 30%; ;border: 1px #808080 solid;border-radius: 8px;margin-top: 0px" align="right">
+       <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
         <center>
             <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
             <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRÓNICA</h2><br>
@@ -48,7 +48,7 @@
     @endif
     <table style="width: 100%;border-collapse:separate;margin-top: -20px">
         <tr >
-            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+            <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                 <!-- <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br> -->
                 <strong>Señor(es):</strong>&nbsp;
                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
@@ -71,7 +71,7 @@
                 @endif<br>
             </td>
             <th style="width: 5%;border-color: white"></th>
-            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+            <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                 <!-- <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center> <br> -->
                 <strong>Orden de Compra:</strong>&nbsp;{{$facturacion->orden_compra}}<br>
                 <strong>Guía de Remisión:</strong> &nbsp;{{$facturacion->guia_remision}}<br>
@@ -186,7 +186,7 @@
 {{--  --}}
 <style>
 
-    *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    *{font-size: 14px;color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";border-color: #3D3D3D}
     .cero{
         margin-bottom: 0px;
 
@@ -195,10 +195,10 @@
         border: none;
     }
     .blanco{border: none;
-        border: border-color: #808080 ;
+         border-color: #808080 ;
     }
     .border {
-        border-color: #808080;
+        border-color: #3D3D3D;
         border-width: 1px;
         border-style: solid;
     }

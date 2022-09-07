@@ -28,16 +28,6 @@
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     
-    <style type="text/css">
-        .procesado:before {
-            content: "Procesado";
-        }
-
-        .procesado:hover:before {
-            content: "Ver";
-        }
-    </style>
-
     <div class="wrapper wrapper-content animated fadeInRight">
         
         {{-- <div class="ibox-tools">
@@ -362,6 +352,10 @@
             </div>
             {{-- Fin de modal configuración --}}
             <style>
+                *{
+                    color: black !important;
+                }
+                .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
                 #auto {
                     /*padding: -100px;*/
                     /*background: orange;*/
@@ -402,7 +396,8 @@
             <style>
                 .form-control {
                     margin-top: 5px;
-                    border-radius: 5px
+                    border-radius: 5px;
+                    border-color: #3D3D3D;
                 }
 
                 p#texto {
@@ -442,80 +437,9 @@
                 .form-control {
                     background-color: transparent !important;
                 }
+                
             </style>
-
-            <script type="text/javascript">
-                function mostrarPassword() {
-                    var cambio = document.getElementById("txtPassword");
-                    if (cambio.type == "password") {
-                        cambio.type = "text";
-                        $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-                    } else {
-                        cambio.type = "password";
-                        $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
-                    }
-                }
-            </script>
-            <script type="text/javascript">
-                {{-- Fotooos --}}
-
-                function validarExt() {
-                    var archivoInput = document.getElementById('archivoInput');
-                    var archivoRuta = archivoInput.value;
-                    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-                    if (!extPermitidas.exec(archivoRuta)) {
-                        alert('Asegurese de haber seleccionado una Imagen');
-                        archivoInput.value = '';
-                        return false;
-                    } else {
-                        //PRevio del PDF
-                        if (archivoInput.files && archivoInput.files[0]) {
-                            var visor = new FileReader();
-                            visor.onload = function(e) {
-                                document.getElementById('visorArchivo').innerHTML =
-                                    '<img name="firma" src="' + e.target.result + '"width="390px" height="200px" />';
-                            };
-                            visor.readAsDataURL(archivoInput.files[0]);
-                        }
-                    }
-                }
-            </script>
-            <script>
-                var clic = 1;
-
-                function divAuto() {
-                    if (clic == 1) {
-                        document.getElementById("div-mostrar").style.height = "50px";
-                        clic = clic + 1;
-                    } else {
-                        document.getElementById("div-mostrar").style.height = "0px";
-                        clic = 1;
-                    }
-                }
-            </script>
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $('#btn_ticket').click(function() {
-                        var id_fac = $(`[id='id']`).val();
-                        $.ajax({
-                            type: "post",
-                            url: "{{ route('ticket_ajax_ingreso') }}",
-                            data: {
-                                '_token': $('input[name=_token]').val(),
-                                'id': id_fac
-                            },
-                            success: function(response) {
-                                if (response == 1) {
-                                    // alert('Imprimiendo Ticket');
-                                } else {
-                                    alert('Error');
-                                }
-                            }
-                        });
-                    });
-                });
-            </script>
+ 
             <!-- Mainly scripts -->
             <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
             <script src="{{ asset('js/popper.min.js') }}"></script>

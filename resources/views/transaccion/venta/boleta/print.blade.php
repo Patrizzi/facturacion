@@ -188,9 +188,12 @@
     </div>
     <style type="text/css">
         .ruc{border-radius: 10px; height: 150px;}
-        .form-control{border-radius: 10px;border-color: #808080}
+        .form-control{border-radius: 10px;border-color: #3D3D3D}
         .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
+        *{
+            color: black;
+        }
     </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

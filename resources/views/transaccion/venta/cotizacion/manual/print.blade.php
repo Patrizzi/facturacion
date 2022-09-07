@@ -30,8 +30,8 @@
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="">
+        <div class="">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
@@ -194,11 +194,14 @@
     }
 </style>
 <style type="text/css">
-    .form-control{border-radius: 10px; padding: 10px }
+    .form-control{border-radius: 10px; padding: 10px;border-color: #3D3D3D }
     .ibox-tools a{color: white !important}
     .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
-    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
-
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
+    *{
+        color: black;
+    }
+    
 </style>
 
 <!-- Mainly scripts -->

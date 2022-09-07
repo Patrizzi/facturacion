@@ -22,6 +22,7 @@ use App\Personal;
 use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
+use App\Cuotas_credito;
 use App\Unidad_medida;
 use App\Tipo_operacion_f;
 use App\Validez;
@@ -507,8 +508,9 @@ class CotizacionManualController extends Controller
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
-        $banco=Banco::where('estado',0)->get();
-        $banco_count = count($banco);
+        // $banco_registros=Banco::where('estado',0)->get();
+        // $
+        // $banco_count = count($banco_registros);
         $j = 1;
 
         //SUBTOTAL
@@ -521,7 +523,7 @@ class CotizacionManualController extends Controller
         
         $archivo=$name.'_'.$id;
         
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2'));
         return $pdf->download('CotizacionManual - '.$archivo.'.pdf');
 
     }

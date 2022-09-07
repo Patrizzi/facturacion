@@ -13,7 +13,7 @@
     .form-control, .single-line {
         background-color: #FFFFFF;
         background-image: none;
-        border: 1px solid #808080;
+        border: 1px solid #3D3D3D;
         border-radius: 1px;
         color: inherit;
         display: block;
@@ -191,7 +191,7 @@
 
 <style>
 
-    *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    *{font-size: 14px;color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
     .cero{
         margin-bottom: 0px;
 

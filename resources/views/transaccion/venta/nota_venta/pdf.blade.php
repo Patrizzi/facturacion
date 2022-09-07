@@ -13,7 +13,7 @@
     .form-control, .single-line {
     background-color: #FFFFFF;
     background-image: none;
-    border: 1px solid #e5e6e7;
+    border: 1px solid #3D3D3D;
     border-radius: 1px;
     color: inherit;
     display: block;
@@ -49,7 +49,7 @@
                 <br>
                 {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
             </td>
-            <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
+            <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
                     <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
                     <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >Nota de Venta</h2><br>
@@ -61,14 +61,14 @@
 <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
 <table style="width: 100%;border-collapse:separate;margin-top: -20px">
     <tr >
-        <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto" >
+        <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
             <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
             <strong>Señor(es):</strong>&nbsp;{{$nota_venta->cliente->nombre}}<br>
             <strong>{{$nota_venta->cliente->documento_identificacion}} :</strong>&nbsp;{{$nota_venta->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <strong>Fecha:</strong>&nbsp;{{$nota_venta->created_at}}<br>
         </td>
         <th style="width: 5%;border-color: white"></th>
-        <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
+        <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
             <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
             <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
             <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -122,20 +122,20 @@
 
 <table style="border: white 0px solid;text-align: center;" >
     <tr style="border: white 0px solid" >
-        <td style="border: 1px #e5e6e7 none;border-radius: 4px;width: 75%">
+        <td style="border: 1px #3D3D3D none;border-radius: 4px;width: 75%">
             <br style="height: 2px;">
         </td>
         <th style="width: 2%;border-color: white"></th>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
+        <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 25%">
             Importe Total<br style="height: 2px;">
          </td>
     </tr>
     <tr>
-        <td style="border: 1px #e5e6e7 none;border-radius: 4px;width: 75%">
+        <td style="border: 1px #3D3D3D none;border-radius: 4px;width: 75%">
             <br style="height: 2px;">
         </td>
         <th style="width: 2%;border-color: white"></th>
-        <td style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 25%">
+        <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 25%">
             {{$nota_venta->moneda->simbolo}}{{$sume}}<br style="height: 2px;">
          </td>
     </tr>
@@ -175,7 +175,7 @@
 {{--  --}}
 <style>
 
-    *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    *{font-size: 14px;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";color: black}
     .cero{
     margin-bottom: 0px;
 
@@ -187,7 +187,7 @@
         border: medium transparent;
         }
     .border {
-        border-color: #aaaaaa;
+        border-color: #3D3D3D;
         border-width: 1px;
         border-style: solid;
     }

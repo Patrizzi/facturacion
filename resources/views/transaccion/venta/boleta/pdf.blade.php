@@ -32,7 +32,7 @@
 <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
     <tr>
         @include('layout_cabecera_ventas_pdf')
-        <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
+        <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
             <center>
                 <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
                 <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >BOLETA ELECTRÓNICA</h2><br>
@@ -45,7 +45,7 @@
 <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
     <table style="width: 100%;border-collapse:separate;margin-top: -20px">
         <tr>
-            <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto;height:auto;" >
+            <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto;height:auto;" >
                 <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br>
                 <strong>Señor(es)</strong>&nbsp;
                 @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
@@ -68,7 +68,7 @@
                 @endif<br>
             </td>
             <th style="width: 5%;border-color: white"></th>
-            <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
+            <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                 <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
                 <strong>Orden de Compra:</strong>&nbsp;{{$boleta->orden_compra}}<br>
                 <strong>Guía de Remisión:</strong> &nbsp;{{$boleta->guia_remision}}<br>
@@ -184,19 +184,21 @@
 {{--  --}}
 <style>
 
-    *{font-size: 13px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    *{font-size: 13px;color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";border-color: #3D3D3D}
     .cero{
         margin-bottom: 0px;
 
     }
     .table-bordered .blanco {
         border: none;
+        border-color: #3D3D3D;
     }
     .blanco{border: none;
-        border: medium transparent;
+        /* border: medium transparent; */
+        border-color: #3D3D3D;
     }
     .border {
-        border-color: #aaaaaa;
+        border-color: #3D3D3D;
         border-width: 1px;
         border-style: solid;
     }
@@ -206,6 +208,10 @@
         margin-bottom: 1rem;
         background-color: transparent;
         border-top-width: 0px;
+        border-color: #3D3D3D;
 
+    }
+    table > thead >  tr {
+        border-color: #3D3D3D;
     }
 </style>

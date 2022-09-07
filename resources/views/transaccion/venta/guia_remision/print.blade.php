@@ -123,7 +123,7 @@
                              @foreach($guia_registro as $guia_registros)
                              <tr>
                                 <td>{{$guia_registros->id}}</td>
-                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S</strong>{{$guia_registros->numero_serie}}<br>
+                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}}<br>
                                     {{$guia_registros->descripcion}}</td>
                                 <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                                 <td>{{$guia_registros->cantidad}}</td>
@@ -186,10 +186,13 @@
 
 
                 <style type="text/css">
-                    .form-control{border-radius: 10px; height: auto;}
+                    .form-control{border-radius: 10px; height: auto;border-color: #3D3D3D;}
                     .ibox-tools a{color: white !important}
                     .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-                    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
+                    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
+                    *{
+                        color: black;
+                    }
                 </style>
 
 

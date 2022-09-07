@@ -173,10 +173,10 @@
         </div>
     </body>
     <style type="text/css">
-        .form-control{border-radius: 10px; height: auto; border-color: #808080}
+        .form-control{border-radius: 10px; height: auto; border-color: #3D3D3D}
         .ibox-tools a{color: white !important}
         .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #808080}
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
         #watermark {
             display: flex;
             justify-content: center;
@@ -198,6 +198,9 @@
         }
         .form-control {
             background-color: transparent !important;
+        }
+        *{
+            color: black;
         }
     </style>
     

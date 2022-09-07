@@ -277,7 +277,7 @@ class FacturacionElectronicaController extends Controller
         // $factura = Facturacion::where('codigo_fac'.$request->codigo_fac)->first();
         //BUSCA EL CODIGO ERROR
         $explod = explode(" ",$msg_r);
-        $n_error = substr($explod[2], 0, 4) ;
+        $n_error = substr($explod[2], 0, 4) ;gi
         
         //Estado Aceptada
         $n_acept = substr($explod[1], 0, 8);

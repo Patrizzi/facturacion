@@ -23,7 +23,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE debito</h2>
+                                <h2>NOTA DE DEBITO</h2>
                                 <h5>{{$notas_debito->codigo_n_d}}</h5>
                             </center>
                         </div>

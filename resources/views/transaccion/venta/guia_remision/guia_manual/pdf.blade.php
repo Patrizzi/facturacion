@@ -38,12 +38,12 @@
         <table style="width: 100%;border-collapse:separate;margin-top: -20px">
             <tbody>
                 <tr >
-                    <td  style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto" >
+                    <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                         <center><strong style="align-content: center;margin: 5px">Domicilio De Partida </strong></center><br>
                         &nbsp;{{$guia_remision_m->almacen->direccion}}<br>
                     </td>
                     <th style="width: 2%;border-color: white"></th>
-                    <td  style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
+                    <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Domicilio De Llegada </strong></center><br>
                         {{$guia_remision_m->cliente->direccion}} <br>
                     </td>
@@ -51,7 +51,7 @@
             </tbody>
             <tbody >
                 <tr >
-                    <td  style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto" >
+                    <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                         <center><strong style="align-content: center;margin: 5px">Destinario</strong></center><br>
                         <strong>Señor(es) :</strong>&nbsp;{{$guia_remision_m->cliente->nombre}}<br>
                         <strong>R.U.C / DNI :</strong>&nbsp; {{$guia_remision_m->cliente->numero_documento}}<br>
@@ -59,7 +59,7 @@
                         <strong>Fecha Traslado :</strong>&nbsp;{{$guia_remision_m->fecha_entrega}} <br>
                     </td>
                     <th style="width: 2%;border-color: white"></th>
-                    <td  style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
+                    <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Unidad de Transporte/Conductor</strong></center><br>
                         @if(isset($guia_remision_m->vehiculo_id))
                             <p>
@@ -124,13 +124,13 @@
         <table style="width: 100%;border-collapse:separate;">
             <tbody>
                 <tr >
-                    <td  style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto" >
+                    <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                         <center><strong style="align-content: center;margin: 5px">Observacion </strong></center><br>
                         &nbsp;{{$guia_remision_m->observacion}}<br>
 
                     </td>
                     <th style="width: 2%;border-color: white"></th>
-                    <td  style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
+                    <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Motivo de Traslado</strong></center><br>{{$guia_remision_m->motivo_traslado}}<br>
                     </td>
                 </tr>
@@ -164,9 +164,9 @@
             .form-control{border-radius: 10px; height: auto;}
             .ibox-tools a{color: white !important}
             .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-            .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
+            .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
             
-            *{font-size: 15px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+            *{font-size: 15px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";color: black;}
             .cero{
                 margin-bottom: 0px;
             

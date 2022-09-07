@@ -57,7 +57,7 @@
                     <input type="text" hidden="" name="firma" value="0">
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                 </form>
-                <button id="btn_ticket" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button>
+                {{-- <button id="btn_ticket" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button> --}}
                 <input type="text" value="{{$cotizacion->id}}" name="id" id="id" hidden="">
                 <a class="btn btn-success" href="{{route('cotizacion.print',$cotizacion->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
                 @if(Auth::user()->email_creado == 1)

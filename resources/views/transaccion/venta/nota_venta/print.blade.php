@@ -175,10 +175,13 @@
             }
         </style>
         <style type="text/css">
+        *{
+            color: black;
+        }
             .form-control{border-radius: 10px; padding: 10px }
             .ibox-tools a{color: white !important}
             .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
-            .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
+            .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
 
         </style>
 

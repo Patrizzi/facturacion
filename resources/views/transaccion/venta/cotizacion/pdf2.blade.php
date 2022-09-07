@@ -13,7 +13,7 @@
     .form-control, .single-line {
         background-color: #FFFFFF;
         background-image: none;
-        border: 1px solid #808080;
+        border: 1px solid #3D3D3D;
         border-radius: 10px;
         color: inherit;
         display: block;
@@ -33,7 +33,7 @@
 <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
     <tr>
         @include('layout_cabecera_ventas_pdf')
-       <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
+       <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
         <center>
             <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
             <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACIÓN ELECTRONICA</h2><br>
@@ -45,7 +45,7 @@
 <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
     <table style="width: 100%;border-collapse:separate;margin-top: -20px">
         <tr >
-            <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto" >
+            <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                 <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
                 <strong>Nombre o Empresa:</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
@@ -56,7 +56,7 @@
                 @endif
             </td>
             <th style="width: 5%;border-color: white"></th>
-            <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 8px;width: auto">
+            <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                 <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
                 <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
                 <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
@@ -121,7 +121,7 @@
          </h3>
      </td>
      {{-- @if($regla== "factura") --}}
-     <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
+     <td   style="width: auto; ;border: 1px #3D3D3D solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
         <span > Subtotal:</span>
         <br>
         <span > Op. Agravada:</span> <br>
@@ -130,7 +130,7 @@
         <span > I.G.V.:</span> <br>
         <span > Importe Total:</span> <br>
     </td>
-    <td   style="width: auto; border: 1px #e5e6e7 solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
+    <td   style="width: auto; border: 1px #3D3D3D solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
         <span>{{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
         <span>{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
         <span>{{$simbologia}} {{number_format($cotizacion->op_inafecta,2)}}</span><br>
@@ -139,10 +139,10 @@
         <span>{{$simbologia}} {{number_format($end,2)}}</span><br>
     </td>
     {{-- @else
-    <td   style="width: auto; ;border: 1px #e5e6e7 solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
+    <td   style="width: auto; ;border: 1px #3D3D3D solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
         <span ><strong>Importe Total:</strong></span><br>
     </td>
-    <td   style="width: auto; border: 1px #e5e6e7 solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
+    <td   style="width: auto; border: 1px #3D3D3D solid;border-top-left-radius: 8px 0 0 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
         <span>{{$simbologia}} {{$end=number_format(round($sub_total, 2),2)}}</span><br>
     </td>
     @endif --}}
@@ -188,7 +188,7 @@
 {{--  --}}
 <style>
 
-    *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    *{font-size: 14px;color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";color: black}
     .cero{
         margin-bottom: 0px;
 
@@ -196,11 +196,12 @@
     .table-bordered .blanco {
         border: none;
     }
-    .blanco{border: none;
-        border: border-color: #808080 ;
+    .blanco{
+        border: none;
+        border-color: #3D3D3D ;
     }
     .border {
-        border-color: #808080;
+        border-color: #3D3D3D;
         border-width: 1px;
         border-style: solid;
     }
