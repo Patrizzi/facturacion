@@ -71,7 +71,7 @@ class ViewController extends Controller
         $all_m_fact += round($sub_op_m + ($sub_op_m * ($igv_total/100)),2);
       }else{
         $op_grav_m_2 = $value_m->op_gravada/$value_m->cambio;
-        $op_ina_m_2 = $value_m->op_inafecta/$value->cambio;
+        $op_ina_m_2 = $value_m->op_inafecta/$value_m->cambio;
         $op_exo_m_2 = $value_m->op_exonerada/$value_m->cambio;
         $sum_op_m_2 = $op_grav_m_2 + $op_ina_m_2 + $op_exo_m_2;
         $all_m_fact_m2 += round($sum_op_m_2 + ($sum_op_m_2 * ($igv_total/100)),2);
