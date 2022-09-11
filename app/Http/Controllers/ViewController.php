@@ -41,21 +41,21 @@ class ViewController extends Controller
     ;
     // $fac_ma_mes = [];
     /* Caclulo de Compras Facturas */
-    $fac_mes=Facturacion::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('f_electronica',1)->get();
-    $fac_ma_mes=Facturacion_m::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('f_electronica',1)->get();
+    $fac_mes=Facturacion::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('f_electronica',1)->where('nota_credito', 0)->get();
+    $fac_ma_mes=Facturacion_m::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('f_electronica',1)->where('nota_credito', 0)->get();
     // return count($fac_ma_mes);
     $all_fact = 0;
     $all_fact_m2 = 0;    
     // if(count($fac_mes) > 0){
       
     foreach ($fac_mes as $value) {
-      if($value->moneda_id > 0){
+      if($value->nombre == "soles"){
         $sub_op = $value->op_gravada + $value->op_inafecta + $value->op_exonerada;
         $all_fact += round($sub_op + ($sub_op * ($igv_total/100)),2);
       }else{
-        $op_grav_m2 = $value->op_gravada/$value->cambio;
-        $op_ina_m2 = $value->op_inafecta/$value->cambio;
-        $op_exo_m2 = $value->op_exonerada/$value->cambio;
+        $op_grav_m2 = $value->op_gravada*$value->cambio;
+        $op_ina_m2 = $value->op_inafecta*$value->cambio;
+        $op_exo_m2 = $value->op_exonerada*$value->cambio;
         $sum_op_m2 = $op_grav_m2 + $op_ina_m2 + $op_exo_m2;
         $all_fact_m2 += round($sum_op_m2 + ($sum_op_m2 * ($igv_total/100)),2);
       }      
@@ -66,13 +66,13 @@ class ViewController extends Controller
     // return count($fac_ma_mes);
     // if(count($fac_ma_mes) > 0){  
     foreach ($fac_ma_mes as $value_m) {
-      if($value_m->moneda_id == 1){
+      if($value_m->moneda_id == "soles"){
         $sub_op_m = $value_m->op_gravada + $value_m->op_inafecta + $value_m->op_exonerada;
         $all_m_fact += round($sub_op_m + ($sub_op_m * ($igv_total/100)),2);
       }else{
-        $op_grav_m_2 = $value_m->op_gravada/$value_m->cambio;
-        $op_ina_m_2 = $value_m->op_inafecta/$value_m->cambio;
-        $op_exo_m_2 = $value_m->op_exonerada/$value_m->cambio;
+        $op_grav_m_2 = $value_m->op_gravada*$value_m->cambio;
+        $op_ina_m_2 = $value_m->op_inafecta*$value_m->cambio;
+        $op_exo_m_2 = $value_m->op_exonerada*$value_m->cambio;
         $sum_op_m_2 = $op_grav_m_2 + $op_ina_m_2 + $op_exo_m_2;
         $all_m_fact_m2 += round($sum_op_m_2 + ($sum_op_m_2 * ($igv_total/100)),2);
       }      

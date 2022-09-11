@@ -316,23 +316,28 @@
                     
                 </div>
                 <div class="nav-bar navbar-center">
-                    <div class=" minimalize-style-3 " style="vertical-align: middle;width: 13em">
-                        <p class="col-lg-12">
+                    <div class=" minimalize-style-3 " style="vertical-align: middle;width: 21em">
+                        <div class="col-lg-12" style="padding: 5px">
                             <div class="row">
                                 @if (isset($tipo_cambio->fecha))
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <center style="font-size: 14px;color: black">
                                             <strong>Compra :</strong><br>{{$tipo_cambio->compra}}
                                         </center>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <center style="font-size: 14px;color: black">
                                             <strong>Venta :</strong><br>{{$tipo_cambio->venta}}
                                         </center>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <center style="font-size: 14px;color: black">
+                                            <strong>Paralelo :</strong><br>{{$tipo_cambio->paralelo}}
+                                        </center>
+                                    </div>
                                 @endif
                             </div>
-                        </p>
+                        </div>
                     </div>  
                 </div>
                 <ul class="nav navbar-top-links navbar-right" style="padding: 10px 0">
