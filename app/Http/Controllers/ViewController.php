@@ -47,9 +47,9 @@ class ViewController extends Controller
     $all_fact = 0;
     $all_fact_m2 = 0;    
     // if(count($fac_mes) > 0){
-      
+    
     foreach ($fac_mes as $value) {
-      if($value->nombre == "soles"){
+      if($value->moneda->nombre == "soles"){
         $sub_op = $value->op_gravada + $value->op_inafecta + $value->op_exonerada;
         $all_fact += round($sub_op + ($sub_op * ($igv_total/100)),2);
       }else{
@@ -66,7 +66,7 @@ class ViewController extends Controller
     // return count($fac_ma_mes);
     // if(count($fac_ma_mes) > 0){  
     foreach ($fac_ma_mes as $value_m) {
-      if($value_m->moneda_id == "soles"){
+      if($value_m->moneda->nombre == "soles"){
         $sub_op_m = $value_m->op_gravada + $value_m->op_inafecta + $value_m->op_exonerada;
         $all_m_fact += round($sub_op_m + ($sub_op_m * ($igv_total/100)),2);
       }else{
@@ -98,13 +98,13 @@ class ViewController extends Controller
     $all_bol = 0;
     $all_bol_m2 = 0;
     foreach ($bol_mes as $value_bol) {
-      if($value_bol->moneda_id == 1 ){
+      if($value_bol->moneda->nombre == "soles" ){
         $b_sub_op = $value_bol->op_gravada + $value_bol->op_exonerada + $value_bol->op_inafecta;
         $all_bol += round($b_sub_op + ($b_sub_op * ($igv_total/100)),2);
       }else{
-        $b_op_grav_m2 = $value_bol->op_gravada/$value_bol->cambio;
-        $b_op_ina_m2 = $value_bol->op_inafecta/$value_bol->cambio;
-        $b_op_exo_m2 = $value_bol->op_exonerada/$value_bol->cambio;
+        $b_op_grav_m2 = $value_bol->op_gravada*$value_bol->cambio;
+        $b_op_ina_m2 = $value_bol->op_inafecta*$value_bol->cambio;
+        $b_op_exo_m2 = $value_bol->op_exonerada*$value_bol->cambio;
         $b_sum_op_m2 = $b_op_grav_m2 + $b_op_ina_m2 + $b_op_exo_m2;
         $all_bol_m2 += round($b_sum_op_m2 + ($b_sum_op_m2 * ($igv_total/100)),2);
       }
@@ -112,13 +112,13 @@ class ViewController extends Controller
     $all_m_bol = 0;
     $all_m_bol_m2 = 0;
     foreach ($bol_ma_mes as $value_bol_m) {
-      if($value_bol_m->moneda_id == 1 ){
+      if($value_bol_m->moneda->nombre == "soles" ){
         $b_sub_m_op = $value_bol_m->op_gravada + $value_bol_m->op_exonerada + $value_bol_m->op_inafecta;
         $all_m_bol += round($b_sub_m_op + ($b_sub_m_op * ($igv_total/100)),2);
       }else{
-        $b_op_grav_m_2 = $value_bol_m->op_gravada/$value_bol_m->cambio;
-        $b_op_ina_m_2 = $value_bol_m->op_inafecta/$value_bol_m->cambio;
-        $b_op_exo_m_2 = $value_bol_m->op_exonerada/$value_bol_m->cambio;
+        $b_op_grav_m_2 = $value_bol_m->op_gravada*$value_bol_m->cambio;
+        $b_op_ina_m_2 = $value_bol_m->op_inafecta*$value_bol_m->cambio;
+        $b_op_exo_m_2 = $value_bol_m->op_exonerada*$value_bol_m->cambio;
         $b_sum_op_m_2 = $b_op_grav_m_2 + $b_op_ina_m_2 + $b_op_exo_m_2;
         $all_m_bol_m2 += round($b_sum_op_m_2 + ($b_sum_op_m_2 * ($igv_total/100)),2);
       }
