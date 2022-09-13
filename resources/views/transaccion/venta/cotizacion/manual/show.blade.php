@@ -662,7 +662,8 @@
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term // search term 
+                        search: params.term, // search term 
+                        tipo_doc: 'manual'
                     };
                 },
                 processResults: function (data) {
@@ -740,7 +741,7 @@
             success: function (msg) {
                 if(msg.price == 0 && msg.amount == 0){
                     // $(`#precio${a}`).val(0);
-                    $(`#cantidad${a}`).val(0);
+                    $(`#cantidad${a}`).val(1);
                     $(`#cantidad${a}`).attr('max', msg.amount );
                     $(`#cantidad`).attr('max', msg.amount );
                     $(`#precio_oficial${a}`).val(msg.price)
