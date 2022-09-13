@@ -226,11 +226,11 @@ Route::group(
 
 		Route::resource('/guia_remision','GuiaRemisionController');
 		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
-		Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
+		// Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
 		Route::post('/guia_remision/peso_stock','GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
 		/* REMISION MANUAL */
 		Route::resource('/guia_remision_manual','GuiaRemisionManualController');
-		Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
+		// Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
 		Route::post('/guia_remision_manual/peso','GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
 		Route::post('/guia_remision_manual/almacen_guia','GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
 		
@@ -252,6 +252,7 @@ Route::group(
 		Route::post('parameter_call/checkEmailCredential', 'ParameterCallController@checkEmailCredential')->name('pa.check_email');
 		Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
 		Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
+		Route::post('parameter_call/ajax_remision', 'ParameterCallController@ajax_remision')->name('pa.ajax_remision');
 
 		Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 

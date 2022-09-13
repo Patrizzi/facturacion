@@ -326,7 +326,7 @@
             placeholder: "Seleccionar Producto",
             ajax: {
                 minimumInputLength: 1,
-                url: "{{ route('remision.ajax_producto') }}",
+                url: "{{ route('pa.ajax_remision') }}",
                 dataType: 'json',
                 type: "POST",
                 // delay: 1500,

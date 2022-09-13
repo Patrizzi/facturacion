@@ -222,12 +222,12 @@
                                         <input style="width: 76px" type='text' id='precio_oficial{{$h}}' name='precio_oficial[]' ondblclick="copy({{$h}})"  class="precio_oficial{{$h}} p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                                     </td>
                                     <td>
-                                        <input style="width: 76px" type='text' id='precio_s_igv{{$h}}' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio}}" />
+                                        <input style="width: 76px" type='text' id='precio_s_igv{{$h}}' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio}}" maxlength="15"/>
                                         <input hidden type='text' id='precio_s_igv_float{{$h}}' name='precio_s_igv_float'  class=" form-control precio_s_igv_float" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio * $cotizacion_m_regs->cantidad}}" />
                                     </td>
                                     <td>
                                         
-                                        <input style="width: 76px" type='text' id='precio_c_igv{{$h}}' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{round($cotizacion_m_regs->precio * $igv_1 ,2)}}" />
+                                        <input style="width: 76px" type='text' id='precio_c_igv{{$h}}' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{round($cotizacion_m_regs->precio * $igv_1 ,2)}}" maxlength="15" />
                                         <span hidden {{$p_igv = $cotizacion_m_regs->precio * $igv_1}}></span>
                                     </td> 
                                     <td>
@@ -742,8 +742,8 @@
                 if(msg.price == 0 && msg.amount == 0){
                     // $(`#precio${a}`).val(0);
                     $(`#cantidad${a}`).val(1);
-                    $(`#cantidad${a}`).attr('max', msg.amount );
-                    $(`#cantidad`).attr('max', msg.amount );
+                    // $(`#cantidad${a}`).attr('max', msg.amount );
+                    // $(`#cantidad`).attr('max', msg.amount );
                     $(`#precio_oficial${a}`).val(msg.price)
                 }else{
                     // $(`#precio${a}`).val(1);

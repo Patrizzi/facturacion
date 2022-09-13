@@ -81,28 +81,11 @@ class GuiaRemisionManualController extends Controller
         return view('transaccion.venta.guia_remision.guia_manual.create',compact('empresa','clientes','almacen','motivo_traslado','vehiculo','transporte_publico','personal','productos','codigo_guia'));
     }
 
-    public function ajax_producto(Request $request){
-        $search = $request->search;
-        if($search == ''){
-            $productos = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
-        }else{
-            $productos = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
-        }
-        foreach($productos as $prods){
-            $products_array[] = array(
-                "id"=>$prods->id,
-                "cod_prod"=>$prods->codigo_producto,
-                "cod_origi"=>$prods->codigo_original,
-                "nombre"=>$prods->nombre
-            );
-        }
-        return $products_array;
-    }
     public function peso_ajax(Request $request){
         $article = $request->get('articulo');
-        $id = explode(" ",$article);
+        $id = explode(" | ",$article);
 
-        $product = Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
+        $product = Producto::where('id',$id[0])->where('codigo_producto',$id[1])->where('codigo_original',$id[2])->first();
 
         $sep_esc = explode(' ',$product->peso);
 

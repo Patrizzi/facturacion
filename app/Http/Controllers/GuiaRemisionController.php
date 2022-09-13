@@ -112,30 +112,14 @@ class GuiaRemisionController extends Controller
 
         return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico'));
     }
-    public function ajax_producto(Request $request){
-        $search = $request->search;
-        if($search == ''){
-            $productos = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
-        }else{
-            $productos = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
-        }
-        foreach($productos as $prods){
-            $products_array[] = array(
-                "id"=>$prods->id,
-                "cod_prod"=>$prods->codigo_producto,
-                "cod_origi"=>$prods->codigo_original,
-                "nombre"=>$prods->nombre
-            );
-        }
-        return $products_array;
-    }
+    
     public function peso_stock(Request $request){
         $article = $request->get('articulo');
         $almacen = $request->get('almacen');
-        $id = explode(" ",$article);
-
-        $product = Producto::where('id',$id[0])->where('codigo_producto',$id[2])->where('codigo_original',$id[4])->first();
-
+        $id = explode(" | ",$article);
+        // return $id;
+        $product = Producto::where('id',$id[0])->where('codigo_producto',$id[1])->where('codigo_original',$id[2])->first();
+        
         $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id', $product->id)->first();
         $sep_esc = explode(' ',$product->peso);
         $peso_pr = $sep_esc[0];

@@ -382,4 +382,24 @@ class ParameterCallController extends Controller
         $convertido = "Son : "."$letra_final"."con"."$end_final"."/100 ".$moneda;
         return $convertido;
     }
+    //* LLAMADO PARA AJAX PRODUCTO EN GUIA REMISION NORMAL Y MANUAL
+    public function ajax_remision(Request $request){
+        $search = $request->search;
+        if($search == ''){
+            $productos = Producto::orderby('nombre','desc')->select('id','codigo_producto','codigo_original','nombre','estado_anular')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->limit(5)->get();
+        }else{
+            $productos = Producto::orderby('nombre','asc')->select('id','codigo_producto','codigo_original','nombre','estado_anular')->where('codigo_producto', 'like', '%' .$search . '%')->orWhere('nombre', 'like', '%' .$search . '%')->orWhere('codigo_original', 'like', '%' .$search . '%')->limit(5)->get();
+        }
+        foreach($productos as $prods){
+            if($prods->estado_anular == "1"){
+                $products_array[] = array(
+                    "id"=>$prods->id,
+                    "cod_prod"=>$prods->codigo_producto,
+                    "cod_origi"=>$prods->codigo_original,
+                    "nombre"=>$prods->nombre
+                );
+            }
+        }
+        return $products_array;
+    }
 }
