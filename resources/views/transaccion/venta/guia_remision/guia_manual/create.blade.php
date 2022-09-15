@@ -386,14 +386,14 @@
                     <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                 </td>
                 <td>
-                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57">
+                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </td>
                 <td>
                     <input type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
                 </td>
                 <td>
                     <div class="input-group">
-                        <input type="text" name="peso[]" id="peso${i}" class="form-control" required step="0.01" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
+                        <input type="text" name="peso[]" id="peso${i}" class="form-control" required step="0.01" onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
                         <div class="input-group-append">
                             <span class="input-group-addon">KG</span>
                         </div>
