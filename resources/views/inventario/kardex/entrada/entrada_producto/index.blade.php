@@ -55,15 +55,15 @@
                                     <td>
                                         <center>
                                             @if($array_final[$value]==1)
-                                            @if($kardex_entrada->estado==1)
-                                            <form action="{{ route('kardex-entrada.destroy', $kardex_entrada->id)}}" method="POST">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-s-m btn-info">Anular </button>
-                                            </form>
-                                            @else
-                                            <button class="btn btn-s-m btn-danger">Anulado</button>
-                                            @endif
+                                                @if($kardex_entrada->estado==1)
+                                                <input type="hidden" name="kardex_nombre_{{$kardex_entrada->id}}" id="kardex_nombre_{{$kardex_entrada->id}}" value="{{$kardex_entrada->codigo_guia}}"/>
+                                                <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$kardex_entrada->id}} )">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i> Anular
+                                                </button>
+                                                {{-- @endif --}}
+                                                @else
+                                                    <button class="btn btn-s-m btn-secondary">Anulado</button>
+                                                @endif
                                             @else
                                             <button class="btn btn-s-m btn-info">Guia en circulacion</button>
 
@@ -80,7 +80,35 @@
         </div>
     </div>
 </div>
-
+{{-- <form action="{{ route('kardex-entrada.destroy', $kardex_entrada->id)}}" method="POST">
+    @csrf
+    @method('delete')
+    <button type="submit" class="btn btn-s-m btn-info">Anular </button>
+</form> --}}
+<!-- Modal Universal Para Anulacion de Kardexs -->
+<div class="modal fade" id="servicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">
+        <div class="modal-content" >
+            <div class="modal-body" style="padding: 0px;">
+                <div class="ibox-content float-e-margins">
+                        <h3 class="font-bold col-lg-12" align="center">
+                            ¿Esta Seguro que Deseas Anular el Kardex Entrada con guia N°:<br><span id="kardex_nombre"> </span>? <br>
+                            <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>
+                        </h3>
+                    <p align="center">
+                        <form action="{{ route('kardex-entrada.destroy')}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id_kardex" id="kardex_id_form" value="">
+                            <center>
+                                <button type="submit" class="btn btn-w-m btn-primary">Anular</button>
+                            </center>
+                        </form>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -102,13 +130,7 @@
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
+            buttons: [{
             customize: function (win){
                 $(win.document.body).addClass('white-bg');
                 $(win.document.body).css('font-size', '10px');
@@ -123,6 +145,14 @@
     });
 
     });
+
+    function abrir_modal(a){
+        var nombre = document.getElementById(`kardex_nombre_${a}`).value;
+        document.getElementById(`kardex_nombre`).innerHTML = nombre;
+        document.getElementById(`kardex_id_form`).value = a;
+        $('#servicio_modal').modal('show');
+        
+    }
 
 </script>
 @endsection

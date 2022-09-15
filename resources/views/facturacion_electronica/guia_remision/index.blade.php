@@ -205,9 +205,9 @@
                                                     <td>{{$remision_manuals->fecha_emision}}</td>
                                                     <td>{{$remision_manuals->fecha_entrega}}</td>
                                                     <td>
-                                                        @if($guia_remision->tipo_transporte==0)
+                                                        @if($remision_manuals->tipo_transporte==0)
                                                             Sin Trasporte
-                                                        @elseif($guia_remision->tipo_transporte==1)
+                                                        @elseif($remision_manuals->tipo_transporte==1)
                                                             Trasporte Publico
                                                         @else
                                                         @endif

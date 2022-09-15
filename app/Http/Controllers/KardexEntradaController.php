@@ -528,8 +528,10 @@ class KardexEntradaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request)
     {
+      // return ;
+      $id = $request->id_kardex;
       $Kardex_entrada=Kardex_entrada::find($id);
       $bucador_registro_kardex=kardex_entrada_registro::where('kardex_entrada_id',$id)->get();
       foreach ($bucador_registro_kardex as $registro => $ids) {

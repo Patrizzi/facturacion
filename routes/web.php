@@ -370,6 +370,7 @@ Route::group(
 
 		Route::resource('/kardex-entrada-Distribucion','KardexEntradaDistribucionController');
 		Route::resource('/kardex-entrada','KardexEntradaController');
+		Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
 		Route::post('/kardex-entrada/inventario-inicial','KardexEntradaController@InventarioInicial')->name('kardex-entrada.i_inicial');
 
 
