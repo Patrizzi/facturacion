@@ -277,7 +277,7 @@
                                             </td>
                                             <td>
                                                 <center>
-                                                    <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
+                                                    <form action="{{route('facturacion_electronica.guia_remision_m_baja_sunat')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="guia_m_id" value="{{$guia_remision_m->id}}">
                                                         <button type="submit" class="btn btn-w-m btn-danger">Anular</button>

@@ -135,7 +135,7 @@ Route::group(
 		
 		//guia remision baja
 		Route::post('/facturacion_electronica_guia_remision_baja_prueba','FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
-		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_sunat');
+		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_baja_sunat');
 		
 		//Nota Credito
 		Route::get('/facturacion_electronica_nota_credito','FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
