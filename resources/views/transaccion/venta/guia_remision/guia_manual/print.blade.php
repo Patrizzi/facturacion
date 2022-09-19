@@ -152,7 +152,7 @@
                     </div>
                 </footer>
                 <br>
-                @include('layout_bancos')
+                {{-- @include('layout_bancos') --}}
                 <br>
                 <div class="row">
                     <div class="col-sm-3">
