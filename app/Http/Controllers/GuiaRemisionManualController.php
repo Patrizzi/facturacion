@@ -192,7 +192,7 @@ class GuiaRemisionManualController extends Controller
             $prod_id[] = $sep_esc[0];
         }
 
-        
+        Cliente::cliente_update($cliente);
         /* Guardado en tabla  */
         $guia_remision_m = new GuiaRemisionManual();
         $guia_remision_m->cod_guia = $codigo_guia;
@@ -260,7 +260,7 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
         $i = 1;
         $pdf=PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',compact('guia_remision_m','guia_remision_m_reg','empresa','i'));
-        return $pdf->download('GuiaRemisionM - '.$guia_remision_m->cod_guia.'.pdf');
+        return $pdf->download('GRM - '.$guia_remision_m->cod_guia.'.pdf');
 
         // return $guia_remision_m;
                 

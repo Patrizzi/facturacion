@@ -28,4 +28,5 @@ class Guia_remision extends Model
     public function vehiculo_publicos(){
         return $this->belongsTo(TransportePublico::class,'vehiculo_publico');
     }
+    
 }

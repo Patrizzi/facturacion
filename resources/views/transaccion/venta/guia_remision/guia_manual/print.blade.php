@@ -202,6 +202,9 @@
         *{
             color: black;
         }
+        p.form-control{
+                        border-color: #3D3D3D;
+                    }
     </style>
     
     <!-- Mainly scripts -->

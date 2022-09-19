@@ -437,7 +437,9 @@
                 .form-control {
                     background-color: transparent !important;
                 }
-                
+                p.form-control{
+                        border-color: #3D3D3D;
+                    }         
             </style>
  
             <!-- Mainly scripts -->

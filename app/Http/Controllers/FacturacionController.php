@@ -921,11 +921,11 @@ return redirect()->route('facturacion.show',$facturacion->id);
         $banco_count=Banco::where('estado','0')->count();
         $i = 1;
 
-        $archivo=$name.'_'.$id;
+        // $archivo=$name.'_'.$id;
         // return view('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
         
         $pdf=PDF::loadView('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
-        return $pdf->download('Facturacion - '.$archivo.'.pdf');
+        return $pdf->download('Factura - '.$facturacion->codigo_fac.'.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }

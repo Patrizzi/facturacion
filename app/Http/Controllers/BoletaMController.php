@@ -459,10 +459,10 @@ class BoletaMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
 
-        $archivo=$name.'_'.$boleta->codigo_boleta;
+        // $archivo=$name.'_'.$boleta->codigo_boleta;
         // return View('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
         $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
-        return $pdf->download('Boleta Manual - '.$archivo.'.pdf');
+        return $pdf->download('BoletaM - '.$boleta->codigo_boleta.'.pdf');
     }
 
     /**

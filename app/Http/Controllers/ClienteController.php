@@ -188,8 +188,34 @@ class ClienteController extends Controller
         3 => $info['provincia'],
         4 => $info['distrito'],
         5 => $info['fechaInscripcion'],
+        6 => $info['ubigeo'],
       );
       return json_encode($datos);
-
     }
+    //* API PARA DNI *//
+    function dni(Request $request){
+      $dni=$request->get('dni');
+      $data = file_get_contents("https://dniruc.apisperu.com/api/v1/dni/".$dni."?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRlc2Fycm9sbG9Aanlwc2FjLmNvbSJ9.1Pt1A4PEFAGmFySlfVeFKZKuVCC-u_ZEW-KYQq-P57k");
+      $info = json_decode($data, true);
+
+      $clientes=Cliente::where('numero_documento',array($info['dni']))->first();
+      if (isset($clientes)) {
+        $ruc_view=$clientes->numero_documento;
+        $ifexiste='1';/*Existe*/
+      }
+      else{
+        $ruc_view=array($info['dni']);
+        $ifexiste='0';/*No Existe*/
+      }
+
+      $datos = array(
+        0 => $dni,
+        1 => $info['dni'],
+        2 => $info['nombres'],
+        3 => $info['apellidoPaterno'],
+        4 => $info['apellidoMaterno'],
+      );
+      return json_encode($datos);
+    }
+    
   }

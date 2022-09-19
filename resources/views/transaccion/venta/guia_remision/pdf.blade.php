@@ -155,7 +155,7 @@
         <br>
         <!-- Fin Totales de Productos -->
 
-        @include('layout_bancos_pdf')
+        {{-- @include('layout_bancos_pdf') --}}
 
           <div style="height: 100px"></div>
           <table style="border:  0px solid white">

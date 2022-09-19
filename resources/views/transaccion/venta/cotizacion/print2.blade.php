@@ -158,6 +158,9 @@
     *{
         color: black;
     }
+    p.form-control{
+                        border-color: #3D3D3D;
+                    }
 </style>
 <!-- Mainly scripts -->
 <script src="js/jquery-3.1.1.min.js"></script>

@@ -1430,7 +1430,7 @@ class CotizacionController extends Controller
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
                     if($check_desc <> 0){
-                        $precio_unitario = $precio - ($pro_ori*$check_desc/100);
+                        $precio_unitario = $precio - ($pre_prom*$check_desc/100);
                         $cotizacion_r_update->precio_unitario_desc = $precio_unitario;
                         $pre_uni_comi = $precio_unitario + ($precio_unitario*($comision/100));
                         $cotizacion_r_update->precio_unitario_comi = round($pre_uni_comi,2);
@@ -1609,16 +1609,15 @@ public function pdf(Request $request,$id){
     $sum=0;
     $i=1;
     $regla=$cotizacion->tipo;
-    $archivo=$name.$regla.$id.".pdf";
     // return "1";
     // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
     if($request->get('firma') == "0"){
         $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
-        return $pdf->download('Cotizacion - '.$archivo.'.pdf');
+        return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
     }else{
         $firma= EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
         $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'));
-        return $pdf->download('Cotizacion - '.$archivo.'.pdf');
+        return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
     }
 }
     //envio hacia facturar cambiar en caso incluya algo

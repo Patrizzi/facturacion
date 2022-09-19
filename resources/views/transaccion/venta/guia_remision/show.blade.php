@@ -249,7 +249,7 @@
         <br>
         <!-- Fin Totales de Productos -->
 
-@include('layout_bancos')
+{{-- @include('layout_bancos') --}}
 
       <br>
       <div class="row">

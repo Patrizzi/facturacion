@@ -455,10 +455,10 @@ class FacturacionMController extends Controller
         $banco_count=Banco::where('estado','0')->count();
         $i = 1;
 
-        $archivo=$name.'_'.$id;
+        // $archivo=$name.'_'.$id;
         
         $pdf=PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
-        return $pdf->download('Facturacion - '.$archivo.'.pdf');
+        return $pdf->download('FacturaM - '.$facturacion->codigo_fac.'.pdf');
     }
 
 

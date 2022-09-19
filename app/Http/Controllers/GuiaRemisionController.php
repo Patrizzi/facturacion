@@ -226,7 +226,7 @@ class GuiaRemisionController extends Controller
                 return "cantidad mayor al stock";
             }
         }
-
+        Cliente::cliente_update($id_cliente);
         $guia_remision = new Guia_remision;
         $guia_remision->cod_guia = $codigo_guia;
         $guia_remision->cliente_id = $id_cliente;
@@ -385,7 +385,7 @@ class GuiaRemisionController extends Controller
         $y = 0;
         // $archivo=$name.$regla.$id.".pdf";
         $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact('guia_remision', 'guia_registro', 'banco', 'empresa', 'banco_count','y'));
-        return $pdf->download('GuiaRemision - ' . '.pdf');
+        return $pdf->download('GR - '.$guia_remision->cod_guia .'.pdf');
     }
 
     public function show($id)

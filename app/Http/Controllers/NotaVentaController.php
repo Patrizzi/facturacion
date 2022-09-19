@@ -197,7 +197,7 @@ class NotaVentaController extends Controller
         $archivo = $nota_venta->cod_nota_venta.'-'.$empresa->ruc;
         // return view('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
         $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
-        return $pdf->download('PDF-DOC-'.$archivo.'.pdf');
+        return $pdf->download('NotaV '.$nota_venta->cod_nota_venta.'.pdf');
     }
     public function edit($id)
     {

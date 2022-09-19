@@ -166,7 +166,7 @@
 
             <br>
             <!-- Fin Totales de Productos -->
-            @include('layout_bancos')
+            {{-- @include('layout_bancos') --}}
       
                 <br>
                 <div class="row">
@@ -192,6 +192,9 @@
                     .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
                     *{
                         color: black;
+                    }
+                    p.form-control{
+                        border-color: #3D3D3D;
                     }
                 </style>
 

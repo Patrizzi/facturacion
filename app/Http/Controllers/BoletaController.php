@@ -897,9 +897,8 @@ return redirect()->route('boleta.show',$boleta->id);
         $sub_total=0;
         $boleta=Boleta::find($id);
         $i=1;
-        $archivo=$name.'_'.$id;
         $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
-        return $pdf->download('Boleta - '.$archivo.'.pdf');
+        return $pdf->download('Boleta - '.$boleta->codigo_boleta.'.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
     }

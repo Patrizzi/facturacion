@@ -403,6 +403,7 @@ Route::group(
 		//Agregado Rapido
 		Route::get('provedorruc', 'ProvedorController@ruc');
 		Route::get('clienteruc', 'ClienteController@ruc');
+		Route::get('clientedni', 'ClienteController@dni');
 		Route::resource('/provedor','ProvedorController');
 
 		Route::resource('/servicios','ServiciosController');

@@ -191,7 +191,7 @@
                                             <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                                         </td>
                                         <td>
-                                            <input type="text" name="cantidad[]" id="cantidad" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                            <input type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="mult_peso(0)">
                                         </td>
                                         <td>
                                             <input type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required>
@@ -203,6 +203,7 @@
                                                     <span class="input-group-addon">KG</span>
                                                 </div>
                                                 <input type="hidden" name="peso_view" id="peso_view0" onkeyup="sum_total()">
+                                                <input type="hidden" name="peso_ori" id="peso_ori0" onkeyup="sum_total()">
                                             </div>
                                         </td>
                                     </tr>
@@ -362,6 +363,8 @@
             },
             success: function (msg) {
                 $(`#peso${a}`).val(msg);
+                $(`#peso_view${a}`).val(msg);
+                $(`#peso_ori${a}`).val(msg);
                 sum_total();
             },
             error: function(eject) {
@@ -494,6 +497,22 @@
         console.log(tot);
         $('#peso_total').val(tot);
         
+    }
+    function mult_peso(b){
+        var cantidad = $(`#cantidad${b}`).val();
+        var peso_ori = $(`#peso_ori${b}`).val();
+        var peso_multi = parseInt(cantidad) * parseFloat(peso_ori);
+        $(`#peso_view${b}`).val(peso_multi);
+        $(`#peso${b}`).val(peso_multi);
+        sum_total();
+
+        
+
+        // $(`#peso${b}`).val(peso_multi);
+        
+
+        
+        // // var
     }
 </script>
 @endsection

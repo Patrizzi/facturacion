@@ -19,15 +19,27 @@
     <div class="modal-content">
       <div>
 
-        <div class="ibox-content" style="padding-bottom: 0px;">
+        <div class="ibox-content" style="padding-bottom: 0px;" id="consulta-ruc">
             <form>
                 {{ csrf_field() }}
-                <div class="row" style="padding-top:8px">
+                <div class="row" style="padding-top:8px" >
                     <label class="col-sm-3 col-form-label">Consultar R.U.C:</label>
                     <div class="col-sm-7">
-                        <input type="number"  class="form-control" class="ruc" id="ruc_cliente" name="ruc_cliente" required="required" autocomplete="off">
+                        <input type="text" pattern="\d*"   class="form-control" class="ruc" id="ruc_cliente" name="ruc_cliente" required="required" autocomplete="off" maxlength="11">
                     </div>
                     <div class="col-sm-2"> <button class="btn btn-info btn-lg botoncito_cliente" id="botoncito_cliente" name="btn" value="cliente"><i class="fa fa-search"></i> </button></div>
+                </div>
+            </form>
+        </div>
+        <div class="ibox-content" style="padding-bottom: 0px;display: none;" id="consulta-dni">
+            <form>
+                {{ csrf_field() }}
+                <div class="row" style="padding-top:8px" >
+                    <label class="col-sm-3 col-form-label">Consultar DNI:</label>
+                    <div class="col-sm-7">
+                        <input type="text" pattern="\d*" class="form-control" class="dni" id="dni_cliente" name="dni_cliente" required="required" autocomplete="off" maxlength="8">
+                    </div>
+                    <div class="col-sm-2"> <button class="btn btn-info btn-lg dni_boton_cliente" id="dni_boton_cliente" name="btn" value="cliente"><i class="fa fa-search"></i> </button></div>
                 </div>
             </form>
         </div>
@@ -49,6 +61,33 @@
                             $('#provincia_cli').val(datos[3]);
                             $('#distrito_cli').val(datos[4]);
                             $('#fechaInscripcion_cli').val(datos[5]);
+                            $('#ubigeo').val(datos[6]);
+                        }
+                    });
+                    return false;
+                });
+                
+            });
+            
+        </script>
+        <script>
+            $(function(){
+                $('#dni_boton_cliente').on('click', function(){
+                    var dni_cliente = $('#dni_cliente').val();
+                    var url = "{{ url('clientedni') }}";
+                    $.ajax({
+                        type:'GET',
+                        url:url,
+                        data:'dni='+dni_cliente,
+                        success: function(datos_dni){
+                            var datos = eval(datos_dni);
+                            $('#numero_ruc_cli').val(datos[0]);
+                            var nombre  = datos[2]+' '+datos[3]+' '+datos[4];
+                            $('#razon_social_cli').val(nombre);
+                            // $('#direccion_cli').val(datos[2]);
+                            // $('#provincia_cli').val(datos[3]);
+                            // $('#distrito_cli').val(datos[4]);
+                            // $('#fechaInscripcion_cli').val(datos[5]);
                         }
                     });
                     return false;
@@ -139,7 +178,7 @@
                                                 </div>
                                                 <div class="form-group col-lg-3 ">
                                                    <label>Código Postal *</label>
-                                                   <input value="150101" name="cod_postal" type="text" class="form-control required ">
+                                                   <input value="150101" name="cod_postal" id="ubigeo" type="text" class="form-control required ">
                                                </div>
                                                <div class="form-group col-lg-3 ">
                                                    <label>Aniversario *</label>
@@ -399,16 +438,25 @@
     function llamado_vuelta(){
         call_wizard();
         $('#numero_ruc_cli').attr('maxlength', 11);
+        $('#consulta-dni').css('display','none');
+        $('#consulta-ruc').css('display','block');
+        $('#botoncito_cliente').prop('disabled', false);
+
+        $('#dni_cliente').val('');
+        $('#ruc_cliente').val('');
+
     }
 </script>
 <script >
     function seleccionado(){
         var opt = $('#cliente_doc').val();
         if(opt=="DNI"){
-                // $('#consulta_p_input').prop('disabled', false);
+            $('#consulta-ruc').css('display','none');
+            $('#consulta-dni').css('display','block');
             $('#botoncito_cliente').prop('disabled', true);
-            $('#numero_ruc_cli').val('');
-            $('#numero_ruc_cli').attr('maxlength', 8);
+            $('#dni_cliente').val('');
+            // $('#dni_cliente').attr('maxlength', 8);
+            
             $('#direccion_cli').val('Lima');
             $('#distrito_cli').val('Lima');
             $('#razon_social_cli').val('');
@@ -420,11 +468,11 @@
             $('#distrito_cli').val('Lima');
             $('#razon_social_cli').val('');
         }else{
-            // $('#consulta_p_input').prop('disabled', 'disabled');
-            // document.getElementById('credito_pago').style.visibility = "initial";
+            $('#consulta-dni').css('display','none');
+            $('#consulta-ruc').css('display','block');
             $('#botoncito_cliente').prop('disabled', false);
-            $('#numero_ruc_cli').val('');
-            $('#numero_ruc_cli').attr('maxlength', 11);
+            $('#ruc_cliente').val('');
+            // $('#ruc_cliente').attr('maxlength', 11);
             $('#direccion_cli').val('Lima');
             $('#distrito_cli').val('Lima');
             $('#razon_social_cli').val('');

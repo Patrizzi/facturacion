@@ -733,25 +733,29 @@ class NotaCreditoController extends Controller
             $document = Facturacion::where('id',$notas_credito->facturacion_id)->first();
             $doc_reg = Facturacion_registro::where('facturacion_id',$document->id)->get();
             $estado=0;
+            $archivo  = $document->codigo_fac;
         }elseif($notas_credito->boleta_id != NULL){
             $document=Boleta::where('id',$notas_credito->boleta_id)->first();
             $doc_reg=Boleta_registro::where('boleta_id',$document->id)->get();
             $estado=1;
+            $archivo  = $document->codigo_boleta;
         }elseif($notas_credito->boleta_m_id != NULL){
             $document=Boleta_m::where('id',$notas_credito->boleta_m_id)->first();
             $doc_reg=Boleta_registros_m::where('boleta_m_id',$document->id)->get();
             $estado=3;
+            $archivo  = $document->codigo_boleta;
         }else{
             $document = Facturacion_m::where('id',$notas_credito->facturacion_m_id)->first();
             $doc_reg = Facturacion_registro_m::where('facturacion_m_id',$document->id)->get();
             $estado=2;
+            $archivo  = $document->codigo_fac;
         }
-        $archivo=$name;
+        // $archivo=$name;
         $u=1;
         $igv=Igv::first();
         $pdf=PDF::loadView('transaccion.venta.nota_credito.pdf',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg','u'));
         // return View('transaccion.venta.nota_credito.pdf',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg'));
-        return $pdf->download('Nota de Credito - '.$archivo.'.pdf');
+        return $pdf->download('NC - '.$archivo.'.pdf');
 
         // return view('transaccion.venta.nota_credito.print',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg'));
     }

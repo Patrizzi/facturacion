@@ -105,7 +105,7 @@ class CotizacionManualController extends Controller
         }
         $sucursal_nr_fac = str_pad($numero_serie_fac, 3, "0", STR_PAD_LEFT);
         $correlativo_fac=str_pad($correlativo_fac, 8, "0", STR_PAD_LEFT);        
-        $cotizacion_numero_fac="CMF".$sucursal_nr_fac."-".$correlativo_fac;
+        $cotizacion_numero_fac="CMF ".$sucursal_nr_fac."-".$correlativo_fac;
 
         $clientes=Cliente::all();
         $moneda=Moneda::where('principal','1')->first();
@@ -148,9 +148,9 @@ class CotizacionManualController extends Controller
         $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);        
         
         if($tipo == "factura"){
-            $cotizacion_numero="CMF".$sucursal_nr."-".$correlativo;    
+            $cotizacion_numero="CMF ".$sucursal_nr."-".$correlativo;    
         }else{
-            $cotizacion_numero="CMB".$sucursal_nr."-".$correlativo;
+            $cotizacion_numero="CMB ".$sucursal_nr."-".$correlativo;
         }
         return $cotizacion_numero;
     }
@@ -221,7 +221,7 @@ class CotizacionManualController extends Controller
 
             $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
             $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);        
-            $cotizacion_numero="CMF".$sucursal_nr."-".$correlativo;
+            $cotizacion_numero="CMF ".$sucursal_nr."-".$correlativo;
 
         }else{
             $tipo_cotizacion = "boleta";
@@ -245,7 +245,7 @@ class CotizacionManualController extends Controller
 
             $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
             $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-            $cotizacion_numero="CMB".$sucursal_nr."-".$correlativo;
+            $cotizacion_numero="CMB ".$sucursal_nr."-".$correlativo;
         }
          // obtención de Tipo de operación
          $operacion=$request->get('tipo_operacion');
@@ -521,10 +521,10 @@ class CotizacionManualController extends Controller
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
         
-        $archivo=$name.'_'.$id;
+        // $archivo=$name.'_'.$id;
         
         $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2'));
-        return $pdf->download('CotizacionManual - '.$archivo.'.pdf');
+        return $pdf->download($cotizacion_m->cod_cotizacion.'.pdf');
 
     }
     /**
