@@ -11,6 +11,7 @@ use App\Forma_pago;
 use App\Cliente;
 use App\Personal;
 use App\Personal_venta;
+use App\Kardex_entrada;
 use App\Igv;
 use App\Producto;
 use App\Servicios;
@@ -70,6 +71,11 @@ class FacturacionMController extends Controller
         $sucursal=1;
         $sucursal=Almacen::where('id',$sucursal)->first();
 
+        $inventario_inicial=Producto::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados ']);
+        }
         // Servicios
         $servicios=Servicios::where('estado_anular',0)->get();
 

@@ -75,13 +75,14 @@ class FacturacionController extends Controller
 // creacion para productos
     public function create(Request $request){
 
-        $inventario_inicial=Kardex_entrada::first();
-        if (isset($inventario_inicial)) {
-            if ( $inventario_inicial->estado==1) {
-                // return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
-            }
+        $almacen=$request->get('almacen');
+        $sucursal =Almacen::where('id', $almacen)->first();
+        
+        $inventario_inicial=Kardex_entrada::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados: '.$sucursal->nombre.'']);
         }
-
         // $kardex_prod=kardex_entrada_registro::join("productos","kardex_entrada_registro.producto_id","productos.id")
         // ->where('estado',1)->get();
 
@@ -102,7 +103,7 @@ class FacturacionController extends Controller
                 }
             }
         }
-        $sucursal =Almacen::where('id', $almacen)->first();
+        
         $servicios=Servicios::where('estado_anular',0)->get();
         //validacion si hay prductos en el almacen
         if(!isset($prod)){
@@ -227,7 +228,7 @@ class FacturacionController extends Controller
         /*Servicio*/
 
         // return $array2;
-        return view('transaccion.venta.facturacion.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ));
+        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ));
     }
 
     public function create_ms(Request $request){

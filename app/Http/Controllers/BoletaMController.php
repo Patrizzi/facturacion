@@ -15,6 +15,7 @@ use App\Producto;
 use App\TipoCambio;
 use App\Moneda;
 use App\Empresa;
+use App\Kardex_entrada;
 use App\Tipo_operacion_f;
 use App\Boleta_registros_m;
 use App\Cuotas_credito;
@@ -45,6 +46,11 @@ class BoletaMController extends Controller
      */
     public function create()
     {
+        $inventario_inicial=Producto::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados ']);
+        }
         // Forma de pago
         $forma_pagos=Forma_pago::all();
 

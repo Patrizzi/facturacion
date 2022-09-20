@@ -84,7 +84,14 @@ class CotizacionManualController extends Controller
         // Sucursal
         $sucursal_1=1;
         $sucursal=Almacen::where('id',$sucursal_1)->first();
-        
+
+        // Validador de contador en productos y servicios
+        $inventario_inicial=Producto::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados ']);
+        }
+
         $almacen = Almacen::where('estado','!=',1)->get();
         //Numero de factura 
         $cotizacion_fact=CotizacionManual::where('almacen_id',$sucursal->id)->where('tipo','factura')->latest()->first();

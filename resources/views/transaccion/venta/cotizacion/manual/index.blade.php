@@ -24,9 +24,10 @@
         <a class="alert-link" href="#">
             <li style="color: black">{{ Session::get('successMsg') }}</li>
         </a>
-    </div>
+    </div>  
 </div>
 @endif
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">

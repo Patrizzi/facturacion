@@ -140,7 +140,7 @@ class CotizacionController extends Controller
         $sucursal=Almacen::where('id',$almacen)->first();
 
         // Validador de contador en productos y servicios
-        $inventario_inicial=Kardex_entrada::where('estado',2)->first()->count();
+        $inventario_inicial=Kardex_entrada::count();
         $servicios = Servicios::count();
         if($inventario_inicial == 0 && $servicios == 0){
             return back()->withErrors(['No hay Productos o Servicios Agregados: '.$sucursal->nombre.'']);

@@ -69,15 +69,25 @@ class BoletaController extends Controller
      */
     public function create(Request $request)
     {
-        $inventario_inicial=Kardex_entrada::first();
-        if (isset($inventario_inicial)) {
-            if ( $inventario_inicial->estado==1) {
-                return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
-            }
-        }
+        // $inventario_inicial=Kardex_entrada::first();
+        // if (isset($inventario_inicial)) {
+        //     if ( $inventario_inicial->estado==1) {
+        //         return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
+        //     }
+        // }
 
         // $productos=Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
+        //validar almacen con prodcutos vacios
         $almacen_p=$request->get('almacen');
+        $sucursal = Almacen::where('id',$almacen_p)->first();
+        $inventario_inicial=Kardex_entrada::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados: '.$sucursal->nombre.'']);
+        }
+        
+        
+        
         $kardex_entrada=Kardex_entrada::where('almacen_id',$almacen_p)->get();
         $kardex_entrada_count=Kardex_entrada::where('almacen_id',$almacen_p)->count();
 
@@ -94,21 +104,21 @@ class BoletaController extends Controller
                 }
             }
         }
-        //validar almacen con prodcutos vacios
-        if(!isset($prod)){
-            return redirect()->route('boleta.index')->with('repite', 'No hay productos en el almacen seleccionado');
-        }
+        
+        // if(!isset($prod)){
+        //     return redirect()->route('boleta.index')->with('repite', 'No hay productos en el almacen seleccionado');
+        // }
 
-        $lista=array_values(array_unique($prod));
-        $lista_count=count($lista);
+        // $lista=array_values(array_unique($prod));
+        // $lista_count=count($lista);
 
-        for($x=0;$x<$lista_count;$x++){
-         $validacion[$x]=Producto::where('estado_anular',1)->where('estado_id','!=',2)->where('id',$lista[$x])->first();
-         if(!$validacion[$x]==NULL){
-            $productos[]=Producto::where('estado_anular',1)->where('estado_id','!=',2)->where('id',$lista[$x])->first();
-        }
+        // for($x=0;$x<$lista_count;$x++){
+        //  $validacion[$x]=Producto::where('estado_anular',1)->where('estado_id','!=',2)->where('id',$lista[$x])->first();
+        //  if(!$validacion[$x]==NULL){
+        //     $productos[]=Producto::where('estado_anular',1)->where('estado_id','!=',2)->where('id',$lista[$x])->first();
+        // }
             // $productos[]=Producto::where('estado_anular',1)->where('estado_id','!=',2)->where('id',$lista[$x])->first();
-    }
+    // }
 
     $moneda=Moneda::where('principal','1')->first();
 
@@ -195,7 +205,7 @@ class BoletaController extends Controller
     }
     $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
 
-    return view('transaccion.venta.boleta.create',compact('productos','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','sucursal','boleta_numero','tipo_operacion'));
+    return view('transaccion.venta.boleta.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','sucursal','boleta_numero','tipo_operacion'));
 
 }
 
@@ -852,38 +862,52 @@ return redirect()->route('boleta.show',$boleta->id);
      */
     public function show($id)
     {
-        // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
-        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=Boleta::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('boleta.index'); }
-
+        $boleta=Boleta::find($id);
         $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
+        //validar almacen con prodcutos vacios
+        $inventario_inicial=Kardex_entrada::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados: '.$boleta->almacen->nombre.'']);
+        }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        
+
+        
         $igv=Igv::first();
         $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
-        $boleta=Boleta::find($id);
+        
         return view('transaccion.venta.boleta.show', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
     }
 
     public function print($id){
-        // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=kardex_entrada::where('estado',2)->first();
-        if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
-
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Boleta::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('boleta.index'); }
+
+        $boleta=Boleta::find($id);
+        //validar almacen con prodcutos vacios
+        $inventario_inicial=Kardex_entrada::count();
+        $servicios = Servicios::count();
+        if($inventario_inicial == 0 && $servicios == 0){
+            return back()->withErrors(['No hay Productos o Servicios Agregados: '.$boleta->almacen->nombre.'']);
+        }
+
+        
 
         $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
         $igv=Igv::first();
         $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
-        $boleta=Boleta::find($id);
+        
         return view('transaccion.venta.boleta.print', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
     }
     public function pdf(Request $request,$id){
