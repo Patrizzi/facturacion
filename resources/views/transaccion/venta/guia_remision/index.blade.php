@@ -9,6 +9,13 @@
 
 @section('content')
 <!-- modal -->
+@if($valor_error == 1)
+<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+    <a class="alert-link" href="../vehiculos">
+        <li class="error" style="color: red">{{ $message }}</li>
+    </a>
+</div>
+@endif
 <div class="row">
     <div class="col-lg-12">
         <div id="modal-form" class="modal fade" aria-hidden="true">
@@ -77,6 +84,13 @@
 </div>
 </div>
 {{-- fimodal --}}
+@if($valor_error == 1)
+<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+    <a class="alert-link" href="../vehiculos">
+        <li class="error" style="color: red">{{ $message }}</li>
+    </a>
+</div>
+@endif
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">

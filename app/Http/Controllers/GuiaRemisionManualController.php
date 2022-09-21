@@ -34,7 +34,16 @@ class GuiaRemisionManualController extends Controller
         $almacen = Almacen::where('estado',0)->get();
         $almacen_primero = Almacen::where('estado',0)->first();
         $conteo_almacen = Almacen::where('estado',0)->count();
-        return view('transaccion.venta.guia_remision.guia_manual.index',compact('guia_remision','almacen','conteo_almacen','almacen_primero','user_login'));
+        $vehiculo = Vehiculo::where('estado_activo', 0)->get();
+        $transporte_publico = TransportePublico::where('estado', 0)->get();
+        if(count($vehiculo) > 0 && count($transporte_publico) > 0){
+            $valor_error = 0;
+            $message = "";
+        }else{
+            $valor_error = 1;
+            $message = "Para crear una Guia de Remision agrege un Vehiculo, ya sea Publico o Privado ";
+        }
+        return view('transaccion.venta.guia_remision.guia_manual.index',compact('guia_remision','almacen','conteo_almacen','almacen_primero','user_login','valor_error','message'));
     }
 
     /**

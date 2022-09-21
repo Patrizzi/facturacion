@@ -27,7 +27,9 @@ class ViewController extends Controller
   {
     setlocale(LC_ALL, 'spanish');
 
-    $moneda_nacional=Moneda::where('id',1)->first();
+    $moneda_nacional=Moneda::where('nombre','soles')->first();
+    $moneda_ext=Moneda::where('nombre','Dolares')->first();
+
     $igv = Igv::first();
     $igv_total = $igv->igv_total;
     $consulta = TipoCambio::where('fecha', Carbon::now()->format('Y-m-d'))->first();
@@ -35,10 +37,13 @@ class ViewController extends Controller
 
     /* CALCULO PARA COMPRAS*/
     $all_kardex = Kardex_entrada::where('estado',1)->where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->get();
+    //* Moneda Nacional SOL
     $tot_sum_kardex = $all_kardex->sum('precio_nacional_total');
     $return_kardex = $moneda_nacional->simbolo.' '.number_format($tot_sum_kardex,2);
-
-    ;
+    //* Moneda EXTRANJERA Dollar
+    $tot_sum_kardex_ext = $all_kardex->sum('precio_extranjero_total');
+    $return_kardex_ext = $moneda_ext->simbolo.' '.number_format($tot_sum_kardex_ext,2);
+    // return $return_kardex_ext;
     // $fac_ma_mes = [];
     /* Caclulo de Compras Facturas */
     $fac_mes=Facturacion::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('f_electronica',1)->where('nota_credito', 0)->get();
@@ -58,7 +63,9 @@ class ViewController extends Controller
         $op_exo_m2 = $value->op_exonerada*$value->cambio;
         $sum_op_m2 = $op_grav_m2 + $op_ina_m2 + $op_exo_m2;
         $all_fact_m2 += round($sum_op_m2 + ($sum_op_m2 * ($igv_total/100)),2);
-      }      
+      }
+      //* Intento de 2 monedas *//
+      
     }
     // }
     $all_m_fact = 0;
@@ -214,6 +221,6 @@ class ViewController extends Controller
     }
     
     // return $array_prod_all;
-    return view('home', compact('empresa','return_tot_fact','return_tot_bol','return_kardex','array_prod_all'));
+    return view('home', compact('empresa','return_tot_fact','return_tot_bol','return_kardex','return_kardex_ext','array_prod_all'));
   }
 }

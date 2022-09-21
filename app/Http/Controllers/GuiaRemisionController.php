@@ -40,14 +40,22 @@ class GuiaRemisionController extends Controller
         if (empty($existe_id)) {
             return redirect()->route('kardex-entrada.index');
         }
-
+        $vehiculo = Vehiculo::where('estado_activo', 0)->get();
+        $transporte_publico = TransportePublico::where('estado', 0)->get();
+        if(count($vehiculo) > 0 && count($transporte_publico) > 0){
+            $valor_error = 0;
+            $message = "";
+        }else{
+            $valor_error = 1;
+            $message = "Para crear una Guia de Remision agrege un Vehiculo, ya sea Publico o Privado ";
+        }
         $user_login = auth()->user();
         $guia_remision = Guia_remision::all();
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $conteo_almacen = Almacen::where('estado', 0)->count();
 
-        return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login'));
+        return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login','valor_error','message'));
     }
 
     /**
@@ -109,6 +117,7 @@ class GuiaRemisionController extends Controller
         $transporte_publico = TransportePublico::where('estado', 0)->get();
         $empresa = Empresa::first();
         $igv = Igv::first();
+
 
         return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico'));
     }

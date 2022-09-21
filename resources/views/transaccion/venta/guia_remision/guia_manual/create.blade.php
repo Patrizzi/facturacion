@@ -103,8 +103,9 @@
                             <div class="row">
                                 <label class="col-sm-2">Tipo de Transporte:</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id">
-                                        <option value="0">Sin Transporte</option>
+                                    <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id" required>
+                                        <option value="">Escoge el tipo de transporte</option>
+                                        {{-- <option value="0">Sin Transporte</option> --}}
                                         <option value="1">Transporte Público</option>
                                         <option value="2">Transaporte Privado</option>
                                     </select>

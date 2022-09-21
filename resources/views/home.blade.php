@@ -28,6 +28,7 @@
                                 <div class="ibox-content" align="center">
                                     <strong>Entrada por kardex</strong>
                                     <h1>{{$return_kardex}}</h1>
+                                    {{-- <h1>{{$return_kardex_ext}}</h1>  --}}
                                 </div>
                             </div>
                         </div>
