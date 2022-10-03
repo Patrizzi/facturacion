@@ -28,7 +28,7 @@
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class=" animated fadeInRight">
         
         {{-- <div class="ibox-tools">
                <a class="btn btn-success"  href="{{route('facturacion.print' , $facturacion->id)}}" target="_blank">Imprimir</a>

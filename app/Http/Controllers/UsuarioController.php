@@ -163,7 +163,7 @@ class UsuarioController extends Controller
             $port = '465';
             $encryption = 'SSL';
             $yourEmail = 'desarrollo@jypsac.com';
-            $yourPassword = '=+WQyq73%cC"';
+            $yourPassword = 'FEfn202jG974F';
             $sendto = $email;
             $titulo = 'Sistema-Codigo Confirmacion';
             $mensaje = $cuerpo_mensaje;
@@ -301,7 +301,7 @@ class UsuarioController extends Controller
             $port = '465';
             $encryption = 'SSL';
             $yourEmail = 'desarrollo@jypsac.com';
-            $yourPassword = '=+WQyq73%cC"';
+            $yourPassword = 'FEfn202jG974F';
             $sendto = $correo_new;
             $titulo = 'Sistema-Codigo Confirmacion';
             $mensaje = $cuerpo_mensaje;

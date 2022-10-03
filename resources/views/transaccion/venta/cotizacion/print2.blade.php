@@ -25,8 +25,8 @@
 </head>
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="wrapper wrapper-content animated fadeInRight">
+    <div class=" animated fadeInRight">
+        <div class=" animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
