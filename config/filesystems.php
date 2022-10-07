@@ -52,6 +52,10 @@ return [
             'driver' => 'local',
             'root' => public_path('archivos/imagenes/marcas/'),
         ],
+        'kardex_entrada' => [
+            'driver' => 'local',
+            'root' => public_path('archivos/kardex_entrada/'),
+        ],
 
         // 'garantia_guia_ingreso' => [
         //     'driver' => 'local',

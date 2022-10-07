@@ -53,6 +53,7 @@
 										</div>
 									</div>
 								</th>
+									<th style="width: 100px">Unidad</th>
 									<th style="width: 100px">Cantidad</th>
 									<th style="width: 100px">Precio</th>
 									<th style="width: 100px">Total</th>
@@ -71,8 +72,9 @@
 										</select>
 										<input type="text" style="display:none"  class="celda"  name="articulo[]" id="input_prod1" >
 									</td>
+									<td><input type='text'  name='unidad[]' class="monto0  form-control"  onkeyup="multi(0);" value="1" required/></td>
 									<td><input type='text'  name='cantidad[]' class="monto0 form-control"  onkeyup="multi(0);"  required/></td>
-									<td><input type='text' name='precio[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
+									<td><input type='text' name='precio[]' class="monto0 precio0 form-control" onkeyup="multi(0);" required/></td>
 									<td><input disabled="disabled" type='text' id='total0' name='total[]' class="form-control" required/></td>
 									<span id="spTotal"></span>
 								</tr>
@@ -140,10 +142,13 @@ span.select2.select2-container.select2-container--default{
 		<input type="text" style="display:none"  class="celda"  name="articulo[]" id="input_prod${i}">
 		</td>
 		<td>
+		<input type='text' name='unidad[]' class="monto${i}  form-control" onkeyup="multi(${i});" required value="1"/>
+		</td>
+		<td>
 		<input type='text' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
 		</td>
 		<td>
-		<input type='text' name='precio[]' class="monto${i} form-control"  onkeyup="multi(${i});"  required/>
+		<input type='text' name='precio[]' class="monto${i} precio${i} form-control"  onkeyup="multi(${i});"  required/>
 		</td>
 		<td>
 		<input type='text' id='total${i}' name='total[]' class="form-control" disabled="disabled" required/>
@@ -197,18 +202,24 @@ span.select2.select2-container.select2-container--default{
 	
 <script>
 	function multi(a){
-		console.log(a);
+		// console.log(a);
 		var total = 1;
-			var change= false; //
-			$(`.monto${a}`).each(function(){
-				if (!isNaN(parseFloat($(this).val()))) {
-					change= true;
+		var change= false; //
+		var precio_empty = $(`.precio${a}`).val();
+		console.log(precio_empty);
+		$(`.monto${a}`).each(function(){
+			if (!isNaN(parseFloat($(this).val()))) {
+				change= true;
+				if(precio_empty.length == 0){
+					total = 0;
+				}else{
 					total *= parseFloat($(this).val());
 				}
-			});
-			total = (change)? total:0;
-			document.getElementById(`total${a}`).value = total;
-		}
+			}
+		});
+		total = (change)? total:0;
+		document.getElementById(`total${a}`).value = total;
+	}
 	</script>
 
 	<script>

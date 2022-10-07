@@ -96,9 +96,10 @@
                     
                     
                 </th>
-                <th style="width:150px">Cantidad</th>
-                <th style="width:150px">Precio </th>
-                <th style="background: #f3f3f4;width:150px">Precio Total</th>
+                <th style="width:100px">Unidad</th>
+                <th style="width:100px">Cantidad</th>
+                <th style="width:100px">Precio </th>
+                <th style="background: #f3f3f4;width:100px">Precio Total</th>
             </tr>
         </thead>
         <tbody id="assas">
@@ -110,23 +111,26 @@
                     <p align="left" class="form-control">{{$kardex_entradas_registro->producto->codigo_original}} - {{$kardex_entradas_registro->producto->nombre}}</p>
                     
                 </td>
-                <input type='hidden'  name='id_registro[]' id="id_registro" readonly="readonly" value="{{$kardex_entradas_registro->id}}" required hidden="hidden" class="id_registro" />
+                    <input type='hidden'  name='id_registro[]' id="id_registro" readonly="readonly" value="{{$kardex_entradas_registro->id}}" required hidden="hidden" class="id_registro" />
                     <input type='hidden'  name='registro_opt[]' id="registro_opt" readonly="readonly" value="{{$kardex_entradas_registro->producto->id}}" required  class="registro_opt" />
                 <td>
-                    <input type='text'  name='cantidad[]' class="monto{{$kardex_entradas_registro->id}} form-control" value="{{$kardex_entradas_registro->cantidad_inicial}}"  onkeyup="multi({{$kardex_entradas_registro->id}});"  required/>
+                    <input type='text'  name='unidad[]' class="monto{{$kardex_entradas_registro->id}} form-control" value="{{$kardex_entradas_registro->unidad}}"  onkeyup="multi({{$kardex_entradas_registro->id}});"  required/>
+                </td>
+                <td>
+                    <input type='text'  name='cantidad[]' class="monto{{$kardex_entradas_registro->id}} form-control" value="{{$kardex_entradas_registro->unidad_cantidad}}"  onkeyup="multi({{$kardex_entradas_registro->id}});"  required/>
                 </td>
                 <td>
                     @if($inventario_inicial->moneda->id == $moneda_nacional->id)
-                        <input type='text' name='precio[]' class="monto{{$kardex_entradas_registro->id}} form-control" onkeyup="multi({{$kardex_entradas_registro->id}});" value="{{$kardex_entradas_registro->precio_nacional}}" required/>
+                        <input type='text' name='precio[]' class="monto{{$kardex_entradas_registro->id}} precio{{$kardex_entradas_registro->id}} form-control" onkeyup="multi({{$kardex_entradas_registro->id}});" value="{{$kardex_entradas_registro->precio_nacional}}" required/>
                     @else
-                        <input type='text' name='precio[]' class="monto{{$kardex_entradas_registro->id}} form-control" onkeyup="multi({{$kardex_entradas_registro->id}});" value="{{$kardex_entradas_registro->precio_extranjero}}" required/>
+                        <input type='text' name='precio[]' class="monto{{$kardex_entradas_registro->id}} precio{{$kardex_entradas_registro->id}} form-control" onkeyup="multi({{$kardex_entradas_registro->id}});" value="{{$kardex_entradas_registro->precio_extranjero}}" required/>
                     @endif
                 </td>
                 <td>
                     @if($inventario_inicial->moneda->id == $moneda_nacional->id)
-                        <input disabled="disabled"  value="{{$kardex_entradas_registro->cantidad_inicial*$kardex_entradas_registro->precio_nacional}}" type='text' id='total{{$kardex_entradas_registro->id}}' name='total[]' class="form-control" required/>
+                        <input disabled="disabled"  value="{{$kardex_entradas_registro->cantidad*$kardex_entradas_registro->precio_nacional}}" type='text' id='total{{$kardex_entradas_registro->id}}' name='total[]' class="form-control" required/>
                     @else
-                        <input disabled="disabled"  value="{{$kardex_entradas_registro->cantidad_inicial*$kardex_entradas_registro->precio_extranjero}}" type='text' id='total{{$kardex_entradas_registro->id}}' name='total[]' class="form-control" required/>
+                        <input disabled="disabled"  value="{{$kardex_entradas_registro->cantidad*$kardex_entradas_registro->precio_extranjero}}" type='text' id='total{{$kardex_entradas_registro->id}}' name='total[]' class="form-control" required/>
                     @endif
                 </td>
                 <span id="spTotal"></span>
@@ -159,6 +163,9 @@ span.select2.select2-container.select2-container--default{
     display: block;
     padding: 3px 12px;
     border: 1px solid #e5e6e7;
+}
+.select2-selection__clear{
+ display: none;
 }
 </style>
 
@@ -245,16 +252,23 @@ span.select2.select2-container.select2-container--default{
     function multi(a){
         // console.log(a);
         var total = 1;
-            var change= false; //
-            $(`.monto${a}`).each(function(){
-                if (!isNaN(parseFloat($(this).val()))) {
-                    change= true;
+        var precio = $(`.precio${a}`).val();
+
+        var change= false; //
+        $(`.monto${a}`).each(function(){
+            if (!isNaN(parseFloat($(this).val()))) {
+                change= true;
+                if(precio.length == 0){
+                    total = 0;
+                }else{
                     total *= parseFloat($(this).val());
                 }
-            });
-            total = (change)? total:0;
-            document.getElementById(`total${a}`).value = Math.round(total*100)/100;
-        }
+                
+            }
+        });
+        total = (change)? total:0;
+        document.getElementById(`total${a}`).value = Math.round(total*100)/100;
+    }
     </script>
     <script type="text/javascript">
         $(".select2_demo_3").select2({
@@ -293,10 +307,13 @@ span.select2.select2-container.select2-container--default{
             </select>
             </td>
             <td>
+            <input type='text' name='unidad_nuevo[]' class="monto${i} form-control" onkeyup="multi(${i});" required value="1"/>
+            </td>
+            <td>
             <input type='text' name='cantidad_nuevo[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
             </td>
             <td>
-            <input type='text' name='precio_nuevo[]' class="monto${i} form-control"  onkeyup="multi(${i});"  required/>
+            <input type='text' name='precio_nuevo[]' class="monto${i} precio${i} form-control"  onkeyup="multi(${i});"  required/>
             </td>
             <td>
             <input type='text' id='total${i}' class="form-control" disabled="disabled" value="0" required/>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Familia;
+use App\Subfamilia;
+
 use Illuminate\Http\Request;
 
 class FamiliaController extends Controller
@@ -45,15 +47,45 @@ class FamiliaController extends Controller
 
         if (empty($nombre)) {
             return redirect()->route('familia.index')->withErrors(['Descripción Vacía, Debe ingresar Registros']);
-        // return redirect()->route('categoria.index');
-
         }
 
         $nombre=strtoupper($nombre);
 
+        //obtener la letra
+        // return $suma;
+        if($suma > 0){
+            $fami = Familia::latest()->first();
+            $letra_ubicacion = preg_replace('/[^a-z áéíóúÁÉÍÓÚñÑ ]/iu', '', $fami->ubicacion); // letra
+            
+            // letra aumentado
+            for ($e=0; $e<1; $e++) {
+                $letra2 =  ++$letra_ubicacion . PHP_EOL;
+            }
+            
+            // Numero aumentado
+            for ($e=0; $e<1; $e++) {
+                $num =  ++$fami->id . PHP_EOL;
+            }
+            $ubicacion = intval($num).$letra2;
+        }else{
+            $ubicacion= '1A';
+        }
+        
+        // Suma de Numero
+        // for ($n=0; $n<1; $n++) {
+        //     $var1 =  ++$suma . PHP_EOL;
+        // }
+        // Suma de Letras
+        // for ($e=0; $e<1; $e++) {
+        //     $letra2 =  ++$letra_ubicacion . PHP_EOL;
+        // }
+        // $var3 = intval($var1).$letra2;
+
+        // $letraAleatoria = rand(ord($init_letra), ord($fin_letra));
         $familia=new Familia;
         $familia->codigo=$contador;
         $familia->descripcion=$nombre;
+        $familia->ubicacion=$ubicacion;
         $familia->estado='0';
         $familia->save();
 
@@ -68,7 +100,11 @@ class FamiliaController extends Controller
      */
     public function show($id)
     {
-        //
+        $familia = Familia::find($id);
+        $subfamilias = Subfamilia::where('id_familia', $familia->id)->get();
+        
+        // $subfamilias = Su
+        return view('configuracion_general.familia.show',compact('familia','subfamilias'));
     }
 
     /**

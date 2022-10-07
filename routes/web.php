@@ -272,6 +272,8 @@ Route::group(
 		Route::resource('/vehiculo','VehiculoController');
 
 		Route::resource('/familia','FamiliaController');
+		Route::resource('/subfamilia','SubfamiliaController');
+		Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
 
 		//Agregado rapido
 		Route::post('agregado_rapido/marcas','AgregadoRapidoController@marcas_store')->name('agregado_rapido.marca_store');

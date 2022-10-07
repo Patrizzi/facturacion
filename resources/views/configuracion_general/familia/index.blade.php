@@ -60,68 +60,81 @@
                                     <th>ID</th>
                                     <th>codigo</th>
                                     <th>Descripcion</th>
-                                    <th></th>
+                                    <th>Ubicacion</th>
+                                    <th>Ver</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <span hidden="hidden">{{$i=1}}</span>
                                 @foreach($familias as $familia)
                                 <tr class="gradeX">
-                                  <td>@if($familia->estado==0) <i class="fa fa-circle" style="color: green;"></i>@else
-                                    <i class="fa fa-circle"></i>@endif {{$i++}}</td>
+                                    <td>
+                                        @if($familia->estado==0) 
+                                            <i class="fa fa-circle" style="color: green;"></i>
+                                        @else
+                                            <i class="fa fa-circle"></i>
+                                        @endif 
+                                        {{$i++}}
+                                    </td>
                                     {{-- <td>{{$familia->id}}</td> --}}
                                     <td>{{$familia->codigo}}</td>
                                     <td>{{$familia->descripcion}}</td>
                                     <td>
+                                        @if($familia->ubicacion != null)
+                                            {{$familia->ubicacion}}
+                                        @else
+                                            Sin Ubicacion
+                                        @endif
+                                    </td>
+                                    <td>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$familia->id}}"><i class="fa fa-edit"></i></button>
+                                        <a href="{{route('familia.show',$familia->id)}}">
+                                            <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
+                                        </a>
+                                        
                                         <div class="modal fade" id="exampleModal{{$familia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div style="padding-left: 15px;padding-right: 15px;">
-                                                        {{-- ccccccccccccccccc --}}
                                                         <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
                                                             <form action="{{ route('familia.update',$familia->id) }}"  enctype="multipart/form-data" method="post">
                                                                 @csrf
                                                                 @method('PATCH')
                                                                 <fieldset >
                                                                     <div>
                                                                         <div class="panel-body" >
-
                                                                             <div class="row">
                                                                                <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/familia.svg')}}" width="100px"></div>
-                                                                               <label class="col-sm-2 col-form-label">Descripcion:</label>
-                                                                               <div class="col-sm-10">
-                                                                                <input type="text" required class="form-control" name="descripcion" value="{{$familia->descripcion}}">
+                                                                                <label class="col-sm-2 col-form-label">Descripcion:</label>
+                                                                                <div class="col-sm-10">
+                                                                                    <input type="text" required class="form-control" name="descripcion" value="{{$familia->descripcion}}">
+                                                                                </div>
+                                                                                @if($conteo > 1 || $familia->estado==1 )
+                                                                                    <div class="col-sm-12" align="center" style="padding-top: 10px">
+                                                                                    <input type="checkbox" class="js-switch_{{$familia->id}}" name="estado"  @if($familia->estado==0) checked=""    @endif />
+                                                                                    </div>
+                                                                                @endif    
                                                                             </div>
-                                                                            @if($conteo > 1 || $familia->estado==1 )
-                                                                            <div class="col-sm-12" align="center" style="padding-top: 10px">
-                                                                             <input type="checkbox" class="js-switch_{{$familia->id}}" name="estado"  @if($familia->estado==0) checked="" @endif />
-                                                                         </div>
-                                                                         @endif
-
-                                                                     </div>
-                                                                 </div>
-                                                             </div>
-
-                                                         </fieldset>
-                                                         <button class="ladda-button btn btn-primary" type="submit">Guardar</button>
-                                                     </form>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <!-- / Modal Create  -->
-                             </td>
-                         </tr>
-                         @endforeach
-                     </tbody>
-                 </table>
-             </div>
-         </div>
-     </div>
- </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <button class="ladda-button btn btn-primary" type="submit">Guardar</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <!-- / Modal Create  -->
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 <style>

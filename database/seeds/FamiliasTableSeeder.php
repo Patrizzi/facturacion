@@ -15,6 +15,7 @@ class FamiliasTableSeeder extends Seeder
 			'id' => 1 ,
 			'codigo' => '001',
 			'descripcion' => 'Familia',
+			'ubicacion' => '1A',
 			'estado' => '0',
 			'created_at' => date('2019-08-01 00:00:00'),
            	'updated_at' => date('2019-08-01 00:00:00')

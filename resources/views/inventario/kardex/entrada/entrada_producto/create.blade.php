@@ -111,6 +111,10 @@
 						<div class="col-sm-4">
 							<input type="date" name="fecha_compra" id="" required="" class="form-control">
 						</div>
+						<label class="col-sm-2 col-form-label">Archivo:</label>
+						<div class="col-sm-4">
+							<input type="file" class="form-control" name="archivo" id="archivo">
+						</div>
 					</div>
 
 					<table cellspacing="0" class="table table-striped " width="100%">
@@ -118,6 +122,7 @@
 							<tr>
 								<th style="width: 10px"></th>
 								<th style="width: 600px">Producto  <a href="{{route('productos.create')}}" class="btn btn-warning" target="blanck" style="padding-top: 0px;padding-bottom: 0px; padding-left: 4px;padding-right: 4px;" ><i class="fa fa-plus-square" aria-hidden="true" ></a></th>
+									<th style="width: 100px">Unidad</th>
 									<th style="width: 100px">Cantidad</th>
 									<th style="width: 100px">Precio</th>
 									<th style="width: 100px">Total</th>
@@ -138,16 +143,27 @@
 										<input type="hidden" value="" id="registro_opt1" name="registro_opt[]" class="registro_opt">
 									</td>
 
+									<td><input type='text' id='unidad' name='unidad[]' class="monto0 unidad0 form-control clean"  onkeyup="multi(0);" value="1"  required/></td>
 									<td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control clean"  onkeyup="multi(0);"  required/></td>
-									<td><input type='text' id='precio' name='precio[]' class="monto0 form-control clean" onkeyup="multi(0);" required/></td>
+									<td><input type='text' id='precio' name='precio[]' class="monto0 precio0 form-control clean" onkeyup="multi(0);" required/></td>
 									<td><input type='text' id='total0' name='total[]' class="form-control clean" required/></td>
 									<span id="spTotal"></span>
 								</tr>
 							</tbody>
+							<tbody style="background-color: white !important">
+								<tr>
+									<td colspan="4">
+										<button type="button" class='addmore btn btn-success' disabled="" > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+									</td>
+									<td colspan="2">
+										<button class="ladda-button btn btn-primary float-right" type="submit" id="boton"  ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+									</td>
+								</tr>
+							</tbody>
 						</table>
 
-						<button type="button" class='addmore btn btn-success' disabled="" > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-						<button class="ladda-button btn btn-primary float-right" type="submit" id="boton"  ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+						
+						
 					</form>
 					<tr>
 						<style type="text/css">
@@ -229,10 +245,13 @@
 		<input type="hidden"  name='registro_opt[]' id="registro_opt${i}" readonly="readonly" value="" required  class="registro_opt" />
 		</td>
 		<td>
-		<input type='text' id='cantidad" + i + "' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
+		<input type='text' id='unidad${i}' name='unidad[]' class="monto${i} unidad${i} form-control" onkeyup="multi(${i});" required value="1"/>
 		</td>
 		<td>
-		<input type='text' id='precio" + i + "' name='precio[]' class="monto${i} form-control"  onkeyup="multi(${i});" required/>
+		<input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
+		</td>
+		<td>
+		<input type='text' id='precio${i}' name='precio[]' class="monto${i} precio${i} form-control"  onkeyup="multi(${i});" required/>
 		</td>
 		<td>
 		<input type='text' id='total${i}' name='total[]' class="form-control" required/>
@@ -296,16 +315,22 @@
 	function multi(a){
 		console.log(a);
 		var total = 1;
-			var change= false; //
-			$(`.monto${a}`).each(function(){
-				if (!isNaN(parseFloat($(this).val()))) {
-					change= true;
+		var precio = $(`.precio${a}`).val();
+		var change= false; //
+		$(`.monto${a}`).each(function(){
+			if (!isNaN(parseFloat($(this).val()))) {
+				change= true;
+				if(precio.length == 0){
+					total = 0;
+				}else{
 					total *= parseFloat($(this).val());
 				}
-			});
-			total = (change)? total:0;
-			document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
-		}
+				
+			}
+		});
+		total = (change)? total:0;
+		document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
+	}
 	</script>
 	<script>
 		$(document).on('click', '.borrar', function (event) {
