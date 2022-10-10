@@ -274,6 +274,7 @@ Route::group(
 		Route::resource('/familia','FamiliaController');
 		Route::resource('/subfamilia','SubfamiliaController');
 		Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
+		Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
 
 		//Agregado rapido
 		Route::post('agregado_rapido/marcas','AgregadoRapidoController@marcas_store')->name('agregado_rapido.marca_store');

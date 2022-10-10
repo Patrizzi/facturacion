@@ -59,18 +59,18 @@ class FamiliaController extends Controller
             
             // letra aumentado
             for ($e=0; $e<1; $e++) {
-                $letra2 =  ++$letra_ubicacion . PHP_EOL;
+                $letra2 =  ++$letra_ubicacion;
             }
             
             // Numero aumentado
             for ($e=0; $e<1; $e++) {
-                $num =  ++$fami->id . PHP_EOL;
+                $num =  ++$fami->id;
             }
             $ubicacion = intval($num).$letra2;
         }else{
             $ubicacion= '1A';
         }
-        
+        // return var_dump($letra2);
         // Suma de Numero
         // for ($n=0; $n<1; $n++) {
         //     $var1 =  ++$suma . PHP_EOL;

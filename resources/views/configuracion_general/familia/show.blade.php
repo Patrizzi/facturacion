@@ -96,15 +96,16 @@
                                 </thead>
                                 <tbody>
                                     @foreach($subfamilias as $subfamilia)
-                                        <form action="">
-                                            <tr class="gradeX">
+                                        <tr class="gradeX">
+                                            <form action="{{ route('subfamilia.update',$subfamilia->id) }}"  enctype="multipart/form-data" method="post">
+                                                @csrf
                                                 <td>
                                                     @if($subfamilia->estado==0) 
                                                         <i class="fa fa-circle" style="color: green;"></i>
                                                     @else
                                                         <i class="fa fa-circle"></i>
                                                     @endif 
-                                            </td>
+                                                </td>
                                                 <td>
                                                     <label id="lbl_{{$subfamilia->id}}">{{$subfamilia->descripcion}}</label>
                                                     <input value="{{$subfamilia->descripcion}}" type="text" class="form-control" name="descripcion" id="subf_desc{{$subfamilia->id}}" style="display: none" >
@@ -114,12 +115,13 @@
                                                     <input type="checkbox" class="switch_sub_estado{{$subfamilia->id}} check_edit disabled" name="sub_familia estado"  @if($subfamilia->estado==0) checked="" @endif />
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-warning edit_btn_{{$subfamilia->id}}" onclick="edit_subfamilia({{$subfamilia->id}})"><i class="fa fa-pencil"></i></button>
-                                                    <button class="btn btn-primary save_btn_{{$subfamilia->id}}" onclick="save_subfamilia({{$subfamilia->id}})" style="display: none"><i class="fa fa-save"></i></button>
+                                                    <button type="button" class="btn btn-warning edit_btn_{{$subfamilia->id}}" onclick="edit_subfamilia({{$subfamilia->id}}),enable_switch{{$subfamilia->id}}()"><i class="fa fa-pencil"></i></button>
+                                                    <button type="submit" class="btn btn-primary save_btn_{{$subfamilia->id}}"  style="display: none"><i class="fa fa-save"></i></button>
+                                                    <button type="submit" class="btn btn-primary save_btn_{{$subfamilia->id}}"  style="display: none"><i class="fa fa-save"></i></button>
                                                 </td>
-                                                
-                                            </tr>
-                                        </form>
+                                            </form>        
+                                        </tr>
+                                    
                                     @endforeach
                                 </tbody>
                             </table>
@@ -194,10 +196,19 @@
 @foreach($subfamilias as $sf)
 <script>
     var swObjs{{$sf->id}} = {};
+    $(document).ready(function(){
+    
     var elem_sub{{$sf->id}} = document.querySelector('.switch_sub_estado{{$sf->id}}');
     var switch_sub{{$sf->id}} = new Switchery(elem_sub{{$sf->id}}, { color: 'skyblue' });
     switch_sub{{$sf->id}}.disable();
     swObjs{{$sf->id}}[elem_sub{{$sf->id}}.id] = switch_sub{{$sf->id}};
+});
+    function enable_switch{{$sf->id}}(){
+        var fake_sw = document.querySelector('.switch_sub_estado{{$sf->id}}');
+        swObjs{{$sf->id}}[fake_sw.id].enable();
+        console.log('delete');
+    }
+
 </script>
 @endforeach
 <script>
@@ -244,10 +255,10 @@
 
         // var fila = $(this).parents("tr");
         // console.log(fila);
-        var new_sw = document.querySelector(`.switch_sub_estado${a}`);
-        // var sw = `swObjs`+`${a}`;
-        swObjs2[new_sw.id].enable()
-        console.log(swObjs2);
+        // var new_sw = document.querySelector(`.switch_sub_estado${a}`);
+        // // var sw = `swObjs`+`${a}`;
+        // swObjs2[new_sw.id].enable()
+        // console.log(swObjs2);
         
 
         // desc.css

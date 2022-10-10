@@ -43,13 +43,13 @@ class SubfamiliaController extends Controller
 
         $familia = Familia::where('id',$id)->first();
         
-        $ubicacion_padre = $familia->ubicacion;
+        $ubicacion_padre = strval($familia->ubicacion).intval($sub_familia_cantidad);
 
         $subfamilia = new Subfamilia();
         $subfamilia->id_familia = $id;
         $subfamilia->codigo = $contador;
         $subfamilia->descripcion = $request->get('descripcion');
-        $subfamilia->ubicacion = $ubicacion_padre.$sub_familia_cantidad;
+        $subfamilia->ubicacion = $familia->ubicacion.$sub_familia_cantidad;
         $subfamilia->estado = 0;
         $subfamilia->save();
 
@@ -85,9 +85,9 @@ class SubfamiliaController extends Controller
      * @param  \App\Subfamilia  $subfamilia
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Subfamilia $subfamilia)
+    public function update($id,Request $request)
     {
-        //
+        return $request;
     }
 
     /**
