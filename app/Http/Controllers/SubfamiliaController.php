@@ -87,9 +87,34 @@ class SubfamiliaController extends Controller
      */
     public function update($id,Request $request)
     {
-        return $request;
+        // return $request;
+        if($request->get('sub_familia_estado')){
+            $estado = 0;
+        }else{
+            $estado = 1;
+        }
+        $subfamilia = Subfamilia::find($id);
+        $subfamilia->descripcion= $request->get('descripcion');
+        $subfamilia->estado = $estado;
+        $subfamilia->save();
+        return redirect()->back();
     }
+    public function search_ajax(Request $request)
+    {
+        // return $request;
+        $subfamilia = Subfamilia::where('id_familia', $request->familia_id)->get();
+        $response = array();
+        foreach($subfamilia as $familias){
+           $response[] = array(
+                "id"=>$familias->id,
+                "descripcion"=>$familias->descripcion
+           );
+        }
+        return $response;
+        // $familia = $request->familia_id;
 
+        // $subfamilia = Subfamilia
+    }
     /**
      * Remove the specified resource from storage.
      *

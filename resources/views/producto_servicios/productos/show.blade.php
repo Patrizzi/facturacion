@@ -55,20 +55,43 @@
               <textarea style="margin-top:10px" data-toggle="tooltip" data-placement="top" title="Description del Producto"  type="text" class="form-control" placeholder="Descripción del Producto" name="descripcion" rows="2" >{{$producto->descripcion}}</textarea >
 
 
-              <div class="m-t-md row">
+            <div class="m-t-md row">
 
-               <div class="col-sm-4"><input type="text" placeholder="Código del Producto" class="form-control"  name="codigo_original" data-toggle="tooltip" data-placement="top" title="Código del Producto"  value="{{$producto->codigo_original}}" ></div>
+              <div class="col-sm-3">
+                <input type="text" placeholder="Código del Producto" class="form-control"  name="codigo_original" data-toggle="tooltip" data-placement="top" title="Código del Producto"  value="{{$producto->codigo_original}}" >
+              </div>
+              <div class="col-sm-3">
+                <select class="form-control m-b" name="origen"  data-toggle="tooltip" data-placement="top" title="Origen del Producto" >
+                  <option value="Producto Nacional"  @if($producto->origen=="Producto Nacional")selected @endif>Producto Nacional</option>
+                  <option value="Producto Importado" @if($producto->origen=="Producto Importado")selected @endif>Producto Importado</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <div  data-toggle="tooltip" data-placement="top" title="Familia">
+                  <select class="familia_select2 form-control m-b" name="familia_id" id="familia_id_sl" required="required" onchange="list_subfamilia()">
+                    <option value=""></option>
+                    @foreach($familias as $familia)
+                      <option value="{{ $familia->id }}"  @if($producto->familia_i_producto->id==$familia->id)selected @endif>{{ $familia->descripcion}}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-3" data-toggle="tooltip" data-placement="top" title="Subfamilia">
+                <div>
+                  <select class="subfamilia_select2 form-control" name="sub_familia_id" >
+                    @foreach($subfamilias as $subfamilia)
+                      @if(isset($producto->subfamilia_id))
+                        <option value="{{ $subfamilia->id }}"  @if($producto->subfamilia_id==$subfamilia->id)selected @else  @endif>{{ $subfamilia->descripcion}}</option>
+                      @else
+                        <option ></option>
+                        <option value="{{ $subfamilia->id}}" >{{ $subfamilia->descripcion}}</option>  
+                      @endif
 
-               <div class="col-sm-4">  <select class="form-control m-b" name="origen"  data-toggle="tooltip" data-placement="top" title="Origen del Producto" >
-                <option value="Producto Nacional"  @if($producto->origen=="Producto Nacional")selected @endif>Producto Nacional</option>
-                <option value="Producto Importado" @if($producto->origen=="Producto Importado")selected @endif>Producto Importado</option>
-              </select></div>
-
-              <div class="col-sm-4"><select  data-toggle="tooltip" data-placement="top" title="Familia"  class="form-control m-b" name="familia_id" required="required">
-               @foreach($familias as $familia)
-               <option value="{{ $familia->id }}"  @if($producto->familia_i_producto->id==$familia->id)selected @endif>{{ $familia->descripcion}}</option>
-               @endforeach
-             </select></div>
+                      
+                    @endforeach
+                  </select>
+                </div>
+              </div>
 
            </div>
          </div>
@@ -105,7 +128,13 @@
           <input type="text" class="form-control" name="descuento_maximo" required="required" value="{{$producto->descuento_maximo}}" >
         </div>
       </div>
-      <label class="col-sm-2 col-form-label">Utilidad: @if(isset($precio_promedio->precio_nacional)) <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#exampleModalCenter"></i>@endif</label>
+      <label class="col-sm-2 col-form-label">Utilidad: 
+        @if(isset($precio_promedio->precio_nacional)) 
+          <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_con_inventario"></i>
+        @else
+          <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_sin_existencia"></i>
+        @endif
+      </label>
       <style>.fa-question-circle:hover{color: blue;}</style>
       <div class="col-sm-4">
         <div class="input-group m-b">
@@ -171,6 +200,43 @@
  </select>
 </div>
 </div>
+<label class="col-sm-2 col-form-label">Fecha de creación:</label>
+<div class="col-sm-4">
+ <div class="input-group m-b">
+  <input type="text" class="form-control" readonly value="{{$producto->created_at}}" name="" id="">
+</div>
+</div>
+<label class="col-sm-2 col-form-label">Ficha del Producto:</label>
+<div class="col-sm-4">
+ <div class="input-group m-b">
+  {{-- <input type="file" class="form-control" value="{{$producto->archivo}}" name="archivo_producto" style="margin: 1px auto 1px auto;padding: 1%"> --}}
+  {{-- <div class="custom-file"> --}}
+    @if(isset($producto->archivo))
+      
+      <div class="row" style="width: 100%;margin: auto">
+        <div class="col-sm-10" style="padding: 0">
+          <div class="custom-file">
+          <input id="logo" type="file" class="custom-file-input" value="{{$producto->archivo}}" name="archivo_producto" />
+          <label for="logo" class="custom-file-label" >{{$producto->archivo}}</label>
+          </div>
+        </div>
+        {{-- <div class="btn btn-secondary col-sm-2" style="padding: 0;vertical-align: middle"> --}}
+          <a class=" btn btn-secondary col-sm-2 "  style="padding: auto;vertical-align: middle" href="{{ asset('/archivos/productos/fichas/'.$producto->archivo)}}" download="{{$producto->archivo}}">
+            <i class="fa fa-download" style="vertical-align:middle;"></i>
+          </a>
+        {{-- </div> --}}
+      </div>
+    @else
+      <div class="col-sm-12" style="padding: 0">
+        <input id="logo" type="file" class="custom-file-input" name="archivo_producto">
+        <label for="logo" class="custom-file-label">Seleccionar archivo...</label>
+      </div>
+    @endif
+    
+  {{-- </div>  --}}
+</div>
+</div>
+
 <div class="col-sm-12">
   <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
 </div>
@@ -192,49 +258,105 @@
 </div>
 </div>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <label class="col-sm-4 col-form-label">Precio Venta al Publico:</label>
-          <div class="col-sm-8"><div class="input-group m-b">
-            <div class="input-group-prepend">
-              <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+</form>
+<!-- Modal  -->
+@if(isset($precio_promedio->precio_nacional))
+  <div class="modal fade" id="utilidad_con_inventario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-sm-4 col-form-label">Precio Venta al Publico:</label>
+            <div class="col-sm-8"><div class="input-group m-b">
+              <div class="input-group-prepend">
+                <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+              </div>
+              <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="{{$producto->precio_venta}}" >
+              </div>
             </div>
-            <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="{{$producto->precio_venta}}" >
+          </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+@else
+  {{-- Modal Utilidad --}}
+  <div class="modal fade" id="utilidad_sin_existencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-sm-4 col-form-label">Precio de Compra:</label>
+            <div class="col-sm-8">
+              <div class="input-group m-b">
+                <div class="input-group-prepend">
+                  <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+                </div>
+                <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_compra" name="precio_compra" value="" >
+              </div>
+            </div>
+            <label class="col-sm-4 col-form-label">Precio Venta al Publico + Igv:</label>
+            <div class="col-sm-8">
+              <div class="input-group m-b">
+                <div class="input-group-prepend">
+                  <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+                </div>
+                <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="" >
+              </div>
             </div>
           </div>
         </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="calcular_utilidad()">Calcular</button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
-      </div>
-
     </div>
   </div>
-</div>
-</form>
+@endif
 <!-- Modal -->
 
-<style>  input#archivoInput{
-  position:absolute;
-  top:0px;
-  left:0px;
-  right:0px;
-  bottom:0px;
-  width:100%;
-  /*height:100%;*/
-  opacity: 0  ;
-  padding: 30px;
-}
+<style>  
+  input#archivoInput{
+    position:absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    width:100%;
+    /*height:100%;*/
+    opacity: 0  ;
+    padding: 30px;
+  }
+  .select2.select2-container.select2-container--default{
+    width: 100% !important;
+    /* height: 100% !important; */
+  }
+  .select2-container--default .select2-selection--single{
+    height: 2.5em;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 32px !important;
+  }
+  .custom-file-label{
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .custom-file-label::after{
+    content: "Sel."
+  }
 </style>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -249,9 +371,59 @@
 <!-- Switchery -->
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <script>
+  // Switchery button
   var elem= document.querySelector('.js-switch');
   var switchery = new Switchery(elem, { color: '#4cc0f7' });
+  // input file button
+  $('.custom-file-input').on('change', function() {
+    let fileName = $(this).val().split('\\').pop();
+    $(this).next('.custom-file-label').addClass("selected").html(fileName);
+  });
+  // select2 inputs 
+  $(document).ready(function(){
+    $('.familia_select2').select2({
+      placeholder: "Seleccionar",
+    
+    });
+    $('.subfamilia_select2').select2({
+      placeholder: "Seleccionar",
+    });
+  });
+  
+  function list_subfamilia(){
+    var family = $('.familia_select2').val();
+    $('.subfamilia_select2').val(null).trigger('change');
+
+    // console.log(family);
+    $('.subfamilia_select2').select2({
+      placeholder: "Seleccionar",
+      ajax: {
+        minimumInputLength: 1,
+        url: "{{ route('subfamilia.search_ajax') }}",
+        dataType: 'json',
+        type: "POST",
+        data: function (params) {
+            return {
+                _token: "{{ csrf_token() }}",
+                familia_id: family    
+            };
+        },
+        processResults: function (data) {
+          return {
+            results: $.map(data, function (item) {
+                return {
+                    id: item.id,
+                    text: item.descripcion,
+                };
+            })
+          };
+        },
+        cache: true
+      }
+    });
+  }
 </script>
 {{-- foto --}}
 <script type="text/javascript">
@@ -282,9 +454,9 @@
       }
     }
   </script>
-  @if(isset($precio_promedio->precio_nacional))
-  <script>
-   function myFunction() {
+@if(isset($precio_promedio->precio_nacional))
+<script>
+  function myFunction() {
      var x,suma,text;
      x = document.getElementById("precio_venta").value;
      if (isNaN(x) ) {
@@ -301,6 +473,21 @@
      document.getElementById("sumando").value = text;
    }
  }
+</script>
+@else
+<script>
+  function calcular_utilidad(){
+    var precio_venta = document.getElementById("precio_venta").value;
+    var precio_compra = document.getElementById("precio_compra").value;
+    
+    if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
+      // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
+      var a1 =  parseFloat(precio_venta) * 100;
+      var a2 = parseFloat(a1) / parseFloat(precio_compra);
+      var utilidad = parseFloat(a2) - 100;
+      document.getElementById("sumando").value = utilidad;
+    }
+  }
 </script>
 @endif
 @endsection

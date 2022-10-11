@@ -2,7 +2,7 @@
 
 @section('title', 'Subfamilias')
 @section('button2', 'Atras')
-@section('config',route('Configuracion'))
+@section('config',route('familia.index'))
 
 @section('content')
 @if($errors->any())
@@ -35,7 +35,9 @@
                                 </div>
                             </div>
                             <div class="col-sm-9" style="vertical-align: middle;margin: auto">
-                                <form action="">
+                                <form action="{{ route('familia.update',$familia->id) }}"  enctype="multipart/form-data" method="post">
+                                    @csrf
+                                    @method('PUT')
                                     <div class="row" style="text-align: center">
                                         <div class="col-sm-3">
                                             <strong><label for="">Codigo:</label></strong>
@@ -115,9 +117,9 @@
                                                     <input type="checkbox" class="switch_sub_estado{{$subfamilia->id}} check_edit disabled" name="sub_familia estado"  @if($subfamilia->estado==0) checked="" @endif />
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-warning edit_btn_{{$subfamilia->id}}" onclick="edit_subfamilia({{$subfamilia->id}}),enable_switch{{$subfamilia->id}}()"><i class="fa fa-pencil"></i></button>
+                                                    <button type="button" class="btn btn-warning btn_edit_all edit_btn_{{$subfamilia->id}}" onclick="edit_subfamilia({{$subfamilia->id}}),enable_switch{{$subfamilia->id}}()"><i class="fa fa-pencil"></i></button>
                                                     <button type="submit" class="btn btn-primary save_btn_{{$subfamilia->id}}"  style="display: none"><i class="fa fa-save"></i></button>
-                                                    <button type="submit" class="btn btn-primary save_btn_{{$subfamilia->id}}"  style="display: none"><i class="fa fa-save"></i></button>
+                                                    <button type="button" class="btn btn-warning cancel_btn_{{$subfamilia->id}}" style="display: none" onclick="recharge()"><i class="fa fa-times"></i></button>
                                                 </td>
                                             </form>        
                                         </tr>
@@ -197,12 +199,11 @@
 <script>
     var swObjs{{$sf->id}} = {};
     $(document).ready(function(){
-    
-    var elem_sub{{$sf->id}} = document.querySelector('.switch_sub_estado{{$sf->id}}');
-    var switch_sub{{$sf->id}} = new Switchery(elem_sub{{$sf->id}}, { color: 'skyblue' });
-    switch_sub{{$sf->id}}.disable();
-    swObjs{{$sf->id}}[elem_sub{{$sf->id}}.id] = switch_sub{{$sf->id}};
-});
+        var elem_sub{{$sf->id}} = document.querySelector('.switch_sub_estado{{$sf->id}}');
+        var switch_sub{{$sf->id}} = new Switchery(elem_sub{{$sf->id}}, { color: 'skyblue' });
+        switch_sub{{$sf->id}}.disable();
+        swObjs{{$sf->id}}[elem_sub{{$sf->id}}.id] = switch_sub{{$sf->id}};
+    });
     function enable_switch{{$sf->id}}(){
         var fake_sw = document.querySelector('.switch_sub_estado{{$sf->id}}');
         swObjs{{$sf->id}}[fake_sw.id].enable();
@@ -250,21 +251,12 @@
         $(`#subf_desc${a}`).css("display",'flex');
 
         $(`.edit_btn_${a}`).css("display",'none');
-        $(`.save_btn_${a}`).css("display",'flex');
+        $(`.save_btn_${a}`).css("display",'inline');
+        $(`.cancel_btn_${a}`).css("display",'inline');
+        $(`.btn_edit_all`).prop('disabled',true);
+        
         // var i_switch = 'switch_sub'+`${a}`;
 
-        // var fila = $(this).parents("tr");
-        // console.log(fila);
-        // var new_sw = document.querySelector(`.switch_sub_estado${a}`);
-        // // var sw = `swObjs`+`${a}`;
-        // swObjs2[new_sw.id].enable()
-        // console.log(swObjs2);
-        
-
-        // desc.css
-        // var desc = document.getElementById(`subf_desc${a}`).value;
-        // alert(desc);
-        // console.log(desc);
     }
 </script>
 

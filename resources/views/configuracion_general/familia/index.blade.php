@@ -87,12 +87,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$familia->id}}"><i class="fa fa-edit"></i></button>
+                                        {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$familia->id}}"><i class="fa fa-edit"></i></button> --}}
                                         <a href="{{route('familia.show',$familia->id)}}">
                                             <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
                                         </a>
                                         
-                                        <div class="modal fade" id="exampleModal{{$familia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        {{-- <div class="modal fade" id="exampleModal{{$familia->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div style="padding-left: 15px;padding-right: 15px;">
@@ -124,7 +124,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>  --}}
                                         <!-- / Modal Create  -->
                                     </td>
                                 </tr>
@@ -169,7 +169,7 @@
     });
 
 </script>
-@foreach($familias as $familia)
+{{-- @foreach($familias as $familia)
 <script>
     var elem_2 = document.querySelector('.js-switch_{{$familia->id}}');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
@@ -180,5 +180,5 @@
     var elem_2 = document.querySelector('.js-switch_vehiculo{{$familia->id}}');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 </script>
-@endforeach
+@endforeach --}}
 @endsection

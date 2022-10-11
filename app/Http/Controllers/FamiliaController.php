@@ -154,7 +154,7 @@ class FamiliaController extends Controller
       $familia->estado=$estado_familia;
       $familia->save();
 
-      return redirect()->route('familia.index');
+      return redirect()->back();
 
   }
 

@@ -5,203 +5,259 @@
 @section('atributo_actu', 'hidden')
 
 @section('content')
- <form action="{{ route('productos.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-   @csrf
-<div class="wrapper wrapper-content animated fadeInRight">
+
 @if($errors->any())
-<div style="padding-top: 20px;">
-  <div class="alert alert-danger">
-    <a class="alert-link" href="#">
-      @foreach ($errors->all() as $error)
-      <li style="color: red">{{ $error }}</li>
-      @endforeach
-    </a>
+  <div style="padding-top: 20px;">
+    <div class="alert alert-danger">
+      <a class="alert-link" href="#">
+        @foreach ($errors->all() as $error)
+          <li style="color: red">{{ $error }}</li>
+        @endforeach
+      </a>
+    </div>
   </div>
-</div>
 @endif
 
+<div class="wrapper wrapper-content animated fadeInRight">
   <div class="row">
     <div class="col-lg-12">
-
       <div class="ibox product-detail">
         <div class="ibox-content">
-
           <div class="row">
-            <div class="col-md-5">
-
-              <div class="product-images">
-
-                <div>
+            <form action="{{ route('productos.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" style="display: flex;">
+              @csrf
+              <div class="col-sm-5">
+                <div class="product-images">
                   <div class="image-imitation" style="padding:0px">
-                   <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
-                   <div id="visorArchivo">
-
-                     <img src="{{asset('img/logos/producto.svg')}}" style="width:100%;padding: 30px;">
-                   </div>
-                 </div>
-               </div>
-
-             </div>
-
-           </div>
-           <div class="col-md-7">
-            <div class="tooltip-demo">
-
-              <div class="row" style="padding-bottom:10px">
-                <div class="col-sm-4" align="center">
-                  <input placeholder="PRO-0X33X345XX" data-toggle="tooltip" data-placement="top"  title="Código Alternativo:" type="text" class="form-control" name="codigo_original" autocomplete="off">
+                    <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
+                    <div id="visorArchivo">
+                      <img src="{{asset('img/logos/producto.svg')}}" style="width: 100%" >
+                    </div>
+                  </div>
                 </div>
-
-                <div class="col-sm-4" align="center">
-                 <select data-toggle="tooltip" data-placement="top" title="Familia"  class="form-control" name="familia_id" required="required">
-                   {{-- <option>Seleccione una Familia</option> --}}
-                   @foreach($familias as $familia)
-                   <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
-                   @endforeach
-                 </select></div>
-
-                 <div class="col-sm-4" align="center">
-                  <select  data-toggle="tooltip" data-placement="top" title="Marca"class="form-control " name="marca_id" required="required">
-                   @foreach($marcas as $marca)
-                   <option value="{{ $marca->id }}">{{ $marca->nombre}}</option>
-                   @endforeach
-                 </select>
-               </div>
-             </div>
-
-             <input type="text" placeholder="Nombre del Producto" class="form-control" required="required" data-toggle="tooltip" name="nombre" data-placement="top" title="Nombre del Producto"  autocomplete="off" >
-             <textarea style="margin-top:10px" data-toggle="tooltip" data-placement="top" title="Descripción del Producto"  type="text" class="form-control" placeholder="Descripción del Producto" name="descripcion" rows="2" ></textarea >
-         </div>
-
-         <hr style="border:1px solid #8080803d;">
-
-         <div class="tooltip-demo row" >
-          <label class="col-sm-2 col-form-label">Desct.1:</label>
-          <div class="col-sm-4">
-           <div class="input-group m-b">
-            <div class="input-group-prepend">
-              <span class="input-group-addon">%</span>
+              </div>
+              <div class="col-md-7" style="vertical-align: middle;padding: auto">
+                <div class="tooltip-demo">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <input placeholder="PRO-0X33X345XX" data-toggle="tooltip" data-placement="top"  title="Código Alternativo:" type="text" class="form-control" name="codigo_original" autocomplete="off">
+                    </div>
+                    <div class="col-sm-3">
+                        <div data-toggle="tooltip" data-placement="top" title="Familia"> 
+                          <select   class="familia_select2 form-control" name="familia_id" id="familia_id_sl" required="required" onchange="list_subfamilia()">
+                            <option value=""></option>
+                              @foreach($familias as $familia)
+                                <option value="{{ $familia->id }}">{{ $familia->descripcion}}</option>
+                              @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" >
+                        <div data-toggle="tooltip" data-placement="top" title="Subfamilia">
+                          <select   class="subfamilia_select2 form-control" name="sub_familia_id" >
+                            {{-- <option value="" aria-readonly="">Seleccionar</option> --}}
+                          </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <div  data-toggle="tooltip" data-placement="top" title="Marca">
+                        <select  class="marca_select2 " name="marca_id" required="required">
+                          @foreach($marcas as $marca)
+                            <option value="{{ $marca->id }}">{{ $marca->nombre}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <input type="text" placeholder="Nombre del Producto" class="form-control" required="required" data-toggle="tooltip" name="nombre" data-placement="top" title="Nombre del Producto"  autocomplete="off" >
+                      <textarea style="margin-top:10px" data-toggle="tooltip" data-placement="top" title="Descripción del Producto"  type="text" class="form-control" placeholder="Descripción del Producto" name="descripcion" rows="2" ></textarea >
+                    </div>
+                  </div>
+                  <hr style="border:1px solid #8080803d;">
+                  <div class="tooltip-demo row">
+                    <label class="col-sm-2 col-form-label">Desct.1:</label>
+                    <div class="col-sm-4">
+                      <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                          <span class="input-group-addon">%</span>
+                        </div>
+                        <input type="text"  data-toggle="tooltip" data-placement="top" title="Descuenta internamente, de forma automática" class="form-control" name="descuento1" value="0" autocomplete="off" required="required" >
+                      </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Desct.2:</label>
+                    <div class="col-sm-4">
+                      <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                          <span class="input-group-addon">%</span>
+                        </div>
+                        <input type="text" class="form-control" data-toggle="tooltip" data-placement="top" title="Descuenta de forma Manual (Cotizaciones, Facturas)" name="descuento2"  required="required" value="0" autocomplete="off" >
+                      </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Desct.Máximo:</label>
+                    <div class="col-sm-4">
+                      <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                          <span class="input-group-addon">%</span>
+                        </div>
+                        <input type="text" class="form-control" name="descuento_maximo" required="required" value="0" autocomplete="off">
+                      </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#exampleModalCenter"></i></label>
+                    <div class="col-sm-4">
+                      <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                          <span class="input-group-addon">%</span>
+                        </div>
+                        <input type="text" id="sumando" class="form-control" name="utilidad" required="required" value="0" autocomplete="off">
+                      </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Ud.Medida:</label>
+                    <div class="col-sm-4">
+                      <div class="input-group m-b">
+                        <select class="form-control m-b" name="unidad_medida_id" required="required">
+                          @foreach($unidad_medidas as $unidad_medida)
+                            <option value="{{ $unidad_medida->id }}">{{ $unidad_medida->medida}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Peso:</label>
+                    <div class="col-sm-2">
+                      <div class="input-group m-b">
+                        <input type="number" class="form-control" name="peso" required="required" value="0" autocomplete="off">
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="input-group m-">
+                        <select name="simbolo" class="form-control">
+                          <option value="Gramos">Gramos</option>
+                          <option value="Kilos">Kilos</option>
+                          <option value="Toneladas">Toneladas</option>
+                        </select>
+                      </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label">garantía:</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" name="garantia" value="12 meses" required="required">
+                    </div>
+                    <label class="col-sm-2 col-form-label">Stock Mínimo:</label>
+                    <div class="col-sm-4" style="padding-bottom: 15px">
+                      <input type="text" class="form-control" name="stock_minimo"    required="" value="0" autocomplete="off"  >
+                    </div>
+                    <label class="col-sm-2 col-form-label">Stock Máximo:</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" name="stock_maximo"  required="" value="0" autocomplete="off"  >
+                    </div>
+                    <label class="col-sm-2 col-form-label">Tipo de Afectación:</label>
+                    <div class="col-sm-4">
+                      <div class="input-group m-b">
+                        <select class="form-control m-b" name="tipo_afectacion" required="required">
+                          @foreach($tipo_afectacion as $tipo_afec)
+                            <option value="{{ $tipo_afec->id }}">{{ $tipo_afec->informacion}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <label class="col-sm-2">Fecha de Creacion:</label>
+                    <div class="col-sm-4">
+                      <input type="text" readonly value="{{date('d/m/Y')}}" class="form-control">
+                    </div>
+                    <label class="col-sm-2">Ficha:</label>
+                    <div class="col-sm-4">
+                      {{-- <input type="file" class="form-control" name="archivo_producto" style="margin: 1px auto 1px auto;padding: 1%"> --}}
+                      <div class="custom-file">
+                        <input id="logo" type="file" class="custom-file-input" name="archivo_producto">
+                        <label for="logo" class="custom-file-label">Seleccionar archivo...</label>
+                      </div> 
+                    </div>
+                    
+                    <div class="col-sm-12" style="align-items: center;padding:  2% 22% 2% 22% ">
+                      <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
-            <input type="text"  data-toggle="tooltip" data-placement="top" title="Descuenta internamente, de forma automática" class="form-control" name="descuento1" value="0" autocomplete="off" required="required" >
           </div>
-        </div>
-
-        <label class="col-sm-2 col-form-label">Desct.2:</label>
-        <div class="col-sm-4">
-         <div class="input-group m-b">
-           <div class="input-group-prepend">
-             <span class="input-group-addon">%</span>
-           </div>
-           <input type="text" class="form-control" data-toggle="tooltip" data-placement="top" title="Descuenta de forma Manual (Cotizaciones, Facturas)" name="descuento2"  required="required" value="0" autocomplete="off" >
-         </div>
-       </div>
-     </div>
-
-     <div class="row">
-       <label class="col-sm-2 col-form-label">Desct.Máximo:</label>
-       <div class="col-sm-4">
-        <div class="input-group m-b">
-          <div class="input-group-prepend"> <span class="input-group-addon">%</span></div>
-          <input type="text" class="form-control" name="descuento_maximo" required="required" value="0" autocomplete="off">
-        </div>
-      </div>
-      <label class="col-sm-2 col-form-label">Utilidad:</label>
-      <style>.fa-question-circle:hover{color: blue;}</style>
-      <div class="col-sm-4">
-        <div class="input-group m-b">
-          <div class="input-group-prepend"><span class="input-group-addon">%</span></div>
-          <input type="text" id="sumando" class="form-control" name="utilidad" required="required" value="0" autocomplete="off">
         </div>
       </div>
     </div>
-
-
-    <div class="row">
-     <label class="col-sm-2 col-form-label">Ud.Medida:</label>
-     <div class="col-sm-4">
-       <div class="input-group m-b">
-         <select class="form-control m-b" name="unidad_medida_id" required="required">
-      @foreach($unidad_medidas as $unidad_medida)
-      <option value="{{ $unidad_medida->id }}">{{ $unidad_medida->medida}}</option>
-      @endforeach
-    </select>
-     </div>
-   </div>
-   <label class="col-sm-2 col-form-label">Peso:</label>
-   <div class="col-sm-2">
-    <div class="input-group m-b">
-     <input type="number" class="form-control" name="peso" required="required" value="0" autocomplete="off">
-   </div>
- </div>
- <div class="col-sm-2">
-  <div class="input-group m-b">
-   <select name="simbolo" class="form-control">
-      <option value="Gramos">Gramos</option>
-      <option value="Kilos">Kilos</option>
-      <option value="Toneladas">Toneladas</option>
-    </select>
   </div>
 </div>
-</div>
+{{-- Modal Utilidad --}}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <label class="col-sm-4 col-form-label">Precio de Compra:</label>
+          <div class="col-sm-8">
+            <div class="input-group m-b">
+              <div class="input-group-prepend">
+                <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+              </div>
+              <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_compra" name="precio_compra" value="" >
+            </div>
+          </div>
+          <label class="col-sm-4 col-form-label">Precio Venta al Publico + Igv:</label>
+          <div class="col-sm-8">
+            <div class="input-group m-b">
+              <div class="input-group-prepend">
+                <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+              </div>
+              <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="" >
+            </div>
+          </div>
+        </div>
 
-
-<div class="row">
- <label class="col-sm-2 col-form-label">garantía:</label>
- <div class="col-sm-4">
-   <input type="text" class="form-control" name="garantia" value="12 meses" required="required">
- </div>
- <label class="col-sm-2 col-form-label">Stock Mínimo:</label>
- <div class="col-sm-4" style="padding-bottom: 15px">
-  <input type="text" class="form-control" name="stock_minimo"    required="" value="0" autocomplete="off"  >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="calcular_utilidad()">Calcular</button>
+      </div>
+    </div>
+  </div>
 </div>
-<label class="col-sm-2 col-form-label">Stock Máximo:</label>
-<div class="col-sm-4">
-  <input type="text" class="form-control" name="stock_maximo"  required="" value="0" autocomplete="off"  >
-</div>
-<label class="col-sm-2 col-form-label">Tipo de Afectación:</label>
-<div class="col-sm-4">
- <div class="input-group m-b">
-    <select class="form-control m-b" name="tipo_afectacion" required="required">
-      @foreach($tipo_afectacion as $tipo_afec)
-      <option value="{{ $tipo_afec->id }}">{{ $tipo_afec->informacion}}</option>
-      @endforeach
-    </select>
-</div>
-</div>
-<div class="col-sm-12">
-  <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-
-
-<div class="ibox-footer">
-  <span style="text-align:right;">
-    Fecha de Creación <i class="fa fa-clock-o"></i> {{date('d:m:Y')}}
-  </span>
-</div>
-</div>
-
-</div>
-</div>
-</div>
-</form>
-
-<style>  input#archivoInput{
-  position:absolute;
-  top:0px;
-  left:0px;
-  right:0px;
-  bottom:0px;
-  width:100%;
-  /*height:100%;*/
-  opacity: 0  ;
-  padding: 30px;
-}
+<style>  
+  .form-control{
+    border-radius: 5px;
+  } 
+  input#archivoInput{
+    position:absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    width:100%;
+    /*height:100%;*/
+    opacity: 0  ;
+    padding: 30px;
+  }
+  .fa-question-circle:hover{color: blue;}
+  .select2.select2-container.select2-container--default{
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .select2-container--default .select2-selection--single{
+    height: 100% !important;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 32px !important;
+  }
+  .custom-file-label{
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .custom-file-label::after{
+    content: "Sel."
+  }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -212,8 +268,57 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 {{-- foto --}}
 <script type="text/javascript">
+  $('.custom-file-input').on('change', function() {
+    let fileName = $(this).val().split('\\').pop();
+    $(this).next('.custom-file-label').addClass("selected").html(fileName);
+  }); 
+  $(document).ready(function(){
+    $('.familia_select2').select2({
+      placeholder: "Seleccionar",
+    
+    });
+    $('.subfamilia_select2').select2({
+      placeholder: "Seleccionar",
+    });
+    $('.marca_select2').select2();
+  });
+  
+  function list_subfamilia(){
+    var family = $('.familia_select2').val();
+    $('.subfamilia_select2').val(null).trigger('change');
+
+    // console.log(family);
+    $('.subfamilia_select2').select2({
+      placeholder: "Seleccionar",
+      ajax: {
+        minimumInputLength: 1,
+        url: "{{ route('subfamilia.search_ajax') }}",
+        dataType: 'json',
+        type: "POST",
+        data: function (params) {
+            return {
+                _token: "{{ csrf_token() }}",
+                familia_id: family    
+            };
+        },
+        processResults: function (data) {
+          return {
+            results: $.map(data, function (item) {
+                return {
+                    id: item.id,
+                    text: item.descripcion,
+                };
+            })
+          };
+        },
+        cache: true
+      }
+    });
+  }
+
   function validarExt()
   {
     var archivoInput = document.getElementById('archivoInput');
@@ -223,23 +328,30 @@
       alert('Asegúrese de haber seleccionado una Imagen');
       archivoInput.value = '';
       return false;
-    }
-
-    else
-    {
+    }else{
         //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-          var visor = new FileReader();
-          visor.onload = function(e)
-          {
-            document.getElementById('visorArchivo').innerHTML =
-            '<img name="foto" src="'+e.target.result+'" style="width:100%;padding: 30px;"/>';
-          };
-          visor.readAsDataURL(archivoInput.files[0]);
-        }
+      if (archivoInput.files && archivoInput.files[0]){
+        var visor = new FileReader();
+        visor.onload = function(e){
+          document.getElementById('visorArchivo').innerHTML =
+          '<img name="foto" src="'+e.target.result+'" style="width:100%;padding: 30px;"/>';
+        };
+        visor.readAsDataURL(archivoInput.files[0]);
       }
     }
-  </script>
+  }
+  function calcular_utilidad(){
+    var precio_venta = document.getElementById("precio_venta").value;
+    var precio_compra = document.getElementById("precio_compra").value;
+    
+    if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
+      // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
+      var a1 =  parseFloat(precio_venta) * 100;
+      var a2 = parseFloat(a1) / parseFloat(precio_compra);
+      var utilidad = parseFloat(a2) - 100;
+      document.getElementById("sumando").value = utilidad;
+    }
+  }
+</script>
 
-  @endsection
+@endsection

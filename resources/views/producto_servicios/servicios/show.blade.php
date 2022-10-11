@@ -101,7 +101,7 @@
 
             <div class="row">
 
-              <label class="col-sm-2 col-form-label">Precio :</label>
+              <label class="col-sm-2 col-form-label">Precio s/igv:</label>
               <div class="col-sm-4"><div class="input-group m-b">
                 <div class="input-group-prepend">
                   <select class="input-group-addon"  name="moneda">

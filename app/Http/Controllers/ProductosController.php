@@ -8,6 +8,7 @@ use App\Categoria;
 use App\Marca;
 use App\Estado;
 use App\Familia;
+use App\Subfamilia;
 use App\kardex_entrada_registro;
 use App\Moneda;
 use App\Stock_almacen;
@@ -48,7 +49,8 @@ class ProductosController extends Controller
         $categorias=Categoria::where('descripcion','PRODUCTOS')->first();
         $unidad_medidas=Unidad_medida::all();
         $tipo_afectacion = Tipo_afectacion::all();
-        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion'));
+        $moneda_principal=Moneda::where('principal',1)->first();
+        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal'));
     }
 
     /**
@@ -59,6 +61,8 @@ class ProductosController extends Controller
      */
     public function store(Request $request )
     {
+        
+        // return $request;
         $this->validate($request,[
             'codigo_original' => ['unique:productos,codigo_original'],
             'nombre' => ['required:productos,nombre'],
@@ -77,6 +81,10 @@ class ProductosController extends Controller
         $marca_cantidad=substr($marca_cantidad,1);
         $codigo=$abreviatura.'-'.$marca_cantidad;
 
+        $codigo_original=$request->get('codigo_original');
+        if (isset($codigo_original)){$codigo_original=$request->get('codigo_original');}
+        else{$codigo_original=$codigo;}
+
         if($request->hasfile('foto')){
             $image1 =$request->file('foto');
             $name =time().$image1->getClientOriginalName();
@@ -85,19 +93,26 @@ class ProductosController extends Controller
         }else{
             $name='producto.svg';
         }
+        if($request->hasFile('archivo_producto')){
+            $file =$request->file('archivo_producto');
+            $name_file =$codigo_original.'-'.$file->getClientOriginalName();
+            $destinationPath_file = public_path('/archivos/productos/fichas/');
+            $file->move($destinationPath_file,$name_file);
+        }else{
+            $name_file = null;
+        }
 
-        if ($request->get('peso')) {$peso=$request->get('peso');  }else{$peso=0;  }
+        $peso=$request->get('peso');
         $simbolo=$request->get('simbolo');
 
-        $codigo_original=$request->get('codigo_original');
-        if (isset($codigo_original)){$codigo_original=$request->get('codigo_original');}
-        else{$codigo_original=$codigo;}
+        
 
         $producto=new Producto;
         $producto->codigo_producto=$codigo;
         $producto->codigo_original=$codigo_original;
         $producto->categoria_id=1;
         $producto->familia_id=$request->get('familia_id');
+        $producto->subfamilia_id=$request->get('sub_familia_id');
         $producto->marca_id=$request->get('marca_id');
         $producto->nombre=$request->get('nombre');
         $producto->descripcion=$request->get('descripcion');
@@ -114,6 +129,7 @@ class ProductosController extends Controller
         $producto->peso=$peso.' '.$simbolo;
         $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
         $producto->foto=$name;
+        $producto->archivo=$name_file;
         $producto->estado_anular='1';
         $producto->save();
 
@@ -144,6 +160,8 @@ class ProductosController extends Controller
 
        $moneda_principal=Moneda::where('principal',1)->first();
        $familias=Familia::all();
+       $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->get();
+    
        $marcas=Marca::all();
        $estados=Estado::all();
        $categorias=Categoria::all();
@@ -153,7 +171,7 @@ class ProductosController extends Controller
        if ($producto== null) {
         return response()->view("errors.404_registros_no_foud",[],404);
     }
-    return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
+    return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
 }
 
     /**
@@ -164,23 +182,25 @@ class ProductosController extends Controller
      */
     public function edit($id)
     {
-        $precio_promedio=Stock_producto::where('producto_id',$id)->first();
-        // return $precio_promedio->precio_nacional;
+        // $precio_promedio=Stock_producto::where('producto_id',$id)->first();
+        // // return $precio_promedio->precio_nacional;
 
-        $producto=Producto::find($id);
-        $pro_peso=$producto->peso;
+        // $producto=Producto::find($id);
+        // $pro_peso=$producto->peso;
 
-        $simbolo = strstr($pro_peso, ' ',false);
-        $peso = strstr($pro_peso, ' ',true);
+        // $simbolo = strstr($pro_peso, ' ',false);
+        // $peso = strstr($pro_peso, ' ',true);
 
-        $moneda_principal=Moneda::where('principal',1)->first();
-        $familias=Familia::all();
-        $marcas=Marca::all();
-        $estados=Estado::all();
-        $categorias=Categoria::all();
-        $unidad_medidas=Unidad_medida::all();
-        $tipo_afectacion = Tipo_afectacion::all();
-        return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio'));
+        // $moneda_principal=Moneda::where('principal',1)->first();
+        // $familias=Familia::all();
+        // $subfamilias=Subfamilia::where('familia_id',$producto->familia_id)->first();
+        
+        // $marcas=Marca::all();
+        // $estados=Estado::all();
+        // $categorias=Categoria::all();
+        // $unidad_medidas=Unidad_medida::all();
+        // $tipo_afectacion = Tipo_afectacion::all();
+        // return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
     }
 
     /**
@@ -192,19 +212,34 @@ class ProductosController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $name =NULL;
-      $this->validate($request,[
-        'codigo_original' => ['required','unique:productos,codigo_original,'.$id],
-    ],[
-        'codigo_original.unique' => 'El codigo alternativo ya existe',
-    ]);
+        // return $request;
+        $name =NULL;
+        $this->validate($request,[
+            'codigo_original' => ['required','unique:productos,codigo_original,'.$id],
+        ],[
+            'codigo_original.unique' => 'El codigo alternativo ya existe',
+        ]);
 
-      if($request->hasfile('foto')){
-        $image1 =$request->file('foto');
-        $name =time().$image1->getClientOriginalName();
-        $destinationPath = public_path('/archivos/imagenes/productos/');
-        $image1->move($destinationPath,$name);
-    }
+        $codigo_original=$request->get('codigo_original');
+
+        $archivo_prod = Producto::where('id',$id)->first();
+        if (isset($codigo_original)) {$codigo_original=$request->get('codigo_original');}
+        else{$codigo_original=$request->get('codigo');}
+
+        if($request->hasfile('foto')){
+            $image1 =$request->file('foto');
+            $name =time().$image1->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/productos/');
+            $image1->move($destinationPath,$name);
+        }
+        if($request->hasFile('archivo_producto')){
+            $file =$request->file('archivo_producto');
+            $name_file =$codigo_original.'-'.$file->getClientOriginalName();
+            $destinationPath_file = public_path('/archivos/productos/fichas/');
+            $file->move($destinationPath_file,$name_file);
+        }else{
+            $name_file = $archivo_prod->archivo;
+        }
 
     if ($request->get('peso')) {$peso=$request->get('peso');  }else{$peso=0;  }
     $simbolo=$request->get('simbolo');
@@ -239,7 +274,11 @@ class ProductosController extends Controller
         $producto->peso=$peso.' '.$simbolo;
         $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
         if($name){$producto->foto=$name;}
+        $producto->archivo=$name_file;
+
         $producto->familia_id = $request->get('familia_id');
+        $producto->subfamilia_id = $request->get('sub_familia_id');
+
         $producto->save();
         return redirect()->route('productos.show',$id);
     }

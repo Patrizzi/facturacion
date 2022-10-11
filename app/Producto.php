@@ -23,6 +23,9 @@ class Producto extends Model
     public function familia_i_producto(){
         return $this->belongsTo(Familia::class,'familia_id');
     }  
+    public function subfamilia_i_producto(){
+        return $this->belongsTo(Subfamilia::class,'subfamilia_id');
+    } 
     public function moneda_i_producto(){
         return $this->belongsTo(Moneda::class,'monedas_id');
     } 
