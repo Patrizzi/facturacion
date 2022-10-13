@@ -106,6 +106,7 @@ Route::group(
 		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
+		Route::post('/nota_venta/precio_sugerido' , 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
 		
 
 //NOTA VENTA

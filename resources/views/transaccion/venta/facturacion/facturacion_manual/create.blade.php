@@ -533,7 +533,7 @@
             document.getElementById(`precio${a}`).value = copy;
             multi_s_igv(a);
         }
-        multi(a);    
+        multi(a);
     }
 
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)

@@ -94,7 +94,7 @@
                             <div align="left">
                                 <strong>Señor(es):</strong> &nbsp;{{$nota_venta->cliente->nombre}}<br>
                                 <strong>{{$nota_venta->cliente->documento_identificacion}} :</strong> &nbsp;{{$nota_venta->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$nota_venta->created_at}}<br>
+                                <strong>Fecha:</strong> &nbsp;{{$nota_venta->updated_at}}<br>
                             </div>
                         </div>
                     </div>
@@ -105,6 +105,7 @@
                             <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <input type="hidden" name="moneda" id="moneda" value="{{$nota_venta->moneda->nombre}}">
+                            <input type="hidden"  id="moneda_id" value="{{$nota_venta->moneda->id}}">
                         </div>
                     </div>
                 </div>
@@ -171,7 +172,7 @@
                 </div>
             </div>
             {{-- //SOLO EDITAR  --}}
-            <span hidden>{{$h=1}}</span>
+            <span hidden>{{$h=0}}</span>
             @if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
                 <div class="div-editar no_mostrar">
                     <form action="{{route('nota_venta.update',$nota_venta->id)}}" method="post" id="nota_vent_update">
@@ -180,8 +181,9 @@
                             <thead>
                                 <tr >
                                     <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
-                                    <th style="width: 65%">Descripcion</th>
-                                    <th>Cantidad</th>
+                                    <th style="width: 51%">Descripcion</th>
+                                    <th style="width: 8%;">Cantidad</th>
+                                    <th>P. Sugerido</th>
                                     <th>P.Unitario</th>
                                     <th>Total</th>
                                 </tr>
@@ -194,13 +196,13 @@
                                         <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                     </td>
                                     <td>
-                                        <input maxlength="190" class="form-control limp" list="browsers2" name="articulo[]"  required autocomplete="off" value="{{$nota_venta_reg->producto}}">
-                                            <datalist id="browsers2" >
+                                        <input maxlength="190" class="form-control limp" list="browsers{{$h}}" name="articulo[]"  required autocomplete="off" value="{{$nota_venta_reg->producto}}" id="article_text{{$h}}">
+                                            <datalist id="browsers{{$h}}" >
                                                 @foreach($productos as $index)
-                                                <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                                <option>{{$index->nombre}} \\ {{$index->descripcion}}</option>
                                                 @endforeach
                                                 @foreach($servicios as $servicio)
-                                                <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                                                <option>{{$servicio->nombre}} \\ {{$servicio->descripcion}}</option>
                                                 @endforeach
                                             </datalist>
                                         </input>
@@ -208,6 +210,7 @@
                                     <input type="hidden" name="elem_delete[]" value="{{$nota_venta_reg->id}}">
                                     <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
                                     <td><input type="text" value="{{$nota_venta_reg->cantidad}}" class="cantidad{{$h}} form-control limp" id="cantidad{{$h}}" name="cantidad[]" onkeyup="multi({{$h}})"></td>
+                                    <td><input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido{{$h}}" ondblclick="copy({{$h}})"></td>
                                     <td><input type="text" value="{{$nota_venta_reg->precio_nacional}}" class="precio{{$h}} form-control limp" id="precio{{$h}}" name="precio[]" onkeyup="multi({{$h}})"></td>
                                     <td><input type="text" value="{{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}" class="form-control limp" name="total" id="total{{$h}}" readonly></td>
                                 </tr>
@@ -452,19 +455,22 @@
             </td>";
             <td>
                 <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
-                <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191">
-                    <datalist id="browsers2" >
+                <input  class="form-control " list="browsers${i}" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,${i});">
+                    <datalist id="browsers${i}" >
                         @foreach($productos as $index)
-                        <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                        <option>{{$index->nombre}} \\ {{$index->descripcion}}</option>
                         @endforeach
                         @foreach($servicios as $servicio)
-                        <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                        <option>{{$servicio->nombre}} \\ {{$servicio->descripcion}}</option>
                         @endforeach
                     </datalist>
                 </input>
             </td>
             <td>
-                <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1g"/>
+            </td>
+            <td>
+                <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
             </td>
             <td>
                 <input type='text'  id='precio${i}' name='precio[]' class="precio${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
@@ -483,7 +489,8 @@
         var cantidad = document.querySelector(`#cantidad${a}`).value;
         var precio = document.querySelector(`#precio${a}`).value;
         var total = cantidad*precio;
-        document.querySelector(`#total${a}`).value = total;
+        var round_tota = parseFloat(Math.round((total) * 100 ) / 100).toFixed(2);
+        document.querySelector(`#total${a}`).value = round_tota;
         // console.log(total);
         var totalInp = $('[name="total"]');
         var total_t = 0;
@@ -491,8 +498,9 @@
         totalInp.each(function(){
             total_t += parseFloat($(this).val());
         });
+        var red = parseFloat(Math.round((total_t) * 100 ) / 100).toFixed(2);
         // document.querySelector(`#impor_t`).value = total_t;
-        $('.impor_t').html(total_t);
+        $('.impor_t').html(red);
         ajax_l();
     }
     function ajax_l(){
@@ -540,19 +548,19 @@
     });
 </script>
 <script>
-var clic = 1;
-function divAuto(){
-    if(clic==1){
-        document.getElementById("div-mostrar").style.height = "50px";
-        clic = clic + 1;
-    } else{
-    document.getElementById("div-mostrar").style.height = "0px";
-    clic = 1;
+    var clic = 1;
+    function divAuto(){
+        if(clic==1){
+            document.getElementById("div-mostrar").style.height = "50px";
+            clic = clic + 1;
+        } else{
+        document.getElementById("div-mostrar").style.height = "0px";
+        clic = 1;
+        }
     }
-}
 </script>
 
-<script type="text/javascript">
+<script >
     function mostrarPassword(){
         var cambio = document.getElementById("txtPassword");
         if(cambio.type == "password"){
@@ -563,7 +571,64 @@ function divAuto(){
             $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
         }
     }
+    function ajax_p_sugerido(item,elemt){
+        var item = item;
+        var moneda = $("#moneda_id").val();
+        $.ajax({
+            type: "post",
+            url: "{{ route('nota_venta.precio_sugerido') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'item': item,		
+                'moneda': moneda,		
+            },
+            success: function (msg) {
+                console.log(msg);
+                $(`#precio_sugerido${elemt}`).val(msg);
+                $(`#value${elemt}`).val(msg);
 
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+    }
+    function change_list(valor,elem){
+        var options = document.getElementById(`browsers${elem}`).getElementsByTagName('option');
+        var optionVals = [];
+        var i = 0;
+
+        for (i; i < options.length; i += 1) {
+            optionVals.push(options[i].value);
+        }
+
+        if (optionVals.indexOf(valor.value) > -1) {
+            console.log(valor.value);
+            ajax_p_sugerido(valor.value,elem);
+        }
+    }
+    function copy(a){
+        if(a==0){
+            var copy = document.getElementById(`precio_sugerido0`).value;
+            document.getElementById(`precio0`).value = copy;
+        }else{
+            var copy = document.getElementById(`precio_sugerido${a}`).value;
+            document.getElementById(`precio${a}`).value = copy;
+        }
+        multi(a);
+    }
+    $(document).ready(function (){ 
+        var contador = `{{$count_reg}}`;
+        for (var index = 0; index < contador; index++) {
+            var options = document.getElementById(`article_text${index}`).value;
+            console.log(options);
+            ajax_p_sugerido(options,index);
+            
+        }
+    });
 </script>
 
 @endsection
