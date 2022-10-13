@@ -30,6 +30,7 @@ Route::group(
 		Route::post('/cotizacion_manual/facturar_store' , 'CotizacionManualController@facturar_store')->name('cotizacion_manual.facturar_store');
 		Route::get('/cotizacion_manual/boletear/{id}','CotizacionManualController@boletear')->name('cotizacion_manual.boletear');
 		Route::post('/cotizacion_manual/boletear_store' , 'CotizacionManualController@boletear_store')->name('cotizacion_manual.boletear_store');
+		Route::get('/cotizacion_manual/free_print/{id}' , 'CotizacionManualController@free_print')->name('cotizacion_manual.free_print');
 
 		Route::resource('/categoria','CategoriaController')->only(['index','create','store','update']);;
 		Route::resource('/vendedores','PersonalVentaController');
@@ -58,6 +59,7 @@ Route::group(
 
 		Route::put('/cotizacion/store_factura/{id}','CotizacionController@store_factura')->name('cotizacion.store_factura');
 		Route::get('/cotizacion/print_cotizacion/{id}' , 'CotizacionController@print')->name('cotizacion.print');
+		Route::get('/cotizacion/free_print/{id}' , 'CotizacionController@free_print')->name('cotizacion.free_print');
 		Route::post('/cotizacion/facturar/{id}' , 'CotizacionController@facturar')->name('cotizacion.facturar');
 		Route::post('/cotizacion/facturar_store' , 'CotizacionController@facturar_store')->name('cotizacion.facturar_store');
 

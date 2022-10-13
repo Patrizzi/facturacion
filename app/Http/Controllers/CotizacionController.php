@@ -2940,157 +2940,58 @@ if($validacion==1){
 
    public function aprobar(Request $request, $id)
    {
-    $cotizacion=Cotizacion::find($id);
-    $cotizacion->estado_aprovar='1';
-    if (!isset($cotizacion->aprobado_por)) {
-        $cotizacion->aprobado_por=auth()->user()->id;
-    }
-    $cotizacion->save();
-    return redirect()->route('cotizacion.index');
-}
-
-public function ticket_ajax_cotizacion(Request $request){
-    $ids = $request->get('id');
-    $cotizacion=Cotizacion::find($ids);
-    if($cotizacion->tipo == "factura"){
-        $tipo_coti = "FACTURA";
-        $registro=Cotizacion_factura_registro::where('cotizacion_id',$ids)->get();
-    }else{
-        $tipo_coti = "BOLETA";
-        $registro=Cotizacion_boleta_registro::where('cotizacion_id',$ids)->get();
-    }
-
-    $empresa=Empresa::first();
-    $moneda = Moneda::where('id',$cotizacion->moneda_id)->first();
-    $igv=Igv::first();
-
-    $nombre_impresora = "EPSONTICKET";
-
-    $connector = new WindowsPrintConnector($nombre_impresora);
-    $printer = new Printer($connector);
-        #Mando un numero de respuesta para saber que se conecto correctamente.
-    echo 1;
-
-         //EMPRESA
-    $empresa=Empresa::first();
-    $printer->setJustification(Printer::JUSTIFY_CENTER);
-    $printer->setEmphasis(true);
-    $printer->text("COTIZACION ".$tipo_coti." ELECTRONICA\n");
-    $printer->text($cotizacion->cod_cotizacion."\n");
-    $printer->text("===============================\n");
-    $printer->text($cotizacion->created_at."\n");
-    $printer->text($empresa->nombre."\n");
-    $printer->setEmphasis(true);
-    $printer->text("RUC: ".$empresa->ruc."\n");
-        // $printer->setEmphasis(false);
-    $printer->text($empresa->calle." - ".$empresa->ciudad." - ".$empresa->region_provincia."\n");
-    $printer->text("Telefono: ".$empresa->telefono);
-    $printer->setEmphasis(false);
-    $printer->text("\n===============================\n");
-
-        //Cliente
-    $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $cotizacion->cliente->nombre);
-    $printer->text($cliente_dato."\n");
-    $cliente_id= sprintf('%-15.20s %-2.2s %-21.21s', $cotizacion->cliente->documento_identificacion, ':', $cotizacion->cliente->numero_documento);
-    $printer->text($cliente_id);
-    $printer->text("\n===============================\n");
-
-        //Productos
-    $leyenda = sprintf('%-14.14s %6.6s %8.8s  %8.8s', 'Producto', 'Cant.', 'P.Unit', 'Total');
-
-    $printer->text( $leyenda);
-    $printer->text("\n");
-    foreach($registro as $data_regs){
-            // $printer -> selectPrintMode(Printer::MODE_UNDERLINE);
-        $subtotal = ($data_regs->precio_unitario_comi * $data_regs->cantidad);
-            // %-4.2s $facturacion->moneda->simbolo,
-        $line = sprintf('%-14.14s %6.0d %8.2F %8.2F', $data_regs->producto->nombre, $data_regs->cantidad, $data_regs->precio_unitario_comi, $subtotal);
-            // $printer->setJustification(Printer::JUSTIFY_LEFT);
-            // $printer->text( ("%.2fx%s\n", , ));
-            // $printer->setJustification(Printer::JUSTIFY_RIGHT);
-        $printer->text( $line);
-        $printer->text("\n");
-            // $printer -> selectPrintMode();
-            // $total += $subtotal;
-    }
-
-    $sub_total=($cotizacion->op_gravada)+($cotizacion->op_inafecta)+($cotizacion->op_exonerada);
-    $sub_total_gravado=($cotizacion->op_gravada);
-
-    $printer->setJustification(Printer::JUSTIFY_CENTER);
-    $printer->text("\n===============================\n");
-    $printer->setJustification(Printer::JUSTIFY_RIGHT);
-
-    if($cotizacion->tipo == "factura"){
-        $igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100;
-        $end=round($sub_total, 2)+round($igv_p, 2);
-
-        $subtotal = sprintf('%20.20s %-2.2s %15.2F', "SUBTOTAL ".$moneda->simbolo, " : ", $sub_total);
-        $printer->text($subtotal."\n");
-        $op_gravada = sprintf('%20.20s %-2.2s %15.2F', "OP. Gravada ".$moneda->simbolo, " : ", $cotizacion->op_gravada);
-        $printer->text($op_gravada."\n");
-        $op_inafecta = sprintf('%20.20s %-2.2s %15.2F', "OP. Inafecta ".$moneda->simbolo, " : ", $cotizacion->op_inafecta);
-        $printer->text($op_inafecta."\n");
-        $op_exonerada = sprintf('%20.20s %-2.2s %15.2F', "OP. Exonerada ".$moneda->simbolo, " : ", $cotizacion->op_exonerada);
-        $printer->text($op_exonerada."\n");
-        $igv = sprintf('%20.20s %-2.2s %15.2F', "I.G.V ".$moneda->simbolo, " : ", $igv_p);
-        $printer->text($igv."\n");
-        $printer->setEmphasis(true);
-        $total = sprintf('%20.20s %-2.2s %15.2F', "TOTAL ".$moneda->simbolo, " : ", $end);
-        $printer->text($total."\n");
-        $printer->setEmphasis(false);
-    }else{
-        $end=round($sub_total, 2);
-
-        $subtotal = sprintf('%20.20s %-2.2s %15.2F', "SUBTOTAL ".$moneda->simbolo, " : ", $sub_total);
-        $printer->text($subtotal."\n");
-        $igv = sprintf('%20.20s %-2.2s %15.2F', "I.G.V ".$moneda->simbolo, " : ", "0.00");
-        $printer->text($igv."\n");
-        $total = sprintf('%20.20s %-2.2s %15.2F', "TOTAL ".$moneda->simbolo, " : ", $end);
-        $printer->text($total."\n");
-        $printer->setEmphasis(false);
-    }
-    $end = $end;
-
-        //NUMEROS A LETRAS
-    $formatter = new NumeroALetras();
-    $num_let = $formatter->toInvoice($end);
-    $printer->setJustification(Printer::JUSTIFY_LEFT);
-    $printer->text("Son: ".$num_let." ".$moneda->nombre."\n");
-
-    $printer->setJustification(Printer::JUSTIFY_CENTER);
-    $printer->text("\n===============================\n");
-    $printer->text("Atendido por: ".$cotizacion->user_personal->name."\n");
-    $printer->text("Autorizado mediante resolucion\n");
-    $printer->text("N° RS 018-005-0002243/SUNAT\n");
-    $printer->text("Representación impresa de la \n");
-    $printer->text("Boleta de Venta Electronica\n");
-    $printer->text("Para consultar el documento\n");
-    $printer->text("Ingrese a:\n");
-    $printer->text("https://ww2.todasmisfacturas.com.pe\n");
-        // $printer->text("Muchas gracias por su compra\n");
-    /*Alimentamos el papel 3 veces*/
-    $printer->feed(3);
-
-        /*
-            Cortamos el papel. Si nuestra impresora
-            no tiene soporte para ello, no generará
-            ningún error
-        */
-            $printer->cut();
-
-        /*
-            Por medio de la impresora mandamos un pulso.
-            Esto es útil cuando la tenemos conectada
-            por ejemplo a un cajón
-        */
-            $printer->pulse();
-
-        /*
-            Para imprimir realmente, tenemos que "cerrar"
-            la conexión con la impresora. Recuerda incluir esto al final de todos los archivos
-        */
-            $printer->close();
+        $cotizacion=Cotizacion::find($id);
+        $cotizacion->estado_aprovar='1';
+        if (!isset($cotizacion->aprobado_por)) {
+            $cotizacion->aprobado_por=auth()->user()->id;
         }
-
+        $cotizacion->save();
+        return redirect()->route('cotizacion.index');
     }
+
+    public function free_print(Request $request,$id){
+        
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        $existe_id=Cotizacion::where('id',$id)->first();
+        if(empty($existe_id)){ return redirect()->route('cotizacion.index'); }
+
+        $banco=Banco::where('estado','0')->get();
+        $banco_count=Banco::where('estado','0')->count();
+        $cotizacion=Cotizacion::find($id);
+        $regla=$cotizacion->tipo;
+        $sub_total=0;
+        $igv=Igv::first();
+
+        /*registros boleta y factura*/
+        if($regla=='factura'){
+            $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+        }elseif($regla=='boleta'){
+            $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+        }
+        /* FIN registros boleta y factura*/
+        /*de numeros a Letras*/
+
+        // foreach($cotizacion_registro as $cotizacion_registros){
+        $sub_total=$cotizacion->op_gravada;
+
+        $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
+        // if ($regla=='factura') {
+        $end=round($sub_total, 2)+round($igv_p, 2);
+        $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
+        // }elseif ($regla=='boleta'){
+        //     $end=round($sub_total, 2);
+        //     $end2=number_format(round($sub_total, 2),2);
+
+        // }
+        /* Finde numeros a Letras*/
+        $empresa=Empresa::first();
+        $sum=0;
+        $i=1;
+
+        return view('transaccion.venta.cotizacion.free_print', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','i','end','igv_p','banco_count','end2'));
+    }
+}

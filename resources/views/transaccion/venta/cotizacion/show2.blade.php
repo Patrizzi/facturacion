@@ -52,6 +52,7 @@
                 @endif
             </div>
             <div class="col-sm-6" align="right">
+                <a href="{{route('cotizacion.free_print', $cotizacion->id)}}" class="btn btn-secondary" target="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Impresion Libre"><i class="fa fa-share-alt"></i></a>
                 <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_cotizacion' ,$cotizacion->id)}}">
                     <input type="text" name="name" maxlength="50" hidden="" value="Cotizacion_{{$cotizacion->tipo}}"  >
                     <input type="text" hidden="" name="firma" value="0">
@@ -125,7 +126,7 @@
                      <div class="form-control" >
                          <h3>Condiciones Generales</h3>
                          <div align="left">
-                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
+                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
                             <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
                             <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -222,11 +223,11 @@
             </footer>
         </div>
         <span hidden> {{$h = 1}} {{ $sume = 0}}</span>
-        <div class="table-responsive div-editar no_mostrar">
+        <div class="div-editar no_mostrar">
             @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
             <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post"  enctype="multipart/form-data" id="coti_update">
                 @csrf
-                <table cellspacing="0" class="table " id="inp_s">
+                <table cellspacing="0" class="table table-responsive" id="inp_s">
                     <thead>
                         <tr>
                             <th><button class="addmore btn btn-success" type="button"><i class="fa fa-plus"></i></button></th>
@@ -456,6 +457,7 @@
         margin: 0px;
         width: auto;
     }
+ 
 </style>
 
 <!-- Mainly scripts -->
