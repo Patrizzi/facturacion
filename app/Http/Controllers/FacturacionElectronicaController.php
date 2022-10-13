@@ -666,7 +666,10 @@ class FacturacionElectronicaController extends Controller
         //codigo
         $codigo=$factura->codigo_fac;
 
-        nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+        
+        if($nota_credito->facturacion_id != null ){
+            nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+        }
 
         $nota_credito->n_electronica=1;
         $nota_credito->save();
@@ -751,7 +754,9 @@ class FacturacionElectronicaController extends Controller
 
         //codigo
         $codigo=$boleta->codigo_boleta;
-        nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+        if($nota_credito->boleta_id != null ){
+            nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+        }
 
         $nota_credito->n_electronica=1;
         $nota_credito->save();
@@ -878,7 +883,7 @@ class FacturacionElectronicaController extends Controller
             //codigo
             $codigo=$factura->codigo_fac;
 
-            nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+            // nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
 
             $nota_credito->n_electronica=1;
             $nota_credito->save();
@@ -971,7 +976,7 @@ class FacturacionElectronicaController extends Controller
     
             //codigo
             $codigo=$boleta->codigo_boleta;
-            nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
+            // nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
     
             $nota_credito->n_electronica=1;
             $nota_credito->save();
