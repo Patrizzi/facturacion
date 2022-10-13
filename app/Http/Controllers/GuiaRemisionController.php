@@ -40,8 +40,9 @@ class GuiaRemisionController extends Controller
         if (empty($existe_id)) {
             return redirect()->route('kardex-entrada.index');
         }
-        $vehiculo = Vehiculo::where('estado_activo', 0)->get();
+        $vehiculo = Vehiculo::where('estado_activo', 1)->get();
         $transporte_publico = TransportePublico::where('estado', 0)->get();
+        return $transporte_publico;
         if(count($vehiculo) > 0 && count($transporte_publico) > 0){
             $valor_error = 0;
             $message = "";

@@ -467,7 +467,7 @@
                 </input>
             </td>
             <td>
-                <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1g"/>
+                <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
             </td>
             <td>
                 <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
