@@ -231,7 +231,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
-                                <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
+                                <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
                             </div>
                             <div class="col-sm-6 " align="right">
                                 <button  class="guardar ladda-button btn btn-info " type="submit" >Guardar</button>
@@ -414,9 +414,11 @@
             cache: true
         }
     });
- 
+ </script>
+ <script>
     var i = 2;
     $(".addmore").on('click', function () {
+        console.log("add");
         var data = `[
         <tr>
             <td>

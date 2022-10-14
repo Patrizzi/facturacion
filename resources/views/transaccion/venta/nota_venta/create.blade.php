@@ -77,7 +77,7 @@
                                     <td>Moneda</td>
                                     <td>:</td>
                                     <td>
-                                    <select name="moneda" class="form-control" required >
+                                    <select name="moneda" class="form-control" required id="moneda_id" >
                                         @foreach($moneda as $monedas)
                                             <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
                                         @endforeach
@@ -105,38 +105,44 @@
                                     <tr>
                                         <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
                                         <th >Articulo</th>
-                                        <th style="width:100px">Cantidad</th>
-                                        <th style="width:100px">Precio</th>
-                                        <th style="width:100px">Total</th>
+                                        <th style="width:120px">Cantidad</th>
+                                        <th style="width:120px">P. Sugerido</th>
+                                        <th style="width:120px">Precio</th>
+                                        <th style="width:120px">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td><input type='checkbox' class="case"></td>
-                                        <td><input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191">
-                                        <datalist id="browsers2" >
+                                        <td><input  class="form-control " list="browsers0" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,0);">
+                                        <datalist id="browsers0">
                                             @foreach($productos as $index)
-                                            <option>{{$index->nombre}} / {{$index->descripcion}}</option>
+                                            <option>{{$index->nombre}} \ {{$index->descripcion}}</option>
                                             @endforeach
                                             @foreach($servicios as $servicio)
-                                            <option>{{$servicio->nombre}} / {{$servicio->descripcion}}</option>
+                                            <option>{{$servicio->nombre}} \ {{$servicio->descripcion}}</option>
                                             @endforeach
+                                        </datalist>
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off"  />
+                                            <input style="width: 96px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"  />
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                            <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido0" ondblclick="copy(0)">
+                                        </td>
+                                        <td>
+                                            <input style="width: 96px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
                                         </td>
 
                                         <td>
-                                            <input style="width: 76px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                            <input style="width: 96px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                         </td>
                                         <span id="spTotal"></span>
                                     </tr>
                                 </tbody>
                                 <tbody>
                                     <tr  align="center">
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td>Total :</td>
@@ -294,8 +300,9 @@
     });
 </script>
 
-<script>
+<script >
     var i = 2;
+
     $(".addmore").on('click', function () {
         var data = `[
         <tr>
@@ -303,107 +310,167 @@
         <input type='checkbox' class='case'/>
         </td>";
         <td>
-        <input  class="form-control " list="browsers2" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191">
+        <input  class="form-control " list="browsers${i}" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,${i});">
+        <datalist id="browsers${i}"  >
+            @foreach($productos as $index)
+            <option >{{$index->nombre}} \\  {{$index->descripcion}}</option>
+            @endforeach
+            @foreach($servicios as $servicio)
+            <option>{{$servicio->nombre}} \\ {{$servicio->descripcion}}</option>
+            @endforeach
+        </datalist>
         </td>
         <td>
-        <input type='text' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+        <input type='text' style="width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
         <td>
-        <input type='text' style="width: 76px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+            <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
         </td>
         <td>
-        <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+        <input type='text' style="width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+        </td>
+        <td>
+        <input type='text' id='total${i}'  style="width: 96px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
         </td>
 
         </tr>
         `;
                         // $(`.monto${a}`).each(function(){
 
-                            $('.tables').append(data);
-                            i++;
-                        });
-                    </script>
-                    <script>
-                        function multi(a){
-                            var total = 1;
-                            var totales=0;
-            var change= false; //
-            $(`.monto${a}`).each(function(){
-                if (!isNaN(parseFloat($(this).val()))) {
-                    change= true;
+        $('.tables').append(data);
+        i++;
+    });
+</script>
+<script>
+    function multi(a){
+        var total = 1;
+        var totales=0;
+        var change= false; //
+        $(`.monto${a}`).each(function(){
+            if (!isNaN(parseFloat($(this).val()))) {
+                change= true;
 
-                    total *= parseFloat($(this).val());
-                }
-            });
-            total = (change)? total:0;
-
-            var cantidad = document.querySelector(`#cantidad${a}`).value;
-            var precio = document.querySelector(`#precio${a}`).value;
-            var multiplier = 100;
-            var final=precio*cantidad;
-            var final_decimal = Math.round(final * multiplier) / multiplier;
-            console.log(final_decimal);
-            document.getElementById(`total${a}`).value = final_decimal;
-
-            var totalInp = $('[name="total"]');
-            var total_t = 0;
-
-            totalInp.each(function(){
-                total_t += parseFloat($(this).val());
-            });
-
-            var multiplier2 = 100;
-            var total_tt = Math.round(total_t * multiplier2) / multiplier2;
-
-            $('#sub_total').val(total_tt);
-
-            var igv_valor=0;
-            var subtotal = document.querySelector(`#sub_total`).value;
-            var igv=subtotal*igv_valor/100;
-
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-            var end=igv_decimal+parseFloat(subtotal);
-
-            var end2 = Math.round(end * multiplier2) / multiplier2;
-
-            // document.getElementById("igv").value = igv_decimal;
-            document.getElementById("total_final").value = end2;
-
-        }
-    </script>
-
-    <script>
-        $(".delete").on('click', function () {
-            $('.case:checkbox:checked').parents("tr").remove();
-            var totalInp = $('[name="total"]');
-            var total_t = 0;
-
-            totalInp.each(function(){
-                total_t += parseFloat($(this).val());
-            });
-            $('#sub_total').val(total_t);
-
-            var igv_valor=18;
-            var subtotal = document.querySelector(`#sub_total`).value;
-            var igv=parseFloat(subtotal)*igv_valor/100;
-            var end=parseFloat(igv)+parseFloat(subtotal);
-
-            // console.log(typeof igv);
-            // console.log(typeof end);
-            document.getElementById("igv").value = igv;
-            document.getElementById("total_final").value = end;
+                total *= parseFloat($(this).val());
+            }
         });
-    </script>
+        total = (change)? total:0;
 
-    <script>
-        function select_all() {
-            $('input[class=case]:checkbox').each(function () {
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    $(this).prop("checked", false);
-                } else {
-                    $(this).prop("checked", true);
+        var cantidad = document.querySelector(`#cantidad${a}`).value;
+        var precio = document.querySelector(`#precio${a}`).value;
+        var multiplier = 100;
+        var final=precio*cantidad;
+        var final_decimal = Math.round(final * multiplier) / multiplier;
+        console.log(final_decimal);
+        document.getElementById(`total${a}`).value = final_decimal;
+
+        var totalInp = $('[name="total"]');
+        var total_t = 0;
+
+        totalInp.each(function(){
+            total_t += parseFloat($(this).val());
+        });
+
+        var multiplier2 = 100;
+        var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+
+        $('#sub_total').val(total_tt);
+
+        var igv_valor=0;
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv=subtotal*igv_valor/100;
+
+        var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+        var end=igv_decimal+parseFloat(subtotal);
+
+        var end2 = Math.round(end * multiplier2) / multiplier2;
+
+        // document.getElementById("igv").value = igv_decimal;
+        document.getElementById("total_final").value = end2;
+
+    }
+</script>
+
+<script>
+    $(".delete").on('click', function () {
+        $('.case:checkbox:checked').parents("tr").remove();
+        var totalInp = $('[name="total"]');
+        var total_t = 0;
+
+        totalInp.each(function(){
+            total_t += parseFloat($(this).val());
+        });
+        $('#sub_total').val(total_t);
+
+        var igv_valor=18;
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv=parseFloat(subtotal)*igv_valor/100;
+        // var end=parseFloat(igv)+parseFloat(subtotal);
+
+        // console.log(typeof igv);
+        // console.log(typeof end);
+        // document.getElementById("igv").value = igv;
+        document.getElementById("total_final").value = end;
+    });
+</script>
+
+<script>
+    function select_all() {
+        $('input[class=case]:checkbox').each(function () {
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
+        });
+    }
+    function ajax_p_sugerido(item,elemt){
+        var item = item;
+        var moneda = $("#moneda_id").val();
+        $.ajax({
+            type: "post",
+            url: "{{ route('nota_venta.precio_sugerido') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'item': item,		
+                'moneda': moneda,		
+            },
+            success: function (msg) {
+                console.log(msg);
+                $(`#precio_sugerido${elemt}`).val(msg);
+                $(`#value${elemt}`).val(msg);
+
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
                 }
-            });
+            },
+            cache:true
+        });
+    }
+    function change_list(valor,elem){
+        var options = document.getElementById(`browsers${elem}`).getElementsByTagName('option');
+        var optionVals = [];
+        var i = 0;
+
+        for (i; i < options.length; i += 1) {
+            optionVals.push(options[i].value);
         }
-    </script>
-    @stop
+
+        if (optionVals.indexOf(valor.value) > -1) {
+            console.log(valor.value);
+            ajax_p_sugerido(valor.value,elem);
+        }
+    }
+    function copy(a){
+        if(a==0){
+            var copy = document.getElementById(`precio_sugerido0`).value;
+            document.getElementById(`precio0`).value = copy;
+        }else{
+            var copy = document.getElementById(`precio_sugerido${a}`).value;
+            document.getElementById(`precio${a}`).value = copy;
+        }
+        multi(a);
+    }
+</script>
+@stop

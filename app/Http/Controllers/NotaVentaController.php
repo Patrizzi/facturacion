@@ -8,6 +8,7 @@ use App\Empresa;
 use App\Forma_pago;
 use App\Garantia;
 use App\Moneda;
+use App\TipoCambio;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use App\Personal;
@@ -15,6 +16,7 @@ use App\Producto;
 use App\Servicios;
 use App\Igv;
 use App\kardex_entrada;
+use App\Stock_producto;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -50,7 +52,82 @@ class NotaVentaController extends Controller
         $user_login =auth()->user();
         return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen','totales'));
     }
+    
+    public function precio_sugerido(Request $request){
+        $item = $request->item;
+        $moneda_nota = $request->moneda;
+        $pro_serv = explode(" \ ", $item);
+        
+        $moneda=Moneda::where('principal',1)->first();
+        $moneda_registrada=$moneda_nota;
+        // return $moneda_seleccion;
+        if(isset($pro_serv[1])){
+            $producto = Producto::where('nombre',$pro_serv[0])->where('descripcion',$pro_serv[1])->first();
+            $servicios = Servicios::where('nombre',$pro_serv[0])->where('descripcion',$pro_serv[1])->first();
+        }else{
+            $producto = Producto::where('nombre',$pro_serv[0])->first();
+            $servicios = Servicios::where('nombre',$pro_serv[0])->first();
+        }
+        
+        // if(!isset($producto) && !isset($servicios)){
+        //     $pro_precio = 0;
+        //     // return $pro_precio;
+        // }
+        $igv = Igv::first();
+        $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
+        if(isset($producto)){
+            $producto_pre = Stock_producto::where('producto_id',$producto->id)->first();
 
+            
+            if($moneda->id == $moneda_registrada){
+                if ($moneda->tipo == 'nacional') {
+                    $utilidad=$producto_pre->precio_nacional*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round($producto_pre->precio_nacional+$utilidad,2);
+
+                }else {
+                    $utilidad=$producto_pre->precio_extranjero*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round($producto_pre->precio_extranjero+$utilidad,2);
+                }
+            }else{
+                if ($moneda->tipo == 'extranjera') {
+                    $utilidad=$producto_pre->precio_extranjero*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round(($producto_pre->precio_extranjero+$utilidad) *$cambio->paralelo ,2);
+                }else{
+                            //promedio original ojo revisar que es precio nacional --------------------------------------------------------
+                    $utilidad=$producto_pre->precio_extranjero*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round(($producto_pre->precio_extranjero+$utilidad) / $cambio->paralelo ,2);
+                }
+            }
+            $igv = $precio_base * ($igv->igv_total/100);
+            $pro_precio = round($precio_base + $igv,2);
+        }elseif(isset($servicios)){
+            if($moneda->id == $moneda_registrada){
+                if($moneda->tipo =='nacional'){
+                    //Calculo de array para precio, stock en (SERVICIO)
+                    $utilidad_serv=$servicios->precio_nacional*($servicios->utilidad)/100;
+                    $precio_base=($servicios->precio_nacional + $utilidad_serv);
+                }else{
+                    $utilidad_serv=$servicios->precio_extranjero*($servicios->utilidad)/100;
+                    $precio_base=($servicios->precio_extranjero + $utilidad_serv);
+                }
+            }else{
+                if($moneda->tipo =='extranjera'){
+                    //Calculo de array para precio, stock en (SERVICIO)
+                    $utilidad_serv=$servicios->precio_nacional*($servicios->utilidad)/100;
+                    $precio_base=($servicios->precio_nacional + $utilidad_serv)/$cambio->paralelo;
+                }else{
+                    $utilidad_serv=$servicios->precio_extranjero*($servicios->utilidad)/100;
+                    $precio_base=( $servicios->precio_extranjero + $utilidad_serv)/$cambio->paralelo;
+                }
+            }
+            $igv = $precio_base * ($igv->igv_total/100);
+            $pro_precio = round($precio_base + $igv,2);
+        }else{
+            $pro_precio = 0;
+        }
+
+        return $pro_precio;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -144,8 +221,9 @@ class NotaVentaController extends Controller
         $nota_venta_re=NotaVentaRegistro::where('nota_venta_id',$id)->get();
         $banco=Banco::where('estado',0)->get();
         $banco_count=$banco->count();
+        $count_reg = count($nota_venta_re);
 
-      return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count','servicios','productos'));
+        return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg'));
 
     }
     /**

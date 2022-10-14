@@ -24,6 +24,7 @@
                 @endif
             </div>
             <div class="col-sm-6" align="right">
+                <a href="{{route('cotizacion_manual.free_print', $cotizacion->id)}}" class="btn btn-secondary" target="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Impresion Libre"><i class="fa fa-share-alt"></i></a>
                 <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}">@csrf
                     <input type="text" name="name" maxlength="50" hidden="" value="CotizacionManual_{{$cotizacion->tipo}}"  >
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
@@ -80,7 +81,7 @@
                             <div align="left">
                                 <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                 <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$cotizacion->created_at}}<br>
+                                <strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
                                 <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
                                 <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
@@ -181,10 +182,10 @@
         </div>
         <span hidden>{{$h = 0 }} {{$igv_1 =  1 + ($igv_t->igv_total/100)}}</span>
         <div class="div-editar no_mostrar">
-            <div class="table-responsive">
+            <div class="table ">
                 <form action="{{route('cotizacion_manual.update', $cotizacion->id)}}" method="post" id="coti_man_update">
                     @csrf
-                    <table class="table tables" id="inp_s">
+                    <table class="table tables table-responsive" id="inp_s" >
                         <thead>
                             <tr>
                                 <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
@@ -452,6 +453,9 @@
         margin: 0px;
         width: auto;
     }
+    .table-responsive{
+        display: inline-table;
+    }
 </style>
 
 <!-- Mainly scripts -->
@@ -611,6 +615,7 @@
 
     var i = {{$h}};
     $(".addmore").on('click', function () {
+        console.log(i)
         var data = `[
         <tr>
             <td>

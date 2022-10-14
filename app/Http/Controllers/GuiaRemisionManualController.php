@@ -34,7 +34,7 @@ class GuiaRemisionManualController extends Controller
         $almacen = Almacen::where('estado',0)->get();
         $almacen_primero = Almacen::where('estado',0)->first();
         $conteo_almacen = Almacen::where('estado',0)->count();
-        $vehiculo = Vehiculo::where('estado_activo', 0)->get();
+        $vehiculo = Vehiculo::where('estado_activo', 1)->get();
         $transporte_publico = TransportePublico::where('estado', 0)->get();
         if(count($vehiculo) > 0 && count($transporte_publico) > 0){
             $valor_error = 0;
