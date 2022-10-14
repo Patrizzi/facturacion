@@ -16,6 +16,39 @@ class FamiliaController extends Controller
      */
     public function index()
     {
+        $f_ubic = Familia::where('ubicacion','!=', null)->count();
+        if($f_ubic == 0){
+            $familia = Familia::all();
+            $letra_ubicacion = 'A';
+            $suma = 1;
+            $num = 1;
+            foreach($familia as $index => $fami){
+                //ubicacion
+                $letra_ubicacion = preg_replace('/[^a-z áéíóúÁÉÍÓÚñÑ ]/iu', '', $letra_ubicacion); // letra            
+                // letra aumentado
+                for ($e=0; $e<1; $e++) {
+                    if($fami->id == 1){
+                        $letra2 =  $letra_ubicacion;
+                    }else{
+                        $letra2 =  ++$letra_ubicacion;
+
+                    }
+                }       
+                // Numero aumentado
+                for ($f=0; $f<1; $f++) {
+                    
+                    if($fami->id == 1){
+                        $num =  1;
+                    }else{
+                        $num =  ++$num;
+                    }
+                }
+                $ubicacion = intval($num).$letra2;
+
+                $fami->ubicacion = $ubicacion;
+                $fami->save();
+            }
+        }
         $familias=Familia::all();
         $conteo=Familia::where('estado','0')->count();
         return view('configuracion_general.familia.index',compact('familias','conteo'));

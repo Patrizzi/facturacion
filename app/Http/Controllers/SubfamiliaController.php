@@ -36,7 +36,7 @@ class SubfamiliaController extends Controller
      */
     public function store($id,Request $request)
     {
-        $sub_familia_cantidad = Subfamilia::all()->count();
+        $sub_familia_cantidad = Subfamilia::where('id_familia', $id)->count();
         $sub_familia_cantidad ++;
         $cien=1000+$sub_familia_cantidad;
         $contador=substr($cien,1);
