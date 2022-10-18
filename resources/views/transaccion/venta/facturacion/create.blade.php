@@ -140,7 +140,7 @@
                                                         <div class="col-sm-6" style="">
                                                             <label for=""><strong>Precio Total: &nbsp;</strong>{{$moneda->simbolo}}&nbsp;</label><label id="cuotas_footer"></label>
                                                         </div>
-                                                        <div class="col-sm-6">
+                                                        <div class="col-sm-6" align="right">
                                                             <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
                                                         </div>
                                                     </div>
@@ -789,7 +789,7 @@
             for (var i = 0; i < inp_mont; i++) {
                 fin = parseFloat(fin) + parseFloat(monto_c[i].value);
             }
-            console.log(fin);
+            var fin_r = Math.round(fin * 100) / 100;
             for (var i = 0; i < inp_mont; i++) {
                 var fecha = monto_fc[i].id;
                 var monto = monto_c[i].id;
@@ -807,7 +807,7 @@
                 }
             }
             
-            if(fin != total || comp != inp_mont ){
+            if(fin_r != total || comp != inp_mont ){
                 // document.getElementById('cuota_modal').click();
                 document.getElementById('suma_campos').style.display = "flex";
             }else{

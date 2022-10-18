@@ -108,7 +108,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                                        <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                        <strong style="font-size:11px">La suma de las cuotas es diferente del monto total</strong>
                                                         <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -119,7 +119,7 @@
                                                                 <label>Fecha:</label>
                                                             </div>
                                                             <div class="col-sm-4">
-                                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1}}" >
                                                             </div>
                                                             <div class="col-sm-1">
                                                                 <label>Monto:</label>
@@ -135,6 +135,17 @@
                                                             <div class="col-sm-2">
                                                                 <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
                                                             </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer" style="display: block">
+                                                    <div class="row">
+                                                        <div class="col-sm-6" style="">
+                                                            <label for=""><strong>Precio Total: &nbsp;</strong>{{$moneda->simbolo}}&nbsp;</label><label id="cuotas_footer"></label>
+                                                        </div>
+                                                        <div class="col-sm-6" align="right">
+                                                            <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -652,9 +663,47 @@
             var monto = monto_c[i].id;
             var fin = (end2/inp_mont)
             document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier)/ multiplier;
+            $("#cuotas_footer").html(Math.round(end2 * multiplier2)/ multiplier2);
         }
     }
+    $(document).on('click','#button_cuotas_save', function(event){
+            
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var monto_fc = document.getElementsByClassName('fecha_pago');
+        console.log(monto_c)
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        var total =  $("#cuotas_footer").html();
+        var fin = 0.00;
+        var comp = 0;
+        for (var i = 0; i < inp_mont; i++) {
+            fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+        }
+        var fin_r = Math.round(fin * 100) / 100;
+        console.log(total);
+        for (var i = 0; i < inp_mont; i++) {
+            var fecha = monto_fc[i].id;
+            var monto = monto_c[i].id;
 
+            var input_text = document.getElementById(`${monto}`).value;
+            var date_text = document.getElementById(`${fecha}`).value;
+            if( input_text.length  == 0){
+                // document.getElementById('cuota_modal').click();
+                document.getElementById('alert_campos').style.display = "flex";
+            }else if(date_text.length  == 0 ){
+                document.getElementById('alert_campos').style.display = "flex";
+            }else{
+                var comp = comp + 1;
+            }
+        }
+        console.log(fin_r);
+        if(fin_r != total || comp != inp_mont ){
+            // document.getElementById('cuota_modal').click();
+            document.getElementById('suma_campos').style.display = "flex";
+        }else{
+            $('#cuotas_modal').modal('hide')
+        }
+        
+    });
         //Función de borrado de fila de articulos (Producto-Servicio)
     $(document).on('click', '.borrar', function (event) {
         event.preventDefault();
@@ -752,7 +801,7 @@
                 <div class="delete_modal${x} row">
                 <div class="col-sm-1"><label>Fecha:</label></div>
                 <div class="col-sm-4">
-                <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" >
+                <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" min="{{$fecha_1}}">
                 </div>
                 <div class="col-sm-1"><label>Monto:</label></div>
                 <div class="col-sm-4">

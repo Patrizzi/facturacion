@@ -42,13 +42,13 @@ class GuiaRemisionController extends Controller
         }
         $vehiculo = Vehiculo::where('estado_activo', 1)->get();
         $transporte_publico = TransportePublico::where('estado', 0)->get();
-        // return $transporte_publico;it
-        if(count($vehiculo) > 0 && count($transporte_publico) > 0){
-            $valor_error = 0;
-            $message = "";
-        }else{
+        // return count($transporte_publico);
+        if(count($vehiculo) == 0 && count($transporte_publico) == 0){
             $valor_error = 1;
             $message = "Para crear una Guia de Remision agrege un Vehiculo, ya sea Publico o Privado ";
+        }else{
+            $valor_error = 0;
+            $message = "";
         }
         $user_login = auth()->user();
         $guia_remision = Guia_remision::all();

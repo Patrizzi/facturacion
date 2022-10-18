@@ -731,7 +731,9 @@ class CotizacionManualController extends Controller
         $empresa = Empresa::first();
         $igv = Igv::first();
         // $bancos = Bancos::all();
-        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','forma_pagos','igv'));
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $fecha_1 = $fecha_hoy->format('Y-m-d');
+        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','forma_pagos','igv','fecha_1'));
     }
     
     public function facturar_store(Request $request){
