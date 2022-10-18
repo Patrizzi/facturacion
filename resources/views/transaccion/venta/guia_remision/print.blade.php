@@ -122,7 +122,7 @@
                             <tbody>
                              @foreach($guia_registro as $guia_registros)
                              <tr>
-                                <td>{{$guia_registros->id}}</td>
+                                <td>{{$guia_registros->producto->codigo_original}}</td>
                                 <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}}<br>
                                     {{$guia_registros->descripcion}}</td>
                                 <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
