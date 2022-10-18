@@ -218,7 +218,7 @@ class Config_fe extends Model
                 # code...
                 $cuotas_credito[$key]=(new Cuota())
                 ->setMonto($cuota->monto)
-                ->setFechaPago(new DateTime('+7days'));
+                ->setFechaPago(new DateTime($cuota->fecha_pago));
             }
 
             $invoice = (new Invoice())
@@ -227,8 +227,8 @@ class Config_fe extends Model
             ->setTipoDoc('01') // Factura - Catalog. 01  // pagina 33 del pdf sunat 2.1
             ->setSerie($serie)// numero de serie
             ->setCorrelativo($correlativo) // y numero correlativo  // ejemplo en seccion 2.2 pagina 20 del pdf sunat 2.1 infomracion precisa pagina 30 pdf sunat 2.1
-            ->setFechaEmision($factura->created_at)
-            ->setFormaPago(new FormaPagoCredito($total)) // FormaPago: credito
+            ->setFechaEmision($factura->updated_at)
+            ->setFormaPago(new FormaPagoCredito(round($total,2))) // FormaPago: credito
             ->setCuotas(
                 $cuotas_credito
             )

@@ -227,8 +227,11 @@ class FacturacionController extends Controller
         // }
         /*Servicio*/
 
-        // return $array2;
-        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion' ));
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $fecha_1 = $fecha_hoy->format('Y-m-d');
+        // return $modifiedMutable;
+
+        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion','fecha_1' ));
     }
 
     public function create_ms(Request $request){
