@@ -100,7 +100,7 @@
                                     <td>{{$cotizacion_registros->servicio->codigo_servicio}}</td>
                                     <td>{{$cotizacion_registros->servicio->nombre}} <br>{{$cotizacion_registros->descipcion_item}}</span></td>
                                     @endif
-                                    
+                                    <td>{{$cotizacion_registros->cantidad}}</td>
                                 </tr>
                                 
                                 {{-- <tr>
@@ -111,9 +111,8 @@
                                     @else
                                     <td>{{$cotizacion_registros->servicio->codigo_servicio}}</td>
                                     <td>{{$cotizacion_registros->servicio->nombre}} <br>{{$cotizacion_registros->descipcion_item}}</span></td>
-                                    @endif
-                                    
-                                    <td>{{$cotizacion_registros->cantidad}}</td>
+                                    @endif--}}
+                                    {{--
                                     <td style="text-align: right;padding-right: 5%">{{number_format($cotizacion_registros->precio_unitario_comi,2)}}</td>
                                     <td style="text-align: right;padding-right: 5%">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2)}}</td>
                                 </tr> --}}

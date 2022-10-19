@@ -87,8 +87,8 @@
                                             <th style="text-align:center;">Codigo </th>
                                             <th>Descripcion</th>
                                             <th style="text-align:center;">Cantidad</th>
-                                            <th style="text-align:center;">P.Unitario</th>
-                                            <th style="text-align:center;">Total<span >{{$cotizacion_m->moneda->simbolo}}</span></th>
+                                            {{-- <th style="text-align:center;">P.Unitario</th>
+                                            <th style="text-align:center;">Total<span >{{$cotizacion_m->moneda->simbolo}}</span></th> --}}
                                         </tr>
                                     </thead>
                                     <tbody >
@@ -111,9 +111,9 @@
                                                     {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                                                 </td>
                                             @endif                        
-                                            <td>{{$cotizacion_registros->cantidad}}</td>
-                                            <td>{{number_format($cotizacion_registros->precio,2)}}</td>
-                                            <td>{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
+                                            <td align="center">{{$cotizacion_registros->cantidad}}</td>
+                                            {{-- <td>{{number_format($cotizacion_registros->precio,2)}}</td>
+                                            <td>{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -157,17 +157,21 @@
                             <br>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <p><u>centro de Atencion : </u></p>
-                                    Telefono : {{$cotizacion_m->user_personal->personal->telefono }}<br>
-                                    Celular : {{$cotizacion_m->user_personal->personal->celular }}<br>
-                                    Email : {{$cotizacion_m->user_personal->personal->email }}<br>
+                                    <p><u>Atendido Por: </u></p>
+                                    Teléfono :  {{$empresa->telefono}}<br>
+                                    Celular : {{$cotizacion_m->user_personal->celular }}<br>
+                                    Email : {{$cotizacion_m->user_personal->email_user}}<br>
                                     Web : {{$empresa->pagina_web}} <br>
                                 </div>
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-3"><br><br>
+                                    @if(empty($firma))
+                                    @else
+                                    <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
+                                    @endif
                                     <hr>
-                                    <center>{{$cotizacion_m->user_personal->personal->nombres }}</center>
+                                    <center>{{$cotizacion_m->user_personal->nombre}}</center>
                                 </div>
                             </div>
                         </div>
