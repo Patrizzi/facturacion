@@ -43,6 +43,10 @@ Route::group(
 
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
+		Route::resource('/cliente_sucursal','ClienteSucursalController')->except('[store]');
+		Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
+		// Route::post('/cliente_sucursal/departamento','ClienteController@ajax_dep')->name('sucursal_dep_cli.ajax_dep');
+
 		Route::post('/cliente_retenedores/{id}' , 'ClienteRetenedoresController@update')->name('cliente_retenedores.reupdate');
 		Route::resource('/compra','CompraController');
 

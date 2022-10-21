@@ -32,6 +32,19 @@ class ClientesSeeder extends Seeder
     		'created_at' => '2020-08-01 11:36:57',
     		'updated_at' => "2020-08-01 11:36:58" ,
     	]);
+		DB::table('contactos')->insert([
+    		'id' => 1 ,
+    		'primer_contacto' => 1,
+    		'nombre' =>"contacto" ,
+    		'cargo' => 'Empleado',
+    		'telefono' => "00000000" ,
+    		'celular' => "999999999" ,
+    		'email' => "desarrollo@jypsac.com" ,
+    		'estado' => 0,
+    		'clientes_id' => 1,
+    		'created_at' => '2020-08-01 11:36:57',
+    		'updated_at' => "2020-08-01 11:36:58" ,
+    	]);
 
     	// DB::table('clientes')->insert([
     	// 	'id' => 2 ,
