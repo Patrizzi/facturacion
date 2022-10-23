@@ -236,6 +236,11 @@
                         </tr>
                       </thead>
                       <tbody>
+                        @if(count($cliente_sucursal) == 0)
+                        <tr>
+                          <td colspan="9" style="text-align: center">Sin registros</td>
+                        </tr>
+                        @endif
                         @foreach($cliente_sucursal as $sucursales)
                         <tr>
                           <td>{{$sucursales->nombre}}</td>
@@ -245,7 +250,7 @@
                           <td>{{$sucursales->provincia}}</td>
                           <td>{{$sucursales->distrito}}</td>
                           <td>{{$sucursales->cod_postal}}</td>
-                          <td style="vertical-align: middle"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#edit_sucursal"><i class="fa fa-pencil"></i></button></td>
+                          <td style="vertical-align: middle"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#edit_sucursal{{$sucursales->id}}"><i class="fa fa-pencil"></i></button></td>
                           @if($sucursales->estado==0)
                             <td class="client-status"><span class="label label-primary">Activo</span></td>
                           @elseif($sucursales->estado==1)
@@ -253,7 +258,7 @@
                           @endif
                           
                         </tr>
-                        <div class="modal fade bd-example-modal-lg" id="edit_sucursal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade bd-example-modal-lg" id="edit_sucursal{{$sucursales->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -312,7 +317,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                       <h4><p>Estado</p></h4>
-                                        <input  type="checkbox" @if($sucursales->estado == 0) checked @else @endif name="estado_id" class="js-switch-edit" />
+                                        <input  type="checkbox" @if($sucursales->estado == 0) checked @else @endif name="estado_id" class="js-switch-edit{{$sucursales->id}}" />
                                     </div>
                                   </div>
                                 </div>
@@ -624,13 +629,18 @@
   var elem= document.querySelector('.js-switch-sucursal');
   var switchery = new Switchery(elem, { color: '#4cc0f7' });
 
-  var elem_edit = document.querySelector('.js-switch-edit');
-  var switchery_edit = new Switchery(elem_edit, { color: '#EF5565' });
+  
   
   var elem_3 = document.querySelector('.js-switch');
   var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 
   
 </script>
+@foreach($cliente_sucursal as $suc_js)
+<script>
+var elem_edit{{$suc_js->id}} = document.querySelector(`.js-switch-edit{{$suc_js->id}}`);
+var switchery_edit = new Switchery(elem_edit{{$suc_js->id}}, { color: '#EF5565' });
+</script>
+@endforeach
 
 @endsection
