@@ -11,17 +11,17 @@ class VehiculostableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('vehiculos')->insert([
-			'id' => 0 ,
-			'placa' => 'EX4M1',
-            'marca' => 'Vehiculo  ',
-            'modelo' => 'Modelo',
-            'año' => '2000',
-			'certificado_inscripcion' => '00000000000',
-            'estado_activo' => '0',
-			'created_at' => date('2019-08-01 00:00:00'),
-           	'updated_at' => date('2019-08-01 00:00:00')
-        ]);
+        // DB::table('vehiculos')->insert([
+		// 	'id' => 0 ,
+		// 	'placa' => 'EX4M1',
+        //     'marca' => 'Vehiculo  ',
+        //     'modelo' => 'Modelo',
+        //     'año' => '2000',
+		// 	'certificado_inscripcion' => '00000000000',
+        //     'estado_activo' => '0',
+		// 	'created_at' => date('2019-08-01 00:00:00'),
+        //    	'updated_at' => date('2019-08-01 00:00:00')
+        // ]);
         // DB::table('vehiculos')->insert([
         //     'id' => 2,
         //     'placa' => 'A78-405',

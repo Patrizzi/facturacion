@@ -55,96 +55,109 @@
                     </div><br>
                     {{--  Cabecera --}}
                     <div class="row">
-                        <div class="col-sm-6" style="margin-bottom: 5px" >
+                        <div class="col-sm-12" style="margin-bottom: 5px" >
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Cliente:</label>
-                                <div class="col-sm-10">
-                                    <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
-                                </div>
-                            </div>
-                        </div  >
-                        <div class="col-sm-6" >
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">F.Emision:</label>
-                                <div class="col-sm-3">
-                                    <input type="text" style="font-size: 12px" name="fecha_emision" class="form-control" value="{{date("Y/m/d")}}" readonly="readonly">
-                                </div>
-                                <label class="col-sm-2 col-form-label">F.Entrega:</label>
+                                <label class="col-sm-1 col-form-label">Cliente:</label>
                                 <div class="col-sm-5">
-                                    <input type="date" name="fecha_entrega" class="form-control" required="required"  >
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" onchange="change_cli()"></select>
+                                </div>
+                                <label class="col-sm-1 col-form-label">Sucursal:</label>
+                                <div class="col-sm-5">
+                                    <div class="tooltip-demo">
+                                        <div class="input-group-prepend">
+                                            <input list="sucursal_list" id="sucursal_input" name="sucursal_cli" data-toggle="tooltip"  class="form-control" data-placement="top" title="Sucursal" required onchange="select_sucursal()" style="width: 70%"  autocomplete="off">
+                                            <datalist id="sucursal_list">
+                                                {{-- <option value=""></option> --}}
+                                            </datalist>
+                                            <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Postal"  required onkeyup="this.value=NumText(this.value)">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i 
+                                                class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                                        </div>
+                                        <input type="hidden"  name="" id="input_suc_array">
+                                        <input type="hidden"  name="" id="input_post_array">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-sm-12" >
-                           <div class="row">
-                            <label class="col-sm-1">Tipo de Transporte:</label>
-                            <div class="col-sm-5">
-                                <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id" required>
-                                    {{-- <option value="0">Sin Transporte</option> --}}
-                                    <option value="">Escoge el tipo de transporte</option>
-                                    <option value="1">Transporte Público</option>
-                                    <option value="2">Transaporte Privado</option>
-                                </select>
+                        <div class="col-sm-12" style="margin-bottom: 5px" >
+                            <div class="row">
+                                <label class="col-sm-1 col-form-label">F.Emision:</label>
+                                <div class="col-sm-2">
+                                    <input type="text" style="font-size: 12px" name="fecha_emision" class="form-control" value="{{date("Y/m/d")}}" readonly="readonly">
+                                </div>
+                                <label class="col-sm-1 col-form-label">F.Entrega:</label>
+                                <div class="col-sm-2">
+                                    <input type="date" name="fecha_entrega" class="form-control" required="required"  >
+                                </div>
+                                <label class="col-sm-1">Tipo de Transporte:</label>
+                                <div class="col-sm-5">
+                                    <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id" required>
+                                        {{-- <option value="0">Sin Transporte</option> --}}
+                                        <option value="">Escoge el tipo de transporte</option>
+                                        <option value="1">Transporte Público</option>
+                                        <option value="2">Transaporte Privado</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-sm-6" id="transporte_publico" hidden="hidden">
-                              <div class="row">
-                                <label class="col-sm-2">Vehiculo Público:</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control m-b" name="vehiculo_publico" autocomplete="off" id="vehiculo_publico">
+                        </div>
+                        <div class="col-sm-12" style="margin-bottom: 5px" >
+                            {{-- <div class="row"> --}}
+                                {{-- <div class="col-sm-6"  > --}}
+                                    <div class="row" id="transporte_publico" hidden="hidden">
+                                        <label class="col-sm-1">Vehiculo Público:</label>
+                                        <div class="col-sm-5">
+                                            <select class="form-control m-b" name="vehiculo_publico" autocomplete="off" id="vehiculo_publico">
+                                                <option value="">Ningún Vehículo</option>
+                                                @foreach($transporte_publico as $transporte_publicos)
+                                                <option value="{{$transporte_publicos->id}}">{{$transporte_publicos->nombre}} /{{$transporte_publicos->ruc}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                {{-- </div> --}}
+                            {{-- </div> --}}
+                        </div>
+                        <div class="col-sm-12" id="transporte_privado" hidden="hidden">
+                            <div class="row">
+                                <label class="col-sm-1">Vehiculo Privado:</label>
+                                <div class="col-sm-5">
+                                    <select class="form-control m-b" name="vehiculo" autocomplete="off" id="vehiculo_privado">
                                         <option value="">Ningún Vehículo</option>
-                                        @foreach($transporte_publico as $transporte_publicos)
-                                        <option value="{{$transporte_publicos->id}}">{{$transporte_publicos->nombre}} /{{$transporte_publicos->ruc}}</option>
+                                        @foreach($vehiculo as $vehiculos)
+                                        <option value="{{$vehiculos->id}}">{{$vehiculos->placa}} /{{$vehiculos->marca}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <label class="col-sm-1">Conductor:</label>
+                                <div class="col-sm-5">
+                                    <select class="form-control m-b" name="conductor" autocomplete="off" id="conductor">
+                                        <option value="">Ningún Conductor</option>
+                                        <option disabled="disabled">------------------------------</option>
+                                        @foreach($personal as $ersonals)
+                                        <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-sm-12" >
+                            <div class="row">
+                                <label class="col-sm-1">Motivo Traslado:</label>
+                                <div class="col-sm-5">
+                                    <select name="motivo_traslado"  class="form-control m-b">
+                                        @foreach($motivo_traslado as $motivo_traslad)
 
+                                        <option id="{{$motivo_traslad->id}}">{{$motivo_traslad->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <label class="col-sm-1">Observaciones:</label>
+                                <div class="col-sm-5">
+                                    <textarea name="observacion" class="form-control">Guía Electrónica Emitida para el Cliente  </textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-sm-12" id="transporte_privado" hidden="hidden">
-                    <div class="row">
-                        <label class="col-sm-1">Vehiculo Privado:</label>
-                        <div class="col-sm-5">
-                            <select class="form-control m-b" name="vehiculo" autocomplete="off" id="vehiculo_privado">
-                                <option value="">Ningún Vehículo</option>
-                                @foreach($vehiculo as $vehiculos)
-                                <option value="{{$vehiculos->id}}">{{$vehiculos->placa}} /{{$vehiculos->marca}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <label class="col-sm-1">Conductor:</label>
-                        <div class="col-sm-5">
-                            <select class="form-control m-b" name="conductor" autocomplete="off" id="conductor">
-                                <option value="">Ningún Conductor</option>
-                                <option disabled="disabled">------------------------------</option>
-                                @foreach($personal as $ersonals)
-                                <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12" >
-                    <div class="row">
-                        <label class="col-sm-1">Motivo Traslado:</label>
-                        <div class="col-sm-5">
-                            <select name="motivo_traslado"  class="form-control m-b">
-                                @foreach($motivo_traslado as $motivo_traslad)
-
-                                <option id="{{$motivo_traslad->id}}">{{$motivo_traslad->nombre}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <label class="col-sm-1">Observaciones:</label>
-                        <div class="col-sm-5">
-                         <textarea name="observacion" class="form-control">Guía Electrónica Emitida para el Cliente  </textarea>
-                     </div>
-                 </div>
-             </div>
-         </div>
          {{-- Fin Cabecera --}}
          {{-- Tabla Mostrito --}}
          <table   cellspacing="0" class="table table-striped ">
@@ -229,6 +242,9 @@
     .select2-hidden-accessible{
         width: auto !important;
         
+    }
+    input[type=date], input[type=datetime-local], input[type=month], input[type=time] {
+        font-size: 12px;
     }
 </style>
 
@@ -385,97 +401,168 @@
         
     }
 </script>
+<script>
+    $(".delete").on('click', function () {
+        $('.case:checkbox:checked').parents("tr").remove();
+        var totalInp = $('[name="total"]');
+        var total_t = 0;
 
-
-
-    <script>
-        $(".delete").on('click', function () {
-            $('.case:checkbox:checked').parents("tr").remove();
-            var totalInp = $('[name="total"]');
-            var total_t = 0;
-
-            totalInp.each(function(){
-                total_t += parseFloat($(this).val());
-            });
-            $('#sub_total').val(total_t);
-
-            var igv_valor={{$igv->renta}};
-            var subtotal = document.querySelector(`#sub_total`).value;
-            var igv=parseFloat(subtotal)*igv_valor/100;
-            var end=parseFloat(igv)+parseFloat(subtotal);
-
-            // console.log(typeof igv);
-            // console.log(typeof end);
-            document.getElementById("igv").value = igv;
-            document.getElementById("total_final").value = end;
+        totalInp.each(function(){
+            total_t += parseFloat($(this).val());
         });
-    </script>
+        $('#sub_total').val(total_t);
 
-    <script>
-        function select_all() {
-            $('input[class=case]:checkbox').each(function () {
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    $(this).prop("checked", false);
-                } else {
-                    $(this).prop("checked", true);
-                }
-            });
-        }
+        var igv_valor={{$igv->renta}};
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv=parseFloat(subtotal)*igv_valor/100;
+        var end=parseFloat(igv)+parseFloat(subtotal);
 
-        function Clear(elem)
-        {
-            elem.value='';
-        }
-    </script>
+        // console.log(typeof igv);
+        // console.log(typeof end);
+        document.getElementById("igv").value = igv;
+        document.getElementById("total_final").value = end;
+    });
+</script>
 
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+<script>
+    function select_all() {
+        $('input[class=case]:checkbox').each(function () {
+            if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
         });
-    </script>
-    <style type="text/css">
-    .a{color: red}
+    }
+
+    function Clear(elem)
+    {
+        elem.value='';
+    }
+</script>
+
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>
+<style type="text/css">
+.a{color: red}
 </style>
 <script>
+    function change_cli(){
+        var cliente = $('#cliente').val();
+        $('#sucursal_list').empty();
+        $('#postal_input').val("");
+        $('#sucursal_input').val("");
+        $.ajax({
+            type: "post",
+            url: "{{ route('guia_remision.ajax_sucursal') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'cliente': cliente
+            },
+            success: function (msg) {
+        
+                let cod_co = msg.cod_postal;
+                let msg_length = cod_co.length;
+                // console.log(msg_length)
+                var list = document.getElementById('sucursal_list');
+                var p_list = document.getElementById('postal_cod_list');
+                
+                if(msg_length == 1){
+                    $('#sucursal_input').val(msg.sucursal[0]);
+                    $('#postal_input').val(msg.cod_postal[0]);
+                    document.getElementById('input_post_array').value = msg.cod_postal[0];
+                    document.getElementById('input_suc_array').value = msg.sucursal[0];
+                }else{
+                    $('#sucursal_input').attr('placeholder','Seleccionar Sucursal');
+                    $('#postal_input').attr('placeholder','Selec. Codigo Postal');
+                    for (let i = 0; i < msg_length; i++) {
+                        var option = document.createElement('option');
+                        option.value = msg.sucursal[i];
+                        list.appendChild(option);
+                        document.getElementById('input_post_array').value = msg.cod_postal;
+                        document.getElementById('input_suc_array').value = msg.sucursal;
+
+                        // var option2 = document.createElement('option');
+                        // option2.value = msg.cod_postal[i];
+                        // p_list.appendChild(option2);
+                    }
+                }
+                
+                // sum_total();
+                
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });   
+    }
+    function select_sucursal(){
+        var valor_input = $('#sucursal_input').val();
+        var all_suc = document.getElementById('input_suc_array').value;
+        var all_postal = document.getElementById('input_post_array').value;
+        // CODIGO PARA SEPARAR LAS SUCURSALES
+        const split_suc = all_suc.split(',');
+        // CODIGO PARA SEPARAR LASA SUCURSALES
+        const split_post = all_postal.split(',');
+        for (let i_suc = 0; i_suc < split_suc.length; i_suc++) {
+            var el_suc = split_suc[i_suc];
+            console.log(el_suc);
+            if(el_suc == valor_input){
+                $('#postal_input').val(split_post[i_suc]);
+            }
+
+        }
+    }
+</script>
+<script>
     function test(a) {
-    var x = (a.value || a.options[a.selectedIndex].value);  //crossbrowser solution =)
-    if (x ==2)/*Transaporte Privado*/
-    {
-        document.getElementById("transporte_privado").removeAttribute("hidden");
-        document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
+        var x = (a.value || a.options[a.selectedIndex].value);  //crossbrowser solution =)
+        if (x ==2)/*Transaporte Privado*/
+        {
+            document.getElementById("transporte_privado").removeAttribute("hidden");
+            document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
 
-        document.getElementById("vehiculo_privado").setAttribute("required", "required");
-        document.getElementById("conductor").setAttribute("required", "required");
-        document.getElementById("vehiculo_publico").removeAttribute("required");
+            document.getElementById("vehiculo_privado").setAttribute("required", "required");
+            document.getElementById("conductor").setAttribute("required", "required");
+            document.getElementById("vehiculo_publico").removeAttribute("required");
 
 
+        }
+        if(x==0)/*Sin Transporte*/
+        {
+            document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
+            document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
+
+            document.getElementById("vehiculo_publico").removeAttribute("required");
+            document.getElementById("vehiculo_privado").removeAttribute("required");
+            document.getElementById("conductor").removeAttribute("required");
+
+
+        }
+        if(x==1)/*Transporte Público*/
+        {
+            document.getElementById("transporte_publico").removeAttribute("hidden");
+            document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
+
+            document.getElementById("vehiculo_publico").setAttribute("required", "required");
+            document.getElementById("vehiculo_privado").removeAttribute("required");
+            document.getElementById("conductor").removeAttribute("required");
+        }
     }
-    if(x==0)/*Sin Transporte*/
-    {
-        document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
-        document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
-
-        document.getElementById("vehiculo_publico").removeAttribute("required");
-        document.getElementById("vehiculo_privado").removeAttribute("required");
-        document.getElementById("conductor").removeAttribute("required");
-
-
+    function delete_guion(string){//solo letras y numeros
+        return string.replace(/-/g, "");
     }
-    if(x==1)/*Transporte Público*/
-    {
-        document.getElementById("transporte_publico").removeAttribute("hidden");
-        document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
-
-        document.getElementById("vehiculo_publico").setAttribute("required", "required");
-        document.getElementById("vehiculo_privado").removeAttribute("required");
-        document.getElementById("conductor").removeAttribute("required");
-    }
-}
 </script>
 
 @endsection

@@ -50,14 +50,20 @@
                     <div class="col-sm-6" align="center">
                         <div class="form-control"><h3>Domicilio De Partida</h3>
                             <div align="left" style="font-size: 13px">
-                                <p>{{$guia_remision_m->almacen->direccion}}</p>
+                                {{-- <p>{{$guia_remision_m->almacen->direccion}}</p> --}}
+                                <p>{{$guia_remision_m->almacen->direccion}} -  {{$guia_remision_m->almacen->cod_postal}}</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6" align="center">
                         <div class="form-control" ><h3>Domicilio De Llegada</h3>
                             <div align="left" style="font-size: 13px">
-                                <p>{{$guia_remision_m->cliente->direccion}}</p>
+                                {{-- <p>{{$guia_remision_m->cliente->direccion}}</p> --}}
+                                @if(isset($guia_remision->sucursal_cliente))
+                                    <p>{{$guia_remision_m->sucursal_cliente}} - {{$guia_remision_m->cod_postal_cliente}}</p>
+                                @else
+                                    <p>{{$guia_remision_m->cliente->direccion}} - {{$guia_remision_m->cliente->cod_postal}}</p>
+                                @endif
                             </div>
                         </div>
                     </div>

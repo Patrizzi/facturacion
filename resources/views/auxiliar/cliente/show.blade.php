@@ -274,14 +274,14 @@
                                   <div class="row">
                                     <div class="col-sm-12">
                                       <h4><p>Nombre</p></h4>
-                                      <input type="text" class="form-control" name="nombre" id="" value="{{$sucursales->nombre}}">
+                                      <input type="text" class="form-control" name="nombre" id="" value="{{$sucursales->nombre}}" >
                                     </div>
                                   </div>
                                   <br>
                                   <div class="row">
                                     <div class="col-sm-8">
                                       <h4><p>Direccion</p></h4>
-                                      <input type="text" class="form-control" name="direccion" id="" required value="{{$sucursales->direccion}}">
+                                      <input type="text" class="form-control" name="direccion" id="" required value="{{$sucursales->direccion}}" onkeyup="this.value=NumText(this.value)">
                                     </div>
                                     <div class="col-sm-4">
                                       <h4><p>Pais</p></h4>
@@ -323,7 +323,7 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                  <button type="submit" class="btn btn-primary">Guardar</button>
+                                  <button type="submit" class="btn btn-primary ladda-button">Guardar</button>
                                 </div>
                               </form>
                             </div>
@@ -517,7 +517,7 @@
           <div class="row">
             <div class="col-sm-8">
               <h4><p>Direccion</p></h4>
-              <input type="text" class="form-control" name="direccion" id="" required>
+              <input type="text" class="form-control" name="direccion" id="" required onkeyup="this.value=NumText(this.value)">
             </div>
             <div class="col-sm-4">
               <h4><p>Pais</p></h4>
@@ -631,8 +631,8 @@
 
   
   
-  var elem_3 = document.querySelector('.js-switch');
-  var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+  var elem_p = document.querySelector('.js-switch');
+  var switchery_2 = new Switchery(elem_p, { color: '#ED5565' });
 
   
 </script>
@@ -642,5 +642,10 @@ var elem_edit{{$suc_js->id}} = document.querySelector(`.js-switch-edit{{$suc_js-
 var switchery_edit = new Switchery(elem_edit{{$suc_js->id}}, { color: '#EF5565' });
 </script>
 @endforeach
+<script>
+  function NumText(string){//solo letras y numeros
+    return string.replace(/-/g, "");
+  }
+</script>
 
 @endsection

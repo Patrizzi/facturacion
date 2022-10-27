@@ -160,7 +160,7 @@ class GuiaRemisionManualController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request
+        // return $request;
         $almacen = $request->get('almacen');
         $cliente = $request->get('cliente');
         $motivo = $request->get('motivo_traslado');
@@ -207,6 +207,8 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m->cod_guia = $codigo_guia;
         $guia_remision_m->almacen_id = $almacen;
         $guia_remision_m->cliente_id = $cliente;
+        $guia_remision_m->sucursal_cliente = $request->get('sucursal_cli');
+        $guia_remision_m->cod_postal_cliente = $request->get('postal_input');
         $guia_remision_m->fecha_emision = $fecha_emision;
         $guia_remision_m->fecha_entrega = $fecha_entrega;
         if ($tipo_transporte==1) {

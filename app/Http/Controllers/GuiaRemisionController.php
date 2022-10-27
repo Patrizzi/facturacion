@@ -6,6 +6,7 @@ use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
 use App\Cliente;
+use App\Cliente_sucursal;
 use App\Cotizacion;
 use App\Cotizacion_boleta_registro;
 use App\Cotizacion_factura_registro;
@@ -45,11 +46,12 @@ class GuiaRemisionController extends Controller
         // return count($transporte_publico);
         if(count($vehiculo) == 0 && count($transporte_publico) == 0){
             $valor_error = 1;
-            $message = "Para crear una Guia de Remision agrege un Vehiculo, ya sea Publico o Privado ";
+            $message = "Para crear una Guia de Remision agrege un Vehiculo, ya sea <span class='url_def'>Publico o Privado</span> ";
         }else{
             $valor_error = 0;
             $message = "";
         }
+        // return $message;
         $user_login = auth()->user();
         $guia_remision = Guia_remision::all();
         $almacen = Almacen::where('estado', 0)->get();
@@ -59,7 +61,35 @@ class GuiaRemisionController extends Controller
         return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login','valor_error','message'));
     }
 
-    /**
+    public function ajax_sucursal(Request $request){
+        // return $request;
+        $cliente = Cliente::where('id',$request->cliente)->first();
+        $cliente_sucursal = Cliente_sucursal::where('cliente_id',$cliente->id)->get();
+
+        
+        // return ;
+        if(count($cliente_sucursal) == 0){
+            $sucursal[] = $cliente->direccion;
+            $cod_post[] = $cliente->cod_postal;
+            $data_array = array(
+                "sucursal"=> $sucursal,
+                "cod_postal"=> $cod_post,
+            );
+        }else{
+            foreach ($cliente_sucursal as $sucursales) {
+                $array_suc[] = $sucursales->direccion.' - '.$sucursales->distrito.' - '.$sucursales->departamento.' - '.$sucursales->pais;
+                $cod_postal[] =  $sucursales->cod_postal;
+                
+            }
+            $data_array = array(
+                "sucursal"=>$array_suc,
+                "cod_postal"=>$cod_postal,
+            );
+        }
+        
+        return $data_array;
+    }
+    /**q
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -240,6 +270,8 @@ class GuiaRemisionController extends Controller
         $guia_remision = new Guia_remision;
         $guia_remision->cod_guia = $codigo_guia;
         $guia_remision->cliente_id = $id_cliente;
+        $guia_remision->sucursal_cliente = $request->get('sucursal_cli');
+        $guia_remision->cod_postal_cliente = $request->get('postal_input');
         $guia_remision->almacen_id = $id_almacen->id;
         $guia_remision->fecha_emision = $request->get('fecha_emision');
         $guia_remision->fecha_entrega = $request->get('fecha_entrega');

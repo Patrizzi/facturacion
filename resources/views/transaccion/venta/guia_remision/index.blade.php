@@ -11,8 +11,8 @@
 <!-- modal -->
 @if($valor_error == 1)
 <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
-    <a class="alert-link" href="../vehiculos">
-        <li class="error" style="color: red">{{ $message }}</li>
+    <a class="alert-link" href="{{route('vehiculo.index')}}">
+        <li class="error" style="color: red">{!!$message!!}</li>
     </a>
 </div>
 @endif
@@ -84,13 +84,6 @@
 </div>
 </div>
 {{-- fimodal --}}
-@if($valor_error == 1)
-<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
-    <a class="alert-link" href="../vehiculos">
-        <li class="error" style="color: red">{{ $message }}</li>
-    </a>
-</div>
-@endif
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -167,9 +160,9 @@
 #auto:hover{
     opacity: .8;
 }
-/*#auto:hover + #div-mostrar{
-    height: 50px;
-    }*/
+.url_def{
+    text-decoration: underline;
+}
 </style>
 
 

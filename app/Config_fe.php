@@ -817,12 +817,21 @@ class Config_fe extends Model
 
     public static function guia_remision($guia, $guias_registros,$tipo_transporte){
 
+        if(isset($guia->sucursal_cliente)){
+            $cli_postal = $guia->cod_postal_cliente;
+            $cli_direc = $guia->sucursal_cliente;
+        }else{
+            $cli_postal = $guia->cliente->cod_postal;
+            $cli_direc = $guia->cliente->direccion;
+        }
+        
+
         //$util = Util::getInstance();
         $empresa=Empresa::first();
 
         // Emisor
         $address = (new Address())
-            ->setUbigueo('150101')
+            ->setUbigueo($empresa->cod_postal)
             ->setDepartamento($empresa->region_provincia)
             ->setProvincia($empresa->region_provincia)
             ->setDistrito($empresa->ciudad)
@@ -873,8 +882,8 @@ class Config_fe extends Model
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida
                 // ->setNumContenedor('XD-2232')
-                ->setLlegada(new Direction(250, $guia->cliente->direccion))   //arreglar el ubigeo de llegada  salida
-                ->setPartida(new Direction(160, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
+                ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
+                ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
         }else{
             $envio = new Shipment();
             $envio
@@ -887,7 +896,7 @@ class Config_fe extends Model
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida
                 // ->setNumContenedor('XD-2232')
-                ->setLlegada(new Direction($guia->cliente->cod_postal, $guia->cliente->direccion))    //arreglar el ubigeo de llegada  salida
+                ->setLlegada(new Direction($cli_postal, $cli_direc))    //arreglar el ubigeo de llegada  salida
                 ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
                 ->setTransportista($transp);
         }
@@ -929,6 +938,13 @@ class Config_fe extends Model
 
     public static function guia_remision_baja($guia, $guias_registros,$tipo_transporte){
 
+        if(isset($guia->sucursal_cliente)){
+            $cli_postal = $guia->cod_postal_cliente;
+            $cli_direc = $guia->sucursal_cliente;
+        }else{
+            $cli_postal = $guia->cliente->cod_postal;
+            $cli_direc = $guia->cliente->direccion;
+        }
         $baja = new Document();
         $baja->setTipoDoc('09')
             ->setNroDoc($guia->cod_guia);
@@ -988,7 +1004,7 @@ class Config_fe extends Model
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida
                 // ->setNumContenedor('XD-2232')
-                ->setLlegada(new Direction($guia->cliente->cod_postal, $guia->cliente->direccion))   //arreglar el ubigeo de llegada  salida
+                ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
                 ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
         }else{
             $envio = new Shipment();
@@ -1002,7 +1018,7 @@ class Config_fe extends Model
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida
                 // ->setNumContenedor('XD-2232')
-                ->setLlegada(new Direction($guia->cliente->cod_postal, $guia->cliente->direccion))    //arreglar el ubigeo de llegada  salida
+                ->setLlegada(new Direction($cli_postal, $cli_direc))    //arreglar el ubigeo de llegada  salida
                 ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
                 ->setTransportista($transp);
         }
