@@ -175,7 +175,14 @@
               <div class="input-group-prepend">
                 <span class="input-group-addon" id="sin_key"></span>
               </div>
-              <input type="number" min="0" step="0.01" class="form-control" value="1" name="" id="key_sin_igv" onchange="modal_key()">
+              @if($servicios->moneda->id==2)
+                {{-- <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required"  > --}}
+                <input type="number" min="0" step="0.01" class="form-control" value="{{$servicios->precio_extranjero}}" name="" id="key_sin_igv" onchange="modal_key()">
+              @else
+              <input type="number" min="0" step="0.01" class="form-control" value="{{$servicios->precio_nacional}}" name="" id="key_sin_igv" onchange="modal_key()">
+                {{-- <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" > --}}
+              @endif
+              
             </div>
           </div>
         </div>
