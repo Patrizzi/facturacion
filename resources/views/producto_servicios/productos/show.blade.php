@@ -79,16 +79,9 @@
               <div class="col-sm-3" data-toggle="tooltip" data-placement="top" title="Subfamilia">
                 <div>
                   <select class="subfamilia_select2 form-control" name="sub_familia_id" >
-                    @foreach($subfamilias as $subfamilia)
-                      @if(isset($producto->subfamilia_id))
-                        <option value="{{ $subfamilia->id }}"  @if($producto->subfamilia_id==$subfamilia->id)selected @else  @endif>{{ $subfamilia->descripcion}}</option>
-                      @else
-                        <option ></option>
-                        <option value="{{ $subfamilia->id}}" >{{ $subfamilia->descripcion}}</option>  
+                    @if(isset($producto->subfamilia_id))
+                        <option value="{{$producto->subfamilia_i_producto->descripcion}}">{{$producto->subfamilia_i_producto->descripcion}}</option>
                       @endif
-
-                      
-                    @endforeach
                   </select>
                 </div>
               </div>
@@ -258,7 +251,6 @@
 </div>
 </div>
 </div>
-</form>
 <!-- Modal  -->
 @if(isset($precio_promedio->precio_nacional))
   <div class="modal fade" id="utilidad_con_inventario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -325,6 +317,8 @@
   </div>
 @endif
 <!-- Modal -->
+</form>
+
 
 <style>  
   input#archivoInput{

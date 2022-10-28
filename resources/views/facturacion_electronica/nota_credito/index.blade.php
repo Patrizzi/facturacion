@@ -34,6 +34,7 @@
                                                 <th><input class='check_all_boleta' type='checkbox' onclick="select_all_nota_credito()" /></th>
                                                 <th>Item</th>
                                                 <th>Codigo de NC</th>
+                                                <th>N° de Doc.</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
                                                 <th>Tipo</th>
@@ -49,66 +50,70 @@
                                                 <td>{{$i++}}</td>
                                                 @if($n_credito->facturacion_id !=NULL)
                                                     <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito->nota_i_facturacion->id)}}">{{$n_credito->nota_i_facturacion->codigo_fac}}</a></td>
                                                     <td>{{$n_credito->nota_i_facturacion->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                    <td>Factura</td>
+                                                    <td>
+                                                        <center>
+                                                            <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
+                                                            @csrf
+                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                            </form>
+                                                        </center>
+                                                    </td>
                                                 @elseif($n_credito->boleta_id !=NULL)
                                                     <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito->nota_i_boleta->id)}}">{{$n_credito->nota_i_boleta->codigo_boleta}}</a></td>
                                                     <td>{{$n_credito->nota_i_boleta->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_boleta->cliente->numero_documento}}</td>
+                                                    <td>Boleta</td>
+                                                    <td>
+                                                        <center>
+                                                            <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                            </form>
+                                                        </center>
+                                                    </td>
                                                 @elseif($n_credito->boleta_m_id !=NULL)
                                                     <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito->nota_i_boleta_manual->id)}}">{{$n_credito->nota_i_boleta_manual->codigo_boleta}}</td>
                                                     <td>{{$n_credito->nota_i_boleta_manual->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                    <td>Boleta Manual</td>
+                                                    <td>
+                                                        <center>
+                                                            <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                            </form>
+                                                        </center>
+                                                    </td>
                                                 @else
                                                     <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito->nota_i_fac_manual->id)}}">{{$n_credito->nota_i_fac_manual->codigo_fac}}</td>
                                                     <td>{{$n_credito->nota_i_fac_manual->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                    <td>Factura Manual</td>
+                                                    <td>
+                                                        <center>
+                                                            <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                            </form>
+                                                        </center>
+                                                    </td>
                                                 @endif
-                                                <td>
-                                                    @if($n_credito->facturacion_id !=NULL)
-                                                        Factura
-                                                    @elseif($n_credito->boleta_id !=NULL)
-                                                        Boleta
-                                                    @elseif($n_credito->boleta_m_id !=NULL)
-                                                        Boleta Manual
-                                                    @else
-                                                        Factura Manual
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <center>
-                                                        @if($n_credito->facturacion_id !=NULL)
-                                                            <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
-                                                        @elseif($n_credito->boleta_id !=NULL)
-                                                            <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
-                                                        @elseif($n_credito->boleta_m_id !=NULL)
-                                                            <form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
-                                                        @else
-                                                            <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
-                                                        @endif
-                                                    </center>
-                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
                                         <tfooter >
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                            <td colspan="7" align="right" style="padding-right: 2em"></td>
                                             <td align="center"><button type="button" class="btn btn-primary" id="nota_credito_elec_all">Enviar</button></td>
                                         </tfooter>
                                     </table>
@@ -125,6 +130,7 @@
                                     <tr>
                                         <th>Item</th>
                                         <th>Codigo de NC</th>
+                                        <th>N° de Doc.</th>
                                         <th>Cliente</th>
                                         <th>Ruc/DNI</th>
                                         <th>Tipo</th>
@@ -132,27 +138,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <span hidden>{{$i=1}}</span>
+                                    <span hidden>{{$q=1}}</span>
                                     @foreach($n_creditos_enviados as $n_credito_enviado)
                                     <tr class="gradeX">
-                                        <td>{{$i++}}</td>
+                                        <td>{{$q++}}</td>
                                         @if($n_credito_enviado->facturacion_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                            <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito_enviado->nota_i_facturacion->id)}}">{{$n_credito_enviado->nota_i_facturacion->codigo_fac}}</a></td>
                                             <td>{{$n_credito_enviado->nota_i_facturacion->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_facturacion->cliente->numero_documento}}</td>
                                         @elseif($n_credito_enviado->boleta_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                            <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito_enviado->nota_i_boleta->id)}}">{{$n_credito_enviado->nota_i_boleta->codigo_boleta}}</a></td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
                                         @elseif($n_credito_enviado->boleta_m_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                            <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito_enviado->nota_i_boleta_manual->id)}}">{{$n_credito_enviado->nota_i_boleta_manual->codigo_boleta}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento}}</td>
                                         @else
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                            <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito_enviado->nota_i_fac_manual->id)}}">{{$n_credito_enviado->nota_i_fac_manual->codigo_fac}}</td>
                                             <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->numero_documento}}</td>
                                         @endif
+                                        
                                         <td>
                                             @if($n_credito_enviado->facturacion_id !=NULL)
                                                 Factura
@@ -209,7 +220,12 @@
 </div>
 {{-- ESTILOS --}}
 <style type="text/css">
-    .a{width: 200px}
+    .a{
+        width: 200px;
+    }
+    .link_tds{
+        color: black !important;
+    }
 </style>
 
 <!-- scripts -->
@@ -231,7 +247,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 20,
             responsive: true,
-            order: [[0, "desc"]],
+            order: [[0, "asc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [ ]
         });

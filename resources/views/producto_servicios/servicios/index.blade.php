@@ -33,7 +33,7 @@
                             <td>{{$servicio->codigo_servicio}}</td>
                             <td>{{$servicio->codigo_original}}</td>
                             <td>{{$servicio->nombre}}</td>
-                            <td>{{$servicio->categoria}}</td>
+                            <td>SERVICIOS</td>
                             @if($servicio->estado_anular==1) <td>Anulado</td>
                             @else <td>Activo</td>@endif
                             <td>

@@ -160,7 +160,7 @@ class ProductosController extends Controller
 
        $moneda_principal=Moneda::where('principal',1)->first();
        $familias=Familia::all();
-       $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->get();
+       $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->where('estado',0)->get();
     
        $marcas=Marca::all();
        $estados=Estado::all();

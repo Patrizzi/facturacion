@@ -30,14 +30,15 @@
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="">
         {{--  --}}
-        <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                         <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
+                            @include('layout_cabecera_ventas')
+                            {{-- <div class="col-sm-4 text-left" align="left">
 
                                 <address class="col-sm-4" align="left">
                                     <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
@@ -51,7 +52,7 @@
                                 {{$empresa->correo}}
                                 <br>
                                 {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-                            </div>
+                            </div> --}}
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
@@ -178,13 +179,19 @@
         *{
             color: black;
         }
-            .form-control{border-radius: 10px; padding: 10px }
+            .form-control{border-radius: 10px; padding: 10px ; border-color: #3D3D3D }
             .ibox-tools a{color: white !important}
             .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
             .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
             p.form-control{
                         border-color: #3D3D3D;
                     }
+                    .form-control {
+            background-color: transparent !important;
+        }
+        *{
+            color: black;
+        }
         </style>
 
         <!-- Mainly scripts -->

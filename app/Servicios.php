@@ -16,6 +16,9 @@ class Servicios extends Model
      public function familia(){
         return $this->belongsTo(Familia::class,'familia_id');
     }
+    public function subfamilia_i_serv(){
+        return $this->belongsTo(Subfamilia::class,'subfamilia_id');
+    } 
      public function marca(){
         return $this->belongsTo(Marca::class,'marca_id');
     }
