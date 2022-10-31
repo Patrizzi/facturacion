@@ -24,6 +24,7 @@ use App\Stock_producto;
 use App\Kardex_entrada;
 use App\moneda;
 use App\kardex_entrada_registro;
+use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
@@ -65,8 +66,6 @@ class GuiaRemisionController extends Controller
         // return $request;
         $cliente = Cliente::where('id',$request->cliente)->first();
         $cliente_sucursal = Cliente_sucursal::where('cliente_id',$cliente->id)->get();
-
-        
         // return ;
         if(count($cliente_sucursal) == 0){
             $sucursal[] = $cliente->direccion;
@@ -76,10 +75,15 @@ class GuiaRemisionController extends Controller
                 "cod_postal"=> $cod_post,
             );
         }else{
+            $array_suc[] = $cliente->direccion;
+            $cod_postal[] = $cliente->cod_postal;
+            $data_array = array(
+                "sucursal"=> $array_suc,
+                "cod_postal"=> $cod_postal,
+            );
             foreach ($cliente_sucursal as $sucursales) {
-                $array_suc[] = $sucursales->direccion.' - '.$sucursales->distrito.' - '.$sucursales->departamento.' - '.$sucursales->pais;
+                $array_suc[] = $sucursales->direccion.' - '.$sucursales->departamento.' - '.$sucursales->provincia.' - '.$sucursales->distrito;
                 $cod_postal[] =  $sucursales->cod_postal;
-                
             }
             $data_array = array(
                 "sucursal"=>$array_suc,
@@ -148,9 +152,10 @@ class GuiaRemisionController extends Controller
         $transporte_publico = TransportePublico::where('estado', 0)->get();
         $empresa = Empresa::first();
         $igv = Igv::first();
+        $fecha_hoy = Carbon::now();
+        $fecha_1 = $fecha_hoy->format('Y-m-d');
 
-
-        return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico'));
+        return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1'));
     }
     
     public function peso_stock(Request $request){

@@ -69,9 +69,8 @@
                                             <datalist id="sucursal_list">
                                                 {{-- <option value=""></option> --}}
                                             </datalist>
-                                            <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Postal"  required onkeyup="this.value=NumText(this.value)">
-                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i 
-                                                class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                                            <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Postal"  required onkeyup="this.value=NumText(this.value)" maxlength="6" minlength="6">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
                                         </div>
                                         <input type="hidden"  name="" id="input_suc_array">
                                         <input type="hidden"  name="" id="input_post_array">
@@ -87,7 +86,7 @@
                                 </div>
                                 <label class="col-sm-1 col-form-label">F.Entrega:</label>
                                 <div class="col-sm-2">
-                                    <input type="date" name="fecha_entrega" class="form-control" required="required"  >
+                                    <input type="date" name="fecha_entrega" class="form-control" required="required" min="{{$fecha_1}}"  >
                                 </div>
                                 <label class="col-sm-1">Tipo de Transporte:</label>
                                 <div class="col-sm-5">

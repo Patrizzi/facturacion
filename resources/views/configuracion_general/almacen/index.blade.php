@@ -54,7 +54,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <label class="col-sm-2 col-form-label">Código Sunat :</label>
+                            <label class="col-sm-2 col-form-label">Código Sunat:</label>
                             <div class="col-sm-4">
                                 <input  type="number" class="form-control" name="cod_sunat" autocomplete="off" required="required" placeholder="Numero de sucursal">
                             </div>
@@ -62,9 +62,9 @@
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" placeholder="Av. , Calle, Ciudad" name="direccion" autocomplete="off" required="required">
                             </div>
-                            <label class="col-sm-2 col-form-label">Cod. Ubigeo:</label>
+                            <label class="col-sm-2 col-form-label">Cod. Ubigeo: <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
                             <div class="col-sm-4">
-                                <input type="number"  class="form-control" name="ubigeo" autocomplete="off" required="required" value="150101">
+                                <input type="text"  class="form-control" name="ubigeo" autocomplete="off" required="required" value="150101" minlength="6" maxlength="6">
                             </div>
                             <label class="col-sm-2 col-form-label">Descripción:</label>
                             <div class="col-sm-10">
@@ -272,16 +272,16 @@
                                                                     <div class="col-sm-4">
                                                                         <input type="text" class="form-control" name="direccion" value="{{$almacen->direccion}}">
                                                                     </div>
-                                                                    <label class="col-sm-2">Cod. Ubigeo</label>
+                                                                    <label class="col-sm-2">Cod. Ubigeo: <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
                                                                     <div class="col-sm-4">
-                                                                        <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}">
+                                                                        <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}" maxlength="6" minlength="6">
                                                                     </div>
                                                                     <label class="col-sm-2 col-form-label">Descripción:</label>
                                                                     <div class="col-sm-6">
                                                                         <textarea class="form-control" name="descripcion" autocomplete="off" required="required" >{{$almacen->descripcion}}</textarea>
                                                                     </div>
-                                                                    <label class="col-sm-2 col-form-label">Activo/desactivo:</label>
-                                                                    <div class="col-sm-1">
+                                                                    <label class="col-sm-2 col-form-label" style="vertical-align: middle;margin-top: auto;margin-bottom: auto">Activo/desactivo:</label>
+                                                                    <div class="col-sm-1" style="vertical-align: middle;margin-top: auto;margin-bottom: auto">
                                                                         @if($almacen->estado == 0)
                                                                             @if($conteo_almacen == 1)
                                                                             <div class="switch-button">

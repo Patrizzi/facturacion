@@ -95,6 +95,7 @@
         input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
+		}
 	</style>
 	<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 	<script src="{{ asset('js/popper.min.js') }}"></script>

@@ -177,8 +177,8 @@
                                                     <input value="0000000" type="number" class="form-control" name="celular" class="form-control required">
                                                 </div>
                                                 <div class="form-group col-lg-3 ">
-                                                   <label>Código Postal *</label>
-                                                   <input value="150101" name="cod_postal" id="ubigeo" type="text" class="form-control required ">
+                                                   <label>Código Postal * <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
+                                                   <input value="150101" name="cod_postal" id="ubigeo" type="text" class="form-control required " maxlength="6" minlength="6">
                                                </div>
                                                <div class="form-group col-lg-3 ">
                                                    <label>Aniversario *</label>
