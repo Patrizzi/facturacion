@@ -80,7 +80,7 @@
                 <div>
                   <select class="subfamilia_select2 form-control" name="sub_familia_id" >
                     @if(isset($producto->subfamilia_id))
-                        <option value="{{$producto->subfamilia_i_producto->descripcion}}">{{$producto->subfamilia_i_producto->descripcion}}</option>
+                        <option value="{{$producto->subfamilia_i_producto->id}}">{{$producto->subfamilia_i_producto->descripcion}}</option>
                       @endif
                   </select>
                 </div>
