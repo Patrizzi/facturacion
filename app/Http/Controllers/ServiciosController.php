@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Familia;
+use App\Subfamilia;
 use App\Marca;
 use App\Moneda;
 use App\Servicios;
@@ -86,6 +87,7 @@ class ServiciosController extends Controller
         $servicios->moneda_id=$moneda_id;
         $servicios->marca_id=$request->get('marca_id');
         $servicios->familia_id=$request->get('familia_id');
+        $servicios->subfamilia_id=$request->get('sub_familia_id');
         $servicios->nombre=$request->get('nombre');
         $servicios->categoria=2;
         $servicios->precio_nacional=round($precio_nacional,2);
@@ -110,22 +112,24 @@ class ServiciosController extends Controller
      */
     public function show($id)
     {
-             $marcas=Marca::all();
-     $familias=Familia::all();
-     $moneda_principal=Moneda::where('tipo','nacional')->first();
-     $afectacion=Tipo_afectacion::all();
-     $moneda_principal_id=$moneda_principal->id;
+        $marcas=Marca::all();
+        $familias=Familia::all();
+        
+        $moneda_principal=Moneda::where('tipo','nacional')->first();
+        $afectacion=Tipo_afectacion::all();
+        $moneda_principal_id=$moneda_principal->id;
         // $moneda_id=$request->get('moneda');
 
-     $monedas=Moneda::all();
-     $servicios=Servicios::find($id);
+        $monedas=Moneda::all();
+        $servicios=Servicios::find($id);
+        $subfamilias=Subfamilia::where('id_familia',$servicios->familia_id)->where('estado',0)->get();
      // return view('producto_servicios.servicios.edit',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
 
      //    $servicios=Servicios::find($id);
      //    $monedas=Moneda::all();
      //    $moneda_nacional=Moneda::where('tipo','nacional')->first();
      //    $moneda_extranjera=Moneda::where('tipo','extranjera')->first();
-        return view('producto_servicios.servicios.show',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
+        return view('producto_servicios.servicios.show',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion','subfamilias'));
     }
 
     /**
@@ -158,7 +162,7 @@ class ServiciosController extends Controller
     public function update(Request $request, $id)
     {
 
-
+    // return $request
         if($request->hasfile('foto')){
             $image1 =$request->file('foto');
             $name =time().$image1->getClientOriginalName();
@@ -189,6 +193,7 @@ class ServiciosController extends Controller
         $servicio->moneda_id=$moneda_id;
         $servicio->codigo_original=$request->get('codigo_original');
         $servicio->familia_id=$request->get('familia_id');
+        $servicio->subfamilia_id=$request->get('sub_familia_id');
         $servicio->nombre=$request->get('nombre');
         if ($request->get('descripcion')) {$servicio->descripcion=$request->get('descripcion');}else{$servicio->descripcion='';}
         $servicio->descuento=$request->get('descuento');

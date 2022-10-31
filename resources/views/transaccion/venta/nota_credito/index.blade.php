@@ -51,7 +51,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nota de Credito</th>
-                                    <th>Nro Documento</th>
+                                    <th>N° de Doc.</th>
                                     <th>Documento</th>
                                     <th>Cliente</th>
                                     <th>Fecha emision</th>

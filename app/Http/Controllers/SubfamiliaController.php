@@ -102,7 +102,7 @@ class SubfamiliaController extends Controller
     public function search_ajax(Request $request)
     {
         // return $request;
-        $subfamilia = Subfamilia::where('id_familia', $request->familia_id)->get();
+        $subfamilia = Subfamilia::where('id_familia', $request->familia_id)->where('estado', 0)->get();
         $response = array();
         foreach($subfamilia as $familias){
            $response[] = array(
