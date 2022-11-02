@@ -43,6 +43,10 @@ Route::group(
 
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
+		Route::resource('/cliente_sucursal','ClienteSucursalController')->except('[store]');
+		Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
+		// Route::post('/cliente_sucursal/departamento','ClienteController@ajax_dep')->name('sucursal_dep_cli.ajax_dep');
+
 		Route::post('/cliente_retenedores/{id}' , 'ClienteRetenedoresController@update')->name('cliente_retenedores.reupdate');
 		Route::resource('/compra','CompraController');
 
@@ -228,6 +232,7 @@ Route::group(
 		Route::get('/guia_remision/print/{id}' , 'GuiaRemisionController@print')->name('guia_remision.print');
 
 		Route::resource('/guia_remision','GuiaRemisionController');
+		Route::post('/guia_remision/sucursal','GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
 		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
 		// Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
 		Route::post('/guia_remision/peso_stock','GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');

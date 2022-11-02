@@ -15,6 +15,7 @@ use App\TransportePublico;
 use App\Personal;
 use App\Producto;
 use App\Stock_almacen;
+use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 
 use Illuminate\Http\Request;
@@ -87,7 +88,11 @@ class GuiaRemisionManualController extends Controller
         $cantidad_sucursal=str_pad($ultima_serie, 2, "0", STR_PAD_LEFT);
         $cantidad_registro=str_pad($numero, 8, "0", STR_PAD_LEFT);
         $codigo_guia='TA'.$cantidad_sucursal.'-'.$cantidad_registro;
-        return view('transaccion.venta.guia_remision.guia_manual.create',compact('empresa','clientes','almacen','motivo_traslado','vehiculo','transporte_publico','personal','productos','codigo_guia'));
+
+        $fecha_hoy = Carbon::now();
+        $fecha_1 = $fecha_hoy->format('Y-m-d');
+
+        return view('transaccion.venta.guia_remision.guia_manual.create',compact('empresa','clientes','almacen','motivo_traslado','vehiculo','transporte_publico','personal','productos','codigo_guia','fecha_1'));
     }
 
     public function peso_ajax(Request $request){
@@ -160,7 +165,7 @@ class GuiaRemisionManualController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request
+        // return $request;
         $almacen = $request->get('almacen');
         $cliente = $request->get('cliente');
         $motivo = $request->get('motivo_traslado');
@@ -207,6 +212,8 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m->cod_guia = $codigo_guia;
         $guia_remision_m->almacen_id = $almacen;
         $guia_remision_m->cliente_id = $cliente;
+        $guia_remision_m->sucursal_cliente = $request->get('sucursal_cli');
+        $guia_remision_m->cod_postal_cliente = $request->get('postal_input');
         $guia_remision_m->fecha_emision = $fecha_emision;
         $guia_remision_m->fecha_entrega = $fecha_entrega;
         if ($tipo_transporte==1) {

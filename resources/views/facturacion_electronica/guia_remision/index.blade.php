@@ -26,7 +26,7 @@
                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-3">Anulados</a></li>
                         <li>
-                            <a href="#" class="nav link guia_m" style="font-weight: bold" >Remision Manual:</a>
+                            <a href="#" class="nav link guia_m" style="font-weight: bold" >G. Remision Manual:</a>
                         </li>
                         <li><a class="nav-link " data-toggle="tab" href="#tab-4">Por Enviar</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-5">Enviados</a></li>

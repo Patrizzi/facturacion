@@ -54,10 +54,33 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Cliente:</label>
                                 <div class="col-sm-10">
-                                    <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" onchange="change_cli()"></select>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Sucursal:</label>
+                                <div class="col-sm-10">
+                                    <div class="tooltip-demo">
+                                        <div class="input-group-prepend">
+                                            <input list="sucursal_list" id="sucursal_input" name="sucursal_cli" data-toggle="tooltip"  class="form-control" data-placement="top" title="Sucursal" required onchange="select_sucursal()" style="width: 70%"  autocomplete="off">
+                                            <datalist id="sucursal_list">
+                                                {{-- <option value=""></option> --}}
+                                            </datalist>
+                                            <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Postal"  required onkeyup="this.value=NumText(this.value)" maxlength="6" minlength="6">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i 
+                                                class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                                        </div>
+                                        <input type="hidden"  name="" id="input_suc_array">
+                                        <input type="hidden"  name="" id="input_post_array">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
                         <div class="col-sm-6">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Almacen:</label>
@@ -70,9 +93,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
                         <div class="col-sm-6">
                             <div class="row">
                                 <label class="col-sm-2">Motivo Traslado:</label>
@@ -85,6 +105,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    {{-- <br> --}}
+                    <div class="row" style="margin-bottom: 5px">
                         <div class="col-sm-6">
                             <div class="row">
                                 <label class="col-sm-2">F. Emision:</label>  
@@ -93,12 +116,10 @@
                                 </div>
                                 <label class="col-sm-2">F. Entrega:</label>
                                 <div class="col-sm-4">
-                                    <input type="date" class="form-control" name="fecha_entrega" id="" required>
+                                    <input type="date" class="form-control" name="fecha_entrega" id="" required min="{{$fecha_1}}">
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-6">
                             <div class="row">
                                 <label class="col-sm-2">Tipo de Transporte:</label>
@@ -112,6 +133,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        
                         <div class="col-sm-6" id="transporte_publico" hidden="hidden">
                             <div class="row">
                               <label class="col-sm-2">Vehiculo Público:</label>
@@ -514,6 +538,78 @@
 
         
         // // var
+    }
+    function change_cli(){
+        var cliente = $('#cliente').val();
+        $('#sucursal_list').empty();
+        $('#postal_input').val("");
+        $('#sucursal_input').val("");
+        $.ajax({
+            type: "post",
+            url: "{{ route('guia_remision.ajax_sucursal') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'cliente': cliente
+            },
+            success: function (msg) {
+        
+                let cod_co = msg.cod_postal;
+                let msg_length = cod_co.length;
+                // console.log(msg_length)
+                var list = document.getElementById('sucursal_list');
+                var p_list = document.getElementById('postal_cod_list');
+                
+                if(msg_length == 1){
+                    $('#sucursal_input').val(msg.sucursal[0]);
+                    $('#postal_input').val(msg.cod_postal[0]);
+                    document.getElementById('input_post_array').value = msg.cod_postal[0];
+                    document.getElementById('input_suc_array').value = msg.sucursal[0];
+                }else{
+                    $('#sucursal_input').attr('placeholder','Seleccionar Sucursal');
+                    $('#postal_input').attr('placeholder','Selec. Codigo Postal');
+                    for (let i = 0; i < msg_length; i++) {
+                        var option = document.createElement('option');
+                        option.value = msg.sucursal[i];
+                        list.appendChild(option);
+                        document.getElementById('input_post_array').value = msg.cod_postal;
+                        document.getElementById('input_suc_array').value = msg.sucursal;
+
+                        // var option2 = document.createElement('option');
+                        // option2.value = msg.cod_postal[i];
+                        // p_list.appendChild(option2);
+                    }
+                }
+                
+                // sum_total();
+                
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });   
+    }
+    function select_sucursal(){
+        var valor_input = $('#sucursal_input').val();
+        var all_suc = document.getElementById('input_suc_array').value;
+        var all_postal = document.getElementById('input_post_array').value;
+        // CODIGO PARA SEPARAR LAS SUCURSALES
+        const split_suc = all_suc.split(',');
+        // CODIGO PARA SEPARAR LASA SUCURSALES
+        const split_post = all_postal.split(',');
+        for (let i_suc = 0; i_suc < split_suc.length; i_suc++) {
+            var el_suc = split_suc[i_suc];
+            console.log(el_suc);
+            if(el_suc == valor_input){
+                $('#postal_input').val(split_post[i_suc]);
+            }
+
+        }
+    }
+    function delete_guion(string){//solo letras y numeros
+        return string.replace(/-/g, "");
     }
 </script>
 @endsection

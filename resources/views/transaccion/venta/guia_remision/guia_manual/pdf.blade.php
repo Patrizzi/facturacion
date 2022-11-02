@@ -40,12 +40,16 @@
                 <tr >
                     <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                         <center><strong style="align-content: center;margin: 5px">Domicilio De Partida </strong></center><br>
-                        &nbsp;{{$guia_remision_m->almacen->direccion}}<br>
+                        &nbsp;{{$guia_remision_m->almacen->direccion}} -  {{$guia_remision_m->almacen->cod_postal}}<br>
                     </td>
                     <th style="width: 2%;border-color: white"></th>
                     <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Domicilio De Llegada </strong></center><br>
-                        {{$guia_remision_m->cliente->direccion}} <br>
+                        @if(isset($guia_remision->sucursal_cliente))
+                            {{$guia_remision_m->sucursal_cliente}} - {{$guia_remision_m->cod_postal_cliente}}
+                        @else
+                            {{$guia_remision_m->cliente->direccion}} - {{$guia_remision_m->cliente->cod_postal}}
+                        @endif <br>
                     </td>
                 </tr>
             </tbody>

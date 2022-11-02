@@ -31,14 +31,11 @@
 
                 <table style="width: 100%;border-collapse:separate;margin-bottom: -10px;color: white;">
                     <tr>
-                        <td style="width: auto;border-color: #3D3D3D" rowspan="2" valign="top">
-                            <img align="" src="{{asset('img/logos/')}}/{{$empresa->foto}}" style="margin-top: 0px;" width="300px" />
-                            <br>
-                        </td>
+                        @include('layout_cabecera_ventas_pdf')
                         <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
                             <center>
                                 <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-                                <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACION ELECTRONICA</h2><br>
+                                <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >GUIA REMISION ELECTRONICA</h2><br>
                                 <h5 style="text-align: center;margin-bottom: -5px" >{{$guia_remision->cod_guia}}</h5>
                             </center>
                         </td>
@@ -50,12 +47,17 @@
                         <tr >
                             <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                                 <center><strong style="align-content: center;margin: 5px">Domicilio De Partida </strong></center><br>
-                                &nbsp;{{$guia_remision->almacen->direccion}}<br>
+                                &nbsp;{{$guia_remision->almacen->direccion}} -  {{$guia_remision->almacen->cod_postal}}<br>
                             </td>
                             <th style="width: 2%;border-color: white"></th>
                             <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                                 <center><strong style="align-content: center;margin: 5px">Domicilio De Llegada </strong></center><br>
-                                {{$guia_remision->cliente->direccion}} <br>
+                                
+                                @if(isset($guia_remision->sucursal_cliente))
+                                    {{$guia_remision->cliente->direccion}} - {{$guia_remision->cod_postal_cliente}}
+                                @else
+                                    {{$guia_remision->cliente->direccion}} - {{$guia_remision->cliente->cod_postal}}
+                                @endif <br>
                             </td>
                         </tr>
                     </tbody>

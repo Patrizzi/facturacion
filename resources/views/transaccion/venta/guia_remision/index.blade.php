@@ -11,8 +11,8 @@
 <!-- modal -->
 @if($valor_error == 1)
 <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
-    <a class="alert-link" href="../vehiculos">
-        <li class="error" style="color: red">{{ $message }}</li>
+    <a class="alert-link" href="{{route('vehiculo.index')}}">
+        <li class="error" style="color: red">{!!$message!!}</li>
     </a>
 </div>
 @endif
@@ -84,13 +84,6 @@
 </div>
 </div>
 {{-- fimodal --}}
-@if($valor_error == 1)
-<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
-    <a class="alert-link" href="../vehiculos">
-        <li class="error" style="color: red">{{ $message }}</li>
-    </a>
-</div>
-@endif
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -109,7 +102,7 @@
                                     <th>Ruc/DNI</th>
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
-                                    <!-- <th>EDITAR</th> -->
+                                    <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,8 +114,18 @@
                                     <td>{{$guias_remision->cliente->numero_documento}}</td>
                                     <td>{{$guias_remision->fecha_emision}}</td>
                                     <td><center><a href="{{route('guia_remision.show' , $guias_remision->id)}}"><button type="button" class="btn btn-w-m btn-primary">VER</button></a></center></td>
-
-
+                                    <td style="text-align:center;">
+                                        @if($guias_remision->g_electronica==1) <!-- Nombre del cliente -->
+                                            <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>Aceptada</span>
+                                        @elseif($guias_remision->g_electronica==2)
+                                            <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="Anulada"><i class="fa fa-times-circle"></i></button>
+                                            <span hidden>Anulada</span>
+                                        @else
+                                            <button class="btn btn-warning btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="En Espera"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>En Espera</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -167,9 +170,9 @@
 #auto:hover{
     opacity: .8;
 }
-/*#auto:hover + #div-mostrar{
-    height: 50px;
-    }*/
+.url_def{
+    text-decoration: underline;
+}
 </style>
 
 
