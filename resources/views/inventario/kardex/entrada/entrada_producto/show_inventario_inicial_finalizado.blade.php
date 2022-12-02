@@ -69,8 +69,13 @@
             <tr>
                 <td >{{$kardex_entradas_registro->producto->codigo_original}} -  {{$kardex_entradas_registro->producto->nombre}}</td>
                 <td>{{$kardex_entradas_registro->cantidad_inicial}}</td>
+                @if($inventario_inicial->g == $moneda_nacional->id )
                 <td>{{$kardex_entradas_registro->precio_nacional}}</td>
                 <td> {{$kardex_entradas_registro->cantidad_inicial*$kardex_entradas_registro->precio_nacional}}</td>
+                @else   
+                <td>{{$kardex_entradas_registro->precio_extranjero}}</td>
+                <td> {{$kardex_entradas_registro->cantidad_inicial*$kardex_entradas_registro->precio_extranjero}}</td>
+                @endif
             </tr>
             @endforeach
         </tbody>

@@ -14,6 +14,7 @@ use App\Provedor;
 use App\TipoCambio;
 use App\User;
 use App\kardex_entrada_registro;
+use App\GuiaRTraslado;
 use Carbon\Carbon;
 use DB;
 use App\Stock_producto;
@@ -30,8 +31,12 @@ class KardexEntradaDistribucionController extends Controller
     public function index()
     {
         $kardex_distribucion=Kardex_entrada::where('tipo_registro_id',"3")->get();
+        foreach($kardex_distribucion as $index => $kd){
+            $cantidad_tot[$index] = kardex_entrada_registro::where('kardex_entrada_id', $kd->id)->sum('cantidad_inicial');
+            $cantidad_prod[$index] = kardex_entrada_registro::where('kardex_entrada_id', $kd->id)->count();
+        }
         $almacen = Almacen::all();
-        return view('inventario.kardex.entrada.distribucion_producto.index',compact('kardex_distribucion','almacen'));
+        return view('inventario.kardex.entrada.distribucion_producto.index',compact('kardex_distribucion','almacen', 'cantidad_tot','cantidad_prod'));
     }
 
     /**
@@ -76,16 +81,23 @@ class KardexEntradaDistribucionController extends Controller
         // $productos=Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
 
         $almacenes=Almacen::where('estado','0')->where('id','!=',1)->get();
+        $alm_principal=Almacen::where('id',1)->first();
 
         $categorias=Categoria::all();
         $user_login =auth()->user()->id;
         $usuario=User::where('id',$user_login)->first();
 
-        return view('inventario.kardex.entrada.distribucion_producto.create',compact('almacenes','productos','categorias','usuario'));
+        return view('inventario.kardex.entrada.distribucion_producto.create',compact('almacenes','productos','categorias','usuario','alm_principal'));
         //   manipulacion de la vista create para kardex dependiendo de los productosgit pushgit
     }
-
+    public function ajax_direccion_almacen(Request $request){
+        $almacen = $request->get('almacen');
+        $almacen_encontrado=Almacen::where('id',$almacen)->first();
+        return $almacen_encontrado->direccion.' - '.$almacen_encontrado->cod_postal;
+    }
+    
     public function stock_ajax_distribucion(Request $request){
+        // return $request;
         $articulo=$request->get('articulo');
         $id=explode(" ",$articulo);
         $almacen_encontrado=Almacen::where('id',1)->first();
@@ -111,6 +123,23 @@ class KardexEntradaDistribucionController extends Controller
         return $stock;
     }
 
+    public function guia_interna(Request $request){
+        $empresa = Empresa::first();
+        $ultima_entrada = GuiaRTraslado::orderby('created_at','DESC')->first();
+        // return $ultima_entrada;
+
+        if(isset($ultima_entrada)){
+          $numero = substr(strstr($ultima_entrada->codigo_guia, '-'), 1);
+          $numero++;
+          $cantidad_registro=str_pad($numero, 8, "0", STR_PAD_LEFT);
+          $codigo_guia='GRT'.'-'.$cantidad_registro;
+        }else{
+          $cantidad_registro=str_pad('1', 8, "0", STR_PAD_LEFT);
+          $codigo_guia='GRT'.'-'.$cantidad_registro;
+        }
+          
+        return view('inventario.kardex.guias.guia',compact('empresa','codigo_guia'));
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -119,6 +148,44 @@ class KardexEntradaDistribucionController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
+        $var = "a";
+        if($var == "a"){
+            $almacen_str = $sep_esc = explode(' \ ',$request->get('almacen'));
+            $almacen_receptor = Almacen::where('id',$almacen_str[0])->first();
+            $almacen_principal  = Almacen::where('id', 1)->first();
+            // $transporte = $request->get('');
+            $observacion = $request->get('observacion');
+            $motivo = $request->get('motivo');
+            $fecha_emision = Carbon::now()->format('d/m/Y');
+            // return $fecha_emision;
+            $empresa = Empresa::first();
+            $ultima_entrada = GuiaRTraslado::orderby('created_at','DESC')->first();
+            // return $ultima_entrada;
+            foreach($request->get('registro_opt') as $item => $articulo){
+                $productos[] = Producto::where('id', $articulo)->first();
+                $stock[] =  Stock_almacen::where('almacen_id',1)->where('producto_id',$productos[$item]->id)->first();
+                $unidad[] = $request->get('unidades')[$item];
+                $cantidad[] = $request->get('cantidad')[$item];
+                $sep_esc = explode(' ',$productos[$item]->peso);
+                $peso[] = $sep_esc[0];
+            }
+            // return $productos;
+            if(isset($ultima_entrada)){
+            $numero = substr(strstr($ultima_entrada->codigo_guia, '-'), 1);
+            $numero++;
+            $cantidad_registro=str_pad($numero, 8, "0", STR_PAD_LEFT);
+            $codigo_guia='GRT'.'-'.$cantidad_registro;
+            }else{
+            $cantidad_registro=str_pad('1', 8, "0", STR_PAD_LEFT);
+            $codigo_guia='GRT'.'-'.$cantidad_registro;
+            }
+            // return $stock;
+            return view('inventario.kardex.guias.guia',compact('empresa','codigo_guia','almacen_receptor','observacion','productos','stock','unidad','cantidad','peso','almacen_principal','fecha_emision','motivo'));
+
+        }
+        return $request;
+        return 
         // return kardex_entrada_registro::stock_producto_precio();
       //ALMACEN
       $almacen_input=$request->input('almacen');

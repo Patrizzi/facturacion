@@ -14,8 +14,28 @@ class MotivoController extends Controller
      */
     public function index()
     {
-        $motivos=Motivo::all();
-        return view('configuracion_general.motivo.index',compact('motivos'));
+        $motivos=Motivo::where('estado',0)->get();
+        $id_compras = 1;
+        $id_salida = 1;
+        // Compras
+        foreach($motivos as $motv){
+            if($motv->tipo == "Sin Asignar"){
+                $str_moti = explode(' ',$motv->nombre);
+                if($str_moti[0] == "Compras"){
+                    $motivos_compra[] = Motivo::where('id',$motv->id)->first(); 
+                }elseif($str_moti[0] == "Devolucion"){
+                    $motivos_dev[] = Motivo::where('id',$motv->id)->first(); 
+                }
+            }else{
+                if($motv->tipo == "Compras"){
+                    $motivos_compra[] = Motivo::where('id',$motv->id)->first(); 
+                }else{
+                    $motivos_dev[] = Motivo::where('id',$motv->id)->first(); 
+                    
+                }
+            }
+        }
+        return view('configuracion_general.motivo.index',compact('motivos_compra','motivos_dev','id_compras','id_salida'));
     }
 
     /**
@@ -36,9 +56,11 @@ class MotivoController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         $motivo=new Motivo;
         $motivo->nombre=$request->get('nombre');
-        $motivo->nombre=$request->get('nombre');
+        $motivo->tipo=$request->get('tipo');
+        $motivo->estado = 0;
         $motivo->save();
 
         return redirect()->route('motivo.index');
@@ -76,8 +98,15 @@ class MotivoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return $request;
         $motivo=Motivo::find($id);
         $motivo->nombre=$request->get('nombre');
+        $motivo->tipo=$request->get('tipo');
+        if($request->get('estado') == "on"){
+            $motivo->estado=0;
+        }else{
+            $motivo->estado= 1;
+        }
         $motivo->save();
         return redirect()->route('motivo.index');
     }

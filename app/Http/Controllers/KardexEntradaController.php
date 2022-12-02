@@ -36,6 +36,7 @@ class KardexEntradaController extends Controller
       $inventario_inicial=Kardex_entrada::where('codigo_guia','INVENTARIO INICIAL')->where('id','!=',$primer_registro_kardex)->get();
       $user_login =auth()->user();
       $almacenes=Almacen::all();
+      $almacen_1=Almacen::first();
       $clasificaciones=Categoria::all();
       if ($user_login->name== 'Administrador') {
         $kardex_entradas=Kardex_entrada::where('tipo_registro_id',1)->where('codigo_guia','!=','INVENTARIO INICIAL')->get();
@@ -63,7 +64,7 @@ class KardexEntradaController extends Controller
       }
       // return $array_final;
       
-      return view('inventario.kardex.entrada.entrada_producto.index' ,compact('primer_registro','kardex_entradas','almacenes','clasificaciones','array_final'));
+      return view('inventario.kardex.entrada.entrada_producto.index' ,compact('primer_registro','kardex_entradas','almacenes','clasificaciones','array_final','almacen_1'));
 
     }
 
@@ -97,7 +98,9 @@ class KardexEntradaController extends Controller
                 return redirect()->route('kardex-entrada.show',$inventario_inicial->id);
             }
         }
-
+        // SOLO FALTA GUARDAR EL TIPO DE TRANSPORTE
+        
+        //
         $productos=Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
         $provedores=Provedor::all();
         $almacenes=Almacen::where('estado','0')->where('id',1)->get();
@@ -105,9 +108,21 @@ class KardexEntradaController extends Controller
         $count_kardex_e = count($kardex_entrada);
 
         if($count_kardex_e > 0){
-            $motivos=Motivo::where('nombre','!=','Inventario Inicial')->get();
+            $motivos_all=Motivo::where('estado',0)->get();
+            foreach($motivos_all as $motv){
+              if($motv->tipo == "Sin Asignar"){
+                  $str_moti = explode(' ',$motv->nombre);
+                  if($str_moti[0] == "Compras"){
+                      $motivos[] = Motivo::where('id',$motv->id)->first(); 
+                  }
+              }else{
+                  if($motv->tipo == "Compras"){
+                      $motivos[] = Motivo::where('id',$motv->id)->first(); 
+                  }
+              }
+          }
         }else{
-            $motivos=Motivo::all();
+            $motivos=Motivo::where('estado',0)->all();
         }
 
         $categorias=Categoria::all();
