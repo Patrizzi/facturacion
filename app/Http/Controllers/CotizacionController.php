@@ -1784,9 +1784,9 @@ if (is_numeric($factura_cod_fac)) {
         // return  $ultima_facturac;
 $cod_fac="F".$sucursal_nr."-".$factura_nr;
 
-$fecha_hoy = Carbon::now()->add(1,'day');
+$fecha_hoy = Carbon::now();
 $fecha_1 = $fecha_hoy->format('Y-m-d');
-
+// return $fecha_1;
 
 if ($cotizacion->estado==0) {
     return view('transaccion.venta.cotizacion.facturar2', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','cotizacion_registros','array_cantidad','comi','array_promedio','forma_pagos','banco','fecha_1'));

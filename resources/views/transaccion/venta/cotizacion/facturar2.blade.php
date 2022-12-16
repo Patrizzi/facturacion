@@ -557,30 +557,33 @@
                 fin = parseFloat(fin) + parseFloat(monto_c[i].value);
             }
             var fin_r = Math.round(fin * 100) / 100;
-            console.log(total);
+            // console.log(total);
             for (var i = 0; i < inp_mont; i++) {
                 var fecha = monto_fc[i].id;
                 var monto = monto_c[i].id;
     
                 var input_text = document.getElementById(`${monto}`).value;
                 var date_text = document.getElementById(`${fecha}`).value;
-                if( input_text.length  == 0){
-                    // document.getElementById('cuota_modal').click();
-                    document.getElementById('alert_campos').style.display = "flex";
-                }else if(date_text.length  == 0 ){
-                    document.getElementById('alert_campos').style.display = "flex";
-                }else{
-                    var comp = comp + 1;
+                if( input_text.length  == 0 || date_text.length  == 0){
+                    console.log("a");
+                    document.getElementById('alert_campos').style.display = "flex";                    
+                    mostrarMensaje();
+                    return;
                 }
             }
-            console.log(fin_r);
-            if(fin_r != total || comp != inp_mont ){
-                // document.getElementById('cuota_modal').click();
+            if(fin_r != total){
                 document.getElementById('suma_campos').style.display = "flex";
             }else{
+                console.log('e')
                 $('#cuotas_modal').modal('hide')
             }
+            mostrarMensaje();
             
         });
+        function mostrarMensaje(){
+            // $("#alert_campos").show(200);
+            $("#alert_campos").hide(3000);
+            $("#suma_campos").hide(3000);
+        }
     </script>
 @endsection

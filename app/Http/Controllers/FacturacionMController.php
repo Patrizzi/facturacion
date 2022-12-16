@@ -131,7 +131,7 @@ class FacturacionMController extends Controller
 
         $factura_numero="FA".$sucursal_nr."-".$factura_nr;
 
-        $fecha_hoy = Carbon::now()->add(1,'day');
+        $fecha_hoy = Carbon::now();
         $fecha_1 = $fecha_hoy->format('Y-m-d');
 
         return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes','sucursal','factura_numero','fecha_1'));

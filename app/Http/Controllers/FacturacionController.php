@@ -227,7 +227,7 @@ class FacturacionController extends Controller
         // }
         /*Servicio*/
 
-        $fecha_hoy = Carbon::now()->add(1,'day');
+        $fecha_hoy = Carbon::now();
         $fecha_1 = $fecha_hoy->format('Y-m-d');
         // return $modifiedMutable;
 
