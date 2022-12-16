@@ -178,7 +178,7 @@
                                                                 </button>
                                                             </div>
                                                             <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                                                <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+                                                                <strong style="font-size:11px">La suma de las cuotas es diferente del monto total</strong>
                                                                 <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
@@ -187,7 +187,7 @@
                                                                 <div class="pago_modal row">
                                                                     <div class="col-sm-1"><label>Fecha:</label></div>
                                                                     <div class="col-sm-4">
-                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1    }}">
                                                                     </div>
                                                                     <div class="col-sm-1"><label>Monto:</label></div>
                                                                     <div class="col-sm-4">
@@ -201,6 +201,16 @@
                                                                     <div class="col-sm-2">
                                                                         <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
                                                                     </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer" style="display: block">
+                                                            <div class="row">
+                                                                <div class="col-sm-6" style="">
+                                                                    <label for=""><strong>Precio Total: &nbsp;</strong><span id="simb_fot">{{$moneda->simbolo}}</span>&nbsp;</label><label id="cuotas_footer"></label>
+                                                                </div>
+                                                                <div class="col-sm-6" align="right">
+                                                                    <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -341,7 +351,8 @@
                             </table>
                         </div>
                         <button type="button" class='addmore btn btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i></button>&nbsp;
-                        <button class="ladda-button btn btn-primary float-right" type="submit"  id="boton" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                        <button class="ladda-button btn btn-primary float-right" type="boton"  id="boton" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                        <button class="ladda-button btn btn-primary float-right" type="submit" hidden  id="boton_submit" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
                     </form>
                 </div>
             </div>
@@ -350,8 +361,7 @@
 </div>
 <div id="loaderGif"></div>
 <style>
-    .form-control{border-radius: 10px}
-    .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
+     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .check{-webkit-appearance: none;height: 34px;background-color: #ffffff00;-moz-appearance: none;border: none;appearance: none;width: 80px;border-radius: 10px;}
     .div_check{position: relative;top: -33px;left: 0px;background-color: #ffffff00;  top: -35;}
@@ -361,8 +371,6 @@
         -webkit-appearance: none;
         margin: 0;
     }
-
-    input[type=number] { -moz-appearance:textfield; }
     input[type=number] { -moz-appearance:textfield; }
     label.col-form-label::marker{
         list-style:none;
@@ -399,7 +407,7 @@
     .not-active { 
         pointer-events: none; 
         cursor: default; 
-    } 
+    }
 </style>
 
 <!-- Mainly scripts -->
@@ -811,6 +819,7 @@
             var monto = monto_c[i].id;
             var fin = (total_tt/inp_mont)
             document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2)/ multiplier2;
+            $("#cuotas_footer").html(Math.round(end2 * multiplier2)/ multiplier2);
         }
     }
     
@@ -914,7 +923,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
                     </div>
-                    <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}">
+                    <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" min="{{$fecha_1}}">
                 </div>
             </div>
             <div class="col-sm-2">
@@ -966,7 +975,96 @@
             document.getElementById('add_pago').removeAttribute('disabled');
         }
     };
+    $(document).on('click','#button_cuotas_save', function(event){
+            
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var monto_fc = document.getElementsByClassName('fecha_pago');
+        console.log(monto_c);
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        var total =  $("#cuotas_footer").html();
+        console.log(total);
 
+        var fin = 0;
+        var comp = 0;
+        for (var i = 0; i < inp_mont; i++) {
+            fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+        }
+        var fin_r = Math.round(fin * 100) / 100;
+        console.log(fin_r);
+
+        for (var i = 0; i < inp_mont; i++) {
+            var fecha = monto_fc[i].id;
+            var monto = monto_c[i].id;
+
+            var input_text = document.getElementById(`${monto}`).value;
+            var date_text = document.getElementById(`${fecha}`).value;
+            console.log(date_text);
+            if( input_text.length  == 0 || date_text.length  == 0){
+                console.log("a");
+                document.getElementById('alert_campos').style.display = "flex";                    
+                mostrarMensaje();
+                return;
+            }
+        }
+        
+        if(fin_r != total){
+            document.getElementById('suma_campos').style.display = "flex";
+        }else{
+            console.log('e')
+            $('#cuotas_modal').modal('hide')
+        }
+        mostrarMensaje();
+        
+    });
+    function mostrarMensaje(){
+        // $("#alert_campos").show(200);
+        $("#alert_campos").hide(3000);
+        $("#suma_campos").hide(3000);
+    }
+    function validez_forma_pago2(){
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var monto_fc = document.getElementsByClassName('fecha_pago');
+        console.log(monto_c);
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        var total =  $("#cuotas_footer").html();
+        console.log(total);
+
+        var fin = 0;
+        var comp = 0;
+        for (var i = 0; i < inp_mont; i++) {
+            fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+        }
+        var fin_r = Math.round(fin * 100) / 100;
+        console.log(fin_r);
+
+        for (var i = 0; i < inp_mont; i++) {
+            var fecha = monto_fc[i].id;
+            var monto = monto_c[i].id;
+
+            var input_text = document.getElementById(`${monto}`).value;
+            var date_text = document.getElementById(`${fecha}`).value;
+            // console.log(date_text);
+            if( input_text.length  == 0 || date_text.length  == 0){
+                
+                document.getElementById('alert_campos').style.display = "flex";                    
+                // mostrarMensaje();
+                return;
+            }
+        }
+        
+        if(fin_r != total){
+            document.getElementById('suma_campos').style.display = "flex";
+        }else{
+            // console.log('e')
+            $('#cuotas_modal').modal('hide');
+        }
+        // mostrarMensaje();
+    }
+    function act(){
+        
+        $("#alert_campos").hide(30000);
+        $("#suma_campos").hide(30000);
+    }
     // SABER SI LAS CUOTAS DEL MODAL DE FORMA DE PAGO CONCUERDA CON EL MONTO FINAL
     $("#boton").on("click",function(buton){
         var f_p = $('#forma_pago').val();
@@ -975,6 +1073,7 @@
         var monto_c = document.getElementsByClassName('monto_pago');
         var monto_fc = document.getElementsByClassName('fecha_pago');
         if(f_p == "2" ){
+            // document.getElementById('cuota_modal').click(); 
             var sum2 = 0;
             for(g = 0; g<inp_mont;g++){
                 var monto1 = monto_c[g].id;
@@ -993,16 +1092,28 @@
                 var input_text = document.getElementById(`${monto}`).value;
                 var date_text = document.getElementById(`${fecha}`).value;
                 if( input_text.length  == 0 || date_text.length  == 0 ){
-                    document.getElementById('cuota_modal').click();
+                    // document.getElementById('cuota_modal').click();
                     document.getElementById('alert_campos').style.display = "flex";
-                    buton.preventDefault();
+                    $('#cuotas_modal').modal('show');
+
+                    setTimeout(act, 5000);
+                    
+                    
+                    console.log('a');
+                    // ();
+                    // buton.preventDefault();
                 }else{
-                    document.getElementById('boton').click();
+                    // document.getElementById('boton_submit').click();
+                    alert('button submit');
+
                 }
             }
+            
         }else{
-            document.getElementById('boton').click();
+            // document.getElementById('boton_submit').click();
+            alert('button submit');
         }
+        
     });
 
     // FUNCIONES PARA LAS ALERTAS DE FORMA DE PAGO
@@ -1036,6 +1147,10 @@
                 $(`#moneda_id`).val(msg.id);
                 $(`#moneda`).val(msg.nombre);
                 $(`#button_changeMoney`).html(msg.other);
+                $(`#basic-addon3`).html(msg.simbolo);
+                $(`#simb_fot`).html(msg.simbolo);
+                
+                
                 if(status==1){
                     status=0;
                 }else{

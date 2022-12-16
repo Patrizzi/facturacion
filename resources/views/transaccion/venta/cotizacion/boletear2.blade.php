@@ -132,7 +132,7 @@
                                                     <div class="pago_modal row">
                                                         <div class="col-sm-1"><label>Fecha:</label></div>
                                                         <div class="col-sm-4">
-                                                            <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" >
+                                                            <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1}}" >
                                                         </div>
                                                         <div class="col-sm-1"><label>Monto:</label></div>
                                                         <div class="col-sm-4">
@@ -146,6 +146,16 @@
                                                         <div class="col-sm-2">
                                                             <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
                                                     </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer" style="display: block">
+                                                <div class="row">
+                                                    <div class="col-sm-6" style="">
+                                                        <label for=""><strong>Precio Total: &nbsp;</strong><span id="simb_fot">{{$cotizacion->moneda->simbolo}}</span>&nbsp;</label><label id="cuotas_footer"></label>
+                                                    </div>
+                                                    <div class="col-sm-6" align="right">
+                                                        <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
                                                     </div>
                                                 </div>
                                               </div>
@@ -542,6 +552,12 @@
                     document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
                 }
         }
+        $(document).ready(function() {             
+            var total = document.getElementById('total').value;
+            document.getElementById("monto_pago0").value = total
+            $("#cuotas_footer").html(total);
+
+        }); 
     </script>
     <script type="text/javascript">
        $(document).ready(function() {             
@@ -549,5 +565,44 @@
             document.getElementById("monto_pago0").value = total
 
         }); 
+    </script>
+    <script>
+        $(document).on('click','#button_cuotas_save', function(event){    
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var monto_fc = document.getElementsByClassName('fecha_pago');
+            console.log(monto_c)
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            var total =  $("#cuotas_footer").html();
+            var fin = 0.00;
+            for (var i = 0; i < inp_mont; i++) {
+                fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+            }
+            var fin_r = Math.round(fin * 100) / 100;
+            for (var i = 0; i < inp_mont; i++) {
+                var fecha = monto_fc[i].id;
+                var monto = monto_c[i].id;
+    
+                var input_text = document.getElementById(`${monto}`).value;
+                var date_text = document.getElementById(`${fecha}`).value;
+                if( input_text.length  == 0 || date_text.length  == 0){
+                    console.log("a");
+                    document.getElementById('alert_campos').style.display = "flex";                    
+                    mostrarMensaje();
+                    return;
+                }
+            }
+            if(fin_r != total){
+                document.getElementById('suma_campos').style.display = "flex";
+            }else{
+                console.log('e')
+                $('#cuotas_modal').modal('hide')
+            }
+            mostrarMensaje();
+        });
+        function mostrarMensaje(){
+            // $("#alert_campos").show(200);
+            $("#alert_campos").hide(3000);
+            $("#suma_campos").hide(3000);
+        }
     </script>
 @endsection

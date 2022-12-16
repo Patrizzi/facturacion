@@ -124,7 +124,7 @@ class BoletaMController extends Controller
         }
         $boleta_numero = "BA".$sucursal_nr."-".$boleta_nr;
         // return $boleta_numero;
-        $fecha_hoy = Carbon::now();
+        $fecha_hoy = Carbon::now()->add(1,'day');
         $fecha_1 = $fecha_hoy->format('Y-m-d');
         return view('transaccion.venta.boleta.boleta_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','empresa','tipo_operacion','almacenes','sucursal','boleta_numero','fecha_1'));
 
@@ -195,7 +195,7 @@ class BoletaMController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        return $request;
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);

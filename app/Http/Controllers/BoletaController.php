@@ -204,8 +204,8 @@ class BoletaController extends Controller
         $boleta_nr=str_pad($boleta_num, 8, "0", STR_PAD_LEFT);
     }
     $boleta_numero="B".$sucursal_nr."-".$boleta_nr;
-    
-    $fecha_hoy = Carbon::now();
+
+    $fecha_hoy = Carbon::now()->add(1,'day');;
     $fecha_1 = $fecha_hoy->format('Y-m-d');
     return view('transaccion.venta.boleta.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','sucursal','boleta_numero','tipo_operacion','fecha_1'));
 
