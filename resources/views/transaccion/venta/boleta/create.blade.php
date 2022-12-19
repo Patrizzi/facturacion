@@ -187,7 +187,7 @@
                                                                 <div class="pago_modal row">
                                                                     <div class="col-sm-1"><label>Fecha:</label></div>
                                                                     <div class="col-sm-4">
-                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1    }}">
+                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1}}">
                                                                     </div>
                                                                     <div class="col-sm-1"><label>Monto:</label></div>
                                                                     <div class="col-sm-4">
@@ -195,7 +195,7 @@
                                                                         <div class="input-group-prepend">
                                                                             <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
                                                                         </div>
-                                                                        <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                                        <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"  onkeypress="return filterFloat(event,this);" >
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-2">
@@ -352,7 +352,7 @@
                         </div>
                         <button type="button" class='addmore btn btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i></button>&nbsp;
                         <button class="ladda-button btn btn-primary float-right" type="boton"  id="boton" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
-                        <button class="ladda-button btn btn-primary float-right" type="submit" hidden  id="boton_submit" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                        <button class="ladda-button btn btn-primary float-right" type="submit" hidden  id="button_submit" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar DB</i></button>&nbsp;
                     </form>
                 </div>
             </div>
@@ -915,7 +915,7 @@
             <div class="col-sm-1"><label>Fecha:</label>
             </div>
             <div class="col-sm-4">
-                <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" >
+                <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" min="{{$fecha_1}}">
             </div>
             <div class="col-sm-1"><label>Monto:</label></div>
             <div class="col-sm-4">
@@ -923,7 +923,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
                     </div>
-                    <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" min="{{$fecha_1}}">
+                    <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" onkeypress="return filterFloat(event,this);">
                 </div>
             </div>
             <div class="col-sm-2">
@@ -998,11 +998,9 @@
 
             var input_text = document.getElementById(`${monto}`).value;
             var date_text = document.getElementById(`${fecha}`).value;
-            console.log(date_text);
             if( input_text.length  == 0 || date_text.length  == 0){
-                console.log("a");
                 document.getElementById('alert_campos').style.display = "flex";                    
-                mostrarMensaje();
+                setTimeout(mostrarMensaje, 3000 );
                 return;
             }
         }
@@ -1021,101 +1019,82 @@
         $("#alert_campos").hide(3000);
         $("#suma_campos").hide(3000);
     }
-    function validez_forma_pago2(){
-        var monto_c = document.getElementsByClassName('monto_pago');
-        var monto_fc = document.getElementsByClassName('fecha_pago');
-        console.log(monto_c);
-        var inp_mont = document.getElementsByClassName('monto_pago').length;
-        var total =  $("#cuotas_footer").html();
-        console.log(total);
-
-        var fin = 0;
-        var comp = 0;
-        for (var i = 0; i < inp_mont; i++) {
-            fin = parseFloat(fin) + parseFloat(monto_c[i].value);
-        }
-        var fin_r = Math.round(fin * 100) / 100;
-        console.log(fin_r);
-
-        for (var i = 0; i < inp_mont; i++) {
-            var fecha = monto_fc[i].id;
-            var monto = monto_c[i].id;
-
-            var input_text = document.getElementById(`${monto}`).value;
-            var date_text = document.getElementById(`${fecha}`).value;
-            // console.log(date_text);
-            if( input_text.length  == 0 || date_text.length  == 0){
-                
-                document.getElementById('alert_campos').style.display = "flex";                    
-                // mostrarMensaje();
-                return;
-            }
-        }
-        
-        if(fin_r != total){
-            document.getElementById('suma_campos').style.display = "flex";
-        }else{
-            // console.log('e')
-            $('#cuotas_modal').modal('hide');
-        }
-        // mostrarMensaje();
-    }
-    function act(){
-        
-        $("#alert_campos").hide(30000);
-        $("#suma_campos").hide(30000);
-    }
     // SABER SI LAS CUOTAS DEL MODAL DE FORMA DE PAGO CONCUERDA CON EL MONTO FINAL
     $("#boton").on("click",function(buton){
-        var f_p = $('#forma_pago').val();
-        var total = document.getElementById('total_final').value;
-        var inp_mont = document.getElementsByClassName('monto_pago').length;
-        var monto_c = document.getElementsByClassName('monto_pago');
-        var monto_fc = document.getElementsByClassName('fecha_pago');
-        if(f_p == "2" ){
-            // document.getElementById('cuota_modal').click(); 
-            var sum2 = 0;
-            for(g = 0; g<inp_mont;g++){
-                var monto1 = monto_c[g].id;
-                var input_text_2 = document.getElementById(`${monto1}`).value;
-                var sum2 = parseFloat(sum2) + parseFloat(input_text_2);
+        var forma_pago = $("#forma_pago option:selected").val();
+        if(forma_pago == 2){
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var monto_fc = document.getElementsByClassName('fecha_pago');
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            var total =  $("#cuotas_footer").html();
+            var fin = 0.00;
+            var comp = 0;
+            for (var i = 0; i < inp_mont; i++) {
+                fin = parseFloat(fin) + parseFloat(monto_c[i].value);
             }
-            var sum = Math.round(sum2 * 100) / 100 ;
-            if(sum != total){
-                document.getElementById('cuota_modal').click();
-                document.getElementById('suma_campos').style.display = "flex";
-                buton.preventDefault();
-            }
+            var fin_r = Math.round(fin * 100) / 100;
+            // console.log(total);
             for (var i = 0; i < inp_mont; i++) {
                 var fecha = monto_fc[i].id;
                 var monto = monto_c[i].id;
+    
                 var input_text = document.getElementById(`${monto}`).value;
                 var date_text = document.getElementById(`${fecha}`).value;
-                if( input_text.length  == 0 || date_text.length  == 0 ){
-                    // document.getElementById('cuota_modal').click();
-                    document.getElementById('alert_campos').style.display = "flex";
+                if( input_text.length  == 0 || date_text.length  == 0){
                     $('#cuotas_modal').modal('show');
-
-                    setTimeout(act, 5000);
-                    
-                    
-                    console.log('a');
-                    // ();
-                    // buton.preventDefault();
-                }else{
-                    // document.getElementById('boton_submit').click();
-                    alert('button submit');
-
+                    document.getElementById('alert_campos').style.display = "flex";                    
+                    setTimeout(mostrarMensaje, 3000);
+                    return;
                 }
             }
-            
+            if(fin_r != total){
+                $('#cuotas_modal').modal('show');
+                document.getElementById('suma_campos').style.display = "flex";
+                setTimeout(mostrarMensaje, 3000);
+            }else{
+                // console.log('e')
+                
+                document.getElementById('button_submit').click();
+            }
+        // buton.preventDefault();
         }else{
-            // document.getElementById('boton_submit').click();
-            alert('button submit');
+            document.getElementById('button_submit').click();
         }
         
     });
+    function filterFloat(evt,input){
+        var key = window.Event ? evt.which : evt.keyCode;    
+        var chark = String.fromCharCode(key);
+        var tempValue = input.value+chark;
 
+        if(key >= 48 && key <= 57){
+            if(filter(tempValue)=== false){
+                return false;
+            }else{       
+                return true;
+            }
+        }else{
+            if(key == 8 || key == 13 || key == 0) {     
+                return true;              
+            }else if(key == 46){
+                if(filter(tempValue)=== false){
+                    return false;
+                }else{       
+                    return true;
+                }
+            }else{
+                return false;
+            }
+        }
+    }
+    function filter(__val__){
+        var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+        if(preg.test(__val__) === true){
+            return true;
+        }else{
+        return false;
+        }   
+    }
     // FUNCIONES PARA LAS ALERTAS DE FORMA DE PAGO
     function cerrar_but_rc(){
         document.getElementById('alert_campos').style.display = "none";
@@ -1212,7 +1191,7 @@
         }, 10000);
     }
     </script>
-     <style type="text/css">
-        .a{color: red}
-    </style>
-    @stop
+    <style type="text/css">
+    .a{color: red}
+</style>
+@endsection

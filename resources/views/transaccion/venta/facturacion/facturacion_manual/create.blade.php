@@ -129,7 +129,7 @@
                                                                     <div class="input-group-prepend">
 
                                                                     </div>
-                                                                    <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"   >
+                                                                    <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"  onkeypress="return filterFloat(event,this);" >
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-2">
@@ -282,7 +282,8 @@
                                 <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
                             </div>
                             <div class="col-sm-6 ">
-                                <button type="submit" name="name" value="pdf" class="ladda-button btn btn-info float-right" id="boton"  style="margin-right: 5px">Enviar</button>
+                                <button type="button" name="name" value="pdf" class="ladda-button btn btn-info float-right" id="boton"  style="margin-right: 5px">Enviar</button>
+                                <button id="button_submit" hidden type="submit">Button DB</button>
                             </div>
                         </div>
                     </form>
@@ -812,7 +813,7 @@
                 <div class="input-group-prepend">
                 
                 </div>
-                <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    >
+                <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    onkeypress="return filterFloat(event,this);" >
                 </div>
                 </div>
                 <div class="col-sm-2">
@@ -876,50 +877,45 @@
         };
     
         $("#boton").on("click",function(buton){
-            // var cliente = document.getElementById("cliente").value;
-            // console.log(cliente);
-           // if(cliente.length != 0){
-            var f_p = $('#forma_pago').val();
-            var total = document.getElementById('total_final').value;
-             console.log(total);
-            var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var monto_c = document.getElementsByClassName('monto_pago');
-            var monto_fc = document.getElementsByClassName('fecha_pago');
-            if(f_p == "2" ){
-                var sum2 = 0.00;
-                for(g = 0; g<inp_mont;g++){
-                    var monto1 = monto_c[g].id;
-                    var input_text_2 = document.getElementById(`${monto1}`).value;
-                    console.log("text2 = "+input_text_2);
-                    var sum2 = ( Number.parseFloat(sum2) + Number.parseFloat(input_text_2));
-                    console.log("sum-b-for = "+sum2);
-
+            var forma_pago = $("#forma_pago option:selected").val();
+            if(forma_pago == 2){
+                var monto_c = document.getElementsByClassName('monto_pago');
+                var monto_fc = document.getElementsByClassName('fecha_pago');
+                var inp_mont = document.getElementsByClassName('monto_pago').length;
+                var total =  $("#cuotas_footer").html();
+                var fin = 0.00;
+                var comp = 0;
+                for (var i = 0; i < inp_mont; i++) {
+                    fin = parseFloat(fin) + parseFloat(monto_c[i].value);
                 }
-                var sum = Math.round(sum2 * 100) / 100;
-                if(sum != total){
-                    document.getElementById('cuota_modal').click();
-                    document.getElementById('suma_campos').style.display = "flex";
-                    buton.preventDefault();
-                }
+                var fin_r = Math.round(fin * 100) / 100;
+                // console.log(total);
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
                     var monto = monto_c[i].id;
+        
                     var input_text = document.getElementById(`${monto}`).value;
                     var date_text = document.getElementById(`${fecha}`).value;
-                    if( input_text.length  == 0 || date_text.length  == 0 ){
-                        document.getElementById('cuota_modal').click();
-                        document.getElementById('alert_campos').style.display = "flex";
-                        buton.preventDefault();
-                    }else{
-                        document.getElementById('boton').click();
-                            // buton.preventDefault();
-                        }
+                    if( input_text.length  == 0 || date_text.length  == 0){
+                        $('#cuotas_modal').modal('show');
+                        document.getElementById('alert_campos').style.display = "flex";                    
+                        setTimeout(mostrarMensaje, 3000);
+                        return;
                     }
+                }
+                if(fin_r != total){
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('suma_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
                 }else{
-                    document.getElementById('boton').click();
-                     // buton.preventDefault();
-                 }
+                    // console.log('e')
+                    
+                    document.getElementById('button_submit').click();
+                }
             // buton.preventDefault();
+            }else{
+                document.getElementById('button_submit').click();
+            }
         });
 
         // TODO Script para cambiar por moneda
@@ -1015,5 +1011,43 @@
             }
         })
     }
+    function filterFloat(evt,input){
+            var key = window.Event ? evt.which : evt.keyCode;    
+            var chark = String.fromCharCode(key);
+            var tempValue = input.value+chark;
+
+            if(key >= 48 && key <= 57){
+                if(filter(tempValue)=== false){
+                    return false;
+                }else{       
+                    return true;
+                }
+            }else{
+                if(key == 8 || key == 13 || key == 0) {     
+                    return true;              
+                }else if(key == 46){
+                    if(filter(tempValue)=== false){
+                        return false;
+                    }else{       
+                        return true;
+                    }
+                }else{
+                    return false;
+                }
+            }
+        }
+        function filter(__val__){
+            var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+            if(preg.test(__val__) === true){
+                return true;
+            }else{
+            return false;
+            }   
+        }
+        function mostrarMensaje(){
+            // $("#alert_campos").show(200);
+            $("#alert_campos").hide(3000);
+            $("#suma_campos").hide(3000);
+        }
     </script>
     @stop
