@@ -2437,9 +2437,10 @@ if($validacion==1){
     }
         // return $factura_cod_bol;
     $cod_bol="B".$sucursal_nr."-".$boleta_nr;
-
+    $fecha_hoy = Carbon::now()->add(1,'day');
+    $fecha_1 = $fecha_hoy->format('Y-m-d');
     if ($cotizacion->estado==0) {
-        return view('transaccion.venta.cotizacion.boletear2', compact('cotizacion','empresa','cotizacion_registros','sum','igv',"array","sub_total" ,'cod_bol','array_cantidad','comi','array_promedio','forma_pagos','banco'));
+        return view('transaccion.venta.cotizacion.boletear2', compact('cotizacion','empresa','cotizacion_registros','sum','igv',"array","sub_total" ,'cod_bol','array_cantidad','comi','array_promedio','forma_pagos','banco','fecha_1'));
     }
     elseif ($cotizacion->estado==1) {
         return redirect()->route('cotizacion.show',$cotizacion->id);

@@ -973,7 +973,7 @@
                 <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
                 </div>
-                <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    >
+                <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"  min="{{$fecha_1}}"  >
                 </div>
                 </div>
                 <div class="col-sm-2">

@@ -345,7 +345,8 @@
                         <!-- </div> -->
                         <!-- @endif -->
                         <div class="col-sm-4" align="center" >
-                            <button class="btn btn-primary " style="margin-top: 5px" type="submit"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                            <button class="btn btn-primary " style="margin-top: 5px" type="button"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                            <button type="submit" hidden id="button_submit">Guardar Hidden</button>
                         </div>
                     </div>
                      <br>
@@ -421,7 +422,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
               </div>
-              <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    >
+              <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"  min="{{$fecha_1}}"  >
             </div>
         </div>
         <div class="col-sm-2">
@@ -520,7 +521,7 @@
                     }
             // buton.preventDefault();
             @else
-                document.getElementById('boton').click();
+                document.getElementById('button_submit').click();
             @endif
         });
 
