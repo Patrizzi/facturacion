@@ -72,7 +72,7 @@
 								<div class="col-sm-4">
 									<input type="text" class="form-control for" name="asunto" value="Ingreso de Equipo" required/>
 								</div>
-								<label class="col-sm-2 col-form-label">Ing. Asignado:</label>
+								<label class="col-sm-2 col-form-label">Tecnico. Asignado:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for m-b" value="{{Auth::user()->personal->nombres}}" id="" readonly="">
 								</div>

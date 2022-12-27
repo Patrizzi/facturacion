@@ -75,7 +75,7 @@
         <th style="width: 10%;border-color: white"></th>
         <td colspan="2" style="border: 1px #e5e6e7 solid;border-radius: 4px;width: auto">
             <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
-            <strong>Ing. Asignado:</strong>&nbsp;{{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}<br>
+            <strong>Técnico Asignado:</strong>&nbsp;{{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}<br>
             <strong>Motivo:</strong>&nbsp;{{$garantia_guia_ingreso->motivo}}<br>
             <strong>Marca:</strong>&nbsp;{{$garantia_guia_ingreso->marcas_i->nombre}}<br>
             <strong>Asunto:</strong>&nbsp;{{$garantia_guia_ingreso->asunto}}<br>
