@@ -4,6 +4,7 @@
 @section('breadcrumb', 'Guia de remision')
 @section('breadcrumb2', 'Guia de remision')
 
+@extends('layout_comunicado')
 @section('content')
 <span hidden="">{{$i=1}}{{$a=1}}{{$j=1}}{{$x=1}}{{$y=1}}{{$o=1}}</span>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -76,7 +77,10 @@
                                                         <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
-                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                            {{-- <button type="" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
+                                                            <span class="btn btn-secondary btn-circle btn-ls disabled">
+                                                                <i class="fa fa-cloud-upload"></i>
+                                                            </span>
                                                         </form>
                                                     </center>
                                                 </td>
@@ -85,7 +89,12 @@
                                         </tbody>
                                         <tfooter >
                                             <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary" id="remision_elec_all">Enviar</button></td>
+                                            <td align="center">
+                                                {{-- <button type="" class="btn btn-primary" id="remision_elec_all">Enviar</button> --}}
+                                                <span class="btn btn-primary btn-ls disabled">
+                                                    Enviar
+                                                </span>
+                                            </td>
                                         </tfooter>
                                     </table>
                                 </div>
@@ -135,7 +144,8 @@
                                                     <form action="{{route('facturacion_electronica.guia_remision_baja_sunat')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
-                                                        <button type="submit" class="btn btn-w-m btn-danger">Anular</button>
+                                                        {{-- <button type="" class="btn btn-w-m btn-danger">Anular</button> --}}
+                                                        <span class="btn btn-w-m btn-danger disabled">Anular</span>
                                                     </form>
                                                 </center>
                                             </td>
@@ -218,7 +228,11 @@
                                                             <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="remision_id" value="{{$remision_manuals->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                                {{-- <button type="" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
+                                                                <span class="btn btn-secondary btn-circle btn-ls disabled">
+                                                                    <i class="fa fa-cloud-upload"></i>
+                                                                </span>
+
                                                             </form>
                                                         </center>
                                                     </td>
@@ -229,7 +243,10 @@
                                             <tr>
                                                 <td colspan="6" align="right" style="padding-right: 2em"></td>
                                                 <td align="center">
-                                                    <button type="button" class="btn btn-primary" id="remision_m_elec_all">Enviar</button>
+                                                    {{-- <button type="" class="btn btn-primary" id="remision_m_elec_all">Enviar</button> --}}
+                                                    <span class="btn btn-primary btn-ls disabled">
+                                                        Enviar
+                                                    </span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -280,7 +297,8 @@
                                                     <form action="{{route('facturacion_electronica.guia_remision_m_baja_sunat')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="guia_m_id" value="{{$guia_remision_m->id}}">
-                                                        <button type="submit" class="btn btn-w-m btn-danger">Anular</button>
+                                                        {{-- <button type="" class="btn btn-w-m btn-danger">Anular</button> --}}
+                                                        <span class="btn btn-w-m btn-danger disabled">Anular</span>
                                                     </form>
                                                 </center>
                                             </td>
@@ -383,6 +401,9 @@
 </div>
 {{-- ESTILOS --}}
 <style type="text/css">
+    .table{
+        font-size: 13px;
+    }
     .a{width: 200px}
     .ibox-content{
         padding: 0px;
@@ -417,6 +438,9 @@
 <!-- Page Scripts -->
 <script>
     $(document).ready(function(){
+        $('#comunicado_modal').modal({backdrop: 'static', keyboard: false});
+        $('#comunicado_modal').modal('show');
+        
         $('.dataTables-example').DataTable({
             pageLength: 15,
             responsive: true,
