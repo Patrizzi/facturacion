@@ -195,7 +195,7 @@ class BoletaMController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        // return $request;
         //código para convertir nombre a producto
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);

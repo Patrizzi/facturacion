@@ -664,8 +664,9 @@
             var monto = monto_c[i].id;
             var fin = (end2/inp_mont)
             document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier)/ multiplier;
-            $("#cuotas_footer").html(Math.round(end2 * multiplier2)/ multiplier2);
+            
         }
+        $("#cuotas_footer").html(total_tt);
     }
     $(document).on('click','#button_cuotas_save', function(event){
             
