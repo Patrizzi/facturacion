@@ -16,6 +16,14 @@
     </a>
 </div>
 @endif
+@if(count($personal_conductor) == 0 )
+<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+    <a class="alert-link" href="{{route('personal.index')}}">
+        <li class="error" style="color: red">No hay Personal con licencia alguna para el Transporte Privado</li>
+    </a>
+</div>
+@endif
+
 <div class="row">
     <div class="col-lg-12">
         <div id="modal-form" class="modal fade" aria-hidden="true">

@@ -131,9 +131,9 @@
                                 <div class="col-sm-5">
                                     <select class="form-control m-b" name="conductor" autocomplete="off" id="conductor">
                                         <option value="">Ningún Conductor</option>
-                                        <option disabled="disabled">------------------------------</option>
                                         @foreach($personal as $ersonals)
-                                        <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
+                                            <option disabled="disabled">------------------------------</option>
+                                            <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
                                         @endforeach
                                     </select>
                                 </div>

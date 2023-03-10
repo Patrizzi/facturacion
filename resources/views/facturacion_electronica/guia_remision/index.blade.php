@@ -18,6 +18,10 @@
                     </div>
                 </div>
                 @endif
+                {{-- MENSAJE DEL AJAX PARA LAS FACTURAS INDIVIDUALES --}}
+                <div id="msg_individual" class="">
+
+                </div>
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
                         <li>
@@ -25,20 +29,20 @@
                         </li>
                         <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Por Enviar</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#tab-3">Anulados</a></li>
+                        @if(count($guia_remision_anulado) != 0)<li><a class="nav-link" data-toggle="tab" href="#tab-3">Anulados</a></li>@endif
                         <li>
                             <a href="#" class="nav link guia_m" style="font-weight: bold" >G. Remision Manual:</a>
                         </li>
                         <li><a class="nav-link " data-toggle="tab" href="#tab-4">Por Enviar</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-5">Enviados</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#tab-6">Anulados</a></li>
+                        @if(count($remision_m_anulado) != 0)<li><a class="nav-link" data-toggle="tab" href="#tab-6">Anulados</a></li>@endif
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
 
-                             <div class="table-responsive">
-                                <div class="ibox-content">
+                             <div class="table-responsive" id="ibox1">
+                                <div class="ibox-content" >
                                     <div class="sk-spinner sk-spinner-double-bounce">
                                         <div class="sk-double-bounce1"></div>
                                         <div class="sk-double-bounce2"></div>
@@ -74,14 +78,15 @@
                                                 @endif
                                                 <td>
                                                     <center>
-                                                        <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
+                                                        {{-- <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
                                                             @csrf
-                                                            <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
-                                                            {{-- <button type="" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
-                                                            <span class="btn btn-secondary btn-circle btn-ls disabled">
+                                                            <input type="hidden" name="factura_id" value="{{$guia_remision->id}}"> --}}
+                                                            {{-- <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
+                                                            {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
                                                                 <i class="fa fa-cloud-upload"></i>
-                                                            </span>
-                                                        </form>
+                                                            </span> --}}
+                                                        {{-- </form> --}}
+                                                        <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$guia_remision->cod_guia}}" onclick="envio_guia(this)"><i class="fa fa-cloud-upload" ></i></button>
                                                     </center>
                                                 </td>
                                             </tr>
@@ -90,10 +95,10 @@
                                         <tfooter >
                                             <td colspan="6" align="right" style="padding-right: 2em"></td>
                                             <td align="center">
-                                                {{-- <button type="" class="btn btn-primary" id="remision_elec_all">Enviar</button> --}}
-                                                <span class="btn btn-primary btn-ls disabled">
-                                                    Enviar
-                                                </span>
+                                                <button type="submit" class="btn btn-primary" id="remision_elec_all">Enviar</button>
+                                                {{-- <span class="btn btn-primary btn-ls disabled"> --}}
+                                                    {{-- Enviar
+                                                </span> --}}
                                             </td>
                                         </tfooter>
                                     </table>
@@ -104,6 +109,11 @@
                     </div>
                     <div role="tabpanel" id="tab-2" class="tab-pane">
                         <div class="panel-body">
+                            <div class="ibox-content">
+                                <div class="alert alert-warning">
+                                    <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                                     <thead>
@@ -115,7 +125,7 @@
                                             <th>Tipo Transporte</th>
                                             <th>XML</th>
                                             <th>ZIP</th>
-                                            <th></th>
+                                            {{-- <th></th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -139,16 +149,16 @@
                                             <td align="center">
                                                 <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                             </td>
-                                            <td>
-                                                <center>
+                                            {{-- <td>
+                                                <span></span> --}}
+                                                {{-- <center>
                                                     <form action="{{route('facturacion_electronica.guia_remision_baja_sunat')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
-                                                        {{-- <button type="" class="btn btn-w-m btn-danger">Anular</button> --}}
-                                                        <span class="btn btn-w-m btn-danger disabled">Anular</span>
+                                                        <button type="submit" class="btn btn-w-m btn-danger">Anular</button>
                                                     </form>
-                                                </center>
-                                            </td>
+                                                </center> --}}
+                                            {{-- </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -228,10 +238,10 @@
                                                             <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="remision_id" value="{{$remision_manuals->id}}">
-                                                                {{-- <button type="" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
-                                                                <span class="btn btn-secondary btn-circle btn-ls disabled">
+                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                                {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
                                                                     <i class="fa fa-cloud-upload"></i>
-                                                                </span>
+                                                                </span> --}}
 
                                                             </form>
                                                         </center>
@@ -243,10 +253,10 @@
                                             <tr>
                                                 <td colspan="6" align="right" style="padding-right: 2em"></td>
                                                 <td align="center">
-                                                    {{-- <button type="" class="btn btn-primary" id="remision_m_elec_all">Enviar</button> --}}
-                                                    <span class="btn btn-primary btn-ls disabled">
+                                                    <button type="submit" class="btn btn-primary" id="remision_m_elec_all">Enviar</button>
+                                                    {{-- <span class="btn btn-primary btn-ls disabled">
                                                         Enviar
-                                                    </span>
+                                                    </span> --}}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -257,6 +267,9 @@
                     </div>
                     <div role="tabpanel" id="tab-5" class="tab-pane">
                         <div class="panel-body">
+                            <div class="alert alert-warning">
+                                <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                                     <thead>
@@ -268,7 +281,7 @@
                                             <th>Tipo Transporte</th>
                                             <th>XML</th>
                                             <th>ZIP</th>
-                                            <th></th>
+                                            {{-- <th></th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -292,16 +305,15 @@
                                             <td align="center">
                                                 <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <center>
                                                     <form action="{{route('facturacion_electronica.guia_remision_m_baja_sunat')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="guia_m_id" value="{{$guia_remision_m->id}}">
-                                                        {{-- <button type="" class="btn btn-w-m btn-danger">Anular</button> --}}
-                                                        <span class="btn btn-w-m btn-danger disabled">Anular</span>
+                                                        <button type="submit" class="btn btn-w-m btn-danger">Anular</button>
                                                     </form>
                                                 </center>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -437,9 +449,10 @@
 
 <!-- Page Scripts -->
 <script>
+    
     $(document).ready(function(){
-        $('#comunicado_modal').modal({backdrop: 'static', keyboard: false});
-        $('#comunicado_modal').modal('show');
+        // $('#comunicado_modal').modal({backdrop: 'static', keyboard: false});
+        // $('#comunicado_modal').modal('show');
         
         $('.dataTables-example').DataTable({
             pageLength: 15,
@@ -447,7 +460,76 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
+
+        
     });
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+
+    function toggle(){
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+    }
+
+    function inv_close(){
+        $(document).ready(function(){
+            $("#myAlert").bind('closed.bs.alert', function(){
+                location.reload();
+            })
+        });  
+        $('[data-toggle="popover"]').popover();
+        const myTimeout = setTimeout(click, 5000);
+    }
+    function click(){
+        console.log("click");
+        $('[data-toggle="popover"]').popover();
+        $('#cerrar_popup').trigger('click');
+    }
+    function envio_guia(codigo){
+        // console.log(codigo.val());
+        $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+        $('.nav-link').addClass('disabled');
+        var value_check =  codigo.value;
+        console.log(value_check);
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.guia_remision_elec_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_remision': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                // revision(value_check, response, 'factura');
+                inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+    }
+
+    //* ALL ENVIO GUIA 
+
     function select_all_remision() {
         $('input[class=case]:checkbox').each(function () {
             // console.log($('input[class=check_all]:checkbox:checked'));
@@ -582,5 +664,7 @@
     $('#cerrar_m').on('click', function(){
         location.reload();
     });
+
+    
 </script>
 @endsection

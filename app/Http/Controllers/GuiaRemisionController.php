@@ -59,7 +59,10 @@ class GuiaRemisionController extends Controller
         $almacen_primero = Almacen::where('estado', 0)->first();
         $conteo_almacen = Almacen::where('estado', 0)->count();
 
-        return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login','valor_error','message'));
+
+        $personal_conductor = Personal::where('id','!=', 1)->where('licencia', '!=', null)->get();
+
+        return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login','valor_error','message','personal_conductor'));
     }
 
     public function ajax_sucursal(Request $request){
@@ -146,7 +149,7 @@ class GuiaRemisionController extends Controller
         }
 
         $clientes = Cliente::all();
-        $personal = Personal::where('id', '!=', 1)->get();
+        $personal = Personal::where('id', '!=', 1)->where('licencia','!=', null)->get();
         $motivo_traslado = MotivoTraslado::all();
         $vehiculo = Vehiculo::where('estado_activo', 0)->get();
         $transporte_publico = TransportePublico::where('estado', 0)->get();

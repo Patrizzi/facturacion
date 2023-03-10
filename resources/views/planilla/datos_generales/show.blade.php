@@ -91,6 +91,7 @@
     <div class="col-lg-4"><h4>Nivel Educativo</h4>{{$personales->nivel_educativo}}<hr></div>
     <div class="col-lg-4"><h4>Carrera Profesional</h4>{{$personales->profesion}}<hr></div>
     <div class="col-lg-4"><h4>Estado Civil</h4>{{$personales->estado_civil}}<hr></div>
+    <div class="col-lg-4"><h4>Licencia de Conducir</h4>@if(isset($personales->licencia)) {{$personales->licencia}} @else <span style="font-style: italic"> Sin Licencia</span> @endif<hr></div>
   </div>
   {{-- Fin Datos Generales vista --}}
 
@@ -173,6 +174,9 @@
          </select>
 
         <hr></div>
+        <div class="col-lg-4"><h4>Licencia de Conducir</h4>
+              <input type="text" class="form-control" value="{{$personales->licencia}}" name="licencia">
+            <hr></div>
       <div class="col-lg-4"><h4>Foto Perfil</h4><input style="display: none;"  type="file" id="archivoInput"  name="foto" onchange="return validarExt()"  /><label for="archivoInput" class="btn btn-info " style="display: inline-block;  cursor: pointer; ">Seleccionar Foto</label><hr></div>
 
       <div class="col-lg-4"><h4>Guardar</h4> <input type="submit" name="" class="btn btn-success"  value="Guardar"><hr></div>

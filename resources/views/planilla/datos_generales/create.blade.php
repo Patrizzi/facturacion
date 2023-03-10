@@ -223,6 +223,10 @@
             </select>
             <hr>
           </div>
+          <div class="col-lg-4"><h4>Licencia de Conducir</h4>
+            <input type="text" class="form-control" name="licencia" id="licencia_id">
+            <hr>
+          </div>
           <input type="text" name="estado_trabajador" class="form-control" value="Activo"  hidden="">
           <div class="col-lg-4"><h4>Guardar</h4> <input type="submit" name="" class="btn btn-success"  value="Guardar"><hr></div>
         </div>
