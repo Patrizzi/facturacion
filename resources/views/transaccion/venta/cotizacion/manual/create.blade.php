@@ -635,14 +635,15 @@
         document.getElementById("igv").value = igv_decimal;
 
         // Operacion para total
-        var totalInp = $('[name="total"]');
-        var total_t = 0;
-        totalInp.each(function(){
-            total_t += parseFloat($(this).val());
-        });
-        console.log(total_t);
+        // var totalInp = $('[name="total"]');
+        // var total_t = 0;
+        // totalInp.each(function(){
+        //     total_t += parseFloat($(this).val());
+        // });
+        // console.log(total_t);
         var multiplier2 = 100;
-        var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+        var total_all = sub_igv_t + igv_decimal; 
+        var total_tt = Math.round(total_all * multiplier2) / multiplier2 ;
         
         $('#total').val(total_tt);
 

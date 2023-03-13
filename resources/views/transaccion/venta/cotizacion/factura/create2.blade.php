@@ -912,12 +912,14 @@
 
         $('#subtotal_gravado').val(total_ttg);
 
-        var igv_valor={{$igv->renta}};
         var subtotal = document.querySelector(`#sub_total`).value;
         var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        
+        var igv_valor={{$igv->renta}};
+        
         var igv=subtotal_gravado*igv_valor/100; 
         var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-        var end=igv_decimal+parseFloat(subtotal);
+        var end=parseFloat(subtotal) + igv_decimal;
         var end2 = Math.round(end * multiplier2) / multiplier2;
 
         document.getElementById("igv").value = igv_decimal;
