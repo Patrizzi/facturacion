@@ -642,19 +642,19 @@
         var end = igv_decimal+parseFloat(sub_igv_tt);
         var end2 = Math.round(end * multiplier) / multiplier;
        // Operacion para total
-       var totalInp = $('[name="total"]');
-        var total_t = 0;
-        totalInp.each(function(){
-            total_t += parseFloat($(this).val());
-        });
-        console.log(total_t);
-        var multiplier2 = 100;
-        var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+        // var totalInp = $('[name="total"]');
+        // var total_t = 0;
+        // totalInp.each(function(){
+        //     total_t += parseFloat($(this).val());
+        // });
+        // console.log(total_t);
+        // var multiplier2 = 100;
+        var total_tt = sub_igv_tt+ end2;
         
         $('#total').val(total_tt);
 
         // var subtotal = document.querySelector(`#total`).value;
-        document.getElementById("total_final").value = total_tt;
+        document.getElementById("total_final").value = end2;
 
 
         var monto_c = document.getElementsByClassName('monto_pago');
@@ -663,10 +663,10 @@
         for (var i = 0; i < inp_mont; i++) {
             var monto = monto_c[i].id;
             var fin = (end2/inp_mont)
-            document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier)/ multiplier;
+            document.getElementById("monto_pago0").value = Math.round(end2 * multiplier)/ multiplier;
             
         }
-        $("#cuotas_footer").html(total_tt);
+        $("#cuotas_footer").html(end2);
     }
     $(document).on('click','#button_cuotas_save', function(event){
             
