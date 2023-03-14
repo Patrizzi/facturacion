@@ -952,6 +952,7 @@ class Config_fe extends Model
         $company = (new Company())
         ->setRuc('20161515648')
         ->setRazonSocial('GREENTER S.A.C.');
+
         //solo vehiculo privado 
         $vehiculoPrincipal = (new Vehicle())
         ->setPlaca($guia->vehiculo->placa);
@@ -971,7 +972,28 @@ class Config_fe extends Model
         $peso_total=$peso_total + $guia_electronica->peso;
         }
 
-        if($tipo_transporte==2){ //privado
+        if($tipo_transporte == 0){ // sin transporte?
+
+            $transp = new Transportist();
+            $transp->setTipoDoc('6')
+                ->setNumDoc($empresa->ruc)
+                ->setRznSocial($empresa->razon_social)
+                ->setNroMtc('0001');
+
+            $envio = (new Shipment())
+                ->setCodTraslado('01') // Cat.20
+                ->setModTraslado($guia->motivo_traslado) // Cat.18 // 1 PUBLICO - 2 PRIVADO
+                ->setFecTraslado(new DateTime())
+                ->setPesoTotal($peso_total)
+                ->setUndPesoTotal('KGM')    //unidad de medida
+            // ->setVehiculo($vehiculoPrincipal)
+            // ->setChoferes([$chofer])
+            ->setLlegada(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))   //arreglar el ubigeo de llegada  salida
+            ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
+            ->setTransportista($transp);
+
+
+        }elseif($tipo_transporte==2){ //privado
             // $empleado=Personal::where('id',$guia->conductor_id)->first();
 
             // $transp = new Transportist();
@@ -983,7 +1005,7 @@ class Config_fe extends Model
             $envio = new Shipment();
             $envio
                 ->setCodTraslado('01') // Cat.20
-                ->setModTraslado('02') // Cat.18
+                ->setModTraslado('02') // Cat.18 // PUBLICO O PRIVADO
                 ->setFecTraslado(new DateTime())
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida

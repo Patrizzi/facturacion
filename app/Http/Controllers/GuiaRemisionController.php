@@ -274,7 +274,14 @@ class GuiaRemisionController extends Controller
                 return "cantidad mayor al stock";
             }
         }
+
         Cliente::cliente_update($id_cliente);
+
+        //motivo traslado - cambio en opt
+        $mt_tr = $request->get('motivo_traslado');
+        
+
+
         $guia_remision = new Guia_remision;
         $guia_remision->cod_guia = $codigo_guia;
         $guia_remision->cliente_id = $id_cliente;
