@@ -46,15 +46,16 @@ class config_acc_guia extends Model
 
         $certificate = new X509Certificate($pfx, $password);
         
+        //beta
         $api = new \Greenter\Api([
             'auth' => 'https://gre-test.nubefact.com/v1',
             'cpe' => 'https://gre-test.nubefact.com/v1',
         ]);
-        // $certificate = file_get_contents(__DIR__ . '/../resources/cert.pem');
+        
         if ($certificate === false) {
             throw new Exception('No se pudo cargar el certificado');
         }
-        return $api->setBuilderOptions([
+        $api->setBuilderOptions([
                 'strict_variables' => true,
                 'optimizations' => 0,
                 'debug' => true,
@@ -62,12 +63,29 @@ class config_acc_guia extends Model
             ])
             ->setApiCredentials('test-85e5b0ae-255c-4891-a595-0b98c65c9854', 'test-Hty/M6QshYvPgItX2P0+Kw==')
             ->setClaveSOL('20161515648', 'MODDATOS', 'MODDATOS')
-            // ->setClaveSOL('20545122520', 'JYPSACFA', 'P@@@W0RDs')
             ->setCertificate($certificate->export(X509ContentType::PEM));
-            return  $api;
+
+
+        //* produccion JYP SAC
+        // $api = new \Greenter\Api([
+        //     'auth' => 'https://api-seguridad.sunat.gob.pe/v1',
+        //     'cpe' => 'https://api-cpe.sunat.gob.pe/v1',
+        // ]);
+        // $api->setBuilderOptions([
+        //         'strict_variables' => true,
+        //         'optimizations' => 0,
+        //         'debug' => true,
+        //         'cache' => false,
+        //     ])
+        //     ->setApiCredentials('8852449e-5cb5-4c85-a12e-42d4531d967b', 'qpL4mZHH89e0scPKwsF0PA==')
+        //     ->setClaveSOL('20545122520', 'JYPSACFA', 'P@@@W0RDs')
+        //     ->setCertificate($certificate->export(X509ContentType::PEM));
+
+
+        return  $api;
 
     }
-    public static function send_guia($see, $invoice){
+    public static function send_guia($see, $invoice,$id_guia){
         
         $result = $see->send($invoice);
         Storage::disk('facturas_electronicas')->put($invoice->getName().'.xml',$see->getLastXml());
@@ -76,6 +94,11 @@ class config_acc_guia extends Model
         // /**@var $res SummaryResult*/
         $ticket = $result->getTicket();
         echo 'Ticket :<strong>' . $ticket .'</strong><br>';
+        $guia = Guia_remision::where('id', $id_guia)->first();
+        if ($guia->ticket_guia_remision_sunat == null) {
+            $guia->ticket_guia_remision_sunat=$ticket;
+            $guia->save();
+        }
 
         if (!$result->isSuccess()) {
             echo 'Codigo Error '.$result->getError()->getCode().'<br>';

@@ -831,180 +831,47 @@ class Config_fe extends Model
 
         //$util = Util::getInstance();
         $empresa=Empresa::first();
-        $motivo_tr = MotivoTraslado::where('nombre',$guia->motivo_traslado)->first();
-        // // Emisor
-        // $address = (new Address())
-        //     ->setUbigueo($empresa->cod_postal)
-        //     ->setDepartamento($empresa->region_provincia)
-        //     ->setProvincia($empresa->region_provincia)
-        //     ->setDistrito($empresa->ciudad)
-        //     ->setUrbanizacion('-')
-        //     ->setDireccion($empresa->calle)
-        //     ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
+        $motivo_tr = MotivoTraslado::mot_tras($guia->motivo_traslado);
 
-        // $company = (new Company())
-        //     ->setRuc($empresa->ruc)
-        //     ->setRazonSocial($empresa->razon_social)
-        //     ->setNombreComercial($empresa->nombre)
-        //     ->setAddress($address);
-
-        // // $company = (new Company())
-        // //     ->setRuc('20161515648')
-        // //     ->setRazonSocial('GREENTER S.A.C.');
-
-        //     if($tipo_transporte==1){ //TRASNPORTE PUBLICO
-        //         $vehiculo_trasporte=TransportePublico::where('id',$guia->vehiculo_publico)->first();
-        //         $transp = new Transportist();
-        //         $transp->setTipoDoc('6')
-        //         ->setNumDoc($vehiculo_trasporte->ruc)          //falta documentacion del conductor
-        //         ->setRznSocial($vehiculo_trasporte->nombre); //nombre de la conduccion
-
-        //     }elseif($tipo_transporte==2){   //TRASPORTE PRIVADO
-        //         $empleado=Personal::where('id',$guia->conductor_id)->first();
-        //         $transp = new Transportist();
-        //         $transp->setTipoDoc('6')
-        //         ->setNumDoc($empresa->ruc)          //falta documentacion del conductor
-        //         ->setRznSocial($empresa->razon_social); //nombre de la conduccion
-        //         // ->setPlaca($guia->vehiculo->placa)
-        //         // ->setChoferTipoDoc('1')     //ayuda
-        //         // ->setChoferDoc($empleado->numero_documento);    //doc chofer
-        //     }
-
-
-        // //obtencion del peso total
-        // $peso_total=1;
-        // foreach($guias_registros as $guia_electronica){
-        //     $peso_total=$peso_total + $guia_electronica->peso;
-        // }
-
-        // if($tipo_transporte==0){
-        //     $envio = new Shipment();
-        //     $envio
-        //         ->setCodTraslado('01') // Cat.20
-        //         ->setDesTraslado('VENTA')
-        //         ->setModTraslado('01') // Cat.18
-        //         ->setFecTraslado(new DateTime())
-        //         // ->setCodPuerto('123')
-        //         // ->setIndTransbordo(false)
-        //         ->setPesoTotal($peso_total)
-        //         ->setUndPesoTotal('KGM')    //unidad de medida
-        //         // ->setNumContenedor('XD-2232')
-        //         ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
-        //         ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
-        // }else{
-        //     $envio = new Shipment();
-        //     $envio
-        //         ->setCodTraslado('01') // Cat.20
-        //         ->setDesTraslado('VENTA')
-        //         ->setModTraslado('01') // Cat.18
-        //         ->setFecTraslado(new DateTime())
-        //         // ->setCodPuerto('123')
-        //         // ->setIndTransbordo(false)
-        //         ->setPesoTotal($peso_total)
-        //         ->setUndPesoTotal('KGM')    //unidad de medida
-        //         // ->setNumContenedor('XD-2232')
-        //         ->setLlegada(new Direction($cli_postal, $cli_direc))    //arreglar el ubigeo de llegada  salida
-        //         ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
-        //         ->setTransportista($transp);
-        // }
-
-        // //codigo correlativo
-        // $codigo_guia=$guia->cod_guia;
-        // $serie=explode("-",$codigo_guia);
-
-        // $correlativo=$serie[1];
-        // $serie_g=$serie[0];
-
-        // $despatch = new Despatch();
-        // $despatch->setVersion('2022')
-        //     ->setTipoDoc('09')
-        //     ->setSerie($serie_g)      //cambiar codigo de guia
-        //     ->setCorrelativo($correlativo)
-        //     ->setFechaEmision(new DateTime())
-        //     ->setCompany($company)
-        //     ->setDestinatario((new Client())
-        //         ->setTipoDoc('6')
-        //         ->setNumDoc($guia->cliente->numero_documento)
-        //         ->setRznSocial($guia->cliente->empresa))
-        //     ->setObservacion($guia->observacion)
-        //     //->setRelDoc($rel)
-        //     ->setEnvio($envio);
-
-        // foreach($guias_registros as $cont => $guia_registro){
-        //     $detail[$cont] = new DespatchDetail();
-        //     $detail[$cont]->setCantidad(2)
-        //         ->setUnidad('ZZ')
-        //         ->setDescripcion($guia_registro->producto->nombre)
-        //         ->setCodigo($guia_registro->producto->codigo_producto);
-        //         // ->setCodProdSunat($guia_registro->producto->codigo_producto)
-        // }
-
-        // $despatch->setDetails($detail);
-
-        // return $despatch;
-
-
-                    
-        //comapañía
-        // $company = (new Company())
-        // ->setRuc($empresa->ruc)
-        // ->setRazonSocial($empresa->razon_social);
+        //* Emisor beta
         $company = (new Company())
         ->setRuc('20161515648')
         ->setRazonSocial('GREENTER S.A.C.');
+        //* Emisor produccion
+        // $company = (new Company())
+        // ->setRuc($empresa->ruc)
+        // ->setRazonSocial($empresa->razon_social);
 
-        //solo vehiculo privado 
-        $vehiculoPrincipal = (new Vehicle())
-        ->setPlaca($guia->vehiculo->placa);
-
-        //CONDUCTOR DE PERSONAL - TABLA DE VEHICULO CON PERSONAL Y INPUT LICENCIA
-        $chofer = (new Driver())
-            ->setTipo('Principal')
-            ->setTipoDoc('1')
-            ->setNroDoc($guia->personal->numero_documento) // 1 = dni // 7 = [pasaporte
-            ->setLicencia($guia->personal->licencia)
-            ->setNombres($guia->personal->nombres)
-            ->setApellidos($guia->personal->apellidos);
-
+        
         //obtencion del peso total
         $peso_total=1;
         foreach($guias_registros as $guia_electronica){
         $peso_total=$peso_total + $guia_electronica->peso;
         }
 
-        if($tipo_transporte == 0){ // sin transporte?
-
-            $transp = new Transportist();
+        $transp = new Transportist();
             $transp->setTipoDoc('6')
                 ->setNumDoc($empresa->ruc)
-                ->setRznSocial($empresa->razon_social)
-                ->setNroMtc('0001');
+                ->setRznSocial($empresa->razon_social);
+                
+        if($tipo_transporte==2){ //privado
 
-            $envio = (new Shipment())
-                ->setCodTraslado('01') // Cat.20
-                ->setModTraslado($guia->motivo_traslado) // Cat.18 // 1 PUBLICO - 2 PRIVADO
-                ->setFecTraslado(new DateTime())
-                ->setPesoTotal($peso_total)
-                ->setUndPesoTotal('KGM')    //unidad de medida
-            // ->setVehiculo($vehiculoPrincipal)
-            // ->setChoferes([$chofer])
-            ->setLlegada(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))   //arreglar el ubigeo de llegada  salida
-            ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
-            ->setTransportista($transp);
+            //solo vehiculo privado 
+            $vehiculoPrincipal = (new Vehicle())
+            ->setPlaca($guia->vehiculo->placa);
 
-
-        }elseif($tipo_transporte==2){ //privado
-            // $empleado=Personal::where('id',$guia->conductor_id)->first();
-
-            // $transp = new Transportist();
-            // $transp->setTipoDoc('6')
-            // ->setNumDoc($empresa->ruc)          //falta documentacion del conductor
-            // ->setRznSocial($empresa->razon_social);
-
+            //CONDUCTOR DE PERSONAL - TABLA DE VEHICULO CON PERSONAL Y INPUT LICENCIA
+            $chofer = (new Driver())
+                ->setTipo('Principal')
+                ->setTipoDoc('1')
+                ->setNroDoc($guia->personal->numero_documento) // 1 = dni // 7 = [pasaporte
+                ->setLicencia($guia->personal->licencia)
+                ->setNombres($guia->personal->nombres)
+                ->setApellidos($guia->personal->apellidos);
 
             $envio = new Shipment();
             $envio
-                ->setCodTraslado('01') // Cat.20
+                ->setCodTraslado($motivo_tr) // Cat.20
                 ->setModTraslado('02') // Cat.18 // PUBLICO O PRIVADO
                 ->setFecTraslado(new DateTime())
                 ->setPesoTotal($peso_total)
@@ -1013,18 +880,18 @@ class Config_fe extends Model
             ->setChoferes([$chofer])
             ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
             ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
-        }else{
-            // $envio = new Shipment();
-            // $envio
-            //     ->setCodTraslado('01') // Cat.20
-            //     ->setDesTraslado('VENTA')
-            //     ->setModTraslado('01') // Cat.18
-            //     ->setFecTraslado(new DateTime())
-            //     ->setPesoTotal($peso_total)
-            //     ->setUndPesoTotal('KGM')    //unidad de medida
-            //     ->setLlegada(new Direction($cli_postal, $cli_direc))    //arreglar el ubigeo de llegada  salida
-            //     ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
-            //     ->setTransportista($transp);
+        }else{ //* PUBLICO 
+            $envio = new Shipment();
+            $envio
+                ->setCodTraslado($motivo_tr) // Cat.20
+                ->setModTraslado('01') // Cat.18 // PUBLICO O PRIVADO
+                ->setFecTraslado(new DateTime())
+                ->setFecTraslado(new DateTime())
+                ->setPesoTotal($peso_total)
+                ->setUndPesoTotal('KGM')    //unidad de medida
+                ->setLlegada(new Direction($cli_postal, $cli_direc))    //arreglar el ubigeo de llegada  salida
+                ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion))    //arreglar el ubigeo de llegada  salida
+                ->setTransportista($transp);
         }
 
         //codigo correlativo
@@ -1034,6 +901,14 @@ class Config_fe extends Model
         $correlativo=$serie[1];
         $serie_g=$serie[0];
 
+        if ($guia->cliente->documento_identificacion == 'RUC') {
+            $tipo_doc_cli = 6;
+        }else if( $guia->cliente->documento_identificacion == 'DNI' ) {
+            $tipo_doc_cli = 1;
+        }else{
+            $tipo_doc_cli = 7;
+        }
+        
         $despatch = new Despatch();
         $despatch->setVersion('2022')
         ->setTipoDoc('09')
@@ -1042,11 +917,9 @@ class Config_fe extends Model
         ->setFechaEmision(new DateTime())
         ->setCompany($company)
         ->setDestinatario((new Client())
-            ->setTipoDoc('6')
+            ->setTipoDoc($tipo_doc_cli)
             ->setNumDoc($guia->cliente->numero_documento)
             ->setRznSocial($guia->cliente->empresa))
-        // ->setObservacion($guia->observacion)
-        //->setRelDoc($rel)
         ->setEnvio($envio);
 
         foreach($guias_registros as $cont => $guia_registro){
@@ -1055,7 +928,6 @@ class Config_fe extends Model
             ->setUnidad('ZZ')
             ->setDescripcion($guia_registro->producto->nombre)
             ->setCodigo($guia_registro->producto->codigo_producto);
-            // ->setCodProdSunat($guia_registro->producto->codigo_producto)
         }
 
         $despatch->setDetails($detail);

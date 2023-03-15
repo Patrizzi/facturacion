@@ -175,7 +175,7 @@
 
         <hr></div>
         <div class="col-lg-4"><h4>Licencia de Conducir</h4>
-              <input type="text" class="form-control" value="{{$personales->licencia}}" name="licencia">
+              <input type="text" placeholder="0000000000" class="form-control" value="{{$personales->licencia}}" name="licencia" maxlength="10">
             <hr></div>
       <div class="col-lg-4"><h4>Foto Perfil</h4><input style="display: none;"  type="file" id="archivoInput"  name="foto" onchange="return validarExt()"  /><label for="archivoInput" class="btn btn-info " style="display: inline-block;  cursor: pointer; ">Seleccionar Foto</label><hr></div>
 

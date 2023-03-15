@@ -125,7 +125,7 @@
                                             <th>Tipo Transporte</th>
                                             <th>XML</th>
                                             <th>ZIP</th>
-                                            {{-- <th></th> --}}
+                                            <th>N° de Ticket</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -148,6 +148,13 @@
                                             </td>
                                             <td align="center">
                                                 <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                            </td>
+                                            <td>
+                                                @if ($guia_remision->ticket_guia_remision_sunat == null)
+                                                    <span style="font-style: italic"> Sin Ticket | Enviado con la version antigua de las Guia de Remision</span>
+                                                @else   
+                                                    <strong>{{$guia_remision->ticket_guia_remision_sunat}}</strong>
+                                                @endif
                                             </td>
                                             {{-- <td>
                                                 <span></span> --}}
@@ -281,7 +288,7 @@
                                             <th>Tipo Transporte</th>
                                             <th>XML</th>
                                             <th>ZIP</th>
-                                            {{-- <th></th> --}}
+                                            {{-- <th>Ticket</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -305,6 +312,7 @@
                                             <td align="center">
                                                 <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                             </td>
+                                            
                                             {{-- <td>
                                                 <center>
                                                     <form action="{{route('facturacion_electronica.guia_remision_m_baja_sunat')}}" method="POST">

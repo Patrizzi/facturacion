@@ -93,7 +93,7 @@
                                     <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id" required>
                                         
                                         <option value="">Escoge el tipo de transporte</option>
-                                        <option value="0">Sin Transporte</option>
+                                        {{-- <option value="0">Sin Transporte</option> --}}
                                         <option value="1">Transporte Público</option>
                                         <option value="2">Transaporte Privado</option>
                                     </select>
