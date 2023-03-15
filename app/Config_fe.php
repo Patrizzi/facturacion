@@ -834,13 +834,13 @@ class Config_fe extends Model
         $motivo_tr = MotivoTraslado::mot_tras($guia->motivo_traslado);
 
         //* Emisor beta
-        $company = (new Company())
-        ->setRuc('20161515648')
-        ->setRazonSocial('GREENTER S.A.C.');
-        //* Emisor produccion
         // $company = (new Company())
-        // ->setRuc($empresa->ruc)
-        // ->setRazonSocial($empresa->razon_social);
+        // ->setRuc('20161515648')
+        // ->setRazonSocial('GREENTER S.A.C.');
+        //* Emisor produccion
+        $company = (new Company())
+        ->setRuc($empresa->ruc)
+        ->setRazonSocial($empresa->razon_social);
 
         
         //obtencion del peso total
