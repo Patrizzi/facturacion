@@ -60,6 +60,8 @@ use Greenter\See;
 use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
 
+use Greenter\Api;
+
 
 class FacturacionElectronicaController extends Controller
 {
@@ -183,15 +185,15 @@ class FacturacionElectronicaController extends Controller
         
         
         $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-        return  dd( $msg);
+        // return  dd( $msg);
         // if(gettype($result) == "object"){
         //     $retorno = $msg;
         // }else{
         //     $retorno = $msg;
         // }
         //cambio de factura electronica - en caso sea todo exitoso
-        // $factura->f_electronica=1;
-        // $factura->save();
+        $factura->f_electronica=1;
+        $factura->save();
         //
         // $array = explode(" ",$msg);
         return $msg;
@@ -1151,5 +1153,15 @@ class FacturacionElectronicaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getcdr_guia(Request $request){
+
+        //generar token 
+        $api = new \Greenter\Sunat\GRE\Api\AuthApi();
+
+        $api->getToken('password','','','','');
+        // generar cdr
+
     }
 }

@@ -126,6 +126,7 @@
                                             <th>XML</th>
                                             <th>ZIP</th>
                                             <th>N° de Ticket</th>
+                                            {{-- <th>Validar CDR</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -156,6 +157,9 @@
                                                     <strong>{{$guia_remision->ticket_guia_remision_sunat}}</strong>
                                                 @endif
                                             </td>
+                                            {{-- <td>
+                                                <button class="btn btn-warning">2</button>
+                                            </td> --}}
                                             {{-- <td>
                                                 <span></span> --}}
                                                 {{-- <center>

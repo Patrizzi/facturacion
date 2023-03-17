@@ -139,6 +139,8 @@ Route::group(
 		// * Guia Remision Manual
 		Route::post('/facturacion_electronica_guia_remision_m_prueba','FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
 		Route::post('/facturacion_electronica_guia_remision_m_prueba_all/send_all','FacturacionElectronicaController@guia_remision_m_all')->name('facturacion_electronica.guia_remision_m_all');
+		//  CONSULTA CDR??
+		Route::post('/f_e_consulta_guia','FacturacionElectronicaController@getcdr_guia')->name('facturacion_electronica.getcdr_guia');
 		
 		//guia remision baja
 		Route::post('/facturacion_electronica_guia_remision_baja_prueba','FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');

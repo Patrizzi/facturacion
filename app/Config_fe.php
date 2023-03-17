@@ -82,7 +82,7 @@ class Config_fe extends Model
         ->setProvincia($empresa->region_provincia)
         ->setDistrito($empresa->ciudad)
         ->setUrbanizacion('-')
-        // ->setDireccion($empresa->calle)
+        ->setDireccion($empresa->calle)
         ->setCodLocal('0000'); // Codigo de establecimiento asignado por SUNAT, 0000 por defecto.
         
         $company = (new Company())
@@ -834,13 +834,13 @@ class Config_fe extends Model
         $motivo_tr = MotivoTraslado::mot_tras($guia->motivo_traslado);
 
         //* Emisor beta
-        // $company = (new Company())
-        // ->setRuc('20161515648')
-        // ->setRazonSocial('GREENTER S.A.C.');
-        //* Emisor produccion
         $company = (new Company())
-        ->setRuc($empresa->ruc)
-        ->setRazonSocial($empresa->razon_social);
+        ->setRuc('20161515648')
+        ->setRazonSocial('GREENTER S.A.C.');
+        //* Emisor produccion
+        // $company = (new Company())
+        // ->setRuc($empresa->ruc)
+        // ->setRazonSocial($empresa->razon_social);
 
         
         //obtencion del peso total
