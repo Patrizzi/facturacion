@@ -126,7 +126,7 @@
                                             <th>XML</th>
                                             <th>ZIP</th>
                                             <th>N° de Ticket</th>
-                                            {{-- <th>Validar CDR</th> --}}
+                                            <th>Validar CDR</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -157,9 +157,14 @@
                                                     <strong>{{$guia_remision->ticket_guia_remision_sunat}}</strong>
                                                 @endif
                                             </td>
-                                            {{-- <td>
-                                                <button class="btn btn-warning">2</button>
-                                            </td> --}}
+                                            <td>
+                                                {{-- <a href="{{route('facturacion_electronica.valid_cdr')}}">a</a> --}}
+                                                <form action="{{route('facturacion_electronica.valid_cdr')}}" method="post">
+                                                    @csrf
+                                                    <input type="text" name="id_guia" value="{{$guia_remision->id}}" hidden>
+                                                    <button type="submit" class="btn btn-warnig">send</button>
+                                                </form>
+                                            </td>
                                             {{-- <td>
                                                 <span></span> --}}
                                                 {{-- <center>

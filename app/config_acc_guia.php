@@ -23,13 +23,14 @@ use Greenter\Model\Despatch\Transportist;
 use Greenter\Model\Sale\Note;
 use Greenter\Model\Response\CdrResponse;
 use Greenter\Model\Response\Error;
+use Greenter\Model\Api;
 use DateTime;
 use Illuminate\Support\Facades\Storage;
 
 use Greenter\Ws\Services\SunatEndpoints;
 use Greenter\See;
-use Greenter\Api;
-
+use Greenter\Sunat\GRE\Api\AuthApi;
+use Greenter\Sunat\GRE\Api\CpeApi;
 use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
 
@@ -148,7 +149,38 @@ class config_acc_guia extends Model
         return $cdr->getDescription().PHP_EOL;
     }
 
+    // public function getcdr_guia(Request $request){
+
+    //     //generar token 
+    //     $api = new \Greenter\Sunat\GRE\Api\AuthApi();
+
+    //     $api->getToken('password','','','','');
+    //     // generar cdr
+
+    // }
 
     //* FIN DE GUIA DE REMISION PRUEBA 2 *//
 
+    public static function getcdr_guia($ticket){
+
+        // $
+        //generar token 
+        $api = new AuthApi();
+
+        $token = $api->getToken('password','https://api.sunat.gob.pe/v1/contribuyente/contribuyentes','8852449e-5cb5-4c85-a12e-42d4531d967b','qpL4mZHH89e0scPKwsF0PA==','20545122520JYPSACFA','P@@@W0RDs');
+
+                // generar cdr
+        // echo $token;
+        $getcdr = new CpeApi();
+        // $getcdr->()
+        $response = $getcdr->consultarEnvioRequest($ticket,'');
+
+        return $response;
+
+
+        // $cdr = new \Greenter\Sunat\GRE\Api\CpeApi();
+        // $cdr->consultarEnvio($ticket);
+        
+
+    }
 }

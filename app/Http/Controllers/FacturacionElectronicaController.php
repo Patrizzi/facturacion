@@ -61,7 +61,7 @@ use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
 
 use Greenter\Api;
-
+use PhpParser\Node\Stmt\Return_;
 
 class FacturacionElectronicaController extends Controller
 {
@@ -1095,6 +1095,14 @@ class FacturacionElectronicaController extends Controller
 
     }
 
+    public function valid_cdr(Request $request){
+
+        $guia_remi = Guia_remision::where('id', $request->get('id_guia'))->first();
+        // return $guia_remi;
+        $response = config_acc_guia::getcdr_guia($guia_remi->ticket_guia_remision_sunat);
+
+        dd($response);
+    }
     /**
      * 
 
@@ -1155,13 +1163,5 @@ class FacturacionElectronicaController extends Controller
         //
     }
 
-    public function getcdr_guia(Request $request){
 
-        //generar token 
-        $api = new \Greenter\Sunat\GRE\Api\AuthApi();
-
-        $api->getToken('password','','','','');
-        // generar cdr
-
-    }
 }
