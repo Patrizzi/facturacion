@@ -456,12 +456,10 @@ class FacturacionElectronicaController extends Controller
         $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
         $guias_registros=g_remision_registro::where('guia_remision_id',$guia->id)->get();
         $tipo_transporte=$guia->tipo_transporte;
-        //configuracion
-        $see=config_acc_guia::getSeeApi();
 
-        //guia
+
+        $see=config_acc_guia::getSeeApi();
         $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
-        // dd($invoice);
         // return response()->json($invoice);
         
         //envio a SUNAT    
@@ -474,7 +472,7 @@ class FacturacionElectronicaController extends Controller
         //guardado de ticket
         
 
-        //cambio de guia electronica - en caso sea exitodo
+        //cambio de guia electronica - en caso sea exitodo 
         $guia->g_electronica=1;
         $guia->save();
         return $msg;
@@ -1098,10 +1096,21 @@ class FacturacionElectronicaController extends Controller
     public function valid_cdr(Request $request){
 
         $guia_remi = Guia_remision::where('id', $request->get('id_guia'))->first();
-        // return $guia_remi;
-        $response = config_acc_guia::getcdr_guia($guia_remi->ticket_guia_remision_sunat);
+        $empresa = Empresa::first();
+        // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
+        $guias_registros=g_remision_registro::where('guia_remision_id',$guia_remi->id)->get();
+        $tipo_transporte=$guia_remi->tipo_transporte;
+        //configuracion
+        $see=config_acc_guia::getSeeApi();
+        $invoice=Config_fe::guia_remision($guia_remi,$guias_registros,$tipo_transporte);
+        $response = config_acc_guia::getcdr_guia($see,$guia_remi->ticket_guia_remision_sunat,$invoice);
 
-        dd($response);
+        $guia_remi->estado_ticket_guia = 1;
+        $guia_remi->save();
+
+
+        return response()->download(public_path('facturas_electronicas/'.'/R-'.$empresa->ruc.'-09-'.$guia_remi->cod_guia.'.zip'));
+
     }
     /**
      * 

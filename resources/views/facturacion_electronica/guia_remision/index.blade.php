@@ -126,7 +126,6 @@
                                             <th>XML</th>
                                             <th>ZIP</th>
                                             <th>N° de Ticket</th>
-                                            <th>Validar CDR</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -148,7 +147,15 @@
                                                 <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
                                             </td>
                                             <td align="center">
-                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                @if ( !isset($guia_remision->ticket_guia_remision_sunat) ||  $guia_remision->estado_ticket_guia == 1 )
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                @else
+                                                    <form action="{{route('facturacion_electronica.valid_cdr')}}" method="post">
+                                                        @csrf
+                                                        <input type="text" name="id_guia" value="{{$guia_remision->id}}" hidden>
+                                                        <button type="submit" class="btn"><img src="{{asset('zip.png')}}" width="25px"></button>
+                                                    </form>
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($guia_remision->ticket_guia_remision_sunat == null)
@@ -156,14 +163,6 @@
                                                 @else   
                                                     <strong>{{$guia_remision->ticket_guia_remision_sunat}}</strong>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                {{-- <a href="{{route('facturacion_electronica.valid_cdr')}}">a</a> --}}
-                                                <form action="{{route('facturacion_electronica.valid_cdr')}}" method="post">
-                                                    @csrf
-                                                    <input type="text" name="id_guia" value="{{$guia_remision->id}}" hidden>
-                                                    <button type="submit" class="btn btn-warnig">send</button>
-                                                </form>
                                             </td>
                                             {{-- <td>
                                                 <span></span> --}}
