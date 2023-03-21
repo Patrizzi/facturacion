@@ -167,14 +167,14 @@ class config_acc_guia extends Model
 
     public static function getcdr_guia($see,$ticket,$invoice){
 
-        $ticket = $see->getStatus($ticket);
+        $cdr_res = $see->getStatus($ticket);
 
-        Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $ticket->getCdrZip());
+        Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $cdr_res->getCdrZip());
 
-        if (!$ticket->isSuccess()) {
+        if (!$cdr_res->isSuccess()) {
             // echo "error";
-            echo 'Codigo Error: '.$ticket->getError()->getCode().'<br>';
-            echo 'Mensaje Error: '.$ticket->getError()->getMessage().'<br>';
+            echo 'Codigo Error: '.$cdr_res->getError()->getCode().'<br>';
+            echo 'Mensaje Error: '.$cdr_res->getError()->getMessage().'<br>';
             //  echo 'Mensaje Error: '.$result->getError()->getMessage();
             exit();  
             // return;
