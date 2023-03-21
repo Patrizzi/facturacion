@@ -150,11 +150,12 @@
                                                 @if ( !isset($guia_remision->ticket_guia_remision_sunat) ||  $guia_remision->estado_ticket_guia == 1 )
                                                     <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 @else
-                                                    <form action="{{route('facturacion_electronica.valid_cdr')}}" method="post">
-                                                        @csrf
-                                                        <input type="text" name="id_guia" value="{{$guia_remision->id}}" hidden>
-                                                        <button type="submit" class="btn"><img src="{{asset('zip.png')}}" width="25px"></button>
-                                                    </form>
+                                                    <div id="div_btn_app">
+                                                        <button type="button" class="btn" id="guia_remi_ind_man" value="{{$guia_remision->id}}" onclick="valid_cdr_normal(this)"><img src="{{asset('zip.png')}}" width="25px"></button>
+                                                    </div>
+                                                    <div style="display: none;" id="div_dw_non">
+                                                        <a id="download_cdr_post" href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download ><img src="{{asset('zip.png')}}" width="25px"></a>   
+                                                    </div>
                                                 @endif
                                             </td>
                                             <td>
@@ -250,15 +251,17 @@
                                                     
                                                     <td>
                                                         <center>
-                                                            <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
+                                                        <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$remision_manuals->cod_guia}}" onclick="envio_guia_manual(this)"><i class="fa fa-cloud-upload" ></i></button>
+
+                                                            {{-- <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="remision_id" value="{{$remision_manuals->id}}">
                                                                 <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
                                                                 {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
                                                                     <i class="fa fa-cloud-upload"></i>
-                                                                </span> --}}
+                                                                </span>
 
-                                                            </form>
+                                                            </form> --}}
                                                         </center>
                                                     </td>
                                                 </tr>
@@ -321,12 +324,14 @@
                                                 @if ( !isset($guia_remision_m->ticket_guia_remi_m_sunat) ||  $guia_remision_m->estado_ticket_guia_m == 1 )
                                                     <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 @else
-                                                    <form action="{{route('facturacion_electronica.valid_cdr_manual')}}" method="post">
-                                                        @csrf
-                                                        <input type="text" name="id_guia" value="{{$guia_remision_m->id}}" hidden>
-                                                        <button type="submit" class="btn"><img src="{{asset('zip.png')}}" width="25px"></button>
-                                                    </form>
+                                                    <div id="div_btn_app_man">
+                                                        <button type="button" class="btn" id="guia_remi_ind_man" value="{{$guia_remision_m->id}}" onclick="valid_cdr_manual(this)"><img src="{{asset('zip.png')}}" width="25px"></button>
+                                                    </div>
+                                                    <div style="display: none;" id="div_dw_non_man">
+                                                        <a id="download_cdr_post" href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download ><img src="{{asset('zip.png')}}" width="25px"></a>   
+                                                    </div>
                                                 @endif
+                                                
                                             </td>
                                             <td>
                                                 @if ($guia_remision_m->ticket_guia_remi_m_sunat == null)
@@ -335,15 +340,6 @@
                                                     <strong>{{$guia_remision_m->ticket_guia_remi_m_sunat}}</strong>
                                                 @endif
                                             </td>
-                                            {{-- <td>
-                                                <center>
-                                                    <form action="{{route('facturacion_electronica.guia_remision_m_baja_sunat')}}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="guia_m_id" value="{{$guia_remision_m->id}}">
-                                                        <button type="submit" class="btn btn-w-m btn-danger">Anular</button>
-                                                    </form>
-                                                </center>
-                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -626,7 +622,49 @@
     $('#cerrar').on('click', function(){
         location.reload();
     });
-    //* REMISION MANUAL 
+    //* REMISION MANUAL
+    function envio_guia_manual(codigo){
+        // console.log(codigo.val());
+        $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+        $('.nav-link').addClass('disabled');
+        var value_check =  codigo.value;
+        console.log(value_check);
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.guia_remision_m_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_remision': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                // revision(value_check, response, 'factura');
+                inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+    }
+    
+    
     function select_all_remision_m() {
         $('input[class=case_m]:checkbox').each(function () {
             // console.log($('input[class=check_all]:checkbox:checked'));
@@ -695,6 +733,96 @@
         location.reload();
     });
 
-    
+    // VALIDAR CDR
+
+    function valid_cdr_normal(codigo){
+        var value_check =  codigo.value;
+
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.valid_cdr') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_remision': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                // revision(value_check, response, 'factura');
+                // inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+        
+        $('#div_btn_app').css('display','none');
+        $('#div_dw_non').css('display', 'block');
+
+        const etiqueta = document.getElementById('download_cdr_post');
+        etiqueta.click();
+
+    }
+
+    function valid_cdr_manual(codigo){
+        var value_check =  codigo.value;
+
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.valid_cdr_manual') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_remision': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                // revision(value_check, response, 'factura');
+                // inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+        
+        $('#div_btn_app_man').css('display','none');
+        $('#div_dw_non_man').css('display', 'block');
+
+        const etiqueta = document.getElementById('download_cdr_post');
+        etiqueta.click();
+
+    }
 </script>
 @endsection

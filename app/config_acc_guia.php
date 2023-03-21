@@ -171,14 +171,24 @@ class config_acc_guia extends Model
 
         Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $cdr_res->getCdrZip());
 
-        if (!$cdr_res->isSuccess()) {
-            // echo "error";
-            echo 'Codigo Error: '.$cdr_res->getError()->getCode().'<br>';
-            echo 'Mensaje Error: '.$cdr_res->getError()->getMessage().'<br>';
-            //  echo 'Mensaje Error: '.$result->getError()->getMessage();
-            exit();  
-            // return;
+        $code = (int)$cdr_res->getCode();
+        // dd($cdr_res);
+        // dd($cdr_res->getCdrResponse()->getNotes());
+        if ($code === 0) {
+            echo 'ESTADO: ACEPTADA'.PHP_EOL;
+            if (count($cdr_res->getCdrResponse()->getNotes()) > 0) {
+                echo 'OBSERVACIONES:'.PHP_EOL;
+            // Corregir estas observaciones en siguientes emisiones.
+                var_dump($cdr_res->getCdrResponse()->getNotes());
+            }
+        }else if ($code >= 2000 && $code <= 3999) {
+            echo 'ESTADO: RECHAZADA'.PHP_EOL;
+        }else{
+            /* Esto no debería darse, pero si ocurre, es un cdr_res inválido que debería tratarse como un error-excepción. */
+            /*code: 0100 a 1999 */
+            echo 'Excepción';
         }
-        return $ticket;
+
+        return $cdr_res->getCdrResponse()->getDescription().PHP_EOL;
     }
 }
