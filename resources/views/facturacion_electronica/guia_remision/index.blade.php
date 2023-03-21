@@ -240,15 +240,13 @@
                                                     <td>{{$remision_manuals->cod_guia}}</td>
                                                     <td>{{$remision_manuals->fecha_emision}}</td>
                                                     <td>{{$remision_manuals->fecha_entrega}}</td>
-                                                    <td>
-                                                        @if($remision_manuals->tipo_transporte==0)
-                                                            Sin Trasporte
-                                                        @elseif($remision_manuals->tipo_transporte==1)
-                                                            Trasporte Publico
-                                                        @else
-                                                        @endif
-                                                    </td>
-                                                    
+                                                    @if($guia_remision->tipo_transporte==0)
+                                                    <td>Sin Trasporte</td>
+                                                    @elseif($guia_remision->tipo_transporte==1)
+                                                    <td>Trasporte Publico</td>
+                                                    @else
+                                                    <td>Trasporte Privado</td>
+                                                    @endif
                                                     <td>
                                                         <center>
                                                         <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$remision_manuals->cod_guia}}" onclick="envio_guia_manual(this)"><i class="fa fa-cloud-upload" ></i></button>
