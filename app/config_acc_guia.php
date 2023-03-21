@@ -171,26 +171,14 @@ class config_acc_guia extends Model
 
         Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $ticket->getCdrZip());
 
-        // $cdr = $res->getCdrResponse();
-        $code = (int)$ticket->getCode();
-        
-        if ($code === 0) {
-            echo 'ESTADO: ACEPTADA'.PHP_EOL;
-            if (count($ticket->getNotes()) > 0) {
-                echo 'OBSERVACIONES:'.PHP_EOL;
-            // Corregir estas observaciones en siguientes emisiones.
-                var_dump($ticket->getNotes());
-            }
-        }else if ($code >= 2000 && $code <= 3999) {
-            echo 'ESTADO: RECHAZADA'.PHP_EOL;
-        }else{
-            /* Esto no debería darse, pero si ocurre, es un CDR inválido que debería tratarse como un error-excepción. */
-            /*code: 0100 a 1999 */
-            echo 'Excepción';
+        if (!$ticket->isSuccess()) {
+            // echo "error";
+            echo 'Codigo Error: '.$ticket->getError()->getCode().'<br>';
+            echo 'Mensaje Error: '.$ticket->getError()->getMessage().'<br>';
+            //  echo 'Mensaje Error: '.$result->getError()->getMessage();
+            exit();  
+            // return;
         }
-
-        return $ticket->getDescription().PHP_EOL;
-        
-        // return $ticket;
+        return $ticket;
     }
 }
