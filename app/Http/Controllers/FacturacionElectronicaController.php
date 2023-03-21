@@ -532,7 +532,7 @@ class FacturacionElectronicaController extends Controller
     public function guia_remision_m_all(Request $request){
         $remision_codigo = $request->get('codigo_remision');
         $guia = GuiaRemisionManual::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
-        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$remision_codigo)->get();
+        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$guia->id)->get();
         $tipo_transporte=$guia->tipo_transporte;
 
         //configuracion
