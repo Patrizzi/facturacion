@@ -937,57 +937,6 @@ class Config_fe extends Model
 
 
     }
-    // public static function guia_remision_v2_Example($guia, $guias_registros,$tipo_transporte){
-
-    //     $empresa = Empresa::first();
-       
-    //     // $company = (new Company())
-    //     // ->setRuc('20161515648')
-    //     // ->setRazonSocial('GREENTER S.A.C.');
-    //     $company = (new Company())
-    //     ->setRuc($empresa->ruc)
-    //     ->setRazonSocial($empresa->razon_social);
-    //     $transp = new Transportist();
-    //     $transp->setTipoDoc('6')
-    //         ->setNumDoc('20000000002')
-    //         ->setRznSocial('TRANSPORTES S.A.C')
-    //         ->setNroMtc('0001');
-
-    //     $envio = new Shipment();
-    //     $envio
-    //         ->setCodTraslado('01') // Cat.20 - Venta
-    //         ->setModTraslado('01') // Cat.18 - Transp. Publico
-    //         ->setFecTraslado(new DateTime())
-    //         ->setPesoTotal(12.5)
-    //         ->setUndPesoTotal('KGM')
-    //     //    ->setNumBultos(2) // Solo válido para importaciones
-    //         ->setLlegada(new Direction('150101', 'AV LIMA'))
-    //         ->setPartida(new Direction('150203', 'AV ITALIA'))
-    //         ->setTransportista($transp);
-
-    //     $despatch = new Despatch();
-    //     $despatch->setVersion('2022')
-    //         ->setTipoDoc('09')
-    //         ->setSerie('T001')
-    //         ->setCorrelativo('121')
-    //         ->setFechaEmision(new DateTime())
-    //         ->setCompany($company)
-    //         ->setDestinatario((new Client())
-    //             ->setTipoDoc('6')
-    //             ->setNumDoc('20000000002')
-    //             ->setRznSocial('EMPRESA DEST 1'))
-    //         ->setEnvio($envio);
-
-    //     $detail = new DespatchDetail();
-    //     $detail->setCantidad(2)
-    //         ->setUnidad('ZZ')
-    //         ->setDescripcion('PROD 1')
-    //         ->setCodigo('PROD1');
-
-    //     $despatch->setDetails([$detail]);
-
-    //     return $despatch;
-    // }
     public static function guia_remision_baja($guia, $guias_registros,$tipo_transporte){
 
         if(isset($guia->sucursal_cliente)){

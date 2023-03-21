@@ -1116,7 +1116,7 @@ class FacturacionElectronicaController extends Controller
         $guia_remi = GuiaRemisionManual::where('id', $request->get('id_guia'))->first();
         $empresa = Empresa::first();
         // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
-        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_id',$guia_remi->id)->get();
+        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$guia_remi->id)->get();
         $tipo_transporte=$guia_remi->tipo_transporte;
         //configuracion
         $see=config_acc_guia::getSeeApi();
