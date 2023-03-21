@@ -45,16 +45,35 @@ class config_acc_guia extends Model
     public static function getSeeApi()
     {
         $pfx = file_get_contents(public_path('certificado/certificado.p12'));
-        $password = 'Ndalmaten81';
+        $password = 'Tecnologia20';
 
         $certificate = new X509Certificate($pfx, $password);
         
         //beta
-        $api = new \Greenter\Api([
-            'auth' => 'https://gre-test.nubefact.com/v1',
-            'cpe' => 'https://gre-test.nubefact.com/v1',
-        ]);
+        // $api = new \Greenter\Api([
+        //     'auth' => 'https://gre-test.nubefact.com/v1',
+        //     'cpe' => 'https://gre-test.nubefact.com/v1',
+        // ]);
         
+        // if ($certificate === false) {
+        //     throw new Exception('No se pudo cargar el certificado');
+        // }
+        // $api->setBuilderOptions([
+        //         'strict_variables' => true,
+        //         'optimizations' => 0,
+        //         'debug' => true,
+        //         'cache' => false,
+        //     ])
+        //     ->setApiCredentials('test-85e5b0ae-255c-4891-a595-0b98c65c9854', 'test-Hty/M6QshYvPgItX2P0+Kw==')
+        //     ->setClaveSOL('20161515648', 'MODDATOS', 'MODDATOS')
+        //     ->setCertificate($certificate->export(X509ContentType::PEM));
+
+
+        // //* produccion JYP SAC
+        $api = new \Greenter\Api([
+            'auth' => 'https://api-seguridad.sunat.gob.pe/v1',
+            'cpe' => 'https://api-cpe.sunat.gob.pe/v1',
+        ]);
         if ($certificate === false) {
             throw new Exception('No se pudo cargar el certificado');
         }
@@ -64,31 +83,15 @@ class config_acc_guia extends Model
                 'debug' => true,
                 'cache' => false,
             ])
-            ->setApiCredentials('test-85e5b0ae-255c-4891-a595-0b98c65c9854', 'test-Hty/M6QshYvPgItX2P0+Kw==')
-            ->setClaveSOL('20161515648', 'MODDATOS', 'MODDATOS')
+            ->setApiCredentials('8852449e-5cb5-4c85-a12e-42d4531d967b', 'qpL4mZHH89e0scPKwsF0PA==')
+            ->setClaveSOL('20545122520', 'JYPSACFA', 'P@@@W0RDs')
             ->setCertificate($certificate->export(X509ContentType::PEM));
-
-
-        // //* produccion JYP SAC
-        // $api = new \Greenter\Api([
-        //     'auth' => 'https://api-seguridad.sunat.gob.pe/v1',
-        //     'cpe' => 'https://api-cpe.sunat.gob.pe/v1',
-        // ]);
-        // $api->setBuilderOptions([
-        //         'strict_variables' => true,
-        //         'optimizations' => 0,
-        //         'debug' => true,
-        //         'cache' => false,
-        //     ])
-        //     ->setApiCredentials('8852449e-5cb5-4c85-a12e-42d4531d967b', 'qpL4mZHH89e0scPKwsF0PA==')
-        //     ->setClaveSOL('20545122520', 'JYPSACFA', 'P@@@W0RDs')
-        //     ->setCertificate($certificate->export(X509ContentType::PEM));
 
 
         return  $api;
 
     }
-    public static function send_guia($see, $invoice,$id_guia){
+    public static function send_guia($see, $invoice,$id_guia,$tipo_g){
         
         $result = $see->send($invoice);
         Storage::disk('facturas_electronicas')->put($invoice->getName().'.xml',$see->getLastXml());
@@ -97,10 +100,18 @@ class config_acc_guia extends Model
         // /**@var $res SummaryResult*/
         $ticket = $result->getTicket();
         echo 'Ticket :<strong>' . $ticket .'</strong><br>';
-        $guia = Guia_remision::where('id', $id_guia)->first();
-        if ($guia->ticket_guia_remision_sunat == null) {
-            $guia->ticket_guia_remision_sunat=$ticket;
-            $guia->save();
+        if($tipo_g == 'normal'){
+            $guia = Guia_remision::where('id', $id_guia)->first();
+            if ($guia->ticket_guia_remision_sunat == null) {
+                $guia->ticket_guia_remision_sunat=$ticket;
+                $guia->save();
+            }
+        }else{
+            $guia = GuiaRemisionManual::where('id', $id_guia)->first();
+            if ($guia->ticket_guia_remi_m_sunat == null) {
+                $guia->ticket_guia_remi_m_sunat=$ticket;
+                $guia->save();
+            }
         }
 
         if (!$result->isSuccess()) {
@@ -123,7 +134,7 @@ class config_acc_guia extends Model
 
         
         // $cdr->writeCdr($invoice, $res->getCdrZip());
-        Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $res->getCdrZip());
+        // Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $res->getCdrZip());
 
         return $res;
         // return $cdr->getDescription().PHP_EOL;
@@ -160,6 +171,26 @@ class config_acc_guia extends Model
 
         Storage::disk('facturas_electronicas')->put('R-'.$invoice->getName().'.zip', $ticket->getCdrZip());
 
-        return "a";
+        // $cdr = $res->getCdrResponse();
+        $code = (int)$ticket->getCode();
+        
+        if ($code === 0) {
+            echo 'ESTADO: ACEPTADA'.PHP_EOL;
+            if (count($ticket->getNotes()) > 0) {
+                echo 'OBSERVACIONES:'.PHP_EOL;
+            // Corregir estas observaciones en siguientes emisiones.
+                var_dump($ticket->getNotes());
+            }
+        }else if ($code >= 2000 && $code <= 3999) {
+            echo 'ESTADO: RECHAZADA'.PHP_EOL;
+        }else{
+            /* Esto no debería darse, pero si ocurre, es un CDR inválido que debería tratarse como un error-excepción. */
+            /*code: 0100 a 1999 */
+            echo 'Excepción';
+        }
+
+        return $ticket->getDescription().PHP_EOL;
+        
+        // return $ticket;
     }
 }

@@ -60,7 +60,7 @@ class GuiaRemisionManualController extends Controller
         $motivo_traslado = MotivoTraslado::all();
         $vehiculo = Vehiculo::where('estado_activo',0)->get();
         $transporte_publico = TransportePublico::where('estado',0)->get();
-        $personal = Personal::where('id','!=',1)->get();
+        $personal = Personal::where('id', '!=', 1)->where('licencia','!=', null)->get();
         $productos = Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
         
         $almacen_serie_remision= Codigo_guia_almacen::where('almacen_id','1')->first();/*Codigo que brinda sunat a cada sucursal*/

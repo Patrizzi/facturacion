@@ -463,14 +463,11 @@ class FacturacionElectronicaController extends Controller
         // return response()->json($invoice);
         
         //envio a SUNAT    
-        $result=config_acc_guia::send_guia($see, $invoice,$guia->id);
+        $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'normal');
 
         //lectura CDR
         $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
 
-
-        //guardado de ticket
-        
 
         //cambio de guia electronica - en caso sea exitodo 
         $guia->g_electronica=1;
@@ -513,7 +510,7 @@ class FacturacionElectronicaController extends Controller
         $tipo_transporte=$guia->tipo_transporte;
 
         //configuracion
-        $see=config_acceso_sunat::guia_electronica();
+        $see=config_acc_guia::getSeeApi();
 
         //guia
         $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
@@ -521,10 +518,10 @@ class FacturacionElectronicaController extends Controller
         // return response()->json($invoice);
         
         //envio a SUNAT    
-        $result=config_acceso_sunat::send($see, $invoice);
+        $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'manual');
 
         //lectura CDR
-        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
 
         //cambio de guia electronica - en caso sea exitodo
         $guia->g_electronica=1;
@@ -539,7 +536,7 @@ class FacturacionElectronicaController extends Controller
         $tipo_transporte=$guia->tipo_transporte;
 
         //configuracion
-        $see=config_acceso_sunat::guia_electronica();
+        $see=config_acc_guia::getSeeApi();
 
         //guia
         $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
@@ -547,10 +544,10 @@ class FacturacionElectronicaController extends Controller
         // return response()->json($invoice);
         
         //envio a SUNAT    
-        $result=config_acceso_sunat::send($see, $invoice);
+        $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'manual');
 
         //lectura CDR
-        $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
+        $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
 
         //cambio de guia electronica - en caso sea exitodo
         $guia->g_electronica=1;
@@ -1108,7 +1105,28 @@ class FacturacionElectronicaController extends Controller
         $guia_remi->estado_ticket_guia = 1;
         $guia_remi->save();
 
+        return $response;
 
+        return response()->download(public_path('facturas_electronicas/'.'/R-'.$empresa->ruc.'-09-'.$guia_remi->cod_guia.'.zip'));
+
+    }
+
+    public function valid_cdr_manual(Request $request){
+
+        $guia_remi = GuiaRemisionManual::where('id', $request->get('id_guia'))->first();
+        $empresa = Empresa::first();
+        // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
+        $guias_registros=GuiaRemisionMRegistros::where('guia_remision_id',$guia_remi->id)->get();
+        $tipo_transporte=$guia_remi->tipo_transporte;
+        //configuracion
+        $see=config_acc_guia::getSeeApi();
+        $invoice=Config_fe::guia_remision($guia_remi,$guias_registros,$tipo_transporte);
+        $response = config_acc_guia::getcdr_guia($see,$guia_remi->ticket_guia_remi_m_sunat,$invoice);
+
+        $guia_remi->estado_ticket_guia_m = 1;
+        $guia_remi->save();
+
+        // return $response;
         return response()->download(public_path('facturas_electronicas/'.'/R-'.$empresa->ruc.'-09-'.$guia_remi->cod_guia.'.zip'));
 
     }

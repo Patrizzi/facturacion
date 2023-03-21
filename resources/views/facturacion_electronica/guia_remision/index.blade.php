@@ -222,7 +222,7 @@
                                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                                         <thead>
                                             <tr>
-                                                <th><input class='check_all_remision_m' type='checkbox' onclick="select_all_remision_m()" /></th>
+                                                <th style="width: 5%;"><input class='check_all_remision_m' type='checkbox' onclick="select_all_remision_m()" /></th>
                                                 <th>ID</th>
                                                 <th>Codigo de Guia</th>
                                                 <th>Fecha emision</th>
@@ -296,7 +296,7 @@
                                             <th>Tipo Transporte</th>
                                             <th>XML</th>
                                             <th>ZIP</th>
-                                            {{-- <th>Ticket</th> --}}
+                                            <th>Ticket</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -318,9 +318,23 @@
                                                 <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
                                             </td>
                                             <td align="center">
-                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                @if ( !isset($guia_remision_m->ticket_guia_remi_m_sunat) ||  $guia_remision_m->estado_ticket_guia_m == 1 )
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                @else
+                                                    <form action="{{route('facturacion_electronica.valid_cdr_manual')}}" method="post">
+                                                        @csrf
+                                                        <input type="text" name="id_guia" value="{{$guia_remision_m->id}}" hidden>
+                                                        <button type="submit" class="btn"><img src="{{asset('zip.png')}}" width="25px"></button>
+                                                    </form>
+                                                @endif
                                             </td>
-                                            
+                                            <td>
+                                                @if ($guia_remision_m->ticket_guia_remi_m_sunat == null)
+                                                    <span style="font-style: italic"> Sin Ticket | Enviado con la version antigua de las Guia de Remision</span>
+                                                @else   
+                                                    <strong>{{$guia_remision_m->ticket_guia_remi_m_sunat}}</strong>
+                                                @endif
+                                            </td>
                                             {{-- <td>
                                                 <center>
                                                     <form action="{{route('facturacion_electronica.guia_remision_m_baja_sunat')}}" method="POST">
