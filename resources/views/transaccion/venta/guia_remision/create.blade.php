@@ -91,8 +91,9 @@
                                 <label class="col-sm-1">Tipo de Transporte:</label>
                                 <div class="col-sm-5">
                                     <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id" required>
-                                        {{-- <option value="0">Sin Transporte</option> --}}
+                                        
                                         <option value="">Escoge el tipo de transporte</option>
+                                        {{-- <option value="0">Sin Transporte</option> --}}
                                         <option value="1">Transporte Público</option>
                                         <option value="2">Transaporte Privado</option>
                                     </select>
@@ -131,9 +132,9 @@
                                 <div class="col-sm-5">
                                     <select class="form-control m-b" name="conductor" autocomplete="off" id="conductor">
                                         <option value="">Ningún Conductor</option>
-                                        <option disabled="disabled">------------------------------</option>
                                         @foreach($personal as $ersonals)
-                                        <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
+                                            <option disabled="disabled">------------------------------</option>
+                                            <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
                                         @endforeach
                                     </select>
                                 </div>

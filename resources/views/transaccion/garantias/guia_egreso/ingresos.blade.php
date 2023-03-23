@@ -30,7 +30,7 @@
                                 <th>ID</th>
                                 <th>Marca</th>
                                 <th>Motivo</th>
-                                <th>Ing Asignado</th>
+                                <th>Técnico Asignado</th>
                                 <th>fecha</th>
                                 <th>Orden servicio</th>
                                 <th>Asunto</th>

@@ -12,4 +12,54 @@ class MotivoTraslado extends Model
     // }
 
 
+    public static function mot_tras($mt_tr){
+
+        // $mt_tr = $lett\;
+        switch ($mt_tr) {
+            case 'Venta':
+                $value_cod = '01';
+                break;
+            case 'Venta sujeta a confirmación del comprobador':
+                $value_cod = '14';
+                break;
+            case 'Compra':
+                $value_cod = '02';
+                break;
+            case 'Consignación':
+                $value_cod = '05';
+                break;
+            case 'Devolución':
+                $value_cod = '06';
+                break;
+            case 'traslado entre Establecimiento de la misma Empresa':
+                $value_cod = '04';
+                break;
+            case 'Traslado de bienes para Transformación':
+                $value_cod = '17';
+                break;
+            case 'Recojo de bienes':
+                $value_cod = '07';
+                break;
+            case 'Traslado por bienes itinerante  de comprobante de pago':
+                $value_cod = '13';
+                break;
+            case 'Traslado zona primaria':
+                $value_cod = '18';
+                break;
+            case 'Importación':
+                $value_cod = '08';
+                break;
+            case 'Exportación':
+                $value_cod = '09';
+                break;
+            case 'Venta con entrega a terceros':
+                $value_cod = '03';
+                break;
+            case 'Otros':
+                $value_cod = '13';
+                break;
+        }
+
+        return $value_cod;
+    }
 }

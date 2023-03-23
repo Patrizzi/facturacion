@@ -45,7 +45,7 @@
               <div class="col-sm-4">
                <input type="text" class="form-control" value="{{$garantias_guias_ingresos->asunto}}" disabled="disabled">
            </div>
-           <label class="col-sm-2 col-form-label">Ing. Asignado:</label>
+           <label class="col-sm-2 col-form-label">Técnico Asignado:</label>
            <div class="col-sm-4">
             <input type="text" class="form-control" disabled="disabled"value="{{$garantias_guias_ingresos->personal_laborales->nombres}}">
         </div>

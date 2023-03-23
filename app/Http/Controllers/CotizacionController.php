@@ -1786,7 +1786,7 @@ $cod_fac="F".$sucursal_nr."-".$factura_nr;
 
 $fecha_hoy = Carbon::now()->add(1,'day');
 $fecha_1 = $fecha_hoy->format('Y-m-d');
-
+// return $fecha_1;
 
 if ($cotizacion->estado==0) {
     return view('transaccion.venta.cotizacion.facturar2', compact('cotizacion','empresa','sum','igv',"array","sub_total",'cod_fac','cotizacion_registros','array_cantidad','comi','array_promedio','forma_pagos','banco','fecha_1'));
@@ -2437,9 +2437,10 @@ if($validacion==1){
     }
         // return $factura_cod_bol;
     $cod_bol="B".$sucursal_nr."-".$boleta_nr;
-
+    $fecha_hoy = Carbon::now()->add(1,'day');
+    $fecha_1 = $fecha_hoy->format('Y-m-d');
     if ($cotizacion->estado==0) {
-        return view('transaccion.venta.cotizacion.boletear2', compact('cotizacion','empresa','cotizacion_registros','sum','igv',"array","sub_total" ,'cod_bol','array_cantidad','comi','array_promedio','forma_pagos','banco'));
+        return view('transaccion.venta.cotizacion.boletear2', compact('cotizacion','empresa','cotizacion_registros','sum','igv',"array","sub_total" ,'cod_bol','array_cantidad','comi','array_promedio','forma_pagos','banco','fecha_1'));
     }
     elseif ($cotizacion->estado==1) {
         return redirect()->route('cotizacion.show',$cotizacion->id);
@@ -2449,6 +2450,7 @@ if($validacion==1){
 
 public function boletear_store(Request $request)
 {
+    return $request;
         //LLAMA A LA FECHA Y COMVIERTE LOS SIGNOS
     $date_sp = Carbon::now();
     $data_g = str_replace(' ', '_',$date_sp);
@@ -2553,7 +2555,23 @@ if($comisionista!="" and $comisionista!="Sin comision - 0"){
 }else{
     $comi=0;
 }
-
+    // FORMA DE PAGO
+    $forma_pago_id=$request->get('forma_pago');
+    if($forma_pago_id == 1){
+        $val = $request->get('fecha_vencimiento');
+    
+        $nuevafechas = date('d-m-Y', strtotime(($val)));
+    
+    
+    }else{
+        $fecha_pago_forma = $request->input('fecha_pago');
+        $contador_for_1 = count($fecha_pago_forma);
+        for($c = 0; $c<$contador_for_1;$c++ ){
+            $val = $fecha_pago_forma[$c];
+        }
+    
+        $nuevafechas = date('d-m-Y', strtotime(($val)));
+    }
         // Creacion de Boleta
 $boletear=new Boleta;
 $boletear->codigo_boleta=$boleta_numero;
@@ -2565,7 +2583,7 @@ $boletear->cliente_id=$cotizacion->cliente_id;
 $boletear->moneda_id=$cotizacion->moneda_id;
 $boletear->forma_pago_id=$cotizacion->forma_pago_id;
 $boletear->fecha_emision=$request->get('fecha_emision');
-$boletear->fecha_vencimiento=$request->get('fecha_vencimiento');
+$boletear->fecha_vencimiento=$nuevafechas;
 $boletear->cambio=$cambio->paralelo;
 $boletear->observacion=$cotizacion->observacion;
 $boletear->comisionista=$cotizacion->comisionista_id;
@@ -2586,7 +2604,7 @@ if($boletear->forma_pago_id == 2){
         // foreach($contador_for as $cuotas => $index ){
     for($c = 0; $c<$contador_for;$c++ ){
         $cuota_cred = new Cuotas_credito;
-        $cuota_cred->boletear = $boletear->id;
+        $cuota_cred->boleta_id = $boletear->id;
         $cuota_cred->numero_cuota = $c+1;
         $cuota_cred->monto = $monto_pago[$c];
         $cuota_cred->fecha_pago = $fecha_pago[$c];

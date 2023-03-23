@@ -197,7 +197,7 @@
                             </select>
                         </div>
                         {{-- Moneda --}}
-                        <label id="moneda_1" class="col-sm-1 col-form-label"
+                        <label id="this_none_moneda" class="col-sm-1 col-form-label"
                             @foreach($config as $confi_create_blade) 
                                 @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
                                     hidden 
@@ -205,7 +205,7 @@
                             @endforeach>
                             Moneda:
                         </label>
-                        <div class="col-sm-5" id="moneda_2" 
+                        <div class="col-sm-5" id="this_display_moneda" 
                             @foreach($config as $confi_create_blade) 
                                 @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
                                     hidden 
@@ -912,12 +912,14 @@
 
         $('#subtotal_gravado').val(total_ttg);
 
-        var igv_valor={{$igv->renta}};
         var subtotal = document.querySelector(`#sub_total`).value;
         var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        
+        var igv_valor={{$igv->renta}};
+        
         var igv=subtotal_gravado*igv_valor/100; 
         var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
-        var end=igv_decimal+parseFloat(subtotal);
+        var end=parseFloat(subtotal) + igv_decimal;
         var end2 = Math.round(end * multiplier2) / multiplier2;
 
         document.getElementById("igv").value = igv_decimal;
@@ -1016,8 +1018,11 @@
             },
             success: function (msg) {
                 //Cambio de moneda
-                $(`#moneda_id`).val(msg.id);
-                $(`#moneda`).val(msg.nombre);
+                console.log('a');
+                // document.getElementById("moneda_id").value = msg.id;
+                // document.getElementById("moneda").value = msg.nombre;
+                $('[id="moneda_id"]').val(msg.id);
+                $('[id="moneda"]').val(msg.nombre);
                 $(`#button_changeMoney`).html(msg.other);
                 if(status==1){
                     status=0;

@@ -66,6 +66,7 @@ class PersonalController extends Controller
         $personal->nivel_educativo=$request->get('nivel_educativo');
         $personal->profesion=$request->get('profesion');
         $personal->direccion=$request->get('direccion');
+        $personal->licencia=$request->get('licencia');
         $personal->estado=1;
         $personal->usuario_registrado=0;
         $personal->estado_trabajador_laboral='Activo';
@@ -155,6 +156,7 @@ class PersonalController extends Controller
             $personal->nivel_educativo=$request->get('nivel_educativo');
             $personal->profesion=$request->get('profesion');
             $personal->direccion=$request->get('direccion');
+            $personal->licencia=$request->get('licencia');
             $personal->foto=$name;
             $personal->save();
         }else{
@@ -173,6 +175,7 @@ class PersonalController extends Controller
             $personal->nivel_educativo=$request->get('nivel_educativo');
             $personal->profesion=$request->get('profesion');
             $personal->direccion=$request->get('direccion');
+            $personal->licencia=$request->get('licencia');
             // $personal->foto=$file_path;
             $personal->save();
         }

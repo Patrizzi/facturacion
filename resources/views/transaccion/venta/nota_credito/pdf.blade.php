@@ -29,7 +29,7 @@
                 <td style="width: 30%; ;border: 1px #808080 solid;border-radius: 8px;margin-top: 0px" align="right">
                     <center>
                         <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-                        <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRÓNICA</h2><br>
+                        <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >NOTA DE CREDITO</h2><br>
                         <h5 style="text-align: center;margin-bottom: -1px" >{{$notas_credito->codigo_n_c}}</h5>
                     </center>
                 </td>

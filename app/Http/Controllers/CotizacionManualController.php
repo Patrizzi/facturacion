@@ -941,8 +941,10 @@ class CotizacionManualController extends Controller
         $forma_pagos = Forma_pago::get();
         $empresa = Empresa::first();
         $igv = Igv::first();
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $fecha_1 = $fecha_hoy->format('Y-m-d');
         // return $cotizacion;
-        return view('transaccion.venta.cotizacion.manual.boletear', compact('cotizacion','cotizacion_registros','empresa','boleta_numero','forma_pagos','igv'));
+        return view('transaccion.venta.cotizacion.manual.boletear', compact('cotizacion','cotizacion_registros','empresa','boleta_numero','forma_pagos','igv','fecha_1'));
     }
     public function boletear_store(Request $request){
         // return $request;
