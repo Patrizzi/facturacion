@@ -45,7 +45,7 @@ class config_acc_guia extends Model
     public static function getSeeApi()
     {
         $pfx = file_get_contents(public_path('certificado/certificado.p12'));
-        $password = 'Tecnologia20';
+        $password = 'Ndalmaten81';
 
         $certificate = new X509Certificate($pfx, $password);
         
@@ -113,7 +113,7 @@ class config_acc_guia extends Model
                 $guia->save();
             }
         }
-
+        
         if (!$result->isSuccess()) {
             echo 'Codigo Error '.$result->getError()->getCode().'<br>';
             echo 'mensaje error '.$result->getError()->getMessage().'<br>';
@@ -123,6 +123,12 @@ class config_acc_guia extends Model
         
 
         $res = $see->getStatus($ticket);
+
+        if($res->getCode() === '98'){
+            echo 'Codigo N:&nbsp;'.$res->getError()->getCode().' Se envió la Guia de Remision a Sunat<br>';
+            echo 'Puede descargar el CDR y consultar la informacion dentro de 5 minutos<br>';
+            return $res;
+        }
         if (!$res->isSuccess()) {
             // echo "error";
             echo 'Codigo Error: '.$res->getError()->getCode().'<br>';

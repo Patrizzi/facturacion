@@ -218,8 +218,12 @@
                     </div>
                     <div role="tabpanel" id="tab-4" class="tab-pane">
                         <div class="panel-body">
-                            <div class="table-responsive">
-                                <div class="table-responsive">
+                            <div class="table-responsive" id="ibox2">
+                                <div class="ibox-content">
+                                    <div class="sk-spinner sk-spinner-double-bounce">
+                                        <div class="sk-double-bounce1"></div>
+                                        <div class="sk-double-bounce2"></div>
+                                    </div>
                                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                                         <thead>
                                             <tr>
@@ -623,7 +627,7 @@
     //* REMISION MANUAL
     function envio_guia_manual(codigo){
         // console.log(codigo.val());
-        $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+        $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
         $('.nav-link').addClass('disabled');
         var value_check =  codigo.value;
         console.log(value_check);
@@ -722,7 +726,7 @@
         }else{
             $('#exampleModal_M').modal({backdrop: 'static', keyboard: false});
             $("#exampleModal_M").modal("show");
-            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
             submit_remision_m_click(0,cant_checks);
         }
         
