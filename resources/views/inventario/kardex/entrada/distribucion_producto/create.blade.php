@@ -25,9 +25,20 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox">
+				<div class="ibox-title">
+					<div class="row">
+						<div class="col-sm-12 text-right" >
+							Generar Guia de Remision <div class="switch-button">
+								<input type="text" name="estado" value="on" hidden="hidden">
+								<input type="checkbox" name="estado" class="js-switch1"   @if()  @else checked @endif />
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="ibox-content">
 					<form action="{{ route('kardex-entrada-Distribucion.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
 						@csrf
+						<input type="hidden" name="past1" id="" value="view_create">
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Motivo:</label>
 							<div class="col-sm-4">
@@ -142,7 +153,14 @@ span.select2.select2-container.select2-container--default{
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- Switchery -->
+<link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+<script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
+<script>
+    var elem1 = document.querySelector('.js-switch1');
+    var switchery = new Switchery(elem1, { color: '#4cc0f7' });
+</script>
 <script type="text/javascript">
 	$(".select2_demo_3").select2({
 		placeholder: "Seleccionar Producto",

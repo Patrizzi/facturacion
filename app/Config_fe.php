@@ -44,6 +44,7 @@ use Greenter\XMLSecLibs\Certificate\X509ContentType;
 // RUC: 20000000001
 // Usuario: MODDATOS
 // Contraseña: moddatos
+//DATA DE CPE SUNAT DOC https://cpe.sunat.gob.pe/node/88
 
 class Config_fe extends Model
 {
