@@ -457,14 +457,16 @@ class Config_fe extends Model
 
         if(strtolower($boleta->cliente->documento_identificacion) == "Dni" ){
             $tipo_doc = '01';
+            $razon_social = $boleta->cliente->nombre;
         }else{
             $tipo_doc = '07';
+            $razon_social = $boleta->cliente->empresa;
         }
         // Cliente
         $client = (new Client())
         ->setTipoDoc('01')   //pagina 42 del pdf sunat 2.1
         ->setNumDoc($tipo_doc) //ruc del receptor
-        ->setRznSocial($boleta->cliente->empresa); //nombre empresa
+        ->setRznSocial($razon_social); //nombre empresa
 
         // Emisor
         $address = new Address();
