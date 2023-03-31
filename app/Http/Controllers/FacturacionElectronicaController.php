@@ -270,7 +270,7 @@ class FacturacionElectronicaController extends Controller
         $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
         
         //cambio de factura electronica - en caso sea todo exitoso
-        // $factura->f_electronica=1;
+        $factura->f_electronica=1;
         $factura->save();
 
         return $msg;
