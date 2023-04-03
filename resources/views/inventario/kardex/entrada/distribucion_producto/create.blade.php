@@ -25,123 +25,127 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox">
-				<div class="ibox-title">
-					<div class="row">
-						<div class="col-sm-12 text-right" >
-							Generar Guia de Remision <div class="switch-button">
-								<input type="text" name="estado" value="on" hidden="hidden">
-								<input type="checkbox" name="estado" class="js-switch1"   @if()  @else checked @endif />
+				<form action="{{ route('kardex-entrada-Distribucion.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+				@csrf
+					<div class="ibox-title">
+						<div class="row">
+							<div class="col-sm-12 text-right" >
+								<div class="switch-button">
+									Generar Guia de Remision &nbsp;&nbsp;
+									<input type="text" name="estado" value="on" hidden="hidden">
+									<input type="checkbox" name="estado_check" class="js-switch1"   @if($check_config->estado == 1) checked  @endif/>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="ibox-content">
-					<form action="{{ route('kardex-entrada-Distribucion.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-						@csrf
-						<input type="hidden" name="past1" id="" value="view_create">
-						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Motivo:</label>
-							<div class="col-sm-4">
-								<input type="text" value="Distribucion a Sucursales" readonly="" class="form-control" name="motivo" required="required">
+					<div class="ibox-content">
+							<input type="hidden" name="past1" id="" value="view_create">
+							<div class="form-group row ">
+								<label class="col-sm-2 col-form-label" >Motivo:</label>
+								<div class="col-sm-4">
+									<input type="text" value="Distribucion a Sucursales" readonly="" class="form-control" name="motivo" required="required">
+								</div>
+								<label class="col-sm-2 col-form-label" >Almacen:</label>
+								<div class="col-sm-4">
+									<select class="form-control" name="almacen" id="almacen" onchange="changue_almc()" required>
+										<option value="">Seleccionar Almacen</option>
+										@foreach($almacenes as $almacen)
+										<option value="{{$almacen->id}} \ {{$almacen->nombre}}">{{$almacen->abreviatura}} / {{$almacen->descripcion}}</option>
+										@endforeach
+									</select>
+								</div>
 							</div>
-							<label class="col-sm-2 col-form-label" >Almacen:</label>
-							<div class="col-sm-4">
-								<select class="form-control" name="almacen" id="almacen" onchange="changue_almc()" required>
-									<option value="">Seleccionar Almacen</option>
-									@foreach($almacenes as $almacen)
-									<option value="{{$almacen->id}} \ {{$almacen->nombre}}">{{$almacen->abreviatura}} / {{$almacen->descripcion}}</option>
-									@endforeach
-								</select>
+							<div class="row ">
+								<label class="col-sm-2 col-form-label" >Punto de Partida:</label>
+								<div class="col-sm-4">
+									<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
+								</div>
+								<label class="col-sm-2 col-form-label" >Punto de Llegada:</label>
+								<div class="col-sm-4">
+									<input class="form-control" name="llegada" id="llegada" readonly>
+								</div>
 							</div>
-						</div>
-						<div class="row ">
-							<label class="col-sm-2 col-form-label" >Punto de Partida:</label>
-							<div class="col-sm-4">
-								<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
+							<div class="form-group row ">
+								
+								{{-- <label class="col-sm-2 col-form-label" >Punto de Partida:</label>
+								<div class="col-sm-4">
+									<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
+								</div> --}}
 							</div>
-							<label class="col-sm-2 col-form-label" >Punto de Llegada:</label>
-							<div class="col-sm-4">
-								<input class="form-control" name="llegada" id="llegada" readonly>
+							<div class="form-group row ">
+								<label class="col-sm-2 col-form-label" >Categoria:</label>
+								<div class="col-sm-4">
+									<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
+								</div>
+								<label class="col-sm-2">Observaciones:</label>
+								<div class="col-sm-4" style="margin-bottom: 15px">
+									<textarea name="observacion" class="form-control" id="" placeholder="..." ></textarea>
+								</div>
 							</div>
-						</div>
-						<div class="form-group row ">
-							
-							{{-- <label class="col-sm-2 col-form-label" >Punto de Partida:</label>
-							<div class="col-sm-4">
-								<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
-							</div> --}}
-						</div>
-						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Categoria:</label>
-							<div class="col-sm-4">
-								<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
-							</div>
-							<label class="col-sm-2">Observaciones:</label>
-							<div class="col-sm-4" style="margin-bottom: 15px">
-								<textarea name="observacion" class="form-control" id="" placeholder="..." ></textarea>
-							</div>
-						</div>
-						<table cellspacing="0" class="table table-striped " width="100%">
-							<thead>
-								<tr>
-									<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-									<th style="width: auto">Producto</th>
-									<th style="width: auto">Stock</th>
-									<th style="width: 100px">Unidades</th>
-									<th style="width: 150px">Cantidad</th>
-									<th style="width: 150px">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><input type='checkbox' class="case" id="form_distribucion"></td>
-									<td>
-										<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
-											<option></option>
-											@foreach($productos as $producto)
-											<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
-											@endforeach
-										</select>
-										<input type="hidden" value="" id="registro_opt0" name="registro_opt[]" class="registro_opt">
-									</td>
-									<td>
-										<input type='text' id='stock0' disabled="" name='stock[]' class="stock0 form-control" required/>
-									</td>
-									<td><input type="text" class="monto0 form-control" id="unidades0" name="unidades[]" value="1" onkeyup="multi(0);"></td>
-									<td><input type='text' id='cantidad0' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
-									<td><input type='text' id='total0' name='total[]' class="total0 form-control"  readonly /></td>
-									<span id="spTotal"></span>
-								</tr>
-							</tbody>
-						</table>
-						<button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-						<button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-						<button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
-					</form>
-				</div>
+							<table cellspacing="0" class="table table-striped " width="100%">
+								<thead>
+									<tr>
+										<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
+										<th style="width: auto">Producto</th>
+										<th style="width: auto">Stock</th>
+										<th style="width: 100px">Unidades</th>
+										<th style="width: 150px">Cantidad</th>
+										<th style="width: 150px">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><input type='checkbox' class="case" id="form_distribucion"></td>
+										<td>
+											<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
+												<option></option>
+												@foreach($productos as $producto)
+												<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+												@endforeach
+											</select>
+											<input type="hidden" value="" id="registro_opt0" name="registro_opt[]" class="registro_opt">
+										</td>
+										<td>
+											<input type='text' id='stock0' disabled="" name='stock[]' class="stock0 form-control" required/>
+										</td>
+										<td><input type="text" class="monto0 form-control" id="unidades0" name="unidades[]" value="1" onkeyup="multi(0);"></td>
+										<td><input type='text' id='cantidad0' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
+										<td><input type='text' id='total0' name='total[]' class="total0 form-control"  readonly /></td>
+										<span id="spTotal"></span>
+									</tr>
+								</tbody>
+							</table>
+							<button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+							<button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+							<button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
 <style type="text/css">
 	.form-control{border-radius: 5px;}
-	input[type=number]::-webkit-inner-spin-button,
-	input[type=number]::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
-.select2-container--default .select2-selection--single { border: none;}
-.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
-span.select2.select2-container.select2-container--default{
-	width: 100% !important;
-	background-color: #FFFFFF;
-	background-image: none;
-	border-radius: 1px;
-	display: block;
-	padding: 3px 12px;
-	border: 1px solid #e5e6e7;
-}
+		input[type=number]::-webkit-inner-spin-button,
+		input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
+	.select2-container--default .select2-selection--single { border: none;}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
+	span.select2.select2-container.select2-container--default{
+		width: 100% !important;
+		background-color: #FFFFFF;
+		background-image: none;
+		border-radius: 1px;
+		display: block;
+		padding: 3px 12px;
+		border: 1px solid #e5e6e7;
+	}
+	.switch-button{
+		/* display: flex; */
+	}
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

@@ -103,15 +103,21 @@ class KardexEntradaDistribucionController extends Controller
         $usuario=User::where('id',$user_login)->first();
 
 
-        //* Creacion en primera instancia sobre activar o no el boton de Crear Guia de Remision
-        $configuracion = ConfiguracionGuiaIngresos::where('tipo_guia')->first();
-        if(isset($configuracion)){
-            //* Guardar por primera vez el estado y retornar variable que si o no
-        }else{
-            //*Si existe hacer que retorne la opcion correcta estado 0 = activo, estado = 1 no activo
-        }
-        //*
-        return view('inventario.kardex.entrada.distribucion_producto.create',compact('almacenes','productos','categorias','usuario','alm_principal'));
+         //* Creacion en primera instancia sobre activar o no el boton de Crear Guia de Remision
+         $configuracion = ConfiguracionGuiaIngresos::where('tipo_guia','kardex_distribucion')->first();
+         // return $configuracion;
+         if(!isset($configuracion)){
+             //* Guardar por primera vez el estado y retornar variable que si o no
+             $configuracion_gui = new ConfiguracionGuiaIngresos();
+             $configuracion_gui->nombre = 'remision_kardex';
+             $configuracion_gui->tipo_guia = 'kardex_distribucion';
+             $configuracion_gui->estado = 1;
+             $configuracion_gui->save();
+         }
+         $check_config =  ConfiguracionGuiaIngresos::where('tipo_guia','kardex_distribucion')->first();
+        //  return $check_config;
+         //*
+        return view('inventario.kardex.entrada.distribucion_producto.create',compact('almacenes','productos','categorias','usuario','alm_principal','check_config'));
         //   manipulacion de la vista create para kardex dependiendo de los productosgit pushgit
     }
     public function ajax_direccion_almacen(Request $request){
@@ -178,10 +184,10 @@ class KardexEntradaDistribucionController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         $var = $request->get('past1');
         // return $var;
-        if($var == "view_create"){
+        if($request->get('estado_check') != null){
+            // return "b";
             $almacen_str = $sep_esc = explode(' \ ',$request->get('almacen'));
             $almacen_receptor = Almacen::where('id',$almacen_str[0])->first();
             $almacen_principal  = Almacen::where('id', 1)->first();
@@ -211,7 +217,10 @@ class KardexEntradaDistribucionController extends Controller
             return view('inventario.kardex.guias.guia',compact('empresa','codigo_guia','almacen_receptor','observacion','productos','stock','unidad','cantidad','peso','almacen_principal','fecha_emision','motivo','vehiculo','transporte_publico','personal','fecha_emision'));
 
         }
-        $codigo_guia_doc = GuiaRTraslado::codigo_guia_tr();
+        // return "a";
+        return $request;
+
+        // $codigo_guia_doc = GuiaRTraslado::codigo_guia_tr();
         // return $request;
 
         //Variables de entorno
