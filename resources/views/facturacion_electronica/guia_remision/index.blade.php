@@ -239,7 +239,7 @@
                                         <tbody>
                                             @foreach($remision_m as $remision_manuals)
                                                 <tr>
-                                                    <td><input type="checkbox" class="case_m" value="{{$remision_manuals->id}}"></td>
+                                                    <td><input type="checkbox" class="case_m" value="{{$remision_manuals->cod_guia}}"></td>
                                                     <td>{{$j++}}</td>
                                                     <td>{{$remision_manuals->cod_guia}}</td>
                                                     <td>{{$remision_manuals->fecha_emision}}</td>
