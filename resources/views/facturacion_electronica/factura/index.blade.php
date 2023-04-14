@@ -400,7 +400,7 @@
             }    
         });
     }
-
+    
     function envio_factura_manual(codigo){
         // console.log(codigo.val());
         $('#ibox2').children('.ibox-content').toggleClass('sk-loading');

@@ -234,7 +234,7 @@ class FacturacionElectronicaController extends Controller
 
         //cambio de factura electronica - en caso sea todo exitoso
         $factura->f_electronica=1;
-        $factura->save();
+        // $factura->save();
 
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
 
@@ -285,14 +285,9 @@ class FacturacionElectronicaController extends Controller
         //BUSCA EL CODIGO ERROR
         $explod = explode(" ",$msg_r);
         $n_error = substr($explod[2], 0, 4) ;
+        $valor_pas = $explod[1];
         
-        //Estado Aceptada
-        $n_acept = substr($explod[1], 0, 8);
 
-        //XML ERRORES
-        $xml = substr($explod[1], 0);
-        // return $xml;
-        $document = Facturacion::where('codigo_fac', $codigo)->first();
         switch ($tipo) {
             case 'factura':
                 $document = Facturacion::where('codigo_fac', $codigo)->first();
@@ -301,32 +296,18 @@ class FacturacionElectronicaController extends Controller
                 $document = Facturacion_m::where('codigo_fac', $codigo)->first();
                 break;
         }
-        // return $document;
-        // return $explod;
-        if(is_numeric($n_error) ){
-            if($n_error < 1999){
-                // $document->f_electronica = 2; //2 para estado anulado
-                // $document->save();
-                $retorno = "La ".$tipo." tiene un error, en caso salga error de nuevo contactar a soporte";
-            }elseif($n_error  > 2000 && $n_error <  3999 ){
-                // $document->f_electronica = 2; //2 para estado anulado
-                // $document->save();
-                $retorno =  "La ".$tipo." no ha podido ser enviada, verifique el contenido ";
 
-            }else{ //ERROR >  4000
-                $document->f_electronica = 2; //2 para estado anulado
-                $document->save();
-                $retorno =  "La ".$tipo." error en contenido de Observacion";
+
+        if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
+            if(strpos($msg_r,'OBSERVACIONES') == true){
+                $retorno =  "Aceptada con Observaciones";
+            }else{
+                $retorno =  "Aceptada";
             }
-        }elseif($xml == "XML"){
-            //RETORNO XML ES POR ERROR VACIO O NO VALIDO EN ALGUNA PARTE, SE PUEDE MODIFICAR Y VOLVER A ENVIAR
-            $retorno = "Intente volver a enviar la ".$tipo;
-        }elseif($n_acept == "ACEPTADA"){
-            $document->f_electronica = 1;
-            $document->save();
-            $retorno =  "Enviado correctamente";
         }else{
-            $retorno = "Error no identificado en la ".$tipo.", no se registró, verifique en la Sunat";
+                $document->f_electronica = 2; //ESTADO ANULADO
+                $document->save();
+                $retorno =  "Rechazado por Sunat";
         }
         return $retorno;
     }
