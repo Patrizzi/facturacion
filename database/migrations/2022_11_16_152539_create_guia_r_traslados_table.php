@@ -21,9 +21,13 @@ class CreateGuiaRTrasladosTable extends Migration
             $table->integer('tipo_transporte')->nullable();
             $table->string('fecha_emision');
             $table->string('fecha_entrega')->nullable();
-            $table->string('almacen_receptor');
-            $table->string('almacen_emisor');
-            $table->string('observaciones');
+            // $table->string('');
+            $table->unsignedBigInteger('almacen_emisor')->nullable();
+            $table->foreign('almacen_emisor')->references('id')->on('almacen')->onDelete('cascade');
+            $table->unsignedBigInteger('almacen_receptor')->nullable();
+            $table->foreign('almacen_receptor')->references('id')->on('almacen')->onDelete('cascade');
+            
+            $table->string('observaciones')->nullable();
             $table->boolean('estado')->default('0');
 
             $table->timestamps();

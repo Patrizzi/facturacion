@@ -30,6 +30,7 @@
                                     <th>Cantidad de Productos</th>
                                     <th>Cantidad Distribuida</th>
                                     <th>Almacen</th>
+                                    <th>Guia de Remision</th>
                                     <th>Ver</th>
                                     {{-- <th>Anular</th> --}}
                                 </tr>
@@ -43,6 +44,7 @@
                                 <td>{{$cantidad_prod[$index]}} @if($cantidad_prod[$index] > 1 ) productos @else producto @endif</td>
                                 <td>{{$cantidad_tot[$index]}} items </td>
                                 <td>{{$kardex_distribuciones->almacen->nombre}}</td>
+                                <td>{{$kardex_distribuciones->cod_guia_remisio}}</td>
                                 <td><a href="{{ route('kardex-entrada-Distribucion.show', $kardex_distribuciones->id) }}"><button type="button" class="btn btn-s-m btn-info">VER</button></a></td>
                                 {{-- <td><button class="btn btn-secondary">Anular</button></td> --}}
                             </tr>

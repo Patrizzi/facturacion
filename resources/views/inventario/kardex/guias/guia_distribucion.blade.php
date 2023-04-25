@@ -60,7 +60,12 @@
                         </div>
                         <label class="col-sm-2 col-form-label" >Almacen Receptor:</label>
                         <div class="col-sm-4">
-                            <input type="text" readonly="" class="form-control" value="{{$almacen_receptor->nombre}} - {{$almacen_principal->direccion}}" name="almacen_receptor" required="required">
+                            <input type="text" readonly="" class="form-control" value="{{$llegada}}" name="llegada" required="required">
+                        </div>
+                        <div style="display: none">
+                            <input type="hidden" name="punto_partida" value="{{$punto_partida}}" id="">
+                            <input type="hidden" name="punto_llegada" value="{{$llegada}}" id="">
+                            <input type="hidden" name="almacen" value="{{$almacen_receptor->id}} \ {{$almacen_receptor->nombre}}" id="">
                         </div>
                     </div>
                     <div class="form-group row" id="transporte_publico" hidden="hidden">
@@ -112,7 +117,7 @@
                                 </div>
                                 <label class="col-sm-4 col-form-label" >Fecha Entrega:</label>
                                 <div class="col-sm-8" >
-                                    <input type="date" name="" class="form-control" id="" required >
+                                    <input type="date" name="fecha_entrega" class="form-control" id="" required >
                                 </div>
                             </div>
                         </div>
@@ -120,7 +125,7 @@
                             <div class="row">
                                 <label class="col-sm-4 col-form-label" >Observaciones:</label>
                                 <div class="col-sm-8">
-                                    <textarea name="" class="form-control" id="" style="height: 89px" placeholder="...">{{$observacion}}</textarea>
+                                    <textarea name="observacion" class="form-control" id="" style="height: 89px" placeholder="...">{{$observacion}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -143,12 +148,12 @@
                                 @foreach($productos as $item => $articulo)
                                 <tr>
                                     <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
-                                    <td><input type="hidden" value="{{$articulo->id}}" name="articulo[]" id="">{{$articulo->codigo_original}} - {{$articulo->nombre}}</td>
+                                    <td><input type="hidden" value="{{$articulo->id}}" name="registro_opt[]" id="">{{$articulo->codigo_original}} - {{$articulo->nombre}}</td>
                                     <td><input type="hidden" name="stock[]" value="{{$stock[$item]->stock}}">{{$stock[$item]->stock}}</td>
-                                    <td><input type="hidden" name="unidad[]" value="{{$unidad[$item]}}" id="">{{$unidad[$item]}}</td>
+                                    <td><input type="hidden" name="unidades[]" value="{{$unidad[$item]}}" id="">{{$unidad[$item]}}</td>
                                     <td><input type="hidden" name="cantidad[]" id="" value="{{$cantidad[$item]}}">{{$cantidad[$item]}}</td>
-                                    <td><input type="hidden" name="cantidad_total[]" value="{{$tot[$item] =  $unidad[$item] * $cantidad[$item]}}">{{$tot[$item] =  $unidad[$item] * $cantidad[$item]}}</td>
-                                    <td><textarea class="form-control" name="n_series[]" id="" ></textarea></td>
+                                    <td><input type="hidden" name="total[]" value="{{$tot[$item] =  $unidad[$item] * $cantidad[$item]}}">{{$tot[$item] =  $unidad[$item] * $cantidad[$item]}}</td>
+                                    <td><textarea class="form-control" name="n_series[]" id="" required ></textarea></td>
                                     <td><input type="hidden" name="peso_tot[]" value="{{$peso[$item] * $tot[$item]}}">{{$peso[$item] * $tot[$item]}}</td>
                                 </tr>
                                 @endforeach

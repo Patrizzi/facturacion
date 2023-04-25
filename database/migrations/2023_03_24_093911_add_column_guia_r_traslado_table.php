@@ -15,8 +15,14 @@ class AddColumnGuiaRTrasladoTable extends Migration
     {
         Schema::table('guia_r_traslados', function (Blueprint $table) {
             // $table->foreign('id_kardex_distribucion')->after('id');
-            $table->unsignedBigInteger('id_kardex_distribucion')->after('id')->nullable();
-            $table->foreign('id_kardex_distribucion')->references('id')->on('kardex_entrada')->onDelete('cascade');
+            $table->unsignedBigInteger('id_kardex')->after('id')->nullable();
+            $table->foreign('id_kardex')->references('id')->on('kardex_entrada')->onDelete('cascade');
+            $table->string('vehiculo_publico')->nullable()->after('tipo_transporte');
+            $table->string('conductor_id')->nullable()->after('vehiculo_publico');
+            $table->unsignedBigInteger('vehiculo_id')->nullable()->after('conductor_id');
+            $table->foreign('vehiculo_id')->references('id')->on('vehiculos')->onDelete('cascade');
+
+            
         });
     }
 

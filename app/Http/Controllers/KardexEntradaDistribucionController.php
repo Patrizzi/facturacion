@@ -37,20 +37,31 @@ class KardexEntradaDistribucionController extends Controller
     public function index()
     {
         $kardex_distribucion=Kardex_entrada::where('tipo_registro_id',"3")->get();
-        if (empty($kardex_distribucion)) {
+        // return count($kardex_distribucion);
+        if (count($kardex_distribucion) != 0) {
             // return "a";
             foreach($kardex_distribucion as $index => $kd){
+                // return $kd;
                 $cantidad_tot[$index] = kardex_entrada_registro::where('kardex_entrada_id', $kd->id)->sum('cantidad_inicial');
                 $cantidad_prod[$index] = kardex_entrada_registro::where('kardex_entrada_id', $kd->id)->count();
+                $guia_remi_kardex_dist = GuiaRTraslado::where('id_kardex',$kd->id)->first();
+                if(isset($guia_remi_kardex_dist)){
+                    $kd->cod_guia_remisio = $guia_remi_kardex_dist->cod_guia;
+                }else{
+                    $kd->cod_guia_remisio =  'Sin guia';
+                }
             }
+            
         } else {
             // return "b";
-            $cantidad_tot[] = 0 ;
-            $cantidad_prod[] = 0;
+            $cantidad_tot = 0 ;
+            $cantidad_prod = 0;
         }
         
         // return $kardex_distribucion;
         $almacen = Almacen::all();
+
+        // return kardex_entrada_registro::where('kardex_entrada_id', 96)->sum('cantidad_inicial');
         return view('inventario.kardex.entrada.distribucion_producto.index',compact('kardex_distribucion','almacen', 'cantidad_tot','cantidad_prod'));
     }
 
@@ -209,29 +220,40 @@ class KardexEntradaDistribucionController extends Controller
             }
             // return $productos;
             $codigo_guia = GuiaRTraslado::codigo_guia_tr();
+            // return  $codigo_guia;
             // $motivo_traslado = MotivoTraslado::all();
             $vehiculo = Vehiculo::where('estado_activo', 0)->get();
             $transporte_publico = TransportePublico::where('estado', 0)->get();
             $personal = Personal::where('id', '!=', 1)->where('licencia','!=', null)->get();
 
-            return view('inventario.kardex.guias.guia',compact('empresa','codigo_guia','almacen_receptor','observacion','productos','stock','unidad','cantidad','peso','almacen_principal','fecha_emision','motivo','vehiculo','transporte_publico','personal','fecha_emision'));
+            $punto_partida = $request->get('punto_partida');
+            $llegada = $request->get('llegada');
+
+            return view('inventario.kardex.guias.guia_distribucion',compact('empresa','codigo_guia','almacen_receptor','observacion','productos','stock','unidad','cantidad','peso','almacen_principal','fecha_emision','motivo','vehiculo','transporte_publico','personal','fecha_emision','punto_partida','llegada'));
 
         }
         // return "a";
-        return $request;
+        // return $request;
 
-        // $codigo_guia_doc = GuiaRTraslado::codigo_guia_tr();
+        $codigo_guia_doc = GuiaRTraslado::codigo_guia_tr();
         // return $request;
 
         //Variables de entorno
-        $almacen_input=$request->input('almacen_receptor');
-        $almacen_json=Almacen::where('direccion',$almacen_input)->first();
+        $almacen_input=$request->input('almacen');
         
+        $almacen = explode(' ',$almacen_input);
+        $almacen_json=Almacen::where('id',$almacen[0])->first();  
+        // return $almacen_json;
+        
+
+
+        // return $request;
+
         //Cantidades extraidas
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);
         //Articulos
-        $articulo_prod = $request->input('articulo');
+        $articulo_prod = $request->input('registro_opt');
         $articulo_p=count($articulo_prod);
 
         //Primer verificacion de articulos en validacion del if
@@ -302,22 +324,33 @@ class KardexEntradaDistribucionController extends Controller
 
 
             //* Guardado de la Guia de Remision Remitente (opcionasl(?))
-            $guia_tras = new GuiaRTraslado;
-            $guia_tras->id_kardex_distribucion = $kardex_entrada->id;
-            $guia_tras->cod_guia = $codigo_guia_doc;
-            $guia_tras->motivo = $kardex_entrada->motivo->nombre;
-            $guia_tras->tipo_transporte =
-            $guia_tras->fecha_emision = $request->get('fec_emision');
-            $guia_tras->fecha_entrega = 
-            $guia_tras->almacen_emision = $kardex_entrada->almacen_emisor_id;
-            $guia_tras->almacen_receptor = $kardex_entrada->almacen_recpetor_id;
-            $guia_tras->observaciones = $request->get('obsersaciones');
-            $guia_tras->estado = 0; //* ESTADO 0 = ACTIVO
-            $guia_tras->save();
+            if($request->get('past1') == 'view_store'){
+                $tipo_trans = $request->get('tipo_transporte');
+                $guia_tras = new GuiaRTraslado;
+                $guia_tras->id_kardex = $kardex_entrada->id;
+                $guia_tras->cod_guia = $codigo_guia_doc;
+                $guia_tras->motivo = $kardex_entrada->motivo->nombre;
+                
+                $guia_tras->tipo_transporte = $tipo_trans;
+                if ($tipo_trans == 1) {
+                    $guia_tras->vehiculo_publico = $request->get('vehiculo_publico');
+                } elseif ($tipo_trans == 2) {
+                    $guia_tras->vehiculo_id = $request->get('vehiculo');
+                    $guia_tras->conductor_id = $request->get('conductor');
+                }
+                
+                $guia_tras->fecha_emision = $request->get('fec_emision');
+                $guia_tras->fecha_entrega = $request->get('fecha_entrega');
+                $guia_tras->almacen_emisor = 1;
+                $guia_tras->almacen_receptor = $almacen_json->id;
+                $guia_tras->observaciones = $request->get('observaciones');
+                $guia_tras->estado = 0; //* ESTADO 0 = ACTIVO
+                $guia_tras->save();
+            }
 
            
             //contador de valores de articulos (re verificacion)
-            $articulo = $request->input('articulo');
+            $articulo = $request->input('registro_opt');
             $count_articulo=count($articulo);
 
             $cantidad= $request->input('cantidad');
@@ -327,18 +360,19 @@ class KardexEntradaDistribucionController extends Controller
                 for($i=0;$i<$count_articulo;$i++){
 
                      //* KARDEX REGISTRO para documento
-                    // $kardex_reg = kardex_entrada_registro::where('kardex_entrada_id',$kardex_entrada->id)->get();
-                    $guia_tra_reg = new guia_r_traslado_registro();
-                    $guia_tra_reg->id_guia_r_traslado = $guia_tras->id;
-                    $guia_tra_reg->producto_id = $articulo_prod[$i];
-                    $guia_tra_reg->stock = $request->get('stock')[$i];
-                    $guia_tra_reg->unidad = $request->get('cantidad')[$i];
-                    $guia_tra_reg->cantidad = $request->get('stock')[$i];
-                    $guia_tra_reg->cantidad_total = $request->get('cantidad_total')[$i];
-                    $guia_tra_reg->numero_series = $request->get('n_series')[$i];
-                    $guia_tra_reg->peso = $request->get('peso_tot')[$i];
-                    $guia_tra_reg->save();
-            
+                    
+                    if($request->get('past1') == 'view_store'){
+                        $guia_tra_reg = new guia_r_traslado_registro();
+                        $guia_tra_reg->id_guia_r_traslado = $guia_tras->id;
+                        $guia_tra_reg->producto_id = $articulo_prod[$i];
+                        $guia_tra_reg->stock = $request->get('stock')[$i];
+                        $guia_tra_reg->unidad = $request->get('unidades')[$i];
+                        $guia_tra_reg->cantidad = $request->get('cantidad')[$i];
+                        $guia_tra_reg->cantidad_total = $request->get('total')[$i];
+                        $guia_tra_reg->numero_series = $request->get('n_series')[$i];
+                        $guia_tra_reg->peso = $request->get('peso_tot')[$i];
+                        $guia_tra_reg->save();
+                    }
                     //Creacion del nuevo registro de kardex entrada
                     $kardex_entrada_registro=new kardex_entrada_registro();
                     $kardex_entrada_registro->kardex_entrada_id=$kardex_entrada->id;
@@ -347,7 +381,9 @@ class KardexEntradaDistribucionController extends Controller
                     $kardex_entrada_registro->precio_nacional=0;
                     $kardex_entrada_registro->precio_extranjero=0;
                     $kardex_entrada_registro->cambio=$cambio->compra;
+                    $kardex_entrada_registro->unidad=$request->get('unidades')[$i];
                     $kardex_entrada_registro->cantidad=$request->get('cantidad')[$i];
+                    $kardex_entrada_registro->unidad_cantidad=$request->get('unidades')[$i] *  $request->get('cantidad')[$i];
                     $kardex_entrada_registro->estado=1;
                     // $kardex_entrada_registro->estado_devolucion;
                     $kardex_entrada_registro->tipo_registro_id=3;
@@ -434,10 +470,29 @@ class KardexEntradaDistribucionController extends Controller
       $kardex_entradas=Kardex_entrada::find($id);
       $kardex_entradas_registros=kardex_entrada_registro::where('kardex_entrada_id',$id)->get();
       $almacen = Almacen::where('principal','1')->first();
-      return view('inventario.kardex.entrada.distribucion_producto.show',compact('kardex_entradas','kardex_entradas_registros','mi_empresa','moneda_nacional','moneda_extranjera','almacen'));
+      $guia_r_traslado = GuiaRTraslado::where('id_kardex', $kardex_entradas->id)->first();
+      if(isset($guia_r_traslado)){
+        $guia_r_tras_reg = guia_r_traslado_registro::where('id_guia_r_traslado', $guia_r_traslado->id )->get();
+      }else{
+        $guia_r_traslado = [0];
+        $guia_r_tras_reg = [0,0];
+      }
+      return view('inventario.kardex.entrada.distribucion_producto.show',compact('kardex_entradas','kardex_entradas_registros','mi_empresa','moneda_nacional','moneda_extranjera','almacen','guia_r_traslado','guia_r_tras_reg'));
       // return $kardex_entradas;
     }
 
+    public function print($id){
+        $mi_empresa=Empresa::first();
+        $moneda_nacional=Moneda::where('id','1')->first();
+        $moneda_extranjera=Moneda::where('id','2')->first();
+        $kardex_entradas=Kardex_entrada::find($id);
+        $kardex_entradas_registros=kardex_entrada_registro::where('kardex_entrada_id',$id)->get();
+        $almacen = Almacen::where('principal','1')->first();
+        $guia_r_traslado = GuiaRTraslado::where('id_kardex', $kardex_entradas->id)->first();
+        $guia_r_tras_reg = guia_r_traslado_registro::where('id_guia_r_traslado', $guia_r_traslado->id )->get();
+        return view('inventario.kardex.guias.guia_distr_print',compact('kardex_entradas','kardex_entradas_registros','mi_empresa','moneda_nacional','moneda_extranjera','almacen','guia_r_traslado','guia_r_tras_reg'));
+
+    }
     /**
      * Show the form for editing the specified resource.
      *
