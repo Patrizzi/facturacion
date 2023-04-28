@@ -197,7 +197,7 @@
                             </select>
                         </div>
                         {{-- Moneda --}}
-                        <label id="this_none_moneda" class="col-sm-1 col-form-label"
+                        <label id="moneda_1" class="col-sm-1 col-form-label"
                             @foreach($config as $confi_create_blade) 
                                 @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
                                     hidden 
@@ -205,7 +205,7 @@
                             @endforeach>
                             Moneda:
                         </label>
-                        <div class="col-sm-5" id="this_display_moneda" 
+                        <div class="col-sm-5" id="moneda_2" 
                             @foreach($config as $confi_create_blade) 
                                 @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
                                     hidden 
@@ -215,7 +215,7 @@
                                 <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
                                 <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
                                 <div class="col-sm-5" style="margin-top: 0px !important" >
-                                    <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                                    <input type="text" name="moneda" id="moneda_nam" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
                                 </div>
 
                                 <div class="col-sm-5 button_money" style="margin-top: 0px !important">
@@ -483,6 +483,7 @@
     }
 
     function ConfiguracionSelector(parameters) {
+        console.log(parameters.id);
         var configuracion_seleccionado = parameters.id;
 
         var data1 = document.getElementById(configuracion_seleccionado+"_1");
@@ -1022,7 +1023,7 @@
                 // document.getElementById("moneda_id").value = msg.id;
                 // document.getElementById("moneda").value = msg.nombre;
                 $('[id="moneda_id"]').val(msg.id);
-                $('[id="moneda"]').val(msg.nombre);
+                $('[id="moneda_nam"]').val(msg.nombre);
                 $(`#button_changeMoney`).html(msg.other);
                 if(status==1){
                     status=0;

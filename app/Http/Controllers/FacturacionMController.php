@@ -24,6 +24,8 @@ use App\Banco;
 use App\Cuotas_credito;
 use App\Codigo_guia_almacen;
 use App\Facturacion_registro;
+use App\Nota_Credito;
+use App\Nota_Debito;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 
@@ -38,7 +40,12 @@ class FacturacionMController extends Controller
     {
         $facturacion=Facturacion_m::all();
         $igv = Igv::first();
-        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv'));
+        
+        foreach ($facturacion as $key => $factura) {
+            $nota_credito[$key] = Nota_Credito::where('facturacion_m_id', $factura->id)->first();
+            $nota_debito[$key] = Nota_Debito::where('facturacion_m_id', $factura->id)->first();
+        }
+        return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv','nota_credito','nota_debito'));
     }
 
     /**

@@ -134,6 +134,8 @@
                                         <th>Cliente</th>
                                         <th>Ruc/DNI</th>
                                         <th>Tipo</th>
+                                        <th>XML</th>
+                                        <th>ZIP</th>
                                         <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                     </tr>
                                 </thead>
@@ -147,33 +149,31 @@
                                             <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito_enviado->nota_i_facturacion->id)}}">{{$n_credito_enviado->nota_i_facturacion->codigo_fac}}</a></td>
                                             <td>{{$n_credito_enviado->nota_i_facturacion->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_facturacion->cliente->numero_documento}}</td>
+                                            <td>Factura</td>
                                         @elseif($n_credito_enviado->boleta_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito_enviado->nota_i_boleta->id)}}">{{$n_credito_enviado->nota_i_boleta->codigo_boleta}}</a></td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
+                                            <td>Boleta</td>
                                         @elseif($n_credito_enviado->boleta_m_id !=NULL)
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito_enviado->nota_i_boleta_manual->id)}}">{{$n_credito_enviado->nota_i_boleta_manual->codigo_boleta}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                            <td>Boleta Manual</td>
                                         @else
                                             <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                             <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito_enviado->nota_i_fac_manual->id)}}">{{$n_credito_enviado->nota_i_fac_manual->codigo_fac}}</td>
                                             <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
                                             <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                            <td>Factura Manual</td>
                                         @endif
-                                        
                                         <td>
-                                            @if($n_credito_enviado->facturacion_id !=NULL)
-                                                Factura
-                                            @elseif($n_credito_enviado->boleta_id !=NULL)
-                                                Boleta
-                                            @elseif($n_credito_enviado->boleta_m_id !=NULL)
-                                                Boleta Manual
-                                            @else
-                                                Factura Manual
-                                            @endif
+                                            <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.xml" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                         </td>
                                         <td>
                                             <center>

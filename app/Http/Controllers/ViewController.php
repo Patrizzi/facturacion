@@ -223,7 +223,6 @@ class ViewController extends Controller
     }else{
       array_multisort(array_column($array_prod_all, "cantidad"), SORT_DESC, $array_prod_all);
     }
-    
     // return $array_prod_all;
     return view('home', compact('empresa','return_tot_fact','return_tot_bol','return_kardex','return_kardex_ext','array_prod_all'));
   }

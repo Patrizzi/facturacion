@@ -28,6 +28,8 @@ use App\Tipo_operacion_f;
 use App\Ventas_registro;
 use App\Kardex_entrada;
 use App\kardex_entrada_registro;
+use App\Nota_Credito;
+use App\Nota_Debito;
 use App\Stock_almacen;
 use App\Stock_producto;
 use Carbon\Carbon;
@@ -52,13 +54,18 @@ class FacturacionController extends Controller
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         $facturacion=Facturacion::all();
+        foreach ($facturacion as $key => $factura) {
+            $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
+            $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura->id)->first();
+        }
+        // return $nota_credito;
         $igv = Igv::first();
         $user_login =auth()->user();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
         // return $facturacion;
-        return view('transaccion.venta.facturacion.index', compact('facturacion','user_login','conteo_almacen','almacen','almacen_primero','igv'));
+        return view('transaccion.venta.facturacion.index', compact('facturacion','user_login','conteo_almacen','almacen','almacen_primero','igv','nota_credito','nota_debito'));
     }
 
     /**

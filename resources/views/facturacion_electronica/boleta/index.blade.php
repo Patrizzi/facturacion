@@ -12,6 +12,10 @@
                     <a class="alert-link" href="#">{{ session('successMsg') }}</a>.
                 </div>
                 @endif
+                {{-- MENSAJE DEL AJAX PARA LAS FACTURAS INDIVIDUALES --}}
+                <div id="msg_individual" class="">
+
+                </div>
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
                         <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Boletas</a></li>
@@ -22,7 +26,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
-                                <div class="table-responsive">
+                                <div class="table-responsive" id="ibox1">
                                     <div class="ibox-content">
                                         <div class="sk-spinner sk-spinner-double-bounce">
                                             <div class="sk-double-bounce1"></div>
@@ -58,11 +62,12 @@
                                                     <td>{{$boleta->fecha_vencimiento }}</td>
                                                     <td>
                                                         <center>
-                                                            <form action="{{route('facturacion_electronica.boleta_sunat')}}" method="POST">
+                                                            {{-- <form action="{{route('facturacion_electronica.boleta_sunat')}}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="boleta_id" value="{{$boleta->id}}">
                                                                 <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            </form> --}}
+                                                            <button type="button" class="btn btn-success btn-circle btn-ls boleta_ind" id="boleta_ind" value="{{$boleta->codigo_boleta}}" onclick="envio_boleta(this)"><i class="fa fa-cloud-upload" ></i></button>
                                                         </center>
                                                     </td>
                                                 </tr>
@@ -127,7 +132,7 @@
                         </div>
                         <div role="tabpanel" id="tab-3" class="tab-pane show">
                             <div class="panel-body">
-                                <div class="table-responsive">
+                                <div class="table-responsive" id="ibox2">
                                     <div class="ibox-content">
                                         <div class="sk-spinner sk-spinner-double-bounce">
                                             <div class="sk-double-bounce1"></div>
@@ -158,11 +163,13 @@
                                                     <td>{{$boleta_m->fecha_vencimiento }}</td>
                                                     <td>
                                                         <center>
-                                                            <form action="{{route('facturacion_electronica.boleta_m_e')}}" method="POST">
+                                                            {{-- <form action="{{route('facturacion_electronica.boleta_m_e')}}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="boleta_id" value="{{$boleta_m->id}}">
                                                                 <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            </form> --}}
+                                                            <button type="button" class="btn btn-success btn-circle btn-ls boleta_ind" id="boleta_ind" value="{{$boleta_m->codigo_boleta}}" onclick="envio_boleta_m(this)"><i class="fa fa-cloud-upload" ></i></button>
+
                                                         </center>
                                                     </td>
                                                 </tr>
@@ -170,7 +177,7 @@
                                             </tbody>
                                             <tfooter >
                                                 <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                                <td align="center"><button type="button" class="btn btn-primary" id="boleta_elec_m_all">Enviar</button></td>
+                                                <td align="center"><button type="button" class="btn btn-primary" id="boleta_elec_all_m">Enviar</button></td>
                                             </tfooter>
                                         </table>
                                     </div>
@@ -301,6 +308,7 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+
 <!-- Page Scripts -->
 <script>
     $(document).ready(function(){
@@ -313,16 +321,73 @@
     });
     function select_all_boleta() {
         $('input[class=case]:checkbox').each(function () {
-            // console.log($('input[class=check_all]:checkbox:checked'));
             if ($('input[class=check_all_boleta]:checkbox:checked').length == 0) {
-                // console.log("a");
                 $(this).prop("checked", false);
             } else {
-                // console.log("b");
                 $(this).prop("checked", true);
             }
         });
     }
+    function select_all_boleta_m() {
+        $('input[class=case2]:checkbox').each(function () {
+            if ($('input[class=check_all_boleta_m]:checkbox:checked').length == 0) {
+                $(this).prop("checked", false);
+            } else {
+                $(this).prop("checked", true);
+            }
+        });
+    }
+    // BOlETA ENVIO
+    function envio_boleta(codigo){
+        $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+        $('.nav-link').addClass('disabled');
+        var value_check =  codigo.value;
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.boleta_elec_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_bol': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                revision(value_check, response, 'boleta');
+                inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+    }
+    $('#boleta_elec_all').on('click', function(){
+        var cant_checks =  $('input[class=case]:checkbox:checked').length;
+        if(cant_checks == 0){
+            console.log("ninguno marcado");
+        }else{
+            $('#exampleModal').modal({backdrop: 'static', keyboard: false});
+            $("#exampleModal").modal("show");
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            submit_boleta_click(0,cant_checks);
+        }
+        
+    });
     function submit_boleta_click(repetir,maximo)
     {
         if ( repetir < maximo ){
@@ -337,20 +402,22 @@
                 success: function (response) {
                     var salt = response. replace(/(\r\n|\n|\r)/gm, "") 
                     var result = salt.substr(0,13);
-                    console.log(result);
+                    // console.log(result);
                     if(result  == "Codigo Error:"){
                         var data = `
                             <div class="alert alert-danger">
-                                <a class="alert-link" href="#">Error N°  `+value_check+' <br> '+response+`</a>
+                                <a class="alert-link" href="#" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</a>
                             </div>
                         `;
                     }else{
                         var data = `
                             <div class="alert alert-success">
-                                <a class="alert-link" href="#">`+response+`</a>
+                                <a class="alert-link" href="#" id="`+value_check+`">`+response+`</a>
                             </div>
                         `;
                     }
+                    console.log('b');
+                    revision(value_check, response, 'boleta');
                     $('#msg_bole_el').append( data );
                     repetir++;
                     submit_boleta_click(repetir, maximo);
@@ -360,38 +427,78 @@
             $('.modal-footer').removeAttr( 'style' );
         }
     }
-    $('#boleta_elec_all').on('click', function(){
-        var cant_checks =  $('input[class=case]:checkbox:checked').length;
-        console.log(cant_checks)
-        // var max_menos = cant_checks -1;
-        if(cant_checks == 0){
-            console.log("ninguno marcado");
-        }else{
-            $('#exampleModal').modal({backdrop: 'static', keyboard: false});
-            $("#exampleModal").modal("show");
-            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-            submit_boleta_click(0,cant_checks);
-        }
-        
-    });
-    $('#cerrar_modal').on('click', function(){
-        location.reload();
-    });
-    //BOLETA MANUAL
-    
-    function select_all_boleta_m() {
-        $('input[class=case2]:checkbox').each(function () {
-            // console.log($('input[class=check_all]:checkbox:checked'));
-            if ($('input[class=check_all_boleta_m]:checkbox:checked').length == 0) {
-                // console.log("a");
-                $(this).prop("checked", false);
-            } else {
-                // console.log("b");
-                $(this).prop("checked", true);
-            }
+    function revision(codigo, msg, tipo){
+        console.log('a');
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.validacion_sunat_boleta') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'tipo': tipo,
+                'codigo_bol': codigo,
+                'msg': msg,
+            },
+            success: function (response) {
+                var data2 = `<p style="margin-bottom: 0px">`+response+`</p>`
+                $(`#`+codigo+``).append( data2 );
+            }    
         });
     }
-    function submit_boleta_manual_click(repetir,maximo)
+    function inv_close(){
+        $(document).ready(function(){
+            $("#myAlert").bind('closed.bs.alert', function(){
+                location.reload();
+            })
+        });  
+        $('[data-toggle="popover"]').popover();
+        const myTimeout = setTimeout(click, 5000);
+    }
+    function click(){
+        console.log("click");
+        $('[data-toggle="popover"]').popover();
+        $('#cerrar_popup').trigger('click');
+    }
+
+    //BOLETA MANUAL
+    function envio_boleta_m(codigo){
+        $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+        $('.nav-link').addClass('disabled');
+        var value_check =  codigo.value;
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'codigo_bol': value_check,
+            },
+            success: function (response) {
+                var salt = response.replace(/(\r\n|\n|\r)/gm, "") 
+                var result = salt.substr(0,13);
+                // console.log(result);
+                if(result  == "Codigo Error:"){
+                    var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación">&times;</a> 
+                            <span class="alert-link" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</span>
+                        </div>
+                    `;
+                }else{
+                    var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="`+value_check+`">`+response+`</span>
+                        </div>
+                    `;
+                }
+                revision(value_check, response, 'boleta_manual');
+                inv_close();
+                $('#msg_individual').append( data );
+                $("#success-alert").show();
+            }    
+        });
+    }
+    function submit_boleta_click_manual(repetir,maximo)
     {
         if ( repetir < maximo ){
             var value_check =  $('input[class=case2]:checkbox:checked')[repetir].value;
@@ -405,45 +512,54 @@
                 success: function (response) {
                     var salt = response. replace(/(\r\n|\n|\r)/gm, "") 
                     var result = salt.substr(0,13);
-                    console.log(result);
+                    // console.log(result);
                     if(result  == "Codigo Error:"){
                         var data = `
                             <div class="alert alert-danger">
-                                <a class="alert-link" href="#">Error N°  `+value_check+' <br> '+response+`</a>
+                                <a class="alert-link" href="#" id="`+value_check+`">Error N°  `+value_check+' <br> '+response+`</a>
                             </div>
                         `;
                     }else{
                         var data = `
                             <div class="alert alert-success">
-                                <a class="alert-link" href="#">`+response+`</a>
+                                <a class="alert-link" href="#" id="`+value_check+`">`+response+`</a>
                             </div>
                         `;
                     }
+                    console.log('b');
+                    revision(value_check, response, 'boleta_manual');
                     $('#msg_bole_el_man').append( data );
                     repetir++;
-                    submit_boleta_manual_click(repetir, maximo);
+                    submit_boleta_click_manual(repetir, maximo);
                 }    
             });
         }else{
             $('.modal-footer').removeAttr( 'style' );
         }
     }
-    $('#boleta_elec_m_all').on('click', function(){
+    $('#boleta_elec_all_m').on('click', function(){
         var cant_checks =  $('input[class=case2]:checkbox:checked').length;
-        console.log(cant_checks)
-        // var max_menos = cant_checks -1;
         if(cant_checks == 0){
             console.log("ninguno marcado");
         }else{
             $('#exampleModal2').modal({backdrop: 'static', keyboard: false});
             $("#exampleModal2").modal("show");
-            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-            submit_boleta_manual_click(0,cant_checks);
+            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+            submit_boleta_click_manual(0,cant_checks);
         }
         
+    });
+    function click(){
+        console.log("click");
+        $('[data-toggle="popover"]').popover();
+        $('#cerrar_popup').trigger('click');
+    }
+    $('#cerrar_modal').on('click', function(){
+        location.reload();
     });
     $('#cerrar_modal2').on('click', function(){
         location.reload();
     });
+
 </script>
 @endsection

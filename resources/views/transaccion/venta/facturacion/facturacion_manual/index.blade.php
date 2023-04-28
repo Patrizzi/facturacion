@@ -50,7 +50,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach($facturacion as $facturacions)
+                                @foreach($facturacion as $index => $facturacions)
                                 <tr class="gradeX">
                                     <td>{{$facturacions->id}}</td>
                                     <td>{{$facturacions->codigo_fac}}</td>
@@ -68,8 +68,24 @@
                                     {{-- Envio a Sunat --}}
                                     <td style="text-align:center;">
                                         @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
-                                        <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
+                                            <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
                                             <span hidden>Aceptada</span>
+                                            @if ($facturacions->nota_credito != 0 )
+                                                @if ($nota_credito[$index]->n_electronica == 1)
+                                                    <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i class="fa fa-reply"></i></button>
+                                                @else
+                                                    <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i class="fa fa-reply"></i></button>
+                                                @endif
+                                                <span hidden>Nota de Credito</span>
+                                            @endif
+                                            @if ($facturacions->nota_debito != 0 )
+                                                @if ($nota_debito[$index]->n_electronica == 1)
+                                                    <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i class="fa fa-share"></i></button>
+                                                @else
+                                                    <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i class="fa fa-share"></i></button>
+                                                @endif
+                                                <span hidden>Nota de Debito</span>
+                                            @endif
                                         @elseif($facturacions->f_electronica==2)
                                             <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="Anulada"><i class="fa fa-times-circle"></i></button>
                                             <span hidden>Anulada</span>

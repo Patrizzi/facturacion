@@ -67,7 +67,9 @@
                                     {{-- Envio a Sunat --}}
                                     <td style="text-align:center;">
                                         @if($boletas->b_electronica==1) <!-- Nombre del cliente -->
-                                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                            <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                        @elseif($boletas->b_electronica=='2')
+                                            <button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button>
                                         @else
                                         <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
                                         @endif

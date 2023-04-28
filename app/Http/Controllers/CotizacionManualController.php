@@ -591,6 +591,7 @@ class CotizacionManualController extends Controller
             $cotizacion_m_est_v->op_gravada = 0;
             $cotizacion_m_est_v->op_inafecta = 0;
             $cotizacion_m_est_v->op_exonerada = 0;
+            $cotizacion_m_est_v->fecha_emision = Carbon::now()->format('d-m-Y');
             $cotizacion_m_est_v->save();
             //nuevos registros
             for ($h=0; $h < $n_r_ori_c ; $h++) { 

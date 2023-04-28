@@ -311,6 +311,7 @@ class FacturacionElectronicaController extends Controller
         }
         return $retorno;
     }
+    
     public function boleta(Request $request)
     {
         // return $request;
@@ -406,7 +407,41 @@ class FacturacionElectronicaController extends Controller
         $boleta->save();
         return $msg;
     }
+    public function validacion_sunat_boleta(Request $request){
+        //* SOLO FACTURA POR AHORA
+        $tipo = $request->tipo;
+        $msg_r = $request->msg;
+        $codigo = $request->codigo_bol;
+        // $factura = Facturacion::where('codigo_fac'.$request->codigo_fac)->first();
+        //BUSCA EL CODIGO ERROR
+        $explod = explode(" ",$msg_r);
+        $n_error = substr($explod[2], 0, 4) ;
+        $valor_pas = $explod[1];
+        
 
+        switch ($tipo) {
+            case 'boleta':
+                $document = Boleta::where('codigo_boleta', $codigo)->first();
+                break;
+            case 'boleta_manual':
+                $document = Boleta_m::where('codigo_boleta', $codigo)->first();
+                break;
+        }
+
+
+        if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
+            if(strpos($msg_r,'OBSERVACIONES') == true){
+                $retorno =  "Aceptada con Observaciones";
+            }else{
+                $retorno =  "Aceptada";
+            }
+        }else{
+                $document->f_electronica = 2; //ESTADO ANULADO
+                $document->save();
+                $retorno =  "Rechazado por Sunat";
+        }
+        return $retorno;
+    }
     // public function guia_remision(Request $request)
     // {   
     //     $guia=Guia_remision::where('g_electronica',0)->where('id',$request->factura_id)->first();
@@ -830,7 +865,7 @@ class FacturacionElectronicaController extends Controller
             //* FACTURA MANUAL
             $factura=Facturacion_m::where('id',$nota_credito->facturacion_m_id)->first();
             $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();
-            foreach($notas_creditos_registro as $i => $nota_c_registros ){
+            foreach($notas_creditos_registro as $i => $nota_c_registros ){ 
                 $n_c_cantidad[$i] = $nota_c_registros->cantidad;
                 $n_c_precio[$i] = $nota_c_registros->precio;
             }
