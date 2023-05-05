@@ -129,6 +129,7 @@ Route::group(
 		Route::get('/facturacion_electronica_boleta','FacturacionElectronicaController@index_boleta')->name('facturacion_electronica.index_boleta');
 		Route::post('/facturacion_electronica_boleta','FacturacionElectronicaController@boleta')->name('facturacion_electronica.boleta_sunat');
 		Route::post('/facturacion_electronica_boleta/send_all','FacturacionElectronicaController@boleta_elec_all')->name('facturacion_electronica.boleta_elec_all');
+		Route::post('/facturacion_electronica/validacion_boleta','FacturacionElectronicaController@validacion_sunat_boleta')->name('facturacion_electronica.validacion_sunat_boleta');
 		//boleta manual
 		Route::post('/facturacion_electronica_boleta_m','FacturacionElectronicaController@boleta_m_e')->name('facturacion_electronica.boleta_m_e');
 		Route::post('/facturacion_electronica_boleta_m/send_all','FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');

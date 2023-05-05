@@ -404,7 +404,7 @@
                                 <li>
                                     <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
                                         <div>
-                                            Tiene @if($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Guias</strong>  @endif pendientes de enviar a SUNAT
+                                            Tiene @if($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
                                         </div>
                                     </a>
                                 </li>    
@@ -414,7 +414,7 @@
                                 <li>
                                     <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
                                         <div>
-                                            Tiene @if($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Guias</strong>  @endif   pendientes de enviar a SUNAT
+                                            Tiene @if($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
                                         </div>
                                     </a>
                                 </li>    
