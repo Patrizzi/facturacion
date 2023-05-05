@@ -38,6 +38,19 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox">
+				<div class="ibox-title" style="padding: 15px 15px 8px 15px">
+					<div class="row">
+						<div class="col-sm-6" align="left">
+							<span><strong>{{Carbon\Carbon::now()->format('d/m/Y')}}</strong></span>
+						</div>
+						<div class="col-sm-6" align="left">
+							@foreach($almacenes as $almacen)
+								<span><strong>{{$almacen->abreviatura}} - {{$almacen->nombre}}</strong></span>
+								<input class="form-control" name="almacen" type="text" hidden="" value="1">
+							@endforeach
+						</div>
+					</div>
+				</div>
 				<div class="ibox-content">
 					<form action="{{ route('kardex-entrada.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="kardex_submit" >
 						@csrf
@@ -57,7 +70,7 @@
 								<input type="text" class="form-control" name="guia_remision" id="guia_remision"  value="0">
 							</div>
 						</div>
-
+						<input class="form-control" name="almacen" type="text" hidden="" value="1">
 						<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Factura:</label>
 							<div class="col-sm-4">
@@ -75,14 +88,22 @@
 						</div>
 
 						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Almacen:</label>
+							{{-- <label class="col-sm-2 col-form-label" >Almacen:</label>
 							<div class="col-sm-4">
 								@foreach($almacenes as $almacen)
 								<input class="form-control" type="text" readonly="" value="{{$almacen->abreviatura}} - {{$almacen->descripcion}}">
 								<input class="form-control" name="almacen" type="text" hidden="" value="1">
 								@endforeach
-							</select>
-						</div>
+							</select> --}}
+							<label class="col-sm-2 col-form-label" >Tipo de Transporte:</label>
+							<div class="col-sm-4">
+								<select name="transporte" required	 id="" class="form-control">
+									<option value="">Escoge el tipo de Transporte</option>
+									<option value="Transporte Privado">Transporte Privado</option>
+									<option value="Transporte Publico">Transporte Publico</option>
+								</select>
+							</div>
+						{{-- </div> --}}
 
 						<label class="col-sm-2 col-form-label"> Informaciones:</label>
 						<div class="col-sm-4">
@@ -336,20 +357,20 @@
 		$(document).on('click', '.borrar', function (event) {
 			event.preventDefault();
 			var e = document.getElementsByClassName("e").length;
-        // alert(e);
-        var fila = $(this).parents("tr");
-        var input_text_opt = fila.find('input[class="registro_opt"]').val();
-		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
-		if (e>1) {
-        	fila.closest('tr').remove();
-        	$(".addmore").prop("disabled", false);
-        }else{
-			$('.clean').val("");
-            $(".select2_demo_3").val(null).trigger("change");
-        	$(".borrar").prop("disabled", false);
-			$(".addmore").prop("disabled", false);
-        }
-    });
+			// alert(e);
+			var fila = $(this).parents("tr");
+			var input_text_opt = fila.find('input[class="registro_opt"]').val();
+			$('option[value="'+input_text_opt+'"]').prop("disabled", false);
+			if (e>1) {
+				fila.closest('tr').remove();
+				$(".addmore").prop("disabled", false);
+			}else{
+				$('.clean').val("");
+				$(".select2_demo_3").val(null).trigger("change");
+				$(".borrar").prop("disabled", false);
+				$(".addmore").prop("disabled", false);
+			}
+		});
 </script>
 <script >
 	function select_opt(b){

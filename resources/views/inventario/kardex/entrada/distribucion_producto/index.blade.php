@@ -26,17 +26,25 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Codigo</th>
+                                    <th>Fecha de Distribución</th>
+                                    <th>Cantidad de Productos</th>
+                                    <th>Cantidad Distribuida</th>
                                     <th>Almacen</th>
+                                    <th>Guia de Remision</th>
                                     <th>Ver</th>
                                     {{-- <th>Anular</th> --}}
                                 </tr>
                             </thead>
-                            <tbody><span hidden="hidden">{{$i=0}}</span>
-                             @foreach($kardex_distribucion as $kardex_distribuciones)
+                            <tbody><span hidden="hidden">{{$i=1}}</span>
+                             @foreach($kardex_distribucion as $index => $kardex_distribuciones)
                              <tr class="gradeX">
-                                <td> {{$i=$i+1}}</td>
+                                <td> {{$i++}}</td>
                                 <td>{{$kardex_distribuciones->codigo_guia}}</td>
+                                <td>{{$kardex_distribuciones->created_at->format('d/m/Y')}}</td>
+                                <td>{{$cantidad_prod[$index]}} @if($cantidad_prod[$index] > 1 ) productos @else producto @endif</td>
+                                <td>{{$cantidad_tot[$index]}} items </td>
                                 <td>{{$kardex_distribuciones->almacen->nombre}}</td>
+                                <td>{{$kardex_distribuciones->cod_guia_remisio}}</td>
                                 <td><a href="{{ route('kardex-entrada-Distribucion.show', $kardex_distribuciones->id) }}"><button type="button" class="btn btn-s-m btn-info">VER</button></a></td>
                                 {{-- <td><button class="btn btn-secondary">Anular</button></td> --}}
                             </tr>

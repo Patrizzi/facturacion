@@ -1,13 +1,14 @@
 @extends('layout')
 @section('title', 'kardex Traslado Almacen')
-{{-- @section('href_accion', route('kardex-entrada-Traslado-almacen.create'))
-@section('value_accion', 'Agregar') --}}
-@section('data-toggle', 'modal')
-@section('href_accion', '#Modal_Select_Almacen')
-@section('value_accion', 'Agregar')
-
+@if(count($almacen) == 0)
+    @section('value_accion', '#')
+    @section('href_accion', '#')
+@else
+    @section('data-toggle', 'modal')
+    @section('href_accion', '#Modal_Select_Almacen')
+    @section('value_accion', 'Agregar')
+@endif
 @section('content')
-
 <div class="modal fade" id="Modal_Select_Almacen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" >
         <div class="modal-content" >

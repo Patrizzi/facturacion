@@ -12,6 +12,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
+                <div class="ibox-title">
+                    <div >
+                        <strong>Almacen Principal - {{$almacen_1->nombre}}</strong>
+                    </div>
+                </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
@@ -21,9 +26,9 @@
                                     <th>Codigo</th>
                                     <th>Motivo</th>
                                     <th>Provedor</th>
-                                    <th>Almacen</th>
-                                    <th>Guia Remision</th>
-                                    <th>Factura</th>
+                                    <th>Fecha Subida</th>
+                                    <th>N° de G. Remision</th>
+                                    <th>N° de Factura</th>
                                     <th>Ver</th>
                                     <th>Anular</th>
                                 </tr>
@@ -35,7 +40,7 @@
                                     <td>{{$primer_registro->codigo_guia}}</td>
                                     <td>{{$primer_registro->codigo_guia}}</td>
                                     <td>{{$primer_registro->codigo_guia}}</td>
-                                    <td>{{$primer_registro->almacen->nombre}}</td>
+                                    <td>{{$primer_registro->created_at->format('d/m/Y')}}</td>
                                     <td>{{$primer_registro->codigo_guia}}</td>
                                     <td>{{$primer_registro->codigo_guia}}</td>
                                     <td><center><a href="{{ route('kardex-entrada.show', $primer_registro->id) }}"><button type="button" class="btn btn-s-m btn-primary">VER</button></a></center></td>
@@ -48,7 +53,7 @@
                                     <td>{{$kardex_entrada->codigo_guia}}</td>
                                     <td>{{$kardex_entrada->motivo->nombre}}</td>
                                     <td>{{$kardex_entrada->provedor->empresa}}</td>
-                                    <td>{{$kardex_entrada->almacen->nombre}}</td>
+                                    <td>{{$kardex_entrada->created_at->format('d/m/Y')}}</td>
                                     <td>{{$kardex_entrada->guia_remision}}</td>
                                     <td>{{$kardex_entrada->factura}}</td>
                                     <td><center><a href="{{ route('kardex-entrada.show', $kardex_entrada->id) }}"><button type="button" class="btn btn-s-m btn-primary">VER</button></a></center></td>

@@ -250,6 +250,9 @@ Route::group(
 
 		Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
 		Route::post('stock_ajax_distribucion', 'KardexEntradaDistribucionController@stock_ajax_distribucion')->name('stock_ajax_distribucion');
+		Route::get('/guia_distribucion', 'KardexEntradaDistribucionController@guia_interna')->name('guia_interna');
+		Route::post('ajax_direccion_almacen', 'KardexEntradaDistribucionController@ajax_direccion_almacen')->name('ajax_direccion_almacen');
+		
 		Route::post('stock_ajax_traslado', 'KardexEntradaTrasladoAlmacenController@stock_ajax_traslado')->name('stock_ajax_traslado');
 
 		//Llamada general de los parámetros requeridos por el articulo (producto-servicio), por medio de ajax (parameter_call)
@@ -384,8 +387,9 @@ Route::group(
 		Route::get('kardex_entrada_productos','KardexEntradaController@productos');
 
 		Route::resource('/kardex-entrada-Distribucion','KardexEntradaDistribucionController');
+		Route::get('/kardex_distribucion_guia_print/{id}','KardexEntradaDistribucionController@print')->name('kardex-distribucion.print');
 		Route::resource('/kardex-entrada','KardexEntradaController');
-		Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
+		Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada-Distribucion.destroy');
 		Route::post('/kardex-entrada/inventario-inicial','KardexEntradaController@InventarioInicial')->name('kardex-entrada.i_inicial');
 
 

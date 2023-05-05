@@ -121,6 +121,7 @@ class KardexSalidaController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         $almacen_imput=$request->input('almacen');
         $id=explode(" ",$almacen_imput);
         $almacen_json=Almacen::where('id',$id[1])->first();
