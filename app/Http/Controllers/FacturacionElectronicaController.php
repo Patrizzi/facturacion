@@ -103,7 +103,13 @@ class FacturacionElectronicaController extends Controller
         $remision_m_anulado = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',1)->get();
         $remision_m_enviados = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',0)->get();
 
-        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','remision_m','remision_m_anulado','remision_m_enviados','empresa'));
+        $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
+        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','remision_m','remision_m_anulado','remision_m_enviados','empresa','msg_ticket'));
     }
     
     public function index_nota_credito(){

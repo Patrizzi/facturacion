@@ -7,7 +7,14 @@
 @extends('layout_comunicado')
 @section('content')
 <span hidden="">{{$i=1}}{{$a=1}}{{$j=1}}{{$x=1}}{{$y=1}}{{$o=1}}</span>
+
+
 <div class="wrapper wrapper-content animated fadeInRight">
+    @if ($msg_ticket ==  0)
+        <div class="alert alert-danger">
+            <b>Por favor, ponerse en contacto con el soporte para ver el tema de Envio Guias de Remision a SUNAT</b>
+        </div>    
+    @endif
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
