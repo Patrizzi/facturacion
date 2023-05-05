@@ -122,7 +122,7 @@ class KardexEntradaDistribucionController extends Controller
              $configuracion_gui = new ConfiguracionGuiaIngresos();
              $configuracion_gui->nombre = 'remision_kardex';
              $configuracion_gui->tipo_guia = 'kardex_distribucion';
-             $configuracion_gui->estado = 1;
+             $configuracion_gui->estado = 0;
              $configuracion_gui->save();
          }
          $check_config =  ConfiguracionGuiaIngresos::where('tipo_guia','kardex_distribucion')->first();
