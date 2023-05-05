@@ -392,7 +392,7 @@
                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                    <a href="{{route('facturacion_electronica.index_guia_remision')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>
@@ -402,7 +402,7 @@
                             @if ($n_credito_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                    <a href="{{route('facturacion_electronica.index_nota_credito')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
                                         </div>
@@ -412,7 +412,7 @@
                             @if ($n_debito_view_count > 0 )
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                    <a href="{{route('facturacion_electronica.index_nota_debito')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
                                         </div>
