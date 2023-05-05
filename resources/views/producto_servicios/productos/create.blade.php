@@ -84,7 +84,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-addon">%</span>
                         </div>
-                        <input type="text"  data-toggle="tooltip" data-placement="top" title="Descuenta internamente, de forma automática" class="form-control" name="descuento1" value="0" autocomplete="off" required="required" >
+                        <input type="text"  data-toggle="tooltip" data-placement="top" title="Descuenta internamente, de forma automática" class="form-control input_valor_numerico" name="descuento1" value="0" autocomplete="off" required="required" >
                       </div>
                     </div>
                     <label class="col-sm-2 col-form-label">Desct.2:</label>
@@ -93,7 +93,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-addon">%</span>
                         </div>
-                        <input type="text" class="form-control" data-toggle="tooltip" data-placement="top" title="Descuenta de forma Manual (Cotizaciones, Facturas)" name="descuento2"  required="required" value="0" autocomplete="off" >
+                        <input type="text" class="form-control input_valor_numerico" data-toggle="tooltip" data-placement="top" title="Descuenta de forma Manual (Cotizaciones, Facturas)" name="descuento2"  required="required" value="0" autocomplete="off" >
                       </div>
                     </div>
                     <label class="col-sm-2 col-form-label">Desct.Máximo:</label>
@@ -102,7 +102,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-addon">%</span>
                         </div>
-                        <input type="text" class="form-control" name="descuento_maximo" required="required" value="0" autocomplete="off">
+                        <input type="text" class="form-control input_valor_numerico" name="descuento_maximo" required="required" value="0" autocomplete="off">
                       </div>
                     </div>
                     <label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#exampleModalCenter"></i></label>
@@ -111,7 +111,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-addon">%</span>
                         </div>
-                        <input type="text" id="sumando" class="form-control" name="utilidad" required="required" value="0" autocomplete="off">
+                        <input type="text" id="sumando" class="form-control input_valor_numerico" name="utilidad" required="required" value="0" autocomplete="off">
                       </div>
                     </div>
                     <label class="col-sm-2 col-form-label">Ud.Medida:</label>
@@ -139,7 +139,7 @@
                         </select>
                       </div>
                     </div>
-                    <label class="col-sm-2 col-form-label">garantía:</label>
+                    <label class="col-sm-2 col-form-label">Garantía:</label>
                     <div class="col-sm-4">
                       <input type="text" class="form-control" name="garantia" value="12 meses" required="required">
                     </div>
@@ -175,7 +175,7 @@
                     </div>
                     
                     <div class="col-sm-12" style="align-items: center;padding:  2% 22% 2% 22% ">
-                      <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
+                      <button type="submit" class="ladda-button btn btn-success btn-block button_guardar" >Guardar</button>
                     </div>
                   </div>
                 </div>
@@ -352,6 +352,18 @@
       document.getElementById("sumando").value = utilidad;
     }
   }
+  //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
+  $('.input_valor_numerico').on('input', function () {
+    this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+  });
+  $('.button_guardar').on('mouseenter', function () {
+    var lol = document.querySelectorAll('.input_valor_numerico');
+      lol.forEach(element => {
+        if (element.val == "" || isNaN(Number(element.value)) == true) {
+          element.value = 0;
+        }
+      });
+  });
 </script>
 
 @endsection

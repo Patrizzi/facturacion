@@ -24,15 +24,11 @@
     @endif
     <div class="row">
       <div class="col-lg-12">
-
         <div class="ibox product-detail">
           <div class="ibox-content">
-
             <div class="row">
               <div class="col-md-5">
-
                 <div class="product-images">
-
                   <div>
                     <div class="image-imitation" style="padding:0px">
                      <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
@@ -93,7 +89,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-addon">%</span>
                     </div>
-                    <input type="text" class="form-control" name="descuento" required="required" value="{{$servicios->descuento}}" >
+                    <input type="text" class="form-control input_valor_numerico" name="descuento" required="required" value="{{$servicios->descuento}}" >
                   </div>
                 </div>
                 <label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_modal"></i></label>
@@ -101,7 +97,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-addon">%</span>
                   </div>
-                  <input type="text" class="form-control" name="utilidad" required="required" value="{{$servicios->utilidad}}" >
+                  <input type="text" class="form-control input_valor_numerico" name="utilidad" required="required" value="{{$servicios->utilidad}}" id="utilidad_inpt">
                 </div>
               </div>
 
@@ -135,7 +131,7 @@
               </select>
             </div>
             <div class="col-sm-12">
-              <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
+              <button type="submit" class="ladda-button btn btn-success btn-block button_guardar" >Guardar</button>
             </div>
           </div>
         </div>
@@ -325,15 +321,16 @@ $(document).ready(function(){
       }
     }
     function calc_utilidad(){
-     var precio_sin_igv = $('#precio_sin_igv').val();
+     var precio_sin_igv = $('#key_sin_igv').val();
      var precio_venta = $('#precio_venta').val();
 
      if (!isNaN(precio_venta) || !isNaN(precio_sin_igv) ) {
       // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
       var a1 =  parseFloat(precio_venta) * 100;
       var a2 = parseFloat(a1) / parseFloat(precio_sin_igv);
+      console.log(precio_sin_igv)
       var utilidad = parseFloat(a2) - 100;
-      document.getElementById("utilidad_calc").value = utilidad;
+      document.getElementById("utilidad_inpt").value = utilidad;
       // console.log(utilidad)
     }
 
@@ -348,7 +345,7 @@ $(document).ready(function(){
   }
   function input_key(){
     var precio_venta = $('#precio_venta').val();
-    var precio_sin_igv = $('#precio_sin_igv').val();
+    var precio_sin_igv = $('#key_sin_igv').val();
     $('#key_sin_igv').val(precio_sin_igv) ;
     if(precio_venta != ""){
       calc_utilidad();
@@ -374,6 +371,17 @@ $(document).ready(function(){
         $('#sin_key').html(selectedOption.text)
         $('#venta_key').html(selectedOption.text)
       // });
+  });
+  $('.input_valor_numerico').on('input', function () {
+    this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+  });
+  $('.button_guardar').on('mouseenter', function () {
+    var lol = document.querySelectorAll('.input_valor_numerico');
+      lol.forEach(element => {
+        if (element.val == "" || isNaN(Number(element.value)) == true) {
+          element.value = 0;
+        }
+      });
   });
   </script>
   @endsection

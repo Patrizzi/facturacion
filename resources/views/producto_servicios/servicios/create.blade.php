@@ -85,7 +85,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-addon">%</span>
                         </div>
-                        <input type="text" class="form-control" name="descuento" required="required" value="0">
+                        <input type="text" class="form-control input_valor_numerico" name="descuento" required="required" value="0">
                       </div>
                     </div>
                     <label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_modal"></i></label>
@@ -94,7 +94,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-addon">%</span>
                         </div>
-                        <input type="text" class="form-control" name="utilidad" required="required" value="0" id="utilidad_calc">
+                        <input type="text" class="form-control input_valor_numerico" name="utilidad" required="required" value="0" id="utilidad_calc">
                       </div>
                     </div>
                   </div>
@@ -121,7 +121,7 @@
                       </select>
                     </div>
                     <div class="col-sm-12">
-                      <button type="submit" class="ladda-button btn btn-success btn-block" >Guardar</button>
+                      <button type="submit" class="ladda-button btn btn-success btn-block button_guardar" >Guardar</button>
                     </div>
                   </div>
                 </div>
@@ -341,6 +341,18 @@
         $('#sin_key').html(selectedOption.text)
         $('#venta_key').html(selectedOption.text)
       // });
+  });
+  //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
+  $('.input_valor_numerico').on('input', function () {
+    this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+  });
+  $('.button_guardar').on('mouseenter', function () {
+    var lol = document.querySelectorAll('.input_valor_numerico');
+      lol.forEach(element => {
+        if (element.val == "" || isNaN(Number(element.value)) == true) {
+          element.value = 0;
+        }
+      });
   });
 </script>
 @endsection
