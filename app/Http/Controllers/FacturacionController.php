@@ -57,6 +57,16 @@ class FacturacionController extends Controller
         foreach ($facturacion as $key => $factura) {
             $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
             $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura->id)->first();
+            if ($nota_credito[$key] == null) {
+                $nota_credito[$key] = null;
+            }else{
+                $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
+            }
+            if ($nota_debito[$key] == null) {
+                $nota_debito[$key] = null;
+            }else{
+                $nota_debito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
+            }
         }
         // return $nota_credito;
         $igv = Igv::first();
