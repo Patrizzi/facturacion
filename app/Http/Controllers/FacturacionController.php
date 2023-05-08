@@ -54,20 +54,28 @@ class FacturacionController extends Controller
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         $facturacion=Facturacion::all();
-        foreach ($facturacion as $key => $factura) {
-            $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
-            $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura->id)->first();
-            if ($nota_credito[$key] == null) {
-                $nota_credito[$key] = null;
-            }else{
+        if(count($facturacion) == 0){
+            $nota_credito[0] = null;
+            $nota_debito[0] = null;
+        }else{
+            foreach ($facturacion as $key => $factura) {
                 $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
-            }
-            if ($nota_debito[$key] == null) {
-                $nota_debito[$key] = null;
-            }else{
-                $nota_debito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
-            }
+                $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura->id)->first();
+                if (!isset($nota_credito[$key])) {
+                    $nota_credito[$key] = null;
+                }else{
+                    $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
+                }
+
+                if (!isset($nota_debito[$key])) {
+                    $nota_debito[$key] = null;
+                }else{
+                    $nota_debito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
+                }
         }
+        }
+        // return $facturacion;
+        
         // return $nota_credito;
         $igv = Igv::first();
         $user_login =auth()->user();
