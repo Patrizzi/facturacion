@@ -61,8 +61,9 @@ class Config_fe extends Model
         //libro: https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia%2Bxml%2Bfactura%2Bversion%202-1%2B1%2B0%20%282%29_0.pdf
         // return $guia;
         if($guia==1){
-            $guia_ex = Guia_remision::where('cod_guia', $factura->guia_remision)->first();
-            if(isset($guia_ex)){
+                $guia_ex = Guia_remision::where('cod_guia', $factura->guia_remision)->first();
+                $guia_ex_m = GuiaRemisionManual::where('cod_guia', $factura->guia_remision)->first();
+            if(isset($guia_ex) || isset($guia_ex_m)){
                 $split_g = explode('-',$factura->guia_remision);
                 $split_20 =  (int)$split_g[1];
                 $new_cod_guia = $split_g[0].'-'.$split_20;
