@@ -211,24 +211,24 @@
                                         <td>
                                             <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </td>
-                                        <td>
+                                        <td class="td_selected">
                                             <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
                                             <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                                         </td>
                                         <td>
-                                            <input type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="mult_peso(0)">
+                                            <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="mult_peso(0)">
                                         </td>
                                         <td>
-                                            <input type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required>
+                                            <input style="min-width: 100px" type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required>
                                         </td>
                                         <td>
-                                            <div class="input-group">
-                                                <input type="text" name="peso[]" step="0.01"  id="peso0" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
+                                            <div class="input-group" style="min-width: 130px">
+                                                <input  type="text" name="peso[]" step="0.01"  id="peso0" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
                                                 <div class="input-group-append">
                                                     <span class="input-group-addon">KG</span>
                                                 </div>
-                                                <input type="hidden" name="peso_view" id="peso_view0" onkeyup="sum_total()">
-                                                <input type="hidden" name="peso_ori" id="peso_ori0" onkeyup="sum_total()">
+                                                <input style="min-width: 100px" type="hidden" name="peso_view" id="peso_view0" onkeyup="sum_total()">
+                                                <input style="min-width: 100px" type="hidden" name="peso_ori" id="peso_ori0" onkeyup="sum_total()">
                                             </div>
                                         </td>
                                     </tr>
@@ -286,6 +286,11 @@
         margin: 0;
     }
     input[type=number] { -moz-appearance:textfield; }
+    @media only screen and (max-width: 1497px){
+        .td_selected > span.select2.select2-container.select2-container--default{
+            min-width: 376px !important;
+        }
+    }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -409,23 +414,23 @@
                 <td>
                     <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
-                <td>
+                <td class="td_selected">
                     <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i})" required></select>
                     <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                 </td>
                 <td>
-                    <input type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </td>
                 <td>
-                    <input type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
+                    <input style="min-width: 100px" type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
                 </td>
                 <td>
-                    <div class="input-group">
-                        <input type="text" name="peso[]" id="peso${i}" class="form-control" required step="0.01" onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
+                    <div class="input-group" style="min-width: 140px">
+                        <input  type="text" name="peso[]" id="peso${i}" class="form-control" required step="0.01" onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
                         <div class="input-group-append">
                             <span class="input-group-addon">KG</span>
                         </div>
-                        <input type="hidden" name="peso_view" id="peso_view${i}" onkeyup="sum_total()">
+                        <input style="min-width: 100px" type="hidden" name="peso_view" id="peso_view${i}" onkeyup="sum_total()">
                     </div>
                 </td>
             </tr>

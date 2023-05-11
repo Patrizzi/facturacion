@@ -70,10 +70,9 @@ class Config_fe extends Model
             }else{
                 $new_cod_guia = $factura->guia_remision;
             }
-            $valor_guia_remi = $new_cod_guia;
             $guiaRemision = (new Document())
             ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
-            ->setNroDoc($valor_guia_remi); // Serie y correlativo de la guia de remision
+            ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision
 
         }
 

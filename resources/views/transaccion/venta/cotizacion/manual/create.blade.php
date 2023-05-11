@@ -162,7 +162,7 @@
                                         <th style="width: 10px">
                                             
                                         </th>
-                                        <th >Articulo</th>
+                                        <th style="width: 100%" >Articulo</th>
                                         <th style="width:100px">Cantidad</th>
                                         <th style="width:100px">P. Sugerido</th>
                                         <th style="width:100px">Precio s/Igv </th>
@@ -177,27 +177,27 @@
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
                                         </td>
-                                        <td>
+                                        <td class="td_selected">
                                             <select class="select2_demo_3 select_change"  required="" id="articulo" onchange="inputs_campos(0),ajax(0)" name="select_articulo"></select>
                                             <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
                                             <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
                                         </td>
                                         
                                         <td>
-                                            <input style="width: 76px" type='number' min="1" id='cantidad0' name='cantidad[]' max="" class="cantidad monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
+                                            <input style="width: 100px" type='number' min="1" id='cantidad0' name='cantidad[]' max="" class="cantidad monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
+                                            <input style="width: 100px" type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='number' step="0.0000001" id='precio_s_igv0' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                            <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv0' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
                                             <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)"   autocomplete="off" />
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='number' step="0.0000001" id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
+                                            <input style="width: 100px" type='number' step="0.0000001" id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
                                         </td> 
                                         <td>
-                                            <input style="width: 76px"  type='number' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                            <input style="width: 100px"  type='number' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                         </td>
                                         <span id="spTotal"></span>
                                     </tr>
@@ -291,6 +291,15 @@
        padding: 0.75rem;
         vertical-align: top;
         border-top: 1px solid rgb(222 226 230);
+    }
+    .td_selected > span.select2.select2-container.select2-container--default{
+        width: 100%;
+    }
+    @media only screen and (max-width: 1498px){
+        .td_selected > span.select2.select2-container.select2-container--default{
+            width: 100% !important;
+            min-width: 376px !important;
+        }
     }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -426,26 +435,26 @@
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </td>";
-            <td>
+            <td class="td_selected">
                 <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
                 <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
                 <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
             </td>
             <td>
-                <input type='number' min='1' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                <input type='number' min='1' style="width: 100px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td class="full-height-scroll tooltip-demo">
-                <input type='number' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                <input type='number' style="width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
-                <input style="width: 76px" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
-                <input style="width: 76px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input style="width: 100px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td> 
             <td>
-                <input type='number' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                <input type='number' id='total${i}'  style="width: 100px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
             </td>
         </tr>
         `;

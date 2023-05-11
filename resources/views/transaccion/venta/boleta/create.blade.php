@@ -254,52 +254,51 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>
+                                        <td >
                                             <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                                         </td>
-                                        <td>
-                                        <select class="monto0 select2_demo_3 select_change" required="" id="articulo"  onchange="ajax(0)"  autocomplete="off">
-                                        </select>
-                                        <textarea  type='text' name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                                        <textarea id='numero_serie0'  name='numero_serie[]' class="form-control"  placeholder="N° de Serie" autocomplete="off" style="margin-top: 5px"></textarea>
-                                        <input style="width: 76px" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" hidden="" required  autocomplete="off"  />
-                                        <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
+                                        <td class="td_selected">
+                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo"  onchange="ajax(0)"  autocomplete="off">
+                                            </select>
+                                            <textarea  type='text' name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                            <textarea id='numero_serie0'  name='numero_serie[]' class="form-control"  placeholder="N° de Serie" autocomplete="off" style="margin-top: 5px"></textarea>
+                                            <input style="min-width: 76px" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" hidden="" required  autocomplete="off"  />
+                                            <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
 
-                                    </td>
-                                    <td>
-                                        <input type='text' id='stock0' disabled="disabled" name='stock[]' class="form-control" required  autocomplete="off"/>
-                                    </td>
-                                    <td>
-                                        <input type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
-                                    </td>
-                                    <td>
-                                        <input type='number' id='precio0' name='precio[]' disabled="disabled" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                    </td>
-                                    <td>
-                                        <div style="position: relative; " > <input class="text_des"type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required  autocomplete="off"/></div>
-
-
-                                        <div  class="div_check" >
-                                            <input class="check"  type='checkbox' id='check0' name='check[]'    onclick="multi(0)" style="" autocomplete="off"/></div>
-                                            <input type='hidden' id='check_descuento0' name='check_descuento[]'  class="form-control"  required >
-                                            <input type='hidden' id='promedio_original0' name='promedio_original[]'  class="form-control"  required >
                                         </td>
                                         <td>
-                                            <input type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
+                                            <input style="min-width: 76px" type='text' id='stock0' disabled="disabled" name='stock[]' class="form-control" required  autocomplete="off"/>
+                                        </td>
+                                        <td>
+                                            <input style="min-width: 76px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <input style="min-width: 76px" type='number' id='precio0' name='precio[]' disabled="disabled" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                        </td>
+                                        <td>
+                                            <div style="position: relative; " > <input style="min-width: 76px" class="text_des"type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required  autocomplete="off"/></div>
+                                            <div  class="div_check" >
+                                                <input style="min-width: 76px" class="check"  type='checkbox' id='check0' name='check[]'    onclick="multi(0)" style="" autocomplete="off"/>
+                                            </div>
+                                            <input style="min-width: 76px" type='hidden' id='check_descuento0' name='check_descuento[]'  class="form-control"  required >
+                                            <input style="min-width: 76px" type='hidden' id='promedio_original0' name='promedio_original[]'  class="form-control"  required >
+                                        </td>
+                                        <td>
+                                            <input style="min-width: 76px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
                                         </td>
                                         {{--                                        <td>--}}
-                                            <input type='hidden' name="1" id='comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
+                                            <input style="min-width: 76px" type='hidden' name="1" id='comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
                                         {{--                                        </td>--}}
                                         <td>
-                                            <input type='text' id='precio_unitario_comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
+                                            <input style="min-width: 76px" type='text' id='precio_unitario_comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
                                         </td>
                                         <td>
-                                            <input type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
-                                            <input type='text' id='afectacion0'  style=""  name='afectacion' disabled="disabled" class="afectacion form-control " hidden=""  required  autocomplete="off"/>
+                                            <input style="min-width: 76px" type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                            <input style="min-width: 76px" type='text' id='afectacion0'  style=""  name='afectacion' disabled="disabled" class="afectacion form-control " hidden=""  required  autocomplete="off"/>
 
                                         </td>
                                         <td>
-                                            <input style="width: 76px" type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
+                                            <input style="min-width: 76px"   type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
                                         </td>
                                         <span id="spTotal"></span>
                                     </tr>
@@ -408,6 +407,12 @@
         pointer-events: none; 
         cursor: default; 
     }
+    @media only screen and (max-width: 1497px){
+        .td_selected > span.select2.select2-container.select2-container--default{
+            /* width: 376px !important; */
+            min-width: 376px !important;
+        }
+    }
 </style>
 
 <!-- Mainly scripts -->
@@ -480,49 +485,49 @@
     $(".addmore").on('click', function () {
         var data = `[
         <tr>
-            <td>
+            <td >
                 <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
             </td>";
-            <td>
+            <td class="td_selected">
                 <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off">
                 </select>
                 <textarea type='text'   name='descripcion_item[]' class="form-control" placeholder="Descripcion de Item"  autocomplete="off" style="margin-top: 5px;"></textarea>
                 <textarea  id='numero_serie${i}' placeholder="N° de Serie"  name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px"></textarea>
-                <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden   autocomplete="off" />
-                <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
+                <input style="min-width: 76px" type='text'  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden   autocomplete="off" />
+                <input style="min-width: 76px" type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
             </td>
             <td>
-                <input type='text' id='stock${i}' name='stock[]' disabled="disabled" class="form-control" required  autocomplete="off"/>
+                <input style="min-width: 76px" type='text' id='stock${i}' name='stock[]' disabled="disabled" class="form-control" required  autocomplete="off"/>
             </td>
             <td>
-                <input type='number' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" max=""  min="1"/>
+                <input style="min-width: 76px" type='number' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" max=""  min="1"/>
             </td>
             <td>
-                <input type='text' id='precio${i}' name='precio[]' disabled="disabled" class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                <input style="min-width: 76px" type='text' id='precio${i}' name='precio[]' disabled="disabled" class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td>
                 <div style="position: relative;" >
-                    <input class="text_des"type='text' id='descuento${i}' name='descuento[]' readonly="readonly" class="" required onkeyup="multi(${i})"  autocomplete="off"/>
+                    <input style="min-width: 76px" class="text_des"type='text' id='descuento${i}' name='descuento[]' readonly="readonly" class="" required onkeyup="multi(${i})"  autocomplete="off"/>
                 </div>
                 <div  class="div_check">
-                    <input class="check"  type='checkbox' id='check${i}' name='check[]' onclick="multi(${i})" style="" autocomplete="off"/>
+                    <input style="min-width: 76px" class="check"  type='checkbox' id='check${i}' name='check[]' onclick="multi(${i})" style="" autocomplete="off"/>
                 </div>
-                <input style="width: 76px" type='hidden'id='check_descuento${i}' name='check_descuento[]' class="form-control"  required >
-                <input type='hidden' id='promedio_original${i}' name='promedio_original[]'  class="form-control"  required >
+                <input style="min-width: 76px" type='hidden'id='check_descuento${i}' name='check_descuento[]' class="form-control"  required >
+                <input style="min-width: 76px" type='hidden' id='promedio_original${i}' name='promedio_original[]'  class="form-control"  required >
             </td>
             <td>
-                <input type='text' id='precio_unitario_descuento${i}' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento${i} form-control"  required  autocomplete="off" />
+                <input style="min-width: 76px" type='text' id='precio_unitario_descuento${i}' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento${i} form-control"  required  autocomplete="off" />
             </td>
             <td>
-                <input type='hidden' name'${i}' id='comision${i}' disabled="disabled" class="form-control"  required  autocomplete="off" />
-                <input type='text' id='precio_unitario_comision${i}' disabled="disabled" class="form-control"  required  autocomplete="off" />
+                <input style="min-width: 76px" type='hidden' name'${i}' id='comision${i}' disabled="disabled" class="form-control"  required  autocomplete="off" />
+                <input style="min-width: 76px" type='text' id='precio_unitario_comision${i}' disabled="disabled" class="form-control"  required  autocomplete="off" />
             </td>
             <td>
-                <input type='text' id='total${i}' name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
-                <input type='text' id='afectacion${i}'  style="width: 76px" hidden  name='afectacion' disabled="disabled" class="afectacion form-control "  required  autocomplete="off"/>
+                <input style="min-width: 76px" type='text' id='total${i}' name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                <input style="min-width: 76px" type='text' id='afectacion${i}'  style="width: 76px" hidden  name='afectacion' disabled="disabled" class="afectacion form-control "  required  autocomplete="off"/>
             </td>
             <td>
-                <input style="width: 76px" type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
+                <input style="min-width: 76px"   type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
             </td>
         </tr>`;
         $('.tables').append(data);

@@ -304,15 +304,13 @@ class FacturacionElectronicaController extends Controller
 
 
         if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
-            if(strpos($msg_r,'OBSERVACIONES') == true){
-                $retorno =  "Aceptada con Observaciones";
-            }else{
-                $retorno =  "Aceptada";
-            }
+            $retorno =  "Aceptada por Sunat";
+        }elseif (strlen($valor_pas) == 13) {
+            $document->f_electronica = 2; //ESTADO ANULADO
+            $document->save();
+            $retorno =  "Rechazado por Sunat";
         }else{
-                $document->f_electronica = 2; //ESTADO ANULADO
-                $document->save();
-                $retorno =  "Rechazado por Sunat";
+            $retorno =  "Aceptada con Observaciones";
         }
         return $retorno;
     }
@@ -436,15 +434,15 @@ class FacturacionElectronicaController extends Controller
 
         if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
             if(strpos($msg_r,'OBSERVACIONES') == true){
-                $retorno =  "Aceptada con Observaciones";
-            }else{
-                $retorno =  "Aceptada";
-            }
+                $retorno =  "Aceptada por Sunat";
+        }elseif (strlen($valor_pas) == 13) {
+            $document->b_electronica = 2; //ESTADO ANULADO
+            $document->save();
+            $retorno =  "Rechazado por Sunat";
         }else{
-                $document->f_electronica = 2; //ESTADO ANULADO
-                $document->save();
-                $retorno =  "Rechazado por Sunat";
+            $retorno =  "Aceptada con Observaciones";
         }
+        
         return $retorno;
     }
     // public function guia_remision(Request $request)

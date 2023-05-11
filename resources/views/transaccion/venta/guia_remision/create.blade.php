@@ -160,51 +160,53 @@
                     </div>
          {{-- Fin Cabecera --}}
          {{-- Tabla Mostrito --}}
-         <table   cellspacing="0" class="table table-striped ">
-            <thead>
-                <tr>
-                    <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-                    <th style="width: 600px;font-size: 13px">Articulo</th>
-                    <th style="width: 100px;font-size: 13px">Stock</th>
-                    <th style="width: 100px;font-size: 13px">Cantidad</th>
-                    <th style="width: 500px;font-size: 13px">Numeros Series</th>
-                    <th style="width: 100px;font-size: 13px">peso</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <input type='checkbox' class="case">
-                    </td>
-                    <td>
-                        {{-- <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
-                        <datalist id="browsers2" >
-                            @foreach($productos as $index => $producto)
-                            <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$producto->peso}} {{$producto->peso}} {{$array_cantidad[$index]}} {{$array_cantidad[$index]}}">
-                                @endforeach
-                            </datalist> --}}
-                            <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
-                            <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
-                        </td>
-                        <td>
-                            <input type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
-                        </td>
-                        <td>
-                            <input type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"   required  autocomplete="off" />
-                        </td>
-                        <td>
-                            <textarea name="series[]" id="series0" required="" class="form-control" placeholder="escanear N/S"></textarea>
-                        </td>
-                        <td>
-                            <input id='peso0' name='peso[]' type="text" class="form-control" value="" readonly="readonly">
-                        </td>
-
-                        <span id="spTotal"></span>
+         <div class="table-responsive">
+            <table   cellspacing="0" class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+                        <th style="width: 600px;font-size: 13px">Articulo</th>
+                        <th style="width: 100px;font-size: 13px">Stock</th>
+                        <th style="width: 100px;font-size: 13px">Cantidad</th>
+                        <th style="width: 500px;font-size: 13px">Numeros Series</th>
+                        <th style="width: 100px;font-size: 13px">peso</th>
                     </tr>
-
-                </tbody><br>
-
-            </table>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type='checkbox' class="case">
+                        </td>
+                        <td class="td_selected">
+                            {{-- <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
+                            <datalist id="browsers2" >
+                                @foreach($productos as $index => $producto)
+                                <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$producto->peso}} {{$producto->peso}} {{$array_cantidad[$index]}} {{$array_cantidad[$index]}}">
+                                    @endforeach
+                                </datalist> --}}
+                                <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
+                                <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
+                            </td>
+                            <td>
+                                <input style="min-width: 100px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
+                            </td>
+                            <td>
+                                <input style="min-width: 100px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"   required  autocomplete="off" />
+                            </td>
+                            <td>
+                                <textarea style="min-width: 250px" name="series[]" id="series0" required="" class="form-control" placeholder="escanear N/S"></textarea>
+                            </td>
+                            <td>
+                                <input style="min-width: 100px" id='peso0' name='peso[]' type="text" class="form-control" value="" readonly="readonly">
+                            </td>
+    
+                            <span id="spTotal"></span>
+                        </tr>
+    
+                    </tbody><br>
+    
+                </table>
+         </div>
 
             <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>&nbsp;
             <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
@@ -245,6 +247,11 @@
     }
     input[type=date], input[type=datetime-local], input[type=month], input[type=time] {
         font-size: 12px;
+    }
+    @media only screen and (max-width: 1497px){
+        .td_selected > span.select2.select2-container.select2-container--default{
+            min-width: 376px !important;
+        }
     }
 </style>
 
@@ -288,21 +295,21 @@
         <td>
         <input type='checkbox' class='case'/>
         </td>";
-        <td>
+        <td class="td_selected">
         <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i});" required></select>
         <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
         </td>
         <td>
-        <input type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
+        <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
         </td>
         <td>
-        <input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  autocomplete="off"/>
+        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  autocomplete="off"/>
         </td>
         <td>
-        <textarea  id='series${i}' name='series[]' class="form-control" required placeholder="escanear N/S"></textarea>
+        <textarea style="min-width: 250px" id='series${i}' name='series[]' class="form-control" required placeholder="escanear N/S"></textarea>
         </td>
         <td>
-        <input id='peso${i}' name='peso[]' type="text" class="form-control" value="0"  readonly="readonly">
+        <input style="min-width: 100px" id='peso${i}' name='peso[]' type="text" class="form-control" value="0"  readonly="readonly">
         </td>
         </tr>`;
         $('table').append(data);

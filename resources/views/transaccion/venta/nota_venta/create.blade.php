@@ -114,7 +114,7 @@
                                 <tbody>
                                     <tr>
                                         <td><input type='checkbox' class="case"></td>
-                                        <td><input  class="form-control " list="browsers0" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,0);">
+                                        <td><input  class="form-control " list="browsers0" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,0);" style="min-width: 500px">
                                         <datalist id="browsers0">
                                             @foreach($productos as $index)
                                             <option>{{$index->nombre}} \ {{$index->descripcion}}</option>
@@ -125,17 +125,17 @@
                                         </datalist>
                                         </td>
                                         <td>
-                                            <input style="width: 96px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"  />
+                                            <input style="min-width: 96px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"  />
                                         </td>
                                         <td>
-                                            <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido0" ondblclick="copy(0)">
+                                            <input type="text" style="min-width: 96px" class="form-control" readonly id="precio_sugerido0" ondblclick="copy(0)">
                                         </td>
                                         <td>
-                                            <input style="width: 96px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                            <input style="min-width: 96px" type='text' id='precio0' name='precio[]'  class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
                                         </td>
 
                                         <td>
-                                            <input style="width: 96px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                            <input style="min-width: 96px"  type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                         </td>
                                         <span id="spTotal"></span>
                                     </tr>
@@ -310,7 +310,7 @@
         <input type='checkbox' class='case'/>
         </td>";
         <td>
-        <input  class="form-control " list="browsers${i}" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,${i});">
+        <input  class="form-control " list="browsers${i}" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,${i});" style="min-width: 500px">
         <datalist id="browsers${i}"  >
             @foreach($productos as $index)
             <option >{{$index->nombre}} \\  {{$index->descripcion}}</option>
@@ -321,16 +321,16 @@
         </datalist>
         </td>
         <td>
-        <input type='text' style="width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+        <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
         <td>
-            <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
+            <input type="text" style="min-width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
         </td>
         <td>
-        <input type='text' style="width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+        <input type='text' style="min-width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
         <td>
-        <input type='text' id='total${i}'  style="width: 96px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+        <input type='text' id='total${i}'  style="min-width: 96px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
         </td>
 
         </tr>
