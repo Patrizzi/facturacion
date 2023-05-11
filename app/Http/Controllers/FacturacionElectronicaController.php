@@ -469,7 +469,7 @@ class FacturacionElectronicaController extends Controller
 
     //     return redirect()->route('facturacion_electronica.index_guia_remision')->with('successMsg',$msg);
 
-    // }
+    }
     public function guia_remision_elec_all(Request $request){
         $remision_codigo = $request->get('codigo_remision');
         $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
