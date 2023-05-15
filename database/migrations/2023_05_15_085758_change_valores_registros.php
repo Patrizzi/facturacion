@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class ChangeValoresRegistros extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('g_remision_registros', function (Blueprint $table) {
+            $table->text('descripcion')->change();
+        });
+        Schema::table('guia_remision_m_registros', function (Blueprint $table) {
+            $table->text('descripcion')->change();
+        });
+        Schema::table('nota_venta_registro', function (Blueprint $table) {
+            $table->text('producto')->change();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
+    }
+}
