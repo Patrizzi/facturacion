@@ -230,7 +230,7 @@
                           <th data-hide="all">Departamento</th>
                           <th data-hide="all">Provincia</th>
                           <th data-hide="all">Distrito</th>
-                          <th>Codigo Postal</th>
+                          <th>Codigo Ubigeo</th>
                           <th>Editar</th>
                           <th>Estado</th>
                         </tr>
@@ -310,7 +310,7 @@
                                   <div class="row">
                                     <div class="col-sm-4 tooltip-demo">
                                       <h4><p>
-                                        Codigo Postal
+                                        Codigo Ubigeo
                                         <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
                                       </p></h4>
                                       <input type="text" class="form-control" name="cod_postal" id="" required value="{{$sucursales->cod_postal}}" maxlength="6" minlength="6">
@@ -455,7 +455,7 @@
                 <tr>
                   <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
                   <td><input type="text" placeholder="Ciudad" name="ciudad" value="{{$cliente_show->ciudad}}" class="form-control">
-                    <td><input type="number" placeholder="Codigo Postal" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
+                    <td><input type="number" placeholder="Codigo Ubigeo" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
                   </tr>
                   <tr>
                     <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/telefono.svg')}}"> </td>
@@ -546,7 +546,7 @@
           <div class="row">
             <div class="col-sm-4 tooltip-demo">
               <h4><p>
-                Codigo Postal
+                Codigo Ubigeo
                 <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
               </p></h4>
               <input type="text" class="form-control" name="cod_postal" id="" required maxlength="6" minlength="6">

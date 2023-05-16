@@ -74,6 +74,7 @@ class ClienteController extends Controller
      $cliente->pais=$request->get('pais');
      $cliente->tipo_cliente=$request->get('tipo_cliente');
      $cliente->aniversario=$request->get('aniversario');
+     /*Nota: el cod postal es código de UBIGEO, cuando se registra el cliente por el agre. rapido es Ubigeo, para envio a sunat es UBIGEO */
      $cliente->cod_postal=$request->get('cod_postal');
      $cliente->fecha_registro=$request->get('fecha_registro');
      $cliente->save();

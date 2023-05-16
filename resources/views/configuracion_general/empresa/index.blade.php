@@ -70,7 +70,7 @@
                       <div class="col-sm-4" style="padding-bottom: 15px">
                         <textarea name="calle" class="form-control" required>{{$mi_empresa->calle}}</textarea>
                       </div>
-                      <label class="col-sm-2 col-form-label">Código Postal:</label>
+                      <label class="col-sm-2 col-form-label">Código Ubigeo:</label>
                       <div class="col-sm-4">
                         <input type="text" class="form-control" required name="codigo_postal" value="{{$mi_empresa->codigo_postal}}">
                       </div>
@@ -142,7 +142,7 @@
           <p class="font-bold"><span><i class="fa fa-circle text-navy"></i> <b> Region Provincia :</b> {{$mi_empresa->region_provincia}}</span></p>
           <p class="font-bold"><span><i class="fa fa-circle text-navy"></i> <b> Ciudad :</b> {{$mi_empresa->ciudad}}</span></p>
           <p class="font-bold"><span><i class="fa fa-circle text-navy"></i> <b> Dirección :</b> {{$mi_empresa->calle}}</span></p>
-          <p class="font-bold"><span><i class="fa fa-circle text-navy"></i> <b> Código Postal :</b> {{$mi_empresa->codigo_postal}}</span></p>
+          <p class="font-bold"><span><i class="fa fa-circle text-navy"></i> <b> Código Ubigeo :</b> {{$mi_empresa->codigo_postal}}</span></p>
         </div>
       </div>
     </div>
