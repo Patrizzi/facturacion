@@ -311,7 +311,7 @@
                                     <div class="col-sm-4 tooltip-demo">
                                       <h4><p>
                                         Codigo Postal
-                                        <a href="https://account.geodir.co/recursos/codigo-postal-mtc-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                                        <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
                                       </p></h4>
                                       <input type="text" class="form-control" name="cod_postal" id="" required value="{{$sucursales->cod_postal}}" maxlength="6" minlength="6">
                                     </div>
@@ -547,7 +547,7 @@
             <div class="col-sm-4 tooltip-demo">
               <h4><p>
                 Codigo Postal
-                <a href="https://account.geodir.co/recursos/codigo-postal-mtc-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
               </p></h4>
               <input type="text" class="form-control" name="cod_postal" id="" required maxlength="6" minlength="6">
             </div>
