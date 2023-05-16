@@ -62,7 +62,7 @@
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" placeholder="Av. , Calle, Ciudad" name="direccion" autocomplete="off" required="required">
                             </div>
-                            <label class="col-sm-2 col-form-label">Cod. Ubigeo: <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
+                            <label class="col-sm-2 col-form-label">Cod. Ubigeo: <a href="https://account.geodir.co/recursos/codigo-postal-mtc-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
                             <div class="col-sm-4">
                                 <input type="text"  class="form-control" name="ubigeo" autocomplete="off" required="required" value="150101" minlength="6" maxlength="6">
                             </div>
@@ -272,7 +272,7 @@
                                                                     <div class="col-sm-4">
                                                                         <input type="text" class="form-control" name="direccion" value="{{$almacen->direccion}}">
                                                                     </div>
-                                                                    <label class="col-sm-2">Cod. Ubigeo: <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
+                                                                    <label class="col-sm-2">Cod. Ubigeo: <a href="https://account.geodir.co/recursos/codigo-postal-mtc-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
                                                                     <div class="col-sm-4">
                                                                         <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}" maxlength="6" minlength="6">
                                                                     </div>

@@ -69,7 +69,7 @@
                                                 {{-- <option value=""></option> --}}
                                             </datalist>
                                             <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Postal"  required onkeyup="this.value=NumText(this.value)" maxlength="6" minlength="6">
-                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i 
+                                            <a href="https://account.geodir.co/recursos/codigo-postal-mtc-peru.html"  target="_blank" style="margin: auto" ><i 
                                                 class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
                                         </div>
                                         <input type="hidden"  name="" id="input_suc_array">
