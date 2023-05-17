@@ -63,16 +63,11 @@ class FacturacionController extends Controller
                 $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura->id)->first();
                 if (!isset($nota_credito[$key])) {
                     $nota_credito[$key] = null;
-                }else{
-                    $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
                 }
-
                 if (!isset($nota_debito[$key])) {
                     $nota_debito[$key] = null;
-                }else{
-                    $nota_debito[$key] = Nota_Credito::where('facturacion_id', $factura->id)->first();
                 }
-        }
+            }
         }
         // return $facturacion;
         

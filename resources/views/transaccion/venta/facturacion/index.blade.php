@@ -114,17 +114,17 @@
                                         <span hidden>Aceptada</span>
                                         @if ($facturacions->nota_credito != 0 )
                                             @if ($nota_credito[$index]->n_electronica == 1)
-                                                <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i class="fa fa-reply"></i></button>
+                                                <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i style="font-weight: 700">NC</i></button>
                                             @else
-                                                <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i class="fa fa-reply"></i></button>
+                                                <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i style="font-weight: 700">NC</i></button>
                                             @endif
                                             <span hidden>Nota de Credito</span>
                                         @endif
                                         @if ($facturacions->nota_debito != 0 )
                                             @if ($nota_debito[$index]->n_electronica == 1)
-                                                <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i class="fa fa-share"></i></button>
+                                                <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i style="font-weight: 700">ND</i></button>
                                             @else
-                                                <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i class="fa fa-share"></i></button>
+                                                <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i style="font-weight: 700">ND</i></button>
                                             @endif
                                             <span hidden>Nota de Debito</span>
                                         @endif

@@ -87,7 +87,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($boletas as $boleta)
+                                @foreach($boletas as $index => $boleta)
                                 <tr class="gradeX">
                                     <td>{{$boleta->id}}</td>
                                     <td>{{$boleta->codigo_boleta}}</td>
@@ -110,11 +110,30 @@
                                     <td style="text-align:center">
                                         @if($boleta->b_electronica=='1')
                                             <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
+                                            <span hidden>Aceptada</span>
+                                            @if ($boleta->nota_credito != 0 )
+                                                @if ($nota_credito[$index]->n_electronica == 1)
+                                                    <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i style="font-weight: 700">NC</i></button>
+                                                @else
+                                                    <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i style="font-weight: 700">NC</i></button>
+                                                @endif
+                                                <span hidden>Nota de Credito</span>
+                                            @endif
+                                            @if ($boleta->nota_debito != 0 )
+                                                @if ($nota_debito[$index]->n_electronica == 1)
+                                                    <button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i style="font-weight: 700">ND</i></button>
+                                                @else
+                                                    <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i style="font-weight: 700">ND</i></button>
+                                                @endif
+                                                <span hidden>Nota de Debito</span>
+                                            @endif
+
                                         @elseif($boleta->b_electronica=='2')
                                             <button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button>
                                         @else
                                             <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-clock-o"></i></button>
                                         @endif
+                                        
                                     </td>
                                 </tr>
                                 @endforeach

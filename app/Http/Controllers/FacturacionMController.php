@@ -40,11 +40,23 @@ class FacturacionMController extends Controller
     {
         $facturacion=Facturacion_m::all();
         $igv = Igv::first();
-        
-        foreach ($facturacion as $key => $factura) {
-            $nota_credito[$key] = Nota_Credito::where('facturacion_m_id', $factura->id)->first();
-            $nota_debito[$key] = Nota_Debito::where('facturacion_m_id', $factura->id)->first();
+        if(count($facturacion) == 0){
+            $nota_credito[0] = null;
+            $nota_debito[0] = null;
+        }else{
+            foreach ($facturacion as $key => $factura) {
+                $nota_credito[$key] = Nota_Credito::where('facturacion_m_id', $factura->id)->first();
+                $nota_debito[$key] = Nota_Debito::where('facturacion_m_id', $factura->id)->first();
+                if (!isset($nota_credito[$key])) {
+                    $nota_credito[$key] = null;
+                }
+                if (!isset($nota_debito[$key])) {
+                    $nota_debito[$key] = null;
+                }
+            }
         }
+
+  
         return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv','nota_credito','nota_debito'));
     }
 

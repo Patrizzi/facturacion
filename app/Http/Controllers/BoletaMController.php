@@ -20,7 +20,8 @@ use App\Tipo_operacion_f;
 use App\Boleta_registros_m;
 use App\Cuotas_credito;
 use App\Banco;
-
+use App\Nota_Credito;
+use App\Nota_Debito;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,7 +37,23 @@ class BoletaMController extends Controller
     {
         $boleta = Boleta_m::get();
         $igv = Igv::first();
-        return view('transaccion.venta.boleta.boleta_manual.index', compact('boleta','igv'));
+        if(count($boleta) == 0){
+            $nota_credito[0] = null;
+            $nota_debito[0] = null;
+        }else{
+            foreach ($boleta as $key => $boletas) {
+                $nota_credito[$key] = Nota_Credito::where('boleta_id', $boletas->id)->first();
+                $nota_debito[$key] = Nota_Debito::where('boleta_id', $boletas->id)->first();
+                if (!isset($nota_credito[$key])) {
+                    $nota_credito[$key] = null;
+                }
+                if (!isset($nota_debito[$key])) {
+                    $nota_debito[$key] = null;
+                }
+            }
+        }
+        // return $nota_credito;
+        return view('transaccion.venta.boleta.boleta_manual.index', compact('boleta','igv','nota_credito','nota_debito'));
     }
 
     /**

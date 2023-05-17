@@ -49,7 +49,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach($boleta as $boletas)
+                                @foreach($boleta as  $index => $boletas)
                                 <tr class="gradeX">
                                     <td>{{$boletas->id}}</td>
                                     <td>{{$boletas->codigo_boleta}}</td>
