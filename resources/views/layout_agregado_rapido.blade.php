@@ -55,13 +55,21 @@
                         data:'ruc='+ruc_cliente,
                         success: function(datos_dni){
                             var datos = eval(datos_dni);
-                            $('#numero_ruc_cli').val(datos[0]);
-                            $('#razon_social_cli').val(datos[1]);
-                            $('#direccion_cli').val(datos[2]);
-                            $('#provincia_cli').val(datos[3]);
-                            $('#distrito_cli').val(datos[4]);
-                            $('#fechaInscripcion_cli').val(datos[5]);
-                            $('#ubigeo').val(datos[6]);
+                            if(datos[2] == 'existente'){
+                                toastr.warning(''+datos[1]+' ya existe',
+                                'Cliente existente', {
+                                    timeOut: 3000
+                                });
+                            }else{
+                                $('#numero_ruc_cli').val(datos[0]);
+                                $('#razon_social_cli').val(datos[1]);
+                                $('#direccion_cli').val(datos[2]);
+                                $('#provincia_cli').val(datos[3]);
+                                $('#distrito_cli').val(datos[4]);
+                                $('#fechaInscripcion_cli').val(datos[5]);
+                                $('#ubigeo').val(datos[6]);
+                            }
+                            
                         }
                     });
                     return false;
@@ -81,9 +89,16 @@
                         data:'dni='+dni_cliente,
                         success: function(datos_dni){
                             var datos = eval(datos_dni);
-                            $('#numero_ruc_cli').val(datos[0]);
-                            var nombre  = datos[2]+' '+datos[3]+' '+datos[4];
-                            $('#razon_social_cli').val(nombre);
+                            if(datos[2] == 'existente'){
+                                toastr.warning(''+datos[1]+' ya existe.',
+                                'Cliente existente', {
+                                    timeOut: 3000
+                                });
+                            }else{
+                                $('#numero_ruc_cli').val(datos[0]);
+                                var nombre  = datos[2]+' '+datos[3]+' '+datos[4];
+                                $('#razon_social_cli').val(nombre);
+                            }
                             // $('#direccion_cli').val(datos[2]);
                             // $('#provincia_cli').val(datos[3]);
                             // $('#distrito_cli').val(datos[4]);

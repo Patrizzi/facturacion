@@ -169,6 +169,7 @@ class ClienteController extends Controller
     }
 
     function ruc(Request $request){
+      // return $request->get('ruc');
       $ruc=$request->get('ruc');
 
       $data = file_get_contents("https://dniruc.apisperu.com/api/v1/ruc/".$ruc."?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRlc2Fycm9sbG9Aanlwc2FjLmNvbSJ9.1Pt1A4PEFAGmFySlfVeFKZKuVCC-u_ZEW-KYQq-P57k");
@@ -177,11 +178,14 @@ class ClienteController extends Controller
       $clientes=Cliente::where('numero_documento',array($info['ruc']))->first();
       if (isset($clientes)) {
         $ruc_view=$clientes->numero_documento;
-        $ifexiste='1';/*Existe*/
-      }
-      else{
+        $datos = array(
+          0 => array($ruc),
+          1 => array($clientes->empresa),
+          2 => 'existente',
+        );
+        return json_encode($datos);
+      }else{
         $ruc_view=array($info['ruc']);
-        $ifexiste='0';/*No Existe*/
       }
 
       $datos = array(
@@ -205,10 +209,15 @@ class ClienteController extends Controller
       if (isset($clientes)) {
         $ruc_view=$clientes->numero_documento;
         $ifexiste='1';/*Existe*/
+        $datos = array(
+          0 => array($dni),
+          1 => array($clientes->empresa),
+          2 => 'existente',
+        );
+        return json_encode($datos);
       }
       else{
         $ruc_view=array($info['dni']);
-        $ifexiste='0';/*No Existe*/
       }
 
       $datos = array(
