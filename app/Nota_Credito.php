@@ -187,4 +187,40 @@ class Nota_Credito extends Model
         
     }
 
+    public static function nota_credito_month(){
+        // Nota de Credito
+        $notas = Nota_Credito::where('n_electronica', 0 )->get();
+        foreach ($notas as $key => $notas_cred) {
+            $fecha_actual = Carbon::now();
+            if($fecha_actual->diffInMonths($notas_cred->fecha_emision)){
+                //* cambiar estado de la nota de credito
+                $notas_cred->n_electronica = 2;  
+                $notas_cred->save();
+                //* cambiar estado de los documentos
+                if (isset($notas_cred->facturacion_id)) { 
+                $factura = Facturacion::where('id',$notas->factuacion_id)->first();
+                $factura->nota_credito = 0;
+                $factura->save();
+                }
+                if(isset($notas_cred->facturacion_m_id)){
+                $factura_m = Facturacion_m::where('id',$notas->factuacion_m_id)->first();
+                $factura_m->nota_credito = 0;
+                $factura_m->save();
+                }
+                if(isset($notas_cred->boleta_id)){
+                $boleta = Facturacion::where('id',$notas->boleta_id)->first();
+                $boleta->nota_credito = 0;
+                $boleta->save();
+                }
+                if(isset($notas_cred->boleta_m_id)){
+                $boleta_m = Facturacion::where('id',$notas->boleta_m_id)->first();
+                $boleta_m->nota_credito = 0;
+                $boleta_m->save();
+                }
+
+            }
+        }
+    }
+    
+
 }

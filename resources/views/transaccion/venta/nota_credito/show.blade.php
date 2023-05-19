@@ -32,6 +32,11 @@
                     </div>
                 </div>
             </div>
+            @if($notas_credito->n_electronica == 2)
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>    
+            @endif
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
                     @include('layout_cabecera_ventas')
@@ -363,7 +368,27 @@
         </div>
     </div>
 </div>
-
+<style>
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-weight: bolder;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 45%;
+        right: 40%;
+        z-index: 100;
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

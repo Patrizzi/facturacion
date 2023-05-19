@@ -173,6 +173,7 @@ Route::group(
 		Route::post('/nota-credito-create_boleta-nc','NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
 		Route::get('/nota-credito/print/{id}','NotaCreditoController@print')->name('nota_credito.print');
 		Route::get('/nota-credito/pdf/{id}','NotaCreditoController@pdf')->name('nota_credito.pdf');
+		Route::post('/nota-credito/anular','NotaCreditoController@anular')->name('nota_credito.anular');
 
 		Route::get('/nota-credito/create_boleta','NotaCreditoController@create_boleta')->name('nota-credito.create_boleta');
 		Route::post('/nota-credito/store-boleta/{id}','NotaCreditoController@store_boleta')->name('nota-credito.store_boleta');

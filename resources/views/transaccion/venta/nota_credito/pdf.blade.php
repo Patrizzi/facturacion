@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Nota de Credito</title>{{--
@@ -37,6 +36,11 @@
         </table>
         {{-- CONTENIDO DE DATOS --}}
         <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
+            @if($notas_credito->n_electronica == 2)
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>    
+            @endif
             <table style="width: 100%;border-collapse:separate;margin-top: -20px">
                 <tr >
                     <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
@@ -219,142 +223,165 @@
                     </td>
                 </tr>
             </table>
-        </div>
-        <div class="form-control" style="border: none;height: auto" >
-            <div align="left">
-    
+        
+            <div class="form-control" style="border: none;height: auto" >
+                <div align="left">
+        
+                </div>
             </div>
-        </div>
-        <br>
-        <div class="table-responsive">
-            <table class="table " style="border-top: 0px;border-color: #808080" >
-                <thead style="border-color: #808080">
-                    <tr>
-                        <th style="width: 8%">Item</th>
-                        <th style="width: 15%">Cod. de Item</th>
-                        <th>Descripción</th>
-                        <th style="width: 11%">Cantidad</th>
-                        <th  style="text-align: center;width: 8%">P. Unit.</th>
-                        <th  style="text-align: center;width: 8%">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- <span hidden="hidden">{{$u=1}} </span> --}}
-                    @foreach($notas_credito_registros as $e => $notas_credito_registro)
+            <br>
+            <div class="table-responsive">
+                <table class="table " style="border-top: 0px;border-color: #808080" >
+                    <thead style="border-color: #808080">
                         <tr>
-                            <td>{{$u++}}</td>
-                            @if(isset($notas_credito_registro->producto_id))
-                                <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
-                            @else
-                                <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
-                            @endif
-                            
-
-                            <td>
-                                {{-- @if(isset($notas_credito_registro->producto_id))
-                                    {{$notas_credito_registro->producto->nombre}} 
-                                @else
-                                    {{$notas_credito_registro->servicio->nombre}} 
-                                @endif --}}
-                                {{$notas_credito_registro->descripcion}} 
-                                {{$doc_reg[$e]->descripcion_item}}
-                                {{-- <br><strong>N/S:</strong>
-                                {{$notas_credito_registro->numero_serie}} --}}
-                            </td>
-                            <td>{{$notas_credito_registro->cantidad}}</td>
-                            <td>{{$notas_credito_registro->precio}}</td>
-                            <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
-                            <td style="display: none">
-                                
-                                {{$sub_total=($notas_credito_registro->nota_credito_ids->op_gravada)+($notas_credito_registro->nota_credito_ids->op_inafecta)+($notas_credito_registro->nota_credito_ids->op_exonerada)}}
-                                {{$sub_total_gravado=($notas_credito_registro->nota_credito_ids->op_gravada)}}
-                                {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                {{$end=round($sub_total, 2)+round($igv_p, 2)}} 
-                                {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
-                                
-                            </td>
+                            <th style="width: 8%">Item</th>
+                            <th style="width: 15%">Cod. de Item</th>
+                            <th>Descripción</th>
+                            <th style="width: 11%">Cantidad</th>
+                            <th  style="text-align: center;width: 8%">P. Unit.</th>
+                            <th  style="text-align: center;width: 8%">Total</th>
                         </tr>
-                    @endforeach
-                </tbody>  
-            </table >
+                    </thead>
+                    <tbody>
+                        {{-- <span hidden="hidden">{{$u=1}} </span> --}}
+                        @foreach($notas_credito_registros as $e => $notas_credito_registro)
+                            <tr>
+                                <td>{{$u++}}</td>
+                                @if(isset($notas_credito_registro->producto_id))
+                                    <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
+                                @else
+                                    <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
+                                @endif
+                                
+
+                                <td>
+                                    {{-- @if(isset($notas_credito_registro->producto_id))
+                                        {{$notas_credito_registro->producto->nombre}} 
+                                    @else
+                                        {{$notas_credito_registro->servicio->nombre}} 
+                                    @endif --}}
+                                    {{$notas_credito_registro->descripcion}} 
+                                    {{$doc_reg[$e]->descripcion_item}}
+                                    {{-- <br><strong>N/S:</strong>
+                                    {{$notas_credito_registro->numero_serie}} --}}
+                                </td>
+                                <td>{{$notas_credito_registro->cantidad}}</td>
+                                <td>{{$notas_credito_registro->precio}}</td>
+                                <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
+                                <td style="display: none">
+                                    
+                                    {{$sub_total=($notas_credito_registro->nota_credito_ids->op_gravada)+($notas_credito_registro->nota_credito_ids->op_inafecta)+($notas_credito_registro->nota_credito_ids->op_exonerada)}}
+                                    {{$sub_total_gravado=($notas_credito_registro->nota_credito_ids->op_gravada)}}
+                                    {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
+                                    {{$end=round($sub_total, 2)+round($igv_p, 2)}} 
+                                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
+                                    
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>  
+                </table >
+            </div>
+            <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
+                <tr>
+                    <td style="width: 70%;border: none">
+                        <h3 align="left">
+                            <?php $v=new CifrasEnLetras() ;
+                                $letra=($v->convertirEurosEnLetras($end));
+                                $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                $end_final_point=strstr($end2, '.',false);
+                                $end_final=str_replace('.', '',$end_final_point);
+                            ?>
+                            Son : {{$letra_final}} con {{$end_final}}/100 
+                            @if(isset($notas_credito->facturacion_id))
+                                {{$notas_credito->nota_i_facturacion->moneda->nombre}} 
+                            @elseif(isset($notas_credito->boleta_id))
+                                {{$notas_credito->nota_i_boleta->moneda->nombre}} 
+                            @elseif(isset($notas_credito->boleta_m_id))
+                                {{$notas_credito->nota_i_boleta_manual->moneda->nombre}}
+                            @else
+                                {{$notas_credito->nota_i_fac_manual->moneda->nombre}} 
+                            @endif 
+                                {{-- {{number_format($sub_total, 2)}}</span> --}}
+                        </h3>
+                    </td>
+                    <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
+                        <span > Subtotal:</span><br>
+                        <span > Op. Gravada:</span><br>
+                        <span > Op. Inafecta:</span><br>
+                        <span > Op. Exonerada:</span><br>
+                        <span > I.G.V.:</span> <br>
+                        <span > Importe Total:</span><br>
+                    </td>
+                    <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
+                        <span>
+                            @if(isset($notas_credito->facturacion_id))
+                                {{$simbologia = $notas_credito->nota_i_facturacion->moneda->simbolo}} 
+                            @elseif(isset($notas_credito->boleta_id))
+                                {{ $simbologia= $notas_credito->nota_i_boleta->moneda->simbolo}} 
+                            @elseif(isset($notas_credito->boleta_m_id))
+                                {{$simbologia=$notas_credito->nota_i_boleta_manual->moneda->simbolo}}
+                            @else
+                                {{ $simbologia = $notas_credito->nota_i_fac_manual->moneda->simbolo}} 
+                            @endif 
+                            {{number_format($sub_total, 2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($notas_credito->op_gravada,2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($notas_credito->op_inafecta,2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($notas_credito->op_exonerada,2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($end,2)}}</span>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
-            <tr>
-                <td style="width: 70%;border: none">
-                    <h3 align="left">
-                        <?php $v=new CifrasEnLetras() ;
-                            $letra=($v->convertirEurosEnLetras($end));
-                            $letra_final = ucfirst(strstr($letra, 'soles',true));
-                            $end_final_point=strstr($end2, '.',false);
-                            $end_final=str_replace('.', '',$end_final_point);
-                        ?>
-                        Son : {{$letra_final}} con {{$end_final}}/100 
-                        @if(isset($notas_credito->facturacion_id))
-                            {{$notas_credito->nota_i_facturacion->moneda->nombre}} 
-                        @elseif(isset($notas_credito->boleta_id))
-                            {{$notas_credito->nota_i_boleta->moneda->nombre}} 
-                        @elseif(isset($notas_credito->boleta_m_id))
-                            {{$notas_credito->nota_i_boleta_manual->moneda->nombre}}
-                        @else
-                            {{$notas_credito->nota_i_fac_manual->moneda->nombre}} 
-                        @endif 
-                            {{-- {{number_format($sub_total, 2)}}</span> --}}
-                    </h3>
-                </td>
-                <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
-                    <span > Subtotal:</span><br>
-                    <span > Op. Gravada:</span><br>
-                    <span > Op. Inafecta:</span><br>
-                    <span > Op. Exonerada:</span><br>
-                    <span > I.G.V.:</span> <br>
-                    <span > Importe Total:</span><br>
-                </td>
-                <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
-                    <span>
-                        @if(isset($notas_credito->facturacion_id))
-                            {{$simbologia = $notas_credito->nota_i_facturacion->moneda->simbolo}} 
-                        @elseif(isset($notas_credito->boleta_id))
-                            {{ $simbologia= $notas_credito->nota_i_boleta->moneda->simbolo}} 
-                        @elseif(isset($notas_credito->boleta_m_id))
-                            {{$simbologia=$notas_credito->nota_i_boleta_manual->moneda->simbolo}}
-                        @else
-                            {{ $simbologia = $notas_credito->nota_i_fac_manual->moneda->simbolo}} 
-                        @endif 
-                        {{number_format($sub_total, 2)}}</span><br>
-                    <span>{{$simbologia}} {{number_format($notas_credito->op_gravada,2)}}</span><br>
-                    <span>{{$simbologia}} {{number_format($notas_credito->op_inafecta,2)}}</span><br>
-                    <span>{{$simbologia}} {{number_format($notas_credito->op_exonerada,2)}}</span><br>
-                    <span>{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
-                    <span>{{$simbologia}} {{number_format($end,2)}}</span>
-                </td>
-            </tr>
-        </table>
     </body>
     <style>
 
-        *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
-        .cero{
-        margin-bottom: 0px;
-    
-        }
-         .table-bordered .blanco {
+    *{font-size: 14px;color: #495057;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+    .cero{
+    margin-bottom: 0px;
+
+    }
+    .table-bordered .blanco {
         border: none;
     }
-        .blanco{border: none;
-            border: medium transparent;
-            }
-        .border {
-            border-color: #aaaaaa;
-            border-width: 1px;
-            border-style: solid;
-        }
-        .table {
+    .blanco{border: none;
+         border-color: #808080 ;
+    }
+    .border {
+        border-color: #3D3D3D;
+        border-width: 1px;
+        border-style: solid;
+    }
+    .table {
         width: 100%;
         max-width: 100%;
         margin-bottom: 1rem;
         background-color: transparent;
         border-top-width: 0px;
-    
+
+    }
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+        font-weight: bolder;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 35%;
+        right: 35%;
+        z-index: 1000;
+    }
+    .form-control {
+        background-color: transparent !important;
     }
     </style>
 </html>

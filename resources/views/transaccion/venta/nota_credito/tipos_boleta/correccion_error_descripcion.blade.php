@@ -160,7 +160,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="13" align="right">
-                                        <button type="submit" class="btn btn-w-m btn-primary">Enviar</button>
+                                        <button type="submit" class="btn btn-w-m btn-primary">Guardar</button>
                                     </td>
                                 </tr>
                             </tbody>

@@ -57,12 +57,13 @@
                                     <th>Fecha emision</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                    <th> Anular</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 @foreach($notas_creditos as $nota_credito)
-                                <tr class="gradeX">
+                                <tr class="gradeX tooltip-demo">
                                     <td>{{$nota_credito->id}}</td>
                                     <td>{{$nota_credito->codigo_n_c}}</td>
                                     @if($nota_credito->facturacion_id !=NULL)
@@ -102,6 +103,22 @@
                                             <button class="btn btn-warning btn-circle btn-ls" data-toggle="tooltip" data-placement="bottom" title="En Espera"><i class="fa fa-check-circle"></i></button>
                                             <span hidden>En Espera</span>
                                         @endif
+                                    </td>
+                                    <td>
+                                        <center>
+                                            @if ($nota_credito->n_electronica == 0)
+                                                <form action="{{route('nota_credito.anular')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id_nota_cre" value="{{$nota_credito->id}}">
+                                                    <button class="btn btn-danger" type="submit">Anular</button>
+                                                </form>
+                                            @else
+                                                <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" >
+                                                    <i class="fa fa-trash"></i>
+                                                    {{-- Anular  --}}
+                                                </button>
+                                            @endif
+                                        </center>
                                     </td>
                                 </tr>
                                 @endforeach 

@@ -57,6 +57,11 @@
             </div>
         </div><br>
         <div class="row" align="center" style="padding-bottom: 5px">
+            @if($notas_credito->n_electronica == 2)
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>    
+            @endif
             <div class="col-sm-6" align="center">
                 <div class="form-control">
                     {{-- <h3> Datos Generales</h3> --}}
@@ -373,7 +378,25 @@
     .ibox-tools a{color: white !important}
     .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
     .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
-
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-weight: bolder;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 45%;
+        right: 40%;
+        z-index: 100;
+    }
 </style>
 
 <!-- Mainly scripts -->

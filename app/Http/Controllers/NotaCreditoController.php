@@ -759,6 +759,38 @@ class NotaCreditoController extends Controller
 
         // return view('transaccion.venta.nota_credito.print',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg'));
     }
+
+    public function anular(Request $request){
+        $id = $request->get('id_nota_cre');
+
+        $nota = Nota_Credito::where('id', $id)->first();
+        $nota->n_electronica = 2;
+        $nota->save();
+        // return $nota;
+        //* Volver a poder generar nota de credito
+        if (isset($nota->facturacion_id)) { 
+            $factura = Facturacion::where('id',$nota->facturacion_id)->first();
+            $factura->nota_credito = 0;
+            $factura->save();
+        }
+        if(isset($nota->facturacion_m_id)){
+            $factura_m = Facturacion_m::where('id',$nota->facturacion_m_id)->first();
+            $factura_m->nota_credito = 0;
+            $factura_m->save();
+        }
+        if(isset($nota->boleta_id)){
+            $boleta = Facturacion::where('id',$nota->boleta_id)->first();
+            $boleta->nota_credito = 0;
+            $boleta->save();
+        }
+        if(isset($nota->boleta_m_id)){
+            $boleta_m = Facturacion::where('id',$nota->boleta_m_id)->first();
+            $boleta_m->nota_credito = 0;
+            $boleta_m->save();
+        }
+        
+        return redirect()->back();
+    }
     /**
      * Show the form for editing the specified resource.
      *

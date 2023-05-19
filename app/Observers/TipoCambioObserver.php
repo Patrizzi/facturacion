@@ -5,6 +5,8 @@ namespace App\Observers;
 use App\TipoCambio;
 use App\servicios;
 use App\Moneda;
+use App\Nota_Credito;
+
 class TipoCambioObserver
 {
     /**
@@ -41,6 +43,8 @@ class TipoCambioObserver
                 $servicio->save();
             }
         }
+        //* Buscar notas de credito de hace 30 dias? 
+        // Nota_Credito::nota_credito_month();
     }
 
     /**
