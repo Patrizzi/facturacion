@@ -651,7 +651,7 @@ class NotaCreditoController extends Controller
             $nc_primera->save();
         }
         // $boleta=Boleta::where('id',$id)->first();
-        $boleta->nota_credito=2;
+        $boleta->nota_credito=1;
         $boleta->save();
         
         // return "exito";

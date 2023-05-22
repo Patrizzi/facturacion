@@ -363,7 +363,7 @@
                     <li class="dropdown" style="margin: 0px 50px">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 18px;"></i> @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0)  <span class="label label-danger link_alert">!!!</span> @endif
+                            <i class="fa fa-bell " style="font-size: 18px;"></i> @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  <span class="label label-danger link_alert">!!!</span> @endif
                         </a>
                         {{-- SI HAY PARA ENVIAR --}}
                         {{-- <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">

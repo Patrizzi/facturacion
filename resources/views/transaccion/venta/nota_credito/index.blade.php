@@ -107,11 +107,12 @@
                                     <td>
                                         <center>
                                             @if ($nota_credito->n_electronica == 0)
-                                                <form action="{{route('nota_credito.anular')}}" method="POST">
+                                                {{-- <form action="{{route('nota_credito.anular')}}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="id_nota_cre" value="{{$nota_credito->id}}">
                                                     <button class="btn btn-danger" type="submit">Anular</button>
-                                                </form>
+                                                </form> --}}
+                                                <button value="{{$nota_credito->codigo_n_c}}"  onclick="anular_nota(this.value, '{{$nota_credito->id}}' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" >Anular</button>
                                             @else
                                                 <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" >
                                                     <i class="fa fa-trash"></i>
@@ -130,7 +131,30 @@
         </div>
     </div>
 </div>
-<!-- Mainly scripts -->
+{{-- MODAL DE ANULACION DE NOTA DE CREDITO --}}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form action="{{route('nota_credito.anular')}}" method="POST">
+                        @csrf
+                        <center>
+                            <p>¿Desea Anular la Nota de credito N°<strong> <span id="strong_nota"> </span></strong> anidada al documento N° <strong><span id="string_doc"></span></strong>?</p>
+                            <input type="hidden" name="id_nota_cre" value="" id="nota_credito_id">
+                            <button class="btn btn-danger" type="submit">Anular</button>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -143,6 +167,13 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<!-- Jquery Validate -->
+<script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+
+<!-- Steps -->
+<script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 <!-- Page-Level Scripts -->
 <script>
     $(document).ready(function(){
@@ -152,26 +183,35 @@
             order: [[0, "desc"]],
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
 
-            {extend: 'print',
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
+                {extend: 'print', customize: function (win){
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
 
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }
-        ]
+                    $(win.document.body).find('table')
+                    .addClass('compact')
+                    .css('font-size', 'inherit');
+                }}
+            ]
 
+        });
     });
+    function anular_nota(a1,id){
+        console.log(a1);
+        // $('#strong_nota').val(strong_nota);
+        var val = a1;
+        document.getElementById("strong_nota").innerHTML=a1;
+        $('#nota_credito_id').val(id);
 
-    });
+
+        // document.getElementById.value 
+        // console.log(codigo_n_c);
+        $('#exampleModalCenter').modal('show');
+    }
 
 </script>
 @endsection

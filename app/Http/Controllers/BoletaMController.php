@@ -42,8 +42,8 @@ class BoletaMController extends Controller
             $nota_debito[0] = null;
         }else{
             foreach ($boleta as $key => $boletas) {
-                $nota_credito[$key] = Nota_Credito::where('boleta_id', $boletas->id)->first();
-                $nota_debito[$key] = Nota_Debito::where('boleta_id', $boletas->id)->first();
+                $nota_credito[$key] = Nota_Credito::where('boleta_m_id', $boletas->id)->first();
+                $nota_debito[$key] = Nota_Debito::where('boleta_m_id', $boletas->id)->first();
                 if (!isset($nota_credito[$key])) {
                     $nota_credito[$key] = null;
                 }

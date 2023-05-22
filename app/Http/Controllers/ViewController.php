@@ -99,8 +99,8 @@ class ViewController extends Controller
     // return $return_tot_fact;
     /* Caclulo de Compras Boletas */
     
-    $bol_mes=Boleta::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('b_electronica',1)->get();
-    $bol_ma_mes=Boleta_m::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('b_electronica',1)->get();
+    $bol_mes=Boleta::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('b_electronica',1)->where('nota_credito', 0)->get();
+    $bol_ma_mes=Boleta_m::where('created_at','>=',Carbon::now()->format('Y-m-01 00:00:00'))->where('b_electronica',1)->where('nota_credito', 0)->get();
     // if(coiu){
 
     // }else{

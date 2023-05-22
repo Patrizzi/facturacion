@@ -107,7 +107,7 @@
                                     <td style="text-align:center">
                                         <a href="{{route('boleta.show',$boleta->id)}}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a>
                                     </td>
-                                    <td style="text-align:center">
+                                    <td class="td-sunat">
                                         @if($boleta->b_electronica=='1')
                                             <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
                                             <span hidden>Aceptada</span>
@@ -149,6 +149,12 @@
 
 <style type="text/css">
     .a{width: 200px}
+    .td-sunat{
+        min-width: 90px !important;
+        max-width: 90px !important;
+        width: 90px !important;
+        text-align: center;
+    }
 </style>
 
 

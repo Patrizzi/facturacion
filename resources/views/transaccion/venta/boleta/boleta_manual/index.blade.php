@@ -49,7 +49,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach($boleta as  $index => $boletas)
+                                @foreach($boleta as $index => $boletas)
                                 <tr class="gradeX">
                                     <td>{{$boletas->id}}</td>
                                     <td>{{$boletas->codigo_boleta}}</td>
@@ -65,8 +65,8 @@
                                         </a>
                                     </td>
                                     {{-- Envio a Sunat --}}
-                                    <td style="text-align:center;">
-                                        @if($boletas->b_electronica==1) <!-- Nombre del cliente -->
+                                    <td class="td-sunat">
+                                        @if($boletas->b_electronica == 1) <!-- Nombre del cliente -->
                                             <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button>
                                             <span hidden>Aceptada</span>
                                             @if ($boletas->nota_credito != 0 )
@@ -101,6 +101,14 @@
         </div>
     </div>
 </div>
+<style>
+    .td-sunat{
+        min-width: 90px !important;
+        max-width: 90px !important;
+        width: 90px !important;
+        text-align: center;
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

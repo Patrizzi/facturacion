@@ -66,7 +66,7 @@
                                         </a>
                                     </td>
                                     {{-- Envio a Sunat --}}
-                                    <td style="text-align:center;">
+                                    <td class="td-sunat">
                                         @if($facturacions->f_electronica==1) <!-- Nombre del cliente -->
                                             <button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Aceptada"><i class="fa fa-check-circle"></i></button>
                                             <span hidden>Aceptada</span>
@@ -106,6 +106,14 @@
         </div>
     </div>
 </div>
+<style>
+    .td-sunat{
+        min-width: 90px !important;
+        max-width: 90px !important;
+        width: 90px !important;
+        text-align: center;
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

@@ -44,7 +44,7 @@ class TipoCambioObserver
             }
         }
         //* Buscar notas de credito de hace 30 dias? 
-        // Nota_Credito::nota_credito_month();
+        Nota_Credito::nota_credito_month();
     }
 
     /**
