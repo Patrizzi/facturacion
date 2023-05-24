@@ -330,7 +330,7 @@
                     <tfooter>
                         <tr>
                             <td colspan="3" rowspan="3">
-                                <h3 align="left" class="h3-total">
+                                <h3 align="left" class="h3-total" id="left_h3">
                                     <?php $v=new CifrasEnLetras() ;
                                     $letra=($v->convertirEurosEnLetras($end));
                                     $letra_final = ucfirst(strstr($letra, 'soles',true));
@@ -654,11 +654,15 @@
         </tr>
         `;
         $('.tables').append(data);
+        
         i++;
         articlesSelect2();
         $(".borrar").prop("disabled", false);
         $(".addmore").prop("disabled", false);
-        
+
+        const section = document.getElementById("left_h3");
+        console.log(section);
+        section.scrollIntoView({block: "end", behavior: "smooth"});
         
     });
     $(document).ready(function() {

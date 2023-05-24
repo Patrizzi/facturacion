@@ -239,7 +239,7 @@
                                 <span hidden>{{$h++}}</span>
                             @endforeach
                         </tbody>
-                        <tbody>
+                        <tbody id="left_h3">
                             <input id='sub_total' hidden/></td>
                             <input id='total' hidden/></td>  
                             <tr>
@@ -652,6 +652,9 @@
         //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
         articlesSelect2();
         toggle();
+        const section = document.getElementById("left_h3");
+        console.log(section);
+        section.scrollIntoView({block: "end", behavior: "smooth"});
     });
     
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada

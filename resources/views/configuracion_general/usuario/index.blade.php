@@ -90,7 +90,7 @@
                                                                                 </select>
                                                                             </div>
 
-                                                                            <label class="col-sm-3 col-form-label">Activo/desactivo:</label>
+                                                                            <label class="col-sm-1 col-form-label">Desactivado</label>
                                                                             <div class="col-sm-2">
                                                                                 @if($usuario->estado == 1)
                                                                                 <div class="switch-button">
@@ -105,7 +105,7 @@
                                                                                 @endif
 
                                                                             </div>
-
+                                                                            <label class="col-sm-2 col-form-label">Activado:</label>
                                                                             <div class="col-sm-12">
                                                                                 {{-- Boton 2do modal --}}
                                                                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#2do_modal{{$usuario->id}}">Guardar</button>
@@ -147,7 +147,7 @@
 
                                                                                 {{--  --}}
                                                                                 {{-- <button class="btn btn-primary" type="submit">Grabar</button> --}}
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -241,8 +241,9 @@
     }
     .switch-button {
         display: inline-block;
-        padding-top: 9px;
-        padding-right: 30px;
+        /* padding-top: 9px;
+        padding-right: 30px; */
+        padding: 9px 40px;
     }
     .switch-button .switch-button__checkbox {
         display: none;
@@ -268,6 +269,7 @@
     }
     .switch-button .switch-button__checkbox:checked + .switch-button__label {
         background-color: #1c84c6;
+        
     }
     .switch-button .switch-button__checkbox:checked + .switch-button__label:before {
         transform: translateX(1rem);
@@ -275,7 +277,7 @@
 </style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src  ="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
