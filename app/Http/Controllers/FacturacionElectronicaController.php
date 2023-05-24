@@ -305,12 +305,16 @@ class FacturacionElectronicaController extends Controller
 
         if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
             $retorno =  "Aceptada por Sunat";
-        }elseif (strlen($valor_pas) == 13) {
+        }elseif (strpos($msg_r,'Codigo Error: ') !== false) {
             $document->f_electronica = 2; //ESTADO ANULADO
             $document->save();
             $retorno =  "Rechazado por Sunat";
-        }else{
+        }elseif(strpos($msg_r,'OBSERVACIONES') !== false){ //OBSERVACIONES PERO ENVIADOS
             $retorno =  "Aceptada con Observaciones";
+        }elseif(strpos($msg_r,'HTTP') !== false){
+            $retorno =  "Error en Servidores de Sunat, volver a intentar en 10 minutos";
+        }else{
+            $retorno =  "Contactar con Soporte para ver el   estado del Comprobande";
         }
         return $retorno;
     }
