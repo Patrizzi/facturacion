@@ -437,14 +437,17 @@ class FacturacionElectronicaController extends Controller
 
 
         if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
-            if(strpos($msg_r,'OBSERVACIONES') == true){
-                $retorno =  "Aceptada por Sunat";
-        }elseif (strlen($valor_pas) == 13) {
+            $retorno =  "Aceptada por Sunat";
+        }elseif (strpos($msg_r,'Codigo Error: ') !== false) {
             $document->b_electronica = 2; //ESTADO ANULADO
             $document->save();
             $retorno =  "Rechazado por Sunat";
-        }else{
+        }elseif(strpos($msg_r,'OBSERVACIONES') !== false){ //OBSERVACIONES PERO ENVIADOS
             $retorno =  "Aceptada con Observaciones";
+        }elseif(strpos($msg_r,'HTTP') !== false){
+            $retorno =  "Error en Servidores de Sunat, volver a intentar en 10 minutos";
+        }else{
+            $retorno =  "Contactar con Soporte para ver el   estado del Comprobande";
         }
         
         return $retorno;
@@ -473,7 +476,7 @@ class FacturacionElectronicaController extends Controller
 
     //     return redirect()->route('facturacion_electronica.index_guia_remision')->with('successMsg',$msg);
 
-    }
+    // }
     public function guia_remision_elec_all(Request $request){
         $remision_codigo = $request->get('codigo_remision');
         $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
