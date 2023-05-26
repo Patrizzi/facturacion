@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaGuiaEgreso;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use App\Marca;
 use App\Contacto;
 use App\Empresa;

@@ -38,7 +38,7 @@ use App\User;
 use App\Validez;
 use App\Ventas_registro;
 use App\kardex_entrada_registro;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -429,10 +429,11 @@ class CotizacionController extends Controller
 
             $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
             $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-            $cotizacion_numero="COTF ".$sucursal_nr."-".$correlativo;
+            $cotizacion_numero="COTF ".trim($sucursal_nr)."-".$correlativo;
 
             $tipo = 'factura';
             $tipo_document = 1;
+        // return array($cotizacion_numero);
 
         }else{
             //BOLETA
@@ -454,12 +455,11 @@ class CotizacionController extends Controller
 
             $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
             $cotizacion_nr=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
-            $cotizacion_numero="COTB ".$sucursal_nr."-".$cotizacion_nr;
+            $cotizacion_numero="COTB ".trim($sucursal_nr)."-".$cotizacion_nr;
 
             $tipo = 'boleta';
             $tipo_document = 3;
         }
-        // return $cotizacion_numero;
         //FIN CODIGO N° DE  COTIZACION
 
         // return $cotizacion_numero;
@@ -511,7 +511,7 @@ class CotizacionController extends Controller
         //estdo vigente edicion
         $submit = $request->get('submit');
         $cotizacion=new Cotizacion;
-        $cotizacion->cod_cotizacion=$cotizacion_numero;
+        $cotizacion->cod_cotizacion= $cotizacion_numero;
         $cotizacion->almacen_id=$request->get('almacen');
         $cotizacion->cliente_id=$cliente_buscador->id;
         $cotizacion->moneda_id=$id_moneda->id;
@@ -1611,7 +1611,7 @@ public function pdf(Request $request,$id){
     $regla=$cotizacion->tipo;
     // return "1";
     // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
-    if($request->get('firma') == "0"){
+    if($request->get('firma') == "0"){        
         $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
         return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
     }else{

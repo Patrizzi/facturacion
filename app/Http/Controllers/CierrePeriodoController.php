@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\CierrePeriodo;
 use App\Moneda;
 use App\Empresa;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use App\CierrePeriodoRegistro;
 
 class CierrePeriodoController extends Controller

@@ -18,7 +18,7 @@ use App\Categoria;
 use App\Producto;
 use App\Igv;
 use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use DB;
 
 class Consulta_MovimientoController extends Controller

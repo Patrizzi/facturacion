@@ -25,7 +25,7 @@ use App\Kardex_entrada;
 use App\moneda;
 use App\kardex_entrada_registro;
 use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Illuminate\Http\Request;
 
 class GuiaRemisionController extends Controller

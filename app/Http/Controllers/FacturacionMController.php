@@ -26,7 +26,7 @@ use App\Codigo_guia_almacen;
 use App\Facturacion_registro;
 use App\Nota_Credito;
 use App\Nota_Debito;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 
 class FacturacionMController extends Controller

@@ -11,7 +11,7 @@ use App\Stock_almacen;
 use App\Igv;
 use App\Empresa;
 use App\Servicios;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Illuminate\Http\Request;
 
 class CantidadPrecioController extends Controller

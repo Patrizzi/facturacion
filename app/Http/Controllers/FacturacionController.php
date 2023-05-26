@@ -34,7 +34,7 @@ use App\Stock_almacen;
 use App\Stock_producto;
 use Carbon\Carbon;
 use Luecano\NumeroALetras\NumeroALetras;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Illuminate\Http\Request;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;

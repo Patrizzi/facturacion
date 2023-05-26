@@ -7,7 +7,7 @@ use App\Moneda;
 use App\Producto;
 use App\Empresa;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 

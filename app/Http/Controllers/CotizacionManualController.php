@@ -27,7 +27,7 @@ use App\Unidad_medida;
 use App\Tipo_operacion_f;
 use App\Validez;
 use App\kardex_entrada_registro;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

@@ -16,7 +16,7 @@ use App\Personal;
 use App\Producto;
 use App\Stock_almacen;
 use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 
 use Illuminate\Http\Request;
 

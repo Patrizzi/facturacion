@@ -16,7 +16,7 @@ use App\Pais;
 use App\User;
 use App\Producto;
 use App\Servicios;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Illuminate\Support\Facades\Redirect;
 use DB;
 use Carbon\Carbon;

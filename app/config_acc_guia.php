@@ -50,30 +50,11 @@ class config_acc_guia extends Model
         $certificate = new X509Certificate($pfx, $password);
         
         //beta
-        // $api = new \Greenter\Api([
-        //     'auth' => 'https://gre-test.nubefact.com/v1',
-        //     'cpe' => 'https://gre-test.nubefact.com/v1',
-        // ]);
-        
-        // if ($certificate === false) {
-        //     throw new Exception('No se pudo cargar el certificado');
-        // }
-        // $api->setBuilderOptions([
-        //         'strict_variables' => true,
-        //         'optimizations' => 0,
-        //         'debug' => true,
-        //         'cache' => false,
-        //     ])
-        //     ->setApiCredentials('test-85e5b0ae-255c-4891-a595-0b98c65c9854', 'test-Hty/M6QshYvPgItX2P0+Kw==')
-        //     ->setClaveSOL('20161515648', 'MODDATOS', 'MODDATOS')
-        //     ->setCertificate($certificate->export(X509ContentType::PEM));
-
-
-        // //* produccion JYP SAC
         $api = new \Greenter\Api([
-            'auth' => 'https://api-seguridad.sunat.gob.pe/v1',
-            'cpe' => 'https://api-cpe.sunat.gob.pe/v1',
+            'auth' => 'https://gre-test.nubefact.com/v1',
+            'cpe' => 'https://gre-test.nubefact.com/v1',
         ]);
+        
         if ($certificate === false) {
             throw new Exception('No se pudo cargar el certificado');
         }
@@ -83,9 +64,28 @@ class config_acc_guia extends Model
                 'debug' => true,
                 'cache' => false,
             ])
-            ->setApiCredentials('8852449e-5cb5-4c85-a12e-42d4531d967b', 'qpL4mZHH89e0scPKwsF0PA==')
-            ->setClaveSOL('20545122520', 'JYPSACFA', 'P@@@W0RDs')
+            ->setApiCredentials('test-85e5b0ae-255c-4891-a595-0b98c65c9854', 'test-Hty/M6QshYvPgItX2P0+Kw==')
+            ->setClaveSOL('20161515648', 'MODDATOS', 'MODDATOS')
             ->setCertificate($certificate->export(X509ContentType::PEM));
+
+
+        // //* produccion JYP SAC
+        // $api = new \Greenter\Api([  
+        //     'auth' => 'https://api-seguridad.sunat.gob.pe/v1',
+        //     'cpe' => 'https://api-cpe.sunat.gob.pe/v1',
+        // ]);
+        // if ($certificate === false) {
+        //     throw new Exception('No se pudo cargar el certificado');
+        // }
+        // $api->setBuilderOptions([
+        //         'strict_variables' => true,
+        //         'optimizations' => 0,
+        //         'debug' => true,
+        //         'cache' => false,
+        //     ])
+        //     ->setApiCredentials('8852449e-5cb5-4c85-a12e-42d4531d967b', 'qpL4mZHH89e0scPKwsF0PA==')
+        //     ->setClaveSOL('20545122520', 'JYPSACFA', 'P@@@W0RDs')
+        //     ->setCertificate($certificate->export(X509ContentType::PEM));
 
 
         return  $api;

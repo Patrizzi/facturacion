@@ -17,7 +17,7 @@ use App\Nota_Credito;
 use App\Nota_Credito_registro;
 use App\Codigo_guia_almacen;
 use App\Almacen;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use DateTime;
 
 use Illuminate\Http\Request;

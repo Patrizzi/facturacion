@@ -21,7 +21,10 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 100%;
     }
-    @page { size: 420mm 297mm landscape; }
+    @page { 
+        size: A4; 
+        font-size: 60% !important;    
+    }
 </style>
 <body class="white-bg">
 {{-- <div class="ibox" style=" margin-bottom:0px; width: 100%">
@@ -30,14 +33,14 @@
         <img align="left" src="{{asset('img/logos/')}}/{{$mi_empresa->foto}}" style="width:200px;height: 50px ;margin-top: 5px">
     </div>
 </div> --}}
-<table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
+<table style="width: 100%;border-collapse:separate;height: auto;">
     <tr>
         @include('layout_cabecera_ventas_pdf')
-       <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
+       <td style="width: 29%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin: 2px 0px" align="right">
         <center>
-            <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-            <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACIÓN ELECTRONICA</h2><br>
-            <h5 style="text-align: center;margin-bottom: -5px" >{{$cotizacion->cod_cotizacion}}</h5>
+            <h3 style="text-align: center;margin-top: 0px"> R.U.C {{$empresa->ruc}}</h3>
+            <h2 style="text-align: center;margin: 4px" >COTIZACIÓN ELECTRONICA</h2>
+            <h4 style="text-align: center;margin-bottom: 0px" >{{$cotizacion->cod_cotizacion}}</h4>
         </center>
     </td>
 </tr>
@@ -73,32 +76,32 @@
     </div>
     <br>
 
-    <div class="table-responsive">
-        <table class="table " style="border-top: 0px" >
+    <div class="">
+        <table class="table " style="border-top: 0px;" >
             <thead style="">
              <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
-                <td width="30px">ITEM </td>
-                <td width="120px" >Código</td>
-                <td width="400px">Descripción</td>
-                <td width="auto">Cantidad</td>
-                <td width="auto">P.Unitario</td>
-                <td width="80px">Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></td>
+                <td style="width: 10px !important">ITEM </td>
+                <td style="width: 60px !important;" >Código</td>
+                <td style="width: 380px !important;">Descripción</td>
+                <td >Cantidad</td>
+                <td >P. Unitario</td>
+                <td >Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></td>
             </tr>
         </thead>
         <tbody>
          @foreach($cotizacion_registro as $cotizacion_registros)
          <tr style="border-bottom-width:   0px white ">
-            <td width="30px" style="">{{$i++}} </td>
+            <td  style="">{{$i++}} </td>
             @if(isset($cotizacion_registros->producto_id))
-            <td width="120px" style="">{{$cotizacion_registros->producto->codigo_producto}}</td>
-            <td width="400px" style="">{{$cotizacion_registros->producto->nombre}} <br>{{$cotizacion_registros->descripcion_item}}</span></td>
+            <td style="">{{$cotizacion_registros->producto->codigo_producto}}</td>
+            <td  style="">{{$cotizacion_registros->producto->nombre}} <br>{{$cotizacion_registros->descripcion_item}}</span></td>
             @else
-            <td width="120px" style="">{{$cotizacion_registros->servicio->codigo_servicio}}</td>
-            <td width="400px" style="">{{$cotizacion_registros->servicio->nombre}} <br>{{$cotizacion_registros->descripcion_item}}</span></td>
+            <td  style="">{{$cotizacion_registros->servicio->codigo_servicio}}</td>
+            <td  style="">{{$cotizacion_registros->servicio->nombre}} <br>{{$cotizacion_registros->descripcion_item}}</span></td>
             @endif
-            <td width="auto" style="">{{$cotizacion_registros->cantidad}}</td>
-            <td width="auto" style="">{{number_format($cotizacion_registros->precio_unitario_comi,2)}}</td>
-            <td width="80px" style="text-align: right" >{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2)}}</td>
+            <td  style="">{{$cotizacion_registros->cantidad}}</td>
+            <td  style="">{{number_format($cotizacion_registros->precio_unitario_comi,2)}}</td>
+            <td  style="text-align: right" >{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2)}}</td>
         </tr>
         @endforeach
     </tbody>
@@ -188,7 +191,7 @@
 {{--  --}}
 <style>
 
-    *{font-size: 14px;color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";color: black}
+    *{color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";color: black}
     .cero{
         margin-bottom: 0px;
 
@@ -206,8 +209,8 @@
         border-style: solid;
     }
     .table {
-        width: 100%;
-        max-width: 100%;
+        /* width: 100%;
+        max-width: 100%; */
         margin-bottom: 1rem;
         background-color: transparent;
         border-top-width: 0px;

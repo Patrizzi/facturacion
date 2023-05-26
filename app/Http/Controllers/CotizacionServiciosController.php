@@ -29,7 +29,7 @@ use App\TipoCambio;
 use App\Ventas_registro;
 use App\kardex_entrada_registro;
 use App\Kardex_entrada;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;

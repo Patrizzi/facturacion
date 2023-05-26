@@ -17,7 +17,7 @@ use App\Categoria;
 use App\Producto;
 use Carbon\Carbon;
 use App\Provedor;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use DB;
 use Illuminate\Http\Request;
 

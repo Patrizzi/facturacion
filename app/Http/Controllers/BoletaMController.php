@@ -22,7 +22,7 @@ use App\Cuotas_credito;
 use App\Banco;
 use App\Nota_Credito;
 use App\Nota_Debito;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

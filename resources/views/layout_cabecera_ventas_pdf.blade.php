@@ -1,8 +1,7 @@
 <td style="width: 30%;border-color: white" rowspan="2" valign="top">
-    <img align="" src="{{asset('img/logos/')}}/{{$empresa->foto}}" style="margin-top: 0px;" width="300px" />
-    <br>
+    <center><img align="center" src="{{asset('img/logos/')}}/{{$empresa->foto}}" style="margin-top: 0px;" width="80%" /></center>
 </td>
-<td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
+<td style="width: 30%;border-color: white;text-align: center;margin: 15px 10px" rowspan="2" valign="top" >
    <strong>{{$empresa->razon_social}}</strong>
    <br>
    Telefono: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}

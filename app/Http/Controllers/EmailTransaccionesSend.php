@@ -42,7 +42,7 @@ use App\Nota_Credito_registro;
 use App\NotaVentaRegistro;
 use App\GarantiaInformeTecnicoArchivos;
 use App\User;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 use DB;
 use App\Servicios;

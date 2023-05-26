@@ -40,10 +40,10 @@
     }
     .strong{
         font-weight: bold;
-        font-size: 13px;
+        /* font-size: 13px; */
     }
     .lol{
-        font-size: 13px;
+        /* font-size: 13px; */
     }
     .border-none{
         border: none;

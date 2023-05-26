@@ -17,7 +17,7 @@ use App\Servicios;
 use App\Igv;
 use App\kardex_entrada;
 use App\Stock_producto;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

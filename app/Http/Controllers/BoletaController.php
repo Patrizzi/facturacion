@@ -30,7 +30,7 @@ use App\Tipo_operacion_f;
 use App\Stock_almacen;
 use App\Stock_producto;
 use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Nota_Credito;
@@ -941,6 +941,7 @@ return redirect()->route('boleta.show',$boleta->id);
         $sub_total=0;
         $boleta=Boleta::find($id);
         $i=1;
+        
         $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
         return $pdf->download('Boleta - '.$boleta->codigo_boleta.'.pdf');
 
