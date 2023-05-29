@@ -250,7 +250,7 @@
                             <thead>
                                 <tr>
                                     <th >ITEM</th>
-                                    <th style="width: 10%">Codigo Producto</th>
+                                    <th style="width: 10%">Código</th>
                                     <th >Descripción</th>
                                     <th style="width: 10%" >Cantidad</th>
                                     <th style="width: 10%">Precio unitario</th>

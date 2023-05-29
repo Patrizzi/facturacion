@@ -124,7 +124,8 @@
         <tr>
             <td style="width: 70%;border: none">
                 <h3 align="left">
-                    <?php  use Luecano\NumeroALetras\NumeroALetras;
+                    <?php  
+                        use Luecano\NumeroALetras\NumeroALetras;
                         $v=new NumeroALetras() ;
                         $letra=($v->toInvoice($end, 2));
                     //  $letra_final = ucfirst(strstr($letra, 'soles',true));

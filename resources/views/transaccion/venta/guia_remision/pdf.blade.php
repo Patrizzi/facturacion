@@ -10,19 +10,22 @@
     <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
 </head>
 <style type="text/css">
-.form-control, .single-line {
-    background-color: #FFFFFF;
-    background-image: none;
-    border: 1px solid #e5e6e7;
-    border-radius: 1px;
-    color: inherit;
-    display: block;
-    padding: 6px 12px;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100%;
-}
-@page { size: 420mm 297mm landscape; }
-</style>
+    .form-control, .single-line {
+        background-color: #FFFFFF;
+        background-image: none;
+        border: 1px solid #e5e6e7;
+        border-radius: 1px;
+        color: inherit;
+        display: block;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 100%;
+    }
+    @page { 
+        size: A4 landscape;
+        font-size: 60% !important;
+    }
+    </style>
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="row">
