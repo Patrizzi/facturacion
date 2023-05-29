@@ -153,16 +153,16 @@
         </tr>
     </table>
     <br>
+    <br>
     <!-- Fin Totales de Productos -->
-    <table style="width: 100%;height: 120px;border-collapse:separate;margin-bottom: -10px">
+    <table style="width: 100%;height: 120px;border-collapse:separate;margin-bottom: -10px;">
         <tr>
-            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;min-height: 500px;">
                 <strong>Observaciones:</strong><br>
                 {{$boleta->observacion}}
             </td>
         </tr>
     </table>
-    <br>
     @include('layout_bancos_pdf')
     <div class="row">
         <br>
@@ -203,7 +203,7 @@
             bottom: 0cm;
             left: 0cm;
             right: 0cm;
-            height: 2cm;
+            height: 10cm;
         }
     </style>
 @endif

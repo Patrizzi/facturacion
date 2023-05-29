@@ -197,7 +197,7 @@
 
     }
 </style>
-@if (count($boleta_registro < 15))
+@if (count($boleta_registro)  > 15)
     <style>
         footer {
             position: fixed;
