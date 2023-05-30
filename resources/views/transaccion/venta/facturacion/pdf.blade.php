@@ -19,7 +19,10 @@
             transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
             width: 100%;
         }
-        @page { size: 420mm 297mm landscape; }
+        @page { 
+            size: A4; 
+            font-size: 60%;
+        }
     </style>
     <body class="white-bg">
         <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
@@ -34,7 +37,6 @@
                 </td>
             </tr>
         </table>
-
         <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
             @if($facturacion->f_electronica == 2)
                 <div id="watermark">
@@ -46,24 +48,38 @@
                     <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
                         <!-- <center><strong style="align-content: center;margin: 5px">Datos Generales </strong></center><br> -->
                         <strong>Señor(es):</strong>&nbsp;
-                        @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
-                        @else{{$facturacion->cotizacion->cliente->nombre}}
-                        @endif<br>
+                        @if(isset($facturacion->cliente_id))
+                            {{$facturacion->cliente->nombre}}
+                        @else
+                            {{$facturacion->cotizacion->cliente->nombre}}
+                        @endif
+                        <br>
                         <strong>R.U.C:</strong>&nbsp;
-                        @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
-                        @else{{$facturacion->cotizacion->cliente->numero_documento}}
+                        @if(isset($facturacion->cliente_id))
+                            {{$facturacion->cliente->numero_documento}}
+                        @else
+                            {{$facturacion->cotizacion->cliente->numero_documento}}
                         @endif&nbsp;&nbsp;<br>
                         <strong>Dirección:</strong>&nbsp;
-                        @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
-                        @else{{$facturacion->cotizacion->cliente->direccion}}
-                        @endif<br>
-                        <strong>Condiciones de Pago:</strong>&nbsp;@if(isset($facturacion->cliente_id)){{$facturacion->forma_pago->nombre }}
-                        @else{{$facturacion->cotizacion->forma_pago->nombre }}
-                        @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        @if(isset($facturacion->cliente_id))
+                            {{$facturacion->cliente->direccion}}
+                        @else
+                            {{$facturacion->cotizacion->cliente->direccion}}
+                        @endif
+                        <br>
+                        <strong>Condiciones de Pago:</strong>&nbsp;
+                        @if(isset($facturacion->cliente_id))
+                            {{$facturacion->forma_pago->nombre }}
+                        @else
+                            {{$facturacion->cotizacion->forma_pago->nombre }}
+                        @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <strong>Tipo de Moneda:</strong>&nbsp;
-                        @if(isset($facturacion->cliente_id)){{$facturacion->moneda->nombre }}
-                        @else{{$facturacion->cotizacion->moneda->nombre }}
-                        @endif<br>
+                        @if(isset($facturacion->cliente_id))
+                            {{$facturacion->moneda->nombre }}
+                        @else
+                            {{$facturacion->cotizacion->moneda->nombre }}
+                        @endif
+                        <br>
                     </td>
                     <th style="width: 5%;border-color: white"></th>
                     <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
@@ -75,23 +91,18 @@
                     </td>
                 </tr>
             </table>
-            <div class="form-control" style="border: none;height: auto" >
-                <div align="left">
-
-                </div>
-            </div>
             <br>
             {{--  --}}
             <div class="table-responsive">
                 <table class="table " style="border-top: 0px;border-color: #808080" >
                     <thead style="border-color: #808080">
                         <tr >
-                        <th style="width: 8%">Item</th>
-                        <th style="width: 15%">Cod. de Item</th>
-                        <th>Descripción</th>
-                        <th style="width: 11%">Cantidad</th>
-                        <th  style="text-align: center;width: 8%">P. Unit.</th>
-                        <th  style="text-align: center;width: 8%">Total</th>
+                        <th class="tr_table_item" style="width: 8%">Item</th>
+                        <th class="tr_table_item" style="width: 15%">Código</th>
+                        <th class="tr_table_item">Descripción</th>
+                        <th class="tr_table_item" style="width: 11%">Cantidad</th>
+                        <th class="tr_table_item"  style="text-align: center;width: 8%">P. Unit.</th>
+                        <th class="tr_table_item"  style="text-align: center;width: 8%">Total</th>
 
                     </tr>
                 </thead>
@@ -174,7 +185,11 @@
 
     <style>
 
-        *{font-size: 14px;color: black;font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";border-color: #3D3D3D}
+        *{
+            color: black;
+            font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+            border-color: #3D3D3D
+        }
         .cero{
             margin-bottom: 0px;
 
@@ -219,6 +234,10 @@
         }
         .form-control {
             background-color: transparent !important;
+        }
+        .tr_table_item{
+            border-top: 0px white;
+            text-align: initial;
         }
     </style>
 </html>

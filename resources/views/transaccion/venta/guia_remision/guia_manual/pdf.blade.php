@@ -6,24 +6,24 @@
         <title>Guia Remision Manual</title>{{--
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
         <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
+        <style type="text/css">
+            .form-control, .single-line {
+                background-color: #FFFFFF;
+                background-image: none;
+                border: 1px solid #808080;
+                border-radius: 10px;
+                color: inherit;
+                display: block;
+                padding: 6px 12px;
+                transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+                width: 100%;
+            }
+            @page { 
+                size: A4 ;
+                font-size: 60% !important;
+            }
+        </style>
     </head>
-    <style type="text/css">
-        .form-control, .single-line {
-            background-color: #FFFFFF;
-            background-image: none;
-            border: 1px solid #808080;
-            border-radius: 10px;
-            color: inherit;
-            display: block;
-            padding: 6px 12px;
-            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-            width: 100%;
-        }
-        @page { 
-            size: A4 ;
-            font-size: 60%;
-        }
-    </style>
     <body class="white-bg">
         <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
             <tr>
@@ -96,32 +96,30 @@
                 </tr>
             </tbody>
         </table>
-        <div class="table-responsive">
-            <table class="table " style="border-top: 0px;border-color: #808080" >
-                <thead style="border-color: #808080">
-                    <tr>
-                        <th style="width: 10px">Item</th>
-                        <th style="width: 60px">Código</th>
-                        <th>Marca / Descripcion</th>
-                        <th>Unid. Medida</th>
-                        <th style="width: 60px">Cantidad</th>
-                        <th style="width: 60px">Peso</th>
+        <div class="">
+            <table class="" style="border-top: 0px;width: 100%;max-width: 100%;table-layout:fixed;border-top: 0px white;" >
+                <thead style="border-top: 0px white;">
+                    <tr style="text-align: left;font-weight: bold;border-top: 0px white;vertical-align: bottom;">
+                        <th  style=" width: 5%;border-top: 0px white">Item</th>
+                        <th  style=" width: 10%;border-top: 0px white">Código</th>
+                        <th  style=" width: 59%;border-top: 0px white">Marca / Descripcion</th>
+                        <th style=" width: 10%;border-top: 0px white">Ud. de Medida</th>
+                        <th style=" width: 8%;border-top: 0px white">Cantidad</th>
+                        <th style=" width: 8%;border-top: 0px white">Peso</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="width: 100%">
                     @foreach($guia_remision_m_reg as $guia_registros)
-                        <tr style="border-bottom-width:   0px white ">
+                        <tr style="border-bottom: 0px white;">
                             <td>{{$i++}}</td>
                             <td>{{$guia_registros->producto->codigo_producto}}</td>
-                            <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}} <br> {{$guia_registros->descripcion}}  </td>
+                            <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong><span style="overflow-wrap: break-word;
+                                ">{{$guia_registros->numero_serie}} </span> <br> {{$guia_registros->descripcion}}  </td>
                             <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                             <td>{{$guia_registros->cantidad}}</td>
                             <td>{{$guia_registros->peso}} KG</td>
                         </tr>
                     @endforeach
-                    <tr>
-                        <td colspan="6"><hr></td>
-                    </tr>
                     <tr>
                         <td colspan="5" align="right">Peso Total:</td>
                         <td>{{$guia_remision_m_reg->sum('peso')}} KGM</td>
@@ -171,10 +169,9 @@
         </table>
     </body>
     <style type="text/css">
-        /* .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D} */
         
         *{
-            color: #495057;
+            color: black;
             font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
         }
         .table-bordered .blanco {
@@ -189,14 +186,19 @@
             border-style: solid;
         }
         .table {
-            width: 100%;
-            max-width: 100%;
+            /* width: 100%;
+            max-width: 100%; */
             margin-bottom: 1rem;
             background-color: transparent;
             border-top-width: 0px;
+            text-align: left;
         }
         .form-control {
             background-color: transparent !important;
+        }
+        .tr_table_item{
+            border-top: 0px white;
+            text-align: initial;
         }
     </style>
 </html>
