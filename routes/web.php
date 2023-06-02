@@ -207,6 +207,7 @@ Route::group(
 		Route::resource('/facturacion','FacturacionController')->except(['store','create']);
 		Route::post('/facturacion/create','FacturacionController@create')->name('facturacion.create');
 		Route::put('/facturacion/store/{id_moneda}','FacturacionController@store')->name('facturacion.store');
+		Route::post('/facturacion/anular','FacturacionController@anulacion')->name('facturacion.anulacion');
 		// Route::post('ticket_ajax', 'FacturacionController@ticket_ajax')->name('ticket_ajax');
 		// Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 

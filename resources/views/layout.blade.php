@@ -89,6 +89,12 @@
         /* margin: 10px 0px; */
         align-self: center;
     }
+    .popover-body{
+        color:#721c24;
+        background-color: #f8d7da;
+        font-weight: bold;
+        text-align: center;
+    }
 </style>
 <body class="">
     <div id="wrapper">
@@ -360,10 +366,11 @@
                     </div>  
                 </div>
                 <ul class="nav navbar-top-links navbar-right" >
-                    <li class="dropdown" style="margin: 0px 50px">
+                    <li class="dropdown" style="margin: 0px 50px" data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT" id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 18px;"></i> @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  <span class="label label-danger link_alert">!!!</span> @endif
+                            <i class="fa fa-bell " style="font-size: 18px;color: red;"></i> @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)   @endif
+                            {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
                         </a>
                         {{-- SI HAY PARA ENVIAR --}}
                         {{-- <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -503,8 +510,10 @@
 
         <script>
             $(document).ready(function (){
-        // Bind normal buttons
-        Ladda.bind( '.ladda-button',{ timeout: 8000 });
-    });
-</script>
+                // Bind normal buttons
+                Ladda.bind( '.ladda-button',{ timeout: 8000 });
+                $('#btn_popover').click();
+            });
+            
+        </script>
 </html>

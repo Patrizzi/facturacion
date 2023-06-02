@@ -1022,4 +1022,31 @@ return redirect()->route('facturacion.show',$facturacion->id);
         return view('transaccion.venta.facturacion.ticket',compact('facturacion','facturacion_registro','empresa','igv','moneda'));
     }
 
+    public function anulacion(Request $request){
+        
+        $id = $request->get('id_fact');
+        $factura = Facturacion::where('id', $id)->first();
+        // return $factura;
+        $factura->estado = 1;
+        $factura->f_electronica = 2;
+        $factura->save();
+        
+
+        //FACTURAS CON GUIA DE REMISION
+        if($factura->guia_remision == "0"){
+            $factura_reg = Facturacion_registro::where('facturacion_id', $factura->id)->get();
+            // return
+            //DESCUENTO DE STOCK 
+            foreach ($factura_reg as $fact_reg) {
+                // return $fact_reg;
+                if ($fact_reg->producto_id  != null) {
+                    Stock_almacen::ingreso($factura->almacen_id,$fact_reg->producto_id,$fact_reg->cantidad);
+                    // return "a";
+                }
+            }
+            kardex_entrada_registro::stock_producto_precio();
+        }
+        return redirect()->back();
+    }
+
 }

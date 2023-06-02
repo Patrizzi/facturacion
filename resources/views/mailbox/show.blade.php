@@ -122,6 +122,7 @@
                         <form action ="{{route('email.store')}}" method="POST" enctype="multipart/form-data" onsubmit="return valida(this)">
                             @csrf
                             <div class="mail-body">
+                                <h2>Enviar Correos</h2>
                                 <div class=" row">
                                     <div class="col-sm-6">
                                         <span>De:</span>
@@ -148,7 +149,7 @@
                                     @else
                                         <div class="col-sm-12">
                                             <span>CC:</span>
-                                            <input type="text" class="form-control" name="cc_email" id="cc">
+                                            <input type="email" class="form-control" name="cc_email" id="cc">
                                         </div>
                                     @endif
                                         <div class="col-sm-12">

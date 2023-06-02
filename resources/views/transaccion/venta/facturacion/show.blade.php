@@ -24,9 +24,15 @@
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox-title" style="padding-right: 3.1%">
+    <div class="ibox-title p-xl" style="padding: 10px 40px !important" >
         <div class="row tooltip-demo">
-            <div class="col-sm-6">
+            <div class="col-sm-6 col_btn" style="text-align: left ">
+                <?php use Carbon\Carbon; ?>
+                @if($facturacion->f_electronica == 0 && $facturacion->created_at->diffInDays(Carbon::now()) > 7 )
+                    <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Anular La Factura" style="display: inline-flex;animation: circleScale 3s infinite;">
+                        <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular"><i class="fa fa-ban fa-xl"></i></button>
+                    </span>
+                @endif
             </div>
             <div class="col-sm-6" align="right">
                 <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_fac' ,$facturacion->id)}}">
@@ -49,78 +55,72 @@
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
                 </div>
                 <div id="div-mostrar">
-                 <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                    @csrf
-                    <input type="tel" name="numero"  value="{{$facturacion->cliente->celular}}"   />
-                    <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                    <input type="text" hidden="" name="url" value="{{route('pdf_fac' ,$facturacion->id)}}?archivo=">
-                    <input type="text" name="name_sin_cambio" hidden="" value="Facturacion_{{$facturacion->codigo_fac}}" />
-                    <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                </form>
+                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
+                        @csrf
+                        <input type="tel" name="numero"  value="{{$facturacion->cliente->celular}}"   />
+                        <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                        <input type="text" hidden="" name="url" value="{{route('pdf_fac' ,$facturacion->id)}}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden="" value="Facturacion_{{$facturacion->codigo_fac}}" />
+                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-            {{-- <div class="ibox-tools">
-                <a class="btn btn-success"  href="{{route('facturacion.print' , $facturacion->id)}}" target="_blank">Imprimir</a>
+    <div class="row " >
+        <div class="col-lg-12" style="margin-top: -5px;" >
+            @if($facturacion->f_electronica == 2)
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>
+            @endif
+            <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                <div class="row">
+                    @include('layout_cabecera_ventas')
+                    <div class="col-sm-4 ">
+                    <div class="form-control ruc" style="height: 125px">
+                        <center>
+                            <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
+                            <h2>FACTURA ELECTRÓNICA</h2>
+                            <h5> {{$facturacion->codigo_fac}}</h5>
+                        </center>
+                    </div>
+                </div>
             </div>
-        </div> --}}
+            <br>
+            <div class="row" align="center" style="padding-bottom: 5px">
+                <div class="col-sm-6" align="center">
+                    <div class="form-control">
+                        <!-- <h3> Datos Generales</h3> -->
+                        <div align="left">
+                            <strong>Cliente:</strong>
+                            @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
+                            @else{{$facturacion->cotizacion->cliente->nombre}}
+                            @endif <br>
+                            <strong>R.U.C:</strong>
+                            @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
+                            @else{{$facturacion->cotizacion->cliente->numero_documento}}
+                            @endif <br>
+                            <strong>Dirección:</strong>
+                            @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
+                            @else{{$facturacion->cotizacion->cliente->direccion}}
+                            @endif <br>
+                            <strong>Condiciones de Pago:</strong>
+                            @if(isset($facturacion->cliente_id)){{$facturacion->forma_pago->nombre }}
+                            @else{{$facturacion->cotizacion->forma_pago->nombre }}
+                            @endif  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Tipo de Moneda:</strong>
+                            @if(isset($facturacion->cliente_id)){{$facturacion->moneda->nombre }}
+                            @else{{$facturacion->cotizacion->moneda->nombre }}
+                            @endif <br>
 
-        <div class="row " >
-            <div class="col-lg-12" style="margin-top: -5px;" >
-                @if($facturacion->f_electronica == 2)
-                    <div id="watermark">
-                        <p>Anulado</p>
-                    </div>    
-                @else
-
-                @endif
-                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        @include('layout_cabecera_ventas')
-                       <div class="col-sm-4 ">
-                        <div class="form-control ruc" style="height: 125px">
-                            <center>
-                                <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>FACTURA ELECTRÓNICA</h2>
-                                <h5> {{$facturacion->codigo_fac}}</h5>
-                            </center>
                         </div>
                     </div>
-                </div><br>
-                <div class="row" align="center" style="padding-bottom: 5px">
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control">
-                            <!-- <h3> Datos Generales</h3> -->
-                            <div align="left">
-                                <strong>Cliente:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->cliente->nombre}}
-                                @else{{$facturacion->cotizacion->cliente->nombre}}
-                                @endif <br>
-                                <strong>R.U.C:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
-                                @else{{$facturacion->cotizacion->cliente->numero_documento}}
-                                @endif <br>
-                                <strong>Dirección:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
-                                @else{{$facturacion->cotizacion->cliente->direccion}}
-                                @endif <br>
-                                <strong>Condiciones de Pago:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->forma_pago->nombre }}
-                                @else{{$facturacion->cotizacion->forma_pago->nombre }}
-                                @endif  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Tipo de Moneda:</strong>
-                                @if(isset($facturacion->cliente_id)){{$facturacion->moneda->nombre }}
-                                @else{{$facturacion->cotizacion->moneda->nombre }}
-                                @endif <br>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6" align="center">
-                       <div class="form-control" >
-                           <!-- <h3>Condiciones Generales</h3> -->
-                           <div align="left">
+                </div>
+                <div class="col-sm-6" align="center">
+                    <div class="form-control" >
+                        <!-- <h3>Condiciones Generales</h3> -->
+                        <div align="left">
                             <strong>Orden de Compra:</strong>
                             {{$facturacion->orden_compra}} <br>
                             <strong>Guía de Remisión:</strong>
@@ -129,19 +129,16 @@
                             {{$facturacion->fecha_emision}} <br>
                             <strong>Fecha de Vencimiento:</strong>
                             {{$facturacion->fecha_vencimiento }} <br>
-
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-12" align="center">
-                   <div class="form-control" style="border: none;height: auto" >
-                       <div align="left">
-
-                       </div>
-                   </div>
-               </div>
-
-           </div>
+                    <div class="form-control" style="border: none;height: auto" >
+                        <div align="left">
+                        </div>
+                    </div>
+                </div>
+            </div>
            <br>
            <div class="table-responsive">
             <table class="table ">
@@ -160,8 +157,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
-
                     <tr>
                         <span hidden="hidden">{{$i=1}} </span>
                         @foreach($facturacion_registro as $facturacion_registros)
@@ -196,7 +191,6 @@
                 </tbody>
             </table>
         </div><br><br><br><br>
-
         <div class="row">
                 <div class="col-sm-8">
                     <h3 align="left">
@@ -255,242 +249,213 @@
                 <div style="padding-left: 15px;padding-right: 15px;">
                     {{-- ccccccccccccccccc --}}
                     <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
                         <form action="{{route('email.config')}}"  enctype="multipart/form-data" method="post">
                             @csrf
                             <div class="row">
                                 <fieldset >
                                     <legend> Agregar Configuracion </legend>
-                                    {{-- <div> --}}
-                                        <div class="panel-body" align="left">
-                                            <div class="row">
-                                                <label class="col-sm-2 col-form-label">Email:</label>
-                                                <div class="col-sm-10"><input type="text" class="form-control" name="email" style="height: 75%;border-radius: 2px ">
-                                                </div>
+                                    <div class="panel-body" align="left">
+                                        <div class="row">
+                                            <label class="col-sm-2 col-form-label">Email:</label>
+                                            <div class="col-sm-10"><input type="text" class="form-control" name="email" style="height: 75%;border-radius: 2px ">
+                                            </div>
 
-                                                <label class="col-sm-2 col-form-label">Contraseña:</label>
-                                                <div class="col-sm-10">
-                                                    <div class="input-group m-b">
-                                                        <input type="password" class="form-control" name="password" id="txtPassword" required="" style="height: 35.2px;border-radius: 2px ">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
-                                                                <i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
-                                                            </span>
-                                                        </div>
+                                            <label class="col-sm-2 col-form-label">Contraseña:</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group m-b">
+                                                    <input type="password" class="form-control" name="password" id="txtPassword" required="" style="height: 35.2px;border-radius: 2px ">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
+                                                            <i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <label class="col-sm-2 col-form-label">SMPT:</label>
-                                                <div class="col-sm-4">
-                                                    <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" required="" style="border-radius: 2px">
-                                                </div>
-
-                                                <label class="col-sm-2 col-form-label">PORT:</label>
-                                                <div class="col-sm-4">
-                                                    <input type="text" class="form-control" name="port" value="110 " style="border-radius: 2px">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <label class="col-sm-2 col-form-label">Encryption:</label>
-                                                <div class="col-sm-4">
-                                                    <select class="form-control" name="encryp" required="" style="height: 85%;border-radius: 2px;padding-top: 4px">
-                                                        <option value="">Ninguno</option>
-                                                        <option value="SSL">SSL</option>
-                                                        <option value="TLS">TLS</option>
-                                                    </select>
-                                                </div>
-                                            </div><br>
-                                            <div class="row">
-                                                <label class="col-sm-2 col-form-label">Firma (opcional):</label>
-                                                <div class="col-sm-10">
-                                                    <input type="file" id="archivoInput" name="firma" onchange="return validarExt()" style="border-radius: 2px" />
-                                                    <span id="visorArchivo">
-                                                        <!--Aqui se desplegará el fichero-->
-                                                        <img name="firma"  src="" width="390px" height="200px" />
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <label class="col-sm-2 col-form-label">Ancho(px)</label>
-                                                <div class="col-sm-4">
-                                                    <input type="number" class="form-control" name="ancho_firma">
-                                                </div>
-                                                <label class="col-sm-2 col-form-label" >Alto(px)</label>
-                                                <div class="col-sm-4">
-                                                    <input type="number" class="form-control" name="alto_firma">
-                                                </div>
-                                            </div>
-                                            <br>
                                         </div>
-                                    </fieldset>
-                                </div>
-                                <button class="ladda-button btn btn-primary" type="submit">Grabar</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <div class="row">
+                                            <label class="col-sm-2 col-form-label">SMPT:</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" name="smtp" placeholder="smtp.gmail.com" required="" style="border-radius: 2px">
+                                            </div>
+
+                                            <label class="col-sm-2 col-form-label">PORT:</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" name="port" value="110 " style="border-radius: 2px">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-sm-2 col-form-label">Encryption:</label>
+                                            <div class="col-sm-4">
+                                                <select class="form-control" name="encryp" required="" style="height: 85%;border-radius: 2px;padding-top: 4px">
+                                                    <option value="">Ninguno</option>
+                                                    <option value="SSL">SSL</option>
+                                                    <option value="TLS">TLS</option>
+                                                </select>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <label class="col-sm-2 col-form-label">Firma (opcional):</label>
+                                            <div class="col-sm-10">
+                                                <input type="file" id="archivoInput" name="firma" onchange="return validarExt()" style="border-radius: 2px" />
+                                                <span id="visorArchivo">
+                                                    <!--Aqui se desplegará el fichero-->
+                                                    <img name="firma"  src="" width="390px" height="200px" />
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-sm-2 col-form-label">Ancho(px)</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="ancho_firma">
+                                            </div>
+                                            <label class="col-sm-2 col-form-label" >Alto(px)</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="alto_firma">
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <button class="ladda-button btn btn-primary" type="submit">Grabar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- MODAL ANULAR A LOS 7 DIAS --}}
+
+    <div class="modal fade" id="modal_anular" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLongTitle">Anular Factura</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><center>La Factura ya tiene más de <strong>7 días</strong> desde su creación, si la envía a Sunat procederá como <strong>RECHAZADA por SUNAT</strong></center></h4>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <p><strong>¿Desea Anular La Factura {{$facturacion->codigo_fac}}?</strong></p>
+                        </div>
+                        <div class="col-sm-4">
+                            <form action="{{route('facturacion.anulacion')}}" method="POST">
+                            {{-- <form action="" method="POST"> --}}
+                                @csrf
+                                <input type="hidden" name="id_fact" value="{{$facturacion->id}}">
+                                <center><button class="btn btn-danger">Anular</i></button></center>
                             </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:  1rem 1rem;justify-content: center">
+                    <div class="row" style="width: 100%">
+                        <div class="col-sm-6" style="padding: 0px" align="left">
+                            *Esto no Anula la Factura en Sunat,
+                        </div>
+                        <div class="col-sm-6" style="padding: 0px" align="right">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- Fin de modal configuracion --}}
-        <style type="text/css">
-            .ruc{border-radius: 10px; height: 150px;}
-            .form-control{border-radius: 10px;}
-            .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-
-            #auto{
-                /*padding: -100px;*/
-                /*background: orange;*/
-                /*width: 95px;*/
-                cursor: pointer;
-                /*margin-top: 10px;*/
-                /*margin-bottom: 10px;*/
-                box-shadow: 0px 0px 1px #000;
-                display: inline-block;
-            }
-
-            #auto:hover{
-                opacity: .8;
-            }
-
-            #div-mostrar{
-                /*width: 50%;*/
-                margin: auto;
-                height: 0px;
-                /*margin-top: -5px*/
-                /*background: #000;*/
-                /*box-shadow: 10px 10px 3px #D8D8D8;*/
-                transition: height .4s;
-                color:white;
-                text-align: right;
-            }
-            #auto:hover{
-                opacity: .8;
-            }
-            #auto:hover + #div-mostrar{
-                height: 50px;
-            }
-            #watermark {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 0;
-            }
-            #watermark p {
-                position: absolute;
-                color:   rgba(120, 120, 120, 0.31);
-                font-weight: bolder;
-                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-                font-size: 95px;
-                pointer-events: none;
-                -webkit-transform: rotate(-45deg);
-                -moz-transform: rotate(-45deg);
-                top: 45%;
-                right: 40%;
-                z-index: 0;
-            }
-            .form-control {
-                background-color: transparent !important;
-            }
-        </style>
-
-        <style>
-            .form-control{margin-top: 5px; border-radius: 5px}
-            p#texto{
-                text-align: center;
-                color:black;
-            }
-
-            input#archivoInput{
-                position:absolute;
-                top:0px;
-                left:0px;
-                right:0px;
-                bottom:0px;
-                width:100%;
-                height:100%;
-                opacity: 0  ;
-            }
-        </style>
-
-        <script type="text/javascript">
-            function mostrarPassword(){
-                var cambio = document.getElementById("txtPassword");
-                if(cambio.type == "password"){
-                    cambio.type = "text";
-                    $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-                }else{
-                    cambio.type = "password";
-                    $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
-                }
-            }
-
-        </script>
-        <script type="text/javascript">
-            {{-- Fotooos --}}
-            function validarExt()
-            {
-                var archivoInput = document.getElementById('archivoInput');
-                var archivoRuta = archivoInput.value;
-                var extPermitidas = /(.jpg|.png|.jfif)$/i;
-                if(!extPermitidas.exec(archivoRuta)){
-                    alert('Asegurese de haber seleccionado una Imagen');
-                    archivoInput.value = '';
-                    return false;
-                }
-
-                else
-                {
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivo').innerHTML =
-                '<img name="firma" src="'+e.target.result+'"width="390px" height="200px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
-        }
+    </div>
+</div>
+{{-- Fin de modal configuracion --}}
+<style type="text/css">
+    .ruc{border-radius: 10px; height: 150px;}
+    .form-control{border-radius: 10px;}
+    /* .a{height: 30px; margin:0;border-radius: 0px;text-align: center;} */
+    #auto{
+        /*padding: -100px;*/
+        /*background: orange;*/
+        /*width: 95px;*/
+        cursor: pointer;
+        /*margin-top: 10px;*/
+        /*margin-bottom: 10px;*/
+        box-shadow: 0px 0px 1px #000;
+        display: inline-block;
     }
-}
-</script>
-<script>
-    var clic = 1;
-    function divAuto(){
-     if(clic==1){
-         document.getElementById("div-mostrar").style.height = "50px";
-         clic = clic + 1;
-     } else{
-        document.getElementById("div-mostrar").style.height = "0px";
-        clic = 1;
+
+    #auto:hover{
+        opacity: .8;
     }
-}
-</script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#btn_ticket').click(function(){
-            var id_fac =  $(`[id='id']`).val();
-            $.ajax({
-             type: "post",
-             url: "{{ route('ticket_ajax_ingreso') }}",
-             data: {
-                '_token': $('input[name=_token]').val(),
-                'id' : id_fac
-            },
-            success: function(response){
-             if(response==1){
-                       // alert('Imprimiendo Ticket');
-                   }else{
-                     alert('Error');
-                 }
-             }
-         });
-        });
-    });
-</script>
+
+    #div-mostrar{
+        /*width: 50%;*/
+        margin: auto;
+        height: 0px;
+        /*margin-top: -5px*/
+        /*background: #000;*/
+        /*box-shadow: 10px 10px 3px #D8D8D8;*/
+        transition: height .4s;
+        color:white;
+        text-align: right;
+    }
+    #auto:hover{
+        opacity: .8;
+    }
+    #auto:hover + #div-mostrar{
+        height: 50px;
+    }
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-weight: bolder;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 45%;
+        right: 40%;
+        z-index: 0;
+    }
+    .form-control {
+        background-color: transparent !important;
+    }
+    .col_btn{
+        display: inline-block;
+        font-weight: 400;
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 0.375rem 0.75rem;
+    }
+</style>
+<style>
+    .form-control{margin-top: 5px; border-radius: 5px}
+    p#texto{
+        text-align: center;
+        color:black;
+    }
+    input#archivoInput{
+        position:absolute;
+        top:0px;
+        left:0px;
+        right:0px;
+        bottom:0px;
+        width:100%;
+        height:100%;
+        opacity: 0  ;
+    }
+    @keyframes circleScale {
+        0% {transform: scale(0.8)  }
+        50% { transform: scale(1.25) }
+        100% { transform: scale(0.8) }
+    }   
+</style>    
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -504,5 +469,55 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<script type="text/javascript">
+    function mostrarPassword(){
+        var cambio = document.getElementById("txtPassword");
+        if(cambio.type == "password"){
+            cambio.type = "text";
+            $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+        }else{
+            cambio.type = "password";
+            $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+        }
+    }
 
+</script>
+<script type="text/javascript">
+    {{-- Fotooos --}}
+    function validarExt()
+    {
+        var archivoInput = document.getElementById('archivoInput');
+        var archivoRuta = archivoInput.value;
+        var extPermitidas = /(.jpg|.png|.jfif)$/i;
+        if(!extPermitidas.exec(archivoRuta)){
+            alert('Asegurese de haber seleccionado una Imagen');
+            archivoInput.value = '';
+            return false;
+        }else{
+            //PRevio del PDF
+            if (archivoInput.files && archivoInput.files[0])
+            {
+                var visor = new FileReader();
+                visor.onload = function(e)
+                {
+                    document.getElementById('visorArchivo').innerHTML =
+                    '<img name="firma" src="'+e.target.result+'"width="390px" height="200px" />';
+                };
+                visor.readAsDataURL(archivoInput.files[0]);
+            }
+        }
+    }
+</script>
+<script>
+    var clic = 1;
+    function divAuto(){
+        if(clic==1){
+            document.getElementById("div-mostrar").style.height = "50px";
+            clic = clic + 1;
+        } else{
+            document.getElementById("div-mostrar").style.height = "0px";
+            clic = 1;
+        }
+    }
+</script>
 @endsection

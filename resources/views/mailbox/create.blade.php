@@ -17,6 +17,7 @@
             <input type="text" hidden  name="retorno" value="{{$ruta_retorno}}" id="">
             @csrf
             <div class="mail-body">
+                <center><h2>Enviar Correos</h2></center>
                 <div class="form-group row">
                     <div class="col-sm-6">
                         <span>De:</span>
