@@ -300,6 +300,7 @@ class GarantiaGuiaIngresoController extends Controller
       $archivo=$request->get('archivo');
       $usuario = User::where('personal_id',$garantia_guia_ingreso->personal_lab_id)->first();
       $empresa=Empresa::first();
+      // return view('transaccion.garantias.guia_ingreso.show_pdf',compact('garantia_guia_ingreso','mi_empresa','contacto','usuario','empresa'));
       $pdf=PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf',compact('garantia_guia_ingreso','mi_empresa','contacto','usuario','empresa'));
             // return $pdf->download();
       return $pdf->download('Guia Ingreso - '.$archivo.' .pdf');

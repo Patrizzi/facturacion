@@ -59,22 +59,22 @@
 <div class="row">
     <div class="col-lg-12" style="margin-top: -2px">
         <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
-            <div class="row" style="height: 120px">
+            <div class="row" style="height: auto;">
                 <div class="col-sm-4 text-left" align="left">
-                    <div class="form-control" align="center" style="height: 79%;" align="left">
-                        <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="height: 70px;width: 90%;margin-top: 5px">
+                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;"" align="left">
+                        <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
                     </div>
                 </div>
                 <div class="col-sm-4" align="center">
-                    <div class="form-control" align="center" style="height: 79%;" align="center">
-                        <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->imagen)}}" style="height: 70px;width: 90%;margin-top: 5px">
+                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;" align="center"  >
+                        <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->imagen)}}" style="max-width: 100%;max-height: 100px;padding: 5px">
                     </div>
                 </div>
                 <div class="col-sm-4" align="right" >
-                    <div class="form-control" align="center" style="height: 79%;" align="right">
-                        <h3 style="">R.U.C {{$empresa->ruc}}</h3>
-                        <h2 style="font-size: 19px">GUIA DE INFORME TECNICO</h2>
-                        <h5>{{$garantias_informe_tecnico->orden_servicio}}</h5>
+                    <div class="form-control" align="center" style="height: 100%;"align="right">
+                        <h2 style="">R.U.C {{$empresa->ruc}}</h2>
+                        <h3 style="font-size: 19px">GUIA DE INFORME TECNICO</h3>
+                        <h4>{{$garantias_informe_tecnico->orden_servicio}}</h4>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                         <div align="left">
                             <strong>Señor(es):</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}<br>
                             <strong>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->documento_identificacion}} :</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>Fecha:</strong> &nbsp;{{$garantias_informe_tecnico->fecha}}<br>
+                            <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantias_informe_tecnico->fecha))}}<br>
                             <strong>Telefono:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Correo:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}<br>
                             <strong>Direccion:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->direccion}}<br>
@@ -125,7 +125,7 @@
                     </div>
                     <div align="left" class="col-sm-6">
                         <strong>Codigo Interno:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->codigo_interno}}<br>
-                        <strong>Fecha de Compra:</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->fecha_compra}}<br>
+                        <strong>Fecha de Compra:</strong> &nbsp;{{date("d/m/Y", strtotime($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->fecha_compra))}}<br>
                         <strong>Revision y Diagnóstico:&nbsp;</strong>{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->revision_diagnostico)!!}
                     </div>
                 </div>

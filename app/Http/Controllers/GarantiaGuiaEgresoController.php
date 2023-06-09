@@ -132,7 +132,7 @@ class GarantiaGuiaEgresoController extends Controller
         $usuario = User::where('personal_id',$garantias_guias_egreso->garantia_ingreso_i->personal_lab_id)->first();
         $archivo=$request->get('archivo');
 
-        // return view('transaccion.garantias.guia_ingreso.show_print',compact('garantia_guia_ingreso','mi_empresa'));
+        // return view('transaccion.garantias.guia_egreso.show_pdf',compact('garantias_guias_egreso','mi_empresa','contacto'));
         // $pdf=App::make('dompdf.wrapper');
         // $pdf=loadView('welcome');
         $pdf=PDF::loadView('transaccion.garantias.guia_egreso.show_pdf',compact('garantias_guias_egreso','mi_empresa','contacto'));

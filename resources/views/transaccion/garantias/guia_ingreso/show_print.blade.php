@@ -21,35 +21,36 @@
 
     {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
     <SCRIPT LANGUAGE="JavaScript">
-        function cerrar() {
-        window.close();
-        }
+        // function cerrar() {
+        // window.close();
+        // }
     </SCRIPT>
 
 </head>
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
-<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
+{{-- <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)"> --}}
+<body class="white-bg" >
 
 <div class="row">
         <div class="col-lg-12">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row" style="height: 130px">
+                <div class="row" style="height: auto;">
                     <div class="col-sm-4 text-left" align="left">
-                        <div class="form-control" align="center" style="height: 79%;" align="left">
-                            <img align="center" src="{{asset('img/logos/'.$mi_empresa->foto)}}" style="height: 70px;width: 90%;margin-top: 5px">
+                        <div class="form-control" align="center" style="height: 100%;" align="left">
+                            <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;vertical-align: middle;align-items: center">
                         </div>
                     </div>
                     <div class="col-sm-4" align="center">
-                         <div class="form-control" align="center" style="height: 79%;" align="center">
-                            <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantia_guia_ingreso->marcas_i->imagen)}}" style="height: 70px;width: 90%;margin-top: 5px">
-                         </div>
+                        <div class="form-control" align="center" style="height: 100%;display: inline-flex; align-items: center; justify-content: center;" align="center"  >
+                            <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantia_guia_ingreso->marcas_i->imagen)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
+                        </div>
                     </div>
                     <div class="col-sm-4" align="right" >
-                         <div class="form-control" align="center" style="height: 79%;" align="right">
-                            <h3 style="">R.U.C {{$mi_empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">GUIA DE INGRESO</h2>
-                            <h5>{{$garantia_guia_ingreso->orden_servicio}}</h5>
+                        <div class="form-control" align="center" style="height: 100%;"align="right">
+                            <h3 style=""><strong>R.U.C {{$empresa->ruc}}</strong></h3>
+                            <h2 ><strong>GUIA DE INGRESO</strong></h2>
+                            <h4>{{$garantia_guia_ingreso->orden_servicio}}</h4>
                         </div>
                     </div>
                 </div>
@@ -60,8 +61,8 @@
                             <h3>Contacto Cliente</h3>
                             <div align="left">
                                 <strong>Señor(es):</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->nombre}}<br>
-                                <strong>{{$garantia_guia_ingreso->clientes_i->documento_identificacion}} :</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$garantia_guia_ingreso->fecha}}<br>
+                                <strong>@if($garantia_guia_ingreso->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha))}}<br>
                                 <strong>Direccion:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
                                 <strong>Telefono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Correo:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->email}}<br>
@@ -99,7 +100,7 @@
                                 </div>
                                 <div align="left" class="col-sm-6">
                                     <strong>Codigo Interno:</strong>&nbsp; {{$garantia_guia_ingreso->codigo_interno}}<br>
-                                    <strong>Fecha de Compra:</strong> &nbsp;{{$garantia_guia_ingreso->fecha_compra}}<br>
+                                    <strong>Fecha de Compra:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha_compra))}}<br>
                                 </div>
                             </div>
                         </div>

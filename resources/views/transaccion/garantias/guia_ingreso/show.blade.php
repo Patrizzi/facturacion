@@ -100,22 +100,22 @@
 <div class="row" >
     <div class="col-lg-12" style="margin-top: -2px">
         <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
-            <div class="row" style="height: 120px">
+            <div class="row" style="height: auto;">
                 <div class="col-sm-4 text-left" align="left">
-                    <div class="form-control" align="center" style="height: 79%;" align="left">
-                        <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="height: 70px;width: 90%;margin-top: 5px">
+                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;"" align="left">
+                        <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
                     </div>
                 </div>
                 <div class="col-sm-4" align="center">
-                    <div class="form-control" align="center" style="height: 79%;" align="center"  >
-                        <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantia_guia_ingreso->marcas_i->imagen)}}" style="height: 70px;width: 90%;margin-top: 5px">
+                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;" align="center"  >
+                        <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantia_guia_ingreso->marcas_i->imagen)}}" style="max-width: 100%;max-height: 100px;padding: 5px">
                     </div>
                 </div>
                 <div class="col-sm-4" align="right" >
-                    <div class="form-control" align="center" style="height: 79%;"align="right">
-                        <h3 style="">R.U.C {{$empresa->ruc}}</h3>
-                        <h2 style="font-size: 19px">GUIA DE INGRESO</h2>
-                        <h5>{{$garantia_guia_ingreso->orden_servicio}}</h5>
+                    <div class="form-control" align="center" style="height: 100%;"align="right">
+                        <h2 style="">R.U.C {{$empresa->ruc}}</h2>
+                        <h3 style="font-size: 19px">GUIA DE INGRESO</h3>
+                        <h4>{{$garantia_guia_ingreso->orden_servicio}}</h4>
                     </div>
                 </div>
             </div>
@@ -125,9 +125,9 @@
                     <div class="form-control" style="height: 100%;">
                         <h3>Contacto Cliente</h3>
                         <div align="left" style="height: 100%;">
-                            <strong>Señor(es):</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->nombre}}<br>
+                            <strong>@if($garantia_guia_ingreso->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->nombre}}<br>
                             <strong>{{$garantia_guia_ingreso->clientes_i->documento_identificacion}} :</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>Fecha:</strong> &nbsp;{{$garantia_guia_ingreso->fecha}}<br>
+                            <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha))}}<br>
                             <strong>Telefono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Correo:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->email}}<br>
                             <strong>Direccion:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
@@ -164,7 +164,7 @@
                     </div>
                     <div align="left" class="col-sm-6">
                         <strong>Codigo Interno:</strong>&nbsp; {{$garantia_guia_ingreso->codigo_interno}}<br>
-                        <strong>Fecha de Compra:</strong> &nbsp;{{$garantia_guia_ingreso->fecha_compra}}<br>
+                        <strong>Fecha de Compra:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha_compra))}}<br>
                     </div>
                 </div>
             </div>
@@ -222,7 +222,7 @@
 
 </div>
 <style type="text/css">
-.form-control{border-radius: 10px; height: 150px;margin-top: 5px; border-radius: 5px}
+.form-control{border-radius: 10px; margin-top: 5px; border-radius: 5px}
 .ibox-tools a{color: white !important}
 .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}

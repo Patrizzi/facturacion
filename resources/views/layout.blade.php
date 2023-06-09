@@ -366,10 +366,10 @@
                     </div>  
                 </div>
                 <ul class="nav navbar-top-links navbar-right" >
-                    <li class="dropdown" style="margin: 0px 50px" data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT" id="btn_popover">
+                    <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 18px;color: red;"></i> @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)   @endif
+                            <i class="fa fa-bell " style="font-size: 18px; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
                             {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
                         </a>
                         {{-- SI HAY PARA ENVIAR --}}
