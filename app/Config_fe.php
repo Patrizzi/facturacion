@@ -858,41 +858,61 @@ class Config_fe extends Model
         //obtencion del peso total
         $peso_total=1;
         foreach($guias_registros as $guia_electronica){
-        $peso_total=$peso_total + $guia_electronica->peso;
+            $peso_total=$peso_total + $guia_electronica->peso;
         }
+        
 
-        $transp = new Transportist();
-            $transp->setTipoDoc('6')
-                ->setNumDoc($empresa->ruc)
-                ->setRznSocial($empresa->razon_social);
-                
         if($tipo_transporte==2){ //privado
 
-            //solo vehiculo privado 
-            $vehiculoPrincipal = (new Vehicle())
-            ->setPlaca($guia->vehiculo->placa);
+            // TIPO DE VEHICULO  - 1M Y L 
+            $vehiculo = Vehiculo::where('id', $guia->vehiculo_id)->first();
+            if($vehiculo->tipo_vehiculo == "M1" || $vehiculo->tipo_vehiculo == "L"){
+                $envio = new Shipment();
+                $envio
+                    ->setCodTraslado($motivo_tr) // Cat.20
+                    ->setIndicadores(['SUNAT_Envio_IndicadorTrasladoVehiculoM1L'])
+                    ->setModTraslado('02') // Cat.18 // PUBLICO O PRIVADO
+                    ->setFecTraslado(new DateTime())
+                    ->setPesoTotal($peso_total)
+                    ->setUndPesoTotal('KGM')    //unidad de medida
+                    ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
+                    ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida    
+            }else{
+                //solo vehiculo privado 
+                $vehiculoPrincipal = (new Vehicle())
+                ->setPlaca($guia->vehiculo->placa);
 
-            //CONDUCTOR DE PERSONAL - TABLA DE VEHICULO CON PERSONAL Y INPUT LICENCIA
-            $chofer = (new Driver())
-                ->setTipo('Principal')
-                ->setTipoDoc('1')
-                ->setNroDoc($guia->personal->numero_documento) // 1 = dni // 7 = [pasaporte
-                ->setLicencia($guia->personal->licencia)
-                ->setNombres($guia->personal->nombres)
-                ->setApellidos($guia->personal->apellidos);
+                //CONDUCTOR DE PERSONAL - TABLA DE VEHICULO CON PERSONAL Y INPUT LICENCIA
+                $chofer = (new Driver())
+                    ->setTipo('Principal')
+                    ->setTipoDoc('1')
+                    ->setNroDoc($guia->personal->numero_documento) // 1 = dni // 7 = [pasaporte
+                    ->setLicencia($guia->personal->licencia)
+                    ->setNombres($guia->personal->nombres)
+                    ->setApellidos($guia->personal->apellidos);
 
-            $envio = new Shipment();
-            $envio
-                ->setCodTraslado($motivo_tr) // Cat.20
-                ->setModTraslado('02') // Cat.18 // PUBLICO O PRIVADO
-                ->setFecTraslado(new DateTime())
-                ->setPesoTotal($peso_total)
-                ->setUndPesoTotal('KGM')    //unidad de medida
-            ->setVehiculo($vehiculoPrincipal)
-            ->setChoferes([$chofer])
-            ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
-            ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
+                $envio = new Shipment();
+                $envio
+                    ->setCodTraslado($motivo_tr) // Cat.20
+                    ->setModTraslado('02') // Cat.18 // PUBLICO O PRIVADO
+                    ->setFecTraslado(new DateTime())
+                    ->setPesoTotal($peso_total)
+                    ->setUndPesoTotal('KGM')    //unidad de medida
+                ->setVehiculo($vehiculoPrincipal)
+                ->setChoferes([$chofer])
+                ->setLlegada(new Direction($cli_postal, $cli_direc))   //arreglar el ubigeo de llegada  salida
+                ->setPartida(new Direction($guia->almacen->cod_postal, $guia->almacen->direccion));    //arreglar el ubigeo de llegada  salida
+            }
+
         }else{ //* PUBLICO 
+
+            $trans_publico = TransportePublico::where('id', $guia->vehiculo_publico)->first();
+            $transp = new Transportist();
+            $transp->setTipoDoc('6')
+                ->setNumDoc($trans_publico->ruc)
+                ->setRznSocial($trans_publico->nombre)
+                ->setNroMtc($trans_publico->numero_mtc);
+
             $envio = new Shipment();
             $envio
                 ->setCodTraslado($motivo_tr) // Cat.20

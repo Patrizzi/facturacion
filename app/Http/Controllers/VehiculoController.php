@@ -37,17 +37,27 @@ class VehiculoController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
+        // Tipo de Vehiculo
+            // 0 Auto Particular
+            // 1 Moto ->cambio en config_fe para 1ML
+            // 2 Camioneta
+            // 3 Omnibus
+            // 4 Minivan
+            
         $categoria=$request->get('categoria');
 
         if ($categoria=='create_publico') {
             $vehiculo=new TransportePublico;
             $vehiculo->nombre=$request->get('nombre');
             $vehiculo->ruc=$request->get('ruc');
+            $vehiculo->numero_mtc=$request->get('n_mtc');
             $vehiculo->estado='0';
             $vehiculo->save();
         }
         elseif($categoria=='create_privado'){
             $vehiculo=new Vehiculo;
+            $vehiculo->tipo_vehiculo=$request->get('tipo_vehiculo');
             $vehiculo->placa=$request->get('placa');
             $vehiculo->marca=$request->get('marca');
             $vehiculo->modelo=$request->get('modelo');
@@ -92,41 +102,51 @@ class VehiculoController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $categoria=$request->get('categoria');
-       if ($categoria=='update_publico') {
-          $estado=$request->get('estado');
-          if(isset($estado)){
-            $estado_numero='0';
-        }
-        else{
-            $estado_numero='1';
-        }
-        $vehiculo=TransportePublico::find($id);
-        $vehiculo->nombre=$request->get('nombre');
-        $vehiculo->ruc=$request->get('ruc');
-        $vehiculo->estado=$estado_numero;
-        $vehiculo->save();
+        // return $request;
+        // Tipo de Vehiculo
+        // Categoría L (Vehículo con menos de cuatro ruedas) </option> {{-- VEHICULOS L --}}
+        // Categoría M (Vehículo de 3 o 4 ruedas y es utilizado para el transporte de pasajeros)</option>  {{-- VEHICULOS M --}}
+        // Categoría M1 (Autos, taxis y SUV)
+        // Categoría N (Vehículo de 4 ruedas y sea para transporte de carga.)</option> {{-- VEHICULOS N --}}
+        // Categoría O (Semirremolques y volquetes)</option>{{-- VEHICULOS O --}}
 
+        $categoria=$request->get('categoria');
+        if ($categoria=='update_publico') {
+            $estado=$request->get('estado');
+            if(isset($estado)){
+                $estado_numero='0';
+            }else{
+                $estado_numero='1';
+            }
+            $vehiculo=TransportePublico::find($id);
+            $vehiculo->nombre=$request->get('nombre');
+            $vehiculo->ruc=$request->get('ruc');
+            $vehiculo->numero_mtc=$request->get('numero_mtc');
+            $vehiculo->estado=$estado_numero;
+            $vehiculo->save();
+
+        }elseif($categoria=='update_privado'){
+            $estado=$request->get('estado');
+            if(isset($estado)){
+                $estado_numero='0';
+            }
+            else{
+                $estado_numero='1';
+            }
+            $vehiculo=Vehiculo::find($id);
+            // $vehiculo->tipo_vehiculo
+            $vehiculo->placa=$request->get('placa');
+            $vehiculo->tipo_vehiculo=$request->get('tipo_vehiculo');
+            $vehiculo->marca=$request->get('marca');
+            $vehiculo->modelo=$request->get('modelo');
+            $vehiculo->certificado_inscripcion=$request->get('certificado_inscripcion');
+            $vehiculo->año=$request->get('año');
+            $vehiculo->estado_activo=$estado_numero;
+            $vehiculo->save();
+        }
+
+        return redirect()->route('vehiculo.index');
     }
-    elseif($categoria=='update_privado'){
-       $estado=$request->get('estado');
-       if(isset($estado)){
-        $estado_numero='0';
-    }
-    else{
-        $estado_numero='1';
-    }
-    $vehiculo=Vehiculo::find($id);
-    $vehiculo->placa=$request->get('placa');
-    $vehiculo->marca=$request->get('marca');
-    $vehiculo->modelo=$request->get('modelo');
-    $vehiculo->certificado_inscripcion=$request->get('certificado_inscripcion');
-    $vehiculo->año=$request->get('año');
-    $vehiculo->estado_activo=$estado_numero;
-    $vehiculo->save();
-}
-return redirect()->route('vehiculo.index');
-}
 
     /**
      * Remove the specified resource from storage.

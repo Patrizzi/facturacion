@@ -490,9 +490,8 @@ class FacturacionElectronicaController extends Controller
         
         //envio a SUNAT    
         $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'normal');
-
         //lectura CDR
-        $msg=$result->getCdrResponse();
+        $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
         // return '';
         //cambio de guia electronica - en caso sea exitodo 
         $guia->g_electronica=1;
@@ -572,7 +571,7 @@ class FacturacionElectronicaController extends Controller
         $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'manual');
         // dd()
         //lectura CDR
-        $msg=$result->getCdrResponse();
+        $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
 
         //cambio de guia electronica - en caso sea exitodo
         $guia->g_electronica=1;
