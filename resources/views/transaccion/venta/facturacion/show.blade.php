@@ -69,7 +69,7 @@
     </div>
     <div class="row " >
         <div class="col-lg-12" style="margin-top: -5px;" >
-            @if($facturacion->f_electronica == 2)
+            @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
                 <div id="watermark">
                     <p>Anulado</p>
                 </div>
