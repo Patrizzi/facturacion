@@ -83,6 +83,7 @@
                                         <option value="1">Compra</option>
                                         <option value="2">Venta</option>
                                         <option value="3">Compra Y Venta</option>
+                                        <option value="4">Ventas Manuales</option>
                                     </select>
 								</div>
 						</div>
@@ -137,7 +138,7 @@
                         <table id="tablaid_venta" class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
                                 <tr>
-                                    <th>Tipo</th>
+                                    <th >Tipo</th>
                                     <th>Nombre producto</th>
                                     <th>cantidad</th>
                                     <th>Precio Nacional</th>
