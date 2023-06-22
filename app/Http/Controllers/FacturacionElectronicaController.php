@@ -490,13 +490,12 @@ class FacturacionElectronicaController extends Controller
         
         //envio a SUNAT    
         $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'normal');
-        dd($result->getCdrResponse());
-        $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
+        // $msg=config_acc_guia::lectura_cdr_guia2($result);
         // return '';
         //cambio de guia electronica - en caso sea exitodo 
         $guia->g_electronica=1;
         $guia->save();
-        return $msg;
+        return '';
     }
 
     public function guia_remision_baja(Request $request)
@@ -571,12 +570,12 @@ class FacturacionElectronicaController extends Controller
         $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'manual');
         // dd()
         //lectura CDR
-        $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
+        // $msg=config_acc_guia::lectura_cdr_guia2($result->getCdrResponse());
 
         //cambio de guia electronica - en caso sea exitodo
         $guia->g_electronica=1;
         $guia->save();
-        return $msg;
+        return '';
     }
     public function guia_remision_m_baja_sunat(Request $request){   
 
