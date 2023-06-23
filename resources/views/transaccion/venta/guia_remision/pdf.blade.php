@@ -114,8 +114,8 @@
                 <tr style="border-bottom-width:   0px white ">
                     <td>{{$y++}}</td>
                     <td>{{$guia_registros->producto->codigo_original}}</td>
-                    <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}}<br>
-                        {{$guia_registros->descripcion}}</td>
+                    <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} / {{$guia_registros->descripcion}} <br>
+                        <strong>N/S: </strong>{{$guia_registros->numero_serie}}</td>
                     <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                     <td>{{$guia_registros->cantidad}}</td>
                     <td>{{$guia_registros->producto->peso}}</td>

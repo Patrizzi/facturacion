@@ -102,7 +102,7 @@
                     <tr style="text-align: left;font-weight: bold;border-top: 0px white;vertical-align: bottom;">
                         <th  style=" width: 5%;border-top: 0px white">Item</th>
                         <th  style=" width: 10%;border-top: 0px white">Código</th>
-                        <th  style=" width: 59%;border-top: 0px white">Marca / Descripcion</th>
+                        <th  style=" width: 59%;border-top: 0px white">Marca / Producto / Descripcion</th>
                         <th style=" width: 10%;border-top: 0px white">Ud. de Medida</th>
                         <th style=" width: 8%;border-top: 0px white">Cantidad</th>
                         <th style=" width: 8%;border-top: 0px white">Peso</th>
@@ -113,8 +113,8 @@
                         <tr style="border-bottom: 0px white;">
                             <td>{{$i++}}</td>
                             <td>{{$guia_registros->producto->codigo_producto}}</td>
-                            <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong><span style="overflow-wrap: break-word;
-                                ">{{$guia_registros->numero_serie}} </span> <br> {{$guia_registros->descripcion}}  </td>
+                            <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} /  {{$guia_registros->descripcion}}   <br> <strong>N/S: </strong><span style="overflow-wrap: break-word;
+                                ">{{$guia_registros->numero_serie}} </span></td>
                             <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                             <td>{{$guia_registros->cantidad}}</td>
                             <td>{{$guia_registros->peso}} KG</td>

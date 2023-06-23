@@ -128,7 +128,7 @@
                             <tr >
                                 <th>ITEM</th>
                                 <th>Codigo Producto </th>
-                                <th>Marca / Descripcion</th>
+                                <th>Marca / Producto / Descripcion</th>
                                 <th>Unid.Medida</th>
                                 <th>Cantidad</th>
                                 <th>Peso</th>
@@ -139,7 +139,7 @@
                              <tr>
                                 <td>{{$i++}}</td>
                                 <td>{{$guia_registros->producto->codigo_producto}}</td>
-                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}} <br>{{$guia_registros->descripcion}}
+                                <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} / {{$guia_registros->descripcion}} <br><strong>N/S: </strong>{{$guia_registros->numero_serie}}
                                  </td>
                                 <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                                 <td>{{$guia_registros->cantidad}}</td>

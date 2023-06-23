@@ -203,7 +203,8 @@
                                         <th style="font-size: 13px;">Articulo</th>
                                         <th style="font-size: 13px; width:10%">Cantidad</th>
                                         <th style="font-size: 13px; width:16%">N° de Serie</th>
-                                        <th style="font-size: 13px; width:11%">Peso</th>
+                                        <th style="font-size: 13px; width:11%">Peso U.</th>
+                                        <th style="font-size: 13px; width:11%">Peso Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -231,11 +232,19 @@
                                                 <input style="min-width: 100px" type="hidden" name="peso_ori" id="peso_ori0" onkeyup="sum_total()">
                                             </div>
                                         </td>
+                                        <td>
+                                            <div class="input-group" style="min-width: 130px">
+                                                <input  type="text" name="peso_tot[]" step="0.01" disabled  id="peso_tot0" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-addon">KG</span>
+                                                </div>
+                                                </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4" align="right"><span style="font-size: 0.8em">Peso Total(KGM):</span></td>
+                                        <td colspan="5" align="right"><span style="font-size: 0.8em">Peso Total(KGM):</span></td>
                                         <td>
                                             <input type="text" class="form-control" id="peso_total" disabled value="0">
                                         </td>

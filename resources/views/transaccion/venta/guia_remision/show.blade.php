@@ -210,9 +210,9 @@
                          <tr>
                             <td>{{$z++}}</td>
                             <td>{{$guia_registros->producto->codigo_original}}</td>
-                            <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} <strong>N/S: </strong>{{$guia_registros->numero_serie}}
+                            <td>{{$guia_registros->producto->marcas_i_producto->nombre}} / {{$guia_registros->producto->nombre}} / {{$guia_registros->descripcion}}
                             <br>
-                            {{$guia_registros->descripcion}}
+                            <strong>N/S: </strong>{{$guia_registros->numero_serie}}
                             </td>
                             <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                             <td>{{$guia_registros->cantidad}}</td>
