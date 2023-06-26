@@ -118,7 +118,8 @@
                                 <th>Marca / Descripcion</th>
                                 <th>Unid.Medida</th>
                                 <th>Cantidad</th>
-                                <th>Peso</th>
+                                <th>Peso U.</th>
+                                <th>Peso Total</th>
                             </thead>
                             <span hidden>{{$y = 1}}</span>
                             <tbody>
@@ -130,11 +131,12 @@
                                 <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                                 <td>{{$guia_registros->cantidad}}</td>
                                 <td>{{$guia_registros->peso}}</td>
+                                <td>{{$tota[] = $guia_registros->cantidad * $guia_registros->peso}} KGM</td>
                             </tr>
                             @endforeach
                             <tr>
-                                <td colspan="5" align="right">Peso Total:</td>
-                                <td>{{$guia_remision_m_reg->sum('peso')}} KG </td>
+                                <td colspan="6" align="right">Peso Total:</td>
+                                <td>{{array_sum($tota)}} KGM </td>
                             </tr>
                         </tbody>
                     </table>

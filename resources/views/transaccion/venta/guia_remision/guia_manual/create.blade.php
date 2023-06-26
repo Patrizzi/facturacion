@@ -217,7 +217,7 @@
                                             <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                                         </td>
                                         <td>
-                                            <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="mult_peso(0)">
+                                            <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
                                         </td>
                                         <td>
                                             <input style="min-width: 100px" type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required>
@@ -428,7 +428,7 @@
                     <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
                 </td>
                 <td>
-                    <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
                 </td>
                 <td>
                     <input style="min-width: 100px" type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
@@ -440,7 +440,16 @@
                             <span class="input-group-addon">KG</span>
                         </div>
                         <input style="min-width: 100px" type="hidden" name="peso_view" id="peso_view${i}" onkeyup="sum_total()">
+                        <input style="min-width: 100px" type="hidden" name="peso_ori" id="peso_ori${i}" onkeyup="sum_total()">
                     </div>
+                </td>
+                <td>
+                    <div class="input-group" style="min-width: 130px">
+                        <input  type="text" name="peso_tot[]" step="0.01" disabled  id="peso_tot${i}" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="sum_total()">
+                        <div class="input-group-append">
+                            <span class="input-group-addon">KG</span>
+                        </div>
+                        </div>
                 </td>
             </tr>
         ]`;
@@ -519,12 +528,16 @@
     }
     function peso_view_p(a){
         var peso = $(`#peso${a}`).val();
+        var cantidad = $(`#cantidad${a}`).val();
         console.log(peso);
         $(`#peso_view${a}`).val(peso);
+        $(`#peso_tot${a}`).val(peso * cantidad);
+        $(`#peso_ori${a}`).val(peso * cantidad);
     }
+
     function sum_total(){
         var total_t = 0;
-        var totalInp = $('[name="peso_view"]');
+        var totalInp = $('[name="peso_ori"]');
         console.log(totalInp)
         // console.log(totalInp);
         totalInp.each(function(){
@@ -538,12 +551,12 @@
         
     }
     function mult_peso(b){
-        var cantidad = $(`#cantidad${b}`).val();
-        var peso_ori = $(`#peso_ori${b}`).val();
-        var peso_multi = parseInt(cantidad) * parseFloat(peso_ori);
-        $(`#peso_view${b}`).val(peso_multi);
-        $(`#peso${b}`).val(peso_multi);
-        sum_total();
+        // var cantidad = $(`#cantidad${b}`).val();
+        // var peso_ori = $(`#peso_ori${b}`).val();
+        // var peso_multi = parseInt(cantidad) * parseFloat(peso_ori);
+        // $(`#peso_view${b}`).val(peso_multi);
+        // $(`#peso${b}`).val(peso_multi);
+        // sum_total();
 
         
 

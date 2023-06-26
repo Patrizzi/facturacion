@@ -54,6 +54,16 @@ class GuiaRemisionManualController extends Controller
      */
     public function create()
     {
+        //* GUIA REMISION MANUAL  COD GUIA
+        $cod_guia = Codigo_guia_almacen::where('serie_remision_m', 0)->first();
+        if(isset($cod_guia)){
+            $almacen_update = Codigo_guia_almacen::find($cod_guia->id);
+            $almacen_update->serie_remision_m = 1;
+            $almacen_update->cod_remision_m = 0;
+            $almacen_update->save();
+        }
+        // return $cod_guia;
+
         $empresa = Empresa::first();
         $clientes = Cliente::get();
         $almacen = Almacen::get();

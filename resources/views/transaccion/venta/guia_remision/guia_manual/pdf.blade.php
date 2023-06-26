@@ -105,7 +105,8 @@
                         <th  style=" width: 59%;border-top: 0px white">Marca / Producto / Descripcion</th>
                         <th style=" width: 10%;border-top: 0px white">Ud. de Medida</th>
                         <th style=" width: 8%;border-top: 0px white">Cantidad</th>
-                        <th style=" width: 8%;border-top: 0px white">Peso</th>
+                        <th style=" width: 8%;border-top: 0px white">Peso U.</th>
+                        <th style=" width: 8%;border-top: 0px white">Peso Tot</th>
                     </tr>
                 </thead>
                 <tbody style="width: 100%">
@@ -117,12 +118,14 @@
                                 ">{{$guia_registros->numero_serie}} </span></td>
                             <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                             <td>{{$guia_registros->cantidad}}</td>
-                            <td>{{$guia_registros->peso}} KG</td>
+                            <td>{{$guia_registros->peso}}</td>
+                            <td>{{$tota[] = $guia_registros->cantidad * $guia_registros->peso}} KGM</td>
+
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="5" align="right">Peso Total:</td>
-                        <td>{{$guia_remision_m_reg->sum('peso')}} KGM</td>
+                        <td colspan="6" align="right">Peso Total:</td>
+                        <td>{{array_sum($tota)}} KGM </td>
                     </tr>
                 </tbody>
             </table>
