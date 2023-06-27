@@ -19,22 +19,22 @@ class MotivoController extends Controller
         $id_salida = 1;
         // Compras
         foreach($motivos as $motv){
-            if($motv->tipo == "Sin Asignar"){
+            if($motv->tipo != "Compras" || $motv->tipo != "Salidas"){
                 $str_moti = explode(' ',$motv->nombre);
                 if($str_moti[0] == "Compras"){
-                    $motivos_compra[] = Motivo::where('id',$motv->id)->first(); 
+                    $motivo_ed = Motivo::where('id',$motv->id)->first(); 
+                    $motivo_ed->tipo = "Compras";
+                    $motivo_ed->save();
                 }elseif($str_moti[0] == "Devolucion"){
-                    $motivos_dev[] = Motivo::where('id',$motv->id)->first(); 
-                }
-            }else{
-                if($motv->tipo == "Compras"){
-                    $motivos_compra[] = Motivo::where('id',$motv->id)->first(); 
-                }else{
-                    $motivos_dev[] = Motivo::where('id',$motv->id)->first(); 
-                    
+                    $motivo_ed = Motivo::where('id',$motv->id)->first(); 
+                    $motivo_ed->tipo = "Salidas";
+                    $motivo_ed->save();
                 }
             }
         }
+        $motivos_compra=Motivo::where('estado',0)->where('tipo', 'Compras')->get();
+        $motivos_dev=Motivo::where('estado',0)->where('tipo', 'Salidas')->get();
+
         return view('configuracion_general.motivo.index',compact('motivos_compra','motivos_dev','id_compras','id_salida'));
     }
 

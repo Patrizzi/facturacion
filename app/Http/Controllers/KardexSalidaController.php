@@ -108,7 +108,7 @@ class KardexSalidaController extends Controller
             }
         }
 
-        $motivos=Motivo::all();
+        $motivos=Motivo::where('estado',0)->where('tipo', 'Salidas')->get();
         $almacenes=Almacen::all();
 
         return view('inventario.kardex.salida.create',compact('motivos','productos','almacen_nombre','almacenes'));
@@ -121,10 +121,10 @@ class KardexSalidaController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        // return $request;
         $almacen_imput=$request->input('almacen');
-        $id=explode(" ",$almacen_imput);
-        $almacen_json=Almacen::where('id',$id[1])->first();
+        // $id=explode(" ",$almacen_imput);
+        $almacen_json=Almacen::where('nombre',$almacen_imput)->first();
         // return $id[];
 
         // return $request;
