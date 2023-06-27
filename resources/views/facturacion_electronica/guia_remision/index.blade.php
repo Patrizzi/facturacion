@@ -251,9 +251,9 @@
                                                     <td>{{$remision_manuals->cod_guia}}</td>
                                                     <td>{{$remision_manuals->fecha_emision}}</td>
                                                     <td>{{$remision_manuals->fecha_entrega}}</td>
-                                                    @if($guia_remision->tipo_transporte==0)
+                                                    @if($remision_manuals->tipo_transporte==0)
                                                     <td>Sin Trasporte</td>
-                                                    @elseif($guia_remision->tipo_transporte==1)
+                                                    @elseif($remision_manuals->tipo_transporte==1)
                                                     <td>Trasporte Publico</td>
                                                     @else
                                                     <td>Trasporte Privado</td>
@@ -370,15 +370,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($remision_m_anulado as $guia_remision)
+                                        @foreach($remision_m_anulado as $guia_remision_m_an)
                                         <tr class="gradeX">
                                             <td>{{$x++}}</td>
-                                            <td>{{$guia_remision->cod_guia}}</td>
-                                            <td>{{$guia_remision->fecha_emision}}</td>
-                                            <td>{{$guia_remision->fecha_entrega}}</td>
-                                            @if($guia_remision->tipo_transporte==0)
+                                            <td>{{$guia_remision_m_an->cod_guia}}</td>
+                                            <td>{{$guia_remision_m_an->fecha_emision}}</td>
+                                            <td>{{$guia_remision_m_an->fecha_entrega}}</td>
+                                            @if($guia_remision_m_an->tipo_transporte==0)
                                             <td>Sin Trasporte</td>
-                                            @elseif($guia_remision->tipo_transporte==1)
+                                            @elseif($guia_remision_m_an->tipo_transporte==1)
                                             <td>Trasporte Publico</td>
                                             @else
                                             <td>Trasporte Privado</td>
