@@ -37,7 +37,7 @@
 
         <div class="row">
             <div class="col-lg-12" style="margin-top: -5px;">
-                @if($facturacion->f_electronica == 2)
+                @if($facturacion->f_electronica == 2 || )
                     <div id="watermark">
                         <p>Anulado</p>
                     </div>    
