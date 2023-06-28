@@ -67,12 +67,20 @@ class Config_fe extends Model
                 $split_g = explode('-',$factura->guia_remision);
                 $split_20 =  (int)$split_g[1];
                 $new_cod_guia = $split_g[0].'-'.$split_20;
+
+
+                $guiaRemision = (new Document())
+                ->setTipoDoc('07') // Guia de Remision remitente: 09, catalogo 01
+                ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision
+
+
             }else{
                 $new_cod_guia = $factura->guia_remision;
+                $guiaRemision = (new Document())
+                ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
+                ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision
             }
-            $guiaRemision = (new Document())
-            ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
-            ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision
+            
 
         }
 
@@ -201,9 +209,17 @@ class Config_fe extends Model
             ;
 
             if($guia==1){
-                $invoice->setGuias([
-                    $guiaRemision // Incluir guia remision.
-                ]);
+                $guia_doc_r = Guia_remision::where('cod_guia', $factura->guia_remision)->first();
+                $guia_doc_r_m = GuiaRemisionManual::where('cod_guia', $factura->guia_remision)->first();
+                if(isset($guia_doc_r) || isset($guia_doc_r_m)){
+                    $invoice->setRelDocs([
+                        $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
+                    ]);
+                }else{
+                    $invoice->setGuias([
+                        $guiaRemision // Incluir guia remision.
+                    ]);
+                }
             }
 
 
@@ -262,9 +278,17 @@ class Config_fe extends Model
             ;
 
             if($guia==1){
-                $invoice->setGuias([
-                    $guiaRemision // Incluir guia remision.
-                ]);
+                $guia_doc_r = Guia_remision::where('cod_guia', $factura->guia_remision)->first();
+                $guia_doc_r_m = GuiaRemisionManual::where('cod_guia', $factura->guia_remision)->first();
+                if(isset($guia_doc_r) || isset($guia_doc_r_m)){
+                    $invoice->setRelDocs([
+                        $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
+                    ]);
+                }else{
+                    $invoice->setGuias([
+                        $guiaRemision // Incluir guia remision.
+                    ]);
+                }
             }
 
 
@@ -277,7 +301,6 @@ class Config_fe extends Model
 
             $invoice->setDetails($item)
             ->setLegends([$legend]);
-
             return $invoice;
         }
     }
