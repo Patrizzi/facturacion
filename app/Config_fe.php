@@ -969,7 +969,7 @@ class Config_fe extends Model
         ->setTipoDoc('09')
         ->setSerie($serie_g)      //cambiar codigo de guia
         ->setCorrelativo($correlativo)
-        ->setFechaEmision(new DateTime())
+        ->setFechaEmision($guia->created_at)
         ->setCompany($company)
         ->setDestinatario((new Client())
             ->setTipoDoc($tipo_doc_cli)
@@ -979,7 +979,7 @@ class Config_fe extends Model
 
         foreach($guias_registros as $cont => $guia_registro){
         $detail[$cont] = new DespatchDetail();
-        $detail[$cont]->setCantidad(2)
+        $detail[$cont]->setCantidad($guia_registro->cantidad)
             ->setUnidad('ZZ')
             ->setDescripcion($guia_registro->producto->nombre)
             ->setCodigo($guia_registro->producto->codigo_producto);
