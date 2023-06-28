@@ -224,7 +224,7 @@ class Config_fe extends Model
 
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $factura->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -261,7 +261,7 @@ class Config_fe extends Model
             ->setCuotas(
                 $cuotas_credito
             )
-            ->setTipoMoneda($factura->moneda->codigo) // Sol - Catalog. 02
+            ->setTipoMoneda->nombre($factura->moneda->codigo) // Sol - Catalog. 02
             ->setCompany($company)
             ->setClient($client)
             //--------------------------estados de obtencion
@@ -293,7 +293,7 @@ class Config_fe extends Model
 
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $factura->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -420,7 +420,7 @@ class Config_fe extends Model
 
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $factura->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -469,7 +469,7 @@ class Config_fe extends Model
             ;
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $factura->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -654,7 +654,7 @@ class Config_fe extends Model
             ;
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $boleta->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -697,7 +697,7 @@ class Config_fe extends Model
             ;
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $boleta->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -797,7 +797,7 @@ class Config_fe extends Model
             ;
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $boleta->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -840,7 +840,7 @@ class Config_fe extends Model
             ;
 
             $formatter = new NumeroALetras();
-            $valor=$formatter->toInvoice($total, 2, 'soles');
+            $valor=$formatter->toInvoice($total, 2, $boleta->moneda->nombre);
 
             $legend = (new Legend())
             ->setCode('1000') // Monto en letras - Catalog. 52 // pagina 33 pdf sunat
@@ -1255,7 +1255,7 @@ class Config_fe extends Model
             ->setMtoImpVenta($total);
 
         $formatter = new NumeroALetras();
-        $valor=$formatter->toInvoice($total, 2, 'soles');
+        $valor=$formatter->toInvoice($total, 2, $factura->moneda->nombre);
         
         $legend = new Legend();
         $legend->setCode('1000')
@@ -1543,7 +1543,7 @@ class Config_fe extends Model
             ;
 
         $formatter = new NumeroALetras();
-        $valor=$formatter->toInvoice($total, 2, 'soles');
+        $valor=$formatter->toInvoice($total, 2, $boleta->moneda->nombre);
         
         $legend = new Legend();
         $legend->setCode('1000')
@@ -1822,7 +1822,7 @@ class Config_fe extends Model
             ;
 
         $formatter = new NumeroALetras();
-        $valor=$formatter->toInvoice($total, 2, 'soles');
+        $valor=$formatter->toInvoice($total, 2, $factura->moneda->nombre);
         
         $legend = new Legend();
         $legend->setCode('1000')
@@ -2095,7 +2095,7 @@ class Config_fe extends Model
             ;
 
         $formatter = new NumeroALetras();
-        $valor=$formatter->toInvoice($total, 2, 'soles');
+        $valor=$formatter->toInvoice($total, 2, $boleta->moneda->nombre);
         
         $legend = new Legend();
         $legend->setCode('1000')

@@ -123,13 +123,13 @@
                             <div class="row">
                                 <div class="col-sm-8">
                                     <h3 align="left">
-                                        <?php $v=new CifrasEnLetras() ;
-                                        $letra=($v->convertirEurosEnLetras($end));
-                                        $letra_final = ucfirst(strstr($letra, 'soles',true));
-                                        $end_final_point=strstr($end2, '.', false);
-                                        $end_final=str_replace('.', '',$end_final_point);
+                                        <?php use Luecano\NumeroALetras\NumeroALetras;
+                                        $v=new NumeroALetras();
+                                        $letra=($v->toInvoice($end, 2));
+                                        // $end_final_point=strstr($end2, '.', false);
+                                        // $end_final=str_replace('.', '',$end_final_point);
                                         ?>
-                                        Son : {{$letra_final}} con {{$end_final}}/100 {{$cotizacion_m->moneda->nombre }}
+                                        Son : {{ucfirst(strtolower($letra))}} {{$cotizacion_m->moneda->nombre }}
                                     </h3>         
                                 </div>
                                 <div class="col-sm-4 form-control ">
