@@ -47,7 +47,7 @@
         </div><br>
 
         <div class="row" align="center" style="padding-bottom: 5px">
-            @if($facturacion->f_electronica == 2)
+            @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
                 <div id="watermark">
                     <p>Anulado</p>
                 </div>    
@@ -162,13 +162,14 @@
     <div class="row">
         <div class="col-sm-8 ">
             <h3 align="left">
-                <?php $v=new CifrasEnLetras() ;
-                $letra=($v->convertirEurosEnLetras($end));
-                $letra_final = ucfirst(strstr($letra, 'soles',true));
-                $end_final_point=strstr($end2, '.',false);
-                $end_final=str_replace('.', '',$end_final_point);
+                <?php  use Luecano\NumeroALetras\NumeroALetras;
+                $v=new NumeroALetras() ;
+                $letra=($v->toInvoice($end, 2));
+                // $letra_final = ucfirst(strstr($letra, 'soles',true));
+                // $end_final_point=strstr($end2, '.',false);
+                // $end_final=str_replace('.', '',$end_final_point);
             ?>
-            Son : {{$letra_final}} con {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+            Son : {{ucfirst(strtolower($letra))}} {{$facturacion->moneda->nombre }}
         </h3>
     </div>
     <div class="col-sm-4 form-control" >

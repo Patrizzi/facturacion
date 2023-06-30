@@ -784,8 +784,11 @@
         $('#div_btn_app').css('display','none');
         $('#div_dw_non').css('display', 'block');
 
-        const etiqueta = document.getElementById('download_cdr_post');
-        etiqueta.click();
+        setTimeout(() => {
+            const etiqueta = document.getElementById('download_cdr_post');
+            etiqueta.click();
+        }, 5000);
+        
 
     }
 
@@ -829,8 +832,10 @@
         $('#div_btn_app_man').css('display','none');
         $('#div_dw_non_man').css('display', 'block');
 
-        const etiqueta = document.getElementById('download_cdr_post');
-        etiqueta.click();
+        setTimeout(() => {
+            const etiqueta = document.getElementById('download_cdr_post');
+            etiqueta.click();
+        }, 5000);
 
     }
 </script>

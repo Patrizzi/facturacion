@@ -39,7 +39,7 @@
         </tr>
     </table>
     <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
-        @if($facturacion->f_electronica == 2)
+        @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
             <div id="watermark">
                 <p>Anulado</p>
             </div>

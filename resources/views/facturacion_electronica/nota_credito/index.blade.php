@@ -173,7 +173,7 @@
                                             <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
                                         </td>
                                         <td>
-                                            <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.xml" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                            <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                         </td>
                                         <td>
                                             <center>

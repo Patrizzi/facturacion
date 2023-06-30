@@ -38,7 +38,7 @@
             </tr>
         </table>
         <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
-            @if($facturacion->f_electronica == 2)
+            @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
                 <div id="watermark">
                     <p>Anulado</p>
                 </div>    
@@ -139,13 +139,14 @@
             <tr>
                 <td style="width: 70%;border: none">
                         <h3 align="left">
-                            <?php $v=new CifrasEnLetras() ;
-                            $letra=($v->convertirEurosEnLetras($end));
-                            $letra_final = ucfirst(strstr($letra, 'soles',true));
-                            $end_final_point=strstr($end2, '.',false);
-                            $end_final=str_replace('.', '',$end_final_point);
+                            <?php  use Luecano\NumeroALetras\NumeroALetras;
+                            $v=new NumeroALetras() ;
+                            $letra=($v->toInvoice($end, 2));
+                            // $letra_final = ucfirst(strstr($letra, 'soles',true));
+                            // $end_final_point=strstr($end2, '.',false);
+                            // $end_final=str_replace('.', '',$end_final_point);
                         ?>
-                        Son : {{$letra_final}} con {{$end_final}}/100 {{$facturacion->moneda->nombre }}
+                        Son : {{ucfirst(strtolower($letra))}} {{$facturacion->moneda->nombre }}
                         </h3>
                     </td>
                     <td style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
