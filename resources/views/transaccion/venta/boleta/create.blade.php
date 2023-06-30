@@ -69,11 +69,11 @@
 
                             </div>
                             <div class="col-sm-4 ">
-                                <div class="form-control ruc" style="height: 125px">
+                                <div class="form-control ruc tooltip-demo" style="height: 125px">
                                     <center>
                                         <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                         <h2>BOLETA ELECTRONICA</h2>
-                                        <h5>{{$boleta_numero}}</h5>
+                                        <h4>{{$boleta_numero}} <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span></h4>
                                     </center>
                                 </div>
                             </div>

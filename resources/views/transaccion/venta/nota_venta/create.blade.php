@@ -31,10 +31,10 @@
                             </div>  
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4">
-                                <div class="form-control" align="center" style="height: auto;">
+                                <div class="form-control tooltip-demo" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">NOTA DE VENTA</h2>
-                                    <h5>{{$cod_nota_venta}}</h5>
+                                    <h4>{{$cod_nota_venta}} <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span></h4>
                                 </div>
                             </div>
                         </div>

@@ -41,11 +41,11 @@
                             </div>
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4">
-                                <div class="form-control ruc" style="height:125px">
+                                <div class="form-control ruc tooltip-demo" style="height:125px">
                                     <center>
                                         <h3 style="padding-top:10px">{{$empresa->ruc}}</h3>
                                         <h2>FACTURA ELECTRONICA</h2>
-                                        <h3 id="codigo_fac_manual">{{$factura_numero}}</h3>
+                                        <h4 id="codigo_fac_manual">{{$factura_numero}} <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span></h4>
                                     </center>
                                 </div>
                             </div>
@@ -1013,7 +1013,7 @@
                 'almacen': almacen,
             },
             success: function(msg){
-                $('#codigo_fac_manual').html(msg)
+                $('#codigo_fac_manual').html(msg+` <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span>`)
             }
         })
     }

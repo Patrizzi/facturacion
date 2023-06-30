@@ -56,7 +56,7 @@
                                     <center>
                                         <h3>{{$empresa->ruc}}</h3>
                                         <h2>Boleta Electronica</h2>
-                                        <h3 id="codigo_bola_manual">{{$boleta_numero}}</h3>
+                                        <h4 id="codigo_bola_manual">{{$boleta_numero}} <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span></h4>
                                     </center>
                                 </div>
                             </div>
