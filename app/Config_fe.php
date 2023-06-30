@@ -261,7 +261,7 @@ class Config_fe extends Model
             ->setCuotas(
                 $cuotas_credito
             )
-            ->setTipoMoneda->nombre($factura->moneda->codigo) // Sol - Catalog. 02
+            ->setTipoMoneda($factura->moneda->codigo) // Sol - Catalog. 02
             ->setCompany($company)
             ->setClient($client)
             //--------------------------estados de obtencion
