@@ -333,9 +333,9 @@
                         <tr>
                             <td colspan="3" rowspan="3">
                                 <h3 align="left" class="h3-total" id="left_h3">
-                                    <?php use Luecano\NumeroALetras\NumeroALetras;
-                                    $v=new NumeroALetras() ;
-                                    $letra=($v->toInvoice($end, 2));
+                                    <?php  
+                                        $v=new NumeroALetras() ;
+                                        $letra=($v->toInvoice($end, 2));
                                     // $end_final_point=strstr($end2, '.', false);
                                     // $end_final=str_replace('.', '',$end_final_point);
                                     ?>
@@ -379,7 +379,7 @@
                 </div>
             </form>
             @else
-            @endif
+        @endif
         </div>
         <!-- /table-responsive -->
         <br>
