@@ -186,7 +186,7 @@
                             <h3 align="left">
                                 <?php  use Luecano\NumeroALetras\NumeroALetras;
                                 $v=new NumeroALetras() ;
-                                // $letra=($v->toInvoice($end, 2));
+                                $letra=($v->toInvoice($end, 2));
                                 // $end_final_point = strstr($end2, '.', false);
                                 // $end_final = str_replace('.', '', $end_final_point);
                                 ?>
