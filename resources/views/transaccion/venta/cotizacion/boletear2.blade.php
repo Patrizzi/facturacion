@@ -247,7 +247,7 @@
                                         <td>{{$cotizacion_registro->servicio->codigo_servicio}}</td>
                                         <td>{{$cotizacion_registro->cantidad}}</td>
                                          <td>
-                                             {{$cotizacion_registro->servicio->nombre}} / {{$cotizacion_registro->servicio->descripcion}}
+                                             {{$cotizacion_registro->servicio->nombre}}
                                              <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
                                              <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° de Serie">
                                          </td>

@@ -30,9 +30,11 @@
              <div class="col-sm-6" >
                 @if($cotizacion->estado == '1')
                     @if($cotizacion->tipo=='factura')
-                        <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('facturacion.show',$factura->id)}}" >Ver Factura</a>
+                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('facturacion.show',$factura->id)}}" >Ver Factura</a>
+                    @elseif($cotizacion->tipo=='boleta')
+                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('boleta.show',$boleta->id)}}" >Ver Boleta</a>
                     @else
-                        <a class="btn btn-default procesado" style="color: inherit !important; width: 100px; transition: 1s"  href="{{route('boleta.show',$boleta->id)}}" >Ver Boleta</a>
+                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('nota_venta.show',$nota_venta->id)}}" >Ver Nota de Venta</a>
                     @endif
                 @else
                 {{-- SIN PROCESAR --}}
@@ -42,11 +44,17 @@
                             <input type="hidden" name="almacen" value="{{$almacen}}" />
                             <button type="submit" class="btn btn-info" href="">Facturar</button>
                         </form>
-                    @else
+                    @elseif($cotizacion->tipo=='boleta')
                         <form action="{{route('cotizacion.boletear', $cotizacion->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="almacen" value="{{$almacen}}" />
                             <button type="submit" class="btn btn-info" href="">Boletear</button>
+                        </form>
+                    @else
+                        <form action="{{route('cotizacion.nota_venta', $cotizacion->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="almacen" value="{{$almacen}}" />
+                            <button type="submit" class="btn btn-info" href="">Generar Nota de V.</button>
                         </form>
                     @endif
                 @endif

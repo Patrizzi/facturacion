@@ -184,7 +184,7 @@ class ParameterCallController extends Controller
             }
         }else if($tipo == '0'){ //Boleta
             if($search == ''){
-                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','DNI')->limit(5)->get();
+                $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento')->where('documento_identificacion','!=','RUC')->limit(5)->get();
             }else{
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','DNI')->where(function($query) use ($search){
                     $query->where('nombre', 'like', '%' .$search . '%')->orWhere('numero_documento', 'like', '%' .$search . '%');

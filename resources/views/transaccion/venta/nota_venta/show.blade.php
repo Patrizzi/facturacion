@@ -8,7 +8,7 @@
 @section('onclick',"event.preventDefault();document.getElementById('nueva_nota').submit();")
 
 @section('content')
-
+<?php use Luecano\NumeroALetras\NumeroALetras; ?>
 <form action="{{ route('nota_venta.create')}}"enctype="multipart/form-data" method="post" id="nueva_nota">
     @csrf
     <input type="text"  hidden="hidden" name="almacen"  value="{{$nota_venta->almacen_id}}">
@@ -102,7 +102,7 @@
                        <div class="form-control" >
                            <h3>Condiciones Generales</h3>
                            <div align="left">
-                            <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <strong>Garantia:</strong> &nbsp;@if($nota_venta->garantia) {{$nota_venta->garantia }} Mes(es) @else @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <input type="hidden" name="moneda" id="moneda" value="{{$nota_venta->moneda->nombre}}">
                             <input type="hidden"  id="moneda_id" value="{{$nota_venta->moneda->id}}">
@@ -135,7 +135,7 @@
                     @foreach($nota_venta_re as $nota_venta_reg)
                     <tr>
                             <td>{{$i++}} </td>
-                            <td>{{$nota_venta_reg->producto}}</td>
+                            <td>{{$nota_venta_reg->producto}}<br>{{$nota_venta_reg->descripcion}}</td>
                             <td>{{$nota_venta_reg->cantidad}}</td>
                             <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
                             <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
@@ -148,17 +148,11 @@
                     <div class="col-sm-8">
                         <h3 align="left" class="">
                             <?php 
-                                $v=new CifrasEnLetras() ;
-                                $end2=number_format(round($sume, 2),2);
-                                $end=round($sume, 2);
-    
-                                $v=new CifrasEnLetras() ;
-                                $letra=($v->convertirEurosEnLetras($end));
-                                $letra_final = ucfirst(strstr($letra, 'soles',true));
-                                $end_final_point=strstr($end2, '.', false);
-                                $end_final=str_replace('.', ' ',$end_final_point);
+                                    $end=round($sume, 2);
+                                    $v=new NumeroALetras() ;
+                                    $letra=($v->toInvoice($end, 2));
                                 ?>
-                                Son : {{$letra_final}} con {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                                Son : {{ucfirst(strtolower($letra))}} {{$nota_venta->moneda->nombre }}
                         </h3>
                     </div>
                     <div class="col-sm-4">
@@ -230,17 +224,11 @@
                         <div class="col-sm-8">
                             <h3 align="left" class="h3-total">
                                 <?php 
-                                    $v=new CifrasEnLetras() ;
-                                    $end2=number_format(round($sume, 2),2);
                                     $end=round($sume, 2);
-
-                                    $v=new CifrasEnLetras() ;
-                                    $letra=($v->convertirEurosEnLetras($end));
-                                    $letra_final = ucfirst(strstr($letra, 'soles',true));
-                                    $end_final_point=strstr($end2, '.', false);
-                                    $end_final=str_replace('.', ' ',$end_final_point);
+                                    $v=new NumeroALetras() ;
+                                    $letra=($v->toInvoice($end, 2));
                                 ?>
-                                Son : {{$letra_final}} con {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+                                Son : {{ucfirst(strtolower($letra))}} {{$nota_venta->moneda->nombre }}
                             </h3>
                         </div>
                         <div class="col-sm-4">

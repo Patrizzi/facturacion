@@ -106,7 +106,7 @@
                                         <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()" /></th>
                                         <th >Articulo</th>
                                         <th style="width:120px">Cantidad</th>
-                                        <th style="width:120px">P. Sugerido</th>
+                                        <th style="width:120px">P. Sugerido (c/igv)</th>
                                         <th style="width:120px">Precio</th>
                                         <th style="width:120px">Total</th>
                                     </tr>
@@ -114,15 +114,10 @@
                                 <tbody>
                                     <tr>
                                         <td><input type='checkbox' class="case"></td>
-                                        <td><input  class="form-control " list="browsers0" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,0);" style="min-width: 500px">
-                                        <datalist id="browsers0">
-                                            @foreach($productos as $index)
-                                            <option>{{$index->nombre}} \ {{$index->descripcion}}</option>
-                                            @endforeach
-                                            @foreach($servicios as $servicio)
-                                            <option>{{$servicio->nombre}} \ {{$servicio->descripcion}}</option>
-                                            @endforeach
-                                        </datalist>
+                                        <td>
+                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="Descripcion del artículo"></textarea>
+                                            <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
                                         </td>
                                         <td>
                                             <input style="min-width: 96px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" value="1"  />
@@ -307,30 +302,25 @@
         var data = `[
         <tr>
         <td>
-        <input type='checkbox' class='case'/>
+            <input type='checkbox' class='case'/>
         </td>";
         <td>
-        <input  class="form-control " list="browsers${i}" name="articulo[]" class="monto0 form-control" required autocomplete="off" maxlength="191" onchange="change_list(this,${i});" style="min-width: 500px">
-        <datalist id="browsers${i}"  >
-            @foreach($productos as $index)
-            <option >{{$index->nombre}} \\  {{$index->descripcion}}</option>
-            @endforeach
-            @foreach($servicios as $servicio)
-            <option>{{$servicio->nombre}} \\ {{$servicio->descripcion}}</option>
-            @endforeach
-        </datalist>
+            <select class="monto${i} select2_demo_3 select_change" required="" id="articulo${i}" onchange="ajax(${i})" autocomplete="off"></select>
+            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="Descripcion del artículo"></textarea>
+            <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
+
         </td>
         <td>
-        <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+            <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
         <td>
             <input type="text" style="min-width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
         </td>
         <td>
-        <input type='text' style="min-width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+            <input type='text' style="min-width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
         </td>
         <td>
-        <input type='text' id='total${i}'  style="min-width: 96px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+            <input type='text' id='total${i}'  style="min-width: 96px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
         </td>
 
         </tr>
@@ -339,9 +329,104 @@
 
         $('.tables').append(data);
         i++;
+        articlesSelect2();
     });
 </script>
 <script>
+    //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
+    $(document).ready(function() {
+        articlesSelect2();
+    });
+    //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
+    function articlesSelect2() {
+        $(".select2_demo_3").select2({
+            placeholder: "Seleccionar Articulo",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.articles') }}",
+                dataType: 'json',
+                type: "POST",
+                // delay: 1500,
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term 
+                        almacen: 0,
+                        tipo_doc: 'manual' 
+                    };
+                },
+                processResults: function (data) {
+                    //validador de articulos multiples
+                    let data_length = data.length;
+                    let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
+                    let articles_selected_count_ajax = articles_selected_ajax.length; 
+                    // for(var z=0;z<articles_selected_count_ajax;z++){
+                    //     var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
+                    //     for(var y=0;y<data_length;y++){
+                    //         if(selected_ajax == data[y].id+ " | " + data[y].codigo + " | " + data[y].codigo_original + " | " + data[y].nombre){
+                    //             if(data[y].tipo == 'producto'){
+                    //                 data[y].disabled=true;
+                    //             }else{
+                    //                 data[y].disabled=false;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id:  item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                disabled: item.disabled
+                            };
+                        })
+                    };
+                },
+                cache: true,
+                passive: true
+            }
+        });
+    }
+    function ajax (a){
+        if(a==0){
+            var articulo = document.getElementById(`articulo`).value;
+            document.getElementById(`input_prod1`).value = articulo;
+
+        }else{
+            var articulo = document.getElementById(`articulo${a}`).value;
+            document.getElementById(`input_prod${a}`).value = articulo;
+            
+        }
+
+        var almacen = $('[id="almacen_id"]').val();
+        var moneda = $('[id="moneda_id"]').val();
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.description') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'articulo': articulo,
+                'almacen': almacen,
+                'moneda': moneda	
+            },
+            success: function (msg) {
+                if(msg.price == 0 && msg.amount == 0){
+                    $(`#precio_sugerido${a}`).val(msg.price)
+                }else{
+                    $(`#precio_sugerido${a}`).val(msg.price)
+                }
+                multi(a);
+                $(`.addmore`).prop("disabled", false);
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+    }
+
     function multi(a){
         var total = 1;
         var totales=0;

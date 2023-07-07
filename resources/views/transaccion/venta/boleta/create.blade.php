@@ -445,7 +445,7 @@
             type: "POST",
             delay: 10,
             data: function (params) {
-                var tipo_coti = 0;
+                var tipo_coti = 3;
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term

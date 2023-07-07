@@ -87,6 +87,7 @@
                                 <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                 <h5 id="n_factura">{{$cotizacion_numero}}</h5>
                                 <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
+                                <h5 id="n_nota_v" style="display: none;">{{$cotizacion_numero_n_venta}}</h5>
                                 {{-- <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"> --}}
                             </div>
                         </div>
@@ -104,11 +105,15 @@
                             <div class="radio">
                                 <input type="radio" name="tipo_coti" id="radio1" value="1" checked="" class="radio_factura" onchange="click_radio_factura()">
                                 <label style="padding-right: 5px;" for="radio1">
-                                    Factura
+                                    Factura &nbsp;
                                 </label>
-                                <input type="radio" name="tipo_coti" id="radio2" value="0" class="radio_boleta" onchange="click_radio_boleta()">
+                                <input type="radio" name="tipo_coti" id="radio2" value="3" class="radio_boleta" onchange="click_radio_boleta()">
                                 <label for="radio2">
-                                    Boleta
+                                    Boleta &nbsp;&nbsp;
+                                </label>
+                                <input type="radio" name="tipo_coti" id="radio3" value="4" class="radio_nota_v" onchange="click_radio_nota_v()">
+                                <label for="radio3">
+                                    Nota de V.
                                 </label>
                             </div>
                         </div>
@@ -989,9 +994,19 @@
         articlesSelect2();
     });
 
+    function click_radio_nota_v(){
+        if ($('input[class=n_nota_v]:radio:checked').length == 0) {
+            document.getElementById("n_nota_v").style.display = "block";
+            document.getElementById("n_boleta").style.display = "none";
+            document.getElementById("n_factura").style.display = "none";
+            $(".select2_demo_client").select2("val", "");
+        }
+        
+    }
     function click_radio_boleta(){
         if ($('input[class=n_boleta]:radio:checked').length == 0) {
             document.getElementById("n_factura").style.display = "none";
+            document.getElementById("n_nota_v").style.display = "none";
             document.getElementById("n_boleta").style.display = "block";
             $(".select2_demo_client").select2("val", "");
         }
@@ -1000,6 +1015,7 @@
     function click_radio_factura(){
         if ($('input[class=n_factura]:radio:checked').length == 0) {
             document.getElementById("n_boleta").style.display = "none";
+            document.getElementById("n_nota_v").style.display = "none";
             document.getElementById("n_factura").style.display = "block";
             $(".select2_demo_client").select2("val", "");
         } 

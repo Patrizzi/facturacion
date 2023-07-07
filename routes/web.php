@@ -75,6 +75,10 @@ Route::group(
 
 		Route::resource('/cotizacion','CotizacionController');
 		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
+
+		Route::post('cotizacion/nota_venta/{id}', 'CotizacionController@nota_venta_gen')->name('cotizacion.nota_venta');
+		Route::post('cotizacion/nota_venta_store', 'CotizacionController@nota_venta_store')->name('cotizacion.nota_venta_store');
+
 		// Route::put('/cotizacion/store/{id_moneda}','CotizacionController@store')->name('cotizacion.store');
 		Route::resource('/empresa/banco','BancoController'); //Banco
 

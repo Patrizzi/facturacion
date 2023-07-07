@@ -488,9 +488,12 @@ class Config_fe extends Model
         $empresa=Empresa::first();
         $igv=Igv::first();
 
-        if(strtolower($boleta->cliente->documento_identificacion) == "Dni" ){
+        if(strtolower($boleta->cliente->documento_identificacion) == "dni" ){ //pagina 42 del pdf sunat 2.1
             $tipo_doc = '01';
             $razon_social = $boleta->cliente->nombre;
+        }elseif(strtolower($boleta->cliente->documento_identificacion) == "ruc"){
+            $tipo_doc = '06';
+            $razon_social = $boleta->cliente->empresa;
         }else{
             $tipo_doc = '07';
             $razon_social = $boleta->cliente->empresa;

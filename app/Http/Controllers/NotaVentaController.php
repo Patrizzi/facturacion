@@ -165,6 +165,18 @@ class NotaVentaController extends Controller
     public function store(Request $request)
     {
         // return $request;
+        $cantidad_p = $request->input('cantidad');
+        $count_cantidad_p=count($cantidad_p);
+        for($i=0 ; $i<$count_cantidad_p;$i++){
+            $articulos[$i]= $request->input('articulo')[$i];
+            $producto_id_name[$i]=strstr($articulos[$i], '|');
+            $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),2);
+            $producto_name[$i]=explode(' | ',$producto_id_3[$i])[2];
+            
+        }
+        // return $producto_name;
+        // return explode(' | ',$producto_id_name[0]);
         //contador de valores de articulos
         $articulo = $request->articulo;
         $count_articulo=count($articulo);
@@ -195,7 +207,8 @@ class NotaVentaController extends Controller
         for($i=0;$i<$count_articulo;$i++){
             $reg_nota_v= new NotaVentaRegistro();
             $reg_nota_v->nota_venta_id=$nota_venta->id;
-            $reg_nota_v->producto=$request->get('articulo')[$i];
+            $reg_nota_v->producto= $producto_name[$i];
+            $reg_nota_v->descripcion=$request->get('descripcion_item')[$i];
             $reg_nota_v->cantidad=$request->get('cantidad')[$i];
             $reg_nota_v->precio_nacional=$request->get('precio')[$i];
             $reg_nota_v->save();
