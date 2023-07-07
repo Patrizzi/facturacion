@@ -30,7 +30,7 @@
                                     <label class="col-sm-2 col-form-label">Ruc:</label>
                                     <div class="col-sm-4"><input type="text" class="form-control" name="ruc"  required="" placeholder="2252415523"></div>
                                     <label class="col-sm-3 col-form-label">N° de MTC:</label>
-                                    <div class="col-sm-7"><input type="text" class="form-control" name="n_mtc" id="" maxlength="4"></div>
+                                    <div class="col-sm-7"><input type="text" class="form-control" name="n_mtc" id="" ></div>
                                     <label class="col-sm-2 col-form-label"><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia.aspx" target="_blank" style="margin: auto"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a></label>
                                 </div>
                             </div>
