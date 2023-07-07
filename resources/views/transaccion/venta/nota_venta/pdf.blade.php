@@ -65,7 +65,7 @@
                     <th style="width: 5%;border-color: white"></th>
                     <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
-                        <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        <strong>Garantia:</strong> &nbsp;@if(isset($nota_venta->id_cotizacion)) {{$nota_venta->garantia}}  @else {{$nota_venta->garantia}} @if( preg_match('/\d+/', $nota_venta->garantia)) Mes(es) @endif @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                     </td>
                 </tr>

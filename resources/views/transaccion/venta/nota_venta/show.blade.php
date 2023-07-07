@@ -102,7 +102,7 @@
                        <div class="form-control" >
                            <h3>Condiciones Generales</h3>
                            <div align="left">
-                            <strong>Garantia:</strong> &nbsp;@if($nota_venta->garantia) {{$nota_venta->garantia }} Mes(es) @else @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                            <strong>Garantia:</strong> &nbsp;@if(isset($nota_venta->id_cotizacion)) {{$nota_venta->garantia}}  @else {{$nota_venta->garantia}} @if( preg_match('/\d+/', $nota_venta->garantia)) Mes(es) @endif @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                             <input type="hidden" name="moneda" id="moneda" value="{{$nota_venta->moneda->nombre}}">
                             <input type="hidden"  id="moneda_id" value="{{$nota_venta->moneda->id}}">

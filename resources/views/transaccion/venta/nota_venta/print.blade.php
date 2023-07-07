@@ -76,7 +76,7 @@
                                <div class="form-control" >
                                    <h3>Condiciones Generales</h3>
                                    <div align="left">
-                                    <strong>Garantia:</strong> &nbsp;{{$nota_venta->garantia }} Mes(es)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Garantia:</strong> &nbsp;@if(isset($nota_venta->id_cotizacion)) {{$nota_venta->garantia}}  @else {{$nota_venta->garantia}} @if( preg_match('/\d+/', $nota_venta->garantia)) Mes(es) @endif @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                     <strong>Tipo de Moneda:</strong> &nbsp;{{$nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                         <div class="col-sm-12" align="center">
                            <div class="form-control" style="border: none;height: auto" >
                                <div align="left">
-                                <strong>observaciones:</strong> &nbsp;{{$nota_venta->observacion }}<br>
+                                <strong>Observaciones:</strong> &nbsp;{{$nota_venta->observacion }}<br>
                             </div>
                         </div>
                     </div>
@@ -119,12 +119,11 @@
 
         <footer style="padding-top: 120px">
          <h3 align="left">
-            <?php $v=new CifrasEnLetras() ;
-                $letra=($v->convertirEurosEnLetras($sume));
-                $letra_final = strstr($letra, 'soles',true);
-                $end_final=strstr($sume, '.');
+            <?php use Luecano\NumeroALetras\NumeroALetras;
+                $v=new NumeroALetras() ;
+                $letra=($v->toInvoice($sume, 2));
             ?>
-            Son : {{$letra_final}} {{$end_final}}/100 {{$nota_venta->moneda->nombre }}
+            Son : {{ucfirst(strtolower($letra))}} {{$nota_venta->moneda->nombre }}
         </h3>
 
         <div class="row">
