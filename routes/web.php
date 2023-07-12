@@ -32,6 +32,9 @@ Route::group(
 		Route::post('/cotizacion_manual/boletear_store' , 'CotizacionManualController@boletear_store')->name('cotizacion_manual.boletear_store');
 		Route::get('/cotizacion_manual/free_print/{id}' , 'CotizacionManualController@free_print')->name('cotizacion_manual.free_print');
 
+		Route::get('/cotizacion_manual/nota_venta/{id}','CotizacionManualController@gen_nota_venta')->name('cotizacion_manual.gen_nota_venta');
+		Route::post('/cotizacion_manual/nota_venta_store','CotizacionManualController@nota_venta_store')->name('cotizacion_manual.nota_venta_store');
+
 		Route::resource('/categoria','CategoriaController')->only(['index','create','store','update']);;
 		Route::resource('/vendedores','PersonalVentaController');
 		Route::put('vendedores/aprobar/{id}', 'PersonalVentaController@aprobar')->name('vendedores.aprobar');

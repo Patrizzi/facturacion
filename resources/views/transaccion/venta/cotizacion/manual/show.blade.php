@@ -17,11 +17,24 @@
              <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
                 @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
-                @elseif($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
-                    <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
-                @else
-                
                 @endif
+                @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 1)
+                    <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('facturacion_manual.show',$factura->id)}}" >Ver Factura</a>
+                @endif
+                @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
+                    <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
+                @endif
+                @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 1)
+                    <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('boleta_manual.show',$boleta->id)}}" >Ver Boleta</a>
+                @endif
+                @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 0)
+                    <a class="btn btn-success" href="{{route('cotizacion_manual.gen_nota_venta',$cotizacion->id)}}" target="_blank">Generar Nota de V.</a>
+                @endif
+                @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 1)
+                    <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('nota_venta.show',$nota_venta->id)}}" >Ver Nota de V.</a>
+                @endif
+
+
             </div>
             <div class="col-sm-6" align="right">
                 <a href="{{route('cotizacion_manual.free_print', $cotizacion->id)}}" class="btn btn-secondary" target="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Impresion Libre"><i class="fa fa-share-alt"></i></a>

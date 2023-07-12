@@ -400,6 +400,7 @@
 
         var almacen = $('[id="almacen_id"]').val();
         var moneda = $('[id="moneda_id"]').val();
+        var igv = {{$igv->igv_total}}
         $.ajax({
             type: "post",
             url: "{{ route('pa.description') }}",
@@ -413,7 +414,8 @@
                 if(msg.price == 0 && msg.amount == 0){
                     $(`#precio_sugerido${a}`).val(msg.price)
                 }else{
-                    $(`#precio_sugerido${a}`).val(msg.price)
+                    var new_price = msg.price + (msg.price * igv/100 );
+                    $(`#precio_sugerido${a}`).val(Math.round(new_price * 100) / 100);
                 }
                 multi(a);
                 $(`.addmore`).prop("disabled", false);

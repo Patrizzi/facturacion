@@ -1,33 +1,18 @@
 @extends('layout')
+@section('title', 'Cotizacion Manual Boletear')
+@section('breadcrumb', 'Cotizacion Manual Boletear')
+@section('breadcrumb2', 'Cotizacion Manual Boletear')
+@section('href_accion', back())
+@section('value_accion', 'Inicio')
 
-@section('title', 'De Cotizacion a Nota de Venta')
-@section('breadcrumb', 'Nota de Venta')
-@section('breadcrumb2', 'Nota de Venta')
-@section('href_accion', route('cotizacion.show',$cotizacion->id))
-@section('value_accion', 'Atrás')
+{{-- @section('button2', 'Nueva Cotización') --}}
+{{-- @section('config', route('cotizacion_manual.create')) --}}
 
 @section('content')
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<head>
-   <script type="text/javascript">
-       $(document).ready(function() {
 
-           $("form").keypress(function(e) {
-               if (e.which == 13) {
-                   setTimeout(function() {
-                       e.target.value += ' | ';
-                   }, 4);
-                   e.preventDefault();
-               }
-           });
-
-
-       });
-   </script>
-</head>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form action="{{route('cotizacion.nota_venta_store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-        @csrf
+    <form action="{{route('cotizacion_manual.nota_venta_store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+    @csrf
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
@@ -126,7 +111,6 @@
                                     <th style="width:10%">Código Item</th>
                                     <th style="width:10%">Cantidad</th>
                                     <th>Descripción</th>
-                                    <th>Stock</th>
                                     <th style="width:10%">Valor Unitario</th>
                                     <th style="width:10%">Valor Venta </th>
                                 </tr>
@@ -135,61 +119,37 @@
                                 @foreach($cotizacion_registros as $index => $cotizacion_registro)
                                 {{-- @if($validor[$index]==1) --}}
                                 <tr>
-                                    @if(isset($cotizacion_registro->producto_id))
-                                        <td>{{$cotizacion_registro->producto->codigo_producto}}</td>
-                                        <td>{{$cotizacion_registro->cantidad}} <input type="hidden" value="{{$cotizacion_registro->cantidad}}" name="cantidad_art[]" id=""></td>
-                                        <td>
+                                    <td>
+                                        @if (isset($cotizacion_registro->producto_id))
+                                            {{$cotizacion_registro->producto->codigo_producto}}
+                                        @else
+                                            {{$cotizacion_registro->servicio->codigo_servicio}}
+                                        @endif
 
-                                           <p >{{$cotizacion_registro->producto->nombre}}</p>
-                                            {{-- / {{$cotizacion_registro->producto->descripcion}} --}}
-                                           <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
-                                        </td>
-                                        <div style="display: none">
-                                            @if(strpos($cotizacion_registro->producto->tipo_afec_i_producto->informacion,'Gravado') !== false)
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*($cotizacion_registro->descuento/100)),2)}}
-                                               {{$comici = round($descu+($descu*($comi/100)),2)}}
-                                               {{$comis_array = ($comici)+($comici*($igv->igv_total/100))}}
-                                           @else
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*$cotizacion_registro->descuento/100),2)}}
-                                               {{$comici = round($descu+($descu*($comi/100)),2)}}
-                                               {{$comis_array = $comici}}
-                                           @endif
-                                            </div>
-                                    @else
-                                       <td>{{$cotizacion_registro->servicio->codigo_servicio}}</td>
-                                       <td>{{$cotizacion_registro->cantidad}}<input type="hidden" value="{{$cotizacion_registro->cantidad}}" name="cantidad_art[]" id=""></td>
-                                        <td>
-                                            <p>{{$cotizacion_registro->servicio->nombre}} / {{$cotizacion_registro->servicio->descripcion}}</p>
-                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
-                                        </td>
-                                        <div style="display: none">
-                                            @if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false)
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*($cotizacion_registro->descuento/100)),2)}}
-                                               {{$comici = $descu+($descu*($comi/100))}}
-                                               {{$comis_array = ($comici)+($comici*($igv->igv_total/100))}}
-                                           @else
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*$cotizacion_registro->descuento/100),2)}}
-                                               {{$comici = $descu+($descu*($comi/100))}}
-                                               {{$comis_array = $comici}}
-                                           @endif
-                                        </div>
-                                    @endif
+                                    </td>
+                                    <td>{{$cotizacion_registro->cantidad}}</td>
+                                    <td>
+                                        @if(isset($cotizacion_registro->producto_id))
+                                            {{$cotizacion_registro->producto->nombre}} | {{$cotizacion_registro->descripcion_item}}
+                                        @else
+                                            {{$cotizacion_registro->servicio->nombre}} | {{$cotizacion_registro->descripcion_item}}
+                                        @endif
+                                        <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
+                                    </td>
                                     
-                                    <td>{{$array_cantidad[$index]}}</td>
-                                    {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
-                                    {{-- [$comi] = porcentaje de comision --}}
-                                    {{-- <td>{{$comis_array}}</td> --}}
-                                   <td>{{$cotizacion->moneda->simbolo}}. {{round($comis_array,2)}} <input type="hidden" value="{{$comis_array}}" name="articulo_tot_end[]" id=""></td>
-                                   <td>{{$cotizacion->moneda->simbolo}}. {{$valor_tot[] = round(round($comis_array,2) * $cotizacion_registro->cantidad,2)}}</td>
-
-                                   <td style="display: none">
-                                       {{-- {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
-                                       {{$sub_total_gravado=($cotizacion->op_gravada)}}
-                                       S/.{{$igv_p=round($sub_total_gravado, 2)*($igv->igv_total/100)}}
-                                       {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                                       {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}} --}}
-                                        
-                                   </td>
+                                    <div style="display: none">
+                                        {{$igv_aa = $igv->igv_total}}
+                                        {{$vat = $cotizacion_registro->precio + ($cotizacion_registro->precio* $igv_aa/100)}}
+                                    </div>
+                                    <td>{{number_format(round($vat ,2),2)}}</td>
+                                    <td>{{number_format($cotizacion_registro->cantidad * round($vat ,2),2)}}</td>
+                                    <td style="display: none">
+                                        {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
+                                        {{$sub_total_gravado=($cotizacion->op_gravada)}}
+                                        S/.{{$igv_p=round($sub_total_gravado, 2)*($igv_aa/100)}}
+                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
+                                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
+                                    </td>
                                 </tr>
                                 {{-- @endif --}}
                                 @endforeach
@@ -199,7 +159,6 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <h3 >
-                                {{$end = array_sum($valor_tot)}}
                                 <?php use Luecano\NumeroALetras\NumeroALetras;
                                 $v=new NumeroALetras() ;
                                 $letra=($v->toInvoice($end, 2));
@@ -211,9 +170,9 @@
                             </h3>
                         </div>
                         <div class="col-sm-4 form-control" align="center">
-                            <p class=" a"> Importe Total</p>
+                            <p class=" a"> <strong>Importe Total</strong></p>
                             <span>{{$cotizacion->moneda->simbolo}}</span>
-                            <span class="impor_t">{{number_format(round($end,2),2)}}</span>
+                            <span class="impor_t">{{number_format($end,2)}}</span>
                         </div>
                     </div>
                     <div class="row" align="center" >
@@ -264,46 +223,9 @@
        else{boton.type = 'button';}
    }
 </script>
-{{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
     $("#boton").on(" click",function(buton){
         document.getElementById('button_submit').click();
     });
-
-</script>
-<script>
-    function filterFloat(evt,input){
-        var key = window.Event ? evt.which : evt.keyCode;    
-        var chark = String.fromCharCode(key);
-        var tempValue = input.value+chark;
-
-        if(key >= 48 && key <= 57){
-            if(filter(tempValue)=== false){
-                return false;
-            }else{       
-                return true;
-            }
-        }else{
-            if(key == 8 || key == 13 || key == 0) {     
-                return true;              
-            }else if(key == 46){
-                if(filter(tempValue)=== false){
-                    return false;
-                }else{       
-                    return true;
-                }
-            }else{
-                return false;
-            }
-        }
-    }
-    function filter(__val__){
-        var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
-        if(preg.test(__val__) === true){
-            return true;
-        }else{
-        return false;
-        }   
-    }
 </script>
 @endsection

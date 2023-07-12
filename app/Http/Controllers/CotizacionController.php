@@ -1408,11 +1408,11 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    $check_desc = $request->get('check_descuento')[$h];
+                    $check_desc = $cotizacion_r_update->descuento;
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
-                    if($check_desc <> 0){
+                    if($cotizacion_r_update->descuento <> 0 || $cotizacion_r_update->comision <> 0 ){
                         $precio_unitario = $precio - ($pro_ori*$check_desc/100);
                         $cotizacion_r_update->precio_unitario_desc = $precio_unitario;
                         $pre_uni_comi = $precio_unitario + ($precio_unitario*($comision/100));
@@ -1478,11 +1478,11 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    $check_desc = $request->get('check_descuento')[$h];
+                    $check_desc = $cotizacion_r_update->descuento;
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
-                    if($check_desc <> 0){
+                    if($cotizacion_r_update->descuento <> 0 || $cotizacion_r_update->comision <> 0 ){
                         $precio_unitario = $precio - ($pre_prom*$check_desc/100);
                         $cotizacion_r_update->precio_unitario_desc = $precio_unitario;
                         $pre_uni_comi = $precio_unitario + ($precio_unitario*($comision/100));
@@ -3175,7 +3175,7 @@ if($validacion==1){
             }
             $reg_nota_v->descripcion=$request->get('descripcion_item')[$i];
             $reg_nota_v->cantidad=$request->get('cantidad_art')[$i];
-            $reg_nota_v->precio_nacional=$request->get('articulo_tot_end')[$i];
+            $reg_nota_v->precio_nacional=round($request->get('articulo_tot_end')[$i],2);
             $reg_nota_v->save();
         }
 
@@ -3214,6 +3214,8 @@ if($validacion==1){
         if($regla=='factura'){
             $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
         }elseif($regla=='boleta'){
+            $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+        }else{
             $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
         }
         /* FIN registros boleta y factura*/

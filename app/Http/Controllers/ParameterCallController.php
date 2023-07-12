@@ -59,7 +59,7 @@ class ParameterCallController extends Controller
         if($money_id->principal==1){
             $moneda=Moneda::where('principal','1')->first();
             //Diferenciador de producto y servicio
-            if(isset($product)){
+            if(isset($product)){ 
                 //Calculo de array para precio, stock en (PRODUCTO)
                 if ($moneda->tipo == 'nacional') {
                     $utilidad=Stock_producto::where('producto_id',$product->id)->avg('precio_nacional')*($product->utilidad-$product->descuento1)/100;

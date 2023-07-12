@@ -157,9 +157,9 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-control" align="center">
-                            <p class=" a"> Importe Total</p>
+                            <p class=" a"> <strong>Importe Total</strong></p>
                             <span>{{$nota_venta->moneda->simbolo}}</span>
-                            <span class="">{{$sume}}</span>
+                            <span class="">{{number_format($end,2)}}</span>
                             {{-- <input type="text" name="impor_t" id="impor_t" value="" readonly class="form-control-plaintext" style="width: 60%"> --}}
                         </div>
                     </div>

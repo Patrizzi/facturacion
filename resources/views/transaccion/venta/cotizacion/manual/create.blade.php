@@ -82,8 +82,12 @@
                                                 Factura
                                             </label>
                                             <input type="radio" name="tipo_coti" id="radio2" value="0" onchange="click_radio_boleta(),codigo_numero()">
-                                            <label for="radio2">
-                                                Boleta
+                                            <label style="padding-right: 5px;" for="radio2">
+                                                Boleta&nbsp;
+                                            </label>
+                                            <input type="radio" name="tipo_coti" id="radio3" value="3" onchange="click_radio_nota_venta(),codigo_numero()">
+                                            <label for="radio3">
+                                                Nota de V. 
                                             </label>
                                         </div>
                                     </td>
@@ -734,6 +738,12 @@
         $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
         
 
+    }
+    function click_radio_nota_venta(){
+        if ($('input[class=n_nota_venta]:radio:checked').length == 0) {
+            $(".select2_demo_client").select2("val", "");
+        }
+        
     }
     function click_radio_boleta(){
         if ($('input[class=n_boleta]:radio:checked').length == 0) {
