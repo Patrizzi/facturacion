@@ -2502,7 +2502,7 @@ if($validacion==1){
 
 public function boletear_store(Request $request)
 {
-    return $request;
+    // return $request;
         //LLAMA A LA FECHA Y COMVIERTE LOS SIGNOS
     $date_sp = Carbon::now();
     $data_g = str_replace(' ', '_',$date_sp);
