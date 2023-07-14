@@ -227,6 +227,7 @@ class NotaVentaController extends Controller
      */
     public function show(Request $request, $id)
     {
+        
         $servicios = Servicios::all();
         $productos=Producto::all();
         $empresa=Empresa::first();
@@ -235,7 +236,7 @@ class NotaVentaController extends Controller
         $banco=Banco::where('estado',0)->get();
         $banco_count=$banco->count();
         $count_reg = count($nota_venta_re);
-
+        // return var_dump($nota_venta_re[0]->precio_nacional+"3");
         return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg'));
 
     }

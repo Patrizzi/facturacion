@@ -137,9 +137,9 @@
                             <td>{{$i++}} </td>
                             <td>{{$nota_venta_reg->producto}}<br>{{$nota_venta_reg->descripcion}}</td>
                             <td>{{$nota_venta_reg->cantidad}}</td>
-                            <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
-                            <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>
-                            <span hidden>{{$sume=$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional+$sume}}</span>
+                            <td>{{$simbologia}} {{round($nota_venta_reg->precio_nacional,2)}}</td>
+                            <td>{{$simbologia}} {{round($nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional,2)}}</td>
+                            <span hidden>{{$sume=round($nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional+$sume,2)}}</span>
                         </tr>
                         @endforeach
                     </tbody>

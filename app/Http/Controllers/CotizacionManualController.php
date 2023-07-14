@@ -1201,7 +1201,7 @@ class CotizacionManualController extends Controller
             }
             $reg_nota_v->descripcion=$request->get('descripcion_item')[$i];
             $reg_nota_v->cantidad=$new_reg->cantidad;
-            $reg_nota_v->precio_nacional=$new_reg->precio + ( $new_reg->precio * $igv->igv_total/100);
+            $reg_nota_v->precio_nacional=round($new_reg->precio + ( $new_reg->precio * $igv->igv_total/100),3);
             $reg_nota_v->save();
         }
         return redirect()->route('nota_venta.show',$nota_venta->id);

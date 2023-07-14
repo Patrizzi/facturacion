@@ -126,7 +126,7 @@
                                     <th style="width:10%">Código Item</th>
                                     <th style="width:10%">Cantidad</th>
                                     <th>Descripción</th>
-                                    <th>Stock</th>
+                                    {{-- <th>Stock</th> --}}
                                     <th style="width:10%">Valor Unitario</th>
                                     <th style="width:10%">Valor Venta </th>
                                 </tr>
@@ -139,22 +139,23 @@
                                         <td>{{$cotizacion_registro->producto->codigo_producto}}</td>
                                         <td>{{$cotizacion_registro->cantidad}} <input type="hidden" value="{{$cotizacion_registro->cantidad}}" name="cantidad_art[]" id=""></td>
                                         <td>
-
                                            <p >{{$cotizacion_registro->producto->nombre}}</p>
-                                            {{-- / {{$cotizacion_registro->producto->descripcion}} --}}
                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
                                         </td>
                                         <div style="display: none">
                                             @if(strpos($cotizacion_registro->producto->tipo_afec_i_producto->informacion,'Gravado') !== false)
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*($cotizacion_registro->descuento/100)),2)}}
-                                               {{$comici = round($descu+($descu*($comi/100)),2)}}
-                                               {{$comis_array = ($comici)+($comici*($igv->igv_total/100))}}
-                                           @else
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*$cotizacion_registro->descuento/100),2)}}
-                                               {{$comici = round($descu+($descu*($comi/100)),2)}}
-                                               {{$comis_array = $comici}}
-                                           @endif
-                                            </div>
+                                                {{ $tot_igv_unit = $cotizacion_registro->precio_unitario_comi + ( $cotizacion_registro->precio_unitario_comi  * ($igv->igv_total/100)) }}
+                                            @else
+                                                {{ $tot_igv_unit = $cotizacion_registro->precio_unitario_comi}}
+                                            @endif
+                                            
+                                        </div>
+                                        <td>
+                                            {{number_format(round($tot_igv_unit ,2),2)}}
+                                        </td>
+                                        <td>
+                                            {{number_format(round($tot_igv_unit * $cotizacion_registro->cantidad ,2),2)}}
+                                        </td>
                                     @else
                                        <td>{{$cotizacion_registro->servicio->codigo_servicio}}</td>
                                        <td>{{$cotizacion_registro->cantidad}}<input type="hidden" value="{{$cotizacion_registro->cantidad}}" name="cantidad_art[]" id=""></td>
@@ -164,30 +165,24 @@
                                         </td>
                                         <div style="display: none">
                                             @if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false)
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*($cotizacion_registro->descuento/100)),2)}}
-                                               {{$comici = $descu+($descu*($comi/100))}}
-                                               {{$comis_array = ($comici)+($comici*($igv->igv_total/100))}}
-                                           @else
-                                               {{$descu = round($array[$index]-($array_promedio[$index]*$cotizacion_registro->descuento/100),2)}}
-                                               {{$comici = $descu+($descu*($comi/100))}}
-                                               {{$comis_array = $comici}}
-                                           @endif
+                                                {{ $tot_igv_unit = $cotizacion_registro->precio_unitario_comi + ( $cotizacion_registro->precio_unitario_comi  * ($igv->igv_total/100)) }}
+                                            @else
+                                                   
+                                            @endif
                                         </div>
+                                        <td>
+                                            {{number_format(round($tot_igv_unit ,2),2)}}
+                                        </td>
+                                        <td>
+                                            {{number_format(round($tot_igv_unit * $cotizacion_registro->cantidad ,2),2)}}
+                                        </td>
                                     @endif
-                                    
-                                    <td>{{$array_cantidad[$index]}}</td>
-                                    {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
-                                    {{-- [$comi] = porcentaje de comision --}}
-                                    {{-- <td>{{$comis_array}}</td> --}}
-                                   <td>{{$cotizacion->moneda->simbolo}}. {{round($comis_array,2)}} <input type="hidden" value="{{$comis_array}}" name="articulo_tot_end[]" id=""></td>
-                                   <td>{{$cotizacion->moneda->simbolo}}. {{$valor_tot[] = round(round($comis_array,2) * $cotizacion_registro->cantidad,2)}}</td>
-
                                    <td style="display: none">
-                                       {{-- {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
+                                       {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
                                        {{$sub_total_gravado=($cotizacion->op_gravada)}}
                                        S/.{{$igv_p=round($sub_total_gravado, 2)*($igv->igv_total/100)}}
                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                                       {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}} --}}
+                                       {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                         
                                    </td>
                                 </tr>
@@ -199,15 +194,14 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <h3 >
-                                {{$end = array_sum($valor_tot)}}
-                                <?php use Luecano\NumeroALetras\NumeroALetras;
-                                $v=new NumeroALetras() ;
-                                $letra=($v->toInvoice($end, 2));
-                                // $end_final_point=strstr($end2, '.',false);
-                                // $end_final=str_replace('.', '',$end_final_point);
+                                <?php 
+                                    use Luecano\NumeroALetras\NumeroALetras;
+                                    $v=new NumeroALetras() ;
+                                    $letra=($v->toInvoice($end, 2));
+                                    $end_final_point=strstr($end2, '.',false);
+                                    $end_final=str_replace('.', '',$end_final_point);
                                 ?>
                                 Son : {{ucfirst(strtolower($letra))}} {{$cotizacion->moneda->nombre}}
-                                <!-- {{-- {{$end2}} --}} -->
                             </h3>
                         </div>
                         <div class="col-sm-4 form-control" align="center">

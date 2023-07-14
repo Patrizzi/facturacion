@@ -139,10 +139,10 @@
                                     
                                     <div style="display: none">
                                         {{$igv_aa = $igv->igv_total}}
-                                        {{$vat = $cotizacion_registro->precio + ($cotizacion_registro->precio* $igv_aa/100)}}
+                                        {{$vat = $cotizacion_registro->precio + ($cotizacion_registro->precio * ($igv_aa/100))}}
                                     </div>
                                     <td>{{number_format(round($vat ,2),2)}}</td>
-                                    <td>{{number_format($cotizacion_registro->cantidad * round($vat ,2),2)}}</td>
+                                    <td>{{number_format($cotizacion_registro->cantidad * $vat ,2)}}</td>
                                     <td style="display: none">
                                         {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
                                         {{$sub_total_gravado=($cotizacion->op_gravada)}}
