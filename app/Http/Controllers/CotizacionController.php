@@ -1525,7 +1525,9 @@ class CotizacionController extends Controller
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=Cotizacion::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('cotizacion.index'); }
-
+        $garantia=Garantia::where('estado',0)->get();
+        $validez=Validez::where('estado',0)->get();
+        $forma_pagos = Forma_pago::get();
         $banco=Banco::where('estado','0')->get();
         $banco_count=Banco::where('estado','0')->count();
         $cotizacion=Cotizacion::find($id);
@@ -1576,10 +1578,10 @@ class CotizacionController extends Controller
         $almacen=Almacen::where('id',$cotizacion->almacen_id)->pluck('id')->first();
         $nueva_cot='cotizacion.create_factura';
         
-        $ruta = "transaccion.venta.cotizacion.pdf2";
-        $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
+        // $ruta = "transaccion.venta.cotizacion.pdf2";
+        // $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
         // return $pdf;
-        return view('transaccion.venta.cotizacion.show2', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','ruta','compact','nota_venta'));
+        return view('transaccion.venta.cotizacion.show2', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos'));
     }
 
 public function print($id){

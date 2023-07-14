@@ -7,7 +7,6 @@
 
 @section('button2', 'Nueva Cotización')
 @section('onclick',"event.preventDefault();document.getElementById('nueva_cot').submit();")
-
 @section('content')
 
 <form action="{{ route($nueva_cot)}}"enctype="multipart/form-data" method="post" id="nueva_cot">
@@ -131,25 +130,93 @@
                         </div>
                     </div>
                     <div class="col-sm-6" align="center">
-                     <div class="form-control" >
-                         <h3>Condiciones Generales</h3>
-                         <div align="left">
-                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
-                            <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
-                            <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            <strong>Comisionista:</strong> &nbsp;
-                           
-                            @if(isset($cotizacion->comisionista->cod_vendedor))
-                            {{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            <input type="hidden" name="" id="comisionista" value="{{$cotizacion->comisionista->comision}}">
-                            @else
-                            Sin Comisionista - 0
-                            <input type="hidden" name="" id="comisionista" value="0">
-                            @endif
+                        <div class="form-control" >
+                            <h3>Condiciones Generales</h3>
+                            <div align="left">
+                                <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
+                                <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
+                                <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Comisionista:</strong> &nbsp;
+                            
+                                @if(isset($cotizacion->comisionista->cod_vendedor))
+                                {{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <input type="hidden" name="" id="comisionista" value="{{$cotizacion->comisionista->comision}}">
+                                @else
+                                Sin Comisionista - 0
+                                <input type="hidden" name="" id="comisionista" value="0">
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
+                    {{-- <div class=""> --}}
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control ">
+                            <div class="row input_small">
+                                <div class="col-sm-4">
+                                    <strong>Señor(es)</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                <input type="hidden" name="" id="cliente_id" value="{{$cotizacion->cliente->id}}">
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" >
+                                        <option selected value="{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}">{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Forma de Pago:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="forma_pago" required="required">
+                                        @foreach($forma_pagos as $forma_pago) 
+                                            <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Garantia:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="garantia">
+                                        @foreach($garantia as $garantias) 
+                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control ">
+                            <div class="row input_small">
+
+                                <div class="col-sm-4">
+                                    <strong>Validez:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select  class="form-control" name="validez" required="required">
+                                        @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Tipo de Moneda:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->moneda->nombre }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Comisionista:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    @if(isset($cotizacion->comisionista->cod_vendedor))
+                                        <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}%">
+                                    @else
+                                        <input class="form-control" readonly type="text" name="" id="" value="Sin Comisionista - 0">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{-- </div> --}}
                 <div class="col-sm-12" align="center">
                  <div class="form-control" style="border: none;height: auto" >
                      <div align="left">
@@ -400,6 +467,19 @@
 </div>
 </div>
 <style>
+    .row {
+        justify-content: center;
+    }
+    .input_small > div {
+        margin-top: 2px ;
+        margin-bottom: 2px ;
+    }
+    .input_small > div > input {
+        padding: 5px 10px;
+    }
+    .input_small > div > select{
+        padding: 5px 10px;
+    }
     #auto{
         cursor: pointer;
         box-shadow: 0px 0px 1px #000;
@@ -467,11 +547,14 @@
         margin: 0px;
         width: auto;
     }
- 
+    .select2-selection.select2-selection--single{
+        text-align: left;
+    }
 </style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -585,7 +668,43 @@
         });
     });
 </script>
+
 <script type="text/javascript">
+
+    var tipo_coti = 3;
+    var cliente_default = $('#cliente_id').val();
+    $(".select2_demo_client").select2({    
+        placeholder: "Seleccionar Cliente",
+        ajax: {
+            minimumInputLength: 1,
+            url: "{{ route('pa.clients') }}",
+            dataType: 'json',
+            type: "POST",
+            delay: 10,
+            data: function (params) {       
+                return {
+                    _token: "{{ csrf_token() }}",
+                    search: params.term, // search term
+                    tipo_coti: tipo_coti,
+                    select_default: cliente_default
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.nombre + ' | ' +  item.numero_documento,
+                        };
+                        
+                    })
+                };
+            },
+            cache: true
+        }
+        
+    });
+
     var clic = 1;
     function divAuto(){
        if(clic==1){

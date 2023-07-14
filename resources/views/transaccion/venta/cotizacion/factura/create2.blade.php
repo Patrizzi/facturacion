@@ -998,7 +998,7 @@
             document.getElementById("n_nota_v").style.display = "block";
             document.getElementById("n_boleta").style.display = "none";
             document.getElementById("n_factura").style.display = "none";
-            $(".select2_demo_client").select2("val", "");
+            $(".a").select2("val", "");
         }
         
     }

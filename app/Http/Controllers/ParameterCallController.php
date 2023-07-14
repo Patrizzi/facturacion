@@ -174,6 +174,8 @@ class ParameterCallController extends Controller
     public function getClients(Request $request){
         $search = $request->search;
         $tipo = $request->tipo_coti;
+        $default = $request->select_default;
+        
         if($tipo == '1'){ //Factura
             if($search == ''){
                 $employees = Cliente::orderby('created_at','desc')->select('id','nombre','numero_documento','documento_identificacion')->where('documento_identificacion','RUC')->limit(5)->get();
@@ -199,6 +201,14 @@ class ParameterCallController extends Controller
         }
         // return $tipo;
         $response = array();
+        if(isset($default)){
+            $default_cli = Cliente::where('id',$default)->first();
+            $response[] = array(
+                "id"=>$default_cli->id,
+                "nombre"=>$default_cli->nombre,
+                "numero_documento"=>$default_cli->numero_documento 
+           );
+        }
         foreach($employees as $employee){
            $response[] = array(
                 "id"=>$employee->id,
