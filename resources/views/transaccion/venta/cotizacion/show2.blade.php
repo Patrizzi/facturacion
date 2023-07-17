@@ -114,42 +114,53 @@
                         </div>
                     </div>
                 </div><br>
-                <div class="row" align="center" style="padding-bottom: 5px">
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control">
-                            <h3>Contacto Cliente</h3>
-                            <div align="left">
-                                <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
-                                <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                <strong>N° Contacto:</strong>&nbsp;{{$cotizacion->cliente->celular}} 
-                                @if(isset($cotizacion->cliente->telefono ))
-                                    / {{$cotizacion->cliente->telefono}}<br>
-                                @endif
+                <div class="table-no mostrar">
+                    <div class="row" align="center" style="padding-bottom: 5px">
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <h3>Contacto Cliente</h3>
+                                <div align="left">
+                                    <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
+                                    <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                    <strong>N° Contacto:</strong>&nbsp;{{$cotizacion->cliente->celular}} 
+                                    @if(isset($cotizacion->cliente->telefono ))
+                                        / {{$cotizacion->cliente->telefono}}<br>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control" >
+                                <h3>Condiciones Generales</h3>
+                                <div align="left">
+                                    <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
+                                    <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
+                                    <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Comisionista:</strong> &nbsp;
+                                
+                                    @if(isset($cotizacion->comisionista->cod_vendedor))
+                                    {{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <input type="hidden" name="" id="comisionista" value="{{$cotizacion->comisionista->comision}}">
+                                    @else
+                                    Sin Comisionista - 0
+                                    <input type="hidden" name="" id="comisionista" value="0">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-sm-12" align="center">
+                            <div class="form-control" style="border: none;height: auto" >
+                                <div align="left">
+                                    <strong>Observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control" >
-                            <h3>Condiciones Generales</h3>
-                            <div align="left">
-                                <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
-                                <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
-                                <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                <strong>Comisionista:</strong> &nbsp;
-                            
-                                @if(isset($cotizacion->comisionista->cod_vendedor))
-                                {{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                <input type="hidden" name="" id="comisionista" value="{{$cotizacion->comisionista->comision}}">
-                                @else
-                                Sin Comisionista - 0
-                                <input type="hidden" name="" id="comisionista" value="0">
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    {{-- <div class=""> --}}
+                </div>
+                <div class="div-editar no_mostrar row" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
                         <div class="form-control ">
                             <div class="row input_small">
@@ -185,7 +196,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6" align="center">
+                    <div class="col-sm-6" align="center" style="padding-bottom: 15px">
                         <div class="form-control ">
                             <div class="row input_small">
 
@@ -216,19 +227,18 @@
                             </div>
                         </div>
                     </div>
-                {{-- </div> --}}
-                <div class="col-sm-12" align="center">
-                 <div class="form-control" style="border: none;height: auto" >
-                     <div align="left">
-                        <strong>Observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+                    <br style="padding-bottom: 5px">
+                    <div class="col-sm-12">
+                        <div class="form-control">
+                            <strong>Observaciones</strong>
+                            <textarea class="form-control" name="" id="">{{$cotizacion->observacion }}</textarea>
+                        </div>
                     </div>
-                </div>
             </div>
-
-        </div><br>
-        <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$cotizacion->almacen_id}}" readonly="readonly">
-        <input type="hidden" id="moneda" class="form-control " value="{{$cotizacion->moneda->nombre}}" readonly="readonly">
-        <input type="hidden" id="moneda_id" class="form-control " value="{{$cotizacion->moneda_id}}" readonly="readonly">
+            <br>
+            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$cotizacion->almacen_id}}" readonly="readonly">
+            <input type="hidden" id="moneda" class="form-control " value="{{$cotizacion->moneda->nombre}}" readonly="readonly">
+            <input type="hidden" id="moneda_id" class="form-control " value="{{$cotizacion->moneda_id}}" readonly="readonly">
         <div class="table-no mostrar">
             <table class="table" cellspacing="0" >
                 <thead>
@@ -537,7 +547,7 @@
         width: 100%;
     }
     .mostrar{
-        display: initial;
+        display: ;
     }
     .no_mostrar{
         display: none;
