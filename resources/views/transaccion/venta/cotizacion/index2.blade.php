@@ -65,7 +65,20 @@
             <div class="ibox ">
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example" >
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for=""><strong>Tipo de Cotizacion:</strong></label>
+                                <select class="form-control col-lg-8" name="" id="select_tipo_coti">
+                                    <option value="">Todos los comprobantes</option>
+                                    <option value="factura">Factura</option>
+                                    <option value="boleta">Boleta</option>
+                                    <option value="nota_venta">Nota de Venta</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example-facturacion" >
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -78,6 +91,7 @@
                                     <th>Estado</th>
                                     <th>Estado Aprobado</th>
                                     <th>Creado por</th>
+                                    <th style="display: none">Tipo de Cotizacion</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,6 +142,9 @@
                                             Creado por  {{$cotizacions->user_personal->personal->nombres}}
                                         @endif
                                     </td>
+                                    <td style="display: none">
+                                        {{$cotizacions->tipo}}
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -158,7 +175,7 @@
 <!-- Page-Level Scripts -->
 <script>
     $(document).ready(function(){
-        $('.dataTables-example').DataTable({
+        table = $('.dataTables-example-facturacion').DataTable({
             pageLength: 10,
             order: [[0, "desc"]],
             responsive: true,
@@ -167,7 +184,13 @@
 
         });
 
+        $(document).on('change', '#select_tipo_coti', function(event) {
+            var nombre = $("#select_tipo_coti option:selected").val();
+            // console.log(nombre);
+            table.column(10).search(nombre).draw();
+        });
+            
     });
-
+    
 </script>
 @endsection

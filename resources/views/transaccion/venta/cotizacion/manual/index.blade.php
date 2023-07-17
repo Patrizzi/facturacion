@@ -34,6 +34,19 @@
             <div class="ibox ">
                 <div class="ibox-content">
                     <div class="table-responsive">
+                        <div class="table-responsive">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for=""><strong>Tipo de Cotizacion:</strong></label>
+                                    <select class="form-control col-lg-8" name="" id="select_tipo_coti">
+                                        <option value="">Todos los comprobantes</option>
+                                        <option value="factura">Factura</option>
+                                        <option value="boleta">Boleta</option>
+                                        <option value="nota_venta">Nota de Venta</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
                                 <tr>
@@ -45,6 +58,7 @@
                                     <th>Importe T.</th>
                                     <th>Ver</th>
                                     <th>Estado</th>
+                                    <th style="display: none">Tipo de Cotizacion</th>
                                 </tr>
                             </thead>
 
@@ -70,6 +84,9 @@
                                         @else
                                             <button type="button" class="btn btn-w-m btn-default">Procesado</button>
                                         @endif
+                                    </td>
+                                    <td style="display: none">
+                                        {{$cotizaciones->tipo}}
                                     </td>
                                 </tr>
                                 @endforeach
@@ -97,12 +114,17 @@
 <!-- Page-Level Scripts -->
 <script>
     $(document).ready(function(){
-        $('.dataTables-example').DataTable({
+        table = $('.dataTables-example').DataTable({
             pageLength: 25,
             order: [[0, "desc"]],
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
+        });
+        $(document).on('change', '#select_tipo_coti', function(event) {
+            var nombre = $("#select_tipo_coti option:selected").val();
+            // console.log(nombre);
+            table.column(8).search(nombre).draw();
         });
     });
 
