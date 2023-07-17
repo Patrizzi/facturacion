@@ -148,7 +148,7 @@
                                             @else
                                                 {{ $tot_igv_unit = $cotizacion_registro->precio_unitario_comi}}
                                             @endif
-                                            
+                                            <input type="hidden" value="{{$tot_igv_unit}}" name="articulo_tot_end[]" id="">
                                         </div>
                                         <td>
                                             {{number_format(round($tot_igv_unit ,2),2)}}
@@ -167,8 +167,9 @@
                                             @if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false)
                                                 {{ $tot_igv_unit = $cotizacion_registro->precio_unitario_comi + ( $cotizacion_registro->precio_unitario_comi  * ($igv->igv_total/100)) }}
                                             @else
-                                                   
+                                                {{ $tot_igv_unit = $cotizacion_registro->precio_unitario_comi}}
                                             @endif
+                                            <input type="hidden" value="{{$tot_igv_unit}}" name="articulo_tot_end[]" id="">
                                         </div>
                                         <td>
                                             {{number_format(round($tot_igv_unit ,2),2)}}

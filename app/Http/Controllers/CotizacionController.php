@@ -1313,6 +1313,16 @@ class CotizacionController extends Controller
 
         // return $request;
         $cotizacion = Cotizacion::where('id',$id)->first();
+        //*UPDATE HEADER COTIZACION
+        $cotizacion = Cotizacion::find($id);
+        $cotizacion->cliente_id = $request->get('cliente');
+        $cotizacion->forma_pago_id = $request->get('forma_pago');
+        $cotizacion->garantia = $request->get('garantia');
+        $cotizacion->validez = $request->get('validez');
+        $cotizacion->observacion = $request->get('observacion');
+        $cotizacion->save();
+
+
         //* ESTADO VIGENTE : USADO PARA EDICION DE COTIZACION;
         $moneda=Moneda::where('principal',1)->first();
         $moneda_registrada=$cotizacion->moneda_id;

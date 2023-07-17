@@ -43,18 +43,21 @@
                             <input type="hidden" name="almacen" value="{{$almacen}}" />
                             <button type="submit" class="btn btn-info" href="">Facturar</button>
                         </form>
+                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
                     @elseif($cotizacion->tipo=='boleta')
                         <form action="{{route('cotizacion.boletear', $cotizacion->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="almacen" value="{{$almacen}}" />
                             <button type="submit" class="btn btn-info" href="">Boletear</button>
                         </form>
+                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
                     @else
                         <form action="{{route('cotizacion.nota_venta', $cotizacion->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="almacen" value="{{$almacen}}" />
                             <button type="submit" class="btn btn-info" href="">Generar Nota de V.</button>
                         </form>
+                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
                     @endif
                 @endif
             </div>
@@ -160,81 +163,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="div-editar no_mostrar row" style="padding-bottom: 5px">
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control ">
-                            <div class="row input_small">
-                                <div class="col-sm-4">
-                                    <strong>Señor(es)</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                <input type="hidden" name="" id="cliente_id" value="{{$cotizacion->cliente->id}}">
-                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" >
-                                        <option selected value="{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}">{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <strong>Forma de Pago:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="forma_pago" required="required">
-                                        @foreach($forma_pagos as $forma_pago) 
-                                            <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> 
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <strong>Garantia:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="garantia">
-                                        @foreach($garantia as $garantias) 
-                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> 
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6" align="center" style="padding-bottom: 15px">
-                        <div class="form-control ">
-                            <div class="row input_small">
-
-                                <div class="col-sm-4">
-                                    <strong>Validez:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <select  class="form-control" name="validez" required="required">
-                                        @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <strong>Tipo de Moneda:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->moneda->nombre }}">
-                                </div>
-                                <div class="col-sm-4">
-                                    <strong>Comisionista:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    @if(isset($cotizacion->comisionista->cod_vendedor))
-                                        <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}%">
-                                    @else
-                                        <input class="form-control" readonly type="text" name="" id="" value="Sin Comisionista - 0">
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br style="padding-bottom: 5px">
-                    <div class="col-sm-12">
-                        <div class="form-control">
-                            <strong>Observaciones</strong>
-                            <textarea class="form-control" name="" id="">{{$cotizacion->observacion }}</textarea>
-                        </div>
-                    </div>
-            </div>
             <br>
             <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$cotizacion->almacen_id}}" readonly="readonly">
             <input type="hidden" id="moneda" class="form-control " value="{{$cotizacion->moneda->nombre}}" readonly="readonly">
@@ -314,6 +242,82 @@
             @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
             <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post"  enctype="multipart/form-data" id="coti_update">
                 @csrf
+                <div class="row">
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control ">
+                            <div class="row input_small">
+                                <div class="col-sm-4">
+                                    <strong>Señor(es)</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                <input type="hidden" name="" id="cliente_id" value="{{$cotizacion->cliente->id}}">
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" >
+                                        <option selected value="{{$cotizacion->cliente->id}}">{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Forma de Pago:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="forma_pago" required="required">
+                                        @foreach($forma_pagos as $forma_pago) 
+                                            <option value="{{$forma_pago->id}}" @if($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>{{$forma_pago->nombre}} </option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Garantia:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="garantia">
+                                        @foreach($garantia as $garantias) 
+                                            <option value="{{$garantias->descripcion}}" @if($cotizacion->garantia == $garantias->descripcion) selected @endif>{{$garantias->descripcion}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="center" style="padding-bottom: 15px">
+                        <div class="form-control ">
+                            <div class="row input_small">
+                                <div class="col-sm-4">
+                                    <strong>Validez:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select  class="form-control" name="validez" required="required">
+                                        @foreach($validez as $validezz) 
+                                            <option value="{{$validezz->descripcion}}" @if($cotizacion->validez == $validezz->descripcion) selected @endif>{{$validezz->descripcion}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Tipo de Moneda:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->moneda->nombre }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Comisionista:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    @if(isset($cotizacion->comisionista->cod_vendedor))
+                                        <input class="form-control" readonly type="text" id="" value="{{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}%">
+                                    @else
+                                        <input class="form-control" readonly type="text" id="" value="Sin Comisionista - 0">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br style="padding-bottom: 5px">
+                    <div class="col-sm-12">
+                        <div class="form-control">
+                            <strong>Observaciones</strong>
+                            <textarea class="form-control" name="observacion" id="">{{$cotizacion->observacion }}</textarea>
+                        </div>
+                    </div>
+                </div>
                 <table cellspacing="0" class="table table-responsive" id="inp_s">
                     <thead>
                         <tr>
@@ -680,8 +684,8 @@
 </script>
 
 <script type="text/javascript">
-
-    var tipo_coti = 3;
+    //*Condicional para el tipo de factura
+    var tipo_coti = $('#tipo_coti').val();
     var cliente_default = $('#cliente_id').val();
     $(".select2_demo_client").select2({    
         placeholder: "Seleccionar Cliente",

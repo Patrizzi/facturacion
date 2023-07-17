@@ -17,18 +17,21 @@
              <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
                 @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
+                    <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
                 @endif
                 @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 1)
                     <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('facturacion_manual.show',$factura->id)}}" >Ver Factura</a>
                 @endif
                 @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
+                    <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
                 @endif
                 @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 1)
                     <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('boleta_manual.show',$boleta->id)}}" >Ver Boleta</a>
                 @endif
                 @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 0)
                     <a class="btn btn-success" href="{{route('cotizacion_manual.gen_nota_venta',$cotizacion->id)}}" target="_blank">Generar Nota de V.</a>
+                    <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
                 @endif
                 @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 1)
                     <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('nota_venta.show',$nota_venta->id)}}" >Ver Nota de V.</a>
@@ -87,42 +90,45 @@
                         </div>
                     </div>
                 </div><br>
-                <div class="row" align="center" style="padding-bottom: 5px">
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control">
-                            <h3>Contacto Cliente</h3>
-                            <div align="left">
-                                <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
-                                <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
-                                <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
+                <div class="table-no mostrar">
+                    <div class="row" align="center" style="padding-bottom: 5px">
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <h3>Contacto Cliente</h3>
+                                <div align="left">
+                                    <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
+                                    <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
+                                    <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                    <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" align="center">
+                          <div class="form-control" >
+                                <h3>Condiciones Generales</h3>
+                                <div align="left">
+                                    <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
+                                    <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
+                                    <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$cotizacion->almacen_id}}" readonly="readonly">
+                        <input type="hidden" id="moneda_id" class="form-control " value="{{$cotizacion->moneda_id}}" readonly="readonly">
+                        <div class="col-sm-12" align="center">
+                            <div class="form-control" style="border: none;height: auto" >
+                                <div align="left">
+                                    <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6" align="center">
-                     <div class="form-control" >
-                         <h3>Condiciones Generales</h3>
-                         <div align="left">
-                            <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
-                            <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                            <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                            <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                        </div>
-                    </div>
                 </div>
-                <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$cotizacion->almacen_id}}" readonly="readonly">
-                <input type="hidden" id="moneda_id" class="form-control " value="{{$cotizacion->moneda_id}}" readonly="readonly">
-                <div class="col-sm-12" align="center">
-                 <div class="form-control" style="border: none;height: auto" >
-                     <div align="left">
-                        <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
-                    </div>
-                </div>
-            </div>
-
-        </div><br>
+            
+            <br>
         <div class="mostrar table-no">
             <div class="table-responsive">
                 <table class="table " >
@@ -195,9 +201,85 @@
         </div>
         <span hidden>{{$h = 0 }} {{$igv_1 =  1 + ($igv_t->igv_total/100)}}</span>
         <div class="div-editar no_mostrar">
-            <div class="table ">
-                <form action="{{route('cotizacion_manual.update', $cotizacion->id)}}" method="post" id="coti_man_update">
-                    @csrf
+            <form action="{{route('cotizacion_manual.update', $cotizacion->id)}}" method="post" id="coti_man_update">
+                @csrf
+                <div class="row">
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control ">
+                            <div class="row input_small">
+                                <div class="col-sm-4">
+                                    <strong>Señor(es)</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                <input type="hidden" name="" id="cliente_id" value="{{$cotizacion->cliente->id}}">
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" >
+                                        <option selected value="{{$cotizacion->cliente->id}}">{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Forma de Pago:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="forma_pago" required="required">
+                                        @foreach($forma_pagos as $forma_pago) 
+                                            <option value="{{$forma_pago->id}}" @if($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>{{$forma_pago->nombre}} </option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Garantia:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="garantia">
+                                        @foreach($garantia as $garantias) 
+                                            <option value="{{$garantias->descripcion}}" @if($cotizacion->garantia == $garantias->descripcion) selected @endif>{{$garantias->descripcion}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="center" style="padding-bottom: 15px">
+                        <div class="form-control ">
+                            <div class="row input_small">
+                                <div class="col-sm-4">
+                                    <strong>Validez:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select  class="form-control" name="validez" required="required">
+                                        @foreach($validez as $validezz) 
+                                            <option value="{{$validezz->descripcion}}" @if($cotizacion->validez == $validezz->descripcion) selected @endif>{{$validezz->descripcion}}</option> 
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Tipo de Moneda:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->moneda->nombre }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <strong>Comisionista:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    @if(isset($cotizacion->comisionista->cod_vendedor))
+                                        <input class="form-control" readonly type="text" id="" value="{{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}%">
+                                    @else
+                                        <input class="form-control" readonly type="text" id="" value="Sin Comisionista - 0">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br style="padding-bottom: 5px">
+                    <div class="col-sm-12">
+                        <div class="form-control">
+                            <strong>Observaciones</strong>
+                            <textarea class="form-control" name="observacion" id="">{{$cotizacion->observacion }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="table ">
                     <table class="table tables table-responsive" id="inp_s" >
                         <thead>
                             <tr>
@@ -284,8 +366,8 @@
                         <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                         </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
         
         <!-- /table-responsive -->
@@ -388,6 +470,16 @@
 {{-- Fin de modal configuracion --}}
 
 <style>
+    .input_small > div {
+        margin-top: 2px ;
+        margin-bottom: 2px ;
+    }
+    .input_small > div > input {
+        padding: 5px 10px;
+    }
+    .input_small > div > select{
+        padding: 5px 10px;
+    }
     #auto{
         cursor: pointer;
         box-shadow: 0px 0px 1px #000;
@@ -473,6 +565,7 @@
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -577,7 +670,40 @@
     }
 </script>
 <script>
-    
+    //*Condicional para el tipo de factura
+    var tipo_coti = $('#tipo_coti').val();
+    var cliente_default = $('#cliente_id').val();
+    $(".select2_demo_client").select2({    
+        placeholder: "Seleccionar Cliente",
+        ajax: {
+            minimumInputLength: 1,
+            url: "{{ route('pa.clients') }}",
+            dataType: 'json',
+            type: "POST",
+            delay: 10,
+            data: function (params) {       
+                return {
+                    _token: "{{ csrf_token() }}",
+                    search: params.term, // search term
+                    tipo_coti: tipo_coti,
+                    select_default: cliente_default
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.nombre + ' | ' +  item.numero_documento,
+                        };
+                        
+                    })
+                };
+            },
+            cache: true
+        }
+        
+    });
     function divAuto(){
         var clic = 1;
        if(clic==1){

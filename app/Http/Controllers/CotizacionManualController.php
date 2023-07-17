@@ -498,6 +498,9 @@ class CotizacionManualController extends Controller
         $cotizacion=CotizacionManual::find($id);
         $cotizacion_m_reg=CotizacionManual_registros::where('cotizacion_m_id',$id)->get();
         $sum=0;
+        $garantia=Garantia::where('estado',0)->get();
+        $validez=Validez::where('estado',0)->get();
+        $forma_pagos = Forma_pago::get();
         $igv_t=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
@@ -517,7 +520,7 @@ class CotizacionManualController extends Controller
         $boleta=Boleta_m::where('cotizador_id',$id)->first();
         $nota_venta=NotaVenta::where('id_cotizacion_m',$id)->first();
 
-        return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2','igv_t','factura','boleta','nota_venta'));
+        return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2','igv_t','factura','boleta','nota_venta','garantia','validez','forma_pagos'));
         //a
     }
     public function print($id){
@@ -591,6 +594,12 @@ class CotizacionManualController extends Controller
     {
         // return $request;
         $cotizacion = CotizacionManual::find($id);
+        $cotizacion->cliente_id = $request->get('cliente');
+        $cotizacion->forma_pago_id = $request->get('forma_pago');
+        $cotizacion->garantia = $request->get('garantia');
+        $cotizacion->validez = $request->get('validez');
+        $cotizacion->observacion = $request->get('observacion');
+        $cotizacion->save();
         $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
         //PRODUCTOS POR CODIGOS
         $art = $request->input('articulo');
