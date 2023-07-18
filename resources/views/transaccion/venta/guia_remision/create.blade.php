@@ -396,6 +396,7 @@
             success: function (msg) {
                 $(`#peso${a}`).val(msg.peso);
                 $(`#stock${a}`).val(msg.stock);
+                $(`#cantidad${a}`).attr('max', msg.stock);
                 // sum_total();
             },
             error: function(eject) {
