@@ -25,13 +25,27 @@
                                     <div class="col-sm-12"><img src="{{asset('img/logos/camion.svg')}}" width="100px"></div>
                                 </div>
                                 <div class="form-group  row">
-                                    <label class="col-sm-2 col-form-label">Nombre Empresa:</label>
-                                    <div class="col-sm-4"><input type="text" class="form-control" name="nombre" required="" placeholder="Trasporte"></div>
-                                    <label class="col-sm-2 col-form-label">Ruc:</label>
-                                    <div class="col-sm-4"><input type="text" class="form-control" name="ruc"  required="" placeholder="2252415523"></div>
-                                    <label class="col-sm-3 col-form-label">N° de MTC:</label>
-                                    <div class="col-sm-7"><input type="text" class="form-control" name="n_mtc" id="" ></div>
-                                    <label class="col-sm-2 col-form-label"><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia.aspx" target="_blank" style="margin: auto"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a></label>
+                                    <label class="col-sm-4 col-form-label">Ruc:</label>
+                                    <div class="col-sm-8 input-group">
+                                        <input type="text" class="form-control" name="ruc" id="ruc"  required="" placeholder="2252415523">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="ajax_search()"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group  row">
+                                    <label class="col-sm-4 col-form-label">Empresa de Transporte:</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="nombre" required="" placeholder="Transporte" readonly></div>
+                                </div>
+                                <div class="form-group  row">
+                                    <label class="col-sm-4 col-form-label">N° de MTC:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="n_mtc" id="" readonly>
+                                        <select class="form-control" name="" id="select_mtc">
+
+                                        </select>
+                                    </div>
+                                    {{-- <label class="col-sm-2 col-form-label"><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia.aspx" target="_blank" style="margin: auto"><i class ="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a></label> --}}
                                 </div>
                             </div>
                         </div>
@@ -375,9 +389,14 @@
         </div>
     </div>
 </div>
-
+<style>
+    .row{
+        align-items: center;    
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -404,7 +423,29 @@
 <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
 <!-- Switchery -->
 <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
-
+<script>
+    function ajax_search(){
+        var ruc = $('#ruc').val();
+        // console.log(ruc);
+        $.ajax({
+            type: "post",
+            url: "{{ route('vehiculo.ajax_mtc') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'ruc': ruc
+            },
+            success: function (msg) {
+                // var data = $.parseJSON(msg);
+                msg.forEach(optionValue => {
+                    const option = document.createElement('option');
+                    option.value = optionValue;
+                    option.textContent = optionValue;
+                    selectElement.appendChild(option);
+                });
+            }
+        });
+    }
+</script>
 @foreach($transporte_publico as $transporte_publicos)
 <script>
     var elem_2 = document.querySelector('.js-switch_{{$transporte_publicos->id}}');
@@ -417,4 +458,5 @@
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 </script>
 @endforeach
+
 @endsection

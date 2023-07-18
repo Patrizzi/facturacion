@@ -3,7 +3,12 @@ namespace App\Http\Controllers;
 
 use App\TransportePublico;
 use App\Vehiculo;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client as GuzzleClient;
+use Goutte\Client;
+
 
 class VehiculoController extends Controller
 {
@@ -18,7 +23,52 @@ class VehiculoController extends Controller
         $transporte_publico=TransportePublico::all();
         return view('planilla.vehiculo.index',compact('vehiculo','transporte_publico'));
     }
+    public function scrapping_mtc(Request $request){
 
+        $ruc = $request->get('ruc');
+        $url = 'https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia_display.aspx'; // Reemplaza esta URL por la página que deseas scrapear
+
+        $data = [
+            '__VIEWSTATE' => '/wEPDwUKLTk2MjgwMjM4NWRkdLR4EEmI6H/Gq0VM2km2uPyg+i4=',
+            '__VIEWSTATEGENERATOR' => '11454F71',
+            '__EVENTVALIDATION' => '/wEWCALDzKq+CQLL98WuCwLI98WuCwLJ98WuCwLO98WuCwLFmO/ABwLm+7rTBwK674/pDE754lgXafISz9MUO/Y+ZXqam9WK',
+            'rbOpciones' => 2,
+            'txtValor' => $ruc,
+            'hdopcion' => 2,
+            'hdvalore' => $ruc,
+            'hdopc' => 2,
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $retorno = curl_exec($ch);
+
+        curl_close($ch);
+
+         $dom = new DOMDocument();
+         @$dom->loadHTML($retorno); // El "@" se utiliza para suprimir los errores que puedan generarse al analizar el HTML
+         $xpath = new DOMXPath($dom);
+ 
+        $columnSelector = '//table//tr/td[2]';
+
+        $retorno_aray = [];
+        $nodes = $xpath->query($columnSelector);
+        // Empezar el bucle desde el segundo elemento
+        for ($i = 1; $i < $nodes->length; $i++) {
+            $node = $nodes->item($i);
+            $retorno_aray[] = $node->nodeValue;
+        }
+
+        $new = [
+            'cod_mtc' => $retorno_aray
+        ];
+        return $new;
+    }
     /**
      * Show the form for creating a new resource.
      *

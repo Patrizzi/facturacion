@@ -294,6 +294,7 @@ Route::group(
 
 		
 		Route::resource('/vehiculo','VehiculoController');
+		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
 		Route::resource('/familia','FamiliaController');
 		Route::resource('/subfamilia','SubfamiliaController');
