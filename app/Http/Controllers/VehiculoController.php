@@ -63,7 +63,7 @@ class VehiculoController extends Controller
             $node = $nodes->item($i);
             $retorno_aray[] = $node->nodeValue;
         }
-
+        
         $new = [
             'cod_mtc' => $retorno_aray
         ];

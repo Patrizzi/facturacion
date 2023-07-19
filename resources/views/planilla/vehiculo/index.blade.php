@@ -35,13 +35,13 @@
                                 </div>
                                 <div class="form-group  row">
                                     <label class="col-sm-4 col-form-label">Empresa de Transporte:</label>
-                                    <div class="col-sm-8"><input type="text" class="form-control" name="nombre" required="" placeholder="Transporte" readonly></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="nombre" required="" id="nombre_empresa" placeholder="Transporte" readonly></div>
                                 </div>
                                 <div class="form-group  row">
                                     <label class="col-sm-4 col-form-label">N° de MTC:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" name="n_mtc" id="" readonly>
-                                        <select class="form-control" name="" id="select_mtc">
+                                        {{-- <input type="text" class="form-control" name="n_mtc" id="" readonly> --}}
+                                        <select class="form-control" name="n_mtc" id="select_mtc" required>
 
                                         </select>
                                     </div>
@@ -435,15 +435,43 @@
                 'ruc': ruc
             },
             success: function (msg) {
-                // var data = $.parseJSON(msg);
-                msg.forEach(optionValue => {
+                const selectElement = document.getElementById('select_mtc');
+                console.log(msg.cod_mtc);
+                $("#select_mtc").empty();
+                if(msg.cod_mtc.length > 0){
+                    msg.cod_mtc.forEach(optionValue => {
+                        const option = document.createElement('option');
+                        option.value = optionValue;
+                        option.textContent = optionValue;
+                        selectElement.appendChild(option);
+                    });
+                }else{
                     const option = document.createElement('option');
-                    option.value = optionValue;
-                    option.textContent = optionValue;
-                    selectElement.appendChild(option);
-                });
+                        option.value = '';
+                        option.textContent = 'Sin existencias';
+                        selectElement.appendChild(option);
+                }
             }
         });
+        //*Consulta RUC
+        var url = "{{ url('clienteruc') }}";
+        $.ajax({
+            type:'GET',
+            url:url,
+            data:'ruc='+ruc,
+            success: function(datos_dni){
+                var datos = eval(datos_dni);
+                if(datos[2] == 'existente'){
+                    $('#nombre_empresa').val(datos[1]);
+                }else{
+                    $('#nombre_empresa').val(datos[0]);
+                }
+                
+            }
+        }).fail( function() {
+            $('#nombre_empresa').attr('placeholder','Ruc Erroneo');
+        });
+        
     }
 </script>
 @foreach($transporte_publico as $transporte_publicos)
