@@ -190,8 +190,8 @@
                             <td>
                                 <input style="min-width: 100px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
                             </td>
-                            <td>
-                                <input style="min-width: 100px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"   required  autocomplete="off" />
+                            <td class="tooltip-demo">
+                                <input style="min-width: 100px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"   required  autocomplete="off"  data-placement="top" title="No se puede procesar productos con stock '0'" />
                             </td>
                             <td>
                                 <textarea style="min-width: 250px" name="series[]" id="series0" required="" class="form-control" placeholder="escanear N/S"></textarea>
@@ -303,7 +303,7 @@
         <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
         </td>
         <td>
-        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  autocomplete="off"/>
+        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
         </td>
         <td>
         <textarea style="min-width: 250px" id='series${i}' name='series[]' class="form-control" required placeholder="escanear N/S"></textarea>
@@ -397,6 +397,20 @@
                 $(`#peso${a}`).val(msg.peso);
                 $(`#stock${a}`).val(msg.stock);
                 $(`#cantidad${a}`).attr('max', msg.stock);
+                if(msg.stock == 0){
+                    $(`#cantidad${a}`).on('keydown paste focus mousedown', function(e){
+                        if(e.keyCode != 9) // ignore tab
+                            e.preventDefault();
+                    });
+                    $(`#cantidad${a}`).attr('data-toggle', 'tooltip');
+                }else{
+                    $$(`#cantidad${a}`).on('keydown paste focus mousedown', function(e){
+                        // if(e.keyCode != 9) // ignore tab
+                        //     e.preventDefault();
+                    });
+                    $(`#cantidad${a}`).attr('data-toggle', '');
+
+                }
                 // sum_total();
             },
             error: function(eject) {
