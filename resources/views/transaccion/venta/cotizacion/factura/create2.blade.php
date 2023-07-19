@@ -842,7 +842,7 @@
         // Con DESCUENTO
         if (checkBox.checked == true && descuento > 0 ){
             // SACADA DE DESCUENTO PRIMERO
-            var precio_uni = precio - (promedio_original*(descuento/100));
+            var precio_uni = precio - (promedio_original2*(descuento/100));
             var precio_uni_dec=Math.round(precio_uni * multiplier) / multiplier;
             document.getElementById(`check_descuento${a}`).value = descuento;
             document.getElementById(`precio_unitario_descuento${a}`).value = precio_uni_dec;
