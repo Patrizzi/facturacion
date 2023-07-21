@@ -466,6 +466,10 @@ Route::group(
 		// Route::get('/inventario.kardex.entrada.create', 'KardexEntradaController@index');
 		// Route::post('/inventario.kardex.entrada.create/fetcha', 'KardexEntradaController@fetcha')->name('autocomplete.fetcha');
 		// Route::post('/api','api.php');
+
+		//* CREDITOS Y COBRANZAS ->CONTROLADOR BETA
+		Route::post('');
+
 	});
 
 Auth::routes([

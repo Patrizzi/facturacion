@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Cuotas_credito;
+use App\Facturacion;
 use Illuminate\Http\Request;
 
 class PagadosController extends Controller
@@ -13,7 +15,10 @@ class PagadosController extends Controller
      */
     public function index()
     {
-        return view('inventario.pagados.index');
+        $facturas = Facturacion::where('forma_pago_id',2)->get();
+        $cuotas = Cuotas_credito::where('facturacion_id','!=',null)->get();
+        // return $cuotas->where('facturacion_id','323')->count();
+        return view('cobranzas.cobros.index',compact('facturas','cuotas'));
     }
 
     /**

@@ -215,6 +215,21 @@
                 </li>
                 @endif
                 @endcan
+                <li>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/.svg')}}" class="iconos">  <span class="nav-label">Cobranza</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="#">Pagos</a>
+                            <ul class="nav nav-third-level">
+                                <li><a href="">Recibo de Pagos</a></li>
+                                <li><a href="">Cobrar</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Registro de Cuotas</a></li>
+                        <li><a href="#">Recibos</a></li>
+                    </ul>
+                </li>
+
                 @can('planilla')
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/planilla.svg')}}" class="iconos"> <span class="nav-label">Planilla</span></a>
