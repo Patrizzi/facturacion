@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cuotas_credito;
 use App\Facturacion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PagadosController extends Controller
@@ -18,9 +19,44 @@ class PagadosController extends Controller
         $facturas = Facturacion::where('forma_pago_id',2)->get();
         $cuotas = Cuotas_credito::where('facturacion_id','!=',null)->get();
         // return $cuotas->where('facturacion_id','323')->count();
-        return view('cobranzas.cobros.index',compact('facturas','cuotas'));
+        $fecha_hoy = Carbon::now()->format('d/m/Y');
+        // return $fecha_hoy;
+        return view('cobranzas.cobros.index',compact('facturas','cuotas','fecha_hoy'));
     }
-
+    public function lista_ajax(Request $request){
+        // return $request->ids_facturas;
+        $count_ids = count($request->ids_facturas);
+        
+        if($count_ids > 0){
+            for ($i=0; $i < $count_ids; $i++) { 
+                $var[] = $request->ids_facturas[$i];
+            }
+        }
+        $facturas = Facturacion::WhereIn('id',$var)->get();
+        foreach ($facturas as $key => $factura) {
+            // $array_cuot = [];
+            $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
+            foreach ($cuotas as $llave => $cuota) {
+                $array_cuot[$llave] = array(
+                    'cuota_n' => $cuota->numero_cuota,
+                    'monto' => $cuota->monto,
+                    'fecha_pago' => $cuota->fecha_pago,
+                    'estado' =>  null
+                );
+            }
+            
+            $array_end[$key] = array(
+                'factura_cod' => $factura->codigo_fac,
+                'cliente_doc' => $factura->cliente->numero_documento,
+                'cliente_nombre' => $factura->cliente->nombre,
+                'factura_moneda' => $factura->moneda->nombre,
+                'total_factura' => $cuotas->sum('monto'),
+                'cuotas_array' => $array_cuot
+            );
+            
+        }
+        return $array_end;
+    }
     /**
      * Show the form for creating a new resource.
      *

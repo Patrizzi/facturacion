@@ -418,6 +418,7 @@ Route::group(
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
 		Route::resource('/pagados','PagadosController');
+		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');
 
