@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-
+    {{$fecha_hoy}}
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -85,191 +85,241 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <h3 class="text-center">N° de Factura</h3>
-                        </div>
-                        <div class="col-sm-4">
-                            <h3 class="text-center">Cuotas por Factura</h3>
-                        </div>
-                        <div class="col-sm-4">
-                            <h3 class="text-center">Total x Cuotas</h3>
-                        </div>
-                    </div>
-                    <div id="div_facturas">
+                    <form action="{{route('pagados.store')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
                         <div class="row">
                             <div class="col-sm-4">
-                                <input type="text" name="" id="numero_fac">
-                            </div>
-                            <div class="col-sm-4 div_select">
-                                <select id="sel" class="select_2_multipl select2-selection--multiple" name="states[]" multiple="multiple">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                </select>
+                                <h3 class="text-center">N° de Factura</h3>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" name="" id="total_cuotas">
+                                <h3 class="text-center">Cuotas por Factura</h3>
+                            </div>
+                            <div class="col-sm-4">
+                                <h3 class="text-center">Total x Cuotas</h3>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            
+                        <div id="div_facturas">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input type="text" name="" id="numero_fac">
+                                </div>
+                                <div class="col-sm-4 div_select">
+                                    <select id="sel" class="select_2_multipl select2-selection--multiple" name="states[]" multiple="multiple">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" name="" id="total_cuotas">
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <label class="bold text-center">Tolta:</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="form-control disabled" id="tota_totas"></label>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="metodo_pago">
-                        <input type="hidden" name="input_pago" id="input_pago" value="1">
                         <div class="row">
                             <div class="col-sm-4">
-                                <h3 class="text-center">Metodos de Pago</h3>
-                                <div class="col-lg-12">
-                                    <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
-                                </div>
-                                <br>
-                                <div class="col-lg-12">
-                                    <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_2" onclick="select_pago(2)">Tarjeta</button>
-                                </div>
-                                <br>
-                                <div class="col-lg-12">
-                                    <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_3" onclick="select_pago(3)">Efectivo</button>
-                                </div>
-                                <br>
-                                <div class="col-lg-12">
-                                    <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_4" onclick="select_pago(4)">Transferencia</button>
+                                <div class="form-group">
+                                    {{-- <label class="col-form-label" for="">Monto Total de Pago</label>
+                                    <div class="input-group select-group">
+                                        <select class="form-control " style="max-width: 30%;height: 100%;">
+                                            @foreach ($monedas as $money)
+                                                <option value="{{$money->id}}">{{$money->simbolo}}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="text" class="form-control select_input_group"/>
+                                    </div> --}}
                                 </div>
                             </div>
-                            <div class="col-sm-8">
-                                <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Numero de Cheque</label>
-                                            <input type="text" id="" name="" value="" placeholder="Numero de Cheque" class="form-control">
-                                        </div>
+                            <div class="col-sm-4">
+                                <label class="col-form-label text-center">Total:</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group select-group">
+                                    <select class="form-control " style="max-width: 30%;height: 36px" id="select_money">
+                                        @foreach ($monedas as $money)
+                                            <option value="{{$money->id}}">{{$money->simbolo}}</option>
+                                        @endforeach
+                                    </select>
+                                    <label class="form-control disabled" id="tota_totas"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="metodo_pago">
+                            <input type="hidden" name="input_pago" id="input_pago" value="1">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h3 class="text-center">Metodos de Pago</h3>
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec active" id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Fecha de Cobro</label>
-                                            <input type="text" id="" name="" value="" placeholder="Fecha de Cobro" class="form-control">
-                                        </div>
+                                    <br>
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_2" onclick="select_pago(2)">Tarjeta</button>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Banco Emisor</label>
-                                            <input type="text" id="" name="" value="" placeholder="Bnaco Emisor" class="form-control">
-                                        </div>
+                                    <br>
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_3" onclick="select_pago(3)">Efectivo</button>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Beneficiario</label>
-                                            <input type="text" id="" name="" value="" placeholder="Beneficiario" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Monto</label>
-                                            <input type="text" id="" name="" value="" placeholder="Monto" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">N° de Cuenta</label>
-                                            <input type="text" id="" name="" value="" placeholder="N° de Cuenta" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Fecha de Emision</label>
-                                            <input type="text" id="" name="" value="" placeholder="Fecha de Emision" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Comprobante</label>
-                                            <input type="file" class="form-control" name="" id="">
-                                        </div>
+                                    <br>
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_4" onclick="select_pago(4)">Transferencia</button>
                                     </div>
                                 </div>
-                                <div class="row pago_m m_pago_2"> {{-- Metodo de Pago 2 - TARJETA --}}
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Titular de la Tajeta</label>
-                                            <input type="text" id="" name="" value="" placeholder="Titular de la Tajeta" class="form-control">
+                                <div class="col-sm-9">
+                                    <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Numero de Cheque</label>
+                                                <input type="text" id="" name="cheque_name" value="" placeholder="Numero de Cheque" class="form-control pago_class_1 class_pago" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Fecha de Cobro</label>
+                                                <input type="text" id="" name="cheque_fecha_cobro" value="" placeholder="Fecha de Cobro" class="form-control pago_class_1 class_pago" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Banco Emisor</label>
+                                                <input type="text" id="" name="cheque_banco_emisor" value="" placeholder="Banco Emisor" class="form-control pago_class_1 class_pago" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Beneficiario</label>
+                                                <input type="text" id="" name="cheque_beneficiario" value="" placeholder="Beneficiario" class="form-control pago_class_1 class_pago" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Monto</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="simbolo_pago_vuelto">S/</span>
+                                                    </div>
+                                                    <input type="number" id="cheque_monto" name="cheque_monto" value="" placeholder="Monto" class="form-control pago_class_1 class_pago" required step="0.01">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">N° de Cuenta</label>
+                                                <input type="text" value="" name="" name="cheque_n_cuenta" placeholder="N° de Cuenta" class="form-control pago_class_1 class_pago" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Fecha de Emision</label>
+                                                <input type="text" value="" name="" name="cheque_fecha_emision" placeholder="Fecha de Emision" class="form-control pago_class_1 class_pago" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Comprobante <small>(opcional)</small></label>
+                                                <input type="file" class="form-control" name="cheque_file" id="" class="form-control pago_class_1 class_pago" required>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Banco</label>
-                                            <select class="form-control" name="banco_tarjeta" id="">
-                                                <option value="BCP">BCP</option>
-                                                <option value="INTERBANK">INTERBANK</option>
-                                                <option value="BBVA">BBVA</option>
-                                                <option value="SCOTIABANK">SCOTIABANK</option>
-                                            </select>
+                                    <div class="row pago_m m_pago_2"> {{-- Metodo de Pago 2 - TARJETA --}}
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Titular de la Tajeta</label>
+                                                <input type="text" id="" name="tarjeta_titular" value="" placeholder="Titular de la Tajeta" class="form-control pago_class_2 class_pago">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Banco</label>
+                                                <select class="form-control pago_class_2 class_pago" name="tarjeta_banco" id="">
+                                                    <option value="">Seleccionar Banco</option>
+                                                    <option value="BCP">BCP</option>
+                                                    <option value="INTERBANK">INTERBANK</option>
+                                                    <option value="BBVA">BBVA</option>
+                                                    <option value="SCOTIABANK">SCOTIABANK</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Fecha</label>
+                                                <input type="date" class="form-control pago_class_2 class_pago fecha_hoy" name="tarjeta_fecha" id="" value="{{$fecha_hoy}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Comprobante</label>
+                                                <input type="file" class="form-control pago_class_2 class_pago" name="tarjeta_file" id="">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Fecha</label>
-                                            <input type="text" class="form-control" name="" id="" value="{{$fecha_hoy}}">
+                                    <div class="row pago_m m_pago_3"> {{-- Metodo de Pago 3 - EFECTIVO--}}
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Persona que Cancela</label>
+                                                <input type="text" id="" name="efectivo_persona" value="" placeholder="Titular" class="form-control pago_class_3 class_pago">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Fecha</label>
+                                                <input type="date" class="form-control pago_class_3 class_pago fecha_hoy" name="" id="" value="{{$fecha_hoy}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Monto de Pago</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="simbolo_pago">S/</span>
+                                                    </div>
+                                                    <input type="number" id="efectivo_pago" class="form-control pago_class_3 class_pago" placeholder="" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Vuelto</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="simbolo_pago_vuelto">S/</span>
+                                                    </div>
+                                                    <input type="text" id="efectivo_vuelto" class="form-control pago_class_3 class_pago" placeholder="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Comprobante</label>
-                                            <input type="file" class="form-control" name="" id="">
+                                    <div class="row pago_m m_pago_4"> {{-- Metodo de Pago 4 - TRANSFERENCIA --}}
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Titular</label>
+                                                <input type="text" id="" name="" value="" placeholder="Titular" class="form-control pago_class_4 class_pago">
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row pago_m m_pago_3"> {{-- Metodo de Pago 3 - EFECTIVO--}}
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Titular</label>
-                                            <input type="text" id="" name="" value="" placeholder="Titular" class="form-control">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Fecha</label>
+                                                <input type="text" class="form-control pago_class_4 class_pago" name="" id="" value="{{$fecha_hoy}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Fecha</label>
-                                            <input type="text" class="form-control" name="" id="" value="{{$fecha_hoy}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Comprobante</label>
-                                            <input type="file" class="form-control" name="" id="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row pago_m m_pago_4"> {{-- Metodo de Pago 4 - TRANSFERENCIA --}}
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Titular</label>
-                                            <input type="text" id="" name="" value="" placeholder="Titular" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Fecha</label>
-                                            <input type="text" class="form-control" name="" id="" value="{{$fecha_hoy}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label class="col-form-label" for="">Comprobante</label>
-                                            <input type="file" class="form-control" name="" id="">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Comprobante</label>
+                                                <input type="file" class="form-control pago_class_4 class_pago" name="" id="">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -305,6 +355,18 @@
         label.col-form-label{
             font-weight: bold;
         }
+        .input-group.col-sm-4{
+            height: fit-content;
+        }
+        .input-group-text{
+            width: 40px;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] { -moz-appearance:textfield; }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -426,6 +488,7 @@
                 var val_fact = check.value;
                 ids_array.push(id_fact[1]);
             });
+            var tipo_cambio = {{$tipo_cambio->paralelo}} ;
             $.ajax({
                 type: "post",
                 url: "{{ route('pagos.lista_ajax') }}",
@@ -446,13 +509,16 @@
                                     <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_`+index+`" value="`+row.factura_cod+`">
                                 </div>
                                 <div class="col-sm-4 div_select">
-                                    <select placeholder="Seleccionar Cuotas" id="sel_`+index+`" class="select_2_multipl_`+index+` select2-selection--multiple" name="cuotas_precio_`+row.factura_cod+`[]" multiple="multiple" onchangue="select_2_(`+index+`)">
+                                    <select placeholder="Seleccionar Cuotas" id="sel_`+index+`" class="select_2_multipl_`+index+` select2-selection--multiple" name="cuotas_precio_`+row.factura_cod+`[]" multiple="multiple" onchangue="select_2_(`+index+`)" required>
                                         `+ row.cuotas_array.map(function(bar){
                                             return '<option value="'+bar.monto+'">'+bar.monto+'</option>'
                                         }) +`
                                     </select>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="input-group col-sm-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">`+row.factura_simbolo+`</span>
+                                    </div>
                                     <label class="form-control" id="lbl_tot_`+index+`">0</label>
                                     <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas_`+index+`">
                                 </div>
@@ -473,15 +539,28 @@
                             $(`#lbl_tot_`+index+``).html(math_total);
                             // TOTAL DE TOTALES
                             var tota_tot = $('#tota_totas').html();
-                            console.log(tota_tot);
                             if(tota_tot == ""){  
                                 tota_tot = 0;
                             }
-                            var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(math_total)) * 100) / 100;
-                            console.log(tot_math);
-                            
-                            
-                            console.log('a');
+                            //TODO O NADA
+                            var igual =   $("#select_money option:selected").text();
+                            if(igual == row.factura_simbolo){
+                                var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(data.text)) * 100) / 100;
+                            }else{
+                                if(row.factura_moneda == "soles" && igual == '$'){  //DE DOLAR A SOL
+                                    var new_val = parseFloat(data.text) / tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(new_val)) * 100) / 100;
+                                    console.log('a');
+                                }else{  // DE SOL A DOLAR
+                                    var new_val = parseFloat(data.text) * tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(new_val)) * 100) / 100;
+                                    console.log('b');
+                                }
+                            }
+                            // console.log(tot_math);
+                            $('#tota_totas').html(tot_math); 
+                            $('#cheque_monto').attr('max',tot_math);
+                            $('#efectivo_pago').attr('min',tot_math);
                         });
                         $(`.select_2_multipl_`+index+``).on('select2:unselect', function (e) {
                             var data = e.params.data;
@@ -492,6 +571,30 @@
                             var math_total = Math.round((parseFloat(ant) - parseFloat(data.text)) * 100 ) / 100;
                             $(`#total_cuotas_`+index+``).val(math_total);
                             $(`#lbl_tot_`+index+``).html(math_total);
+                            var tota_tot = $('#tota_totas').html();
+
+                            // console.log(tota_tot);
+                            if(tota_tot == ""){  
+                                tota_tot = 0;
+                            }
+                            var igual =   $("#select_money option:selected").text();
+                            if(igual == row.factura_simbolo){
+                                var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(data.text)) * 100) / 100;
+                            }else{
+                                if(row.factura_moneda == "soles" && igual == '$'){  //DE DOLAR A SOL
+                                    var new_val = parseFloat(data.text) / tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(new_val)) * 100) / 100;
+                                    console.log('a');
+                                }else{  // DE SOL A DOLAR
+                                    var new_val = parseFloat(data.text) * tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(new_val)) * 100) / 100;
+                                    console.log('b');
+                                }
+                            }
+                            // console.log(tot_math);
+                            $('#tota_totas').html(tot_math);
+                            $('#cheque_monto').attr('max',tot_math);
+                            $('#efectivo_pago').attr('min',tot_math);
                         });
                     });
                     
@@ -510,12 +613,48 @@
         function select_pago(item){
             $('.pago_m').css('display','none');
             $(`.m_pago_`+item).css('display','flex');
+            
+            $('.class_pago').attr('required', false);
+            $('.class_pago').val('');
+            $(`.pago_class_`+item).attr('required', true);
+            
+
             $('.btn_pago_selec').removeClass("active"); 
             $(`#bm_pago_`+item).addClass("active");
             $('#input_pago').val(item);
+            
+            var fecha = {{$fecha_hoy}} ;
+            $('.fecha_hoy').val(fecha);
            console.log(item); 
         }
 
+        $('#select_money').on('change', function() {
+            var tipo_cambio = {{$tipo_cambio->paralelo}} ;
+            var total = $('#tota_totas').html();
+            if(this.value == "1"){
+                var conv = parseFloat(total) * tipo_cambio;
+                var conv_two = Math.round(conv * 100) / 100;
+                $('#tota_totas').html(conv_two);
+                //CAMBIO EN METODO DE PAGO = EFECTIVO
+                $('#simbolo_pago').html('S/');
+                $('#simbolo_pago_vuelto').html('S/');
+            }else{ //Dolares
+                var conv = parseFloat(total) / tipo_cambio;
+                var conv_two = Math.round(conv * 100) / 100;
+                $('#tota_totas').html(conv_two);
+                //CAMBIO EN METODO DE PAGO = EFECTIVO
+                $('#simbolo_pago').html('$');
+                $('#simbolo_pago_vuelto').html('$');
+            }
+            $('#cheque_monto').attr('max',conv_two);
+            $('#efectivo_pago').attr('min',conv_two);
+        });
+        $('#efectivo_pago').on('keyup', function(){
+            var pago = this.value;
+            var total = $('#tota_totas').text();
+            var vuelto  = parseFloat( this.value) - parseFloat(total);
+            $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
+        })
     </script>
 
 @endsection
