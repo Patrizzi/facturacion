@@ -89,9 +89,9 @@ class Config_fe extends Model
 
         // Cliente
         if($factura->cliente->empresa == null){
-            $razon = $factura->cliente->empresa;
-        }else{
             $razon = $factura->cliente->nombre;
+        }else{
+            $razon = $factura->cliente->empresa;
         }
         $client = (new Client())
         ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
