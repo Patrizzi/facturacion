@@ -87,58 +87,60 @@
                 <div class="modal-body">
                     <form action="{{route('pagados.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <h3 class="text-center">N° de Factura</h3>
-                            </div>
-                            <div class="col-sm-4">
-                                <h3 class="text-center">Cuotas por Factura</h3>
-                            </div>
-                            <div class="col-sm-4">
-                                <h3 class="text-center">Total x Cuotas</h3>
-                            </div>
-                        </div>
-                        <div id="div_facturas">
+                        <div class="cabeza_facturas">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input type="text" name="" id="numero_fac">
-                                </div>
-                                <div class="col-sm-4 div_select">
-                                    <select id="sel" class="select_2_multipl select2-selection--multiple" name="states[]" multiple="multiple">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                    </select>
+                                    <h3 class="text-center">N° de Factura</h3>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input type="text" name="" id="total_cuotas">
+                                    <h3 class="text-center">Cuotas por Factura</h3>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Total x Cuotas</h3>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    {{-- <label class="col-form-label" for="">Monto Total de Pago</label>
+                            <div id="div_facturas">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <input type="text" name="" id="numero_fac">
+                                    </div>
+                                    <div class="col-sm-4 div_select">
+                                        <select id="sel" class="select_2_multipl select2-selection--multiple" name="states[]" multiple="multiple">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="" id="total_cuotas">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        {{-- <label class="col-form-label" for="">Monto Total de Pago</label>
+                                        <div class="input-group select-group">
+                                            <select class="form-control " style="max-width: 30%;height: 100%;">
+                                                @foreach ($monedas as $money)
+                                                    <option value="{{$money->id}}">{{$money->simbolo}}</option>
+                                                @endforeach
+                                            </select>
+                                            <input type="text" class="form-control select_input_group"/>
+                                        </div> --}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-form-label text-center">Total:</label>
+                                </div>
+                                <div class="col-sm-4">
                                     <div class="input-group select-group">
-                                        <select class="form-control " style="max-width: 30%;height: 100%;">
+                                        <select class="form-control " style="max-width: 30%;height: 36px" id="select_money">
                                             @foreach ($monedas as $money)
                                                 <option value="{{$money->id}}">{{$money->simbolo}}</option>
                                             @endforeach
                                         </select>
-                                        <input type="text" class="form-control select_input_group"/>
-                                    </div> --}}
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label class="col-form-label text-center">Total:</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="input-group select-group">
-                                    <select class="form-control " style="max-width: 30%;height: 36px" id="select_money">
-                                        @foreach ($monedas as $money)
-                                            <option value="{{$money->id}}">{{$money->simbolo}}</option>
-                                        @endforeach
-                                    </select>
-                                    <label class="form-control disabled" id="tota_totas"></label>
+                                        <label class="form-control disabled" id="tota_totas"></label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -175,13 +177,20 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha de Cobro</label>
-                                                <input type="text" id="" name="cheque_fecha_cobro" value="" placeholder="Fecha de Cobro" class="form-control pago_class_1 class_pago" required>
+                                                <input type="date" id="" name="cheque_fecha_cobro" value="" placeholder="Fecha de Cobro" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Banco Emisor</label>
-                                                <input type="text" id="" name="cheque_banco_emisor" value="" placeholder="Banco Emisor" class="form-control pago_class_1 class_pago" required>
+                                                {{-- <input type="text" id="" name="cheque_banco_emisor" value="" placeholder="Banco Emisor" class="form-control pago_class_1 class_pago" required> --}}
+                                                <select class="form-control pago_class_1 class_pago" name="cheque_banco_emisor" id="" required>
+                                                    <option value="">Seleccionar Banco</option>
+                                                    <option value="BCP">BCP</option>
+                                                    <option value="INTERBANK">INTERBANK</option>
+                                                    <option value="BBVA">BBVA</option>
+                                                    <option value="SCOTIABANK">SCOTIABANK</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -220,6 +229,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{$fecha_hoy}}
                                     <div class="row pago_m m_pago_2"> {{-- Metodo de Pago 2 - TARJETA --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
@@ -242,7 +252,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha</label>
-                                                <input type="date" class="form-control pago_class_2 class_pago fecha_hoy" name="tarjeta_fecha" id="" value="{{$fecha_hoy}}">
+                                                <input type="date" value="{{$fecha_hoy}}" class="form-control pago_class_2 class_pago fecha_hoy" name="tarjeta_fecha" id="" >
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -305,6 +315,14 @@
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Comprobante</label>
                                                 <input type="file" class="form-control pago_class_4 class_pago" name="" id="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="">Notas Adicionales</label>
+                                                <textarea class="form-control" name="" id="" rows="4"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -561,6 +579,8 @@
                             $('#tota_totas').html(tot_math); 
                             $('#cheque_monto').attr('max',tot_math);
                             $('#efectivo_pago').attr('min',tot_math);
+                            $('#cheque_monto').val(tot_math);
+                            
                         });
                         $(`.select_2_multipl_`+index+``).on('select2:unselect', function (e) {
                             var data = e.params.data;
@@ -595,6 +615,7 @@
                             $('#tota_totas').html(tot_math);
                             $('#cheque_monto').attr('max',tot_math);
                             $('#efectivo_pago').attr('min',tot_math);
+                            $('#cheque_monto').val(tot_math);
                         });
                     });
                     
@@ -648,6 +669,7 @@
             }
             $('#cheque_monto').attr('max',conv_two);
             $('#efectivo_pago').attr('min',conv_two);
+            $('#cheque_monto').val(conv_two);
         });
         $('#efectivo_pago').on('keyup', function(){
             var pago = this.value;
