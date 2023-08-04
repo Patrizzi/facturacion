@@ -145,6 +145,7 @@
                             </div>
                         </div>
                         <br>
+                        <input type="hidden" value="{{$fecha_hoy}}" name="" id="fecha_value_php">
                         <div class="metodo_pago">
                             <input type="hidden" name="input_pago" id="input_pago" value="1">
                             <div class="row">
@@ -177,7 +178,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha de Cobro</label>
-                                                <input type="date" id="" name="cheque_fecha_cobro" value="" placeholder="Fecha de Cobro" class="form-control pago_class_1 class_pago" required>
+                                                <input type="date" id="" name="cheque_fecha_cobro" value="{{$fecha_hoy}}" placeholder="Fecha de Cobro" class="form-control pago_class_1 class_pago fecha_hoy" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -308,7 +309,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha</label>
-                                                <input type="text" class="form-control pago_class_4 class_pago" name="" id="" value="{{$fecha_hoy}}">
+                                                <input type="date" class="form-control pago_class_4 class_pago fecha_hoy" name="" id="" value="{{$fecha_hoy}}">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -636,7 +637,7 @@
             $(`.m_pago_`+item).css('display','flex');
             
             $('.class_pago').attr('required', false);
-            $('.class_pago').val('');
+            // $('.class_pago').val('');
             $(`.pago_class_`+item).attr('required', true);
             
 
@@ -644,9 +645,10 @@
             $(`#bm_pago_`+item).addClass("active");
             $('#input_pago').val(item);
             
-            var fecha = {{$fecha_hoy}} ;
+            var fecha = $('#fecha_value_php').val();
+            console.log(fecha);
             $('.fecha_hoy').val(fecha);
-           console.log(item); 
+           
         }
 
         $('#select_money').on('change', function() {

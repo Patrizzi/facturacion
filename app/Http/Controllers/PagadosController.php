@@ -21,7 +21,8 @@ class PagadosController extends Controller
         $facturas = Facturacion::where('forma_pago_id',2)->get();
         $cuotas = Cuotas_credito::where('facturacion_id','!=',null)->get();
         // return $cuotas->where('facturacion_id','323')->count();
-        $fecha_hoy = Carbon::now()->format('d/m/Y');
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        // return $fecha_hoy;
         $monedas = Moneda::get();
         $tipo_cambio=TipoCambio::latest('created_at')->first();       // return $fecha_hoy;
         return view('cobranzas.cobros.index',compact('facturas','cuotas','fecha_hoy','monedas','tipo_cambio'));
