@@ -59,7 +59,7 @@
                         <div class="form-control" ><h3>Domicilio De Llegada</h3>
                             <div align="left" style="font-size: 13px">
                                 {{-- <p>{{$guia_remision_m->cliente->direccion}}</p> --}}
-                                @if(isset($guia_remision->sucursal_cliente))
+                                @if(isset($guia_remision_m->sucursal_cliente))
                                     <p>{{$guia_remision_m->sucursal_cliente}} - {{$guia_remision_m->cod_postal_cliente}}</p>
                                 @else
                                     <p>{{$guia_remision_m->cliente->direccion}} - {{$guia_remision_m->cliente->cod_postal}}</p>
