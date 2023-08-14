@@ -220,7 +220,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha de Emision</label>
-                                                <input type="text" value="" name="" name="cheque_fecha_emision" placeholder="Fecha de Emision" class="form-control pago_class_1 class_pago" required>
+                                                <input type="date" value="{{$fecha_hoy}}" name="" name="cheque_fecha_emision" placeholder="Fecha de Emision" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">

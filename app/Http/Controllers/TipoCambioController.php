@@ -118,6 +118,7 @@ class TipoCambioController extends Controller
         // https://www.youtube.com/watch?v=WTxYp9ECnPY
         $data = file_get_contents("https://www.deperu.com/api/rest/cotizaciondolar.json");
         $info = json_decode($data, true);
+        return $info;
         if($moneda->tipo=="nacional"){
             $num=$info['Cotizacion'][0]['Venta']-0.05;
         }else{
