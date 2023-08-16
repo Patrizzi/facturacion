@@ -322,12 +322,16 @@ class KardexEntradaController extends Controller
       if($count_articulo = $count_cantidad = $count_precio){
           for($i=0;$i<$count_articulo;$i++){
               $cantidad_total = $request->get('unidad')[$i] * $request->get('cantidad')[$i];
+              $cantidad_total_no_zero = $request->get('unidad')[$i] * $request->get('cantidad')[$i];
+              if($cantidad_total == 0){
+                $cantidad_total = 1;
+              }
               $kardex_entrada_registro=new kardex_entrada_registro();
               $kardex_entrada_registro->kardex_entrada_id=$kardex_entrada->id;
               $kardex_entrada_registro->producto_id=$producto_id[$i];
               $kardex_entrada_registro->unidad=$request->get('unidad')[$i];
               $kardex_entrada_registro->unidad_cantidad=$request->get('cantidad')[$i];
-              $kardex_entrada_registro->cantidad_inicial=$cantidad_total;
+              $kardex_entrada_registro->cantidad_inicial=$cantidad_total_no_zero;
               $kardex_entrada_registro->tipo_registro_id = 1;
               //monedas
               if($moneda_principal_id==$kardex_entrada_moneda_id){
@@ -357,10 +361,12 @@ class KardexEntradaController extends Controller
               }
 
               $kardex_entrada_registro->almacen_id=$kardex_entrada->almacen_id;
-              $kardex_entrada_registro->cantidad= $cantidad_total;
+              $kardex_entrada_registro->cantidad= $cantidad_total_no_zero;
               $kardex_entrada_registro->estado=1;
               $kardex_entrada_registro->save();
-
+              if($cantidad_total == 1){
+                $cantidad_total = 0;
+              }
               //buscador de producto en la tabla stock productos
               $producto_stock=Stock_producto::where('producto_id',$producto_id[$i])->first();
               
