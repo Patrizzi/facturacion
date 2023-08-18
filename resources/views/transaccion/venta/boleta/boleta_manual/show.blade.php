@@ -66,7 +66,7 @@
                         <input type="text" hidden="" name="url"
                             value="{{ route('boleta_manual.pdf', $boleta->id) }}?archivo=">
                         <input type="text" name="name_sin_cambio" hidden=""
-                            value="BoletaM_{{ $boleta->cod_boleta }}" />
+                            value="BoletaM_{{ $boleta->codigo_boleta }}" />
                         <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
                             formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
                             data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
