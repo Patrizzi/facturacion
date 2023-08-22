@@ -106,7 +106,7 @@
                         @foreach($nota_venta_re as $nota_venta_reg)
                         <tr>
                             <td>{{$i++}} </td>
-                            <td>{{$nota_venta_reg->producto}}</td>
+                            <td>{{$nota_venta_reg->producto}}<br>{{$nota_venta_reg->descripcion}}</td>
                             <td>{{$nota_venta_reg->cantidad}}</td>
                             <td>{{$simbologia}} {{$nota_venta_reg->precio_nacional}}</td>
                             <td>{{$simbologia}} {{$nota_venta_reg->cantidad*$nota_venta_reg->precio_nacional}}</td>

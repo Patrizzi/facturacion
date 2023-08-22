@@ -1155,12 +1155,12 @@ class CotizacionManualController extends Controller
         $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
 
         // Numero de Nota de Venta
-        $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+        $count_nota_venta=NotaVenta::where('almacen_id',$cotizacion->almacen_id)->count();
         $count_nota_venta++;
-        $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+        $sucursal_nr = str_pad($cotizacion->almacen_id, 3, "0", STR_PAD_LEFT);
         $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
         $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
-        
+        // return $request;
 
         return view('transaccion.venta.cotizacion.manual.nota_venta',compact('empresa','forma_pagos','cotizacion','cotizacion_registros','cod_nota_venta','igv'));
     }
