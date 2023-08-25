@@ -467,6 +467,9 @@ Route::group(
 		// Route::get('/inventario.kardex.entrada.create', 'KardexEntradaController@index');
 		// Route::post('/inventario.kardex.entrada.create/fetcha', 'KardexEntradaController@fetcha')->name('autocomplete.fetcha');
 		// Route::post('/api','api.php');
+
+		Route::resource('/eventos', 'EventosController');
+		Route::post('/eventos/call', 'EventosController@eventos_show')->name('eventos.call');
 	});
 
 Auth::routes([
