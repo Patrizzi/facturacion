@@ -91,7 +91,7 @@ class ClienteController extends Controller
      return redirect()->route('cliente.show',$cliente->id);
    }
  }
-
+user
  public function storecontact($data)
  {
 

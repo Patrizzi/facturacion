@@ -30,33 +30,7 @@
                                     </li>
                                     <li>1</li>
                                 </ul> --}}
-                                <ul class="nav metismenu" id="side-menu">
-                                    <li class="active">
-                                        <a href="#" aria-expanded="true"><i class="fa fa-sitemap"></i> <span class="nav-label">Menu Levels </span><span class="fa arrow"></span></a>
-                                        <ul class="nav nav-second-level collapse in" aria-expanded="true" style="">
-                                            <li class="">
-                                                <a href="#" aria-expanded="false">Third Level <span class="fa arrow"></span></a>
-                                                <ul class="nav nav-third-level collapse" aria-expanded="false" style="height: 0px;">
-                                                    <li>
-                                                        <a href="#">Third Level Item</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">Third Level Item</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">Third Level Item</a>
-                                                    </li>
-                    
-                                                </ul>
-                                            </li>
-                                            <li><a href="#" aria-expanded="false">Second Level Item</a></li>
-                                            <li>
-                                                <a href="#" aria-expanded="false">Second Level Item</a></li>
-                                            <li>
-                                                <a href="#" aria-expanded="false">Second Level Item</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                @include('eventos.menu')
                             </div>
                             <div class="col-lg-9">
                                 <div id="calendar"></div>
@@ -208,6 +182,7 @@
         .fc-event.main {
             color: var(--fc-event-text-color, #fff);
         }
+
     </style>
     <input type="hidden" name="_token" value="ggmY2I1Gjt0wDFRU1ds0cP9H4g5dJaFg7X6wXgXU">
     <!-- Mainly scripts -->
@@ -354,4 +329,5 @@
             // color_select();
         });
     </script>
+
 @endsection
