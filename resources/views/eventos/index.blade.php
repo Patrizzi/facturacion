@@ -3,9 +3,9 @@
 @section('atributo_actu', 'hidden')
 @section('atributo_1', 'hidden')
 
-@section('foto', auth()->user()->avatar)
-@section('nombre', auth()->user()->personal->nombres)
-@section('area', auth()->user()->name)
+@section('foto', auth()->user()->avatar )
+@section('nombre', auth()->user()->personal->nombres )
+@section('area', auth()->user()->name )
 @section('content')
 
     <div class="wrapper wrapper-content">
@@ -18,18 +18,6 @@
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-lg-3">
-                                {{-- <ul>
-                                    <li>
-                                        <button class="btn btn-primary">Eventos</button>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-primary">Categorias</button>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-primary">Add Cateogria</button>
-                                    </li>
-                                    <li>1</li>
-                                </ul> --}}
                                 @include('eventos.menu')
                             </div>
                             <div class="col-lg-9">
@@ -41,16 +29,18 @@
             </div>
         </div>
     </div>
-    @include('eventos.modal_add')
     <div class="modal fade" id="edit_button">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content ">
                 <div class="modal-header">
-                    <h6 class="modal-title">Detalles Evento</h6>
-                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span
-                            aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title" id="exampleModalLabel">Ver Evento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <form action="" id="form_update" style="margin: 5px 2em">
+                <form action="{{ route('eventos.update') }}" method="POST" id="form_update" style="margin: 5px 2em">
+                    @csrf
+                    <input type="hidden" name="id_evento" id="event_id_form">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-sm-12 col-md-12">
@@ -61,14 +51,16 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-sm-12 col-md-12">
                                 <label class="form-label">Cliente <span class="text-red">*</span></label>
-                                <select class="form-control form-select select2" name="cliente_id" id="select_cli_id"
-                                    data-bs-placeholder="Seleccionar Cliente">
+                                <select class="form-control form-select select2_demo_client_edit" name="cliente_id"
+                                    id="select_cli_id" data-bs-placeholder="Seleccionar Cliente">
                                 </select>
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-sm-6 col-md-6">
                                 <label class="form-label">Tipo de Atención<span class="text-red">*</span></label></label>
@@ -85,8 +77,9 @@
                                 <div class="row">
                                     <div class="col-sm-8">
                                         <select class="form-control select_cat" name="categoria" id="select_cat_edit"
-                                            onchange="color_select()">
+                                            onchange="color_select_opt()">
                                         </select>
+                                        <input type="hidden" id="id_cat_edit">
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-control category-color">
@@ -95,6 +88,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-sm-6 col-md-6">
                                 <label class="form-label">Fecha de Inicio <span class="text-red">*</span></label></label>
@@ -123,6 +117,17 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <label class="form-label">Asignar Usuario<span class="text-red">*</span></label></label>
+                                <select class="form-control select2_demo_user" name="usuario" id="user_asig">
+                                </select>
+                            </div>
+                            {{-- <div class="col-sm-6 col-md-6">
+    
+                        </div> --}}
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
@@ -154,9 +159,7 @@
             font-size: 25px;
         }
 
-        .category-color {
-            height: 100%;
-        }
+
 
         .fc-event-time,
         .fc-event-title {
@@ -182,7 +185,6 @@
         .fc-event.main {
             color: var(--fc-event-text-color, #fff);
         }
-
     </style>
     <input type="hidden" name="_token" value="ggmY2I1Gjt0wDFRU1ds0cP9H4g5dJaFg7X6wXgXU">
     <!-- Mainly scripts -->
@@ -204,21 +206,14 @@
     <!-- iCheck -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <!-- Full Calendar -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script>
-        // A $( document ).ready() block.
-        // $(document).ready(function() {
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "{{ route('eventos.call') }}",
-        //         data: {
-        //             '_token': $('input[name=_token]').val(),
-        //         },
-        //         success: function(res) {
-        //             console.log(res);
-        //             alert(res);
-        //         }
-        //     });
-        // });
+        $(document).ready(function() {
+            $('#event_menu_eventos').click();
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -241,29 +236,37 @@
                     console.log(info.event);
                     //* AL HACER CLICK EN UN EVENTO
                     $('#select_cat_edit').empty();
-                    $('#select_cli_id').empty();
+                    // $('#select_cli_id').empty();
                     $('#show_event_edit').val(info.event.title);
                     $('#descripcion_edit').val(info.event.extendedProps.description);
                     $('#fecha_inicio_edit').val(moment(info.event.start, 'DD.MM.YYYY').format(
                         'YYYY-MM-DD'));
                     $('#fecha_fin_edit').val(moment(info.event.extendedProps.endStr, 'YYYY-MM-DDTHH:mm')
                         .format('YYYY-MM-DD'));
-                    // console.log(info.event.extendedProps)
-                    $('#select_cli_id').append(
-                        '<option id="select_clie" value=' + info.event.extendedProps.cliente_id +
-                        ' selected>' + info.event.extendedProps.cliente_name + '</option>' +
-                        `@foreach ($clientes as $clie))
-                        <option value="{{ $clie->id }}">{{ $clie->nombre }}</option>
-                        @endforeach`);
-                    // alert(info.event.extendedProps.name_color);
-                    // $('#select_cat_edit').val(info.event.color);
+
+                    var select = new Option(info.event.extendedProps.cliente_name + `|` + info.event
+                        .extendedProps.cliente_doc, info.event.extendedProps.cliente_id);
+                    select.selected = true;
+                    $(".select2_demo_client_edit").append(select);
+
+                    selected_ajax();
+                    $('#select_cat_edit').val(info.event.color);
                     $('#select_cat_edit').append(
                         '<option id="select_cat_opt" value=' + info.event.extendedProps.id_color +
-                        ' selected>' + info.event.extendedProps.name_color + '</option>' +
+                        ' selected >' + info.event.extendedProps.name_color + '</option>' +
                         `@foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $category->id }}">{{ $category->titulo }}</option>
                     @endforeach`);
-                    // color_select_opt();
+                    $('#id_cat_edit').val(info.event.extendedProps.id_color);
+
+                    var select2 = new Option(info.event
+                        .extendedProps.user_name, info.event.extendedProps.user_id);
+                    select2.selected = true;
+                    $(".select2_demo_user").append(select2);
+                    selected_user_ajax();
+
+                    $('#event_id_form').val(info.event.id);
+                    color_select_opt();
                     if (info.event.extendedProps.all_day == 1) {
                         $('#hora_inicio_edit').val('');
                         $('#hora_fin_edit').val('');
@@ -326,8 +329,113 @@
 
             });
             calendar.render();
-            // color_select();
+            color_select();
         });
+
+
+
+        function check_day_update() {
+            if ($('#all_day_edit').is(':checked')) {
+                $('#hora_inicio_edit').attr('disabled', true);
+                $('#hora_fin_edit').attr('disabled', true);
+                $('#hora_inicio_edit').attr('required', false);
+                $('#hora_fin_edit').attr('required', false);
+            } else {
+                $('#hora_inicio_edit').attr('disabled', false);
+                $('#hora_fin_edit').attr('disabled', false);
+                $('#hora_inicio_edit').attr('required', true);
+                $('#hora_fin_edit').attr('required', true);
+            }
+        }
+
+
+
+        function color_select_opt() {
+            var color_id = $('#select_cat_edit').val();
+            console.log(color_id);
+            $.ajax({
+                type: "post",
+                url: "{{ route('category.color') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'color': color_id
+                },
+                success: function(msg) {
+                    console.log(msg);
+                    $('.category-color').css('background-color', "" + msg + "");
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        }
+
+        function selected_ajax() {
+            $(".select2_demo_client_edit").select2({
+                placeholder: "Seleccionar Cliente",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{ route('pa.clients') }}",
+                    dataType: 'json',
+                    type: "POST",
+                    delay: 10,
+                    data: function(params) {
+                        var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                        return {
+                            _token: "{{ csrf_token() }}",
+                            search: params.term, // search term
+                            tipo_coti: tipo_coti
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nombre + ' | ' + item.numero_documento,
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function selected_user_ajax() {
+            $(".select2_demo_user").select2({
+                placeholder: "Seleccionar Usuario",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{ route('pa.user_search') }}",
+                    dataType: 'json',
+                    type: "POST",
+                    delay: 10,
+                    data: function(params) {
+                        var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                        return {
+                            _token: "{{ csrf_token() }}",
+                            search: params.term, // search term
+                            tipo_coti: tipo_coti
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nombre,
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
     </script>
 
 @endsection

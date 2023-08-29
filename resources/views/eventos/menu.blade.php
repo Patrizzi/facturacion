@@ -3,20 +3,40 @@
     <div id="sidebar-wrapper-event">
         <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
             <li>
-                <a href="#"><span class="fa-stack fa-lg pull-left"><i
-                            class="fa fa-flag fa-stack-1x "></i></span>Shortcut</a>
+                <a href="#" id="event_menu_eventos"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-calendar fa-stack-1x "></i></span>Eventos</a>
                 <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-                    <li><a href="#"><span class="fa-stack fa-lg pull-left"><i
-                                    class="fa fa-flag fa-stack-1x "></i></span>link1</a>
+                    <li><a href="#" data-toggle="modal" data-target="#modal_event"><span
+                                class="fa-stack fa-lg pull-left"><i class="fa fa-plus fa-stack-1x "></i></span>Agregar
+                            Eventos</a>
                     </li>
-                    <li><a href="#"><span class="fa-stack fa-lg pull-left"><i
-                                    class="fa fa-flag fa-stack-1x "></i></span>link2</a>
+                    <li><a href="{{ route('eventos.index') }}"><span class="fa-stack fa-lg pull-left"><i
+                        class="fa fa-list fa-stack-1x "></i></span>Lista de Evento</a>
+                    </li>
+                    <li><a href="{{ route('eventos.user_indes') }}"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-user fa-stack-1x "></i></span>Mis Eventos</a>
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="#" id="cat_menu_eventos"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-flag fa-stack-1x "></i></span>Categorias</a>
+                <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                    <li><a href="#" data-toggle="modal" data-target="#modal_category"><span
+                                class="fa-stack fa-lg pull-left"><i class="fa fa-plus fa-stack-1x "></i></span>Agregar
+                            Categoria</a>
+                    </li>
+                    <li><a href="{{ route('categorias_eventos.index') }}"><span class="fa-stack fa-lg pull-left"><i
+                                    class="fa fa-list fa-stack-1x "></i></span>Lista de Categorias</a>
+                    </li>
+                </ul>
+            </li>
+
         </ul>
     </div>
 </div>
+@include('eventos.categorias.add_modal')
+@include('eventos.modal_add')
 <style>
     .nav-pills>li>a {
         border-radius: 0;
@@ -44,7 +64,7 @@
         height: 100%;
         margin-left: -250px;
         overflow-y: auto;
-        background: #000;
+        background: transparent;
         -webkit-transition: all 0.5s ease;
         -moz-transition: all 0.5s ease;
         -o-transition: all 0.5s ease;
@@ -95,14 +115,14 @@
     .sidebar-nav li a {
         display: block;
         text-decoration: none;
-        color: #999999;
+        color: #212529;
     }
 
     .sidebar-nav li a:hover {
         text-decoration: none;
-        color: #fff;
-        background: rgba(255, 255, 255, 0.2);
-        border-left: red 2px solid;
+        color: black;
+        background: #DCDCDC;
+        border-left: #1c84c6 2px solid;
     }
 
     .sidebar-nav li a:active,
@@ -143,8 +163,14 @@
         }
 
         #sidebar-wrapper-event {
-            width: 250px;
+            width: 100%;
+            border-right: 1px solid #1c84c6;
+            padding-left: 1em;
         }
+    }
+
+    .category-color {
+        height: 100%;
     }
 </style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -181,4 +207,38 @@
     $(document).ready(function() {
         initMenu();
     });
+
+    function color_select() {
+        var color_id = $('#select_cat').val();
+        $.ajax({
+            type: "post",
+            url: "{{ route('category.color') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'color': color_id
+            },
+            success: function(msg) {
+                $('.category-color').css('background-color', "" + msg + "");
+            },
+            error: function(eject) {
+                if (eject.status === 400) {
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache: true
+        });
+    }
+    function check_day() {
+            if ($('#all_day').is(':checked')) {
+                $('#hora_inicio').attr('disabled', true);
+                $('#hora_fin').attr('disabled', true);
+                $('#hora_inicio').attr('required', false);
+                $('#hora_fin').attr('required', false);
+            } else {
+                $('#hora_inicio').attr('disabled', false);
+                $('#hora_fin').attr('disabled', false);
+                $('#hora_inicio').attr('required', true);
+                $('#hora_fin').attr('required', true);
+            }
+        }
 </script>

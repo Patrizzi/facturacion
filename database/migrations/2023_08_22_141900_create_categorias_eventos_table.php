@@ -18,8 +18,9 @@ class CreateCategoriasEventosTable extends Migration
             $table->string('titulo');
             $table->string('color');
             $table->text('descripcion')->nullable();
-            $table->unsignedBigInteger('user_crate_id')->nullable();
-            $table->foreign('user_crate_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_create_id')->nullable();
+            $table->foreign('user_create_id')->references('id')->on('users')->onDelete('cascade');
+            $table->boolean('estado')->default(0);
             $table->timestamps();
         });
     }

@@ -14,7 +14,8 @@ class CategoriasEventosController extends Controller
      */
     public function index()
     {
-        //
+        $categories = CategoriasEventos::get();
+        return view('eventos.categorias.index',compact('categories'));
     }
 
     /**
@@ -35,7 +36,13 @@ class CategoriasEventosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = new CategoriasEventos;
+        $category->titulo = $request->get('name');
+        $category->descripcion = $request->get('description');
+        $category->color = $request->get('color');
+        $category->user_create_id = auth()->user()->id;
+        $category->save();
+        return redirect()->back();
     }
 
     /**
@@ -67,9 +74,22 @@ class CategoriasEventosController extends Controller
      * @param  \App\CategoriasEventos  $categoriasEventos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CategoriasEventos $categoriasEventos)
+    public function update(Request $request)
     {
-        //
+
+        $id = $request->get('id');
+        $categori = CategoriasEventos::find($id);
+        $categori->titulo = $request->get('name');
+        $categori->descripcion = $request->get('description');
+        $categori->color = $request->get('color');
+        if($request->get('estado') == "on"){
+            $categori->estado = 0;
+        }else{
+            $categori->estado = 1;
+        }
+        
+        $categori->save();
+        return "exito";
     }
 
     /**
