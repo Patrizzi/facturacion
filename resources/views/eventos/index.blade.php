@@ -556,10 +556,11 @@
                 }
             });
         }
-        $(".button_display").on("click", function() {
-            $(".button_display").attr('disabled', true);
+
+        $(".button_display").on("submit", function() {
+            this.prop('disabled', true);
             setTimeout(() => {
-                $(".button_display").attr('disabled', false);
+                this.prop('disabled', false);
             }, 5000);
         });
     </script>
