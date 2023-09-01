@@ -94,7 +94,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-6">
                             <label class="form-label">Asignar Usuario<span class="text-red">*</span></label></label>
-                            <select class="form-control select2_demo_user" name="usuario" id="user_asig">
+                            <select class="form-control select2_demo_user_add" name="usuario" id="user_asig">
                                 <option value=""></option>
                                 {{-- @foreach ($user as $users)
                                     <option value="{{ $users->id }}">{{ $users->name }}</option>
@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit">Guardar</button>
+                    <button class="btn btn-primary button_display" type="submit">Guardar</button>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </form>
@@ -184,7 +184,7 @@
             cache: true
         }
     });
-    $(".select2_demo_user").select2({
+    $(".select2_demo_user_add").select2({
         placeholder: "Seleccionar Usuario",
         ajax: {
             minimumInputLength: 1,

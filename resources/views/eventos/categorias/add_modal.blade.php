@@ -39,7 +39,7 @@
                 </div>
                 <span id="event_id"></span>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary button_display">Guardar</button>
                     <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </form>

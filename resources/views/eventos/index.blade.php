@@ -3,9 +3,9 @@
 @section('atributo_actu', 'hidden')
 @section('atributo_1', 'hidden')
 
-@section('foto', auth()->user()->avatar )
-@section('nombre', auth()->user()->personal->nombres )
-@section('area', auth()->user()->name )
+@section('foto', auth()->user()->avatar)
+@section('nombre', auth()->user()->personal->nombres)
+@section('area', auth()->user()->name)
 @section('content')
 
     <div class="wrapper wrapper-content">
@@ -21,6 +21,29 @@
                                 @include('eventos.menu')
                             </div>
                             <div class="col-lg-9">
+                                <div class="" style="padding:  10px 15px">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <h3>Usuario</h3>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select class="form-control select2_demo_user_select" name="usuario"
+                                                id="user_asig">
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button class="btn btn-warning button_display" data-style="zoom-in"
+                                                id="eraser_events"><i class="fa fa-eraser"></i></button>
+                                        </div>
+                                        <div class="col-sm-4">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ibox-content" style="padding:  5px 5px">
+
+                                </div>
+                                <br>
                                 <div id="calendar"></div>
                             </div>
                         </div>
@@ -129,6 +152,7 @@
     
                         </div> --}}
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label class="form-label">Descripcion del Evento<span
@@ -139,7 +163,7 @@
                     </div>
                     <span id="event_id"></span>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" id="btn_save_update">Save changes</button>
+                        <button class="btn btn-primary button_display" id="btn_save_update">Save changes</button>
                         <button class="btn btn-light" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -212,6 +236,7 @@
     <script>
         $(document).ready(function() {
             $('#event_menu_eventos').click();
+            select_2_search();
         });
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -229,7 +254,8 @@
                     url: "{{ route('eventos.call') }}",
                     method: 'POST',
                     extraParams: {
-                        '_token': $('input[name=_token]').val()
+                        '_token': $('input[name=_token]').val(),
+                        'tipo': "empty"
                     },
                 }],
                 eventClick: function(info) {
@@ -330,6 +356,68 @@
             });
             calendar.render();
             color_select();
+            $('.select2_demo_user_select').on('select2:select', function(e) {
+
+                var eventSources = calendar.getEventSources();
+                var len = eventSources.length;
+                for (var i = 0; i < len; i++) {
+                    eventSources[i].remove();
+                }
+                var data = e.params.data;
+                console.log(data.id);
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('eventos.call') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'tipo': data.id
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        calendar.addEventSource(msg);
+                    },
+                    error: function(eject) {
+                        if (eject.status === 400) {
+                            console.log(eject.responseJSON.error);
+                        }
+                    },
+                    cache: true
+                });
+                console.log(eventSources);
+                /* This will make it show up */
+
+
+                calendar.refetchEvents();
+
+            });
+            $('#eraser_events').click(function() {
+                $('.select2_demo_user_select').val(null).trigger('change');
+                var eventSources = calendar.getEventSources();
+                var len = eventSources.length;
+                for (var i = 0; i < len; i++) {
+                    eventSources[i].remove();
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('eventos.call') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'tipo': 'empty'
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        calendar.addEventSource(msg);
+                    },
+                    error: function(eject) {
+                        if (eject.status === 400) {
+                            console.log(eject.responseJSON.error);
+                        }
+                    },
+                    cache: true
+                });
+
+                calendar.refetchEvents();
+            });
         });
 
 
@@ -436,6 +524,44 @@
                 }
             });
         }
+
+        function select_2_search() {
+            $(".select2_demo_user_select").select2({
+                placeholder: "Seleccionar Usuario",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{ route('pa.user_search') }}",
+                    dataType: 'json',
+                    type: "POST",
+                    delay: 10,
+                    data: function(params) {
+                        var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                        return {
+                            _token: "{{ csrf_token() }}",
+                            search: params.term, // search term
+                            tipo_coti: tipo_coti
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nombre,
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+        $(".button_display").on("click", function() {
+            $(".button_display").attr('disabled', true);
+            setTimeout(() => {
+                $(".button_display").attr('disabled', false);
+            }, 5000);
+        });
     </script>
 
 @endsection

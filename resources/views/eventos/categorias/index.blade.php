@@ -40,10 +40,12 @@
                                                     <th>{{ $categ->id }}</th>
                                                     <th>{{ $categ->titulo }}</th>
                                                     <th>
-                                                        <div class="ibox-title" style="background-color: transparent;border: none;padding: 0px;min-height: 35px">
+                                                        <div class="ibox-title"
+                                                            style="background-color: transparent;border: none;padding: 0px;min-height: 35px">
                                                             <h5>{{ $categ->color }}</h5>
                                                             <div class="ibox-tools" style="top: 0px">
-                                                                <span class="label label-warning-light float-right" style="background-color: {{ $categ->color }}">&nbsp;</span>
+                                                                <span class="label label-warning-light float-right"
+                                                                    style="background-color: {{ $categ->color }}">&nbsp;</span>
                                                             </div>
                                                         </div>
                                                     </th>
@@ -57,9 +59,11 @@
                                                     </th>
                                                     <th style="width: 8%" class="text-center">
                                                         @if ($categ->estado == 0)
-                                                            <i class="fa fa-check" style="color: green;font-size: 20px !important"></i>
+                                                            <i class="fa fa-check"
+                                                                style="color: green;font-size: 20px !important"></i>
                                                         @else
-                                                            <i class="fa fa-times" style="color: red;font-size: 20px !important"></i>
+                                                            <i class="fa fa-times"
+                                                                style="color: red;font-size: 20px !important"></i>
                                                         @endif
                                                     </th>
                                                 </tr>
@@ -122,13 +126,14 @@
                                 Estado:
                             </div>
                             <div class="col-sm-8 text-center" id="dic_check">
-                                
+
                             </div>
                         </div>
                         <input type="hidden" name="id" value="" id="value_id">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="save_edit_category()">Guardar</button>
+                        <button type="button button_display" class="btn btn-primary"
+                            onclick="save_edit_category()">Guardar</button>
                         <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
@@ -186,14 +191,18 @@
                     console.log(params.estado);
                     if (params.estado == 0) {
                         var html = `<input type="checkbox" name="estado" class="js-switch"  checked />`;
-                        $('#dic_check').append( html);
+                        $('#dic_check').append(html);
                         var elem = document.querySelector('.js-switch');
-                        var switchery = new Switchery(elem, { color: '#1AB394' });
+                        var switchery = new Switchery(elem, {
+                            color: '#1AB394'
+                        });
                     } else {
                         var html = `<input type="checkbox" name="estado" class="js-switch"  />`;
-                        $('#dic_check').append( html);
+                        $('#dic_check').append(html);
                         var elem = document.querySelector('.js-switch');
-                        var switchery = new Switchery(elem, { color: '#1AB394' });
+                        var switchery = new Switchery(elem, {
+                            color: '#1AB394'
+                        });
                     }
 
                 }
@@ -215,7 +224,11 @@
                 }
             });
         }
-        // var elem = document.querySelector('.js-switch');
-        // var switchery = new Switchery(elem, { color: '#1AB394' });
+        $(".button_display").on("click", function() {
+            $(".button_display").attr('disabled', true);
+            setTimeout(() => {
+                $(".button_display").attr('disabled', false);
+            }, 5000);
+        });
     </script>
 @endsection

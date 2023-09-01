@@ -11,10 +11,10 @@
                             Eventos</a>
                     </li>
                     <li><a href="{{ route('eventos.index') }}"><span class="fa-stack fa-lg pull-left"><i
-                        class="fa fa-list fa-stack-1x "></i></span>Lista de Evento</a>
+                                    class="fa fa-list fa-stack-1x "></i></span>Lista de Evento</a>
                     </li>
                     <li><a href="{{ route('eventos.user_indes') }}"><span class="fa-stack fa-lg pull-left"><i
-                            class="fa fa-user fa-stack-1x "></i></span>Mis Eventos</a>
+                                    class="fa fa-user fa-stack-1x "></i></span>Mis Eventos</a>
                     </li>
                 </ul>
             </li>
@@ -228,17 +228,19 @@
             cache: true
         });
     }
+
     function check_day() {
-            if ($('#all_day').is(':checked')) {
-                $('#hora_inicio').attr('disabled', true);
-                $('#hora_fin').attr('disabled', true);
-                $('#hora_inicio').attr('required', false);
-                $('#hora_fin').attr('required', false);
-            } else {
-                $('#hora_inicio').attr('disabled', false);
-                $('#hora_fin').attr('disabled', false);
-                $('#hora_inicio').attr('required', true);
-                $('#hora_fin').attr('required', true);
-            }
+        if ($('#all_day').is(':checked')) {
+            $('#hora_inicio').attr('disabled', true);
+            $('#hora_fin').attr('disabled', true);
+            $('#hora_inicio').attr('required', false);
+            $('#hora_fin').attr('required', false);
+        } else {
+            $('#hora_inicio').attr('disabled', false);
+            $('#hora_fin').attr('disabled', false);
+            $('#hora_inicio').attr('required', true);
+            $('#hora_fin').attr('required', true);
         }
+    }
+
 </script>

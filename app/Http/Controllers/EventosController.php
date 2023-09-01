@@ -16,41 +16,31 @@ class EventosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function eventos_show()
+    public function eventos_show(Request $request)
     {
-        $var = auth()->user()->name;
-        // if ($var == "Administrador") {
-        $eventos = Eventos::get();
-        // } else {
-        //     $user_eventos = EventosUsers::where('user_id', auth()->user()->id)->get();
-        //     foreach ($user_eventos as $value => $ids_event) {
-        //         $ids[$value] =  $ids_event->evento_id;
-        //     }
-        //     $eventos = Eventos::whereIn('id', $ids)->get();
-        // }
-        // return response()->json($eventos);
-        // $response = array();
-        foreach ($eventos as $key => $events) {
-            $category = CategoriasEventos::where('id', $events->categoria_id)->first();
-            $evento_user = EventosUsers::where('evento_id',$events->id)->first();
-            $rgb = sscanf($category->color, "#%2x%2x%2x");
-            list($r, $g, $b) = $rgb;
-
-            // Calcula el brillo del color
-            $brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
-
-            // Determina si el color es oscuro o claro
-            if ($brightness < 128) {
-                $color_Text =  "#ffff";
-            } else {
-                $color_Text =  "black";
+        $tipo = $request->tipo;
+        // return $tipo;
+        if ($tipo == "empty") {
+            $eventos = Eventos::get();
+        } else {
+            $user_eventos = EventosUsers::where('user_id', (string)$tipo)->get();
+            // return $user_eventos;
+            foreach ($user_eventos as $ids_event) {
+                $ids[] =  $ids_event->evento_id;
             }
+            $eventos = Eventos::whereIn('id', $ids)->get();
+        }
+        // return $tipo;
+        foreach ($eventos as  $events) {
+            $category = CategoriasEventos::where('id', $events->categoria_id)->first();
+            $evento_user_a = EventosUsers::where('evento_id', $events->id)->first();
+            // return $evento_user_a->users->id;
             $response[] = array(
                 "id" => $events->id,
                 "start" => $events->fecha_inicio,
                 "startStr" => $events->fecha_inicio,
                 "title" => $events->titulo,
-                "textColor" => $color_Text,
+                // "textColor" => $color_Text,
                 "description" => $events->descripcion,
                 "end" => $events->fecha_final,
                 "endStr" => $events->fecha_final,
@@ -62,8 +52,8 @@ class EventosController extends Controller
                 "cliente_id" => $events->clientes->id,
                 "cliente_name" => $events->clientes->nombre,
                 "cliente_doc" => $events->clientes->numero_documento,
-                "user_id" => $evento_user->users->id,
-                "user_name" => $evento_user->users->nombre,
+                "user_id" => $evento_user_a->users->id,
+                "user_name" => $evento_user_a->users->nombre,
                 // "rendering" => 'background',
             );
         }
@@ -85,7 +75,7 @@ class EventosController extends Controller
         // $response = array();
         foreach ($eventos as $key => $events) {
             $category = CategoriasEventos::where('id', $events->categoria_id)->first();
-            $evento_user = EventosUsers::where('evento_id',$events->id)->first();
+            $evento_user = EventosUsers::where('evento_id', $events->id)->first();
             $rgb = sscanf($category->color, "#%2x%2x%2x");
             list($r, $g, $b) = $rgb;
 
