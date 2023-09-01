@@ -25,13 +25,27 @@
                                     <div class="col-sm-12"><img src="{{asset('img/logos/camion.svg')}}" width="100px"></div>
                                 </div>
                                 <div class="form-group  row">
-                                    <label class="col-sm-2 col-form-label">Nombre Empresa:</label>
-                                    <div class="col-sm-4"><input type="text" class="form-control" name="nombre" required="" placeholder="Trasporte"></div>
-                                    <label class="col-sm-2 col-form-label">Ruc:</label>
-                                    <div class="col-sm-4"><input type="text" class="form-control" name="ruc"  required="" placeholder="2252415523"></div>
-                                    <label class="col-sm-3 col-form-label">N° de MTC:</label>
-                                    <div class="col-sm-7"><input type="text" class="form-control" name="n_mtc" id="" ></div>
-                                    <label class="col-sm-2 col-form-label"><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia.aspx" target="_blank" style="margin: auto"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a></label>
+                                    <label class="col-sm-4 col-form-label">Ruc:</label>
+                                    <div class="col-sm-8 input-group">
+                                        <input type="text" class="form-control" name="ruc" id="ruc"  required="" placeholder="2252415523">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="ajax_search()"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group  row">
+                                    <label class="col-sm-4 col-form-label">Empresa de Transporte:</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="nombre" required="" id="nombre_empresa" placeholder="Transporte"></div>
+                                </div>
+                                <div class="form-group  row">
+                                    <label class="col-sm-4 col-form-label">N° de MTC:</label>
+                                    <div class="col-sm-8">
+                                        {{-- <input type="text" class="form-control" name="n_mtc" id="" readonly> --}}
+                                        <select class="form-control" name="n_mtc" id="select_mtc" required>
+
+                                        </select>
+                                    </div>
+                                    {{-- <label class="col-sm-2 col-form-label"><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia.aspx" target="_blank" style="margin: auto"><i class ="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a></label> --}}
                                 </div>
                             </div>
                         </div>
@@ -190,16 +204,26 @@
                                                                                 <div class="form-group  row">
                                                                                     <div class="col-sm-12"><img src="{{asset('img/logos/camion.svg')}}" width="100px"></div>
                                                                                 </div>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-sm-4 col-form-label">Ruc:</label>
+                                                                                    <div class="col-sm-8 input-group">
+                                                                                        <input type="text" class="form-control" name="ruc" id="ruc_editar"  required="" placeholder="2252415523" value="{{$transporte_publicos->ruc}}">
+                                                                                        <span class="input-group-append">
+                                                                                            <button type="button" class="btn btn-primary" onclick="ajax_search_edit()"><i class="fa fa-search"></i></button>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
                                                                                 <div class="form-group  row">
-                                                                                    <label class="col-sm-2 col-form-label">Empresa:</label>
-                                                                                    <div class="col-sm-4"><input type="text" class="form-control" name="nombre" value="{{$transporte_publicos->nombre}}" placeholder="AT4-234"></div>
-                                                                                    <label class="col-sm-2 col-form-label">Ruc:</label>
-                                                                                    <div class="col-sm-4"><input type="text" class="form-control" name="ruc" value="{{$transporte_publicos->ruc}}" placeholder="Toyota"></div>
+                                                                                    <label class="col-sm-4 col-form-label">Empresa:</label>
+                                                                                    <div class="col-sm-8"><input type="text" class="form-control" name="nombre" id="nombre_empresa_edit" value="{{$transporte_publicos->nombre}}" placeholder="AT4-234"></div>
                                                                                 </div>
                                                                                 <div class="form-group row">
-                                                                                    <label class="col-sm-3 col-form-label">N° de MTC:</label>
-                                                                                    <div class="col-sm-7"><input type="text" class="form-control" name="n_mtc" value="{{$transporte_publicos->numero_mtc}}"></div>
-                                                                                    <label class="col-sm-2 col-form-label"><a href="https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia.aspx" target="_blank" style="margin: auto"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a></label>
+                                                                                    <label class="col-sm-4 col-form-label">N° de MTC:</label>
+                                                                                    <div class="col-sm-8">
+                                                                                        <select class="form-control" name="n_mtc" id="select_mtc_edit" required>
+                                                                                            <option value="{{$transporte_publicos->numero_mtc}}" selected>{{$transporte_publicos->numero_mtc}}</option>
+                                                                                        </select>
+                                                                                    </div>
                                                                                 </div>
                                                                                 <div class="form-group  row">
                                                                                     <div class="col-sm-6" align="right">
@@ -375,9 +399,14 @@
         </div>
     </div>
 </div>
-
+<style>
+    .row{
+        align-items: center;    
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -404,7 +433,114 @@
 <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
 <!-- Switchery -->
 <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+<script>
+    function ajax_search(){
+        var ruc = $('#ruc').val();
+        $('#nombre_empresa').attr('readonly', true);
 
+        // console.log(ruc);
+        $.ajax({
+            type: "post",
+            url: "{{ route('vehiculo.ajax_mtc') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'ruc': ruc
+            },
+            success: function (msg) {
+                const selectElement = document.getElementById('select_mtc');
+                console.log(msg.cod_mtc);
+                $("#select_mtc").empty();
+                if(msg.cod_mtc.length > 0){
+                    msg.cod_mtc.forEach(optionValue => {
+                        const option = document.createElement('option');
+                        option.value = optionValue;
+                        option.textContent = optionValue;
+                        selectElement.appendChild(option);
+                    });
+                }else{
+                    const option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'Sin existencias';
+                        selectElement.appendChild(option);
+                }
+            }
+        });
+        //*Consulta RUC
+        var url = "{{ url('clienteruc') }}";
+        $.ajax({
+            type:'GET',
+            url:url,
+            data:'ruc='+ruc,
+            success: function(datos_dni){
+                var datos = eval(datos_dni);
+                if(datos[2] == 'existente'){
+                    $('#nombre_empresa').val(datos[1]);
+                }else{
+                    $('#nombre_empresa').val(datos[0]);
+                }
+                
+            }
+        }).fail( function() {
+            $('#nombre_empresa').attr('placeholder','Ruc Erroneo');
+        });
+        
+    }
+    function ajax_search_edit(){
+        var ruc = $('#ruc_editar').val();
+        $(`#nombre_empresa_edit`).attr('readonly', true);
+
+        // console.log(ruc);
+        $.ajax({
+            type: "post",
+            url: "{{ route('vehiculo.ajax_mtc') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'ruc': ruc
+            },
+            success: function (msg) {
+                const selectElement = document.getElementById('select_mtc_edit');
+                console.log(msg.cod_mtc);
+                $("#select_mtc_edit").empty();
+                if(msg.cod_mtc.length > 0){
+                    msg.cod_mtc.forEach(optionValue => {
+                        const option = document.createElement('option');
+                        option.value = optionValue;
+                        option.textContent = optionValue;
+                        selectElement.appendChild(option);
+                    });
+                }else{
+                    const option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'Sin existencias';
+                        selectElement.appendChild(option);
+                }
+            }
+        });
+        //*Consulta RUC
+        var url = "{{ url('clienteruc') }}";
+        $.ajax({
+            type:'GET',
+            url:url,
+            data:'ruc='+ruc,
+            success: function(datos_dni){
+                var datos = eval(datos_dni);
+                if(datos[2] == 'existente'){
+                    // var ruc = $('#nombre_empresa_edit').attr('readonly', false);
+                    $('#nombre_empresa_edit').val(datos[1]);
+                }else{
+                    // var ruc = $('#nombre_empresa_edit').attr('readonly', false);
+                    $('#nombre_empresa_edit').val(datos[0]);
+                }
+                $('#nombre_empresa').attr('readonly', true);
+
+            }
+        }).fail( function() {
+            var ruc = $('#nombre_empresa_edit').attr('readonly', false);
+            $('#nombre_empresa_edit').attr('placeholder','Ruc Erroneo');
+        });
+        
+    }
+</script>
 @foreach($transporte_publico as $transporte_publicos)
 <script>
     var elem_2 = document.querySelector('.js-switch_{{$transporte_publicos->id}}');
@@ -417,4 +553,5 @@
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 </script>
 @endforeach
+
 @endsection

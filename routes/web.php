@@ -10,6 +10,9 @@
 // Route::get('sentencia2', function (App\Sentencia $post) {
 // 	return $post->cotizacion();
 // });
+
+use App\Http\Controllers\ParameterCallController;
+
 Route::group(
 	[ 'middleware' => ['auth','api','cambio_diario']],
 	function(){
@@ -294,6 +297,7 @@ Route::group(
 
 		
 		Route::resource('/vehiculo','VehiculoController');
+		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
 		Route::resource('/familia','FamiliaController');
 		Route::resource('/subfamilia','SubfamiliaController');
@@ -469,9 +473,20 @@ Route::group(
 		// Route::post('/inventario.kardex.entrada.create/fetcha', 'KardexEntradaController@fetcha')->name('autocomplete.fetcha');
 		// Route::post('/api','api.php');
 
-		//* CREDITOS Y COBRANZAS ->CONTROLADOR BETA
-		Route::post('');
+		Route::resource('/eventos', 'EventosController');
+		Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
+		Route::get('/mis_eventos', 'EventosController@evento_user')->name('eventos.user_indes');
+		
+		Route::resource('/categorias_eventos', 'CategoriasEventosController')->except('update');
+		
+		Route::post('/categories/update', 'CategoriasEventosController@update')->name('category.update');
+		Route::post('/eventos/call', 'EventosController@eventos_show')->name('eventos.call');
+		Route::post('/eventos/user_call', 'EventosController@eventos_show_user')->name('eventos.call_user');
 
+		
+        Route::post('/categories/select_color', 'ParameterCallController@color_set')->name('category.color');
+		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
+		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 	});
 
 Auth::routes([

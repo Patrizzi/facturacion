@@ -47,7 +47,7 @@
                     <th style="width: 2%;border-color: white"></th>
                     <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: 45%">
                         <center><strong style="align-content: center;margin: 5px">Domicilio De Llegada </strong></center><br>
-                        @if(isset($guia_remision->sucursal_cliente))
+                        @if(isset($guia_remision_m->sucursal_cliente))
                             {{$guia_remision_m->sucursal_cliente}} - {{$guia_remision_m->cod_postal_cliente}}
                         @else
                             {{$guia_remision_m->cliente->direccion}} - {{$guia_remision_m->cliente->cod_postal}}

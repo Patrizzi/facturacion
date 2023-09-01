@@ -291,6 +291,7 @@
 
                     </ul>
                 </li>
+                <li><a href="{{route('eventos.user_indes')}}"><img src="{{ asset('/archivos/imagenes/layout/calendario.png')}}" class="iconos"> <span class="nav-label">Calendario</span></a></li>
                 @can('auxiliares')
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/auxiliar.svg')}}" class="iconos"><span class="nav-label">Auxiliares</span></a>

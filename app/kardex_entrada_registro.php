@@ -50,7 +50,7 @@ class kardex_entrada_registro extends Model
             // return $prod;
 
             for($x=0;$x<$count_cantidad;$x++){
-                while($cantidad[$x] > $contador){
+                // while($cantidad[$x] > $contador){
                     $kardex_almacen_principal_desc=kardex_entrada_registro::where('producto_id',$prod[$x])
                         ->where('estado',1)
                         ->orderBy('id', 'DESC')
@@ -58,7 +58,7 @@ class kardex_entrada_registro extends Model
                         ->first();
                     $contador=$contador+$kardex_almacen_principal_desc->cantidad_inicial;
                     $array_registros[]=$kardex_almacen_principal_desc->id;
-                }
+                // }
                 //llamar los kardex_registros que tengan los id
                 $precio_nacional=kardex_entrada_registro::where('producto_id',$prod[$x])
                     ->where('precio_nacional',"!=",0)

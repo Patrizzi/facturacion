@@ -52,6 +52,26 @@
                         </button>
                     </form>
                 @endif
+                <div id="auto" onclick="divAuto()">
+                    <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a">
+                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i> 
+                    </a>
+                </div>
+                <div id="div-mostrar">
+                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                        style="text-align: none;padding-right: 0;padding-left: 0;">
+                        @csrf
+                        <input type="tel" name="numero" value="{{ $boleta->cliente->celular }}" />
+                        <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                        <input type="text" hidden="" name="url"
+                            value="{{ route('boleta_manual.pdf', $boleta->id) }}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden=""
+                            value="BoletaM_{{ $boleta->codigo_boleta }}" />
+                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
+                            formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
+                            data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -328,6 +348,18 @@
     }
 
 </style>
+<script>
+    var clic = 1;
+
+    function divAuto() {
+        if (clic == 1) {
+            document.getElementById("div-mostrar").style.height = "50px";
+            clic = clic + 1;
+        } else {
+            document.getElementById("div-mostrar").style.height = "0px";
+            clic = 1;
+        }
+    }
 </script>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
