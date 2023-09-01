@@ -8,7 +8,7 @@
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
-                        <div class="table-responsive">
+                        <div class="" style="padding: 0px 15px">
                             <h1>Facturas a credito</h1>
                             <div class="row">
                                 <div class="col-sm-2">
@@ -30,6 +30,8 @@
                                         Pagar Todos</button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover dataTables-example">
                                 <thead>
                                     <tr>
@@ -73,7 +75,7 @@
             </div>
         </div>
     </div>
-    {{$fecha_hoy}}
+    {{-- {{$fecha_hoy}} --}}
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -226,11 +228,11 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Comprobante <small>(opcional)</small></label>
-                                                <input type="file" class="form-control" name="cheque_file" id="" class="form-control pago_class_1 class_pago" required>
+                                                <input type="file" name="cheque_file" id="" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
                                     </div>
-                                    {{$fecha_hoy}}
+                                    {{-- {{$fecha_hoy}} --}}
                                     <div class="row pago_m m_pago_2"> {{-- Metodo de Pago 2 - TARJETA --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
@@ -267,13 +269,13 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Persona que Cancela</label>
-                                                <input type="text" id="" name="efectivo_persona" value="" placeholder="Titular" class="form-control pago_class_3 class_pago">
+                                                <input type="text" name="persona_efectivo" id="" name="efectivo_persona" value="" placeholder="Titular" class="form-control pago_class_3 class_pago">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha</label>
-                                                <input type="date" class="form-control pago_class_3 class_pago fecha_hoy" name="" id="" value="{{$fecha_hoy}}">
+                                                <input type="date" name="fecha_efectivo" class="form-control pago_class_3 class_pago fecha_hoy" name="" id="" value="{{$fecha_hoy}}">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -283,7 +285,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="simbolo_pago">S/</span>
                                                     </div>
-                                                    <input type="number" id="efectivo_pago" class="form-control pago_class_3 class_pago" placeholder="" >
+                                                    <input type="number" name="monto_pago_efectivo" id="efectivo_pago" class="form-control pago_class_3 class_pago" placeholder="" step="0.01" >
                                                 </div>
                                             </div>
                                         </div>
@@ -294,7 +296,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="simbolo_pago_vuelto">S/</span>
                                                     </div>
-                                                    <input type="text" id="efectivo_vuelto" class="form-control pago_class_3 class_pago" placeholder="">
+                                                    <input type="text" name="monto_vuelto" id="efectivo_vuelto" class="form-control pago_class_3 class_pago" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -327,15 +329,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 text-center">
+                                            <button type="submit" class="btn btn-primary">Enviar</button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                
-                            </div>
-                            <div class="col-sm-6">
-                                <button type="submit" class="btn btn-primary">Enviar</button>
                             </div>
                         </div>
                     </form>
