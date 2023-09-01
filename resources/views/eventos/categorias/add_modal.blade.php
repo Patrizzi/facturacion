@@ -15,7 +15,7 @@
                             Título:
                         </div>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="name" id="" autocomplete="off">
+                            <input type="text" class="form-control" name="name" id="" autocomplete="off" required>
                         </div>
                     </div>
                     <br>
@@ -24,7 +24,7 @@
                             Color:
                         </div>
                         <div class="col-sm-8">
-                            <input type="color" class="form-control" id="color" name="color" autocomplete="off">
+                            <input type="color" class="form-control" id="color" name="color" autocomplete="off" required>
                         </div>
                     </div>
                     <br>
@@ -40,7 +40,7 @@
                 <span id="event_id"></span>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary button_display">Guardar</button>
-                    <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
