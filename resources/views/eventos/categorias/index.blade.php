@@ -15,58 +15,61 @@
                     <div class="ibox-title">
                         <h5 style="color:#0073c1">Control de Eventos</h5>
                     </div>
-                    <div class="ibox-content">
-                        <div class="row">
+                    <div class="ibox-content" style="min-height: 500px">
+                        <div class="row" style="min-height: 500px">
                             <div class="col-lg-3">
                                 @include('eventos.menu')
                             </div>
                             <div class="col-lg-9">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                    <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
+                                        placeholder="Search in table">
+
+                                    <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
                                         <thead>
                                             <tr>
-                                                <th>Id</th>
-                                                <th>Titulo</th>
-                                                <th>Color</th>
-                                                <th>Descripcion:</th>
-                                                <th>Creado por:</th>
-                                                <th>Editar</th>
-                                                <th>Estado</th>
+                                                <th data-toggle="true">Id</th>
+                                                <th data-toggle="true">Titulo</th>
+                                                <th data-toggle="true">Color</th>
+                                                <th data-toggle="true" data-hide="all">Descripcion:</th>
+                                                <th data-toggle="true" data-hide="all">Creado por:</th>
+                                                <th data-toggle="true" >Editar</th>
+                                                <thdata-toggle="true" >Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($categories as $categ)
-                                                <tr>
-                                                    <th>{{ $categ->id }}</th>
-                                                    <th>{{ $categ->titulo }}</th>
-                                                    <th>
-                                                        <div class="ibox-title"
-                                                            style="background-color: transparent;border: none;padding: 0px;min-height: 35px">
-                                                            <h5>{{ $categ->color }}</h5>
-                                                            <div class="ibox-tools" style="top: 0px">
-                                                                <span class="label label-warning-light float-right"
-                                                                    style="background-color: {{ $categ->color }}">&nbsp;</span>
-                                                            </div>
+                                            <tr>
+                                                <td>{{ $categ->id }}</td>
+                                                <td>{{ $categ->titulo }}</td>
+                                                <td>
+                                                    <div class="ibox-title"
+                                                        style="background-color: transparent;border: none;padding: 0px;min-height: 35px">
+                                                        <h5>{{ $categ->color }}</h5>
+                                                        <div class="ibox-tools" style="top: 0px">
+                                                            <span class="label label-warning-light float-right"
+                                                                style="background-color: {{ $categ->color }}">&nbsp;</span>
                                                         </div>
-                                                    </th>
-                                                    <th>{{ $categ->descripcion }}</th>
-                                                    <th>{{ $categ->user->name }}</th>
-                                                    <th style="width: 8%" class="text-center">
-                                                        <a class="btn btn-warning" data-bs-effect="effect-scale"
-                                                            data-toggle="modal" data-target="#modal_edit_categorie"
-                                                            onclick="button_edit({{ $categ->id }})"><i
-                                                                class="fa fa-pencil" style="color: white"></i></a>
-                                                    </th>
-                                                    <th style="width: 8%" class="text-center">
-                                                        @if ($categ->estado == 0)
-                                                            <i class="fa fa-check"
-                                                                style="color: green;font-size: 20px !important"></i>
-                                                        @else
-                                                            <i class="fa fa-times"
-                                                                style="color: red;font-size: 20px !important"></i>
-                                                        @endif
-                                                    </th>
-                                                </tr>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $categ->descripcion }}</td>
+                                                <td>{{ $categ->user->name }}</td>
+                                                <td style="width: 8%" class="text-center">
+                                                    <a class="btn btn-warning" data-bs-effect="effect-scale"
+                                                        data-toggle="modal" data-target="#modal_edit_categorie"
+                                                        onclick="button_edit({{ $categ->id }})"><i
+                                                            class="fa fa-pencil" style="color: white"></i></a>
+                                                </td>
+                                                <td style="width: 8%" class="text-center">
+                                                    @if ($categ->estado == 0)
+                                                        <i class="fa fa-check"
+                                                            style="color: green;font-size: 20px !important"></i>
+                                                    @else
+                                                        <i class="fa fa-times"
+                                                            style="color: red;font-size: 20px !important"></i>
+                                                    @endif
+                                                </td>
+                                            </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -152,10 +155,14 @@
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            $('.footable').footable();
+
             $('.dataTables-example').DataTable({
                 pageLength: 15,
                 order: [

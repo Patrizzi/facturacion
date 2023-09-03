@@ -58,11 +58,11 @@
 
     #sidebar-wrapper-event {
         z-index: 1000;
-        position: absolute;
+        /* position: absolute; */
         left: 250px;
         width: 0;
         height: 100%;
-        margin-left: -250px;
+        /* margin-left: -250px; */
         overflow-y: auto;
         background: transparent;
         -webkit-transition: all 0.5s ease;
@@ -163,9 +163,15 @@
         }
 
         #sidebar-wrapper-event {
+            z-index: 1000;
+            position: absolute;
+            /* left: 250px; */
             width: 100%;
             border-right: 1px solid #1c84c6;
             padding-left: 1em;
+            /* height: 100%; */
+            margin-left: -250px;
+
         }
     }
 
@@ -242,5 +248,4 @@
             $('#hora_fin').attr('required', true);
         }
     }
-
 </script>
