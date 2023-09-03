@@ -115,7 +115,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary button_display" type="submit">Guardar</button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
                 </div>
             </form>
         </div>
