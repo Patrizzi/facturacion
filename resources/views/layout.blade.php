@@ -31,13 +31,18 @@
 {{--  --}}
 <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
-    body {font:@yield('tamano_letra', auth()->user()->config->tamano_letra) @yield('Letra', auth()->user()->config->letra);}
-    .spans{color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
+    body {
+        @if(auth()->user()->config->letra != 'none') font-family: @yield('Letra', auth()->user()->config->letra) !important; @endif 
+        @if(auth()->user()->config->tamano_letra != '') font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important; @endif
+    }
+    .spans{
+        color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
         font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
-        text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);}
+        text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);
+    }
 
-        .nav-header {
-          background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");
+    .nav-header {
+        background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");
       }
 
       .btn-primary {
@@ -276,7 +281,14 @@
 
                     </ul>
                 </li>
-                <li><a href="{{route('eventos.user_indes')}}"><img src="{{ asset('/archivos/imagenes/layout/calendario.png')}}" class="iconos"> <span class="nav-label">Calendario</span></a></li>
+                <li><a href="{{route('eventos.user_indes')}}">
+                        <img src="{{ asset('/archivos/imagenes/layout/calendario.png')}}" class="iconos"> <span class="nav-label">Calendario&nbsp;&nbsp;&nbsp;</span>
+                        @if ($count_eventos > 0)
+                            <span class="label label-warning">{{$count_eventos}}</span>    
+                        @endif
+                        
+                    </a>
+                </li>
                 @can('auxiliares')
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/auxiliar.svg')}}" class="iconos"><span class="nav-label">Auxiliares</span></a>
@@ -347,19 +359,19 @@
                             <div class="row">
                                 @if (isset($tipo_cambio->fecha))
                                     <div class="col-sm-4">
-                                        <center style="font-size: 14px;color: black">
-                                            <strong>Compra :</strong><br>{{$tipo_cambio->compra}}
-                                        </center>
+                                        <div style="color: black" class="text-center">
+                                            <span><strong>Compra :</strong><br>{{$tipo_cambio->compra}}</span>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4">
-                                        <center style="font-size: 14px;color: black">
-                                            <strong>Venta :</strong><br>{{$tipo_cambio->venta}}
-                                        </center>
+                                        <div style="color: black" class="text-center">
+                                            <span><strong>Venta :</strong><br>{{$tipo_cambio->venta}}</span>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4">
-                                        <center style="font-size: 14px;color: black">
-                                            <strong>Paralelo :</strong><br>{{$tipo_cambio->paralelo}}
-                                        </center>
+                                        <div style="color: black" class="text-center">
+                                            <span><strong>Paralelo :</strong><br>{{$tipo_cambio->paralelo}}</span>
+                                        </div>
                                     </div>
                                 @endif
                             </div>
