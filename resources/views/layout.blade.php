@@ -35,6 +35,13 @@
         @if(auth()->user()->config->letra != 'none') font-family: @yield('Letra', auth()->user()->config->letra) !important; @endif 
         @if(auth()->user()->config->tamano_letra != '') font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important; @endif
     }
+    .form-control , table , span{
+        @if(auth()->user()->config->letra != 'none') font-family: @yield('Letra', auth()->user()->config->letra) !important; @endif 
+        @if(auth()->user()->config->tamano_letra != '') font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important; @endif
+    }
+    span.select2-selection__placeholder {
+        @if(auth()->user()->config->tamano_letra == '' || auth()->user()->config->tamano_letra == null || auth()->user()->config->tamano_letra == 'smaller' ) font-size: small !important; @else  font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important ;  @endif 
+    }
     .spans{
         color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
         font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
@@ -132,12 +139,12 @@
                                 {{-- @if($conteo_almacen==1) --}}
                                     <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{route('cotizacion_manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
-                                    <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
-                                    <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
-                                    <li><a href="{{route('boleta.index')}}">Boleta</a></li>
-                                    <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>    
-                                    <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
-                                    <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
+                                    <li><a href="{{route('facturacion.index')}}"><span>Facturación</span></a></li>
+                                    <li><a href="{{route('facturacion_manual.index')}}"><span>Facturación M.</span></a></li>
+                                    <li><a href="{{route('boleta.index')}}"><span>Boleta</span></a></li>
+                                    <li><a href="{{route('boleta_manual.index')}}"><span>Boleta M.</span></a></li>    
+                                    <li><a href="{{route('nota_venta.index')}}"><span>Nota Venta</span></a></li>
+                                    <li><a href="{{route('nota-credito.index')}}"><span>Nota Crédito</span></a></li>
                                 {{-- @endif --}}
                             {{-- @elseif($inventario_inicial->estado==1)
                                 <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
@@ -147,15 +154,15 @@
                                 {{-- @if($inventario_inicial->estado) --}}
                                     <li> <a href="{{route('cotizacion.index')}}"><span  class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{route('cotizacion_manual.index')}}"><span  class="nav-label">Cotizaciones M.</span></a> </li>
-                                    <li><a href="{{route('boleta.index')}}">Boleta</a></li>
-                                    <li><a href="{{route('boleta_manual.index')}}">Boleta M.</a></li>
-                                    <li><a href="{{route('facturacion.index')}}">Facturación</a></li>
-                                    <li><a href="{{route('facturacion_manual.index')}}">Facturación M.</a></li>
-                                    <li><a href="{{route('guia_remision.index')}}">Guía Remisión</a></li>
-                                    <li><a href="{{route('guia_remision_manual.index')}}">Guía Remisión M.</a></li>
-                                    <li><a href="{{route('nota_venta.index')}}">Nota Venta</a></li>
-                                    <li><a href="{{route('nota-credito.index')}}">Nota Crédito</a></li>
-                                    <li><a href="{{route('nota-debito.index')}}">Nota Débito</a></li>
+                                    <li><a href="{{route('boleta.index')}}"><span>Boleta</span></a></li>
+                                    <li><a href="{{route('boleta_manual.index')}}"><span>Boleta M.</span></a></li>
+                                    <li><a href="{{route('facturacion.index')}}"><span>Facturación</span></a></li>
+                                    <li><a href="{{route('facturacion_manual.index')}}"><span>Facturación M.</span></a></li>
+                                    <li><a href="{{route('guia_remision.index')}}"><span>Guía Remisión</span></a></li>
+                                    <li><a href="{{route('guia_remision_manual.index')}}"><span>Guía Remisión M.</span></a></li>
+                                    <li><a href="{{route('nota_venta.index')}}"><span>Nota Venta</span></a></li>
+                                    <li><a href="{{route('nota-credito.index')}}"><span>Nota Crédito</span></a></li>
+                                    <li><a href="{{route('nota-debito.index')}}"><span>Nota Débito</span></a></li>
                                 {{-- @else --}}
                                 {{-- @endif --}}
                             @endif
@@ -165,13 +172,13 @@
                         <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
                         <ul class="nav nav-second-level collapse">
                          @can('transacciones-garantias-guias_ingreso.index')
-                         <li><a href="{{route('garantia_guia_ingreso.index')}}">Guía Ingreso</a></li>
+                         <li><a href="{{route('garantia_guia_ingreso.index')}}"><span>Guía Ingreso</span></a></li>
                          @endcan
                          @can('transacciones-garantias-guias_egreso.index')
-                         <li><a href="{{route('garantia_guia_egreso.index')}}">Guía Egreso</a></li>
+                         <li><a href="{{route('garantia_guia_egreso.index')}}"><span>Guía Egreso</span></a></li>
                          @endcan
                          @can('transacciones-garantias-informe_tecnico.index')
-                         <li><a href="{{route('garantia_informe_tecnico.index')}}">Informe Técnico</a></li>
+                         <li><a href="{{route('garantia_informe_tecnico.index')}}"><span>Informe Técnico</span></a></li>
                          @endcan
 
                      </ul>
@@ -191,15 +198,15 @@
                             <ul class="nav nav-second-level collapse">
                                 @can('inventario-productos_kardex')
                                 <li>
-                                    <a href="#">Kardex-Producto</a>
+                                    <a href="#"><span>Kardex-Producto</span></a>
                                     <ul class="nav nav-third-level">
                                         @can('inventario-productos_kardex-entrada_producto.index')
-                                        <li><a href="{{route('kardex-entrada.index')}}">Entrada Producto</a></li>
+                                        <li><a href="{{route('kardex-entrada.index')}}"><span>Entrada Producto</span></a></li>
                                         @endcan
-                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}">Distribución Producto</a></li>
-                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}">Traslado de Almacén </a></li>
+                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}"><span>Distribución Producto</span></a></li>
+                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}"><span>Traslado de Almacén </span></a></li>
                                         @can('inventario-productos_kardex-salida_producto.index')
-                                        <li><a href="{{route('kardex-salida.index')}}">Salida Producto</a></li>
+                                        <li><a href="{{route('kardex-salida.index')}}"><span>Salida Producto</span></a></li>
                                         @endcan
 
                                     </ul>
@@ -212,10 +219,10 @@
                         <li><a href="{{route('inventario-inicial.index')}}">Inventario Inicial</a></li>
                         @endcan --}}
                         @can('inventario-toma_de_inventario.index')
-                        <li><a href="{{route('periodo-consulta.index')}}">Consultas de inventario</a></li><!-- Periodo Consulta -->
+                        <li><a href="{{route('periodo-consulta.index')}}"><span>Consultas de inventario</span></a></li><!-- Periodo Consulta -->
                         @endcan
-                        <li><a href="{{route('cierre-periodo.index')}}">Cierre Periodo</a></li>
-                        <li><a href="{{route('movimiento-consulta.index')}}">Movimiento Consulta</a></li>
+                        <li><a href="{{route('cierre-periodo.index')}}"><span>Cierre Periodo</span></a></li>
+                        <li><a href="{{route('movimiento-consulta.index')}}"><span>Movimiento Consulta</span></a></li>
                     </ul>
                 </li>
                 @endif
@@ -225,12 +232,12 @@
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/planilla.svg')}}" class="iconos"> <span class="nav-label">Planilla</span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('planilla-datos_generales.index')
-                        <li><a href="{{route('personal.index')}}">Personal</a></li>
+                        <li><a href="{{route('personal.index')}}"><span>Personal</span></a></li>
                         @endcan
                         @can('planilla-vendedores.index')
-                        <li><a href="{{route('vendedores.index')}}">Vendedores</a></li>
+                        <li><a href="{{route('vendedores.index')}}"><span>Vendedores</span></a></li>
                         @endcan
-                        <li><a href="{{route('vehiculo.index')}}">Vehículos</a></li>
+                        <li><a href="{{route('vehiculo.index')}}"><span>Vehículos</span></a></li>
 
                     </ul>
                 </li>
@@ -241,23 +248,23 @@
                     <ul class="nav nav-second-level collapse">
                         @can('consultas-garantias')
                         <li>
-                            <a href="#">Garantias</a>
+                            <a href="#"><span>Garantias</span></a>
                             <ul class="nav nav-third-level">
                                 @can('consultas-garantias-guia_ingreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}">Guía Ingreso</a></li>
+                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}"><span>Guía Ingreso</span></a></li>
                                 @endcan
                                 @can('consultas-garantias-guia_egreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_egreso')}}">Guía Egreso</a></li>
+                                <li><a href="{{route('consultas.garantias.guias_egreso')}}"><span>Guía Egreso</span></a></li>
                                 @endcan
                                 @can('consultas-garantias-informe_tecnico.index')
-                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}">Informe Técnico</a></li>
+                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}"><span>Informe Técnico</span></a></li>
                                 @endcan
                             </ul>
                         </li>
                         @endcan
                         {{-- @can('consulta.cantidad_precio.index') --}}
-                        <li><a href="{{route('cantidad_precio.index')}}">Productos</a></li>
-                        <li><a href="{{route('cantidad_precio.index_servicio')}}">Servicios</a></li>
+                        <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
+                        <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li>
                         {{-- @endcan --}}
                     </ul>
                 </li>
@@ -265,19 +272,19 @@
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('facturacion_electronica.index')}}">Facturas</a></li>
-                        <li><a href="{{route('facturacion_electronica.index_boleta')}}">Boletas</a></li>
-                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}">Guía Remisión</a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}">Nota de créditos</a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}">Nota de débitos</a></li>
+                        <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('email.index')}}">Bandeja de Entrada</a></li>
-                        <li><a href="{{route('configuracion_email.index')}}">Configuración</a></li>
-                        <li><a href="{{route('email.trash')}}">Papelera</a></li>
+                        <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
+                        <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
+                        <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
 
                     </ul>
                 </li>
@@ -294,10 +301,10 @@
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/auxiliar.svg')}}" class="iconos"><span class="nav-label">Auxiliares</span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('auxiliares-clientes.index')
-                        <li><a href="{{route('cliente.index')}}">Clientes</a></li>
+                        <li><a href="{{route('cliente.index')}}"><span>Clientes</span></a></li>
                         @endcan
                         @can('auxiliares-provedores.index')
-                        <li><a href="{{route('provedor.index')}}">Proveedores</a></li>
+                        <li><a href="{{route('provedor.index')}}"><span>Proveedores</span></a></li>
                         @endcan
                     </ul>
                 </li>
@@ -307,18 +314,18 @@
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg')}}" class="iconos"><span class="nav-label">Productos y Servicios</span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('productos.index')}}">Productos</a></li>
-                        <li><a href="{{route('servicios.index')}}">Servicios</a></li>
+                        <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
+                        <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/configuracion.svg')}}" class="iconos"><span class="nav-label">Configuración </span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
-                        <li><a href="{{route('Configuracion')}}">Configuración del Sistema</a></li>
+                        <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
                         @endcan
                         @can('maestro-configuracion_general.mi_empresa.index')
-                        <li><a href="{{route('empresa.index')}}">Mi Empresa</a></li>
+                        <li><a href="{{route('empresa.index')}}"><span>Mi Empresa</span></a></li>
                         @endcan
                     </ul>
                 </li>

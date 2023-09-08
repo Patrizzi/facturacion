@@ -134,7 +134,7 @@
                                                         <h4>Tamaño de Fuente: </h4>
                                                         <select name="tamano_letra" class="form-control">
                                                             <option value="x-small" @if ($configs->tamano_letra == 'x-small') selected @endif>x-small</option>
-                                                            <option value="small" @if ($configs->tamano_letra == 'small') selected @endif>small</option>
+                                                            <option value="smaller" @if ($configs->tamano_letra == 'smaller') selected @endif>smaller</option>
                                                             <option value="" @if ($configs->tamano_letra == '') selected @endif>100%*</option>
                                                             <option value="medium" @if ($configs->tamano_letra == 'medium') selected @endif>medium</option>
                                                             <option value="large" @if ($configs->tamano_letra == 'large') selected @endif>large</option>
