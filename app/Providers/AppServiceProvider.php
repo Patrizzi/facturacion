@@ -12,6 +12,7 @@ use App\Kardex_entrada;
 use App\Almacen;
 use App\Boleta;
 use App\Boleta_m;
+use App\EventosUsers;
 use App\Facturacion;
 use App\Facturacion_m;
 use App\Guia_remision;
@@ -64,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('guia_m_view_count', GuiaRemisionManual::where('g_electronica', 0 )->count());
             $view->with('n_credito_view_count', Nota_Credito::where('n_electronica', 0 )->count());
             $view->with('n_debito_view_count', Nota_Debito::where('n_electronica', 0 )->count());
+            $view->with('count_eventos', EventosUsers::whereDate('start',Carbon::parse()->now())->where('user_id',auth()->user()->id)->count());
         });
         Schema::defaultStringLength(191);
 

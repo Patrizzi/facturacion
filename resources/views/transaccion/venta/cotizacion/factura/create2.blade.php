@@ -403,9 +403,7 @@
     label.col-form-label::marker{
         list-style:none;
     }
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        font-size: 12px;
-    }
+    
     .select2-container--default .select2-selection--single {
         border: none;
     }
