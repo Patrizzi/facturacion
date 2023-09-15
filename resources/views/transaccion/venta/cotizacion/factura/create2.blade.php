@@ -681,6 +681,7 @@
     
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
+        var almacen = $('[id="almacen_id"]').val();
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Articulo",
             ajax: {
@@ -692,7 +693,9 @@
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term // search term 
+                        search: params.term, // search term 
+                        almacen: almacen,
+                        tipo_doc: "normal"
                     };
                 },
                 processResults: function (data) {
