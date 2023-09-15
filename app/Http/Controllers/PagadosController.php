@@ -80,11 +80,12 @@ class PagadosController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         $tipo_pag = $request->get('input_pago');
         switch ($tipo_pag) {
             case '1':
                 # code...
-                $
+                // $
                 $pago->save();
                 break;
             case '2':
@@ -92,7 +93,7 @@ class PagadosController extends Controller
                 $pago->save();
                 break;
             case '3': #EFECTIVO
-                $datos
+                // $datos
                 # code...
                 $pago->save();
                 break;
