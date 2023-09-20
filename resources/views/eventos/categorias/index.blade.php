@@ -22,19 +22,25 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="table-responsive">
-                                    <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
-                                        placeholder="Search in table">
-
-                                    <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                                    {{-- <div class="row" style="margin: 0px;padding: 0px"> --}}
+                                        {{-- <div class="col" style="margin: 0px;padding: 0px"> --}}
+                                            <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
+                                            placeholder="Buscar categoría...">
+                                        {{-- </div> --}}
+                                        {{-- <div class="col text-right">
+                                            <button class="btn btn-secondary"><i class="fa fa-plus"></i>Categoría</button>
+                                        </div> --}}
+                                    {{-- </div> --}}
+                                    <table class="footable table table-stripped" data-page-size="8" data-filter=#filter p>
                                         <thead>
                                             <tr>
                                                 <th data-toggle="true">Id</th>
                                                 <th data-toggle="true">Titulo</th>
                                                 <th data-toggle="true">Color</th>
-                                                <th data-toggle="true" data-hide="all">Descripcion:</th>
-                                                <th data-toggle="true" data-hide="all">Creado por:</th>
+                                                <th data-toggle="true" data-hide="all">Descripcion</th>
+                                                <th data-toggle="true" data-hide="all">Creado por</th>
                                                 <th data-toggle="true" >Editar</th>
-                                                <thdata-toggle="true" >Estado</th>
+                                                <th data-toggle="true" >Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>

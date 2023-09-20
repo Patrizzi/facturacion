@@ -122,7 +122,7 @@ class KardexEntradaController extends Controller
               }
           }
         }else{
-            $motivos=Motivo::where('estado',0)->all();
+            $motivos=Motivo::where('estado',0)->get();
         }
 
         $categorias=Categoria::all();

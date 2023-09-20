@@ -200,6 +200,7 @@
                                                 @endforeach
                                             </datalist>
                                         </input>
+                                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo">{{$nota_venta_reg->descripcion}}</textarea>
                                     </td>
                                     <input type="hidden" name="elem_delete[]" value="{{$nota_venta_reg->id}}">
                                     <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
@@ -453,6 +454,7 @@
                         @endforeach
                     </datalist>
                 </input>
+                <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo"></textarea>
             </td>
             <td>
                 <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>

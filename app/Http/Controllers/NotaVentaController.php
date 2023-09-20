@@ -330,6 +330,7 @@ class NotaVentaController extends Controller
                 if($request->get('n_registros_ori')[$h] == "existente"){
                     $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
                     $nota_venta_upd_new->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd_new->descripcion= $request->get('article_descripcion')[$h];
                     $nota_venta_upd_new->cantidad= $request->get('cantidad')[$h];
                     $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
                     $nota_venta_upd_new->save();
@@ -337,6 +338,7 @@ class NotaVentaController extends Controller
                     $nota_venta_upd =new NotaVentaRegistro;
                     $nota_venta_upd->nota_venta_id = $nota_venta->id;
                     $nota_venta_upd->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd->descripcion= $request->get('article_descripcion')[$h];
                     $nota_venta_upd->cantidad= $request->get('cantidad')[$h];
                     $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
                     $nota_venta_upd->save();
