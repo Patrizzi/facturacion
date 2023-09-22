@@ -107,7 +107,7 @@
                                         <input type="text" name="" id="numero_fac">
                                     </div>
                                     <div class="col-sm-4 div_select">
-                                        <select id="sel" class="select_2_multipl select2-selection--multiple" name="states[]" multiple="multiple">
+                                        <select id="sel" class="select_2_multipl select2-selection--multiple" name="select_cuotas[]" multiple="multiple">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                         </select>
@@ -154,19 +154,19 @@
                                 <div class="col-sm-3">
                                     <h3 class="text-center">Metodos de Pago</h3>
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec active" id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
+                                        <button type="button" value="btn_pago_1" class="btn btn-block btn-primary btn_pago_selec active" id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
                                     </div>
                                     <br>
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_2" onclick="select_pago(2)">Tarjeta</button>
+                                        <button type="button" value="btn_pago_2" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_2" onclick="select_pago(2)">Tarjeta</button>
                                     </div>
                                     <br>
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_3" onclick="select_pago(3)">Efectivo</button>
+                                        <button type="button" value="btn_pago_3" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_3" onclick="select_pago(3)">Efectivo</button>
                                     </div>
                                     <br>
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_4" onclick="select_pago(4)">Transferencia</button>
+                                        <button type="button" value="btn_pago_4" class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_4" onclick="select_pago(4)">Transferencia</button>
                                     </div>
                                 </div>
                                 <div class="col-sm-9">
@@ -216,13 +216,13 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">N° de Cuenta</label>
-                                                <input type="text" value="" name="" name="cheque_n_cuenta" placeholder="N° de Cuenta" class="form-control pago_class_1 class_pago" required>
+                                                <input type="text" value="" name="cheque_n_cuenta" placeholder="N° de Cuenta" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha de Emision</label>
-                                                <input type="date" value="{{$fecha_hoy}}" name="" name="cheque_fecha_emision" placeholder="Fecha de Emision" class="form-control pago_class_1 class_pago" required>
+                                                <input type="date" value="{{$fecha_hoy}}" name="cheque_fecha_emision" placeholder="Fecha de Emision" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -269,13 +269,13 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Persona que Cancela</label>
-                                                <input type="text" name="persona_efectivo" id="" name="efectivo_persona" value="" placeholder="Titular" class="form-control pago_class_3 class_pago">
+                                                <input type="text" id="" name="efectivo_persona" value="" placeholder="Titular" class="form-control pago_class_3 class_pago">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha</label>
-                                                <input type="date" name="fecha_efectivo" class="form-control pago_class_3 class_pago fecha_hoy" name="" id="" value="{{$fecha_hoy}}">
+                                                <input type="date" name="fecha_efectivo" class="form-control pago_class_3 class_pago fecha_hoy" id="" value="{{$fecha_hoy}}">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -305,27 +305,27 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Titular</label>
-                                                <input type="text" id="" name="" value="" placeholder="Titular" class="form-control pago_class_4 class_pago">
+                                                <input type="text" id="" name="transferencia_titular"  value="" placeholder="Titular" class="form-control pago_class_4 class_pago">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Fecha</label>
-                                                <input type="date" class="form-control pago_class_4 class_pago fecha_hoy" name="" id="" value="{{$fecha_hoy}}">
+                                                <input type="date" class="form-control pago_class_4 class_pago fecha_hoy" name="transferencia_fecha" id="" value="{{$fecha_hoy}}">
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Comprobante</label>
-                                                <input type="file" class="form-control pago_class_4 class_pago" name="" id="">
+                                                <input type="file" class="form-control pago_class_4 class_pago" name="transferencia_comprobante" id="">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row"> {{--  NOTAS PARA TODOS --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Notas Adicionales</label>
-                                                <textarea class="form-control" name="" id="" rows="4"></textarea>
+                                                <textarea class="form-control" name="notas_adicionales" id="" rows="4"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -529,7 +529,7 @@
                                 <div class="col-sm-4 div_select">
                                     <select placeholder="Seleccionar Cuotas" id="sel_`+index+`" class="select_2_multipl_`+index+` select2-selection--multiple" name="cuotas_precio_`+row.factura_cod+`[]" multiple="multiple" onchangue="select_2_(`+index+`)" required>
                                         `+ row.cuotas_array.map(function(bar){
-                                            return '<option value="'+bar.monto+'">'+bar.monto+'</option>'
+                                            return '<option value="'+bar.id_cuota+'_'+bar.monto+'">'+'N°-'+bar.cuota_n+': '+bar.monto+'</option>'
                                         }) +`
                                     </select>
                                 </div>
@@ -552,7 +552,8 @@
                             if(ant == ""){  
                                 ant = 0;
                             }
-                            var math_total = Math.round((parseFloat(data.text) + parseFloat(ant)  ) * 100 ) / 100;
+                            var data_cuota = data.text.replace(/N°-\d+: /g, '');
+                            var math_total = Math.round((parseFloat(data_cuota) + parseFloat(ant)  ) * 100 ) / 100;
                             $(`#total_cuotas_`+index+``).val(math_total);
                             $(`#lbl_tot_`+index+``).html(math_total);
                             // TOTAL DE TOTALES
@@ -562,15 +563,16 @@
                             }
                             //TODO O NADA
                             var igual =   $("#select_money option:selected").text();
+                            
                             if(igual == row.factura_simbolo){
-                                var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(data.text)) * 100) / 100;
+                                var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(data_cuota)) * 100) / 100;
                             }else{
                                 if(row.factura_moneda == "soles" && igual == '$'){  //DE DOLAR A SOL
-                                    var new_val = parseFloat(data.text) / tipo_cambio;
+                                    var new_val = parseFloat(data_cuota) / tipo_cambio;
                                     var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(new_val)) * 100) / 100;
                                     console.log('a');
                                 }else{  // DE SOL A DOLAR
-                                    var new_val = parseFloat(data.text) * tipo_cambio;
+                                    var new_val = parseFloat(data_cuota) * tipo_cambio;
                                     var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(new_val)) * 100) / 100;
                                     console.log('b');
                                 }
@@ -588,7 +590,8 @@
                             if(ant == ""){  
                                 ant = 0;
                             }
-                            var math_total = Math.round((parseFloat(ant) - parseFloat(data.text)) * 100 ) / 100;
+                            var data_cuota = data.text.replace(/N°-\d+: /g, '');
+                            var math_total = Math.round((parseFloat(ant) - parseFloat(data_cuota)) * 100 ) / 100;
                             $(`#total_cuotas_`+index+``).val(math_total);
                             $(`#lbl_tot_`+index+``).html(math_total);
                             var tota_tot = $('#tota_totas').html();
@@ -599,14 +602,14 @@
                             }
                             var igual =   $("#select_money option:selected").text();
                             if(igual == row.factura_simbolo){
-                                var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(data.text)) * 100) / 100;
+                                var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(data_cuota)) * 100) / 100;
                             }else{
                                 if(row.factura_moneda == "soles" && igual == '$'){  //DE DOLAR A SOL
-                                    var new_val = parseFloat(data.text) / tipo_cambio;
+                                    var new_val = parseFloat(data_cuota) / tipo_cambio;
                                     var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(new_val)) * 100) / 100;
                                     console.log('a');
                                 }else{  // DE SOL A DOLAR
-                                    var new_val = parseFloat(data.text) * tipo_cambio;
+                                    var new_val = parseFloat(data_cuota) * tipo_cambio;
                                     var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(new_val)) * 100) / 100;
                                     console.log('b');
                                 }

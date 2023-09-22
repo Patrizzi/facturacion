@@ -43,6 +43,7 @@ class PagadosController extends Controller
             $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
             foreach ($cuotas as $llave => $cuota) {
                 $array_cuot[$llave] = array(
+                    'id_cuota' => $cuota->id,
                     'cuota_n' => $cuota->numero_cuota,
                     'monto' => $cuota->monto,
                     'fecha_pago' => $cuota->fecha_pago,
@@ -56,7 +57,7 @@ class PagadosController extends Controller
                 'cliente_nombre' => $factura->cliente->nombre,
                 'factura_moneda' => $factura->moneda->nombre,
                 'factura_simbolo' => $factura->moneda->simbolo,
-                'total_factura' => $cuotas->sum('monto'),
+                'total_factura' => round($cuotas->sum('monto'),2),
                 'cuotas_array' => $array_cuot
             );
         }
@@ -80,26 +81,64 @@ class PagadosController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
         $tipo_pag = $request->get('input_pago');
+        return $request;
+        // CUOTAS DE DB cambio de estado? // agregar estado en columna de cuotas_Credito
+        // Obtencion de las facturas seleccionadas
+        $n_fact_s = $request->get('numero_factura');
+        foreach ($n_fact_s as $key => $value) {
+            $cuotas_pre = $request->get('cuotas_precio_'.$value);
+            foreach ($cuotas_pre as $key2 => $value2) {
+                $monto_cuota = explode('_',$value2);
+                $couta = Cuotas_credito::where('id',$monto_cuota[0])->first();
+                // $couta->estado = 1;
+                // $couta->save();
+            }
+            // AGREGAR A LA NUEVA TABLA LOS REGISTROS?
+
+
+        }
+        return $couta;
+        // crear tabla para el registro de estos datos, asignar tipo de doc, id doc, motno y campos que se le entran
+        return $request;
+
         switch ($tipo_pag) {
-            case '1':
-                # code...
-                // $
-                $pago->save();
+            case '1': #CHEQUE
+                // $pago_reg_1 = new DB();
+                // $pago_reg_1-> = $request->get('cheque_name');
+                // $pago_reg_1-> = $request->get('cheque_fecha_cobro');
+                // $pago_reg_1-> = $request->get('cheque_banco_emisor');
+                // $pago_reg_1-> = $request->get('cheque_beneficiario');
+                // $pago_reg_1-> = $request->get('cheque_monto');
+                // $pago_reg_1-> = $request->get('cheque_n_cuenta');
+                // $pago_reg_1-> = $request->get('cheque_file');
+                // $pago_reg_1-> = $request->get('notas_adicionales');
+                // $pago_reg_1->save();
                 break;
-            case '2':
-                # code...
-                $pago->save();
+            case '2': #TARJETA
+                // $pago_reg_2 = new DB();
+                // $pago_reg_2-> = $request->get('tarjeta_titular');
+                // $pago_reg_2-> = $request->get('tarjeta_banco');
+                // $pago_reg_2-> = $request->get('tarjeta_file');
+                // $pago_reg_2-> = $request->get('notas_adicionales');
+                // $pago_reg_2->save();
                 break;
             case '3': #EFECTIVO
-                // $datos
-                # code...
-                $pago->save();
+                // $pago_reg_3 = new DB();
+                // $pago_reg_3-> = $request->get('persona_efectivo');
+                // $pago_reg_3-> = $request->get('fecha_efectivo');
+                // $pago_reg_3-> = $request->get('monto_pago_efectivo');
+                // $pago_reg_3-> = $request->get('monto_vuelto');
+                // $pago_reg_3-> = $request->get('notas_adicionales');
+                // $pago_reg_3->save();
                 break;
-            case '4':
-                # code...
-                $pago->save();
+            case '4': #Transferencia
+                // $pago_reg_4 = new DB();
+                // $pago_reg_4-> = $request->get('transferencia_titular');
+                // $pago_reg_4-> = $request->get('transferencia_fecha');
+                // $pago_reg_4-> = $request->get('transferencia_comprobante');
+                // $pago_reg_4-> = $request->get('notas_adicionales');
+                // $pago_reg_4->save();
                 break;
         }
     }
