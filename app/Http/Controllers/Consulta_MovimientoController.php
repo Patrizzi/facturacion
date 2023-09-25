@@ -171,7 +171,7 @@ class Consulta_MovimientoController extends Controller
 
                     $facturacion->subtotal=round($facturacion->precio/(1+($igv->igv_total/100)),2);
                     $facturacion->igv=round($facturacion->precio-$facturacion->subtotal,2);
-
+                    $facturacion->moneda = $facturacion->moneda->nombre;
                     $total=$total+$facturacion->precio;
                     $igv_t=$igv_t+$facturacion->igv;
                     $subtotal=$subtotal+$facturacion->subtotal;
@@ -207,6 +207,7 @@ class Consulta_MovimientoController extends Controller
 
                     $facturacion->subtotal=round($facturacion->precio/(1+($igv->igv_total/100)),2);
                     $facturacion->igv=round($facturacion->precio-$facturacion->subtotal,2);
+                    $facturacion->moneda = $facturacion->moneda->nombre;
                     $total=$total+$facturacion->precio;
                     $igv_t=$igv_t+$facturacion->igv;
                     $subtotal=$subtotal+$facturacion->subtotal;
@@ -281,6 +282,7 @@ class Consulta_MovimientoController extends Controller
 
                     $boleta->subtotal=round($boleta->precio/(1+($igv->igv_total/100)),2);
                     $boleta->igv=round($boleta->precio-$boleta->subtotal,2);
+                    $boleta->moneda = $boleta->moneda->nombre;
                     $total=$total+$boleta->precio;
                     $igv_t=$igv_t+$boleta->igv;
                     $subtotal=$subtotal+$boleta->subtotal;
@@ -318,6 +320,7 @@ class Consulta_MovimientoController extends Controller
                     $boleta->precio=$boleta_precio;
                     $boleta->subtotal=round($boleta->precio/(1+($igv->igv_total/100)),2);
                     $boleta->igv=round($boleta->precio-$boleta->subtotal,2);
+                    $boleta->moneda = $boleta->moneda->nombre;
                     $total=$total+$boleta->precio;
                     $igv_t=$igv_t+$boleta->igv;
                     $subtotal=$subtotal+$boleta->subtotal;
