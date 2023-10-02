@@ -151,6 +151,7 @@
                                     <th>Proveedor</th>
                                     <th>Ruc</th>
                                     <th>Nr Doc </th>
+                                    <th>Moneda</th>
                                     <th>Subtotal</th>
                                     <th>Igv</th>
                                     <th>Total</th>
@@ -158,6 +159,7 @@
                             </thead>
                         <tbody id="tbody_venta">
                             <tr class="gradeX">
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -185,6 +187,7 @@
                                     <th>Cliente</th>
                                     <th>Ruc</th>
                                     <th>Nr Doc </th>
+                                    <th>Moneda</th>
                                     <th>Subtotal</th>
                                     <th>Igv</th>
                                     <th>Total</th>
@@ -192,6 +195,7 @@
                             </thead>
                         <tbody id="tbody_venta">
                             <tr class="gradeX">
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -296,6 +300,7 @@
                             { "data": "cliente.nombre" , "defaultContent": ""},
                             { "data": "cliente.numero_documento" , "defaultContent": ""},
                             { "data": "codigo_fac" },
+                            { "data": "moneda.nombre","defaultContent": "" },
                             { "data": "subtotal"},
                             { "data": "igv" },
                             { "data": "precio" }
@@ -338,6 +343,7 @@
                             { "data": "cliente.nombre" , "defaultContent": ""},
                             { "data": "cliente.numero_documento" , "defaultContent": ""},
                             { "data": "codigo_boleta" },
+                            { "data": "moneda.nombre","defaultContent": "" },
                             { "data": "subtotal"},
                             { "data": "igv" },
                             { "data": "precio" }
