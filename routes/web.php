@@ -12,6 +12,7 @@
 // });
 
 use App\Http\Controllers\ParameterCallController;
+use Illuminate\Support\Facades\Route;
 
 Route::group(
 	[ 'middleware' => ['auth','api','cambio_diario']],
@@ -423,6 +424,8 @@ Route::group(
 		Route::resource('/moneda','MonedaController');
 		Route::resource('/pagados','PagadosController');
 		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
+		Route::get('/moras','PagadosController@view_mora')->name('pagos.view_mora');
+		Route::get('/moras/{id}','PagadosController@edit_mora')->name('pagos.edit_mora');
 		// Route::post('/pagados/store',)
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');

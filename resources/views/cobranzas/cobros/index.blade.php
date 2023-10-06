@@ -228,7 +228,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Comprobante <small>(opcional)</small></label>
-                                                <input type="file" name="cheque_file" id="" class="form-control pago_class_1 class_pago" required>
+                                                <input type="file" name="cheque_file" id="" class="form-control pago_class_1 class_pago file_input">
                                             </div>
                                         </div>
                                     </div>
@@ -261,7 +261,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Comprobante</label>
-                                                <input type="file" class="form-control pago_class_2 class_pago" name="tarjeta_file" id="">
+                                                <input type="file" class="form-control pago_class_2 class_pago file_input" name="tarjeta_file" id="">
                                             </div>
                                         </div>
                                     </div>
@@ -317,7 +317,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="">Comprobante</label>
-                                                <input type="file" class="form-control pago_class_4 class_pago" name="transferencia_comprobante" id="">
+                                                <input type="file" class="form-control pago_class_4 class_pago file_input" name="transferencia_comprobante" id="">
                                             </div>
                                         </div>
                                     </div>
@@ -641,6 +641,8 @@
             $('.class_pago').attr('required', false);
             // $('.class_pago').val('');
             $(`.pago_class_`+item).attr('required', true);
+            $(`.file_input`).attr('required', false);
+            
             
 
             $('.btn_pago_selec').removeClass("active"); 
