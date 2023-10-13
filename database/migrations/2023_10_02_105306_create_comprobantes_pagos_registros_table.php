@@ -19,9 +19,9 @@ class CreateComprobantesPagosRegistrosTable extends Migration
             $table->foreign('Comprobante_pago_id')->references('id')->on('comprobantes_pagos')->onDelete('cascade');
             $table->unsignedBigInteger('id_cuota_credito')->nullable();  // Id Cuota del comprobante a credito
             $table->foreign('id_cuota_credito')->references('id')->on('cuotas_creditos')->onDelete('cascade');
-            $table->double('monto_total',17,2);
-            $table->double('monto_pago',17,2);
-            $table->string('fecha_pago');
+            $table->string('monto_total');
+            $table->string('monto_pago');
+            $table->string('fecha_pago')->nullable();
             $table->timestamps();
         });
     }

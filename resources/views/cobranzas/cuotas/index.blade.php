@@ -31,8 +31,8 @@
                                                 <th>Item</th>
                                                 <th>N° Factura</th>
                                                 <th>Cliente</th>
-                                                <th>N° de Cuotas Por Pagar</th>
-                                                <th>N° de Cuotas Pagadas</th>
+                                                <th>Cuotas Por Pagar</th>
+                                                <th>Cuotas Pagadas</th>
                                                 <th>Total a Pagar</th>
                                                 <th>Ultima Fecha de Pago</th>
                                                 <th>Pago en Lote</th>

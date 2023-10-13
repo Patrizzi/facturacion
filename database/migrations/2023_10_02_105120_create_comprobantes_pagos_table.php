@@ -24,10 +24,12 @@ class CreateComprobantesPagosTable extends Migration
             $table->foreign('boleta_id')->references('id')->on('boleta')->onDelete('cascade');
             $table->unsignedBigInteger('boleta_m_id')->nullable();  // BOLETA_MANUAL
             $table->foreign('boleta_m_id')->references('id')->on('boleta_m')->onDelete('cascade');
-            $table->string('tipo_pago'); // CREDITO siempres
-            $table->double('monto_tot',17,2);
-            $table->double('monto_pago',17,2);
-            $table->string('fecha_registro');
+            $table->string('tipo_pago')->nullable();; // CREDITO siempres
+            $table->foreign('id_moneda')->references('id')->on('monedas')->onDelete('cascade');
+            $table->unsignedBigInteger('id_moneda')- >nullable();
+            $table->string('monto_tot')->nullable();;
+            $table->string('monto_pago')->nullable();;
+            $table->string('fecha_registro')->nullable();
             $table->timestamps();
         });
     }
