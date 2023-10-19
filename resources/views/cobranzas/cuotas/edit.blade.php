@@ -2,8 +2,7 @@
 
 @section('title', 'Cobros')
 @section('content')
-    <h1>
-        {{ $cod_fact }}</h1>
+    <h1>{{ $cod_fact }}</h1>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -49,15 +48,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    {{-- <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label"><strong>Clasificacion</strong></label>
-                                            <div class="col-sm-9">
-                                                <label class="col-form-label"> ??</label>
-                                            </div>
-                                        </div> --}}
-
-                                    {{-- </div> --}}
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -69,13 +59,15 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Código:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" value="{{$cod_fact}}" readonly>
+                                                    <input type="text" class="form-control" value="{{ $cod_fact }}"
+                                                        readonly>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Moneda</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" value="{{ strtoupper($factura->moneda->nombre) }}" readonly>
+                                                    <input type="text" class="form-control"
+                                                        value="{{ strtoupper($factura->moneda->nombre) }}" readonly>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -88,8 +80,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong> :</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control"
-                                                        value=" " readonly>
+                                                    <input type="text" class="form-control" value=" " readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -121,7 +112,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-4">
                                             <p class="text-center">??</p>
                                         </div>
@@ -152,7 +143,8 @@
 
                                     <thead>
                                         <tr>
-                                            <th data-sort-ignore="true" style="width: 50px;text-align: center">Pago Lote</th>
+                                            <th data-sort-ignore="true" style="width: 50px;text-align: center">Pago Lote
+                                            </th>
                                             <th>Id</th>
                                             <th style="width: 25px">Estado</th>
                                             <th>N° Cuota | MONTO</th>
@@ -255,15 +247,21 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-primary" id="pago" onclick="modal_pagos({{ $fc_cuota->id }})">Pagar</button>
+                                                    <button class="btn btn-primary" id="pago"
+                                                        onclick="modal_pagos({{ $fc_cuota->id }})">Pagar</button>
                                                     <button class="btn btn-primary">Adelanto</button>
                                                 </td>
                                                 {{-- <td></td> --}}
                                                 {{-- <td><input type="checkbox" name="" id=""></td> --}}
                                                 <td>
                                                     {{-- MODAL DE VER DETALLES  --}}
-                                                    <button class="btn btn-primary" onclick="detalle_cuota({{ $fc_cuota->id }})">Ver detalles</button>
+                                                    @if ($fc_cuota->estado == 1)
+                                                    <button class="btn btn-primary"
+                                                        onclick="detalle_cuota({{ $fc_cuota->id }})">Ver detalles</button>
                                                     <input type="hidden" name="" id="">
+                                                    @else
+                                                    <button class="btn btn-primary" disabled>Ver detalles</button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -567,11 +565,11 @@
             </div>
         </div>
     </div>
-    {{-- AGREGAR ADELANTO--}}
+    {{-- AGREGAR ADELANTO --}}
 
-    {{-- VER DETALLE PAGO--}}
+    {{-- VER DETALLE PAGO --}}
     <div class="modal fade bd-example-modal-lg" id="detalle_pago" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -609,158 +607,216 @@
 
                         </div>
                     </div>
-                    <div id="pago_cheque"> {{--  CHEQUE  --}}
-                       {{-- SI el pago es checque --}}
-                       <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Numero de Cheque</strong></label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="Numero de Cheque">
+                    <div id="body_pago_detail">
+                        <div id="pago_cheque" class="view_pagos"> {{--  CHEQUE  --}}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Numero de
+                                                Cheque</strong></label>
+                                        <input type="text" class="form-control" name="" id=""
+                                            placeholder="Numero de Cheque">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Numero de
+                                                Cheque</strong></label>
+                                        <input type="text" class="form-control" name="" id=""
+                                            placeholder="Fecha de Cobro">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Banco</strong></label>
+                                        <input type="text" class="form-control" name="" id=""
+                                            placeholder="Banco">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Beneficiario</strong></label>
+                                        <input type="text" class="form-control" name="" id=""
+                                            placeholder="Beneficiario">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>N de cuenta</strong></label>
+                                        <input type="text" class="form-control" name="" id=""
+                                            placeholder="N de cuenta">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Fecha de
+                                                Emision</strong></label>
+                                        <input type="text" class="form-control" name="" id=""
+                                            placeholder="Fecha de Emision">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Ver
+                                                Comprobante</strong></label><br>
+                                        <button class="btn btn-prmiary">Ver comprobante</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <textarea class="form-control" name="" id=""></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                       
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Numero de Cheque</strong></label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="Fecha de Cobro">
+
+                        <div id="pago_tarjeta" class="view_pagos"> {{-- TARJETA --}}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Titular de
+                                                Tarjeta</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Banco</strong></label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="Banco">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Banco</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                       
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Beneficiario</strong></label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="Beneficiario">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Ver
+                                                Comprobante</strong></label><br>
+                                        <button class="btn btn-prmiary">Ver comprobante</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>N de cuenta</strong></label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="N de cuenta">
-                                </div>
-                            </div>
-                        </div>
-                       
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Fecha de Emision</strong></label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="Fecha de Emision">
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Ver Comprobante</strong></label><br>
-                                    <button class="btn btn-prmiary" >Ver comprobante</button>
-                                </div>
-                            </div>
-                        </div>
-                       
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Notas Adicionales</strong></label><br>
-                                    <textarea class="form-control" name="" id="" ></textarea>
-                                </div>
-                            </div>
-                       </div>
-                    </div>
-                    <div id="pago_tarjeta"> {{-- TARJETA --}}
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Titular de Tarjeta</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <textarea class="form-control" name="" id=""></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Banco</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
+
+                        <div id="pago_efectivo" class="view_pagos"> {{-- EFECTIVO  --}}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Persona que
+                                                cancela</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Ver Comprobante</strong></label><br>
-                                    <button class="btn btn-prmiary" >Ver comprobante</button>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Notas Adicionales</strong></label><br>
-                                    <textarea class="form-control" name="" id="" ></textarea>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Ver
+                                                Comprobante</strong></label><br>
+                                        <button class="btn btn-prmiary">Ver comprobante</button>
+                                    </div>
                                 </div>
                             </div>
-                       </div>
-                    </div>
-                    <div> {{-- EFECTIVO  --}}
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Persona que cancela</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Fecha</strong></label><br>
-                                    <input type="text" class="form-control" name="" id="" >
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <textarea class="form-control" name="" id=""></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Ver Comprobante</strong></label><br>
-                                    <button class="btn btn-prmiary" >Ver comprobante</button>
+
+                        <div id="pago_transferencia" class="view_pagos"> {{-- TRANSFERENCIA --}}
+                            <h2>TRANSFERENCIA</h2>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Titular</label>
+                                        <input type="text" class="form-control" name="" id="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Fecha</label>
+                                        <input type="date" class="form-control" name="" id="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Ver
+                                                Comprobante</strong></label><br>
+                                        <button class="btn btn-prmiary">Ver comprobante</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for=""><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <textarea class="form-control" name="" id=""></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="col-form-label" for=""><strong>Notas Adicionales</strong></label><br>
-                                    <textarea class="form-control" name="" id="" ></textarea>
-                                </div>
-                            </div>
-                       </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -811,10 +867,6 @@
             color: white;
             cursor: auto;
         }
-
-        /* .table > thead > tr > th {
-                        background: transparent;
-                    } */
         .table>thead>tr>th,
         .table>tbody>tr>th,
         .table>tfoot>tr>th,
@@ -822,6 +874,9 @@
         .table>tbody>tr>td,
         .table>tfoot>tr>td {
             vertical-align: middle;
+        }
+        .view_pagos{
+            display: none;
         }
     </style>
     <!-- scripts -->
@@ -901,11 +956,34 @@
             var vuelto = parseFloat(this.value) - parseFloat(total);
             $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
         })
-        function detalle_cuota(item){
-            
+
+        function detalle_cuota(item) {
             $('#detalle_pago').modal('show');
             $('#id_cuota').html(item);
-            
+
+            var data = item;
+            $.ajax({
+                type: "post",
+                url: "{{ route('pagos.show_cuota') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'data': item,
+                },
+                success: function (msg) {
+                    alert(msg)
+                    // switch (expresión) {
+                    //     case valor1:
+                    //         //Declaraciones ejecutadas cuando el resultado de expresión coincide con el valor1
+                    //     [break;]
+                    //     case valor2:
+                    //         //Declaraciones ejecutadas cuando el resultado de expresión coincide con el valor2
+                    //     [break;]
+                    //     case valorN:
+                    //         //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
+                    //     [break;]
+                    // }
+                }
+            });
         }
     </script>
 @endsection

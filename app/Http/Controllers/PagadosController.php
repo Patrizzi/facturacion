@@ -11,6 +11,7 @@ use App\Moneda;
 use App\TipoCambio;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\Mime\Part\Multipart\DigestPart;
 
 class PagadosController extends Controller
 {
@@ -151,6 +152,7 @@ class PagadosController extends Controller
                 #CHEQUE
                 $pago_reg_1 = new ComprobantesPagosDetalle();
                 $pago_reg_1->comprobante_pago_id = $comprobante_pago->id;
+                $pago_reg_1->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                 $pago_reg_1->tipo_pago = "cheque";
                 $pago_reg_1->numero_input = $request->get('cheque_name');
                 $pago_reg_1->fechas_input = $request->get('cheque_fecha_cobro');
@@ -164,15 +166,16 @@ class PagadosController extends Controller
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
                 $comprobante_pago->fecha_registro = $pago_reg_1->fechas_input;
                 $comprobante_pago->save();
-                $comprobante_pago = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                $comprobante_pago->fecha_pago = $pago_reg_1->fechas_input;
-                $comprobante_pago->save();
+                $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
+                $comprobante_pago_reg->fecha_pago = $pago_reg_1->fechas_input;
+                $comprobante_pago_reg->save();
                 
                 break;
             case '2':
                  #TARJETA
                 $pago_reg_2 = new ComprobantesPagosDetalle();
                 $pago_reg_2->comprobante_pago_id = $comprobante_pago->id;
+                $pago_reg_2->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                 $pago_reg_2->tipo_pago = "tarjeta";
                 $pago_reg_2->persona_input = $request->get('tarjeta_titular');
                 $pago_reg_2->bancos_input = $request->get('tarjeta_banco');
@@ -183,14 +186,15 @@ class PagadosController extends Controller
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
                 $comprobante_pago->fecha_registro = $pago_reg_2->fechas_input;
                 $comprobante_pago->save();
-                $comprobante_pago = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                $comprobante_pago->fecha_pago = $pago_reg_2->fechas_input;
-                $comprobante_pago->save();
+                $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
+                $comprobante_pago_reg->fecha_pago = $pago_reg_2->fechas_input;
+                $comprobante_pago_reg->save();
                 break;
             case '3': 
                 #EFECTIVO
                 $pago_reg_3 = new ComprobantesPagosDetalle();
                 $pago_reg_3->comprobante_pago_id = $comprobante_pago->id;
+                $pago_reg_3->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                 $pago_reg_3->tipo_pago = "efectivo";
                 $pago_reg_3->persona_input = $request->get('persona_efectivo');
                 $pago_reg_3->fechas_input = $request->get('fecha_efectivo');
@@ -201,14 +205,15 @@ class PagadosController extends Controller
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
                 $comprobante_pago->fecha_registro = $pago_reg_3->fechas_input;
                 $comprobante_pago->save();
-                $comprobante_pago = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                $comprobante_pago->fecha_pago = $pago_reg_3->fechas_input;
-                $comprobante_pago->save();
+                $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
+                $comprobante_pago_reg->fecha_pago = $pago_reg_3->fechas_input;
+                $comprobante_pago_reg->save();
                 break;
             case '4':
                  #Transferencia
                 $pago_reg_4 = new ComprobantesPagosDetalle();
                 $pago_reg_4->comprobante_pago_id = $comprobante_pago->id;
+                $pago_reg_4->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                 $pago_reg_4->tipo_pago = "transferencia";
                 $pago_reg_4->persona_input = $request->get('transferencia_titular');
                 $pago_reg_4->fechas_input = $request->get('transferencia_fecha');
@@ -218,12 +223,12 @@ class PagadosController extends Controller
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
                 $comprobante_pago->fecha_registro = $pago_reg_4->fechas_input;
                 $comprobante_pago->save();
-                $comprobante_pago = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                $comprobante_pago->fecha_pago = $pago_reg_4->fechas_input;
-                $comprobante_pago->save();
+                $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
+                $comprobante_pago_reg->fecha_pago = $pago_reg_4->fechas_input;
+                $comprobante_pago_reg->save();
                 break;
         }
-        return 'excelente';
+        return redirect()->back();
     }
 
     // public function store_individual)_
@@ -291,11 +296,26 @@ class PagadosController extends Controller
         $fact_cuotas = Cuotas_credito::where('facturacion_id',$factura->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $pagos = ComprobantesPagos::where('factuacion_id', $factura->id)->get();
-        foreach ($pagos as $key => $pagos_ind) {
-            $pagos_reg = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
-            $pagos_deta = ComprobantesPagosDetalle::where('comprobante_pago_id', $pagos_ind->id)->get();
+        if (count($pagos) != 0) {
+            foreach ($pagos as $key => $pagos_ind) {
+                $pagos_reg = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
+                $pagos_deta = ComprobantesPagosDetalle::where('comprobante_pago_id', $pagos_ind->id)->get();
+            }
+        }else{
+            $pagos_reg = [];
+            $pagos_deta = [];
         }
-        // return $pagos_reg;
+        // return $pagos;
         return view('cobranzas.cuotas.edit',compact('cod_fact','factura','fact_cuotas','fecha_hoy','pagos','pagos_reg','pagos_deta'));
+    }
+    public function show_cuotas(Request $request){
+        $n_cuota = $request->data;
+        $cuotas = Cuotas_credito::where('id', $n_cuota)->first();
+        // return $cuotas;
+        $pagos = ComprobantesPagosRegistros::where('id_cuota_credito', $cuotas->id)->get();
+        foreach ($pagos as $key => $pagos_ind) {
+            $pagos_deta = ComprobantesPagosDetalle::where('comprobante_pago_reg_id', $pagos_ind->id)->get();
+        }
+        return $pagos;
     }
 }

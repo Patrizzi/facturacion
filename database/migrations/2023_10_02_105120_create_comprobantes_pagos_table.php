@@ -26,7 +26,7 @@ class CreateComprobantesPagosTable extends Migration
             $table->foreign('boleta_m_id')->references('id')->on('boleta_m')->onDelete('cascade');
             $table->string('tipo_pago')->nullable();; // CREDITO siempres
             $table->foreign('id_moneda')->references('id')->on('monedas')->onDelete('cascade');
-            $table->unsignedBigInteger('id_moneda')- >nullable();
+            $table->unsignedBigInteger('id_moneda')->nullable();
             $table->string('monto_tot')->nullable();;
             $table->string('monto_pago')->nullable();;
             $table->string('fecha_registro')->nullable();

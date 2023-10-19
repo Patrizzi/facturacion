@@ -17,6 +17,8 @@ class CreateComprobantesPagosDetallesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('comprobante_pago_id')->nullable();  // Comprobante pago ID FK
             $table->foreign('Comprobante_pago_id')->references('id')->on('comprobantes_pagos')->onDelete('cascade');
+            $table->unsignedBigInteger('comprobante_pago_reg_id')->nullable();  // Comprobante pago registros ID FK
+            $table->foreign('Comprobante_pago_reg_id')->references('id')->on('comprobantes_pagos_registros')->onDelete('cascade');
             $table->string('tipo_pago'); // EFECTIVO - TARJETA - ETC
             $table->string('numero_input')->nullable();
             $table->string('fechas_input')->nullable();
