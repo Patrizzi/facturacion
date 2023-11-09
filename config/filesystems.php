@@ -56,7 +56,10 @@ return [
             'driver' => 'local',
             'root' => public_path('archivos/kardex_entrada/'),
         ],
-
+        'pagos' => [
+            'driver' => 'local',
+            'root' => public_path('archivos/pagos_sistema/'),
+        ],
         // 'garantia_guia_ingreso' => [
         //     'driver' => 'local',
         //     'root' => public_path('archivos/garantia_guia_ingreso/'),

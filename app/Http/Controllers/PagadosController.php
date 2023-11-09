@@ -6,6 +6,7 @@ use App\ComprobantesPagos;
 use App\ComprobantesPagosDetalle;
 use App\ComprobantesPagosRegistros;
 use App\Cuotas_credito;
+use App\Empresa;
 use App\Facturacion;
 use App\Moneda;
 use App\TipoCambio;
@@ -61,7 +62,7 @@ class PagadosController extends Controller
                 'cliente_nombre' => $factura->cliente->nombre,
                 'factura_moneda' => $factura->moneda->nombre,
                 'factura_simbolo' => $factura->moneda->simbolo,
-                'total_factura' => round($cuotas->sum('monto'),2),
+                'total_factura' => round($cuotas->sum('monto'), 2),
                 'cuotas_array' => $array_cuot
             );
         }
@@ -111,20 +112,20 @@ class PagadosController extends Controller
         // AGREGAR A LA NUEVA TABLA La cabecaer
         $comprobante_pago = new ComprobantesPagos();
         $comprobante_pago->tipo_doc = 'factura';
-        $comprobante_pago->factuacion_id = $request->get('id_factura') ;
+        $comprobante_pago->factuacion_id = $request->get('id_factura');
         // $comprobante_pago->factuacion_m_id ;
         // $comprobante_pago->boleta_id ;
         // $comprobante_pago->boleta_m_id ;
-        $comprobante_pago->tipo_pago = $tipo_pago_txt ;
-        
+        $comprobante_pago->tipo_pago = $tipo_pago_txt;
+
         // $comprobante_pago->fecha_registro =  ;
         $comprobante_pago->save();
-        
+
         foreach ($n_fact_s as $key => $value) {
-            $cuotas_pre = $request->get('cuotas_precio_'.$value);
+            $cuotas_pre = $request->get('cuotas_precio_' . $value);
             foreach ($cuotas_pre as $key2 => $value2) {
-                $monto_cuota = explode('_',$value2);
-                $couta = Cuotas_credito::where('id',$monto_cuota[0])->first();
+                $monto_cuota = explode('_', $value2);
+                $couta = Cuotas_credito::where('id', $monto_cuota[0])->first();
                 // return $request;
                 $couta->estado = 1;
                 $couta->save();
@@ -143,12 +144,22 @@ class PagadosController extends Controller
             $comprobante_pago->monto_pago = $request->get('tot_cuotas')[$key];
             $comprobante_pago->save();
         }
-        
+
         // crear tabla para el registro de estos datos, asignar tipo de doc, id doc, motno y campos que se le entran
         // return $request;
 
         switch ($tipo_pag) {
-            case '1': 
+            case '1':
+
+                if ($request->hasFile('cheque_file')) {
+                    $file = $request->file('cheque_file');
+                    $name_file = time() . $file->getClientOriginalName();
+                    $destino = public_path('archivos/pagos_sistema/');
+                    $file->move($destino, $name_file);
+                } else {
+                    $name_file = null;
+                }
+
                 #CHEQUE
                 $pago_reg_1 = new ComprobantesPagosDetalle();
                 $pago_reg_1->comprobante_pago_id = $comprobante_pago->id;
@@ -160,7 +171,8 @@ class PagadosController extends Controller
                 $pago_reg_1->persona_input = $request->get('cheque_beneficiario');
                 $pago_reg_1->montos_input = $request->get('cheque_monto');
                 $pago_reg_1->adicional_input = $request->get('cheque_n_cuenta');
-                $pago_reg_1->file_input = $request->get('cheque_file');
+                $pago_reg_1->fecha_emision_input = $request->get('cheque_fecha_emision');
+                $pago_reg_1->file_input = $name_file;
                 $pago_reg_1->notas_adicionales = $request->get('notas_adicionales');
                 $pago_reg_1->save();
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
@@ -169,10 +181,18 @@ class PagadosController extends Controller
                 $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
                 $comprobante_pago_reg->fecha_pago = $pago_reg_1->fechas_input;
                 $comprobante_pago_reg->save();
-                
                 break;
             case '2':
-                 #TARJETA
+                #TARJETA
+                if ($request->hasFile('cheque_file')) {
+                    $file = $request->file('cheque_file');
+                    $name_file = time() . $file->getClientOriginalName();
+                    $destino = public_path('archivos/pagos_sistema/');
+                    $file->move($destino, $name_file);
+                } else {
+                    $name_file = null;
+                }
+
                 $pago_reg_2 = new ComprobantesPagosDetalle();
                 $pago_reg_2->comprobante_pago_id = $comprobante_pago->id;
                 $pago_reg_2->comprobante_pago_reg_id = $comprobante_pago_reg->id;
@@ -180,7 +200,7 @@ class PagadosController extends Controller
                 $pago_reg_2->persona_input = $request->get('tarjeta_titular');
                 $pago_reg_2->bancos_input = $request->get('tarjeta_banco');
                 $pago_reg_2->fechas_input = $request->get('tarjeta_fecha');
-                $pago_reg_2->file_input = $request->get('tarjeta_file');
+                $pago_reg_2->file_input = $name_file;
                 $pago_reg_2->notas_adicionales = $request->get('notas_adicionales');
                 $pago_reg_2->save();
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
@@ -190,13 +210,13 @@ class PagadosController extends Controller
                 $comprobante_pago_reg->fecha_pago = $pago_reg_2->fechas_input;
                 $comprobante_pago_reg->save();
                 break;
-            case '3': 
+            case '3':
                 #EFECTIVO
                 $pago_reg_3 = new ComprobantesPagosDetalle();
                 $pago_reg_3->comprobante_pago_id = $comprobante_pago->id;
                 $pago_reg_3->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                 $pago_reg_3->tipo_pago = "efectivo";
-                $pago_reg_3->persona_input = $request->get('persona_efectivo');
+                $pago_reg_3->persona_input = $request->get('efectivo_persona');
                 $pago_reg_3->fechas_input = $request->get('fecha_efectivo');
                 $pago_reg_3->montos_input = $request->get('monto_pago_efectivo');
                 $pago_reg_3->adicional_input = $request->get('monto_vuelto');
@@ -210,14 +230,23 @@ class PagadosController extends Controller
                 $comprobante_pago_reg->save();
                 break;
             case '4':
-                 #Transferencia
+                #Transferencia
+                if ($request->hasFile('cheque_file')) {
+                    $file = $request->file('cheque_file');
+                    $name_file = time() . $file->getClientOriginalName();
+                    $destino = public_path('archivos/pagos_sistema/');
+                    $file->move($destino, $name_file);
+                } else {
+                    $name_file = null;
+                }
+
                 $pago_reg_4 = new ComprobantesPagosDetalle();
                 $pago_reg_4->comprobante_pago_id = $comprobante_pago->id;
                 $pago_reg_4->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                 $pago_reg_4->tipo_pago = "transferencia";
                 $pago_reg_4->persona_input = $request->get('transferencia_titular');
                 $pago_reg_4->fechas_input = $request->get('transferencia_fecha');
-                $pago_reg_4->file_input = $request->get('transferencia_comprobante');
+                $pago_reg_4->file_input = $name_file;
                 $pago_reg_4->notas_adicionales = $request->get('notas_adicionales');
                 $pago_reg_4->save();
                 $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
@@ -277,23 +306,25 @@ class PagadosController extends Controller
         //
     }
 
-    public function view_mora(){
-        $facturas_sp = Facturacion::where('forma_pago_id',2)->get();
+    public function view_mora()
+    {
+        $facturas_sp = Facturacion::where('forma_pago_id', 2)->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
         foreach ($facturas_sp as $key => $f_sp) {
-            $cuotas[$key] = Cuotas_credito::where('facturacion_id',$f_sp->id)->count();
+            $cuotas[$key] = Cuotas_credito::where('facturacion_id', $f_sp->id)->count();
         }
         // return $cuotas[0];
         // $facturas_mora = Facturacion::all();
-        return view('cobranzas.cuotas.index',compact('facturas_sp','cuotas','cuotas_all'));
+        return view('cobranzas.cuotas.index', compact('facturas_sp', 'cuotas', 'cuotas_all'));
     }
 
-    public function edit_mora($id){
+    public function edit_mora($id)
+    {
         // POR AHORA EL ID ES EL CODIGO DE FACTURA
         $cod_fact = $id;
         $factura = Facturacion::where('codigo_fac', $id)->first();
-        $fact_cuotas = Cuotas_credito::where('facturacion_id',$factura->id)->get();
+        $fact_cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $pagos = ComprobantesPagos::where('factuacion_id', $factura->id)->get();
         if (count($pagos) != 0) {
@@ -301,21 +332,273 @@ class PagadosController extends Controller
                 $pagos_reg = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
                 $pagos_deta = ComprobantesPagosDetalle::where('comprobante_pago_id', $pagos_ind->id)->get();
             }
-        }else{
+        } else {
             $pagos_reg = [];
             $pagos_deta = [];
         }
         // return $pagos;
-        return view('cobranzas.cuotas.edit',compact('cod_fact','factura','fact_cuotas','fecha_hoy','pagos','pagos_reg','pagos_deta'));
+        return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta'));
     }
-    public function show_cuotas(Request $request){
+    public function show_cuotas(Request $request)
+    {
         $n_cuota = $request->data;
         $cuotas = Cuotas_credito::where('id', $n_cuota)->first();
-        // return $cuotas;
-        $pagos = ComprobantesPagosRegistros::where('id_cuota_credito', $cuotas->id)->get();
-        foreach ($pagos as $key => $pagos_ind) {
-            $pagos_deta = ComprobantesPagosDetalle::where('comprobante_pago_reg_id', $pagos_ind->id)->get();
+        if ($cuotas->facturacion_id != null) {
+            $simbolo = $cuotas->factura_ids->moneda->simbolo;
         }
-        return $pagos;
+        if ($cuotas->factura_m_ids != null) {
+            $simbolo = $cuotas->factura_m_ids->moneda->simbolo;
+        }
+        if ($cuotas->boleta_ids != null) {
+            $simbolo = $cuotas->boleta_ids->moneda->simbolo;
+        }
+        if ($cuotas->boleta_m_ids != null) {
+            $simbolo = $cuotas->boleta_m_ids->moneda->simbolo;
+        }
+
+        $pagos = ComprobantesPagosRegistros::where('id_cuota_credito', $cuotas->id)->get();
+        $nav_head = "";
+        $val_html = "";
+        foreach ($pagos as $key => $pagos_ind) {
+            $pagos_deta = ComprobantesPagosDetalle::where('comprobante_pago_reg_id', $pagos_ind->id)->first();
+
+            if ($key == 0) {
+                $nav_head .= "<li><a class='nav-link active' data-toggle='tab' href='#tab-" . $key . "'>Pago " . $key + 1 . "</a></li>";
+            } else {
+                $nav_head .= "<li><a class='nav-link' data-toggle='tab' href='#tab-" . $key . "'>Pago " . $key + 1 . "</a></li>";
+            }
+            // Comprobante existencia
+            if ($pagos_deta->file_input == null) {
+                $comprobante = "<p class='btn btn-secondary view_tarjeta' id='tarjeta_comprobante'>Sin Comprobante</p>";
+            } else {
+                $comprobante = "<a class='btn btn-primary' href='" . asset('archivos/pagos_sistema/' . $pagos_deta->file_input) . "' download='" . $pagos_deta->file_input . "'>Descargar comprobante</a>";
+            }
+
+            if ($pagos_deta->tipo_pago == "cheque") {
+                $val_html = "
+                <div class='tab-content '>
+                    <div id='tab-" . $key . "' class='tab-pane active'>
+                        <div class='panel-body'>
+                            <div class='row'>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>N° de Cheque</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_num'>" . $pagos_deta->numero_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Fecha de Cobro</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_fecha'>" . Carbon::parse($pagos_deta->fechas_input)->format('d/m/Y') . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Banco Emisor</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_banco'>" . $pagos_deta->bancos_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Beneficiario</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_beneficiario'>" . $pagos_deta->persona_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Monto</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_monto'>" . $simbolo . " " . number_format($pagos_deta->montos_input, 2) . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>N° de cuenta</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_cuenta'>" . $pagos_deta->adicional_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Fecha de Emision</strong></label>
+                                        <p class='form-control view_cheque' id='cheque_fecha'>" . Carbon::parse($pagos_deta->fecha_emision_input)->format('d/m/Y') . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Comprobante</strong></label><br>
+                                        " . $comprobante . "
+                                    </div>
+                                </div>
+                                <div class='col-sm-12'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <span class='form-control view_efectivo text-area-false' id='efectivo_notas'>" . $pagos_deta->notas_adicionales . "</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+                ";
+            }
+            if ($pagos_deta->tipo_pago == "tarjeta") {
+                $val_html = "
+                <div class='tab-content '>
+                    <div id='tab-" . $key . "' class='tab-pane active'>
+                        <div class='panel-body'>
+                            <div class='row'>
+                                <div class='col-sm-12'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Tipo de Pago</strong></label>
+                                        <p class='form-control view_tarjeta' id='tipo_pago'>TARJETA</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Titular de la Tarjeta</strong></label>
+                                        <p class='form-control view_tarjeta' id='tarjeta_titular'>" . $pagos_deta->persona_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Banco</strong></label>
+                                        <p class='form-control view_tarjeta' id='tarjeta_banco'>" . $pagos_deta->bancos_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Fecha</strong></label>
+                                        <p class='form-control view_tarjeta' id='tarjeta_fecha'>" . Carbon::parse($pagos_deta->fechas_input)->format('d/m/Y') . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Comprobante</strong></label><br>
+                                        " . $comprobante . "
+                                    </div>
+                                </div>
+                                <div class='col-sm-12'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <span class='form-control view_efectivo text-area-false' id='efectivo_notas'>" . $pagos_deta->notas_adicionales . "</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ";
+            }
+            if ($pagos_deta->tipo_pago == "efectivo") {
+                $val_html .= "
+                <div class='tab-content '>
+                    <div id='tab-" . $key . "' class='tab-pane active'>
+                        <div class='panel-body'>
+                            <div class='row'>
+                                <div class='col-sm-12'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Tipo de Pago</strong></label>
+                                        <p class='form-control view_efectivo' id='tipo_pago'>EFECTIVO</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Persona que cancela</strong></label>
+                                        <p class='form-control view_efectivo' id='efectivo_persona'>" . $pagos_deta->persona_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Fecha</strong></label>
+                                        <p class='form-control view_efectivo' id='efectivo_fecha'>" . Carbon::parse($pagos_deta->fechas_input)->format('d/m/Y') . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Monto de Pago</strong></label>
+                                        <p class='form-control view_efectivo' id='efectivo_monto'>" . $simbolo . " " . number_format($pagos_deta->montos_input, 2) . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Vuelto</strong></label>
+                                        <p class='form-control view_efectivo' id='efectivo_vuelto'>" . $simbolo . " " . number_format($pagos_deta->adicional_input, 2) . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-12'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <span class='form-control view_efectivo text-area-false' id='efectivo_notas'>" . $pagos_deta->notas_adicionales . "</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ";
+            }
+            if ($pagos_deta->tipo_pago == "transferencia") {
+                $val_html = "
+                <div class='tab-content '>
+                    <div id='tab-" . $key . "' class='tab-pane active'>
+                        <div class='panel-body'>
+                            <div class='row'>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Titular</strong></label>
+                                        <p class='form-control view_transferencia' id='transferencia_titular'>" . $pagos_deta->persona_input . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Fecha</strong></label>
+                                        <p class='form-control view_transferencia' id='transferencia_fecha'>" . Carbon::parse($pagos_deta->fechas_input)->format('d/m/Y') . "</p>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Comprobante</strong></label><br>
+                                        " . $comprobante . "
+                                    </div>
+                                </div>
+                                <div class='col-sm-12'>
+                                    <div class='form-group'>
+                                        <label class='form-label'><strong>Notas
+                                                Adicionales</strong></label><br>
+                                        <span class='form-control view_efectivo text-area-false' id='efectivo_notas'>" . $pagos_deta->notas_adicionales . "</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ";
+            }
+        }
+
+        $end_html = "
+            <ul class='nav nav-tabs'>
+            " . $nav_head . "
+            </ul>
+            " . $val_html . "
+        ";
+        // json_encode($pagos_deta);
+
+        $array_return = array(
+            'datos_cuota' => '2',
+            'html_end' => $end_html,
+        );
+
+        return $array_return;
+    }
+    public function print_cuotas(Request $request)
+    {
+        $empresa = Empresa::first();
+        // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+        return view('cobranzas.cuotas.print',compact('empresa'));
+                
     }
 }
