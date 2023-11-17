@@ -651,6 +651,9 @@ class FacturacionElectronicaController extends Controller
             case 06:
                 $des_mot = 'Devolucion total';
                 break;
+            case 07:
+                $des_mot = 'Devolucion por Item';
+                break;
         }
         // case($nota_credito->motivo == 1){
 
