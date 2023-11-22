@@ -47,6 +47,7 @@
                                             <option value="02">Anulacion por error en el RUC</option>
                                             <option value="03">Correcion por error en la descripcion</option>
                                             <option value="06">Devolucion Total</option>
+                                            <option value="07">Devolucion por Item</option>
                                             {{-- <option value="8">Otros conceptos</option>
                                             <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
                                         </select>
@@ -83,6 +84,7 @@
                                             <option value="02">Anulacion por error en el RUC</option>
                                             <option value="03">Correcion por error en la descripcion</option>
                                             <option value="06">Devolucion Total</option>
+                                            <option value="07">Devolucion por Item</option>
                                             {{-- <option value="8">Otros conceptos</option>
                                             <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
                                         </select>

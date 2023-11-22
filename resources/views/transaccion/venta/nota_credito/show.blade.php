@@ -232,6 +232,8 @@
                                         @break
                                         @case(06)
                                         Devolucion total<br>
+                                        @case(07)
+                                        Devolucion por Item<br>
                                         @break
                                     @endswitch
                                     <strong>Tipo de sustento:</strong>

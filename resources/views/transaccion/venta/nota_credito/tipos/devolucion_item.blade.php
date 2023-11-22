@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Nota Credito Descuento Global')
-@section('breadcrumb', 'Nota Credito Descuento Global')
-@section('breadcrumb2', 'Nota Credito Descuento Global')
+@section('title', 'Nota Credito Devolucion por Item')
+@section('breadcrumb', 'Nota Credito Devolucion por Item')
+@section('breadcrumb2', 'Nota Credito Devolucion por Item')
 @section('href_accion', route('nota-credito.index'))
 @section('value_accion', 'atras')
 
@@ -116,7 +116,6 @@
                             </div>
                         </div>
                         <br>
-                        <h1>HACER MISMA OPERACION DE CREAT</h1>
                         <div class="table-responsive">
                             <table class="table ">
                                 <thead>
@@ -137,118 +136,101 @@
                                 <tbody>
                                     <span hidden="hidden">{{ $u = 0 }} </span>
                                     {{-- <tr> --}}
-                                        @foreach ($facturacion_registro as $e => $facturacion_registros)
-                                    <tr>
-                                        <td>
-                                            <button class="btn e btn-danger delete_item" type="button"><i
-                                                    class="fa fa-trash"></i></button>
-                                        </td>
-                                        <td>{{ $u++ }}</td>
-                                        @if (isset($facturacion_registros->producto_id))
-                                            <td>{{ $facturacion_registros->producto->codigo_producto }}</td>
-                                            <input type="hidden" name="tipo_afec[]" id="tipo_afec{{ $e }}"
-                                                value="{{ $facturacion_registros->producto->tipo_afec_i_producto->informacion }}">
-                                            <input type="hidden" name="tipo_item[]"
-                                                value="producto | {{ $facturacion_registros->producto_id }}">
-                                        @elseif(isset($facturacion_registros->servicio_id))
-                                            <td>{{ $facturacion_registros->servicio->codigo_servicio }}</td>
-                                            <input type="hidden" name="tipo_afec[]" id="tipo_afec{{ $e }}"
-                                                value="{{ $facturacion_registros->servicio->tipo_afec_i_serv->informacion }}">
-                                            <input type="hidden" name="tipo_item[]"
-                                                value="servicio | {{ $facturacion_registros->servicio_id }}">
-                                        @endif
-                                        <td>
+                                    @foreach ($facturacion_registro as $e => $facturacion_registros)
+                                        <tr>
+                                            <td>
+                                                <button class="btn e btn-danger delete_item" type="button"><i
+                                                        class="fa fa-trash"></i></button>
+                                            </td>
+                                            <td>{{ $u++ }}</td>
                                             @if (isset($facturacion_registros->producto_id))
-                                                <input required="required" class="form-control" type="text"
-                                                    id="input_descripcion_{{ $e }}"
-                                                    name="input_descripcion[]"
-                                                    value="{{ $facturacion_registros->producto->nombre }}" hidden>
-                                                <p>{{ $facturacion_registros->producto->nombre }}</p>
-                                                {{-- Cambiar po select2 --}}
+                                                <td>{{ $facturacion_registros->producto->codigo_producto }}
+                                                    <input type="hidden" name="tipo_afec[]"
+                                                        id="tipo_afec{{ $e }}"
+                                                        value="{{ $facturacion_registros->producto->tipo_afec_i_producto->informacion }}">
+                                                    <input type="hidden" name="tipo_item[]"
+                                                        value="producto | {{ $facturacion_registros->producto_id }}">
+                                                    <input hidden="hidden" class="celda">
+                                                </td>
                                             @elseif(isset($facturacion_registros->servicio_id))
-                                                <input required="required" class="form-control" type="text"
-                                                    id="input_descripcion_{{ $e }}"
-                                                    name="input_descripcion[]"
-                                                    value="{{ $facturacion_registros->servicio->nombre }}" hidden>
-                                                <p>{{ $facturacion_registros->servicio->nombre }}</p>
-                                                {{-- Cambiar po select2 --}}
+                                                <td>{{ $facturacion_registros->servicio->codigo_servicio }}
+                                                    <input type="hidden" name="tipo_afec[]"
+                                                        id="tipo_afec{{ $e }}"
+                                                        value="{{ $facturacion_registros->servicio->tipo_afec_i_serv->informacion }}">
+                                                    <input type="hidden" name="tipo_item[]"
+                                                        value="servicio | {{ $facturacion_registros->servicio_id }}">
+                                                    <input hidden="hidden" class="celda">
+                                                </td>
                                             @endif
-                                        </td>
-                                        {{-- <td>{{$facturacion_registros->cantidad}}</td> Cantidad --}}
-                                        <td><input required="required" class="form-control" type="number"
-                                                id="input_cantidad_{{ $e }}"
-                                                name="input_cant[]"
-                                                value="{{ $facturacion_registros->cantidad }}"
-                                                max="{{ $facturacion_registros->cantidad }}"
-                                                onkeyup="multi({{ $e }})"></td>
-                                        {{-- Cantidad Nueva --}}
-                                        @if ($tipo == 'factura_origi')
-                                            <td><input class="form-control"
-                                                    value="{{ $facturacion_registros->precio_unitario_comi }}"
-                                                    type="text" id="input_precio_{{ $e }}"
-                                                    max="{{ $facturacion_registros->precio_unitario_comi }}"
-                                                    onkeyup="multi({{ $e }})"
-                                                    name="input_precio[]"></td>
-                                            {{-- Precio TOTAL --}}
-                                            <td><input required="required" class="form-control" type="text"
-                                                    id="input_precio_tot_{{ $e }}" name="input_precio_tot"
-                                                    value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}"
-                                                    readonly
-                                                    max="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}"
+
+                                            <td>
+                                                @if (isset($facturacion_registros->producto_id))
+                                                    <input required="required" class="form-control" type="text"
+                                                        id="input_descripcion_{{ $e }}"
+                                                        name="input_descripcion[]"
+                                                        value="{{ $facturacion_registros->producto->nombre }}" hidden>
+                                                    <p>{{ $facturacion_registros->producto->nombre }}</p>
+                                                    {{-- Cambiar po select2 --}}
+                                                @elseif(isset($facturacion_registros->servicio_id))
+                                                    <input required="required" class="form-control" type="text"
+                                                        id="input_descripcion_{{ $e }}"
+                                                        name="input_descripcion[]"
+                                                        value="{{ $facturacion_registros->servicio->nombre }}" hidden>
+                                                    <p>{{ $facturacion_registros->servicio->nombre }}</p>
+                                                    {{-- Cambiar po select2 --}}
+                                                @endif
+                                            </td>
+                                            {{-- <td>{{$facturacion_registros->cantidad}}</td> Cantidad --}}
+                                            <td><input required="required" class="form-control" type="number"
+                                                    id="input_cantidad_{{ $e }}" name="input_cant[]"
+                                                    value="{{ $facturacion_registros->cantidad }}"
+                                                    max="{{ $facturacion_registros->cantidad }}"
                                                     onkeyup="multi({{ $e }})"></td>
-                                            <input type="text" id="afectacion_{{ $e }}" name="afectacion"
-                                                class="form-control" hidden="" required autocomplete="off"
-                                                value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}" />
-                                        @else
-                                            <td><input type="text" class="form-control"
-                                                    value="{{ $facturacion_registros->precio }}"
-                                                    max="{{ $facturacion_registros->precio }}"
-                                                    id="input_precio_{{ $e }}"
-                                                    name="input_precio[]"></td>
-                                            {{-- Precio TOTAL --}}
-                                            <td><input required="required" class="form-control" type="text"
-                                                    id="input_precio_tot_{{ $e }}" name="input_precio_tot"
-                                                    value="{{ $facturacion_registros->precio * $facturacion_registros->cantidad }}"
-                                                    max="{{ $facturacion_registros->precio * $facturacion_registros->cantidad }}"
-                                                    readonly></td>
-                                            <input type="text" id="afectacion_{{ $e }}" name="afectacion"
-                                                class="form-control" hidden="" required autocomplete="off"
-                                                value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}" />
-                                        @endif
-                                        <td style="display: none">
+                                            {{-- Cantidad Nueva --}}
+                                            @if ($tipo == 'factura_origi')
+                                                <td><input class="form-control"
+                                                        value="{{ $facturacion_registros->precio_unitario_comi }}"
+                                                        type="text" id="input_precio_{{ $e }}"
+                                                        max="{{ $facturacion_registros->precio_unitario_comi }}"
+                                                        onkeyup="multi({{ $e }})" name="input_precio[]"></td>
+                                                {{-- Precio TOTAL --}}
+                                                <td><input required="required" class="form-control" type="text"
+                                                        id="input_precio_tot_{{ $e }}" name="input_precio_tot"
+                                                        value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}"
+                                                        readonly
+                                                        max="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}"
+                                                        onkeyup="multi({{ $e }})">
+                                                    <input type="text" id="afectacion_{{ $e }}"
+                                                        name="afectacion" class="form-control" hidden="" required
+                                                        autocomplete="off"
+                                                        value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}" />
+                                                </td>
+                                            @else
+                                                <td><input type="text" class="form-control"
+                                                        value="{{ $facturacion_registros->precio }}"
+                                                        max="{{ $facturacion_registros->precio }}"
+                                                        id="input_precio_{{ $e }}" name="input_precio[]"></td>
+                                                {{-- Precio TOTAL --}}
+                                                <td><input required="required" class="form-control" type="text"
+                                                        id="input_precio_tot_{{ $e }}" name="input_precio_tot"
+                                                        value="{{ $facturacion_registros->precio * $facturacion_registros->cantidad }}"
+                                                        max="{{ $facturacion_registros->precio * $facturacion_registros->cantidad }}"
+                                                        readonly>
+                                                    <input type="text" id="afectacion_{{ $e }}"
+                                                        name="afectacion" class="form-control" hidden="" required
+                                                        autocomplete="off"
+                                                        value="{{ $facturacion_registros->precio * $facturacion_registros->cantidad }}" />
+                                                </td>
+                                            @endif
+                                            <td style="display: none">
 
-                                            {{ $sub_total = $facturacion_registros->factura_ids->op_gravada + $facturacion_registros->factura_ids->op_inafecta + $facturacion_registros->factura_ids->op_exonerada }}
-                                            {{ $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada }}
-                                            {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                            {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                        </td>
-                                    </tr>
+                                                {{ $sub_total = $facturacion_registros->factura_ids->op_gravada + $facturacion_registros->factura_ids->op_inafecta + $facturacion_registros->factura_ids->op_exonerada }}
+                                                {{ $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada }}
+                                                {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
+                                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
+                                            </td>
+                                        </tr>
                                     @endforeach
-
-                                    {{-- </tr> --}}
-                                    {{-- @foreach ($facturacion_registro as $item)
-                                    <tr>
-                                        <td>
-                                            {{$u++}}
-                                        </td>
-                                        <td>
-                                            0
-                                        </td>
-                                        <td>
-                                            <input required class="form-control" type="text" name="" id="" value="{{$}}">
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                @endforeach --}}
-                                    {{-- <tr>
-                                        <td colspan="6" align="right">
-                                            <p>guia_remision</p>
-                                        </td>
-                                        <td>
-                                            <input type="text" name="" id="">
-                                        </td> --}}
-                                    {{-- </tr> --}}
                                 </tbody>
                                 <tbody>
                                     <tr style="background-color: #f5f5f500;" align="center">
@@ -406,9 +388,7 @@
             var input_text_opt = fila.find('input[class="celda"]').val();
             $('option[value="' + input_text_opt + '"]').prop("disabled", false);
             $(".addmore").prop("disabled", false);
-            $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Item",
-            });
+
             // ELIMINAR TR
             if (e > 1) {
                 fila.closest('tr').remove();
@@ -445,7 +425,7 @@
             var total_ttg = Math.round(total_tg * multiplier3) / multiplier3;
             // console.log(totalInpG);
             $('#subtotal_gravado').val(total_ttg);
-
+            console.log(total_ttg);
             var subtotal = document.querySelector(`#sub_total`).value;
             var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
 
@@ -455,7 +435,7 @@
             var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
             var end = parseFloat(subtotal) + igv_decimal;
             var end2 = Math.round(end * multiplier2) / multiplier2;
-
+            console.log(igv_decimal);
             document.getElementById("igv").value = igv_decimal;
             document.getElementById("total_final").value = end2;
 

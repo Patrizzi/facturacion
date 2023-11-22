@@ -683,7 +683,7 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();    
 
 
-        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
+        $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
@@ -735,6 +735,9 @@ class FacturacionElectronicaController extends Controller
             case 06:
                 $des_mot = 'Devolucion total';
                 break;
+            case 07:
+                $des_mot = 'Devolucion por Item';
+                break;
         }
         // return $notas_creditos_registro;  
         //factura - factura registro
@@ -771,8 +774,8 @@ class FacturacionElectronicaController extends Controller
         $sustento=$nota_credito->tipo;
 
         $see=config_acceso_sunat::facturacion_electronica();   
-
-        $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
+        // return count($notas_creditos_registro);
+        $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
         
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
@@ -853,7 +856,7 @@ class FacturacionElectronicaController extends Controller
             $see=config_acceso_sunat::facturacion_electronica();    
 
 
-            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
+            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$$notas_creditos_registro);
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
@@ -900,7 +903,7 @@ class FacturacionElectronicaController extends Controller
             $see=config_acceso_sunat::facturacion_electronica();    
 
 
-            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
+            $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
@@ -948,7 +951,7 @@ class FacturacionElectronicaController extends Controller
     
             $see=config_acceso_sunat::facturacion_electronica();   
     
-            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
+            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
             
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
@@ -994,7 +997,7 @@ class FacturacionElectronicaController extends Controller
     
             $see=config_acceso_sunat::facturacion_electronica();   
     
-            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot);
+            $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
             
             //envio a SUNAT    
             $result=config_acceso_sunat::send($see, $invoice);
