@@ -171,7 +171,7 @@ class ClienteController extends Controller
       // return $request->get('ruc');
       $ruc=$request->get('ruc');
 
-      $data = file_get_contents("https://dniruc.apisperu.com/api/v1/ruc/".$ruc."?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRlc2Fycm9sbG9Aanlwc2FjLmNvbSJ9.1Pt1A4PEFAGmFySlfVeFKZKuVCC-u_ZEW-KYQq-P57k");
+      $data = file_get_contents("http://jypsac.dyndns.org:190/apidata/public/v1/ruc/".$ruc."?token=rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL"); 
       $info = json_decode($data, true);
 
       $clientes=Cliente::where('numero_documento',array($info['ruc']))->first();
@@ -193,15 +193,15 @@ class ClienteController extends Controller
         2 => $info['direccion'],
         3 => $info['provincia'],
         4 => $info['distrito'],
-        5 => $info['fechaInscripcion'],
-        6 => $info['ubigeo'],
+        // 5 => $info['fechaInscripcion'],
+        5 => $info['ubigeo'],
       );
       return json_encode($datos);
     }
     //* API PARA DNI *//
     function dni(Request $request){
       $dni=$request->get('dni');
-      $data = file_get_contents("https://dniruc.apisperu.com/api/v1/dni/".$dni."?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRlc2Fycm9sbG9Aanlwc2FjLmNvbSJ9.1Pt1A4PEFAGmFySlfVeFKZKuVCC-u_ZEW-KYQq-P57k");
+      $data = file_get_contents("http://jypsac.dyndns.org:190/apidata/public/v1/dni/".$dni."?token=rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL");
       $info = json_decode($data, true);
 
       $clientes=Cliente::where('numero_documento',array($info['dni']))->first();

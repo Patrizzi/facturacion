@@ -66,8 +66,8 @@
                                 $('#direccion_cli').val(datos[2]);
                                 $('#provincia_cli').val(datos[3]);
                                 $('#distrito_cli').val(datos[4]);
-                                $('#fechaInscripcion_cli').val(datos[5]);
-                                $('#ubigeo').val(datos[6]);
+                                // $('#fechaInscripcion_cli').val(datos[5]);
+                                $('#ubigeo').val(datos[5]);
                             }
                             
                         }

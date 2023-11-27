@@ -129,7 +129,7 @@ class NotaCreditoController extends Controller
         }else if($tipo_nota_credito == 06){//devolucion total
             return view('transaccion.venta.nota_credito.tipos.devolucion_total',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 07){//devolucion por el item
-            //return view('transaccion.venta.nota_credito.tipos.devolucion_item',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global'));
+            return view('transaccion.venta.nota_credito.tipos.devolucion_item',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }
         
     }
@@ -207,8 +207,10 @@ class NotaCreditoController extends Controller
             return view('transaccion.venta.nota_credito.tipos_boleta.correccion_error_descripcion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 06){//devolucion total
             return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_total',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
+        }elseif($tipo_nota_credito == 0){
+
         }else if($tipo_nota_credito == 07){//devolucion por el item
-            //return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_item',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_item',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }
 
         return view('transaccion.venta.nota_credito.create_boleta',compact('boleta','boleta_registro','empresa','igv','sub_total','banco'));
@@ -316,68 +318,100 @@ class NotaCreditoController extends Controller
         if($request->motivo==2){
             $factura->codigo_fac=$nueva_factura;
         }
-
-        $contadores=count($factura_registro);
-        if($tipo == "factura_origi"){
+        // return $request;
+        
+        // return $request;
+        // return var_dump($request->motivo);
+        if($request->motivo == "07" || $request->motivo == "05"){
+            $contadores=count($request->tipo_afec);
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
-                $cantidad="input_cantidad_".$string;
-                if($request->$cantidad==NULL){
-                }else{
-                    if(isset($factura_registro[$a]->producto_id)){
-                        if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                            $gravada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                            $exonerada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                            $inafecta += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                    }else{
-                        if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                            $gravada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                            $exonerada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                            $inafecta += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
+
+                $opt = explode(' ',$request->tipo_afec[$a]);
+                // return $opt[0];
+                // if($request->$cantidad==NULL){
+                // }else{
+                    if($opt[0] == 'Gravado'){
+                        // $gravada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                        $gravada += round($request->input_precio[$a]*$request->input_cant[$a],2);
                     }
-                }
+                    if($opt[0] == 'Exonerado'){
+                        // $exonerada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                        $exonerada += round($request->precio[$a]*$request->input_cant[$a],2);
+                    }
+                    if($opt[0] == 'Inafecto'){
+                        // $inafecta += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                        $inafecta += round($request->precio[$a]*$request->input_cant[$a],2);
+                    }
+                // }
             }
+            // return $gravada;
+
+            // return $request ;
         }else{
-            for($a=0;$a<$contadores;$a++){
-                $string=(string)$a;
-                $cantidad="input_cantidad_".$string;
-                if($request->$cantidad==NULL){
-                }else{
-                    if(isset($factura_registro[$a]->producto_id)){
-                        if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                            $gravada += round($factura_registro[$a]->precio*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                            $exonerada += round($factura_registro[$a]->precio*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                            $inafecta += round($factura_registro[$a]->precio*$request->$cantidad,2);
-                        }
+            $contadores=count($factura_registro);
+            if($tipo == "factura_origi"){
+                for($a=0;$a<$contadores;$a++){
+                    $string=(string)$a;
+                    $cantidad="input_cantidad_".$string;
+                    if($request->$cantidad==NULL){
                     }else{
-                        if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                            $gravada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                        if(isset($factura_registro[$a]->producto_id)){
+                            if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                                $gravada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                                $exonerada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                                $inafecta += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                        }else{
+                            if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                                $gravada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                                $exonerada += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                                $inafecta += round($factura_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
                         }
-                        if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                            $exonerada += round($factura_registro[$a]->precio*$request->$cantidad,2);
-                        }
-                        if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                            $inafecta += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                    }
+                }
+            }else{
+                for($a=0;$a<$contadores;$a++){
+                    $string=(string)$a;
+                    $cantidad="input_cantidad_".$string;
+                    if($request->$cantidad==NULL){
+                    }else{
+                        if(isset($factura_registro[$a]->producto_id)){
+                            if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                                $gravada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                                $exonerada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                                $inafecta += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                        }else{
+                            if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                                $gravada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                                $exonerada += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                            if(strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                                $inafecta += round($factura_registro[$a]->precio*$request->$cantidad,2);
+                            }
                         }
                     }
                 }
             }
+            
         }
-
+        // return "a";
         $nota_credito=new Nota_Credito();
         $nota_credito->codigo_n_c=$nota_credito_numero;
         if($tipo == "factura_origi"){
@@ -398,33 +432,59 @@ class NotaCreditoController extends Controller
 
         $codigo=$factura->codigo_fac;
         $contar=0;
-        $contador=count($factura_registro);
-        for($p=0;$p<$contador;$p++){
-            $string=(string)$p;
-            $precio="input_precio_".$string;
-            $cantidad="input_cantidad_".$string;
-            $descuento="input_descuento_".$string;
-            $descripcion="input_descripcion_".$string;
-            if($request->$cantidad==NULL){
-            }else{
+        
+        // return $request;
+        if($request->motivo == "07" || $request->motivo == "09"){
+            $contador=count($request->tipo_afec);
+            for($a=0;$a<$contadores;$a++){
+                $string=(string)$a;
+                $tipo = explode(' | ',$request->tipo_item[$a]);
+                $opt = explode(' ',$request->tipo_afec[$a]);
                 $nota_creditos_r=new Nota_Credito_registro();
                 $nota_creditos_r->nota_credito_id=$nota_credito->id;
                 //condicional para diferenciar productos y servicios en facturacion registro
-                if(isset($factura_registro[$p]->producto_id)){
-                    $nota_creditos_r->producto_id=$factura_registro[$p]->producto_id;
+                if($tipo[0] == "producto"){
+                    $nota_creditos_r->producto_id=$tipo[1];
                 }else{
-                    $nota_creditos_r->servicio_id=$factura_registro[$p]->servicio_id;
+                    $nota_creditos_r->servicio_id=$tipo[1];
                 }
 
-                $nota_creditos_r->precio=$request->$precio;
-                $nota_creditos_r->cantidad=$request->$cantidad;
-                $nota_creditos_r->descuento=$request->$descuento;
-                $nota_creditos_r->descripcion=$request->$descripcion;
+                $nota_creditos_r->precio=$request->input_precio[$a];
+                $nota_creditos_r->cantidad=$request->input_cant[$a];
+                // $nota_creditos_r->descuento=$request->$descuento;
+                $nota_creditos_r->descripcion=$request->input_descripcion[$a];
                 $nota_creditos_r->save();
-                $contar++;
+                // }
+            }
+        } else {
+            $contador=count($factura_registro);
+            for($p=0;$p<$contador;$p++){
+                $string=(string)$p;
+                $precio="input_precio_".$string;
+                $cantidad="input_cantidad_".$string;
+                $descuento="input_descuento_".$string;
+                $descripcion="input_descripcion_".$string;
+                if($request->$cantidad==NULL){
+                }else{
+                    $nota_creditos_r=new Nota_Credito_registro();
+                    $nota_creditos_r->nota_credito_id=$nota_credito->id;
+                    //condicional para diferenciar productos y servicios en facturacion registro
+                    if(isset($factura_registro[$p]->producto_id)){
+                        $nota_creditos_r->producto_id=$factura_registro[$p]->producto_id;
+                    }else{
+                        $nota_creditos_r->servicio_id=$factura_registro[$p]->servicio_id;
+                    }
+
+                    $nota_creditos_r->precio=$request->$precio;
+                    $nota_creditos_r->cantidad=$request->$cantidad;
+                    $nota_creditos_r->descuento=$request->$descuento;
+                    $nota_creditos_r->descripcion=$request->$descripcion;
+                    $nota_creditos_r->save();
+                    $contar++;
+                }
             }
         }
-
+        
         $contador=$contar;
 
         $nc_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
@@ -528,72 +588,91 @@ class NotaCreditoController extends Controller
             $boleta->codigo_boleta=$nueva_boleta;
         }
 
-        $contadores=count($boleta_registro);
-        if($tipo == "boleta_origi" ){
+        // return $request;
+        if ($request->motivo == "07" || $request->motivo == "05") {
+            $contadores=count($request->tipo_afec);
             for($a=0;$a<$contadores;$a++){
                 $string=(string)$a;
-                $cantidad="input_cantidad_".$string;
-                if($request->$cantidad==NULL){
-                }else{
-                    if(isset($boleta_registro[$a]->producto_id)){
-                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                            $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                            
-                        }
-                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                            $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                            $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                    }else{
-                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                            $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                            
-                        }
-                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                            $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                            $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                        }
-                    }
+                $opt = explode(' ',$request->tipo_afec[$a]);
+                if($opt[0] == 'Gravado'){
+                    $gravada += round($request->input_precio[$a]*$request->input_cant[$a],2);
                 }
-                // return $request;
+                if($opt[0] == 'Exonerado'){
+                    $exonerada += round($request->precio[$a]*$request->input_cant[$a],2);
+                }
+                if($opt[0] == 'Inafecto'){
+                    $inafecta += round($request->precio[$a]*$request->input_cant[$a],2);
+                }
             }
-        }else{
-            for($a=0;$a<$contadores;$a++){
-                $string=(string)$a;
-                $cantidad="input_cantidad_".$string;
-                if($request->$cantidad==NULL){
-                }else{
-                    if(isset($boleta_registro[$a]->producto_id)){
-                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                            $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                            
-                        }
-                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                            $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                        }
-                        if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                            $inafecta += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                        }
+        } else {
+            $contadores=count($boleta_registro);
+            if($tipo == "boleta_origi" ){
+                for($a=0;$a<$contadores;$a++){
+                    $string=(string)$a;
+                    $cantidad="input_cantidad_".$string;
+                    if($request->$cantidad==NULL){
                     }else{
-                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                            $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                            
-                        }
-                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                            $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                        }
-                        if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                            $inafecta += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                        if(isset($boleta_registro[$a]->producto_id)){
+                            if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                                $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                                
+                            }
+                            if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                                $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                            if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                                $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                        }else{
+                            if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                                $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                                
+                            }
+                            if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                                $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
+                            if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                                $inafecta += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
+                            }
                         }
                     }
+                    // return $request;
                 }
-                // return $request;
+            }else{
+                for($a=0;$a<$contadores;$a++){
+                    $string=(string)$a;
+                    $cantidad="input_cantidad_".$string;
+                    if($request->$cantidad==NULL){
+                    }else{
+                        if(isset($boleta_registro[$a]->producto_id)){
+                            if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
+                                $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                                
+                            }
+                            if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
+                                $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                            if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
+                                $inafecta += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                        }else{
+                            if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
+                                $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                                
+                            }
+                            if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
+                                $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                            if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
+                                $inafecta += round($boleta_registro[$a]->precio*$request->$cantidad,2);
+                            }
+                        }
+                    }
+                    // return $request;
+                }
             }
         }
+        
         
         // return $boleta_registro[$a]->precio_unitario_comi
 
@@ -617,32 +696,59 @@ class NotaCreditoController extends Controller
         
         $codigo=$boleta->codigo_boleta;
         $contar=0;
-        $contador=count($boleta_registro);
+        // $contador=count($boleta_registro);
 
-        for($p=0;$p<$contador;$p++){
-            $string=(string)$p;
-            $precio="input_precio_".$string;
-            $cantidad="input_cantidad_".$string;
-            $descuento="input_descuento_".$string;
-            $descripcion="input_descripcion_".$string;
-            if($request->$cantidad==NULL){
-            }else{
+
+        if($request->motivo == "07" || $request->motivo == "05"){
+            $contador=count($request->tipo_afec);
+            for($a=0;$a<$contadores;$a++){
+                $string=(string)$a;
+                $tipo = explode(' | ',$request->tipo_item[$a]);
+                $opt = explode(' ',$request->tipo_afec[$a]);
                 $nota_creditos_r=new Nota_Credito_registro();
                 $nota_creditos_r->nota_credito_id=$nota_credito->id;
-                if(isset($boleta_registro[$p]->producto_id)){
-                    $nota_creditos_r->producto_id=$boleta_registro[$p]->producto_id;
+                //condicional para diferenciar productos y servicios en facturacion registro
+                if($tipo[0] == "producto"){
+                    $nota_creditos_r->producto_id=$tipo[1];
                 }else{
-                    $nota_creditos_r->servicio_id=$boleta_registro[$p]->servicio_id;
+                    $nota_creditos_r->servicio_id=$tipo[1];
                 }
 
-                $nota_creditos_r->precio=$boleta_registro[$p]->precio;
-                $nota_creditos_r->cantidad=$request->$cantidad;
-                $nota_creditos_r->descuento=$request->$descuento;
-                $nota_creditos_r->descripcion=$request->$descripcion;
+                $nota_creditos_r->precio=$request->input_precio[$a];
+                $nota_creditos_r->cantidad=$request->input_cant[$a];
+                // $nota_creditos_r->descuento=$request->$descuento;
+                $nota_creditos_r->descripcion=$request->input_descripcion[$a];
                 $nota_creditos_r->save();
-                $contar++;
+                // }
+            }
+        } else {
+            $contador=count($boleta_registro);
+            for($p=0;$p<$contador;$p++){
+                $string=(string)$p;
+                $precio="input_precio_".$string;
+                $cantidad="input_cantidad_".$string;
+                $descuento="input_descuento_".$string;
+                $descripcion="input_descripcion_".$string;
+                if($request->$cantidad==NULL){
+                }else{
+                    $nota_creditos_r=new Nota_Credito_registro();
+                    $nota_creditos_r->nota_credito_id=$nota_credito->id;
+                    if(isset($boleta_registro[$p]->producto_id)){
+                        $nota_creditos_r->producto_id=$boleta_registro[$p]->producto_id;
+                    }else{
+                        $nota_creditos_r->servicio_id=$boleta_registro[$p]->servicio_id;
+                    }
+    
+                    $nota_creditos_r->precio=$boleta_registro[$p]->precio;
+                    $nota_creditos_r->cantidad=$request->$cantidad;
+                    $nota_creditos_r->descuento=$request->$descuento;
+                    $nota_creditos_r->descripcion=$request->$descripcion;
+                    $nota_creditos_r->save();
+                    $contar++;
+                }
             }
         }
+        
         $contador=$contar;
 
         $nc_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
