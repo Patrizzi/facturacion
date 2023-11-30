@@ -336,7 +336,7 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $pagos;
+        // return $fact_cuotas->where('estado',1)->sum('monto');
         return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta'));
     }
     public function show_cuotas(Request $request)
@@ -594,11 +594,18 @@ class PagadosController extends Controller
 
         return $array_return;
     }
-    public function print_cuotas(Request $request)
+    public function print_cuotas(Request $request,$id)
     {
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $factura = Facturacion::where('id', $id)->first();
+        $fact_cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+        
+        $pagos = ComprobantesPagos::where('factuacion_id', $factura->id)->get();
         $empresa = Empresa::first();
+        // return  $fact_cuotas;
+        
         // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
-        return view('cobranzas.cuotas.print',compact('empresa'));
+        return view('cobranzas.cuotas.print',compact('empresa','factura','fact_cuotas','pagos','fecha_hoy'));
                 
     }
 }

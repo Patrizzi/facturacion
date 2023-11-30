@@ -17,34 +17,26 @@
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label"><strong>Nombre:</strong></label>
                                             <div class="col-sm-9">
-                                                {{-- <label class="col-form-label">{{ $factura->cliente->nombre }}</label> --}}
-                                                <input type="text" class="form-control"
-                                                    value="{{ $factura->cliente->nombre }}" readonly>
+                                                <p class="form-control">{{ $factura->cliente->nombre }}</p>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label
                                                 class="col-sm-3 col-form-label"><strong>{{ strtoupper($factura->cliente->documento_identificacion) }}:</strong></label>
                                             <div class="col-sm-9">
-                                                {{-- <label class="col-form-label">{{ $factura->cliente->nombre }}</label> --}}
-                                                <input type="text" class="form-control"
-                                                    value="{{ $factura->cliente->numero_documento }}" readonly>
+                                                <p class="form-control">{{ $factura->cliente->numero_documento }}</p>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
                                             <div class="col-sm-9">
-                                                {{-- <label class="col-form-label">{{ $factura->cliente->celular }}</label> --}}
-                                                <input type="text" class="form-control"
-                                                    value="{{ $factura->cliente->celular }}" readonly>
+                                                <p class="form-control">{{ $factura->cliente->celular }}</p>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label"><strong>Email:</strong></label>
                                             <div class="col-sm-9">
-                                                {{-- <label class="col-form-label">{{ $factura->cliente->email }}</label> --}}
-                                                <input type="text" class="form-control"
-                                                    value="{{ $factura->cliente->email }}" readonly>
+                                                <p class="form-control">{{ $factura->cliente->email }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -59,22 +51,19 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Código:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" value="{{ $cod_fact }}"
-                                                        readonly>
+                                                    <p class="form-control">{{ $cod_fact }}</p>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Moneda</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control"
-                                                        value="{{ strtoupper($factura->moneda->nombre) }}" readonly>
+                                                    <p class="form-control">{{ strtoupper($factura->moneda->nombre) }}</p>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>N° Cuotas:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control"
-                                                        value="{{ $fact_cuotas->count() }}" readonly>
+                                                    <p class="form-control">{{ $fact_cuotas->count() }}</p>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -89,34 +78,43 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Monto Total:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control"
-                                                        value="{{ $factura->moneda->simbolo }} {{ $sum_total = number_format($fact_cuotas->sum('monto'), 2) }}"
-                                                        readonly>
+                                                    {{-- @if ($fact_cuotas->sum('monto') != 0) --}}
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ $sum_total = number_format($fact_cuotas->sum('monto'), 2) }}</p>
+                                                    {{-- @else
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ $sum_total = 0}}</p>
+                                                    @endif --}}
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Monto Pagado</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" value="{{ $factura->moneda->simbolo }} {{ $pago_total = number_format($fact_cuotas->where('estado',1)->sum('monto'), 2) }}" readonly>
+                                                    @if ($fact_cuotas->where('estado',1)->sum('monto') != 0)
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ $pago_total = number_format($fact_cuotas->where('estado',1)->sum('monto'), 2) }}</p>
+                                                    @else
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ $pago_total =  0 }}</p>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Monto Deuda:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" value="{{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}}" readonly>
+                                                    <p class="form-control">{{ $factura->moneda->simbolo }} {{number_format( $fact_cuotas->sum('monto') - $fact_cuotas->where('estado',1)->sum('monto') , 2)}}</p>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Interes:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" value="{{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}}" readonly>
+                                                    <p class="form-control">
+                                                        {{-- {{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}} --}}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="col-sm-4">
                                             <div class="form-group row justify-content-center">
-                                                <button class="btn btn-secondary">Descargar Detalle de Cuota</button>
+                                                {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
+                                                <a class="btn btn-secondary" href="{{route('pagos.print_cuotas',$factura->id)}}">Descargar Detalle de Cuota</a>
                                             </div>
                                         </div>
 
@@ -129,28 +127,26 @@
                             <div class="ibox-content" style="width: 100% !important">
                                 <div class="row">
                                     <div class="col-sm-4">
-
-                                    </div>
-                                    <div class="col-sm-4">
-
-                                    </div>
-                                    <div class="col-sm-4">
                                         <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
                                             placeholder="Search in table">
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-4 text-right">
+                                        <button class="btn btn-secondary pago_all_lote" id="pago_lote" disabled>Pagar en Lote</button>
                                     </div>
                                 </div>
                                 <br>
                                 <table class="footable table table-stripped table-bordered table-hover toggle-arrow-tiny"
                                     data-page-size="8" data-filter="#filter">
-                                    {{-- <table class="table table-striped table-bordered table-hover dataTables-example"> --}}
-
                                     <thead>
                                         <tr>
                                             <th data-sort-ignore="true" style="width: 50px;text-align: center">Pago Lote
                                             </th>
-                                            <th>Id</th>
                                             <th style="width: 25px">Estado</th>
-                                            <th>N° Cuota | MONTO</th>
+                                            <th>N° Cuota </th>
+                                            <th>MONTO</th>
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Vencimiento</th>
                                             <th data-hide="all">Dias de retraso</th>
@@ -166,8 +162,13 @@
                                     <tbody>
                                         @foreach ($fact_cuotas as $index => $fc_cuota)
                                             <tr>
-                                                <td><input type="checkbox" name="" id=""></td>
-                                                <td>{{ $fc_cuota->id }}</td>
+                                                <td>
+                                                    @if ($fc_cuota->estado == 0)
+                                                        <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})">
+                                                    @else
+
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     @if ($fc_cuota->estado == 0)
                                                         <button id="pendiente" class="btn btn-primary"
@@ -186,8 +187,8 @@
                                                             id="estado_{{ $fc_cuota->id }}" value="RETRASADO">
                                                     @endif
                                                 </td>
+                                                <td>Cuota N° {{ $fc_cuota->numero_cuota }}</td>
                                                 <td>
-                                                    Cuota N° {{ $fc_cuota->numero_cuota }} |
                                                     {{ $factura->moneda->simbolo }}
                                                     {{ number_format($fc_cuota->monto, 2) }}
                                                     <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}"
@@ -301,20 +302,40 @@
                 </div>
                 <div class="modal-body">
                     <div class="metodo_pago_header">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <h3 class="text-center">Cuota N° | Monto</h3>
-                                <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
-                                </p>
-                                <input type="hidden" name="" id="monto_value">
+                        <div id="only_pago">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Cuota N° | Monto</h3>
+                                    <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
+                                    </p>
+                                    <input type="hidden" name="" id="monto_value">
+                                </div>
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Fecha de Vencimiento</h3>
+                                    <p class="text-center"><label id="fecha_ven"></label></p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Estado</h3>
+                                    <p class="text-center"><label id="estado_n"></label></p>
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                <h3 class="text-center">Fecha de Vencimiento</h3>
-                                <p class="text-center"><label id="fecha_ven"></label></p>
-                            </div>
-                            <div class="col-sm-4">
-                                <h3 class="text-center">Estado</h3>
-                                <p class="text-center"><label id="estado_n"></label></p>
+                        </div>
+                        <div id="lote_pago">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Cuota N° | Monto</h3>
+                                    <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
+                                    </p>
+                                    <input type="hidden" name="" id="monto_value">
+                                </div>
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Fecha de Vencimiento</h3>
+                                    <p class="text-center"><label id="fecha_ven"></label></p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h3 class="text-center">Estado</h3>
+                                    <p class="text-center"><label id="estado_n"></label></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -683,6 +704,9 @@
             overflow: auto;
             background-color: white;
         }
+        p.form-control{
+            margin-bottom: 0px;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -776,47 +800,84 @@
                 },
                 success: function (msg) {
                     $('#body_pago_detail').append(msg['html_end']);
-                    // alert(msg);
-                    // console.log(msg);
-                    // console.log(msg);
-
-                    // switch (msg.tipo_pago ==") {
-                    //     case valor1:
-                    //         //Declaraciones ejecutadas cuando el resultado de expresión coincide con el valor1
-                    //     [break;]
-                    //     case valor2:
-                    //         //Declaraciones ejecutadas cuando el resultado de expresión coincide con el valor2
-                    //     [break;]
-                    //     case valorN:
-                    //         //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
-                    //     [break;]
-                    // }
-                    // if (msg.tipo_pago == "cheque") {
-                    //     $('#view_all').css('display', none);
-                    //     $('.view_cheque').css('display', block);
-                    //     console.log('a');
-                    // }
-                    // if (msg.tipo_pago == "tarjeta") {
-                    //     $('#view_all').css('display',none);
-                    //     $('.view_tarjeta').css('display', block);
-                    //     console.log('b');
-                    // }
-                    // if (msg.tipo_pago == "efectivo") {
-                    //     $('#view_all').css('display',none);
-                    //     $('.view_efectivo').css('display', block);
-                    //     console.log('c');
-                    // }
-                    // if (msg.tipo_pago == "transferencia") {
-                    //     $('#view_all').css('display',none);
-                    //     $('.view_transferencia').css('display', block);
-                    //     console.log('d');
-                    // }
                 }
             });
         }
         // $('#detalle_pago')
-            $('#detalle_pago').on('hidden.bs.modal', function (e) {
-                $('#body_pago_detail').empty();
-            })
+        $('#detalle_pago').on('hidden.bs.modal', function (e) {
+            $('#body_pago_detail').empty();
+        });
+        function check_lote(num){
+            var count_check = document.querySelectorAll('.check_only');
+            let checkboxesDesactivados = 0;
+
+            // Recorrer los checkboxes y contar los desactivados
+            count_check.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkboxesDesactivados++;
+                }
+            });
+            // console.log(checkboxesDesactivados);
+            if(checkboxesDesactivados > 0){
+                $('#pago_lote').attr('disabled', false);
+            }else{
+                $('#pago_lote').attr('disabled', true);
+            }
+        }
+        function modal_pagos_lote(value) {
+            $('#todo_pago').modal('show');
+
+            var html = `
+                <div class="lote_pago">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h3 class="text-center">Cuota N° | Monto</h3>
+                            <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
+                            </p>
+                            <input type="hidden" name="" id="monto_value">
+                        </div>
+                        <div class="col-sm-4">
+                            <h3 class="text-center">Fecha de Vencimiento</h3>
+                            <p class="text-center"><label id="fecha_ven"></label></p>
+                        </div>
+                        <div class="col-sm-4">
+                            <h3 class="text-center">Estado</h3>
+                            <p class="text-center"><label id="estado_n"></label></p>
+                        </div>
+                    </div>
+                </div>`;
+                
+            //se abre modal, llamado de ajax para chapar el detalle de cuota? 
+            var numero = $(`#numero_` + value).val();
+            var monto = $(`#monto_` + value).val();
+            var vencimiento = $(`#fecha_ven_` + value).val();
+            var estado = $(`#estado_` + value).val();
+            var total_c = $(`#total_` + value).val();
+            $('#cuota_n').html(numero);
+            $('#monto_n').html(monto);
+            $('#monto_value').html(total_c);
+            $('#fecha_ven').html(vencimiento);
+            $('#estado_n').html(estado);
+            $('#efectivo_pago').attr('min', total_c);
+            // var id_cuota = $(`#estado_`+value).val();
+            $('#id_cuota_select').val(value);
+            $('#total_cuota').val(total_c);
+            $(`#cuota_precio`).val(value + '_' + total_c);
+            // $('#cuota_precio').val(total_c);
+
+            // cuotas_precio_
+
+        }
+        $('#pago_lote').on('click', function(){
+            var count_check = document.querySelectorAll('.check_only');
+            count_check.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    var id_cuot = checkbox.id;
+                    let id_one = id_cuot.match(/\d+/g);
+                    modal_pagos_lote(id_one[0]);
+                }
+            });
+            // detalle_cuota()
+        });
     </script>
 @endsection

@@ -31,9 +31,10 @@
                                                 <th>Item</th>
                                                 <th>N° Factura</th>
                                                 <th>Cliente</th>
-                                                <th>Cuotas Por Pagar</th>
-                                                <th>Cuotas Pagadas</th>
-                                                <th>Total a Pagar</th>
+                                                {{-- <th>Cuotas Por Pagar</th>
+                                                <th>Cuotas Pagadas</th> --}}
+                                                <th>Debe - Cuotas</th>
+                                                <th>Pagó - Cuotas</th>
                                                 <th>Ultima Fecha de Pago</th>
                                                 <th>Pago en Lote</th>
                                                 <th>Detalles</th>
@@ -46,9 +47,10 @@
                                                     <td>{{$f_sp->id}}</td>
                                                     <td>{{$f_sp->codigo_fac}}</td>
                                                     <td>{{$f_sp->cliente->nombre}}</td>
-                                                    <td>{{$cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 0)->count()}}</td>
-                                                    <td>{{$cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 1)->count()}}</td>
-                                                    <td>{{$f_sp->moneda->simbolo }} {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->sum('monto'), 2) }}</td>
+                                                    {{-- <td>{{$cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 0)->count()}}</td>
+                                                    <td>{{$cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 1)->count()}}</td> --}}
+                                                    <td>{{$f_sp->moneda->simbolo }} {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->sum('monto'), 2) }} - {{$cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 0)->count()}}</td>
+                                                    <td>{{$f_sp->moneda->simbolo }} {{number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'), 2) }} - {{$cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 1)->count()}}</td>
                                                     <td>
                                                         @if ($cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 1)->count() != 0)
                                                             {{date('d-m-Y', strtotime($cuotas_all->where('facturacion_id',$f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
