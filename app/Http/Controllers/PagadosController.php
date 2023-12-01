@@ -86,6 +86,7 @@ class PagadosController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         $tipo_pag = $request->get('input_pago');
         // return  $tipo_pag;
         // CUOTAS DE DB cambio de estado? // agregar estado en columna de cuotas_Credito

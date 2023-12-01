@@ -319,34 +319,21 @@
                                     <p class="text-center"><label id="estado_n"></label></p>
                                 </div>
                             </div>
+                            <hr>
                         </div>
                         <div id="lote_pago">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <h3 class="text-center">Cuota N° | Monto</h3>
-                                    <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
-                                    </p>
-                                    <input type="hidden" name="" id="monto_value">
-                                </div>
-                                <div class="col-sm-4">
-                                    <h3 class="text-center">Fecha de Vencimiento</h3>
-                                    <p class="text-center"><label id="fecha_ven"></label></p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <h3 class="text-center">Estado</h3>
-                                    <p class="text-center"><label id="estado_n"></label></p>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id_factura" id="id_factura" value="{{ $factura->id }}">
-                        <input type="hidden" name="id_cuota" id="id_cuota_select" value="">
+                        <div class="display: none" id="ids_divs_factura">
+                            
+                        </div>
                         <input type="hidden" name="numero_factura[]" id="cod_factura" value="{{ $cod_fact }}">
                         <input type="hidden" name="tot_cuotas[]" id="total_cuota" value="">
-                        <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio"
-                            value="">
+                        {{-- <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio"value=""> --}}
 
                         <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">
                         {{-- <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_`+index+`" value="`+row.factura_cod+`"> --}}
@@ -707,6 +694,9 @@
         p.form-control{
             margin-bottom: 0px;
         }
+        p{
+            margin-bottom: 0px;   
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -735,7 +725,16 @@
     </script>
     <script>
         function modal_pagos(value) {
+            $('.input_check').remove();
+            $('.cuota_prec_fact').remove();
+            $('#lote_pago').css('display','none');
+            $('#only_pago').css('display','block');
             $('#todo_pago').modal('show');
+            var ids = `
+                <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
+                <input type="hidden" name="cuotas_precio_`+ {{ $cod_fact }} +`[]" id="cuota_precio" value=""`+value+`" class="cuota_prec_fact">
+            `;
+            $('#ids_divs_factura').append(ids);
             //se abre modal, llamado de ajax para chapar el detalle de cuota? 
             var numero = $(`#numero_` + value).val();
             var monto = $(`#monto_` + value).val();
@@ -825,58 +824,75 @@
             }
         }
         function modal_pagos_lote(value) {
+            $('#only_pago').css('display','none');
+            $('#lote_pago').css('display','block');
+            
             $('#todo_pago').modal('show');
+            
+            // for (let index = 0; index < array.length; index++) {
+                var numero = $(`#numero_` + value).val();
+                var monto = $(`#monto_` + value).val();
+                var vencimiento = $(`#fecha_ven_` + value).val();
+                var estado = $(`#estado_` + value).val();
+                var total_c = $(`#total_` + value).val();
+                var html = `
+                    <div class="lote_pago_sect">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h3 class="text-center">Cuota N°: `+numero+`</h3>
+                                <h3 class="text-center">Monto: `+monto+`</h3>
+                                <input type="hidden" name="" id="monto_value" value="`+total_c+`">
+                            </div>
+                            <div class="col-sm-4">
+                                <h3 class="text-center">Fecha de Vencimiento</h3>
+                                <p class="text-center"><label id="fecha_ven">`+vencimiento+`</label></p>
+                            </div>
+                            <div class="col-sm-4">
+                                <h3 class="text-center">Estado</h3>
+                                <p class="text-center"><label id="estado_n">`+estado+`</label></p>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>`
+                ;
+                $('#lote_pago').append(html);
+                var ids = `
+                    <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
+                    <input type="hidden" name="cuotas_precio_`+{{ $cod_fact }}+`[]" id="cuota_precio" value=""`+value+`" class="cuota_prec_fact">
+                `;
+                $('#ids_divs_factura').append(ids);
 
-            var html = `
-                <div class="lote_pago">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <h3 class="text-center">Cuota N° | Monto</h3>
-                            <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
-                            </p>
-                            <input type="hidden" name="" id="monto_value">
-                        </div>
-                        <div class="col-sm-4">
-                            <h3 class="text-center">Fecha de Vencimiento</h3>
-                            <p class="text-center"><label id="fecha_ven"></label></p>
-                        </div>
-                        <div class="col-sm-4">
-                            <h3 class="text-center">Estado</h3>
-                            <p class="text-center"><label id="estado_n"></label></p>
-                        </div>
-                    </div>
-                </div>`;
+                // $('#id_cuota_select').val(value);
+
+
+                //se abre modal, llamado de ajax para chapar el detalle de cuota? 
+
+                // $('#efectivo_pago').attr('min', total_c);
+                // var id_cuota = $(`#estado_`+value).val();
+                // $('#id_cuota_select').val(value);
                 
-            //se abre modal, llamado de ajax para chapar el detalle de cuota? 
-            var numero = $(`#numero_` + value).val();
-            var monto = $(`#monto_` + value).val();
-            var vencimiento = $(`#fecha_ven_` + value).val();
-            var estado = $(`#estado_` + value).val();
-            var total_c = $(`#total_` + value).val();
-            $('#cuota_n').html(numero);
-            $('#monto_n').html(monto);
-            $('#monto_value').html(total_c);
-            $('#fecha_ven').html(vencimiento);
-            $('#estado_n').html(estado);
-            $('#efectivo_pago').attr('min', total_c);
-            // var id_cuota = $(`#estado_`+value).val();
-            $('#id_cuota_select').val(value);
-            $('#total_cuota').val(total_c);
-            $(`#cuota_precio`).val(value + '_' + total_c);
-            // $('#cuota_precio').val(total_c);
+                // $('#cuota_precio').val(total_c);
 
             // cuotas_precio_
 
         }
         $('#pago_lote').on('click', function(){
+            $('.lote_pago_sect').remove();
+            $('.input_check').remove();
+            $('.cuota_prec_fact').remove();
+            var total_c = 0;
             var count_check = document.querySelectorAll('.check_only');
             count_check.forEach(function(checkbox) {
                 if (checkbox.checked) {
                     var id_cuot = checkbox.id;
                     let id_one = id_cuot.match(/\d+/g);
                     modal_pagos_lote(id_one[0]);
+                    total_c += parseFloat($(`#total_` + id_one[0]).val());
                 }
             });
+            $('#efectivo_pago').attr('min', total_c);
+            $('#total_cuota').val(total_c);
+            $(`#cuota_precio`).val(value + '_' + total_c);
             // detalle_cuota()
         });
     </script>
