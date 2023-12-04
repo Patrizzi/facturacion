@@ -312,8 +312,12 @@ class PagadosController extends Controller
         $facturas_sp = Facturacion::where('forma_pago_id', 2)->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
-        foreach ($facturas_sp as $key => $f_sp) {
-            $cuotas[$key] = Cuotas_credito::where('facturacion_id', $f_sp->id)->count();
+        if (!isset($facturas_sp)) {
+            foreach ($facturas_sp as $key => $f_sp) {
+                $cuotas[$key] = Cuotas_credito::where('facturacion_id', $f_sp->id)->count();
+            }
+        }else{
+            $cuotas = array('a','b');
         }
         // return $cuotas[0];
         // $facturas_mora = Facturacion::all();

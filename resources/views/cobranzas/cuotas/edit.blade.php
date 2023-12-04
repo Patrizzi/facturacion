@@ -142,8 +142,9 @@
                                     data-page-size="8" data-filter="#filter">
                                     <thead>
                                         <tr>
-                                            <th data-sort-ignore="true" style="width: 50px;text-align: center">Pago Lote
+                                            <th data-sort-ignore="true" style="width: 50px;text-align: center">Ver más
                                             </th>
+                                            <th data-sort-ignore="true">Pago Lote</th>
                                             <th style="width: 25px">Estado</th>
                                             <th>N° Cuota </th>
                                             <th>MONTO</th>
@@ -153,15 +154,18 @@
                                             {{-- <th data-hide="all">Interes de Retraso</th> --}}
                                             <th>Metodo de Pago</th>
                                             <th>Fecha de Pago</th>
-                                            <th style="width: 170px">Pagar</th>
+                                            <th data-sort-ignore="true" style="width: 170px">Pagar</th>
                                             {{-- <th>P</th> --}}
                                             {{-- <th>Pagar Lote</th> --}}
-                                            <th>Detalle</th>
+                                            <th data-sort-ignore="true"> Detalle</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($fact_cuotas as $index => $fc_cuota)
                                             <tr>
+                                                <td>
+                                                    
+                                                </td>
                                                 <td>
                                                     @if ($fc_cuota->estado == 0)
                                                         <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})">
@@ -308,7 +312,7 @@
                                     <h3 class="text-center">Cuota N° | Monto</h3>
                                     <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
                                     </p>
-                                    <input type="hidden" name="" id="monto_value">
+                                    <input class="monto_total_only" type="hidden" name="" id="monto_value">
                                 </div>
                                 <div class="col-sm-4">
                                     <h3 class="text-center">Fecha de Vencimiento</h3>
@@ -732,7 +736,7 @@
             $('#todo_pago').modal('show');
             var ids = `
                 <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
-                <input type="hidden" name="cuotas_precio_`+ {{ $cod_fact }} +`[]" id="cuota_precio" value=""`+value+`" class="cuota_prec_fact">
+                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
             `;
             $('#ids_divs_factura').append(ids);
             //se abre modal, llamado de ajax para chapar el detalle de cuota? 
@@ -750,7 +754,7 @@
             // var id_cuota = $(`#estado_`+value).val();
             $('#id_cuota_select').val(value);
             $('#total_cuota').val(total_c);
-            $(`#cuota_precio`).val(value + '_' + total_c);
+            // $(`#cuota_precio`).val(value + '_' + total_c);
             // $('#cuota_precio').val(total_c);
 
             // cuotas_precio_
@@ -779,9 +783,15 @@
         }
         $('#efectivo_pago').on('keyup', function() {
             var pago = this.value;
-            var total = $('#monto_value').text();
-            console.log(total);
-            var vuelto = parseFloat(this.value) - parseFloat(total);
+            // var total = $('.monto_total').text();
+            var total_monto = $('[class="monto_total"]');
+            var tot_mont = 0;
+
+            total_monto.each(function(){
+                tot_mont += parseFloat($(this).val());
+            });
+            console.log(total_monto);
+            var vuelto = parseFloat(this.value) - parseFloat(tot_mont);
             $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
         })
 
@@ -841,7 +851,7 @@
                             <div class="col-sm-4">
                                 <h3 class="text-center">Cuota N°: `+numero+`</h3>
                                 <h3 class="text-center">Monto: `+monto+`</h3>
-                                <input type="hidden" name="" id="monto_value" value="`+total_c+`">
+                                <input class="monto_total" type="hidden" name="" id="monto_value" value="`+total_c+`">
                             </div>
                             <div class="col-sm-4">
                                 <h3 class="text-center">Fecha de Vencimiento</h3>
@@ -858,7 +868,7 @@
                 $('#lote_pago').append(html);
                 var ids = `
                     <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
-                    <input type="hidden" name="cuotas_precio_`+{{ $cod_fact }}+`[]" id="cuota_precio" value=""`+value+`" class="cuota_prec_fact">
+                    <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_`+value+`" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
                 `;
                 $('#ids_divs_factura').append(ids);
 
@@ -888,11 +898,12 @@
                     let id_one = id_cuot.match(/\d+/g);
                     modal_pagos_lote(id_one[0]);
                     total_c += parseFloat($(`#total_` + id_one[0]).val());
+                    // $(`#cuota_precio`+id_one[0]+``).val(id_one[0] + '_' + total_c);
                 }
             });
             $('#efectivo_pago').attr('min', total_c);
             $('#total_cuota').val(total_c);
-            $(`#cuota_precio`).val(value + '_' + total_c);
+            
             // detalle_cuota()
         });
     </script>
