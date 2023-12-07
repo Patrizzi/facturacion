@@ -123,6 +123,7 @@
                             </div>
                         </div>
                         <br>
+                        {{-- {{=}} --}}
                         <div class="row">
                             <div class="ibox-content" style="width: 100% !important">
                                 <div class="row">
@@ -134,7 +135,9 @@
 
                                     </div>
                                     <div class="col-sm-4 text-right">
-                                        <button class="btn btn-secondary pago_all_lote" id="pago_lote" disabled>Pagar en Lote</button>
+                                        @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
+                                            <button class="btn btn-secondary pago_all_lote" id="pago_lote" disabled>Pagar en Lote</button>
+                                        @endif
                                     </div>
                                 </div>
                                 <br>
@@ -144,7 +147,9 @@
                                         <tr>
                                             <th data-sort-ignore="true" style="width: 50px;text-align: center">Ver más
                                             </th>
-                                            <th data-sort-ignore="true">Pago Lote</th>
+                                            @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
+                                                <th data-sort-ignore="true">Pago Lote</th>
+                                            @endif
                                             <th style="width: 25px">Estado</th>
                                             <th>N° Cuota </th>
                                             <th>MONTO</th>
@@ -166,13 +171,14 @@
                                                 <td>
                                                     
                                                 </td>
-                                                <td>
-                                                    @if ($fc_cuota->estado == 0)
-                                                        <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})">
-                                                    @else
-
-                                                    @endif
-                                                </td>
+                                                @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
+                                                    <td>
+                                                        @if ($fc_cuota->estado == 0)
+                                                            <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})">
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                                
                                                 <td>
                                                     @if ($fc_cuota->estado == 0)
                                                         <button id="pendiente" class="btn btn-primary"
@@ -210,24 +216,26 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{-- @if () --}}
-                                                        {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->format('d/m/Y') }}
-                                                    {{-- @else --}}
-                                                        
-                                                    {{-- @endif --}}
+                                                    {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->format('d/m/Y') }}
                                                     <input type="hidden" name=""
                                                         id="fecha_ven_{{ $fc_cuota->id }}"
                                                         value="{{ $fc_cuota->fecha_pago }}">
                                                 </td>
                                                 <td>
-                                                    @if ($fc_cuota->estado == 0)
-                                                        @if ($fecha_hoy > $fc_cuota->fecha_pago)
-                                                            <strong>{{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays(Carbon\Carbon::parse($fecha_hoy)) }}</strong>
+                                                    @if ($fc_cuota->estado == 1)
+                                                        @if ( $fc_cuota->fecha_pago > $fecha_hoy )
+                                                            Pagado el día {{ Carbon\Carbon::parse($fact_cuotas[$index - 1]->fecha_pago)->format('d/m/Y') }}
                                                         @elseif($fecha_hoy == $fc_cuota->fecha_pago)
-                                                            <strong>Ultimo dia de pago</strong>
+                                                            <strong>Se pagó el dia de hoy</strong>    
+                                                        @else
+                                                            <strong>1</strong>
                                                         @endif
                                                     @else
-                                                        <strong>{{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays(Carbon\Carbon::parse($pagos[$index]->fecha_registros)) }}</strong>
+                                                        @if (Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays( Carbon\Carbon::parse($pagos_reg->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first()) ) > 1)
+                                                            <strong>{{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays( Carbon\Carbon::parse($pagos_reg->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first()) ) }}</strong>
+                                                        @else
+                                                            Aun sin fecha de pago
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 {{-- <td>
@@ -238,10 +246,11 @@
                                                     @endif
                                                 </td> --}}
                                                 <td>
-                                                    @if ($fc_cuota->estado == 0)
-                                                        <strong>Sin Pago</strong>
+                                                    {{-- {{$pagos_reg[$index]}} --}}
+                                                    @if (isset($pagos_reg[$index]))
+                                                        <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
                                                     @else
-                                                        <strong>{{ strtoupper($pagos[$index]->tipo_pago) }}</strong>
+                                                        <strong>Sin Pago</strong>
                                                     @endif
                                                 </td>
 
@@ -249,7 +258,7 @@
                                                     @if ($fc_cuota->estado == 0)
                                                         <strong>PENDIENTE</strong>
                                                     @elseif($fc_cuota->estado == 1)
-                                                        <strong>{{ Carbon\Carbon::parse($pagos[$index]->fecha_registro)->format('d/m/Y') }}</strong>
+                                                        <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_registro)->format('d/m/Y') }}</strong>
                                                     @else
                                                         <strong>RETRASADO</strong>
                                                     @endif
@@ -312,7 +321,7 @@
                                     <h3 class="text-center">Cuota N° | Monto</h3>
                                     <p class="text-center"><label id="cuota_n"></label> | <label id="monto_n"></label>
                                     </p>
-                                    <input class="monto_total_only" type="hidden" name="" id="monto_value">
+                                    <input class="monto_total" type="hidden" name="" id="monto_value" value="0">
                                 </div>
                                 <div class="col-sm-4">
                                     <h3 class="text-center">Fecha de Vencimiento</h3>
@@ -601,19 +610,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h1 id="id_cuota"></h1>
+                    {{-- <h1 id="id_cuota"></h1> --}}
                     <div class="row">
                         <div class="col-sm-4">
                             <h3 class="text-center">N° de Cuota</h3>
-                            <input type="text" class="form-control" name="" id="" readonly>
+                            <input type="text" class="form-control" name="" id="n_cuota_header" readonly>
                         </div>
                         <div class="col-sm-4">
                             <h3 class="text-center">Monto</h3>
-                            <input type="text" class="form-control" name="" id="" readonly>
+                            <input type="text" class="form-control" name="" id="monto_cuota_header" readonly>
                         </div>
                         <div class="col-sm-4">
                             <h3 class="text-center">Estado</h3>
-                            <input type="text" class="form-control" name="" id=""readonly>
+                            <input type="text" class="form-control" name="" id="estado_cuota_header" readonly>
                         </div>
                     </div>
                     <br>
@@ -747,7 +756,7 @@
             var total_c = $(`#total_` + value).val();
             $('#cuota_n').html(numero);
             $('#monto_n').html(monto);
-            $('#monto_value').html(total_c);
+            $('#monto_value').val(total_c);
             $('#fecha_ven').html(vencimiento);
             $('#estado_n').html(estado);
             $('#efectivo_pago').attr('min', total_c);
@@ -808,7 +817,14 @@
                     'data': item,
                 },
                 success: function (msg) {
-                    $('#body_pago_detail').append(msg['html_end']);
+                    var numero = $(`#numero_` + item).val();
+                    var monto = $(`#monto_` + item).val();
+                    // var vencimiento = $(`#fecha_ven_` + item).val();
+                    var estado = $(`#estado_` + item).val();
+                    $('#n_cuota_header').val(numero);
+                    $('#monto_cuota_header').val(monto);
+                    $('#estado_cuota_header').val(estado);
+                        $('#body_pago_detail').append(msg['html_end']);
                 }
             });
         }

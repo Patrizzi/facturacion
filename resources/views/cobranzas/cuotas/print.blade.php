@@ -94,8 +94,10 @@
                                         <thead>
                                             <tr>
                                                 <th>ITEM</th>
+                                                <th>N ° CUOTA</th>
                                                 <th>ESTADO</th>
                                                 <th>MONTO</th>
+                                                <th>MONTO CANCELADO</th>
                                                 <th>FECHA DE VENCIMIENTO</th>
                                                 <th>METODO DE PAGO</th>
                                                 <th>FECHA DE PAGO</th>
@@ -105,6 +107,7 @@
                                             @foreach ($fact_cuotas as $index => $fc_cuota)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
+                                                    <th>Cuota N° {{$fc_cuota->numero_cuota}}</th>
                                                     <td>
                                                         @if ($fc_cuota->estado == 0)
                                                             <strong>PENDIENTE</strong>
@@ -117,15 +120,13 @@
                                                     <td>
                                                         {{ $factura->moneda->simbolo }}
                                                         {{ number_format($fc_cuota->monto, 2) }}
-                                                        <input type="hidden" name=""
-                                                            id="numero_{{ $fc_cuota->id }}"
-                                                            value="{{ $fc_cuota->numero_cuota }}">
-                                                        <input type="hidden" name=""
-                                                            id="monto_{{ $fc_cuota->id }}"
-                                                            value="{{ $factura->moneda->simbolo }} {{ $fc_cuota->monto }}">
-                                                        <input type="hidden" name=""
-                                                            id="total_{{ $fc_cuota->id }}"
-                                                            value="{{ $fc_cuota->monto }}">
+                                                    </td>
+                                                    <td>
+                                                        @if ($fc_cuota->estado == 1)
+                                                            {{$pagos_reg->where('id_cuota_credito', $fc_cuota->id )->pluck('monto_pago')->first()}}
+                                                        @else
+                                                            Sin Pago
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->format('d/m/Y') }}
@@ -134,7 +135,7 @@
                                                         @if ($fc_cuota->estado == 0)
                                                             <strong>--- --- ---</strong>
                                                         @else
-                                                            <strong>{{ strtoupper($pagos[$index]->tipo_pago) }}</strong>
+                                                            <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
                                                         @endif
                                                     </td>
 
@@ -142,7 +143,7 @@
                                                         @if ($fc_cuota->estado == 0)
                                                             <strong>--- --- ---</strong>
                                                         @elseif($fc_cuota->estado == 1)
-                                                            <strong>{{ Carbon\Carbon::parse($pagos[$index]->fecha_registro)->format('d/m/Y') }}</strong>
+                                                            <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_registro)->format('d/m/Y') }}</strong>
                                                         @else
                                                             <strong>RETRASADO</strong>
                                                         @endif
@@ -163,16 +164,16 @@
             </div>
         </div>
     </div>
-    <footer>
+    {{-- <footer> --}}
+    <div class="">
         <div class="">
-            <div class="">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                            <div>
-                                {{-- <div class="row">
-                                    <div class="col-sm-6" align="center">
-                                        <div class="form-control">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                        <div>
+                            <div class="row">
+                                <div class="col-sm-8" align="center">
+                                    {{-- <div class="form-control">
                                             <h3>Contacto Cliente</h3>
                                             <div align="left">
                                                 <strong>Señor(es):</strong>
@@ -188,38 +189,47 @@
                                                     / {{ $factura->cliente->telefono }}
                                                 @endif
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6" align="center">
-                                        <div class="form-control">
-                                            <h3>Condiciones Generales</h3>
-                                            <div align="left">
-                                                <strong>Forma De Pago:</strong>
-                                                &nbsp;{{ $factura->forma_pago->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>
-                                                &nbsp;{{ $factura->created_at }}<br>
-                                                <strong>Validez:</strong> &nbsp;{{ $factura->validez }}<br>
-                                                <strong>Garantía:</strong>
-                                                &nbsp;{{ $factura->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                                <strong>Tipo de Moneda:</strong>
-                                                &nbsp;{{ $factura->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        </div> --}}
+                                </div>
+                                <div class="col-sm-4" align="center">
+                                    <div class="form-control">
+                                        <div align="left">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <p><strong>Monto Total:</strong></p>
+                                                    <p><strong>Monto Deuda:</strong></p>
+                                                    <p><strong>Monto Pagado:</strong></p>
+                                                </div>
+                                                <div>
+                                                    
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <p>{{ $factura->moneda->simbolo }} {{$total = $pagos_reg->sum('monto_pago') }}
+                                                    </p>
+                                                    <p>{{ $factura->moneda->simbolo }} {{$pagado =  $fact_cuotas->sum('monto') }}
+                                                    </p>
+                                                    <p>{{ $factura->moneda->simbolo }} {{ $total - $pagado }}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div> --}}
-                                <br>
-                                <div class="row">
-                                    <div class="col-sm-12">
-
-                                    </div>
                                 </div>
                             </div>
-                            @include('layout_bancos')
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-12">
+
+                                </div>
+                            </div>
                         </div>
+                        @include('layout_bancos')
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+    {{-- </footer> --}}
 </body>
 <style type="text/css">
     .form-control {
