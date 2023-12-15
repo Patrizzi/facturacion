@@ -51,11 +51,11 @@
                                 <div class="form-control">
                                     <h3>Contacto Cliente</h3>
                                     <div align="left">
-                                        <strong>Señor(es):</strong> &nbsp;{{ $factura->cliente->nombre }}<br>
+                                        <strong>Señor(es):</strong> {{ $factura->cliente->nombre }}<br>
                                         <strong>{{ $factura->cliente->documento_identificacion }} :</strong>
-                                        &nbsp;{{ $factura->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                        <strong>Dirección:</strong>&nbsp; {{ $factura->cliente->direccion }}<br>
-                                        <strong>N° Contacto:</strong>&nbsp; {{ $factura->cliente->celular }}
+                                        {{ $factura->cliente->numero_documento }}<br>
+                                        <strong>Dirección:</strong> {{ $factura->cliente->direccion }}<br>
+                                        <strong>N° Contacto:</strong> {{ $factura->cliente->celular }}
                                         @if (isset($factura->cliente->telefono))
                                             / {{ $factura->cliente->telefono }}
                                         @endif
@@ -66,14 +66,11 @@
                                 <div class="form-control">
                                     <h3>Condiciones Generales</h3>
                                     <div align="left">
-                                        <strong>Forma De Pago:</strong>
-                                        &nbsp;{{ $factura->forma_pago->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>
-                                        &nbsp;{{ $factura->created_at }}<br>
-                                        <strong>Validez:</strong> &nbsp;{{ $factura->validez }}<br>
-                                        <strong>Garantía:</strong>
-                                        &nbsp;{{ $factura->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        <strong>Forma De Pago: </strong>{{ $factura->forma_pago->nombre }}<br>
+                                        <strong>Fecha: </strong> {{ $factura->created_at }}<br>
+                                        <strong>    </strong>
                                         <strong>Tipo de Moneda:</strong>
-                                        &nbsp;{{ $factura->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        {{ $factura->moneda->nombre }}<br>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +104,7 @@
                                             @foreach ($fact_cuotas as $index => $fc_cuota)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <th>Cuota N° {{$fc_cuota->numero_cuota}}</th>
+                                                    <td>Cuota N° {{$fc_cuota->numero_cuota}}</td>
                                                     <td>
                                                         @if ($fc_cuota->estado == 0)
                                                             <strong>PENDIENTE</strong>
@@ -123,7 +120,8 @@
                                                     </td>
                                                     <td>
                                                         @if ($fc_cuota->estado == 1)
-                                                            {{$pagos_reg->where('id_cuota_credito', $fc_cuota->id )->pluck('monto_pago')->first()}}
+                                                            {{ $factura->moneda->simbolo }}
+                                                            {{ number_format( (float)$pagos_reg->where('id_cuota_credito', $fc_cuota->id )->pluck('monto_pago')->first(), 2) }}
                                                         @else
                                                             Sin Pago
                                                         @endif
@@ -177,13 +175,13 @@
                                             <h3>Contacto Cliente</h3>
                                             <div align="left">
                                                 <strong>Señor(es):</strong>
-                                                &nbsp;{{ $factura->cliente->nombre }}<br>
+                                                {{ $factura->cliente->nombre }}<br>
                                                 <strong>{{ $factura->cliente->documento_identificacion }}
                                                     :</strong>
-                                                &nbsp;{{ $factura->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                                <strong>Dirección:</strong>&nbsp;
+                                                {{ $factura->cliente->numero_documento }}<br>
+                                                <strong>Dirección:</strong>
                                                 {{ $factura->cliente->direccion }}<br>
-                                                <strong>N° Contacto:</strong>&nbsp;
+                                                <strong>N° Contacto:</strong>
                                                 {{ $factura->cliente->celular }}
                                                 @if (isset($factura->cliente->telefono))
                                                     / {{ $factura->cliente->telefono }}
@@ -195,20 +193,22 @@
                                     <div class="form-control">
                                         <div align="left">
                                             <div class="row">
-                                                <div class="col-sm-6">
-                                                    <p><strong>Monto Total:</strong></p>
-                                                    <p><strong>Monto Deuda:</strong></p>
+                                                <div class="col-sm-7">
+                                                    <p><strong>Monto Total de Deuda:</strong></p>
                                                     <p><strong>Monto Pagado:</strong></p>
+                                                    <p><strong>Monto Total Deuda:</strong></p>
                                                 </div>
-                                                <div>
-                                                    
+                                                <div style="display: none">
+                                                    {{$total = $pagos_reg->sum('monto_pago') }}
+                                                    {{$pagado =  $fact_cuotas->sum('monto') }}
+                                                    {{$all_tot = $pagado - $total }}
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <p>{{ $factura->moneda->simbolo }} {{$total = $pagos_reg->sum('monto_pago') }}
+                                                <div class="col-sm-5">
+                                                    <p>{{ $factura->moneda->simbolo }} {{number_format($pagado ,2) }}
                                                     </p>
-                                                    <p>{{ $factura->moneda->simbolo }} {{$pagado =  $fact_cuotas->sum('monto') }}
+                                                    <p>{{ $factura->moneda->simbolo }} {{number_format($total , 2) }}
                                                     </p>
-                                                    <p>{{ $factura->moneda->simbolo }} {{ $total - $pagado }}
+                                                    <p>{{ $factura->moneda->simbolo }} {{ number_format($all_tot,2)}}
                                                     </p>
                                                 </div>
                                             </div>

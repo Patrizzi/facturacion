@@ -66,13 +66,13 @@
                                                     <p class="form-control">{{ $fact_cuotas->count() }}</p>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            {{-- <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Interes Porcentual :</strong></label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" value=" " readonly>
                                                     <small>Dependiendo del cliente? / depender de un monto fijo? / </small>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group row">
@@ -101,20 +101,20 @@
                                                     <p class="form-control">{{ $factura->moneda->simbolo }} {{number_format( $fact_cuotas->sum('monto') - $fact_cuotas->where('estado',1)->sum('monto') , 2)}}</p>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            {{-- <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Interes:</strong></label>
                                                 <div class="col-sm-7">
                                                     <p class="form-control">
-                                                        {{-- {{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}} --}}
+                                                        {{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}}
                                                     </p>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
 
                                         <div class="col-sm-4">
                                             <div class="form-group row justify-content-center">
                                                 {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
-                                                <a class="btn btn-secondary" href="{{route('pagos.print_cuotas',$factura->id)}}">Descargar Detalle de Cuota</a>
+                                                <a class="btn btn-secondary" href="{{route('pagos.print_cuotas',$factura->id)}}" target="_blank">Descargar Detalle de Cuota</a>
                                             </div>
                                         </div>
 
@@ -155,7 +155,7 @@
                                             <th>MONTO</th>
                                             <th>Fecha Inicio</th>
                                             <th>Fecha Vencimiento</th>
-                                            <th data-hide="all">Dias de retraso</th>
+                                            <th data-hide="all">Informacion del Pago</th>
                                             {{-- <th data-hide="all">Interes de Retraso</th> --}}
                                             <th>Metodo de Pago</th>
                                             <th>Fecha de Pago</th>
@@ -223,28 +223,22 @@
                                                 </td>
                                                 <td>
                                                     @if ($fc_cuota->estado == 1)
-                                                        @if ( $fc_cuota->fecha_pago > $fecha_hoy )
-                                                            Pagado el día {{ Carbon\Carbon::parse($fact_cuotas[$index - 1]->fecha_pago)->format('d/m/Y') }}
+                                                        @if ( $fc_cuota->fecha_pago > Carbon\Carbon::parse($pagos_deta->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first())->format('d/m/Y' ))
+                                                            Pagado el día {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}
                                                         @elseif($fecha_hoy == $fc_cuota->fecha_pago)
                                                             <strong>Se pagó el dia de hoy</strong>    
                                                         @else
-                                                            <strong>1</strong>
+                                                            <strong style="color: red">Se pagó retrasado: {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}</strong>
                                                         @endif
                                                     @else
-                                                        @if (Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays( Carbon\Carbon::parse($pagos_reg->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first()) ) > 1)
-                                                            <strong>{{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays( Carbon\Carbon::parse($pagos_reg->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first()) ) }}</strong>
+                                                        {{-- @if (count($pagos_reg) > 1)
+                                                            <strong>{{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays( Carbon\Carbon::parse($pagos_reg->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first()) )  }}</strong>
                                                         @else
                                                             Aun sin fecha de pago
-                                                        @endif
+                                                        @endif --}}
+                                                        Sin pago asociado
                                                     @endif
                                                 </td>
-                                                {{-- <td>
-                                                    @if ($fc_cuota->estado == 0)
-                                                        <strong>Sin Pago</strong>
-                                                    @else
-                                                        <strong>Acsá va pago de new tabla</strong>
-                                                    @endif
-                                                </td> --}}
                                                 <td>
                                                     {{-- {{$pagos_reg[$index]}} --}}
                                                     @if (isset($pagos_reg[$index]))
@@ -340,7 +334,7 @@
                     </div>
                     <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id_factura" id="id_factura" value="{{ $factura->id }}">
+                        <input type="hidden" name="id_factura" id="id_factura[]" value="{{ $factura->id }}">
                         <div class="display: none" id="ids_divs_factura">
                             
                         </div>
@@ -614,15 +608,18 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <h3 class="text-center">N° de Cuota</h3>
-                            <input type="text" class="form-control" name="" id="n_cuota_header" readonly>
+                            {{-- <input type="text" class="form-control" name="" id="n_cuota_header" readonly> --}}
+                            <p class="form-control text-center" id="n_cuota_header">Cuota N° </p>
                         </div>
                         <div class="col-sm-4">
                             <h3 class="text-center">Monto</h3>
-                            <input type="text" class="form-control" name="" id="monto_cuota_header" readonly>
+                            {{-- <input type="text" class="form-control" name="" id="monto_cuota_header" readonly> --}}
+                            <p class="form-control text-center" id="monto_cuota_header">Cuota N° </p>
                         </div>
                         <div class="col-sm-4">
                             <h3 class="text-center">Estado</h3>
-                            <input type="text" class="form-control" name="" id="estado_cuota_header" readonly>
+                            {{-- <input type="text" class="form-control" name="" id="estado_cuota_header" readonly> --}}
+                            <p class="form-control text-center" id="estado_cuota_header">Cuota N° </p>
                         </div>
                     </div>
                     <br>
@@ -742,18 +739,28 @@
             $('.cuota_prec_fact').remove();
             $('#lote_pago').css('display','none');
             $('#only_pago').css('display','block');
+                
             $('#todo_pago').modal('show');
-            var ids = `
-                <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
-                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
-            `;
-            $('#ids_divs_factura').append(ids);
             //se abre modal, llamado de ajax para chapar el detalle de cuota? 
             var numero = $(`#numero_` + value).val();
             var monto = $(`#monto_` + value).val();
             var vencimiento = $(`#fecha_ven_` + value).val();
             var estado = $(`#estado_` + value).val();
             var total_c = $(`#total_` + value).val();
+            var ids = `
+                <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
+                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_`+value+`" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
+            `;
+            $('#ids_divs_factura').append(ids);
+            
+            // console.log(total_c);
+            // var ids = `
+            //     <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
+            //     <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
+            // `;
+            // $('#ids_divs_factura').append(ids);
+            
+            console.log(total_c);
             $('#cuota_n').html(numero);
             $('#monto_n').html(monto);
             $('#monto_value').val(total_c);
@@ -762,6 +769,7 @@
             $('#efectivo_pago').attr('min', total_c);
             // var id_cuota = $(`#estado_`+value).val();
             $('#id_cuota_select').val(value);
+            console.log('a: '+ total_c)
             $('#total_cuota').val(total_c);
             // $(`#cuota_precio`).val(value + '_' + total_c);
             // $('#cuota_precio').val(total_c);
@@ -821,10 +829,10 @@
                     var monto = $(`#monto_` + item).val();
                     // var vencimiento = $(`#fecha_ven_` + item).val();
                     var estado = $(`#estado_` + item).val();
-                    $('#n_cuota_header').val(numero);
-                    $('#monto_cuota_header').val(monto);
-                    $('#estado_cuota_header').val(estado);
-                        $('#body_pago_detail').append(msg['html_end']);
+                    $('#n_cuota_header').html(`Cuota N° `+numero);
+                    $('#monto_cuota_header').html(monto);
+                    $('#estado_cuota_header').html(estado);
+                    $('#body_pago_detail').append(msg['html_end']);
                 }
             });
         }
@@ -861,6 +869,7 @@
                 var vencimiento = $(`#fecha_ven_` + value).val();
                 var estado = $(`#estado_` + value).val();
                 var total_c = $(`#total_` + value).val();
+                console.log(total_c)
                 var html = `
                     <div class="lote_pago_sect">
                         <div class="row">
