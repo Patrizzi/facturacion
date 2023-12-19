@@ -897,19 +897,6 @@
                 `;
                 $('#ids_divs_factura').append(ids);
 
-                // $('#id_cuota_select').val(value);
-
-
-                //se abre modal, llamado de ajax para chapar el detalle de cuota? 
-
-                // $('#efectivo_pago').attr('min', total_c);
-                // var id_cuota = $(`#estado_`+value).val();
-                // $('#id_cuota_select').val(value);
-                
-                // $('#cuota_precio').val(total_c);
-
-            // cuotas_precio_
-
         }
         $('#pago_lote').on('click', function(){
             $('.lote_pago_sect').remove();
@@ -929,7 +916,6 @@
             $('#efectivo_pago').attr('min', total_c);
             $('#total_cuota').val(total_c);
             
-            // detalle_cuota()
         });
     </script>
 @endsection

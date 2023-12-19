@@ -16,13 +16,14 @@
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
-                                <div class="row">
-                                    {{-- <div class="col-sm-6">
-                                        logo.png
-                                    </div>
+                                <div class="row" style="margin-right: 5px">
                                     <div class="col-sm-6">
-
-                                    </div> --}}
+                                        {{-- logo.png --}}
+                                    </div>
+                                    <div class="col-sm-6 text-right">
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
+                                            Lote</button>
+                                    </div>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover dataTables-example">
@@ -33,6 +34,7 @@
                                                 <th style="width: 150px">Estado</th>
                                                 <th>N° Factura</th>
                                                 <th>Cliente</th>
+                                                <th>Total</th>
                                                 <th>Debe | Cuotas</th>
                                                 <th>Pagó | Cuotas</th>
                                                 <th>Ultima Fecha de Pago</th>
@@ -44,7 +46,17 @@
                                             @foreach ($facturas_sp as $index => $f_sp)
                                                 <tr>
                                                     <td>{{ $f_sp->id }}</td>
-                                                    <td><input type="checkbox" name="" id=""></td>
+
+                                                    <td>
+                                                        @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
+                                                            <input type="checkbox" name=""
+                                                                id="check_{{ $f_sp->codigo_fac }}"
+                                                                class="form-control check_only check_lost_{{$index}}"
+                                                                onclick="check_lote({{ $index }})">
+                                                            {{-- <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})"> --}}
+                                                        @endif
+                                                    </td>
+
                                                     <td>
                                                         @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
                                                             <button id="pendiente" class="btn btn-primary"
@@ -59,6 +71,9 @@
                                                     </td>
                                                     <td>{{ $f_sp->codigo_fac }}</td>
                                                     <td>{{ $f_sp->cliente->nombre }}</td>
+                                                    <td>
+                                                        {{ $cuotas_all->where('facturacion_id', $f_sp->id)->count() }}
+                                                    </td>
                                                     <td>{{ $f_sp->moneda->simbolo }}
                                                         {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->sum('monto'),2) }}
                                                         <strong>|</strong>
@@ -195,7 +210,7 @@
                                         </div> --}}
                                     </div>
                                 </div>
-                                <div class="col-sm-4 text-right" >
+                                <div class="col-sm-4 text-right">
                                     <label class="col-form-label text-right">Total:</label>
                                 </div>
                                 <div class="col-sm-4">
@@ -545,15 +560,16 @@
                 buttons: []
             });
         });
-
+        // PAGO INDIVIDUAL
         function pago_factura(n_factura) {
             // console.log('a');
             $('#div_facturas').empty();
             $('#tot_simbolo').empty();
+            $('#ids_divs_factura').empty();
             $('#todo_pago').modal('show');
 
             var only_id_fact = `
-                <input type="hidden" name="id_factura[]" id="id_factura_`+n_factura+`" value="`+n_factura+`">
+                <input type="hidden" name="id_factura[]" id="id_factura_` + n_factura + `" value="` + n_factura + `">
             `;
             $('#ids_divs_factura').append(only_id_fact);
             var ids_array = [n_factura];
@@ -604,9 +620,12 @@
                         `;
                         $('#div_facturas').append(data);
 
-                        var data_2 = `<hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">`+ row.factura_simbolo+`</label></div><label class='form-control disabled' id='tota_totas'></label>`;
+                        var data_2 =
+                            `<hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
+                            row.factura_simbolo +
+                            `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
                         $('#tot_simbolo').append(data_2);
-                        
+
                         $(`.select_2_multipl_` + index + ``).select2({
                             placeholder: "Seleccionar Cuotas"
                         });
@@ -619,7 +638,7 @@
                             }
                             var data_cuota = data.text.replace(/N°-\d+: /g, '');
                             console.log(data_cuota);
-                            
+
                             var math_total = Math.round((parseFloat(data_cuota) + parseFloat(
                                 ant)) * 100) / 100;
                             $(`#total_cuotas_` + index + ``).val(math_total);
@@ -654,24 +673,25 @@
                             $('#cheque_monto').attr('max', tot_math);
                             $('#efectivo_pago').attr('min', tot_math);
                             $('#cheque_monto').val(tot_math);
-                            
+
                             console.log(data.id);
-                            var ids_cuotas =  data.id;
+                            var ids_cuotas = data.id;
                             var ids_arry = ids_cuotas.split('_');
-                            
+
                             var cuota_array = `
-                                <input class="input_check" type="hidden" name="id_cuota[]" value="`+ids_arry[0]+`" id='cuota_`+ids_arry[0]+`'>
+                                <input class="input_check" type="hidden" name="id_cuota[]" value="` + ids_arry[0] +
+                                `" id='cuota_` + ids_arry[0] + `'>
                             `;
                             $('#ids_divs_factura').append(cuota_array);
 
                         });
                         $(`.select_2_multipl_` + index + ``).on('select2:unselect', function(e) {
                             var data = e.params.data;
-                            var ids_cuotas =  data.id;
+                            var ids_cuotas = data.id;
                             var ids_arry = ids_cuotas.split('_');
                             console.log(ids_arry);
-                            $(`#cuota_`+ids_arry[0]+``).remove();
-                            
+                            $(`#cuota_` + ids_arry[0] + ``).remove();
+
                             var ant = $(`#total_cuotas_` + index + ``).val();
                             if (ant == "") {
                                 ant = 0;
@@ -687,29 +707,8 @@
                             if (tota_tot == "") {
                                 tota_tot = 0;
                             }
-                            // var igual = $("#select_money option:selected").text();
-                            // if (igual == row.factura_simbolo) {
                             var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(
                                 data_cuota)) * 100) / 100;
-                            // } else {
-                            //     if (row.factura_moneda == "soles" && igual ==
-                            //         '$') { //DE DOLAR A SOL
-                            //         var new_val = parseFloat(data_cuota) / tipo_cambio;
-                            //         var tot_math = Math.round((parseFloat(tota_tot) -
-                            //             parseFloat(new_val)) * 100) / 100;
-                            //         console.log('a');
-                            //     } else { // DE SOL A DOLAR
-                            //         var new_val = parseFloat(data_cuota) * tipo_cambio;
-                            //         var tot_math = Math.round((parseFloat(tota_tot) -
-                            //             parseFloat(new_val)) * 100) / 100;
-                            //         console.log('b');
-                            //     }
-                            // }
-                            // console.log(tot_math);
-
-                            
-
-                            
                             $('#tota_totas').html(tot_math);
                             $('#cheque_monto').attr('max', tot_math);
                             $('#efectivo_pago').attr('min', tot_math);
@@ -727,9 +726,6 @@
             });
         }
 
-        $('#sel_0').on('select2:select', function (e) {
-            console.log('a');
-        });
         function select_pago(item) {
             $('.pago_m').css('display', 'none');
             $(`.m_pago_` + item).css('display', 'flex');
@@ -739,21 +735,247 @@
             $(`.pago_class_` + item).attr('required', true);
             $(`.file_input`).attr('required', false);
 
-
-
             $('.btn_pago_selec').removeClass("active");
             $(`#bm_pago_` + item).addClass("active");
             $('#input_pago').val(item);
 
             var fecha = $('#fecha_value_php').val();
             // console.log(fecha);
-            $('.fecha_hoy').val(fecha);  
+            $('.fecha_hoy').val(fecha);
         }
-        $('#efectivo_pago').on('keyup', function(){
+        $('#efectivo_pago').on('keyup', function() {
             var pago = this.value;
             var total = $('#tota_totas').text();
-            var vuelto  = parseFloat( this.value) - parseFloat(total);
+            var vuelto = parseFloat(this.value) - parseFloat(total);
             $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
         })
+
+        // PAGO MULTIPLE
+
+        function check_lote(num) {
+            var elemento = document.getElementsByClassName(`check_lost_`+num); 
+            var id_cuot = elemento[0].getAttribute('id');
+            let id_one = id_cuot.split('_');
+            // console.log(elemento[0])
+            if (elemento[0].checked) {
+                var only_id_fact = `
+                    <input type="hidden" name="id_factura[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] + `">`;
+                $('#ids_divs_factura').append(only_id_fact);
+            }else{
+                $(`#id_factura_` + id_one[1] + ``).remove();
+            }
+            var count_check = document.querySelectorAll('.check_only');
+            let checkboxesDesactivados = 0;
+            // Recorrer los checkboxes y contar los desactivados
+            count_check.forEach(function(checkbox) {
+                console.log(checkbox)
+                if (checkbox.checked) {
+                    checkboxesDesactivados++;
+                }
+            });  
+            // console.log(checkboxesDesactivados);
+            if (checkboxesDesactivados > 0) {
+                $('#pago_lote_total').attr('disabled', false);
+            } else {
+                $('#pago_lote_total').attr('disabled', true);
+            }
+        }
+        // $('#pago_lote_button').on('click', function(){
+        //     // console.log('a');
+        // });
+        $('#pago_lote_total').on('click', function() {
+            
+            $('#div_facturas').empty();
+            $('#tot_simbolo').empty();
+            $('#ids_divs_factura').empty();
+            // var total_c = 0;
+            var count_check = document.querySelectorAll('.check_only');
+
+
+
+            // count_check.forEach(function(checkbox) {
+                // console.log(checkbox.id)
+                if (checkbox.checked) {
+                    var id_cuot = checkbox.id;
+                    let id_one = id_cuot.split('_');
+                    
+
+                    // console.log(id_one);
+                    pago_lote_total(id_one[1]);
+                    // total_c += parseFloat($(`#total_` + id_one[0]).val());
+                    // $(`#cuota_precio`+id_one[0]+``).val(id_one[0] + '_' + total_c);
+                }
+            // });
+            // $('#efectivo_pago').attr('min', total_c);
+            // $('#total_cuota').val(total_c);
+
+        });
+
+        function pago_lote_total(n_factura) {
+            // console.log(n_factura)
+            $('#todo_pago').modal('show');
+            // console.log('a');
+            $('#div_facturas').empty();
+            $('#tot_simbolo').empty();
+            $('#ids_divs_factura').empty();
+            $('#todo_pago').modal('show');
+
+            // var only_id_fact = `
+            //     <input type="hidden" name="id_factura[]" id="id_factura_` + n_factura + `" value="` + n_factura + `">
+            // `;
+            // $('#ids_divs_factura').append(only_id_fact);
+            var ids_array = [n_factura];
+            $.ajax({
+                type: "post",
+                url: "{{ route('pagos.lista_ajax') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'ids_facturas': ids_array
+                },
+                success: function(msg) {
+                    // console.log(msg)
+                    msg.forEach(function(row, index) {
+                        // console.log(row.cuotas_array); 
+                        // cod_factura
+                        var data = `
+                            <div class="row">
+                                <label></label>
+                                <div class="col-sm-4">
+                                    <label class="form-control">` + row.factura_cod +
+                            `</label>
+                                    <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_` +
+                            index + `" value="` + row.factura_cod + `">
+                                </div>
+                                <div class="col-sm-4 div_select">
+                                    <select placeholder="Seleccionar Cuotas" id="sel_` + index +
+                            `" class="select_2_multipl_` + index +
+                            ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
+                            `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
+                                        ` + row.cuotas_array.map(function(bar) {
+                                if (bar.estado == 0) {
+                                    return '<option value="' + bar.id_cuota + '_' + bar.monto +
+                                        '">' +
+                                        'N°-' + bar.cuota_n + ': ' + bar.monto + '</option>'
+                                }
+                            }) + `
+                                    </select>
+                                </div>
+                                <div class="input-group col-sm-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">` + row.factura_simbolo + `</span>
+                                    </div>
+                                    <label class="form-control" id="lbl_tot_` + index + `">0</label>
+                                    <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas_` +
+                            index + `">
+                                </div>
+                            </div>
+                        `;
+                        $('#div_facturas').append(data);
+
+                        var data_2 =
+                            `<hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
+                            row.factura_simbolo +
+                            `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
+                        $('#tot_simbolo').append(data_2);
+
+                        $(`.select_2_multipl_` + index + ``).select2({
+                            placeholder: "Seleccionar Cuotas"
+                        });
+                        $(`.select_2_multipl_` + index + ``).on('select2:select', function(e) {
+                            var data = e.params.data;
+                            // console.log(data)
+                            var ant = $(`#total_cuotas_` + index + ``).val();
+                            if (ant == "") {
+                                ant = 0;
+                            }
+                            var data_cuota = data.text.replace(/N°-\d+: /g, '');
+                            console.log(data_cuota);
+
+                            var math_total = Math.round((parseFloat(data_cuota) + parseFloat(
+                                ant)) * 100) / 100;
+                            $(`#total_cuotas_` + index + ``).val(math_total);
+                            $(`#lbl_tot_` + index + ``).html(math_total);
+                            // TOTAL DE TOTALES
+                            var tota_tot = $('#tota_totas').html();
+                            if (tota_tot == "") {
+                                tota_tot = 0;
+                            }
+                            //TODO O NADA
+                            var igual = $("#simbolor_label").html();
+
+                            if (igual == row.factura_simbolo) {
+                                var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
+                                    data_cuota)) * 100) / 100;
+                            } else {
+                                if (row.factura_moneda == "soles" && igual ==
+                                    '$') { //DE DOLAR A SOL
+                                    var new_val = parseFloat(data_cuota) / tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) +
+                                        parseFloat(new_val)) * 100) / 100;
+                                    // console.log('a');
+                                } else { // DE SOL A DOLAR
+                                    var new_val = parseFloat(data_cuota) * tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) +
+                                        parseFloat(new_val)) * 100) / 100;
+                                    // console.log('b');
+                                }
+                            }
+                            // console.log(tot_math);
+                            $('#tota_totas').html(tot_math);
+                            $('#cheque_monto').attr('max', tot_math);
+                            $('#efectivo_pago').attr('min', tot_math);
+                            $('#cheque_monto').val(tot_math);
+
+                            console.log(data.id);
+                            var ids_cuotas = data.id;
+                            var ids_arry = ids_cuotas.split('_');
+
+                            var cuota_array = `
+                                <input class="input_check" type="hidden" name="id_cuota[]" value="` + ids_arry[0] +
+                                `" id='cuota_` + ids_arry[0] + `'>
+                            `;
+                            $('#ids_divs_factura').append(cuota_array);
+
+                        });
+                        $(`.select_2_multipl_` + index + ``).on('select2:unselect', function(e) {
+                            var data = e.params.data;
+                            var ids_cuotas = data.id;
+                            var ids_arry = ids_cuotas.split('_');
+                            console.log(ids_arry);
+                            $(`#cuota_` + ids_arry[0] + ``).remove();
+
+                            var ant = $(`#total_cuotas_` + index + ``).val();
+                            if (ant == "") {
+                                ant = 0;
+                            }
+                            var data_cuota = data.text.replace(/N°-\d+: /g, '');
+                            var math_total = Math.round((parseFloat(ant) - parseFloat(
+                                data_cuota)) * 100) / 100;
+                            $(`#total_cuotas_` + index + ``).val(math_total);
+                            $(`#lbl_tot_` + index + ``).html(math_total);
+                            var tota_tot = $('#tota_totas').html();
+
+                            // console.log(tota_tot);
+                            if (tota_tot == "") {
+                                tota_tot = 0;
+                            }
+                            var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(
+                                data_cuota)) * 100) / 100;
+                            $('#tota_totas').html(tot_math);
+                            $('#cheque_monto').attr('max', tot_math);
+                            $('#efectivo_pago').attr('min', tot_math);
+                            $('#cheque_monto').val(tot_math);
+                        });
+                    });
+
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        }
     </script>
 @endsection
