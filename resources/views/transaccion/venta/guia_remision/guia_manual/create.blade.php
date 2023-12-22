@@ -220,7 +220,8 @@
                                             <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
                                         </td>
                                         <td>
-                                            <input style="min-width: 100px" type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required>
+                                            {{-- <input style="min-width: 100px" type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required> --}}
+                                            <textarea style="min-width: 250px" name="serie[]" id="series0" class="form-control" placeholder="Numero de Serie"></textarea>
                                         </td>
                                         <td>
                                             <div class="input-group" style="min-width: 130px">
@@ -431,7 +432,7 @@
                     <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad${i}" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(${i});sum_total()" >
                 </td>
                 <td>
-                    <input style="min-width: 100px" type="text" name="serie[]" id="n_serie${i}" class="form-control serie_pace" required>
+                    <textarea style="min-width: 250px" name="serie[]"  id="n_serie${i}"  class="form-control" placeholder="Numero de Serie"></textarea>
                 </td>
                 <td>
                     <div class="input-group" style="min-width: 140px">
