@@ -171,7 +171,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
-                                                <th style="width: 150px">Estado</th>
+                                                <th style="width: 50px !important">Estado</th>
                                                 <th>N° Factura</th>
                                                 <th>Cliente</th>
                                                 <th>Total Pagado</th>
@@ -184,7 +184,7 @@
                                                 @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() == $cuotas_all->where('facturacion_id', $f_sp->id)->count())
                                                     <tr>
                                                         <td>{{ $f_sp->id }}</td>
-                                                        <td>
+                                                        <td style="width: 50px !important">
                                                             @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
                                                                 <button id="cancelado" class="btn btn-primary"
                                                                     disabled><strong>PAGADO</strong></button>
@@ -258,6 +258,9 @@
                                                 <th style="width: 150px">Cliente</th>
                                                 <th>Documento</th>
                                                 <th>Facturas Creadas</th>
+                                                <th>Facturas Pagadas completas</th>
+                                                <th>Monto Total Pagado FACT. SOLES</th>
+                                                <th>Monto Total Pagado FACT. DOLARES</th>
                                                 {{-- <th>Cliente</th>
                                                 <th>Total Pagado</th>
                                                 <th>Ultima Fecha de Pago</th>
@@ -266,6 +269,34 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($clientes as $index => $clie)
+                                                <div class="display: none">
+                                                    <div style="display: none">
+                                                        {{$facturas_sp->where('cliente_id',$clie->id)}} {{$cal = 0}} {{$count_fact_pag = 0}}
+                                                    </div>
+                                                    @foreach ($facturas_sp->where('cliente_id',$clie->id) as $facturas_norma)
+                                                        <div style="display: none">
+                                                            {{ $std_cuot = $cuotas_all->where('facturacion_id',$facturas_norma->id)->where('estado', 1)->count()}}
+                                                            {{ $std_cuot2 = $cuotas_all->where('facturacion_id',$facturas_norma->id)->count()}}
+                                                        </div>
+                                                        
+                                                            @if ($std_cuot == $std_cuot2 )
+                                                                @if ($facturas_norma->moneda->nombre == 'soles')
+                                                                    <div style="display: none">
+                                                                        {{$cal += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
+                                                                        {{$count_fact_pag =  $count_fact_pag+1}}
+                                                                    </div>
+                                                                @else
+                                                                {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
+                                                                    <div style="display: none">
+                                                                        {{$cal += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
+                                                                        {{$count_fact_pag =  $count_fact_pag+1}}
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        
+                                                    @endforeach
+                                                </div>
+                                                {{-- COLUMNAS PARA MONTO SOLES Y MONTO DOLARES, COLUMNA ADICIONAL CON LOS 2 PRECIO TOTALES POR CLIENTE --}}
                                                 <tr>
                                                     <td>{{$index++}}</td>
                                                     <td>{{$clie->nombre}}</td>
@@ -273,8 +304,13 @@
                                                     {{-- <td></td>
                                                     <td></td> --}}
                                                     <td>
-                                                        
                                                         {{$clie->cantidad_fact}}
+                                                    </td>
+                                                    <td>
+                                                        {{$count_fact_pag}}
+                                                    </td>
+                                                    <td>
+                                                        {{$cal}}
                                                     </td>
                                                 </tr>
                                             @endforeach

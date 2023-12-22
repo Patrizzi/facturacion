@@ -328,16 +328,21 @@ class PagadosController extends Controller
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
-        if (!isset($facturas_sp)) {
+        // if (!isset($facturas_sp)) {
             foreach ($facturas_sp as $key => $f_sp) {
                 $cuotas[$key] = Cuotas_credito::where('facturacion_id', $f_sp->id)->count();
+                $client_id[$key] = $f_sp->cliente_id;
             }
-        }else{
+        // }else{
             $cuotas = [];
-        }
+            // $client_id = $f_sp->id;
+        // }
         $tipo_cambio = TipoCambio::latest('created_at')->first();       // return $fecha_hoy;
         
-        $clientes =  Cliente::get();
+        
+        
+        $clientes =  Cliente::whereIn('id', $client_id)->get();
+        // return $clientes;
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
             $count_tot = Facturacion::where('cliente_id',$client->id)->count();
