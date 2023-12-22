@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\ComprobantesPagos;
 use App\ComprobantesPagosDetalle;
 use App\ComprobantesPagosRegistros;
@@ -335,10 +336,31 @@ class PagadosController extends Controller
             $cuotas = [];
         }
         $tipo_cambio = TipoCambio::latest('created_at')->first();       // return $fecha_hoy;
-        // return $cuotas[0];
-        // $facturas_mora = Facturacion::all();
-        // return $cuotas_all;
-        return view('cobranzas.cuotas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio'));
+        
+        $clientes =  Cliente::get();
+        foreach($clientes as $kry => $client){
+            // BUSCAR FACTURAS POR CLIENTE
+            $count_tot = Facturacion::where('cliente_id',$client->id)->count();
+            $client['cantidad_fact'] = $count_tot;
+            //pagadas
+            $facturas = Facturacion::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
+            if (count($facturas) > 0) {
+                foreach ($facturas as $key => $f_sp) {
+                    $cuota_lopp = Cuotas_credito::where('facturacion_id', $f_sp->id)->where('estado', 1)->get();
+                    if(count($cuota_lopp) > 0){
+                        $cuot[$key] = $cuota_lopp;
+                    }    
+                }
+                $client['cuotas'] = $cuot;
+            }else{
+                $client['cuotas'] = 0;
+            }
+        }
+        // return $clientes;
+
+
+
+        return view('cobranzas.cuotas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes'));
     }
 
     public function edit_mora($id)

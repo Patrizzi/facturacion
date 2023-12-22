@@ -3,24 +3,49 @@
 @section('title', 'Cobros')
 @section('content')
 
-
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Sin procesar</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#tab-2">Moras</a></li>
+                        <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Sin Pagar</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#tab-2">Pagados</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-3">Cliente</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
                                 <div class="row" style="margin-right: 5px">
-                                    <div class="col-sm-6">
-                                        {{-- logo.png --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Estado:</label>
+                                            <div class="col-sm-9">
+                                                <select class="select_2_estado" name="" id="select_estado">
+                                                    <option value="">Seleccionar una opción</option>
+                                                    <option value="sin">Sin Pagar</option>
+                                                    <option value="parcial">Pagado Parcial</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 text-right">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Cliente:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <select class="select2_demo_client" name="cliente" id="cliente"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 text-right">
                                         <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
                                             Lote</button>
                                     </div>
@@ -44,66 +69,69 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($facturas_sp as $index => $f_sp)
-                                                <tr>
-                                                    <td>{{ $f_sp->id }}</td>
+                                                @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() != $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                    <tr>
+                                                        <td>{{ $f_sp->id }}</td>
 
-                                                    <td>
-                                                        @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
-                                                            <input type="checkbox" name=""
-                                                                id="check_{{ $f_sp->codigo_fac }}"
-                                                                class="form-control check_only check_lost_{{$index}}"
-                                                                onclick="check_lote({{ $index }})">
-                                                            {{-- <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})"> --}}
-                                                        @endif
-                                                    </td>
+                                                        <td>
+                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
+                                                                <input type="checkbox" name=""
+                                                                    id="check_{{ $f_sp->id }}"
+                                                                    class="form-control check_only check_lost_{{ $index }} {{ $f_sp->moneda->nombre }}"
+                                                                    onclick="check_lote({{ $index }})">
+                                                                {{-- <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})"> --}}
+                                                            @endif
+                                                        </td>
 
-                                                    <td>
-                                                        @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
-                                                            <button id="pendiente" class="btn btn-primary"
-                                                                disabled><strong>PAGADO</strong></button>
-                                                        @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
-                                                            <button id="pagado" class="btn btn-primary"
-                                                                disabled><strong>PAGADO PARCIAL</strong></button>
-                                                        @else
-                                                            <button id="retrasado" class="btn btn-primary"
-                                                                disabled><strong>SIN PAGO</strong></button>
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $f_sp->codigo_fac }}</td>
-                                                    <td>{{ $f_sp->cliente->nombre }}</td>
-                                                    <td>
-                                                        {{ $cuotas_all->where('facturacion_id', $f_sp->id)->count() }}
-                                                    </td>
-                                                    <td>{{ $f_sp->moneda->simbolo }}
-                                                        {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->sum('monto'),2) }}
-                                                        <strong>|</strong>
-                                                        {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() }}
-                                                    </td>
-                                                    <td>{{ $f_sp->moneda->simbolo }}
-                                                        {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
-                                                        <strong>|</strong>
-                                                        {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() }}
-                                                    </td>
-                                                    <td>
-                                                        @if ($cuotas_all)
-                                                            {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
-                                                        @else
-                                                            <strong>Pendiente</strong>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-primary"
-                                                            href="{{ route('pagos.edit_mora', $f_sp->codigo_fac) }}">Detalles</a>
-                                                    </td>
-                                                    <td>
-                                                        @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
-                                                            <button class="btn btn-primary"
-                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
-                                                        @else
-                                                            <button class="btn btn-primary" disabled>Pagar</button>
-                                                        @endif
-                                                    </td>
-                                                </tr>
+                                                        <td>
+                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
+                                                                <button id="cancelado" class="btn btn-primary"
+                                                                    disabled><strong>PAGADO</strong></button>
+                                                            @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                                <button id="parcial" class="btn btn-warning"
+                                                                    disabled><strong>PARCIAL</strong></button>
+                                                            @else
+                                                                <button id="nulo" class="btn btn-danger"
+                                                                    disabled><strong>SIN PAGO</strong></button>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $f_sp->codigo_fac }}</td>
+                                                        <td>{{ $f_sp->cliente->nombre }}</td>
+                                                        <td>
+                                                            {{ $cuotas_all->where('facturacion_id', $f_sp->id)->count() }}
+                                                        </td>
+                                                        <td>{{ $f_sp->moneda->simbolo }}
+                                                            {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->sum('monto'),2) }}
+                                                            <strong>|</strong>
+                                                            {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() }}
+                                                        </td>
+                                                        <td>{{ $f_sp->moneda->simbolo }}
+                                                            {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                            <strong>|</strong>
+                                                            {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() }}
+                                                        </td>
+                                                        <td>
+                                                            @if ($cuotas_all)
+                                                                {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                            @else
+                                                                <strong>Pendiente</strong>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-primary"
+                                                                href="{{ route('pagos.edit_mora', $f_sp->codigo_fac) }}">Detalles</a>
+                                                        </td>
+                                                        <td>
+                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
+                                                                <button class="btn btn-primary"
+                                                                    onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
+                                                            @else
+                                                                <button class="btn btn-primary" disabled>Pagar</button>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @else
+                                                @endif
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -112,28 +140,147 @@
                         </div>
                         <div role="tabpanel" id="tab-2" class="tab-pane">
                             <div class="panel-body">
-                                <strong>Donec quam felis</strong>
-                                <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among
-                                    the stalks, and grow familiar with the countless indescribable forms of the insects
-                                    and flies, then I feel the presence of the Almighty, who formed us in his own image, and
-                                    the breath </p>
-                                <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss
-                                    of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                                    sense of mere tranquil existence, that I neglect my talents. I should be incapable of
-                                    drawing a single stroke at the present moment; and yet.</p>
+                                <div class="row" style="margin-right: 5px">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Cliente:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <select class="select2_demo_client_2" name="cliente" id="cliente_2"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_2()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-4 text-right">
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
+                                            Lote</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-examaple-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th style="width: 150px">Estado</th>
+                                                <th>N° Factura</th>
+                                                <th>Cliente</th>
+                                                <th>Total Pagado</th>
+                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($facturas_sp as $index => $f_sp)
+                                                @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() == $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                    <tr>
+                                                        <td>{{ $f_sp->id }}</td>
+                                                        <td>
+                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
+                                                                <button id="cancelado" class="btn btn-primary"
+                                                                    disabled><strong>PAGADO</strong></button>
+                                                            @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                                <button id="parcial" class="btn btn-warning"
+                                                                    disabled><strong>PARCIAL</strong></button>
+                                                            @else
+                                                                <button id="nulo" class="btn btn-danger"
+                                                                    disabled><strong>SIN PAGO</strong></button>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $f_sp->codigo_fac }}</td>
+                                                        <td>{{ $f_sp->cliente->nombre }}</td>
+                                                        <td>
+                                                            {{ $f_sp->moneda->simbolo }}
+                                                            {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                        </td>
+                                                        <td>
+                                                            @if ($cuotas_all)
+                                                                {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                            @else
+                                                                <strong>Pendiente</strong>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-primary"
+                                                                href="{{ route('pagos.edit_mora', $f_sp->codigo_fac) }}">Detalles</a>
+                                                        </td>
+                                                    </tr>
+                                                @else
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" id="tab-3" class="tab-pane">
                             <div class="panel-body">
-                                <strong>Donec quam felis</strong>
-                                <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among
-                                    the stalks, and grow familiar with the countless indescribable forms of the insects
-                                    and flies, then I feel the presence of the Almighty, who formed us in his own image, and
-                                    the breath </p>
-                                <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss
-                                    of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                                    sense of mere tranquil existence, that I neglect my talents. I should be incapable of
-                                    drawing a single stroke at the present moment; and yet.</p>
+                                <div class="row" style="margin-right: 5px">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Cliente:</label>
+                                            <div class="col-sm-9">
+                                                {{-- <div class="input-group">
+                                                    <select class="select2_demo_client_2" name="cliente" id="cliente_2"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_2()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div> --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-4 text-right">
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
+                                            Lote</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-examaple-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th style="width: 150px">Cliente</th>
+                                                <th>Documento</th>
+                                                <th>Facturas Creadas</th>
+                                                {{-- <th>Cliente</th>
+                                                <th>Total Pagado</th>
+                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Detalles</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($clientes as $index => $clie)
+                                                <tr>
+                                                    <td>{{$index++}}</td>
+                                                    <td>{{$clie->nombre}}</td>
+                                                    <td>{{$clie->numero_documento}}</td>
+                                                    {{-- <td></td>
+                                                    <td></td> --}}
+                                                    <td>
+                                                        
+                                                        {{$clie->cantidad_fact}}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -141,7 +288,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -156,16 +302,10 @@
                 <div class="modal-body">
                     <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        {{-- <input type="hidden" name="id_factura[]" id="id_factura" value=""> --}}
                         <div class="display: none" id="ids_divs_factura">
 
                         </div>
-                        {{-- <input type="hidden" name="numero_factura[]" id="cod_factura" value=""> --}}
-                        {{-- <input type="hidden" name="tot_cuotas[]" id="total_cuota" value=""> --}}
-                        {{-- <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio"value=""> --}}
-
                         <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">
-                        {{-- <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_`+index+`" value="`+row.factura_cod+`"> --}}
                         <div class="cabeza_facturas">
                             <div class="row">
                                 <div class="col-sm-4">
@@ -199,15 +339,6 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        {{-- <label class="col-form-label" for="">Monto Total de Pago</label>
-                                        <div class="input-group select-group">
-                                            <select class="form-control " style="max-width: 30%;height: 100%;">
-                                                @foreach ($monedas as $money)
-                                                    <option value="{{$money->id}}">{{$money->simbolo}}</option>
-                                                @endforeach
-                                            </select>
-                                            <input type="text" class="form-control select_input_group"/>
-                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-sm-4 text-right">
@@ -215,13 +346,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="input-group select-group" id="tot_simbolo">
-                                        {{-- <select class="form-control " style="max-width: 30%;height: 36px"
-                                            id="select_money">
-                                            @foreach ($monedas as $money)
-                                                <option value="{{ $money->id }}">{{ $money->simbolo }}</option>
-                                            @endforeach
-                                        </select> --}}
-                                        {{-- <label class="form-control disabled" id="tota_totas"></label> --}}
+
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +401,6 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label">Banco Emisor</label>
-                                                {{-- <input type="text" id="" name="cheque_banco_emisor" value="" placeholder="Banco Emisor" class="form-control pago_class_1 class_pago" required> --}}
                                                 <select class="form-control pago_class_1 class_pago"
                                                     name="cheque_banco_emisor" id="" required>
                                                     <option value="">Seleccionar Banco</option>
@@ -334,7 +458,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- {{$fecha_hoy}} --}}
                                     <div class="row pago_m m_pago_2"> {{-- Metodo de Pago 2 - TARJETA --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
@@ -534,6 +657,10 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
+
+        .col-sm-9>.select2.select2-container.select2-container--default {
+            width: 100% !important;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -550,7 +677,69 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script>
+        var tipo_coti = 3;
+        $(".select2_demo_client").select2({
+            placeholder: "Seleccionar Cliente",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.nombre,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+        $(".select2_demo_client_2").select2({
+            placeholder: "Seleccionar Cliente",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.nombre,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+    </script>
+    <script>
         $(".select_2_multipl").select2();
+        $('.select_2_estado').select2();
 
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({
@@ -559,7 +748,48 @@
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: []
             });
+            $(document).on('change', '#select_estado', function(event) {
+                var nombre = $("#select_estado option:selected").val();
+                table.column(2).search(nombre).draw();
+            });
+            $(document).on('change', '#cliente', function(event) {
+                var nombre = $("#cliente option:selected").val();
+                table.column(4).search(nombre).draw();
+            });
         });
+
+        $(document).ready(function() {
+            table = $('.dataTables-examaple-2').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+            $(document).on('change', '#select_estado', function(event) {
+                var nombre = $("#select_estado option:selected").val();
+                table.column(2).search(nombre).draw();
+            });
+            $(document).on('change', '#cliente_2', function(event) {
+                var nombre = $("#cliente_2 option:selected").val();
+                table.column(3).search(nombre).draw();
+            });
+        });
+
+        function limpiar_select() {
+            // console.log('a');
+            var table2 = $('.dataTables-example').DataTable();
+            table2.column(2).search('').draw();
+            $('#cliente').val(null).trigger('change');
+
+        }
+
+        function limpiar_select_2() {
+            // console.log('a');
+            var table2 = $('.dataTables-examaple-2').DataTable();
+            table2.column(3).search('').draw();
+            $('#cliente_2').val(null).trigger('change');
+
+        }
         // PAGO INDIVIDUAL
         function pago_factura(n_factura) {
             // console.log('a');
@@ -703,7 +933,6 @@
                             $(`#lbl_tot_` + index + ``).html(math_total);
                             var tota_tot = $('#tota_totas').html();
 
-                            // console.log(tota_tot);
                             if (tota_tot == "") {
                                 tota_tot = 0;
                             }
@@ -753,87 +982,91 @@
         // PAGO MULTIPLE
 
         function check_lote(num) {
-            var elemento = document.getElementsByClassName(`check_lost_`+num); 
+            //separado por nombre de moneda
+            var elemento = document.getElementsByClassName(`check_lost_` + num);
+            var list_clas = elemento[0].className;
+            let array_class = list_clas.split(' ');
+
             var id_cuot = elemento[0].getAttribute('id');
             let id_one = id_cuot.split('_');
-            // console.log(elemento[0])
+            console.log('1')
             if (elemento[0].checked) {
+                console.log(elemento[0])
                 var only_id_fact = `
-                    <input type="hidden" name="id_factura[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] + `">`;
+                    <input type="hidden" name="id_factura[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] +
+                    `">`;
                 $('#ids_divs_factura').append(only_id_fact);
-            }else{
+            } else {
                 $(`#id_factura_` + id_one[1] + ``).remove();
+                console.log('2')
             }
+            console.log('3')
             var count_check = document.querySelectorAll('.check_only');
             let checkboxesDesactivados = 0;
             // Recorrer los checkboxes y contar los desactivados
             count_check.forEach(function(checkbox) {
-                console.log(checkbox)
                 if (checkbox.checked) {
                     checkboxesDesactivados++;
                 }
-            });  
-            // console.log(checkboxesDesactivados);
+                var class_check = checkbox.className;
+                let class_global = class_check.split(' ');
+                if (class_global[3] != array_class[3]) {
+                    checkbox.disabled = true;
+                }
+
+            });
             if (checkboxesDesactivados > 0) {
                 $('#pago_lote_total').attr('disabled', false);
             } else {
+                count_check.forEach(function(checkbox) {
+                    checkbox.disabled = false;
+                });
                 $('#pago_lote_total').attr('disabled', true);
             }
         }
-        // $('#pago_lote_button').on('click', function(){
-        //     // console.log('a');
-        // });
         $('#pago_lote_total').on('click', function() {
-            
+
             $('#div_facturas').empty();
             $('#tot_simbolo').empty();
-            $('#ids_divs_factura').empty();
-            // var total_c = 0;
+
             var count_check = document.querySelectorAll('.check_only');
 
+            var arr = new Array();
+            var arr = [];
+            count_check.forEach(function(checkbox) {
 
-
-            // count_check.forEach(function(checkbox) {
-                // console.log(checkbox.id)
                 if (checkbox.checked) {
+
                     var id_cuot = checkbox.id;
                     let id_one = id_cuot.split('_');
-                    
 
-                    // console.log(id_one);
-                    pago_lote_total(id_one[1]);
-                    // total_c += parseFloat($(`#total_` + id_one[0]).val());
-                    // $(`#cuota_precio`+id_one[0]+``).val(id_one[0] + '_' + total_c);
+                    arr.push(id_one[1]);
                 }
-            // });
-            // $('#efectivo_pago').attr('min', total_c);
-            // $('#total_cuota').val(total_c);
+
+            });
+            pago_lote_total(arr);
 
         });
 
         function pago_lote_total(n_factura) {
+            console.log(n_factura);
             // console.log(n_factura)
             $('#todo_pago').modal('show');
             // console.log('a');
             $('#div_facturas').empty();
             $('#tot_simbolo').empty();
-            $('#ids_divs_factura').empty();
+            // $('#ids_divs_factura').empty();
             $('#todo_pago').modal('show');
 
-            // var only_id_fact = `
-            //     <input type="hidden" name="id_factura[]" id="id_factura_` + n_factura + `" value="` + n_factura + `">
-            // `;
-            // $('#ids_divs_factura').append(only_id_fact);
-            var ids_array = [n_factura];
             $.ajax({
                 type: "post",
                 url: "{{ route('pagos.lista_ajax') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'ids_facturas': ids_array
+                    'ids_facturas': n_factura
                 },
                 success: function(msg) {
-                    // console.log(msg)
+                    // console.log(msg[0])
                     msg.forEach(function(row, index) {
                         // console.log(row.cuotas_array); 
                         // cod_factura
@@ -871,12 +1104,6 @@
                             </div>
                         `;
                         $('#div_facturas').append(data);
-
-                        var data_2 =
-                            `<hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
-                            row.factura_simbolo +
-                            `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
-                        $('#tot_simbolo').append(data_2);
 
                         $(`.select_2_multipl_` + index + ``).select2({
                             placeholder: "Seleccionar Cuotas"
@@ -967,7 +1194,11 @@
                             $('#cheque_monto').val(tot_math);
                         });
                     });
-
+                    var data_2 =
+                        `<hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
+                        msg[0].factura_simbolo +
+                        `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
+                    $('#tot_simbolo').append(data_2);
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
