@@ -130,7 +130,7 @@
             <div class="col-lg-12" align="right">
                 <div style="width:20%">
                  <p class="form-control a"> Importe Total</p>
-                 <p class="form-control a"> {{$nota_venta->moneda->simbolo}} {{$sume}}</p>
+                 <p class="form-control a"> {{$nota_venta->moneda->simbolo}} {{number_format($sume,2)}}</p>
              </div>
 
          </div>

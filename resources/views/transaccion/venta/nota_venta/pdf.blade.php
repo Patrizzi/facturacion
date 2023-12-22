@@ -129,7 +129,7 @@
                 </td>
                 <th style="width: 2%;border-color: white"></th>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 25%">
-                    {{$nota_venta->moneda->simbolo}}{{$sume}}<br style="height: 2px;">
+                    {{$nota_venta->moneda->simbolo}}{{number_format($sume,2)}}<br style="height: 2px;">
                 </td>
             </tr>
         </table>
