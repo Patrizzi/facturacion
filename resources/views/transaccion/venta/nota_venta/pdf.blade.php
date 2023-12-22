@@ -20,7 +20,7 @@
             width: 100%;
         }
         @page { 
-            size: A4 landscape;
+            size: 21cm 29.7cm;
             font-size: 60% !important;    
         }
     </style>
