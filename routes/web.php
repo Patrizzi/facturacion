@@ -426,6 +426,7 @@ Route::group(
 		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
 		Route::get('/moras','PagadosController@view_mora')->name('pagos.view_mora');
 		Route::get('/moras/{id}','PagadosController@edit_mora')->name('pagos.edit_mora');
+		Route::get('/moras/cliente/{ruc}','PagadosController@show_cliente')->name('pagos.show_cliente');
 		Route::post('/show_cuotas','PagadosController@show_cuotas')->name('pagos.show_cuota');
 		Route::get('/show_cuotas/print/{id}','PagadosController@print_cuotas')->name('pagos.print_cuotas');
 		// Route::post('/pagados/store',)

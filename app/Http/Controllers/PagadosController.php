@@ -392,6 +392,16 @@ class PagadosController extends Controller
         // return $reg_b->where('estado',1)->sum('monto');
         return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta'));
     }
+    public function show_cliente($ruc_cli){
+        $ruc = $ruc_cli;
+        $cliente = Cliente::where('numero_documento', $ruc)->first();
+        $facturas = Facturacion::where('cliente_id',$cliente->id)->get();
+        $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
+        $start_mes = Carbon::now()->startOfMonth()->format('m-d-Y');
+        $end_mes = Carbon::now()->endOfMonth()->format('m-d-Y');;
+        // return $start_mes;
+        return view('cobranzas.cuotas.clientes',compact('ruc','cliente','facturas','cuotas_all','start_mes','end_mes'));
+    }
     public function show_cuotas(Request $request)
     {
         $n_cuota = $request->data;

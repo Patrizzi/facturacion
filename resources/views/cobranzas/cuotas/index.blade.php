@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cobros')
+@section('title', 'Cobros CREDITOS')
 @section('content')
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -146,7 +146,7 @@
                                             <label class="col-sm-3 col-form-label">Cliente:</label>
                                             <div class="col-sm-9">
                                                 <div class="input-group">
-                                                    <select class="select2_demo_client_2" name="cliente" id="cliente_2"
+                                                    <select class="select2_demo_client_2" name="cliente_2" id="cliente_2"
                                                         required=""></select>
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-primary"
@@ -214,7 +214,6 @@
                                                                 href="{{ route('pagos.edit_mora', $f_sp->codigo_fac) }}">Detalles</a>
                                                         </td>
                                                     </tr>
-                                                @else
                                                 @endif
                                             @endforeach
                                         </tbody>
@@ -251,7 +250,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover dataTables-examaple-2">
+                                    <table class="table table-striped table-bordered table-hover dataTables-examaple-3">
                                         <thead>
                                             <tr>
                                                 <th>Id</th>
@@ -259,8 +258,10 @@
                                                 <th>Documento</th>
                                                 <th>Facturas Creadas</th>
                                                 <th>Facturas Pagadas completas</th>
-                                                <th>Monto Total Pagado FACT. SOLES</th>
-                                                <th>Monto Total Pagado FACT. DOLARES</th>
+                                                <th>Monto Soles Pagados de Facturas Completas</th>
+                                                <th style="width: 63px !important">T.C Promedio</th>
+                                                <th>Monto Dolares Pagados de Facturas Completas</th>
+                                                <th>Detalles</th>
                                                 {{-- <th>Cliente</th>
                                                 <th>Total Pagado</th>
                                                 <th>Ultima Fecha de Pago</th>
@@ -271,24 +272,35 @@
                                             @foreach ($clientes as $index => $clie)
                                                 <div class="display: none">
                                                     <div style="display: none">
-                                                        {{$facturas_sp->where('cliente_id',$clie->id)}} {{$cal = 0}} {{$count_fact_pag = 0}}
+                                                        {{$facturas_sp->where('cliente_id',$clie->id)}} {{$cal_sol = 0}} {{$cal_dol = 0}}  {{$count_fact_pag = 0}} {{$prom_tc = 0}} {{$cant = 0}}
                                                     </div>
                                                     @foreach ($facturas_sp->where('cliente_id',$clie->id) as $facturas_norma)
                                                         <div style="display: none">
                                                             {{ $std_cuot = $cuotas_all->where('facturacion_id',$facturas_norma->id)->where('estado', 1)->count()}}
                                                             {{ $std_cuot2 = $cuotas_all->where('facturacion_id',$facturas_norma->id)->count()}}
+                                                            
                                                         </div>
-                                                        
                                                             @if ($std_cuot == $std_cuot2 )
+                                                                <div style="display: none">
+                                                                    {{ $prom_tc +=  $facturas_norma->cambio}}
+                                                                    {{ $cant +=  1}}
+                                                                </div>
                                                                 @if ($facturas_norma->moneda->nombre == 'soles')
+                                                                {{-- CONVERTIR EN SOLES MONT TOTAL / TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
-                                                                        {{$cal += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
+                                                                        {{$simbolo_mon_sol = 'S/.'}}
+                                                                        {{$simbolo_mon_dol = '$'}}
+                                                                        {{$cal_sol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
+                                                                        {{$cal_dol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto') / $facturas_norma->cambio}}
                                                                         {{$count_fact_pag =  $count_fact_pag+1}}
                                                                     </div>
                                                                 @else
                                                                 {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
-                                                                        {{$cal += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
+                                                                        {{$simbolo_mon_dol = '$'}}
+                                                                        {{$simbolo_mon_sol = 'S/.'}}
+                                                                        {{$cal_dol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
+                                                                        {{$cal_sol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto') * $facturas_norma->cambio}}
                                                                         {{$count_fact_pag =  $count_fact_pag+1}}
                                                                     </div>
                                                                 @endif
@@ -299,7 +311,7 @@
                                                 {{-- COLUMNAS PARA MONTO SOLES Y MONTO DOLARES, COLUMNA ADICIONAL CON LOS 2 PRECIO TOTALES POR CLIENTE --}}
                                                 <tr>
                                                     <td>{{$index++}}</td>
-                                                    <td>{{$clie->nombre}}</td>
+                                                    <td >{{$clie->nombre}}</td>
                                                     <td>{{$clie->numero_documento}}</td>
                                                     {{-- <td></td>
                                                     <td></td> --}}
@@ -310,10 +322,20 @@
                                                         {{$count_fact_pag}}
                                                     </td>
                                                     <td>
-                                                        {{$cal}}
+                                                        {{$simbolo_mon_sol}} {{number_format($cal_sol,2)}}
+                                                    </td>
+                                                    <td>
+                                                        {{number_format($prom_tc / $cant,2)}}
+                                                    </td>
+                                                    <td>
+                                                        {{$simbolo_mon_dol}} {{number_format($cal_dol,2)}}
+                                                    </td>
+                                                    <td>
+                                                        {{-- <button class="btn btn-secondary">Ver detalles</button> --}}
+                                                        <a href="{{ route('pagos.show_cliente', $clie->numero_documento)}}" class="btn btn-secondary">Ver Detalles</a>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach 
                                         </tbody>
                                     </table>
                                 </div>
@@ -789,43 +811,46 @@
                 table.column(2).search(nombre).draw();
             });
             $(document).on('change', '#cliente', function(event) {
-                var nombre = $("#cliente option:selected").val();
-                table.column(4).search(nombre).draw();
-            });
-        });
-
-        $(document).ready(function() {
-            table = $('.dataTables-examaple-2').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
-            $(document).on('change', '#select_estado', function(event) {
-                var nombre = $("#select_estado option:selected").val();
-                table.column(2).search(nombre).draw();
-            });
-            $(document).on('change', '#cliente_2', function(event) {
-                var nombre = $("#cliente_2 option:selected").val();
-                table.column(3).search(nombre).draw();
+                var nombre_2 = $("#cliente option:selected").val();
+                table.column(4).search(nombre_2).draw();
             });
         });
 
         function limpiar_select() {
             // console.log('a');
-            var table2 = $('.dataTables-example').DataTable();
-            table2.column(2).search('').draw();
+            var table_lp = $('.dataTables-example').DataTable();
+            table_lp.column(4).search('').draw();
             $('#cliente').val(null).trigger('change');
 
         }
 
+        $(document).ready(function() {
+            table2 = $('.dataTables-examaple-2').DataTable({
+                pageLength: 20,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+            $(document).on('change', '#cliente_2', function(event) {
+                var nombre2 = $("#cliente_2 option:selected").val();
+                table2.column(3).search(nombre2).draw();
+            });
+        });
         function limpiar_select_2() {
             // console.log('a');
-            var table2 = $('.dataTables-examaple-2').DataTable();
-            table2.column(3).search('').draw();
+            var table2_2l = $('.dataTables-examaple-2').DataTable();
+            table2_2l.column(3).search('').draw();
             $('#cliente_2').val(null).trigger('change');
 
         }
+        $(document).ready(function() {
+            table3 = $('.dataTables-examaple-3').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+        });
         // PAGO INDIVIDUAL
         function pago_factura(n_factura) {
             // console.log('a');
