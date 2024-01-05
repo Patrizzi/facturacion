@@ -9,6 +9,7 @@ use App\ComprobantesPagosRegistros;
 use App\Cuotas_credito;
 use App\Empresa;
 use App\Facturacion;
+use App\Igv;
 use App\Moneda;
 use App\TipoCambio;
 use Carbon\Carbon;
@@ -38,7 +39,7 @@ class PagadosController extends Controller
     {
         // return $request->ids_facturas;
         $count_ids = count($request->ids_facturas);
-
+        $igv = Igv::first();
         if ($count_ids > 0) {
             for ($i = 0; $i < $count_ids; $i++) {
                 $var[] = $request->ids_facturas[$i];
@@ -47,15 +48,30 @@ class PagadosController extends Controller
         $facturas = Facturacion::WhereIn('id', $var)->get();
         foreach ($facturas as $key => $factura) {
             // $array_cuot = [];
-            $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
-            foreach ($cuotas as $llave => $cuota) {
-                $array_cuot[$llave] = array(
-                    'id_cuota' => $cuota->id,
-                    'cuota_n' => $cuota->numero_cuota,
-                    'monto' => $cuota->monto,
-                    'fecha_pago' => $cuota->fecha_pago,
-                    'estado' =>  $cuota->estado
+            if ($factura->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
+                foreach ($cuotas as $llave => $cuota) {
+                    $array_cuot[$llave] = array(
+                        'id_cuota' => $cuota->id,
+                        'cuota_n' => $cuota->numero_cuota,
+                        'monto' => $cuota->monto,
+                        'fecha_pago' => $cuota->fecha_pago,
+                        'estado' =>  $cuota->estado
+                    );
+                }
+                $pago_tot = round($cuotas->sum('monto'), 2);
+            }else{
+                $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada;
+                $pago_tot = number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2);
+
+                $array_cuot[0] = array(
+                    'id_cuota' => '1',
+                    'cuota_n' => '1',
+                    'monto' => $pago_tot,
+                    'fecha_pago' => $factura->fecha_vencimiento,
+                    'estado' =>  '0'
                 );
+
             }
 
             $array_end[$key] = array(
@@ -64,7 +80,7 @@ class PagadosController extends Controller
                 'cliente_nombre' => $factura->cliente->nombre,
                 'factura_moneda' => $factura->moneda->nombre,
                 'factura_simbolo' => $factura->moneda->simbolo,
-                'total_factura' => round($cuotas->sum('monto'), 2),
+                'total_factura' => $pago_tot,
                 'cuotas_array' => $array_cuot
             );
         }
@@ -114,8 +130,11 @@ class PagadosController extends Controller
         // return $request;    
         // AGREGAR A LA NUEVA TABLA La cabecaer
         $facturas_comp = $request->get('id_factura');
+
+        // fac
         // return $facturas_comp;
         foreach ($facturas_comp as $fc_comp) {
+
             $comprobante_pago = new ComprobantesPagos();
             $comprobante_pago->tipo_doc = 'factura';
             $comprobante_pago->factuacion_id = $fc_comp;
@@ -126,24 +145,27 @@ class PagadosController extends Controller
 
             // $comprobante_pago->fecha_registro =  ;
             $comprobante_pago->save();
+            $factura_search  = Facturacion::where('id', $fc_comp)->first();
             // return $request;
             foreach ($n_fact_s as $key => $value) {
                 $cuotas_pre = $request->get('cuotas_precio_' . $value);
                 foreach ($cuotas_pre as $key2 => $value2) {
                     $monto_cuota = explode('_', $value2);
                     // $monto_cuota = explode('_', $value2);
-                    $couta = Cuotas_credito::where('id', $monto_cuota[0])->first();
-                    // return $couta;
-                    $couta->estado = 1;
-                    $couta->save();
+                    if ($factura_search->forma_pago_id == 2) {
+                        $couta = Cuotas_credito::where('id', $monto_cuota[0])->first();
+                        $couta->estado = 1;
+                        $couta->save();
+                    }
 
                     // AGREGAR A LA NUEVA TABLA LOS REGISTROS?
                     $comprobante_pago_reg = new ComprobantesPagosRegistros();
                     $comprobante_pago_reg->comprobante_pago_id = $comprobante_pago->id;
-                    $comprobante_pago_reg->id_cuota_credito = $request->get('id_cuota')[$key2];
+                    if($factura_search->forma_pago_id == 2){
+                        $comprobante_pago_reg->id_cuota_credito = $request->get('id_cuota')[$key2];
+                    }
                     $comprobante_pago_reg->monto_total = $request->get('tot_cuotas')[$key];
                     $comprobante_pago_reg->monto_pago = $monto_cuota[1];
-                    // $comprobante_pago_reg->fecha_pago = $request->get('');
                     $comprobante_pago_reg->save();
 
                     $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
@@ -263,6 +285,12 @@ class PagadosController extends Controller
                 }
                 
             }
+            //FALTA VERIFICAR SI TODAS LAS CUOTAS HAN SIDO PASADAS A PAGO TOTAL?
+            $factura_estado = Facturacion::where('id',$fc_comp)->first();
+            if($factura_estado->forma_pago_id == 1){
+                $factura_estado->estado_pago = 2;
+                $factura_estado->save();
+            }
         }
  
 
@@ -323,11 +351,12 @@ class PagadosController extends Controller
 
     public function view_mora()
     {
-        $facturas_sp = Facturacion::where('forma_pago_id', 2)->get();
+        $facturas_sp = Facturacion::orderByDesc('id')->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
+        $igv = Igv::first();
         // if (!isset($facturas_sp)) {
             foreach ($facturas_sp as $key => $f_sp) {
                 $cuotas[$key] = Cuotas_credito::where('facturacion_id', $f_sp->id)->count();
@@ -365,7 +394,7 @@ class PagadosController extends Controller
 
 
 
-        return view('cobranzas.cuotas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes'));
+        return view('cobranzas.cuotas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv'));
     }
 
     public function edit_mora($id)
@@ -388,8 +417,9 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $pagos_reg;
+        // return $pagos;
         // return $reg_b->where('estado',1)->sum('monto');
+        // return $pagos_deta;
         return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta'));
     }
     public function show_cliente($ruc_cli){
@@ -397,10 +427,60 @@ class PagadosController extends Controller
         $cliente = Cliente::where('numero_documento', $ruc)->first();
         $facturas = Facturacion::where('cliente_id',$cliente->id)->get();
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
-        $start_mes = Carbon::now()->startOfMonth()->format('m-d-Y');
-        $end_mes = Carbon::now()->endOfMonth()->format('m-d-Y');;
-        // return $start_mes;
-        return view('cobranzas.cuotas.clientes',compact('ruc','cliente','facturas','cuotas_all','start_mes','end_mes'));
+        $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
+        $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
+        $igv = Igv::first();
+
+        // Pagados en el mes conversion de Monedas
+        foreach ($facturas as $key => $fact) {
+            $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada;
+            $total = $subtotal + ($fact->op_gravada * ($igv->renta / 100));
+            if($fact->moneda->nombre == 'soles'){
+                $soles[] =  $total;
+                $dolares[] = $total * $fact->cambio;
+            }else{
+                $dolares[] = $total;
+                $soles[] = $total / $fact->cambio;
+            }
+        }
+        $tot_sol = array_sum($soles);
+        $tot_dol = array_sum($dolares);
+        
+        $moneda_sol = Moneda::where('nombre','soles')->first();
+        $moneda_dol = Moneda::where('nombre','Dolares')->first();
+
+        $star_month = Carbon::now()->startOfMonth();
+        $end_month = Carbon::now()->endOfMonth();
+        $fact_mes = Facturacion::where('cliente_id',$cliente->id)->whereBetween('created_at',[$star_month,$end_month])->get();
+        foreach ($fact_mes as $key => $fact_m) {
+            $subtotal = $fact_m->op_gravada + $fact_m->op_inafecta + $fact_m->op_exonerada;
+            $total = $subtotal + ($fact_m->op_gravada * ($igv->renta / 100));
+            if($fact_m->moneda->nombre == 'soles'){
+                $soles_m[] =  $total;
+                $dolares_m[] = $total * $fact_m->cambio;
+            }else{
+                $dolares[] = $total;
+                $soles_m[] = $total / $fact_m->cambio;
+            }
+        }
+        $tot_sol_m = array_sum($soles_m);
+        $tot_dol_m = array_sum($dolares_m);
+        // return $fact_mes;
+
+        // PAGOS EN DEUDA
+        $fact_sin = Facturacion::where('cliente_id',$cliente->id)->where('estado_pago', '!=', 2)->get();
+        foreach ($fact_sin as $key => $fact_s) {
+            $subtotal = $fact_s->op_gravada + $fact_s->op_inafecta + $fact_s->op_exonerada;
+            $total = $subtotal + ($fact_s->op_gravada * ($igv->renta / 100));
+            if($fact_s->moneda->nombre == 'soles'){
+                $soles_s_p[] =  round($total,2);
+            }else{
+                $soles_s_p[] = round($total / $fact_s->cambio,2);
+            }
+        }
+        // return $soles_s_p;
+        $tot_sol_sp = array_sum($soles_s_p);
+        return view('cobranzas.cuotas.clientes',compact('ruc','cliente','facturas','cuotas_all','start_mes','end_mes','igv','tot_dol','tot_sol','moneda_sol','moneda_dol','fact_mes','tot_sol_m','fact_sin','tot_sol_sp'));
     }
     public function show_cuotas(Request $request)
     {

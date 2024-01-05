@@ -134,154 +134,232 @@
                                     </div>
                                 </div>
                                 <br>
-                                <table class="footable table table-stripped table-bordered table-hover toggle-arrow-tiny"
+                                @if ($factura->forma_pago_id == 2)
+                                    <table class="footable table table-stripped table-bordered table-hover toggle-arrow-tiny"
+                                    data-page-size="8" data-filter="#filter">
+                                        <thead>
+                                            <tr>
+                                                <th data-sort-ignore="true" style="width: 50px;text-align: center">Ver más
+                                                </th>
+                                                @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
+                                                    <th data-sort-ignore="true">Pago Lote</th>
+                                                @endif
+                                                <th style="width: 25px">Estado</th>
+                                                <th>N° Cuota </th>
+                                                <th>MONTO</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Vencimiento</th>
+                                                <th data-hide="all" style="display: none !important;">Informacion del Pago</th>
+                                                {{-- <th data-hide="all">Interes de Retraso</th> --}}
+                                                <th>Metodo de Pago</th>
+                                                <th>Fecha de Pago</th>
+                                                <th data-sort-ignore="true" style="width: 170px">Pagar</th>
+                                                {{-- <th>P</th> --}}
+                                                {{-- <th>Pagar Lote</th> --}}
+                                                <th data-sort-ignore="true"> Detalle</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($fact_cuotas as $index => $fc_cuota)
+                                                <tr>
+                                                    <td>
+                                                        
+                                                    </td>
+                                                    @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
+                                                        <td>
+                                                            @if ($fc_cuota->estado == 0)
+                                                                <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})">
+                                                            @endif
+                                                        </td>
+                                                    @endif
+                                                    
+                                                    <td>
+                                                        @if ($fc_cuota->estado == 0)
+                                                            <button id="pendiente" class="btn btn-primary"
+                                                                disabled><strong>PENDIENTE</strong></button>
+                                                            <input type="hidden" name=""
+                                                                id="estado_{{ $fc_cuota->id }}" value="PENDIENTE">
+                                                        @elseif($fc_cuota->estado == 1)
+                                                            <button id="pagado" class="btn btn-primary"
+                                                                disabled><strong>PAGADO</strong></button>
+                                                            <input type="hidden" name=""
+                                                                id="estado_{{ $fc_cuota->id }}" value="PAGADO">
+                                                        @else
+                                                            <button id="retrasado" class="btn btn-primary"
+                                                                disabled><strong>RETRASADO</strong></button>
+                                                            <input type="hidden" name=""
+                                                                id="estado_{{ $fc_cuota->id }}" value="RETRASADO">
+                                                        @endif
+                                                    </td>
+                                                    <td>Cuota N° {{ $fc_cuota->numero_cuota }}</td>
+                                                    <td>
+                                                        {{ $factura->moneda->simbolo }}
+                                                        {{ number_format($fc_cuota->monto, 2) }}
+                                                        <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}"
+                                                            value="{{ $fc_cuota->numero_cuota }}">
+                                                        <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}"
+                                                            value="{{ $factura->moneda->simbolo }} {{ $fc_cuota->monto }}">
+                                                        <input type="hidden" name="" id="total_{{ $fc_cuota->id }}"
+                                                            value="{{ $fc_cuota->monto }}">
+                                                    </td>
+                                                    <td>
+                                                        @if ($index == 0)
+                                                            {{ Carbon\Carbon::parse($factura->fecha_emision)->format('d/m/Y') }}
+                                                        @else
+                                                            {{ Carbon\Carbon::parse($fact_cuotas[$index - 1]->fecha_pago)->format('d/m/Y') }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->format('d/m/Y') }}
+                                                        <input type="hidden" name=""
+                                                            id="fecha_ven_{{ $fc_cuota->id }}"
+                                                            value="{{ $fc_cuota->fecha_pago }}">
+                                                    </td>
+                                                    <td>
+                                                        @if (isset($pagos_reg[$index]))
+                                                            @if ($pagos_reg[$index]->comprobante_pago->tipo_pago == "efectivo")
+                                                                {{-- <p><strong>Persona que a</strong></p>
+                                                                <p><strong></strong></p>
+                                                                <p><strong></strong></p>
+                                                                <p><strong></strong></p> --}}
+                                                                <div class="row">
+                                                                    <div class="col-sm-6"><strong>Persona que Cancela:</strong></div>
+                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('persona_input')->first()}}</div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6"><strong>Fecha de Cancelación</strong></div>
+                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first()}}</div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6"><strong>Monto de Pago</strong></div>
+                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('montos_input')->first()}}</div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6"><strong>Vuelto</strong></div>
+                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('adicional_input')->first()}}</div>
+                                                                </div>
+                                                            @elseif($pagos_reg[$index]->comprobante_pago->tipo_pago ==  "tarjeta")
+                                                                "tarjeta"
+                                                            @elseif($pagos_reg[$index]->comprobante_pago->tipo_pago == "cheque")
+                                                                <p>1</p>
+                                                                <p>2</p>
+                                                                <p>3</p>
+                                                                <p>4</p>
+                                                            @else
+                                                                "Transferencia"
+                                                            @endif
+                                                        @endif
+                                                        {{-- @if ($fc_cuota->estado == 1)
+                                                            @if ( $fc_cuota->fecha_pago > Carbon\Carbon::parse($pagos_deta->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first())->format('d/m/Y' ))
+                                                                Pagado el día {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}
+                                                            @elseif($fecha_hoy == $fc_cuota->fecha_pago)
+                                                                <strong>Se pagó el dia de hoy</strong>    
+                                                            @else
+                                                                <strong style="color: red">Se pagó retrasado: {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}</strong>
+                                                            @endif
+                                                        @else
+                                                            Sin pago asociado
+                                                        @endif --}}
+                                                    </td>
+                                                    <td>
+                                                        {{-- {{$pagos_reg[$index]}} --}}
+                                                        @if (isset($pagos_reg[$index]))
+                                                            <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
+                                                        @else
+                                                            <strong>Sin Pago</strong>
+                                                        @endif
+                                                    </td>
+
+                                                    <td>
+                                                        @if ($fc_cuota->estado == 0)
+                                                            <strong>PENDIENTE</strong>
+                                                        @elseif($fc_cuota->estado == 1)
+                                                            <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_registro)->format('d/m/Y') }}</strong>
+                                                        @else
+                                                            <strong>RETRASADO</strong>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($fc_cuota->estado == 1)
+                                                            <button class="btn btn-primary" id="pago" disabled>Pagar</button>
+                                                            {{-- <button class="btn btn-primary" disabled>Adelanto</button> --}}
+                                                        @else
+                                                            <button class="btn btn-primary" id="pago"
+                                                                onclick="modal_pagos({{ $fc_cuota->id }})" >Pagar</button>
+                                                            {{-- <button class="btn btn-primary">Adelanto</button> --}}
+                                                        @endif
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        {{-- MODAL DE VER DETALLES  --}}
+                                                        @if ($fc_cuota->estado != 1)
+                                                            <button class="btn btn-primary" disabled>Ver detalles</button>
+                                                        @else
+                                                            <button class="btn btn-primary"
+                                                            onclick="detalle_cuota({{ $fc_cuota->id }})">Ver detalles</button>
+                                                            <input type="hidden" name="" id="">
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="11">
+                                                    <ul class="pagination float-left"></ul>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                @else
+                                    <table class="footable table table-stripped table-bordered table-hover toggle-arrow-tiny"
                                     data-page-size="8" data-filter="#filter">
                                     <thead>
                                         <tr>
                                             <th data-sort-ignore="true" style="width: 50px;text-align: center">Ver más
                                             </th>
-                                            @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
-                                                <th data-sort-ignore="true">Pago Lote</th>
-                                            @endif
                                             <th style="width: 25px">Estado</th>
-                                            <th>N° Cuota </th>
                                             <th>MONTO</th>
-                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Emision</th>
                                             <th>Fecha Vencimiento</th>
                                             <th data-hide="all">Informacion del Pago</th>
-                                            {{-- <th data-hide="all">Interes de Retraso</th> --}}
                                             <th>Metodo de Pago</th>
                                             <th>Fecha de Pago</th>
                                             <th data-sort-ignore="true" style="width: 170px">Pagar</th>
-                                            {{-- <th>P</th> --}}
-                                            {{-- <th>Pagar Lote</th> --}}
                                             <th data-sort-ignore="true"> Detalle</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($fact_cuotas as $index => $fc_cuota)
-                                            <tr>
-                                                <td>
-                                                    
-                                                </td>
-                                                @if ($fact_cuotas->where('facturacion_id',$factura->id)->where('estado', 1)->count() != $fact_cuotas->count() )
-                                                    <td>
-                                                        @if ($fc_cuota->estado == 0)
-                                                            <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})">
-                                                        @endif
-                                                    </td>
-                                                @endif
-                                                
-                                                <td>
-                                                    @if ($fc_cuota->estado == 0)
-                                                        <button id="pendiente" class="btn btn-primary"
-                                                            disabled><strong>PENDIENTE</strong></button>
-                                                        <input type="hidden" name=""
-                                                            id="estado_{{ $fc_cuota->id }}" value="PENDIENTE">
-                                                    @elseif($fc_cuota->estado == 1)
-                                                        <button id="pagado" class="btn btn-primary"
-                                                            disabled><strong>PAGADO</strong></button>
-                                                        <input type="hidden" name=""
-                                                            id="estado_{{ $fc_cuota->id }}" value="PAGADO">
-                                                    @else
-                                                        <button id="retrasado" class="btn btn-primary"
-                                                            disabled><strong>RETRASADO</strong></button>
-                                                        <input type="hidden" name=""
-                                                            id="estado_{{ $fc_cuota->id }}" value="RETRASADO">
-                                                    @endif
-                                                </td>
-                                                <td>Cuota N° {{ $fc_cuota->numero_cuota }}</td>
-                                                <td>
-                                                    {{ $factura->moneda->simbolo }}
-                                                    {{ number_format($fc_cuota->monto, 2) }}
-                                                    <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}"
-                                                        value="{{ $fc_cuota->numero_cuota }}">
-                                                    <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}"
-                                                        value="{{ $factura->moneda->simbolo }} {{ $fc_cuota->monto }}">
-                                                    <input type="hidden" name="" id="total_{{ $fc_cuota->id }}"
-                                                        value="{{ $fc_cuota->monto }}">
-                                                </td>
-                                                <td>
-                                                    @if ($index == 0)
-                                                        {{ Carbon\Carbon::parse($factura->fecha_emision)->format('d/m/Y') }}
-                                                    @else
-                                                        {{ Carbon\Carbon::parse($fact_cuotas[$index - 1]->fecha_pago)->format('d/m/Y') }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->format('d/m/Y') }}
-                                                    <input type="hidden" name=""
-                                                        id="fecha_ven_{{ $fc_cuota->id }}"
-                                                        value="{{ $fc_cuota->fecha_pago }}">
-                                                </td>
-                                                <td>
-                                                    @if ($fc_cuota->estado == 1)
-                                                        @if ( $fc_cuota->fecha_pago > Carbon\Carbon::parse($pagos_deta->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first())->format('d/m/Y' ))
-                                                            Pagado el día {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}
-                                                        @elseif($fecha_hoy == $fc_cuota->fecha_pago)
-                                                            <strong>Se pagó el dia de hoy</strong>    
-                                                        @else
-                                                            <strong style="color: red">Se pagó retrasado: {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}</strong>
-                                                        @endif
-                                                    @else
-                                                        {{-- @if (count($pagos_reg) > 1)
-                                                            <strong>{{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays( Carbon\Carbon::parse($pagos_reg->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first()) )  }}</strong>
-                                                        @else
-                                                            Aun sin fecha de pago
-                                                        @endif --}}
-                                                        Sin pago asociado
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{-- {{$pagos_reg[$index]}} --}}
-                                                    @if (isset($pagos_reg[$index]))
-                                                        <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
-                                                    @else
-                                                        <strong>Sin Pago</strong>
-                                                    @endif
-                                                </td>
-
-                                                <td>
-                                                    @if ($fc_cuota->estado == 0)
-                                                        <strong>PENDIENTE</strong>
-                                                    @elseif($fc_cuota->estado == 1)
-                                                        <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_registro)->format('d/m/Y') }}</strong>
-                                                    @else
-                                                        <strong>RETRASADO</strong>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($fc_cuota->estado == 1)
-                                                        <button class="btn btn-primary" id="pago" disabled>Pagar</button>
-                                                        {{-- <button class="btn btn-primary" disabled>Adelanto</button> --}}
-                                                    @else
-                                                        <button class="btn btn-primary" id="pago"
-                                                            onclick="modal_pagos({{ $fc_cuota->id }})" >Pagar</button>
-                                                        {{-- <button class="btn btn-primary">Adelanto</button> --}}
-                                                    @endif
-                                                    
-                                                </td>
-                                                <td>
-                                                    {{-- MODAL DE VER DETALLES  --}}
-                                                    @if ($fc_cuota->estado != 1)
-                                                        <button class="btn btn-primary" disabled>Ver detalles</button>
-                                                    @else
-                                                        <button class="btn btn-primary"
-                                                        onclick="detalle_cuota({{ $fc_cuota->id }})">Ver detalles</button>
-                                                        <input type="hidden" name="" id="">
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
                                         <tr>
-                                            <td colspan="11">
-                                                <ul class="pagination float-left"></ul>
-                                            </td>
+                                            @foreach ($pagos as $pago)
+                                                <td></td>
+                                                <td>
+                                                    <button id="pagado" class="btn btn-primary"
+                                                        disabled><strong>PAGADO</strong></button>
+                                                    <input type="hidden" name=""
+                                                        id="estado_{{ $factura->id }}" value="PAGADO">
+                                                </td>
+                                                <td class="text-center">
+                                                    {{$factura->moneda->simbolo}} {{$pago->monto_tot}}
+                                                </td>
+                                                <td>
+                                                    {{Carbon\Carbon::parse($pago->fecha_registro)->format('d-m-Y')}}
+                                                </td>
+                                                <td>
+                                                    {{$factura->fecha_vencimiento}}
+                                                </td>
+                                                <td>
+                                                    {{$pago->tipo_pago}}
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            @endforeach
                                         </tr>
-                                    </tfoot>
-                                </table>
+                                    </tbody>
+                                    </table>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -699,6 +777,12 @@
         }
         p{
             margin-bottom: 0px;   
+        }
+        .footable-row-detail-name{
+            display: none;
+        }
+        .footable-row-detail-value {
+            width: 21vw;
         }
     </style>
     <!-- scripts -->

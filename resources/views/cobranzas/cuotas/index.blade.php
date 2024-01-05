@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cobros CREDITOS')
+@section('title', 'Pagos de Facturas')
 @section('content')
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -15,20 +15,28 @@
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active show">
                             <div class="panel-body">
+                                <br>
+                                <hr>
                                 <div class="row" style="margin-right: 5px">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3 text-right">
                                         <div class="form-group row" style="margin-left: 15px">
                                             <label class="col-sm-3 col-form-label">Estado:</label>
                                             <div class="col-sm-9">
-                                                <select class="select_2_estado" name="" id="select_estado">
-                                                    <option value="">Seleccionar una opción</option>
-                                                    <option value="sin">Sin Pagar</option>
-                                                    <option value="parcial">Pagado Parcial</option>
-                                                </select>
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        value="01-01-2024  31-01-2024" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_fechas()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group row" style="margin-left: 15px">
                                             <label class="col-sm-3 col-form-label">Cliente:</label>
                                             <div class="col-sm-9">
@@ -45,21 +53,55 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 text-right">
+                                    <div class="col-sm-2">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Estado:</label>
+                                            <div class="col-sm-9">
+                                                <select class="select_2_estado" name="" id="select_estado">
+                                                    <option value="">Seleccionar una opción</option>
+                                                    <option value="sin">Sin Pagar</option>
+                                                    <option value="parcial">Pagado Parcial</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label font-weight-bold ">Tipo:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group" style="align-items: center">
+                                                    Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
+                                                        name="" id="contad_check">&nbsp;&nbsp;
+                                                    Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
+                                                        name="" id="credit_check">
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_estado()" style="visibility: hidden">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 text-right">
                                         <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
                                             Lote</button>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover dataTables-example">
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
-                                                <th>Pago Lote</th>
-                                                <th style="width: 150px">Estado</th>
+                                                <th>Pagar</th>
+                                                <th>Estado</th>
                                                 <th>N° Factura</th>
                                                 <th>Cliente</th>
-                                                <th>Total</th>
+                                                <th>Fecha de Emision</th>
+                                                <th>Tipo de Pago</th>
+                                                <th>Total Cuotas</th>
                                                 <th>Debe | Cuotas</th>
                                                 <th>Pagó | Cuotas</th>
                                                 <th>Ultima Fecha de Pago</th>
@@ -69,27 +111,29 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($facturas_sp as $index => $f_sp)
-                                                @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() != $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                @if ($f_sp->estado_pago != 2)
                                                     <tr>
                                                         <td>{{ $f_sp->id }}</td>
 
                                                         <td>
-                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
-                                                                <input type="checkbox" name=""
-                                                                    id="check_{{ $f_sp->id }}"
-                                                                    class="form-control check_only check_lost_{{ $index }} {{ $f_sp->moneda->nombre }}"
-                                                                    onclick="check_lote({{ $index }})">
-                                                                {{-- <input type="checkbox" name="" id="check_{{ $fc_cuota->id }}" class="form-control check_only" onclick="check_lote({{$index}})"> --}}
-                                                            @endif
+                                                            {{-- @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0) --}}
+                                                            <input type="checkbox" name=""
+                                                                id="check_{{ $f_sp->id }}"
+                                                                class="form-control check_only check_lost_{{ $index }} {{ $f_sp->moneda->nombre }}"
+                                                                onclick="check_lote({{ $index }})">
                                                         </td>
-
                                                         <td>
-                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
-                                                                <button id="cancelado" class="btn btn-primary"
-                                                                    disabled><strong>PAGADO</strong></button>
-                                                            @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
-                                                                <button id="parcial" class="btn btn-warning"
-                                                                    disabled><strong>PARCIAL</strong></button>
+                                                            @if ($f_sp->forma_pago_id == 2)
+                                                                @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
+                                                                    <button id="cancelado" class="btn btn-primary"
+                                                                        disabled><strong>PAGADO</strong></button>
+                                                                @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                                    <button id="parcial" class="btn btn-warning"
+                                                                        disabled><strong>PARCIAL</strong></button>
+                                                                @else
+                                                                    <button id="nulo" class="btn btn-danger"
+                                                                        disabled><strong>SIN PAGO</strong></button>
+                                                                @endif
                                                             @else
                                                                 <button id="nulo" class="btn btn-danger"
                                                                     disabled><strong>SIN PAGO</strong></button>
@@ -97,24 +141,45 @@
                                                         </td>
                                                         <td>{{ $f_sp->codigo_fac }}</td>
                                                         <td>{{ $f_sp->cliente->nombre }}</td>
+                                                        <td>{{ Carbon\Carbon::parse($f_sp->fecha_emision)->format('d-m-Y') }}</td>
+                                                        <td>{{ $f_sp->forma_pago->nombre }}</td>
                                                         <td>
-                                                            {{ $cuotas_all->where('facturacion_id', $f_sp->id)->count() }}
-                                                        </td>
-                                                        <td>{{ $f_sp->moneda->simbolo }}
-                                                            {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->sum('monto'),2) }}
-                                                            <strong>|</strong>
-                                                            {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() }}
-                                                        </td>
-                                                        <td>{{ $f_sp->moneda->simbolo }}
-                                                            {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
-                                                            <strong>|</strong>
-                                                            {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() }}
-                                                        </td>
-                                                        <td>
-                                                            @if ($cuotas_all)
-                                                                {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                            @if ($f_sp->forma_pago->id == 2)
+                                                                {{ $cuotas_all->where('facturacion_id', $f_sp->id)->count() }}
                                                             @else
-                                                                <strong>Pendiente</strong>
+                                                                1
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $f_sp->moneda->simbolo }}
+                                                            @if ($f_sp->forma_pago_id == 2)
+                                                                {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->sum('monto'),2) }}
+                                                                <strong>|</strong>
+                                                                {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() }}
+                                                            @else
+                                                                <span
+                                                                    hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}
+                                                                </span>
+                                                                {{ number_format(round($subtotal + ($f_sp->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $f_sp->moneda->simbolo }}
+                                                            @if ($f_sp->forma_pago_id == 2)
+                                                                {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                                <strong>|</strong>
+                                                                {{ $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() }}
+                                                            @else
+                                                                0.00
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($f_sp->forma_pago_id == 2)
+                                                                @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first() != null)
+                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                @else
+                                                                    <strong>Pendiente</strong>
+                                                                @endif
+                                                            @else
+                                                                {{$f_sp->fecha_vencimiento}}
                                                             @endif
                                                         </td>
                                                         <td>
@@ -122,12 +187,8 @@
                                                                 href="{{ route('pagos.edit_mora', $f_sp->codigo_fac) }}">Detalles</a>
                                                         </td>
                                                         <td>
-                                                            @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() > 0)
-                                                                <button class="btn btn-primary"
-                                                                    onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
-                                                            @else
-                                                                <button class="btn btn-primary" disabled>Pagar</button>
-                                                            @endif
+                                                            <button class="btn btn-primary"
+                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
                                                         </td>
                                                     </tr>
                                                 @else
@@ -162,7 +223,8 @@
 
                                     </div>
                                     <div class="col-sm-4 text-right">
-                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total"
+                                            disabled>Pagar
                                             Lote</button>
                                     </div>
                                 </div>
@@ -171,9 +233,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
-                                                <th style="width: 50px !important">Estado</th>
+                                                <th>Estado</th>
                                                 <th>N° Factura</th>
                                                 <th>Cliente</th>
+                                                <th>Tipo</th>
                                                 <th>Total Pagado</th>
                                                 <th>Ultima Fecha de Pago</th>
                                                 <th>Detalles</th>
@@ -181,10 +244,10 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($facturas_sp as $index => $f_sp)
-                                                @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->count() == $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                @if ($f_sp->estado_pago == 2)
                                                     <tr>
                                                         <td>{{ $f_sp->id }}</td>
-                                                        <td style="width: 50px !important">
+                                                        <td>
                                                             @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
                                                                 <button id="cancelado" class="btn btn-primary"
                                                                     disabled><strong>PAGADO</strong></button>
@@ -198,15 +261,27 @@
                                                         </td>
                                                         <td>{{ $f_sp->codigo_fac }}</td>
                                                         <td>{{ $f_sp->cliente->nombre }}</td>
+                                                        <td>{{ $f_sp->forma_pago->nombre }}</td>
                                                         <td>
                                                             {{ $f_sp->moneda->simbolo }}
-                                                            {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                            @if ($f_sp->forma_pago_id == 2)
+                                                                {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                            @else
+                                                                <span
+                                                                    hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}
+                                                                </span>
+                                                                {{ number_format(round($subtotal + ($f_sp->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                            @endif
                                                         </td>
                                                         <td>
-                                                            @if ($cuotas_all)
-                                                                {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                            @if ($f_sp->forma_pago_id == 2)
+                                                                @if ($cuotas_all)
+                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                @else
+                                                                    <strong>Pendiente</strong>
+                                                                @endif
                                                             @else
-                                                                <strong>Pendiente</strong>
+                                                                {{$f_sp->fecha_vencimiento}}
                                                             @endif
                                                         </td>
                                                         <td>
@@ -245,7 +320,8 @@
 
                                     </div>
                                     <div class="col-sm-4 text-right">
-                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total"
+                                            disabled>Pagar
                                             Lote</button>
                                     </div>
                                 </div>
@@ -272,70 +348,72 @@
                                             @foreach ($clientes as $index => $clie)
                                                 <div class="display: none">
                                                     <div style="display: none">
-                                                        {{$facturas_sp->where('cliente_id',$clie->id)}} {{$cal_sol = 0}} {{$cal_dol = 0}}  {{$count_fact_pag = 0}} {{$prom_tc = 0}} {{$cant = 0}}
+                                                        {{ $facturas_sp->where('cliente_id', $clie->id) }}
+                                                        {{ $cal_sol = 0 }} {{ $cal_dol = 0 }} {{ $count_fact_pag = 0 }}
+                                                        {{ $prom_tc = 0 }} {{ $cant = 0 }}
                                                     </div>
-                                                    @foreach ($facturas_sp->where('cliente_id',$clie->id) as $facturas_norma)
+                                                    @foreach ($facturas_sp->where('cliente_id', $clie->id) as $facturas_norma)
                                                         <div style="display: none">
-                                                            {{ $std_cuot = $cuotas_all->where('facturacion_id',$facturas_norma->id)->where('estado', 1)->count()}}
-                                                            {{ $std_cuot2 = $cuotas_all->where('facturacion_id',$facturas_norma->id)->count()}}
-                                                            
+                                                            {{ $std_cuot = $cuotas_all->where('facturacion_id', $facturas_norma->id)->where('estado', 1)->count() }}
+                                                            {{ $std_cuot2 = $cuotas_all->where('facturacion_id', $facturas_norma->id)->count() }}
+
                                                         </div>
-                                                            @if ($std_cuot == $std_cuot2 )
-                                                                <div style="display: none">
-                                                                    {{ $prom_tc +=  $facturas_norma->cambio}}
-                                                                    {{ $cant +=  1}}
-                                                                </div>
-                                                                @if ($facturas_norma->moneda->nombre == 'soles')
+                                                        @if ($std_cuot == $std_cuot2)
+                                                            <div style="display: none">
+                                                                {{ $prom_tc += $facturas_norma->cambio }}
+                                                                {{ $cant += 1 }}
+                                                            </div>
+                                                            @if ($facturas_norma->moneda->nombre == 'soles')
                                                                 {{-- CONVERTIR EN SOLES MONT TOTAL / TIPO CAMBIO EN ESE DIA --}}
-                                                                    <div style="display: none">
-                                                                        {{$simbolo_mon_sol = 'S/.'}}
-                                                                        {{$simbolo_mon_dol = '$'}}
-                                                                        {{$cal_sol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
-                                                                        {{$cal_dol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto') / $facturas_norma->cambio}}
-                                                                        {{$count_fact_pag =  $count_fact_pag+1}}
-                                                                    </div>
-                                                                @else
+                                                                <div style="display: none">
+                                                                    {{ $simbolo_mon_sol = 'S/.' }}
+                                                                    {{ $simbolo_mon_dol = '$' }}
+                                                                    {{ $cal_sol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') }}
+                                                                    {{ $cal_dol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') / $facturas_norma->cambio }}
+                                                                    {{ $count_fact_pag = $count_fact_pag + 1 }}
+                                                                </div>
+                                                            @else
                                                                 {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
-                                                                    <div style="display: none">
-                                                                        {{$simbolo_mon_dol = '$'}}
-                                                                        {{$simbolo_mon_sol = 'S/.'}}
-                                                                        {{$cal_dol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto')}}
-                                                                        {{$cal_sol += $cuotas_all->where('facturacion_id',$facturas_norma->id)->sum('monto') * $facturas_norma->cambio}}
-                                                                        {{$count_fact_pag =  $count_fact_pag+1}}
-                                                                    </div>
-                                                                @endif
+                                                                <div style="display: none">
+                                                                    {{ $simbolo_mon_dol = '$' }}
+                                                                    {{ $simbolo_mon_sol = 'S/.' }}
+                                                                    {{ $cal_dol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') }}
+                                                                    {{ $cal_sol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') * $facturas_norma->cambio }}
+                                                                    {{ $count_fact_pag = $count_fact_pag + 1 }}
+                                                                </div>
                                                             @endif
-                                                        
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                                 {{-- COLUMNAS PARA MONTO SOLES Y MONTO DOLARES, COLUMNA ADICIONAL CON LOS 2 PRECIO TOTALES POR CLIENTE --}}
                                                 <tr>
-                                                    <td>{{$index++}}</td>
-                                                    <td >{{$clie->nombre}}</td>
-                                                    <td>{{$clie->numero_documento}}</td>
+                                                    <td>{{ $index++ }}</td>
+                                                    <td>{{ $clie->nombre }}</td>
+                                                    <td>{{ $clie->numero_documento }}</td>
                                                     {{-- <td></td>
                                                     <td></td> --}}
                                                     <td>
-                                                        {{$clie->cantidad_fact}}
+                                                        {{ $clie->cantidad_fact }}
                                                     </td>
                                                     <td>
-                                                        {{$count_fact_pag}}
+                                                        {{ $count_fact_pag }}
                                                     </td>
                                                     <td>
-                                                        {{$simbolo_mon_sol}} {{number_format($cal_sol,2)}}
+                                                        {{ $simbolo_mon_sol }} {{ number_format($cal_sol, 2) }}
                                                     </td>
                                                     <td>
-                                                        {{number_format($prom_tc / $cant,2)}}
+                                                        {{ number_format($prom_tc / $cant, 2) }}
                                                     </td>
                                                     <td>
-                                                        {{$simbolo_mon_dol}} {{number_format($cal_dol,2)}}
+                                                        {{ $simbolo_mon_dol }} {{ number_format($cal_dol, 2) }}
                                                     </td>
                                                     <td>
                                                         {{-- <button class="btn btn-secondary">Ver detalles</button> --}}
-                                                        <a href="{{ route('pagos.show_cliente', $clie->numero_documento)}}" class="btn btn-secondary">Ver Detalles</a>
+                                                        <a href="{{ route('pagos.show_cliente', $clie->numero_documento) }}"
+                                                            class="btn btn-secondary">Ver Detalles</a>
                                                     </td>
                                                 </tr>
-                                            @endforeach 
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -719,6 +797,26 @@
         .col-sm-9>.select2.select2-container.select2-container--default {
             width: 100% !important;
         }
+        i.fa.fa-arrow-right.icon.icon-arrow-right.glyphicon.glyphicon-arrow-right {
+            color: black;
+            display: none;
+        }
+
+        .next.available::after {
+            content: ">>";
+        }
+
+        i.fa.fa-arrow-left.icon.icon-arrow-left.glyphicon.glyphicon-arrow-left {
+            color: black;
+            display: none;
+        }
+
+        .prev.available::after {
+            content: "<<";
+        }
+        .form-control.tipo_check{
+            width: 20px;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -732,9 +830,82 @@
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            $('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "format": "DD-MM-YYYY",
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var startDate = start.format('DD-MM-YYYY');
+                    var endDate = end.format('DD-MM-YYYY');
+                    var dates = [];
+                    var currentDate = new Date(start);
+
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_fechas(){
+             // console.log('a');
+             var table_lp = $('.dataTables-example').DataTable();
+            table_lp.column(5).search('').draw();
+            // $('#fecha_emi').val(null).trigger('change');
+        }
         var tipo_coti = 3;
         $(".select2_demo_client").select2({
             placeholder: "Seleccionar Cliente",
@@ -801,9 +972,10 @@
 
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({
-                pageLength: 25,
+                pageLength: 20,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
+                bAutoWidth: true, 
                 buttons: []
             });
             $(document).on('change', '#select_estado', function(event) {
@@ -836,6 +1008,7 @@
                 table2.column(3).search(nombre2).draw();
             });
         });
+
         function limpiar_select_2() {
             // console.log('a');
             var table2_2l = $('.dataTables-examaple-2').DataTable();
@@ -1269,5 +1442,40 @@
                 cache: true
             });
         }
+        $('#contad_check').on('click', function() {
+            var count_check = document.querySelectorAll('.tipo_check');
+            let checkboxesDesactivados = 0;
+            count_check.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkboxesDesactivados++;
+                }
+            });
+            if (checkboxesDesactivados == 0 || checkboxesDesactivados == 2) {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(6).search('credito|contado', true, false).draw();
+            } else {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(6).search('contado', true, false).draw();
+            }
+
+
+        });
+        $('#credit_check').on('click', function() {
+            var count_check = document.querySelectorAll('.tipo_check');
+            let checkboxesDesactivados = 0;
+
+            count_check.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkboxesDesactivados++;
+                }
+            });
+            if (checkboxesDesactivados == 0 || checkboxesDesactivados == 2) {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(6).search('credito|contado', true, false).draw();
+            } else {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(6).search('credito', true, false).draw();
+            }
+        });
     </script>
 @endsection

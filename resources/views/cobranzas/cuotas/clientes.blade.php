@@ -1,8 +1,7 @@
 @extends('layout')
 
-@section('title', 'Cobros')
+@section('title', 'Pagos Solo Facturas')
 @section('content')
-
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -10,52 +9,139 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-control">
-                                    <h1>INFO DE EMPRESA</h1>
+                                    <h2 class="text-center"><strong>Datos Cliente</strong></h2>
+                                    <br>
+                                    <div style="margin: auto 10px">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label"><strong>Nombre:</strong></label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control">{{ $cliente->nombre }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-sm-3 col-form-label"><strong>{{ strtoupper($cliente->documento_identificacion) }}:</strong></label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control">{{ $cliente->numero_documento }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control">{{ $cliente->celular }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label"><strong>Email:</strong></label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control">{{ $cliente->email }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-8">
                                 <div class="form-control">
-                                    <h1>ESTADISTICAS DE FACTURAS</h1>
+                                    <h2 class="text-center"><strong>Informacion General</strong></h2>
+                                    <br>
+                                    <div style="margin: auto 10px">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="text-center">Contado y Credito</p>
+                                                <div class="flot-chart">
+                                                    <div class="flot-chart-pie-content" id="flot-pie-chart"></div>
+                                                </div>
+                                                <p class="text-center small">Todas las Facturas</p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Cantidad de Facturas Totales</label>
+                                                                <span class="form-control">{{$facturas->count()}}</span></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Monto Total Soles</label>
+                                                                <span class="form-control">{{$moneda_sol->simbolo}} {{number_format(round($tot_sol,2),2)}}</span></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Facturas sin Pagar</label>
+                                                                <span class="form-control">{{$fact_sin->count()}}</span></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Facturas en el Mes Actual</label>
+                                                                <span class="form-control">{{$fact_mes->count()}}</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Facturas Pagadas Totalmente</label>
+                                                                <span class="form-control">{{$facturas->where('estado_pago', 2)->count()}}</span></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Monto Total Dolares</label>
+                                                            <span class="form-control">{{$moneda_dol->simbolo}} {{number_format(round($tot_dol,2),2)}}</span></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Monto sin Pagar</label>
+                                                                <span class="form-control">{{$moneda_sol->simbolo}} {{number_format(round($tot_sol_sp,2),2)}}</span></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-group"><label class="small font-weight-bold">Monto de Facturas del Mes ({{$moneda_sol->simbolo}})</label>
+                                                                <span class="form-control">{{$moneda_sol->simbolo}} {{number_format(round($tot_sol_m,2),2)}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <br>
+                    </div>
+                    <br>
+                    <div class="ibox-content">
                         <div>
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="form-group row" style="margin-left: 15px">
                                         <label class="col-sm-3 col-form-label font-weight-bold ">Mes:</label>
                                         <div class="col-sm-9">
                                             <div class="input-group">
                                                 <input class="form-control" type="text" name="daterange"
-                                                    value="{{$start_mes}} - {{$end_mes}}" />
-                                                {{-- <input type="date" class="form-control" name="" id="fecha_emi">
+                                                    value="{{ $start_mes }} - {{ $end_mes }}" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-primary"
                                                         onclick="limpiar_select_emision()">
                                                         <i class="fa fa-eraser"></i>
                                                     </button>
-                                                </span> --}}
-                                            </div>
-                                        </div>
-                                        <label class="col-sm-3 col-form-label font-weight-bold ">Año</label>
-                                        <div class="col-sm-9">
-                                            <div class="input-group">
-                                                <select class="form-control" name="" id=""></select>
-                                                {{-- <input type="date" class="form-control" name="" id="fecha_emi">
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select_emision()">
-                                                        <i class="fa fa-eraser"></i>
-                                                    </button>
-                                                </span> --}}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
+                                    <div class="form-group row" style="margin-left: 15px">
+                                        <label class="col-sm-3 col-form-label font-weight-bold ">Tipo:</label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group" style="align-items: center">
+                                                Contado: <input type="checkbox" class="form-control tipo_check"
+                                                    name="" id="contad_check">
+                                                Credito: <input type="checkbox" class="form-control tipo_check"
+                                                    name="" id="credit_check">
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-primary"
+                                                        onclick="limpiar_select_estado()" style="visibility: hidden">
+                                                        <i class="fa fa-eraser"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
                                     <div class="form-group row" style="margin-left: 15px">
                                         <label class="col-sm-3 col-form-label font-weight-bold ">Estado:</label>
                                         <div class="col-sm-9">
@@ -77,9 +163,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
 
-                                </div>
                             </div>
                         </div>
                         <br>
@@ -106,8 +190,17 @@
                                             <td>{{ $fact->codigo_fac }}</td>
                                             <td>{{ $fact->forma_pago->nombre }}</td>
                                             <td>{{ $fact->fecha_emision }}</td>
-                                            <td>{{ $fact->moneda->simbolo }}
-                                                {{ number_format($cuotas_all->where('facturacion_id', $fact->id)->sum('monto'), 2) }}
+                                            <td>
+                                                @if ($fact->forma_pago_id == 1)
+                                                    <span
+                                                        hidden>{{ $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada }}
+                                                    </span>
+                                                    {{ $fact->moneda->simbolo }}
+                                                    {{ number_format(round($subtotal + ($fact->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                @else
+                                                    {{ $fact->moneda->simbolo }}
+                                                    {{ number_format($cuotas_all->where('facturacion_id', $fact->id)->sum('monto'), 2) }}
+                                                @endif
                                             </td>
                                             <td class="td-center">
                                                 @if ($cuotas_all->where('facturacion_id', $fact->id)->where('estado', 0)->count() == 0)
@@ -162,9 +255,9 @@
                                                             class="fa fa-times-circle"></i></button>
                                                     <span hidden>Anulada</span>
                                                 @else
-                                                    <button class="btn btn-warning btn-circle btn-ls" data-toggle="tooltip"
-                                                        data-placement="bottom" title="En Espera"><i
-                                                            class="fa fa-check-circle"></i></button>
+                                                    <button class="btn btn-warning btn-circle btn-ls"
+                                                        data-toggle="tooltip" data-placement="bottom"
+                                                        title="En Espera"><i class="fa fa-check-circle"></i></button>
                                                     <span hidden>En Espera</span>
                                                 @endif
                                             </td>
@@ -190,8 +283,12 @@
 
         .estado-sunat {}
 
+        .select2-selection.select2-selection--single {
+            height: 100% !important;
+        }
+
         .select2.select2-container.select2-container--default {
-            /* width: 100% !important; */
+            width: calc(100% - 46px) !important;
         }
 
         .input-group>.select2-container--bootstrap {
@@ -238,10 +335,51 @@
     <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
 
+    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
+
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <script>
+        $(function() {
+
+            var data = [{
+                label: "Contado: " + {{ $facturas->where('forma_pago_id', 1)->count() }},
+                data: {{ $facturas->where('forma_pago_id', 1)->count() }},
+                color: "#FF6A6A",
+            }, {
+                label: "Crédito: " + {{ $facturas->where('forma_pago_id', 2)->count() }},
+                data: {{ $facturas->where('forma_pago_id', 2)->count() }},
+                color: "#6AA2FF",
+            }];
+
+            var plotObj = $.plot($("#flot-pie-chart"), data, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                grid: {
+                    hoverable: true
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+                    shifts: {
+                        x: 20,
+                        y: 0
+                    },
+                    defaultTheme: false
+                }
+            });
+
+        });
+
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({
                 pageLength: 25,
@@ -268,19 +406,11 @@
             var nombre_2 = $("#fecha_emi option:selected").val();
             table.column(3).search(nombre_2).draw();
         });
-
-        function limpiar_select_emision() {
-            // console.log('a');
-            var table_lp = $('.dataTables-example').DataTable();
-            table_lp.column(3).search('').draw();
-            $('#fecha_emi').val(null).trigger('change');
-
-        }
         $(document).ready(function() {
             $('input[name="daterange"]').daterangepicker({
                     "locale": {
                         "format": "DD-MM-YYYY",
-                        "separator": " - ",
+                        "separator": " | ",
                         "applyLabel": "Guardar",
                         "cancelLabel": "Cancelar",
                         "fromLabel": "Desde",
@@ -313,18 +443,69 @@
                     }
                 },
                 function(start, end, label) {
-                    let startDate = start.format("DD-MM-YYYY").toString();
-                    let endDate = end.format("DD-MM-YYYY").toString();
+                    var startDate = start.format('DD-MM-YYYY');
+                    var endDate = end.format('DD-MM-YYYY');
+                    var dates = [];
+                    var currentDate = new Date(start);
 
-                    console.log(startDate);
-                    console.log(endDate);
-                    table.column(3).search(startDate).draw();
-                    // document.getElementById("startDate").innerHTML =
-                    //     "Start date: " + startDate;
-                    // document.getElementById("endDate").innerHTML = "End date: " + endDate;
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
 
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(3).search(dateRangeString, true, false).draw();
                 }
             );
+        });
+
+        function limpiar_select_emision() {
+            // console.log('a');
+            var table_lp = $('.dataTables-example').DataTable();
+            table_lp.column(3).search('').draw();
+            $('#fecha_emi').val(null).trigger('change');
+
+        }
+        $('#contad_check').on('click', function() {
+            var count_check = document.querySelectorAll('.tipo_check');
+            let checkboxesDesactivados = 0;
+            count_check.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkboxesDesactivados++;
+                }
+            });
+            if (checkboxesDesactivados == 0 || checkboxesDesactivados == 2) {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(2).search('credito|contado', true, false).draw();
+            } else {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(2).search('contado', true, false).draw();
+            }
+
+
+        });
+        $('#credit_check').on('click', function() {
+            var count_check = document.querySelectorAll('.tipo_check');
+            let checkboxesDesactivados = 0;
+
+            count_check.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    checkboxesDesactivados++;
+                }
+            });
+            if (checkboxesDesactivados == 0 || checkboxesDesactivados == 2) {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(2).search('credito|contado', true, false).draw();
+            } else {
+                var table_lp = $('.dataTables-example').DataTable();
+                table_lp.column(2).search('credito', true, false).draw();
+            }
         });
     </script>
 @endsection
