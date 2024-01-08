@@ -417,7 +417,7 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $pagos;
+        // return $pagos_reg;
         // return $reg_b->where('estado',1)->sum('monto');
         // return $pagos_deta;
         return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta'));

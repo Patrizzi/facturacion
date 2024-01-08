@@ -149,8 +149,8 @@
                                                 <th>MONTO</th>
                                                 <th>Fecha Inicio</th>
                                                 <th>Fecha Vencimiento</th>
-                                                <th data-hide="all" style="display: none !important;">Informacion del Pago</th>
-                                                {{-- <th data-hide="all">Interes de Retraso</th> --}}
+                                                <th data-hide="all" style="display: none !important;">Dias de Restraso:</th>
+                                                {{-- <th data-hide="all"></th> --}}
                                                 <th>Metodo de Pago</th>
                                                 <th>Fecha de Pago</th>
                                                 <th data-sort-ignore="true" style="width: 170px">Pagar</th>
@@ -216,53 +216,13 @@
                                                             value="{{ $fc_cuota->fecha_pago }}">
                                                     </td>
                                                     <td>
-                                                        @if (isset($pagos_reg[$index]))
-                                                            @if ($pagos_reg[$index]->comprobante_pago->tipo_pago == "efectivo")
-                                                                {{-- <p><strong>Persona que a</strong></p>
-                                                                <p><strong></strong></p>
-                                                                <p><strong></strong></p>
-                                                                <p><strong></strong></p> --}}
-                                                                <div class="row">
-                                                                    <div class="col-sm-6"><strong>Persona que Cancela:</strong></div>
-                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('persona_input')->first()}}</div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-sm-6"><strong>Fecha de Cancelación</strong></div>
-                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first()}}</div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-sm-6"><strong>Monto de Pago</strong></div>
-                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('montos_input')->first()}}</div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-sm-6"><strong>Vuelto</strong></div>
-                                                                    <div class="col-sm-6">{{$pagos_deta->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('adicional_input')->first()}}</div>
-                                                                </div>
-                                                            @elseif($pagos_reg[$index]->comprobante_pago->tipo_pago ==  "tarjeta")
-                                                                "tarjeta"
-                                                            @elseif($pagos_reg[$index]->comprobante_pago->tipo_pago == "cheque")
-                                                                <p>1</p>
-                                                                <p>2</p>
-                                                                <p>3</p>
-                                                                <p>4</p>
-                                                            @else
-                                                                "Transferencia"
-                                                            @endif
-                                                        @endif
-                                                        {{-- @if ($fc_cuota->estado == 1)
-                                                            @if ( $fc_cuota->fecha_pago > Carbon\Carbon::parse($pagos_deta->where('id_cuota_credito', $fc_cuota->id)->pluck('fecha_pago')->first())->format('d/m/Y' ))
-                                                                Pagado el día {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}
-                                                            @elseif($fecha_hoy == $fc_cuota->fecha_pago)
-                                                                <strong>Se pagó el dia de hoy</strong>    
-                                                            @else
-                                                                <strong style="color: red">Se pagó retrasado: {{ Carbon\Carbon::parse($pagos_deta[$index]->where('comprobante_pago_reg_id', $pagos_reg[$index]->id)->pluck('fechas_input')->first())->format('d/m/Y') }}</strong>
-                                                            @endif
+                                                        @if ($index == 0)
+                                                            Aun no ha sido pagado
                                                         @else
-                                                            Sin pago asociado
-                                                        @endif --}}
-                                                    </td>
+                                                            Se retrasó {{Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays(\Carbon\Carbon::parse($pagos_reg[$index]->fecha_pago))}} días
+                                                        @endif
+                                                    </td> 
                                                     <td>
-                                                        {{-- {{$pagos_reg[$index]}} --}}
                                                         @if (isset($pagos_reg[$index]))
                                                             <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
                                                         @else
@@ -274,7 +234,7 @@
                                                         @if ($fc_cuota->estado == 0)
                                                             <strong>PENDIENTE</strong>
                                                         @elseif($fc_cuota->estado == 1)
-                                                            <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_registro)->format('d/m/Y') }}</strong>
+                                                            <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_pago)->format('d/m/Y') }}</strong>
                                                         @else
                                                             <strong>RETRASADO</strong>
                                                         @endif
@@ -782,7 +742,7 @@
             display: none;
         }
         .footable-row-detail-value {
-            width: 21vw;
+            width: 50vw;
         }
     </style>
     <!-- scripts -->
