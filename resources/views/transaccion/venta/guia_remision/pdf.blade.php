@@ -163,8 +163,10 @@
                     <br>
                     <br>
                     <br>
-                    <hr>
-                    <center>{{$guia_remision->user_personal->personal->nombres }}</center>
+                    @if (Auth::user()->config->guia_remision_firma == 0)
+                        <hr>
+                        <center>{{$guia_remision->user_personal->personal->nombres }}</center>
+                    @endif
                 </td>
             </tr>
         </table>
