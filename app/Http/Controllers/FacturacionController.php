@@ -14,6 +14,7 @@ use App\Facturacion;
 use App\Facturacion_registro;
 use App\Forma_pago;
 use App\Cuotas_credito;
+use App\Guia_remision;
 use App\Igv;
 use App\Marcas;
 use App\Moneda;
@@ -1038,7 +1039,7 @@ return redirect()->route('facturacion.show',$facturacion->id);
             // return
             //DESCUENTO DE STOCK 
             foreach ($factura_reg as $fact_reg) {
-                // return $fact_reg;
+            // return $fact_reg;
                 if ($fact_reg->producto_id  != null) {
                     Stock_almacen::ingreso($factura->almacen_id,$fact_reg->producto_id,$fact_reg->cantidad);
                     // return "a";
@@ -1048,5 +1049,24 @@ return redirect()->route('facturacion.show',$facturacion->id);
         }
         return redirect()->back();
     }
+    public function ajax_remision(Request $request){
+        $id_cli = $request->get('id_cliente');
+        // buscar guias de remision por cliente que no este enviadas a la sunat
 
+        $guias = Guia_remision::where('cliente_id', $id_cli)->where('g_electronica', 0)->get();
+        // return count($guias);
+        
+        if(count($guias) != 0){
+            foreach ($guias as $guias_r) {
+                $guias_cod[] = $guias_r->cod_guia;
+            }
+            return $guias_cod;
+        }else{
+            $guias_cod = "vacio";
+            return $guias_cod;
+        }
+        
+
+
+    }
 }
