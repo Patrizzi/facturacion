@@ -378,19 +378,22 @@ class PagadosController extends Controller
             $client['cantidad_fact'] = $count_tot;
             //pagadas
             $facturas = Facturacion::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
-            if (count($facturas) > 0) {
+            // $cuot = [];
+            if (count($facturas) != 0) {
+                // return "a";
                 foreach ($facturas as $key => $f_sp) {
-                    $cuota_lopp = Cuotas_credito::where('facturacion_id', $f_sp->id)->where('estado', 1)->get();
+                    $cuota_lopp[] = Cuotas_credito::where('facturacion_id', $f_sp->id)->where('estado', 1)->get();
                     if(count($cuota_lopp) > 0){
                         $cuot[$key] = $cuota_lopp;
                     }    
-                }
+                }   
                 $client['cuotas'] = $cuot;
             }else{
+                // return "b";
                 $client['cuotas'] = 0;
             }
         }
-        // return $clientes;
+        // return $client;
 
 
 
@@ -404,6 +407,7 @@ class PagadosController extends Controller
         $factura = Facturacion::where('codigo_fac', $id)->first();
         $fact_cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $igv = Igv::first();
         $pagos = ComprobantesPagos::where('factuacion_id', $factura->id)->get();
         if (count($pagos) != 0) {
             foreach ($pagos as $key => $pagos_ind) {
@@ -419,8 +423,8 @@ class PagadosController extends Controller
         }
         // return $pagos_reg;
         // return $reg_b->where('estado',1)->sum('monto');
-        // return $pagos_deta;
-        return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta'));
+        // return $pagos;
+        return view('cobranzas.cuotas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv'));
     }
     public function show_cliente($ruc_cli){
         $ruc = $ruc_cli;
