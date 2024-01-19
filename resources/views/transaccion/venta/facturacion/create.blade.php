@@ -502,6 +502,11 @@
         input.value = "";
     }
     function remove_item(elemento){
+        var input = $('#guia_save_inp').val();
+        var texto = elemento.innerText;
+        var new_text = texto+' ';
+        var nuevoValor = input.replace(new_text, '');
+        $('#guia_save_inp').val(nuevoValor);
         elemento.remove();
     }
     // TODO Validacion de formulario el no doble incerción

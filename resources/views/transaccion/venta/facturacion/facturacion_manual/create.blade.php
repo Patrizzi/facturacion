@@ -502,16 +502,14 @@
 
         input.value = "";
     }
-    // function remove_item(elemento){
-    //     console.log(elemento.innerText);
-    //     var input = $('#guia_save_inp').val();
-    //     var texto = elemento.innerText;
-    //     console.log(texto);
-    //     var nuevoValor = input.replace(texto, '');
-    //     console.log(nuevoValor);
-    //     input.value = nuevoValor;
-    //     elemento.remove();
-    // }
+    function remove_item(elemento){
+        var input = $('#guia_save_inp').val();
+        var texto = elemento.innerText;
+        var new_text = texto+' ';
+        var nuevoValor = input.replace(new_text, '');
+        $('#guia_save_inp').val(nuevoValor);
+        elemento.remove();
+    }
     
     function valida(f) {
         var boton=document.getElementById("boton");
