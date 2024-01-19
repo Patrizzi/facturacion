@@ -32,7 +32,6 @@
                                                         </button>
                                                     </span>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +190,6 @@
                                                                 onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
                                                         </td>
                                                     </tr>
-                                                @else
                                                 @endif
                                             @endforeach
                                         </tbody>
@@ -220,7 +218,22 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Ultima Fecha de Pago:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange2"
+                                                        value="01-01-2024  31-01-2024" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_fechas_2()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
 
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4 text-right">
                                         <button class="btn btn-primary" type="button" id="pago_lote_total"
@@ -301,7 +314,7 @@
                                 <div class="row" style="margin-right: 5px">
                                     <div class="col-sm-4">
                                         <div class="form-group row" style="margin-left: 15px">
-                                            <label class="col-sm-3 col-form-label">Cliente:</label>
+                                            {{-- <label class="col-sm-3 col-form-label">Cliente:</label> --}}
                                             <div class="col-sm-9">
                                                 {{-- <div class="input-group">
                                                     <select class="select2_demo_client_2" name="cliente" id="cliente_2"
@@ -335,7 +348,7 @@
                                                 <th>Facturas Creadas</th>
                                                 <th>Facturas Pagadas completas</th>
                                                 <th>Monto Soles Pagados de Facturas Completas</th>
-                                                <th style="width: 63px !important">T.C Promedio</th>
+                                                {{-- <th style="width: 63px !important">T.C Promedio</th> --}}
                                                 <th>Monto Dolares Pagados de Facturas Completas</th>
                                                 <th>Detalles</th>
                                                 {{-- <th>Cliente</th>
@@ -345,12 +358,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($clientes as $index => $clie)
-                                                @if ( count($facturas_sp->where('cliente_id', $clie->id)) > 1)
+                                            @foreach ($clientes as $index3 => $clie)
+                                                @if ( count($facturas_sp->where('cliente_id', $clie->id)) >= 1)
                                                     <div class="display: none">
                                                         <div style="display: none">                                                        
                                                             {{ $cal_sol = 0 }} {{ $cal_dol = 0 }} {{ $count_fact_pag = 0 }}
-                                                            {{ $prom_tc = 0 }} {{ $cant = 0 }}
+                                                            {{ $prom_tc = 0 }} {{ $cant = 1 }}
                                                         </div>
                                                         @foreach ($facturas_sp->where('cliente_id', $clie->id) as $facturas_norma)
                                                             <div style="display: none">
@@ -370,7 +383,6 @@
                                                                         {{ $simbolo_mon_dol = '$' }}
                                                                         {{ $cal_sol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') }}
                                                                         {{ $cal_dol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') / $facturas_norma->cambio }}
-                                                                        {{ $count_fact_pag = $count_fact_pag + 1 }}
                                                                     </div>
                                                                 @else
                                                                     {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
@@ -379,7 +391,6 @@
                                                                         {{ $simbolo_mon_sol = 'S/.' }}
                                                                         {{ $cal_dol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') }}
                                                                         {{ $cal_sol += $cuotas_all->where('facturacion_id', $facturas_norma->id)->sum('monto') * $facturas_norma->cambio }}
-                                                                        {{ $count_fact_pag = $count_fact_pag + 1 }}
                                                                     </div>
                                                                 @endif
                                                             @endif
@@ -396,16 +407,16 @@
                                                             {{ $clie->cantidad_fact }}
                                                         </td>
                                                         <td>
-                                                            {{ $count_fact_pag }}
+                                                            {{ $facturas_sp->where('cliente_id', $clie->id)->where('estado_pago', 2)->count() }}
                                                         </td>
                                                         <td>
-                                                            {{ $simbolo_mon_sol }} {{ number_format($cal_sol, 2) }}
+                                                            {{ $simbolo_mon_sol }} {{ $var_precio_tot[$index3]['tot'] }}
                                                         </td>
-                                                        <td>
+                                                        {{-- <td>
                                                             {{ number_format($prom_tc / $cant, 2) }}
-                                                        </td>
+                                                        </td> --}}
                                                         <td>
-                                                            {{ $simbolo_mon_dol }} {{ number_format($cal_dol, 2) }}
+                                                            {{ $simbolo_mon_dol }} {{ $var_precio_tot[$index3]['tot_dol'] }}
                                                         </td>
                                                         <td>
                                                             {{-- <button class="btn btn-secondary">Ver detalles</button> --}}
@@ -739,10 +750,10 @@
         }
 
         .nav.nav-tabs {
-            display: flex;
+            /* display: flex;
             justify-content: space-evenly;
             align-items: center;
-            flex-wrap: nowrap;
+            flex-wrap: nowrap; */
         }
 
         #view_all {
@@ -900,12 +911,70 @@
                     table.column(5).search(dateRangeString, true, false).draw();
                 }
             );
+            $('input[name="daterange2"]').daterangepicker({
+                    "locale": {
+                        "format": "DD-MM-YYYY",
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var startDate = start.format('DD-MM-YYYY');
+                    var endDate = end.format('DD-MM-YYYY');
+                    var dates = [];
+                    var currentDate = new Date(start);
+
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    // console.log(dateRangeString);
+                    table2.column(6).search(dateRangeString, true, false).draw();
+                }
+            );
         });
         function limpiar_fechas(){
-             // console.log('a');
-             var table_lp = $('.dataTables-example').DataTable();
+            var table_lp = $('.dataTables-example').DataTable();
             table_lp.column(5).search('').draw();
-            // $('#fecha_emi').val(null).trigger('change');
+        }
+        function limpiar_fechas_2(){
+            var table_lp_2 = $('.dataTables-examaple-2').DataTable();
+            table_lp_2.column(6).search('').draw();
         }
         var tipo_coti = 3;
         $(".select2_demo_client").select2({

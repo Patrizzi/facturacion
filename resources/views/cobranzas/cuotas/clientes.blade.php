@@ -184,12 +184,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($facturas as $fact)
+                                    @foreach ($facturas as $index =>  $fact)
                                         <tr>
                                             <td>{{ $fact->id }}</td>
                                             <td>{{ $fact->codigo_fac }}</td>
                                             <td>{{ $fact->forma_pago->nombre }}</td>
-                                            <td>{{ $fact->fecha_emision }}</td>
+                                            <td>{{ Carbon\Carbon::parse($fact->fecha_emision)->format('d-m-Y')}}</td>
                                             <td>
                                                 @if ($fact->forma_pago_id == 1)
                                                     <span
@@ -203,15 +203,25 @@
                                                 @endif
                                             </td>
                                             <td class="td-center">
-                                                @if ($cuotas_all->where('facturacion_id', $fact->id)->where('estado', 0)->count() == 0)
-                                                    <button id="cancelado" class="btn btn-primary" style="width: 15vh"
+                                                @if ($fact->forma_pago_id == 1)
+                                                    @if ($fact->estado_pago == 2)
+                                                        <button id="cancelado" class="btn btn-primary" style="width: 15vh"
                                                         disabled><strong>PAGADO TOTAL</strong></button>
-                                                @elseif($cuotas_all->where('facturacion_id', $fact->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $fact->id)->count())
-                                                    <button id="parcial" class="btn btn-warning" style="width: 15vh"
-                                                        disabled><strong>PAGO PARCIAL</strong></button>
-                                                @else
-                                                    <button id="nulo" class="btn btn-danger" style="width: 15vh"
+                                                    @else
+                                                        <button id="nulo" class="btn btn-danger" style="width: 15vh"
                                                         disabled><strong>SIN PAGO</strong></button>
+                                                    @endif
+                                                @else
+                                                    @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
+                                                        <button id="cancelado" class="btn btn-primary"
+                                                            disabled><strong>PAGADO</strong></button>
+                                                    @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                        <button id="parcial" class="btn btn-warning"
+                                                            disabled><strong>PARCIAL</strong></button>
+                                                    @else
+                                                        <button id="nulo" class="btn btn-danger"
+                                                            disabled><strong>SIN PAGO</strong></button>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td class="td-center">
@@ -473,6 +483,7 @@
 
         }
         $('#contad_check').on('click', function() {
+            console.log("cont");
             var count_check = document.querySelectorAll('.tipo_check');
             let checkboxesDesactivados = 0;
             count_check.forEach(function(checkbox) {
@@ -482,15 +493,16 @@
             });
             if (checkboxesDesactivados == 0 || checkboxesDesactivados == 2) {
                 var table_lp = $('.dataTables-example').DataTable();
-                table_lp.column(2).search('credito|contado', true, false).draw();
+                table_lp.column(2).search('Credito|Contado', true, false).draw();
             } else {
                 var table_lp = $('.dataTables-example').DataTable();
-                table_lp.column(2).search('contado', true, false).draw();
+                table_lp.column(2).search('Contado', true, false).draw();
             }
 
 
         });
         $('#credit_check').on('click', function() {
+            console.log("cred");
             var count_check = document.querySelectorAll('.tipo_check');
             let checkboxesDesactivados = 0;
 
