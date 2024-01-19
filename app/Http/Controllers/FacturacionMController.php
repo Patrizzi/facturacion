@@ -517,7 +517,7 @@ class FacturacionMController extends Controller
         $id_cli = $request->get('id_cliente');
         // buscar guias de remision por cliente que no este enviadas a la sunat
 
-        $guias = GuiaRemisionManual::where('cliente_id', $id_cli)->where('g_electronica', 0)->get();
+        $guias = GuiaRemisionManual::where('cliente_id', $id_cli)->where('g_electronica', 1)->get();
         // return count($guias);
         
         if(count($guias) != 0){
