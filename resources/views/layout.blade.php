@@ -229,18 +229,18 @@
                 @endif
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/.svg')}}" class="iconos">  <span class="nav-label">Cobranza</span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/.svg')}}" class="iconos">  <span class="nav-label">Créditos</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li>
-                            <a href="#">Pagos</a>
-                            <ul class="nav nav-third-level">
+                            {{-- <a href="#">Pagos</a>
+                            <ul class="nav nav-third-level"> --}}
                                 <li><a href="{{route('pagos.view_facturas')}}">Facturas</a></li>
-                                <li><a href="{{route('pagos.view_facturas')}}">Facturas M.</a></li>
-                                <li><a href="{{route('pagos.view_facturas')}}">Boletas</a></li>
-                                <li><a href="{{route('pagos.view_facturas')}}">Boletas M.</a></li>
+                                <li><a href="{{route('pagos.view_facturas_m')}}">Facturas M.</a></li>
+                                <li><a href="{{route('pagos.view_boletas')}}">Boletas</a></li>
+                                <li><a href="{{route('pagos.view_boletas_m')}}">Boletas M.</a></li>
                                 <li><a href="{{route('pagos.view_facturas')}}">Nota de Venta</a></li>
-                                <li><a href="">Cobrar</a></li>
-                            </ul>
+                                {{-- <li><a href="">Cobrar</a></li> --}}
+                            {{-- </ul> --}}
                         </li>
                         {{-- <li><a href="#">Registro de Cuotas</a></li>
                         <li><a href="#">Recibos</a></li> --}}

@@ -1,6 +1,8 @@
 @extends('layout')
 
-@section('title', 'Pagos Solo Facturas')
+@section('title', 'Pagos Solo Facturas M.
+
+')
 @section('content')
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -199,7 +201,7 @@
                                                     {{ number_format(round($subtotal + ($fact->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                 @else
                                                     {{ $fact->moneda->simbolo }}
-                                                    {{ number_format($cuotas_all->where('facturacion_id', $fact->id)->sum('monto'), 2) }}
+                                                    {{ number_format($cuotas_all->where('facturacion_m_id', $fact->id)->sum('monto'), 2) }}
                                                 @endif
                                             </td>
                                             <td class="td-center">
@@ -212,10 +214,10 @@
                                                         disabled><strong>SIN PAGO</strong></button>
                                                     @endif
                                                 @else
-                                                    @if ($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() == 0)
+                                                    @if ($cuotas_all->where('facturacion_m_id', $fact->id)->where('estado', 0)->count() == 0)
                                                         <button id="cancelado" class="btn btn-primary"
                                                             disabled><strong>PAGADO</strong></button>
-                                                    @elseif($cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_id', $f_sp->id)->count())
+                                                    @elseif($cuotas_all->where('facturacion_m_id', $fact->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_m_id', $fact->id)->count())
                                                         <button id="parcial" class="btn btn-warning"
                                                             disabled><strong>PARCIAL</strong></button>
                                                     @else
@@ -273,7 +275,7 @@
                                             </td>
                                             {{-- <td><button class="btn btn-primary">Ver</button></td> --}}
                                             <td>
-                                                <a href="{{ route('facturacion.show', $fact->id) }}"
+                                                <a href="{{ route('facturacion_manual.show', $fact->id) }}"
                                                     class="btn btn-primary">Ver</a>
                                             </td>
                                         </tr>

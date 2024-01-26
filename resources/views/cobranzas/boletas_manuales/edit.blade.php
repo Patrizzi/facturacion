@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Registros '.$cod_fact)
+@section('title', 'Registros '.$cod_bol)
 @section('content')
-    {{-- <h1>{{ $cod_fact }}</h1> --}}
+    {{-- <h1>{{ $cod_bol }}</h1> --}}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -17,26 +17,26 @@
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label"><strong>Nombre:</strong></label>
                                             <div class="col-sm-9">
-                                                <p class="form-control">{{ $factura->cliente->nombre }}</p>
+                                                <p class="form-control">{{ $boleta->cliente->nombre }}</p>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label
-                                                class="col-sm-3 col-form-label"><strong>{{ strtoupper($factura->cliente->documento_identificacion) }}:</strong></label>
+                                                class="col-sm-3 col-form-label"><strong>{{ strtoupper($boleta->cliente->documento_identificacion) }}:</strong></label>
                                             <div class="col-sm-9">
-                                                <p class="form-control">{{ $factura->cliente->numero_documento }}</p>
+                                                <p class="form-control">{{ $boleta->cliente->numero_documento }}</p>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
                                             <div class="col-sm-9">
-                                                <p class="form-control">{{ $factura->cliente->celular }}</p>
+                                                <p class="form-control">{{ $boleta->cliente->celular }}</p>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label"><strong>Email:</strong></label>
                                             <div class="col-sm-9">
-                                                <p class="form-control">{{ $factura->cliente->email }}</p>
+                                                <p class="form-control">{{ $boleta->cliente->email }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -46,19 +46,19 @@
                                 <div class="form-control">
                                     <h2 class="text-center"><strong>Datos de Comprobante</strong></h2>
                                     <br>
-                                    @if ($factura->forma_pago_id == 2)
+                                    @if ($boleta->forma_pago_id == 2)
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Código:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $cod_fact }}</p>
+                                                        <p class="form-control">{{ $cod_bol }}</p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Moneda</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ strtoupper($factura->moneda->nombre) }}
+                                                        <p class="form-control">{{ strtoupper($boleta->moneda->nombre) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -66,7 +66,7 @@
                                                     <label class="col-sm-5 col-form-label"><strong>N°
                                                             Cuotas:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $fact_cuotas->count() }}</p>
+                                                        <p class="form-control">{{ $bol_cuotas->count() }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -75,12 +75,12 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Total:</strong></label>
                                                     <div class="col-sm-7">
-                                                        {{-- @if ($fact_cuotas->sum('monto') != 0) --}}
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                            {{ $sum_total = number_format($fact_cuotas->sum('monto'), 2) }}
+                                                        {{-- @if ($bol_cuotas->sum('monto') != 0) --}}
+                                                        <p class="form-control">{{ $boleta->moneda->simbolo }}
+                                                            {{ $sum_total = number_format($bol_cuotas->sum('monto'), 2) }}
                                                         </p>
                                                         {{-- @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }} {{ $sum_total = 0}}</p>
+                                                            <p class="form-control">{{ $boleta->moneda->simbolo }} {{ $sum_total = 0}}</p>
                                                         @endif --}}
                                                     </div>
                                                 </div>
@@ -88,12 +88,12 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Pagado</strong></label>
                                                     <div class="col-sm-7">
-                                                        @if ($fact_cuotas->where('estado', 1)->sum('monto') != 0)
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{ $pago_total = number_format($fact_cuotas->where('estado', 1)->sum('monto'), 2) }}
+                                                        @if ($bol_cuotas->where('estado', 1)->sum('monto') != 0)
+                                                            <p class="form-control">{{ $boleta->moneda->simbolo }}
+                                                                {{ $pago_total = number_format($bol_cuotas->where('estado', 1)->sum('monto'), 2) }}
                                                             </p>
                                                         @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                            <p class="form-control">{{ $boleta->moneda->simbolo }}
                                                                 {{ $pago_total = 0 }}</p>
                                                         @endif
                                                     </div>
@@ -102,8 +102,8 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                            {{ number_format($fact_cuotas->sum('monto') - $fact_cuotas->where('estado', 1)->sum('monto'), 2) }}
+                                                        <p class="form-control">{{ $boleta->moneda->simbolo }}
+                                                            {{ number_format($bol_cuotas->sum('monto') - $bol_cuotas->where('estado', 1)->sum('monto'), 2) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -111,7 +111,7 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Interes:</strong></label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">
-                                                            {{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}}
+                                                            {{ $boleta->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}}
                                                         </p>
                                                     </div>
                                                 </div> --}}
@@ -121,7 +121,7 @@
                                                 <div class="form-group row justify-content-center">
                                                     {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_cuotas', $boleta->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                             </div>
@@ -133,13 +133,13 @@
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Código:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $cod_fact }}</p>
+                                                        <p class="form-control">{{ $cod_bol }}</p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Moneda</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ strtoupper($factura->moneda->nombre) }}
+                                                        <p class="form-control">{{ strtoupper($boleta->moneda->nombre) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -157,11 +157,11 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Total:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                        <p class="form-control">{{ $boleta->moneda->simbolo }}
                                                             <span
-                                                                hidden>{{ $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada }}
+                                                                hidden>{{ $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
                                                             </span>
-                                                            {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                            {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -169,12 +169,12 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Pagado: </strong></label>
                                                     <div class="col-sm-7">
-                                                        @if ($factura->estado_pago == 2)
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                        @if ($boleta->estado_pago == 2)
+                                                            <p class="form-control">{{ $boleta->moneda->simbolo }}
+                                                                {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                             </p>
                                                         @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                            <p class="form-control">{{ $boleta->moneda->simbolo }}
                                                                 {{ $pago_total = 0.00 }}</p>
                                                         @endif
                                                     </div>
@@ -185,7 +185,7 @@
                                                     </label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">
-                                                            @if ($factura->estado_pago == 1)
+                                                            @if ($boleta->estado_pago == 1)
                                                                 Sin Pago
                                                             @else
                                                                 {{Carbon\Carbon::parse($pagos->pluck('fecha_registro')->first())->format('d-m-Y')}}
@@ -197,13 +197,13 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_cuotas', $boleta->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('facturacion.show', $factura->id) }}"
-                                                        target="_blank">Ver Factura</a>
+                                                        href="{{ route('boleta.show', $boleta->id) }}"
+                                                        target="_blank">Ver boleta</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -215,7 +215,7 @@
                         {{-- {{=}} --}}
                         <div class="row">
                             <div class="ibox-content" style="width: 100% !important">
-                                @if ($factura->forma_pago_id == 2)
+                                @if ($boleta->forma_pago_id == 2)
                                     <div class="row">
                                    
                                         <div class="col-sm-4">
@@ -226,7 +226,7 @@
 
                                         </div>
                                         <div class="col-sm-4 text-right">
-                                            @if ($fact_cuotas->where('facturacion_id', $factura->id)->where('estado', 1)->count() != $fact_cuotas->count())
+                                            @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
                                                 <button class="btn btn-secondary pago_all_lote" id="pago_lote" disabled>Pagar
                                                     en
                                                     Lote</button>
@@ -242,7 +242,7 @@
                                             <tr>
                                                 <th data-sort-ignore="true" style="width: 50px;text-align: center">Ver más
                                                 </th>
-                                                @if ($fact_cuotas->where('facturacion_id', $factura->id)->where('estado', 1)->count() != $fact_cuotas->count())
+                                                @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
                                                     <th data-sort-ignore="true">Pago Lote</th>
                                                 @endif
                                                 <th style="width: 25px">Estado</th>
@@ -262,12 +262,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($fact_cuotas as $index => $fc_cuota)
+                                            @foreach ($bol_cuotas as $index => $fc_cuota)
                                                 <tr>
                                                     <td>
 
                                                     </td>
-                                                    @if ($fact_cuotas->where('facturacion_id', $factura->id)->where('estado', 1)->count() != $fact_cuotas->count())
+                                                    @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
                                                         <td>
                                                             @if ($fc_cuota->estado == 0)
                                                                 <input type="checkbox" name=""
@@ -298,23 +298,23 @@
                                                     </td>
                                                     <td>Cuota N° {{ $fc_cuota->numero_cuota }}</td>
                                                     <td>
-                                                        {{ $factura->moneda->simbolo }}
+                                                        {{ $boleta->moneda->simbolo }}
                                                         {{ number_format($fc_cuota->monto, 2) }}
                                                         <input type="hidden" name=""
                                                             id="numero_{{ $fc_cuota->id }}"
                                                             value="{{ $fc_cuota->numero_cuota }}">
                                                         <input type="hidden" name=""
                                                             id="monto_{{ $fc_cuota->id }}"
-                                                            value="{{ $factura->moneda->simbolo }} {{ $fc_cuota->monto }}">
+                                                            value="{{ $boleta->moneda->simbolo }} {{ $fc_cuota->monto }}">
                                                         <input type="hidden" name=""
                                                             id="total_{{ $fc_cuota->id }}"
                                                             value="{{ $fc_cuota->monto }}">
                                                     </td>
                                                     <td>
                                                         @if ($index == 0)
-                                                            {{ Carbon\Carbon::parse($factura->fecha_emision)->format('d/m/Y') }}
+                                                            {{ Carbon\Carbon::parse($boleta->fecha_emision)->format('d/m/Y') }}
                                                         @else
-                                                            {{ Carbon\Carbon::parse($fact_cuotas[$index - 1]->fecha_pago)->format('d/m/Y') }}
+                                                            {{ Carbon\Carbon::parse($bol_cuotas[$index - 1]->fecha_pago)->format('d/m/Y') }}
                                                         @endif
                                                     </td>
                                                     <td>
@@ -324,12 +324,16 @@
                                                             value="{{ $fc_cuota->fecha_pago }}">
                                                     </td>
                                                     <td>
-                                                        @if ($index == 0)
-                                                            Aun no ha sido pagado
+                                                        @if ($fc_cuota->estado == 1)
+                                                            @if($pagos_reg[$index]->fecha_pago == $fc_cuota->fecha_pago)
+                                                                Se pagó el mismo día     
+                                                            @elseif(Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago) > 0)
+                                                                Se pagó a tiempo
+                                                            @else
+                                                                Tiene {{Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago)}} días de Retraso
+                                                            @endif
                                                         @else
-                                                            Se retrasó
-                                                            {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays(\Carbon\Carbon::parse($pagos_reg[$index]->fecha_pago)) }}
-                                                            días
+                                                            Aun no ha sido pagado
                                                         @endif
                                                     </td>
                                                     <td>
@@ -390,7 +394,7 @@
                                             <div class="form-control">
                                                 <p><strong>Tipo de Pago:</strong></p>
                                                 <hr>
-                                                @if ($factura->estado_pago != 0)
+                                                @if ($boleta->estado_pago != 0)
                                                     <h3 class="text-right">{{ucfirst($pagos->pluck('tipo_pago')->first())}}</h3>
                                                 @else
                                                     <i>Aun no ha pago registrado</i>
@@ -428,7 +432,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-control">
                                                         <strong>Monto Pagado</strong><hr>
-                                                        <p class="text-right">{{ $factura->moneda->simbolo }} {{number_format($pagos_deta[0]->montos_input,2)}}</p>
+                                                        <p class="text-right">{{ $boleta->moneda->simbolo }} {{number_format($pagos_deta[0]->montos_input,2)}}</p>
                                                     </div>
                                                 </div>
                                                 <br>
@@ -487,14 +491,14 @@
                                                     <div class="form-control">
                                                         <strong>Monto de Pago</strong>
                                                         <hr>
-                                                        <p class="text-right">{{$factura->moneda->simbolo}} {{number_format($pagos_deta[0]->montos_input,2)}}</p>
+                                                        <p class="text-right">{{$boleta->moneda->simbolo}} {{number_format($pagos_deta[0]->montos_input,2)}}</p>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-control">
                                                         <strong>Vuelto</strong>
                                                         <hr>
-                                                        <p class="text-right">{{$factura->moneda->simbolo}} {{$pagos_deta[0]->adicional_input}}</p>
+                                                        <p class="text-right">{{$boleta->moneda->simbolo}} {{$pagos_deta[0]->adicional_input}}</p>
                                                     </div>
                                                 </div>
                                                 @break
@@ -516,7 +520,7 @@
                                                 @break
                                             @default
                                         @endswitch
-                                        @if ($factura->estado_pago != 0)
+                                        @if ($boleta->estado_pago != 0)
                                             <div class="col-sm-3">
                                                 <div class="form-control">
                                                     <strong>Comprobante</strong><hr>
@@ -587,18 +591,19 @@
 
                         </div>
                     </div>
-                    <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('pagos.store_boleta') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id_factura" id="id_factura[]" value="{{ $factura->id }}">
-                        <div class="display: none" id="ids_divs_factura">
+                        <input type="hidden" name="tipo_comprobante" value="boleta_m">
+                        <input type="hidden" name="id_boleta_m" id="id_boleta[]" value="{{ $boleta->id }}">
+                        <div class="display: none" id="ids_divs_boleta">
 
                         </div>
-                        <input type="hidden" name="numero_factura[]" id="cod_factura" value="{{ $cod_fact }}">
+                        <input type="hidden" name="numero_boleta_m[]" id="cod_boleta" value="{{ $cod_bol }}">
                         <input type="hidden" name="tot_cuotas[]" id="total_cuota" value="">
-                        {{-- <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio"value=""> --}}
+                        {{-- <input type="hidden" name="cuotas_precio_{{ $cod_bol }}[]" id="cuota_precio"value=""> --}}
 
                         <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">
-                        {{-- <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_`+index+`" value="`+row.factura_cod+`"> --}}
+                        {{-- <input class="form-control" type="hidden" name="numero_boleta[]" id="numero_fac_`+index+`" value="`+row.boleta_cod+`"> --}}
                         <div class="metodo_pago">
                             <input type="hidden" name="input_pago" id="input_pago" value="1">
                             <div class="row">
@@ -1014,7 +1019,7 @@
     <script>
         function modal_pagos(value) {
             $('.input_check').remove();
-            $('.cuota_prec_fact').remove();
+            $('.cuota_prec_bol').remove();
             $('#lote_pago').css('display', 'none');
             $('#only_pago').css('display', 'block');
 
@@ -1027,17 +1032,17 @@
             var total_c = $(`#total_` + value).val();
             var ids = `
                 <input class="input_check" type="hidden" name="id_cuota[]" value="` + value + `">
-                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
-                `" value="` + value + '_' + total_c + `" class="cuota_prec_fact">
+                <input type="hidden" name="cuotas_precio_{{ $cod_bol }}[]" id="cuota_precio_` + value +
+                `" value="` + value + '_' + total_c + `" class="cuota_prec_bol">
             `;
-            $('#ids_divs_factura').append(ids);
+            $('#ids_divs_boleta').append(ids);
 
             // console.log(total_c);
             // var ids = `
         //     <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
-        //     <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
+        //     <input type="hidden" name="cuotas_precio_{{ $cod_bol }}[]" id="cuota_precio" value="`+value + '_' + total_c+`" class="cuota_prec_bol">
         // `;
-            // $('#ids_divs_factura').append(ids);
+            // $('#ids_divs_boleta').append(ids);
 
             console.log(total_c);
             $('#cuota_n').html(numero);
@@ -1173,16 +1178,16 @@
             $('#lote_pago').append(html);
             var ids = `
                     <input class="input_check" type="hidden" name="id_cuota[]" value="` + value + `">
-                    <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
-                `" value="` + value + '_' + total_c + `" class="cuota_prec_fact">
+                    <input type="hidden" name="cuotas_precio_{{ $cod_bol }}[]" id="cuota_precio_` + value +
+                `" value="` + value + '_' + total_c + `" class="cuota_prec_bol">
                 `;
-            $('#ids_divs_factura').append(ids);
+            $('#ids_divs_boleta').append(ids);
 
         }
         $('#pago_lote').on('click', function() {
             $('.lote_pago_sect').remove();
             $('.input_check').remove();
-            $('.cuota_prec_fact').remove();
+            $('.cuota_prec_bol').remove();
             var total_c = 0;
             var count_check = document.querySelectorAll('.check_only');
             count_check.forEach(function(checkbox) {
@@ -1200,3 +1205,4 @@
         });
     </script>
 @endsection
+    

@@ -423,10 +423,35 @@ Route::group(
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
 		Route::resource('/pagados','PagadosController');
-		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
+		// Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura
+		// PAGADOS FACTURAS
 		Route::get('/pagos/facturas','PagadosController@view_facturas')->name('pagos.view_facturas');
-		Route::get('/pagos/facturas/{id}','PagadosController@edit_mora')->name('pagos.edit_mora');
-		Route::get('/pagos/facturas/cliente/{ruc}','PagadosController@show_cliente')->name('pagos.show_cliente');
+		Route::post('/pagados/lista_ajax_fact','PagadosController@lista_ajax_fact')->name('pagos.lista_ajax_fact');
+		Route::get('/pagos/facturas/{id}','PagadosController@show_facturas')->name('pagos.show_facturas');
+		Route::get('/pagos/facturas/cliente/{ruc}','PagadosController@show_cliente_factura')->name('pagos.show_cliente_factura');
+		// PAGADOS FACTURAS MANUALES
+		Route::get('/pagos/facturas_m','PagadosController@view_facturas_m')->name('pagos.view_facturas_m');
+		Route::post('/pagados/lista_ajax_fact_m','PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
+		Route::get('/pagos/facturas_m/{id}','PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
+		Route::get('/pagos/facturas_m/cliente/{ruc}','PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
+		// PAGADOS BOLETAS 
+		Route::post('/pagados/store_boleta','PagadosController@store_boleta')->name('pagos.store_boleta');
+		
+		Route::get('/pagos/boletas','PagadosController@view_boletas')->name('pagos.view_boletas');
+		Route::post('/pagados/lista_ajax_boletas','PagadosController@lista_ajax_boleta')->name('pagos.lista_ajax_boletas');
+		Route::get('/pagos/boletas/{id}','PagadosController@show_boletas')->name('pagos.show_boletas');
+		Route::get('/pagos/boletas/cliente/{ruc}','PagadosController@show_cliente_boleta')->name('pagos.show_cliente_boleta');
+		// PAGADOS BOLETAS MANUALES
+		Route::get('/pagos/boletas_m','PagadosController@view_boletas_m')->name('pagos.view_boletas_m');
+		Route::post('/pagados/lista_ajax_boletas_m','PagadosController@lista_ajax_boletas_m')->name('pagos.lista_ajax_boletas_m');
+		Route::get('/pagos/boletas_m/{id}','PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
+		Route::get('/pagos/boletas_m/cliente/{ruc}','PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
+		//PAGADOS DE NOTA DE VENTA
+		Route::get('/pagos/nota_venta','PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
+		Route::post('/pagados/lista_ajax_n_venta','PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
+
+
+
 		Route::post('/show_cuotas','PagadosController@show_cuotas')->name('pagos.show_cuota');
 		Route::get('/show_cuotas/print/{id}','PagadosController@print_cuotas')->name('pagos.print_cuotas');
 		// Route::post('/pagados/store',)
