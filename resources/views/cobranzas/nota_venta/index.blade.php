@@ -108,7 +108,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($nota_venta as $index => $n_v)
+                                            @foreach ($nota_venta->where('estado_pago', 0) as $index => $n_v)
                                                 <tr>
                                                     <td>{{$n_v->id}}</td>
                                                     <td>
@@ -122,7 +122,7 @@
                                                             disabled><strong>SIN PAGO</strong></button>
                                                     </td>
                                                     <td>
-                                                        {{$n_v->n_venta_cod}}
+                                                        {{$n_v->cod_nota_venta}}
                                                     </td>
                                                     <td>
                                                         {{$n_v->cliente->nombre}}
@@ -141,12 +141,12 @@
                                                         {{$n_v->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}
                                                     </td>
                                                     <td>
-                                                        {{-- <a class="btn btn-primary"
-                                                                href="{{ route('pagos.show_facturas', $f_sp->codigo_fac) }}">Detalles</a> --}}
+                                                        <a class="btn btn-primary"
+                                                            href="{{ route('pagos.show_nota_venta', $n_v->cod_nota_venta) }}">Detalles</a>
                                                     </td>
                                                     <td>
                                                         <button class="btn btn-primary"
-                                                                onclick="pago_n_venta( {{ $n_v->id }} )">Pagar</button>
+                                                            onclick="pago_n_venta( {{ $n_v->id }} )">Pagar</button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -205,7 +205,7 @@
                                             <tr>
                                                 <th>Item</th>
                                                 <th>Estado</th>
-                                                <th>N° Factura</th>
+                                                <th>N° Nota de Venta</th>
                                                 <th>Cliente</th>
                                                 <th>Tipo</th>
                                                 <th>Total Pagado</th>
@@ -222,7 +222,7 @@
                                                             disabled><strong>PAGADO</strong></button>
                                                     </td>
                                                     <td>
-                                                        {{$n_v2->n_venta_cod}}
+                                                        {{$n_v2->cod_nota_venta}}
                                                     </td>
                                                     <td>
                                                         {{$n_v2->cliente->nombre}}
@@ -238,11 +238,11 @@
                                                         {{$n_v->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}
                                                     </td>
                                                     <td>
-                                                        FALTA
+                                                        {{Carbon\Carbon::parse($compr_pago->where('nota_venta_id', $n_v2->id)->pluck('fecha_registro')->first())->format('d-m-Y')}}
                                                     </td>
                                                     <td>
-                                                        {{-- <a class="btn btn-primary"
-                                                            href="{{ route('pagos.show_facturas', $f_sp->codigo_fac) }}">Detalles</a>   --}}
+                                                        <a class="btn btn-primary"
+                                                            href="{{ route('pagos.show_nota_venta', $n_v2->cod_nota_venta) }}">Detalles</a>
                                                     </td>
                                                 </tr>                                                
                                             @endforeach
@@ -347,7 +347,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('pagos.store_n_venta') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="tipo_comprobante" value="factura">
                         <div class="display: none" id="ids_divs_n_venta">

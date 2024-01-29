@@ -447,8 +447,13 @@ Route::group(
 		Route::get('/pagos/boletas_m/{id}','PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
 		Route::get('/pagos/boletas_m/cliente/{ruc}','PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
 		//PAGADOS DE NOTA DE VENTA
+		Route::post('/pagados/store_nota_venta','PagadosController@store_n_venta')->name('pagos.store_n_venta');
+
 		Route::get('/pagos/nota_venta','PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
 		Route::post('/pagados/lista_ajax_n_venta','PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
+		Route::get('/pagos/nota_venta/{id}','PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
+		
+		Route::get('/pagos/nota_venta/cliente/{ruc}','PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
 
 
 
