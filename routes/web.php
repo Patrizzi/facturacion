@@ -452,7 +452,6 @@ Route::group(
 		Route::get('/pagos/nota_venta','PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
 		Route::post('/pagados/lista_ajax_n_venta','PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
 		Route::get('/pagos/nota_venta/{id}','PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
-		
 		Route::get('/pagos/nota_venta/cliente/{ruc}','PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
 
 

@@ -126,7 +126,7 @@
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
                                                         href="{{ route('pagos.show_nota_venta', $n_venta->id) }}"
-                                                        target="_blank">Ver boleta</a>
+                                                        target="_blank">Ver Nota V.</a>
                                                 </div>
                                             </div>
                                         </div>

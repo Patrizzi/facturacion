@@ -1872,22 +1872,30 @@ class PagadosController extends Controller
     public function show_cliente_nota_v($ruc_cli){
         $ruc = $ruc_cli;
         $cliente = Cliente::where('numero_documento', $ruc)->first();
-        $boletas = NotaVenta::where('cliente_id',$cliente->id)->get();
+        $nota_ve = NotaVenta::where('cliente_id',$cliente->id)->get();
+        // return $nota_ve->id;
+        $nota_ve_reg2 = NotaVentaRegistro::whereIn('nota_venta_id', $nota_ve->pluck('id'))->get();
         // $cuotas_all = Cuotas_credito::where('boleta_m_id', '!=', null)->get();
         $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
         $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
         $igv = Igv::first();
-
+        
         // Pagados en el mes conversion de Monedas
-        foreach ($boletas as $key => $bol) {
-            $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada;
-            $total = $subtotal + ($bol->op_gravada * ($igv->renta / 100));
-            if($bol->moneda->nombre == 'soles'){
-                $soles[] =  $total;
-                $dolares[] = $total / $bol->cambio;
+        foreach ($nota_ve as $key => $n_v) {
+            $total = 0;
+            $totales1 = 0;
+            $nota_v_rg = NotaVentaRegistro::where('nota_venta_id', $n_v->id)->get();
+            foreach($nota_v_rg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $totales1 += $total;
+            $tipo_c = TipoCambio::where('fecha', Carbon::parse($n_v->fecha_emision)->format('Y-m-d'))->first();
+            if($n_v->moneda->nombre == 'soles'){
+                $soles[] =  $totales1;
+                $dolares[] = $totales1 / $tipo_c->paralelo;
             }else{
-                $dolares[] = $total;
-                $soles[] = $total * $bol->cambio;
+                $dolares[] = $totales1;
+                $soles[] = $totales1 * $tipo_c->paralelo;
             }
         }
         $tot_sol = array_sum($soles);
@@ -1898,18 +1906,25 @@ class PagadosController extends Controller
 
         $star_month = Carbon::now()->startOfMonth();
         $end_month = Carbon::now()->endOfMonth();
-        $bol_mes = NotaVenta::where('cliente_id',$cliente->id)->whereBetween('created_at',[$star_month,$end_month])->get();
+        $n_v_mes = NotaVenta::where('cliente_id',$cliente->id)->whereBetween('created_at',[$star_month,$end_month])->get();
         $soles_m = [];
         $dolares_m = [];
-        foreach ($bol_mes as $key => $bol_m) {
-            $subtotal = $bol_m->op_gravada + $bol_m->op_inafecta + $bol_m->op_exonerada;
-            $total = $subtotal + ($bol_m->op_gravada * ($igv->renta / 100));
-            if($bol_m->moneda->nombre == 'soles'){
-                $soles_m[] =  $total;
-                $dolares_m[] = $total * $bol_m->cambio;
+        foreach ($n_v_mes as $key => $n_v_m) {
+            $total = 0;
+            $totales = 0;
+            $nota_v_rg = NotaVentaRegistro::where('nota_venta_id', $n_v->id)->get();
+            foreach($nota_v_rg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $totales += $total;
+            $tipo_c = TipoCambio::where('fecha', Carbon::parse($n_v->fecha_emision)->format('Y-m-d'))->first();
+
+            if($n_v_m->moneda->nombre == 'soles'){
+                $soles_m[] =  $totales;
+                $dolares_m[] = $totales * $tipo_c->paralelo;
             }else{
-                $dolares[] = $total;
-                $soles_m[] = $total / $bol_m->cambio;
+                $dolares[] = $totales;
+                $soles_m[] = $totales / $tipo_c->paralelo;
             }
         }
         $tot_sol_m = array_sum($soles_m);
@@ -1917,36 +1932,42 @@ class PagadosController extends Controller
         
 
         // PAGOS EN DEUDA
-        $bol_sin = NotaVenta::where('cliente_id',$cliente->id)->where('estado_pago', '!=', 2)->get();
+        $n_v = NotaVenta::where('cliente_id',$cliente->id)->where('estado_pago', '!=', 2)->get();
         $soles_s_p = [];
-        foreach ($bol_sin as $key => $bol_s) {
-            $subtotal = $bol_s->op_gravada + $bol_s->op_inafecta + $bol_s->op_exonerada;
-            $total = $subtotal + ($bol_s->op_gravada * ($igv->renta / 100));
-            if($bol_s->moneda->nombre == 'soles'){
-                $soles_s_p[] =  round($total,2);
+        foreach ($n_v as $key => $n_v_f) {
+            $total = 0;
+            $totales = 0;
+            $nota_v_rg = NotaVentaRegistro::where('nota_venta_id', $n_v_f->id)->get();
+            foreach($nota_v_rg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $totales += $total;
+            $tipo_c = TipoCambio::where('fecha', Carbon::parse($n_v_f->fecha_emision)->format('Y-m-d'))->first();
+            if($n_v_f->moneda->nombre == 'soles'){
+                $soles_s_p[] =  $total;
             }else{
-                $soles_s_p[] = round($total / $bol_s->cambio,2);
+                $soles_s_p[] = $total / $tipo_c;
             }
         }
         $tot_sol_sp = array_sum($soles_s_p);
-        if(count($boletas) == 0){
-            $nota_credito[0] = null;
-            $nota_debito[0] = null;
-        }else{
-            foreach ($boletas as $key => $boleta2) {
-                $nota_credito[$key] = Nota_Credito::where('boleta_m_id', $boleta2->id)->first();
-                $nota_debito[$key] = Nota_Debito::where('boleta_m_id', $boleta2->id)->first();
-                if (!isset($nota_credito[$key])) {
-                    $nota_credito[$key] = null;
-                }
-                if (!isset($nota_debito[$key])) {
-                    $nota_debito[$key] = null;
-                }
-            }
-        }
+        // if(count($nota_ve) == 0){
+        //     $nota_credito[0] = null;
+        //     $nota_debito[0] = null;
+        // }else{
+        //     foreach ($nota_ve as $key => $boleta2) {
+        //         $nota_credito[$key] = Nota_Credito::where('boleta_m_id', $boleta2->id)->first();
+        //         $nota_debito[$key] = Nota_Debito::where('boleta_m_id', $boleta2->id)->first();
+        //         if (!isset($nota_credito[$key])) {
+        //             $nota_credito[$key] = null;
+        //         }
+        //         if (!isset($nota_debito[$key])) {
+        //             $nota_debito[$key] = null;
+        //         }
+        //     }
+        // }
         // return $cuotas_all;
-        
-        return view('cobranzas.boletas.clientes',compact('ruc','cliente','boletas','cuotas_all','start_mes','end_mes','igv','tot_dol','tot_sol','moneda_sol','moneda_dol','bol_mes','tot_sol_m','bol_sin','tot_sol_sp','nota_credito','nota_debito'));
+            // return $nota_ve;
+        return view('cobranzas.nota_venta.clientes',compact('ruc','cliente','nota_ve', 'nota_ve_reg2' ,'start_mes','end_mes','igv','tot_dol','tot_sol','moneda_sol','moneda_dol','n_v_mes','tot_sol_m','n_v','tot_sol_sp'));
     }
 
 

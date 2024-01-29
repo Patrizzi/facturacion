@@ -320,8 +320,8 @@
                                                         {{ $simbolo_mon_dol }} {{ $var_precio_tot[$index3]['tot_dol'] }}
                                                     </td>
                                                     <td>
-                                                        {{-- <a href="{{ route('pagos.show_cliente_factura', $clie->numero_documento) }}"
-                                                            class="btn btn-secondary">Ver Detalles</a> --}}
+                                                        <a href="{{ route('pagos.show_cliente_nota_v', $clie->numero_documento) }}"
+                                                            class="btn btn-secondary">Ver Detalles</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
