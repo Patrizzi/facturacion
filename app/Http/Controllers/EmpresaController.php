@@ -22,6 +22,14 @@ class EmpresaController extends Controller
         $banco=Banco::all();
         $moneda=Moneda::all();
         $banco_registro=BancoRegistro::all();
+        //CONFIGURACION ADICINAL
+        foreach ($banco as $key => $bn) {
+            $bn_reg = BancoRegistro::where('banco_id',$bn->id)->get();
+            if(count($bn_reg) == 0){
+                $bn->estado = 1;
+                $bn->save();
+            }
+        }
         return view('configuracion_general.empresa.index',compact('mi_empresa','banco','banco_registro','moneda'));
     }
 

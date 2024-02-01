@@ -17,7 +17,9 @@ class BancoRegistro extends Model
     public function bancos_i(){
         return $this->belongsTo(Banco::class,'banco_id');
     }
-
+    public function monedas_i(){
+        return $this->belongsTo(Moneda::class,'moneda_id');
+    }
 }
 
 
