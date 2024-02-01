@@ -248,7 +248,7 @@
                                         <input type="text" name="creadas_id[]" hidden value="" readonly>
                                         <select name="descripcion1_creadas[]" class="form-control" id="">
                                           <option value="Cta C.">Cuenta Corriente</option>
-                                          <option value="Cta Ah.">Cuenta Ahorro</option>
+                                          <option value="Cta A.">Cuenta Ahorro</option>
                                           <option value="Cta Det.">Cuenta Detracciones</option>
                                           <option value="CCI">Cod. C. Interbancario</option>
                                         </select>
@@ -281,7 +281,7 @@
                                             {{-- <input type="t ext" name="descripcion1_creadas[]" class="form-control" value=" {{$banco_registros->tipo_cuenta}}"> --}}
                                             <select name="descripcion1_creadas[]" class="form-control" id="">
                                               <option value="Cta C." @if($banco_registros->tipo_cuenta == 'Cta C.') selected @endif>Cuenta Corriente</option>
-                                              <option value="Cta Ah." @if($banco_registros->tipo_cuenta == 'Cta Ah.') selected @endif>Cuenta Ahorro</option>
+                                              <option value="Cta A." @if($banco_registros->tipo_cuenta == 'Cta A.') selected @endif>Cuenta Ahorro</option>
                                               <option value="Cta Det." @if($banco_registros->tipo_cuenta == 'Cta Det.') selected @endif>Cuenta Detracciones</option>
                                               <option value="CCI." @if($banco_registros->tipo_cuenta == 'CCI') selected @endif>Cod. C. Interbancario</option>
                                             </select>
@@ -570,7 +570,7 @@
             <div class="col-lg-3">
               <select name="descripcion1[]" class="form-control" id="">
                 <option value="Cta C.">Cuenta Corriente</option>
-                <option value="Cta Ah.">Cuenta Ahorro</option>
+                <option value="Cta A.">Cuenta Ahorro</option>
                 <option value="Cta Det.">Cuenta Detracciones</option>
                 <option value="CCI">Cod. C. Interbancario</option>
               </select>
