@@ -1,6 +1,8 @@
-@php use App\Banco  @endphp
-@php use App\BancoRegistro @endphp
-@php $banco=Banco::where('estado',0)->get(); @endphp
+@php 
+    use App\Banco;
+    use App\BancoRegistro ;
+    $banco=Banco::where('estado',0)->get(); 
+@endphp
 <table style="border-collapse:separate; border-spacing:1em;margin:">
     <tr>
     @if(count($banco) != 4 )
@@ -43,7 +45,7 @@
         /* font-size: 70%; */
     }
     .lol{
-        font-size: 70%;
+        font-size: 75%;
     }
     .border-none{
         border: none;

@@ -6,6 +6,7 @@ use App\TipoCambio;
 use App\servicios;
 use App\Moneda;
 use App\Nota_Credito;
+use App\Tipo_operacion_f;
 
 class TipoCambioObserver
 {
@@ -45,6 +46,7 @@ class TipoCambioObserver
         }
         //* Buscar notas de credito de hace 30 dias? 
         Nota_Credito::nota_credito_month();
+        Tipo_operacion_f::add_new_items();
     }
 
     /**
