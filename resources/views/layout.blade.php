@@ -554,6 +554,8 @@
                 Ladda.bind( '.ladda-button',{ timeout: 8000 });
                 $('#btn_popover').click();
             });
-            
+            setTimeout(function() {
+                $('#btn_popover').popover('hide');
+            }, 10000);
         </script>
 </html>

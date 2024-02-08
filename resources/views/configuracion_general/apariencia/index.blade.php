@@ -162,7 +162,27 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h2><strong>Comprobantes</strong></h2>
+                                        <div class="ibox-content">
+                                            <div class="">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <h4>Firma en Guia de Remision</h4>
+                                                        <strong>Ocultar&nbsp;</strong><input type="checkbox" class="js-switch" name="remision_firma" @if(Auth::user()->config->guia_remision_firma == 0) checked @endif/><strong>&nbsp;Mostrar</strong>
+                                                        <hr>
 
+                                                    </div>
+                                                    <div class="col-lg-6 text-right">
+                                                        <br>
+                                                        <button type="sumbit" class="btn btn-success"><i
+                                                            class="fa fa-refresh" aria-hidden="true"></i>
+                                                        Cambiar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>{{-- row --}}
                             </form>
@@ -218,6 +238,10 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+
     <script>
         $(document).ready(function() {
 
@@ -227,6 +251,8 @@
             })
 
         });
+        var elem_2 = document.querySelector('.js-switch');
+        var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
     </script>
 
 @endsection

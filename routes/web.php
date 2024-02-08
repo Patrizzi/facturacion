@@ -219,7 +219,7 @@ Route::group(
 		Route::post('/facturacion/create','FacturacionController@create')->name('facturacion.create');
 		Route::put('/facturacion/store/{id_moneda}','FacturacionController@store')->name('facturacion.store');
 		Route::post('/facturacion/anular','FacturacionController@anulacion')->name('facturacion.anulacion');
-		// Route::post('ticket_ajax', 'FacturacionController@ticket_ajax')->name('ticket_ajax');
+		Route::post('/facturacion/ajax_remision', 'FacturacionController@ajax_remision')->name('facturacion.ajx_remision');
 		// Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 
 
@@ -230,6 +230,7 @@ Route::group(
 		
 		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
 		Route::resource('facturacion_manual','FacturacionMController');
+		Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
 
 		//boleta manual manual
 		Route::resource('boleta_manual','BoletaMController');

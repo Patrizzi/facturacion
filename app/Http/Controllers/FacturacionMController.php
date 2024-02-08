@@ -24,6 +24,7 @@ use App\Banco;
 use App\Cuotas_credito;
 use App\Codigo_guia_almacen;
 use App\Facturacion_registro;
+use App\GuiaRemisionManual;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use PDF;
@@ -511,6 +512,26 @@ class FacturacionMController extends Controller
         $j = 1;
         
         return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+    }
+    public function ajax_remision(Request $request){
+        $id_cli = $request->get('id_cliente');
+        // buscar guias de remision por cliente que no este enviadas a la sunat
+
+        $guias = GuiaRemisionManual::where('cliente_id', $id_cli)->where('g_electronica', 0)->get();
+        // return count($guias);
+        
+        if(count($guias) != 0){
+            foreach ($guias as $guias_r) {
+                $guias_cod[] = $guias_r->cod_guia;
+            }
+            return $guias_cod;
+        }else{
+            $guias_cod = "vacio";
+            return $guias_cod;
+        }
+        
+
+
     }
     public function ticket(Request $request,$id){
         

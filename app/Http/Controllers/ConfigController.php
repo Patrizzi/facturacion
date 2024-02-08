@@ -71,6 +71,8 @@ class ConfigController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        // return $request;
         $apariencia=Config::find($id);
         $apariencia->fondo_perfil=$request->get('fondo_perfil');
         $apariencia->borde_foto=$request->get('borde_foto');
@@ -81,6 +83,12 @@ class ConfigController extends Controller
         $apariencia->color_sombra_nombre=$request->get('color_sombra_nombre');
         $apariencia->color_nombre=$request->get('color_nombre');
         $apariencia->tamano_letra_perfil=$request->get('tamano_letra_perfil');
+        if ($request->get('remision_firma') == 'on') {
+            $apariencia->guia_remision_firma = 0;
+        }else{
+            $apariencia->guia_remision_firma = 1;
+        }
+
         $apariencia->save();
 
         return redirect()->route('apariencia.index');

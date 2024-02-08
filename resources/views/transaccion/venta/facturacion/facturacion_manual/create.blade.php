@@ -70,9 +70,14 @@
                                 <tr>
                                     <td>Orden de compra</td><td>:</td>
                                     <td><input type="text" class="form-control m-b" name="orden_compra" required  autocomplete="off" value="0"></td>
-                                    <td>Guía remisión</td><td>:</td>
-                                    <td><input type="text" class="form-control" value="0" name="guia_r"></td>
-                                    
+                                    <td>Guía remisión <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small></td><td>:</td>
+                                    <td>
+                                        <input list="guia_list" type="text" class="form-control" value="0" name="" id="guia_remi_input" autocomplete="off">
+                                        <datalist id="guia_list">
+                                        </datalist>
+                                        <span id="lista_gr"></span>
+                                        <input type="hidden" name="guia_r" id="guia_save_inp" value="0">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Vendedor</td><td>:</td>
@@ -342,6 +347,17 @@
             min-width: 376px !important;
         }
     }
+    .item_guia{
+        font-size: 11px;
+        margin: 0px 7px;
+        cursor: hand;
+    }
+    a.item_guia::after{
+        content: "x";
+        font-size: 9px;
+        color: red;
+        vertical-align: top;
+    }
 </style>
 
 
@@ -422,11 +438,79 @@
                         };
                     })
                 };
+                //LIMPIAR EL INPUT GUIA REMISION
+                $('#guia_save_inp').val("0");
             },
             cache: true
         }
     });
+    $('.select2_demo_client').on('select2:select', function (e) {
+        $('#guia_remi_input').val('0');
+        var s = document.getElementById("guia_list");
+        var numChilds = s.children.length;
+        for(var i=0;i<numChilds;i++){
+            s.children[0].remove() 
+        }
+        var data = e.params.data;
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion_manual.ajx_remision') }}",
+            data: {
+                '_token': '{{ csrf_token() }}',
+                'id_cliente': data.id,
+            },
+            success: function (msg) {
+                var miSpan = document.getElementById('lista_gr');
+                while (miSpan.firstChild) {
+                    miSpan.removeChild(miSpan.firstChild);
+                }
+                $('#guia_save_inp').val("0");
 
+                if(typeof(msg) == "object"){
+                    for (let index = 0; index < msg.length; index++) {
+                        $('#guia_list').append("<option value='" + msg[index] + "'>");
+                    }
+                }
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+    });
+    function agregarElemento() {
+
+        const input = document.getElementById("guia_remi_input");
+        const datalist = document.getElementById("guia_list");
+        const listaElementos = document.getElementById("lista_gr");
+        const opciones = input.value.trim().split(' ');
+
+        opciones.forEach(opcion => {
+            if (opcion && !Array.from(listaElementos.children).some(el => el.textContent === opcion)) {
+                var val = $('#guia_save_inp').val();
+                listaElementos.innerHTML += `<a class="item_guia" onclick="remove_item(this)">${opcion}</a>`;
+                
+                if(val == "0" ){
+                    $('#guia_save_inp').val("");
+                }
+                var val2 = $('#guia_save_inp').val();
+                $('#guia_save_inp').val(val2+`${opcion} `);
+            }
+        });
+
+        input.value = "";
+    }
+    function remove_item(elemento){
+        var input = $('#guia_save_inp').val();
+        var texto = elemento.innerText;
+        var new_text = texto+' ';
+        var nuevoValor = input.replace(new_text, '');
+        $('#guia_save_inp').val(nuevoValor);
+        elemento.remove();
+    }
+    
     function valida(f) {
         var boton=document.getElementById("boton");
         var completo = true;
@@ -1017,6 +1101,30 @@
             }
         })
     }
+    $('#guia_remi_input').on('change', function(){
+        var valor = this.value;
+        var conversion = valor.replace(/ /g, "|");
+        var listaNombres = valor.split(" ");    
+        console.log(listaNombres);
+        for (let i = 0; i < listaNombres.length; i++) {
+            var compa = /^([A-Z0-9]{3,4})-\d{1,8}$/;
+            var seg = compa.test(listaNombres[i])
+            if(seg == true || listaNombres[i] == 0 ){
+                $('#guia_remi_input').css('border', '1px solid #e5e6e7');
+                agregarElemento();
+            }else{
+                $('#guia_remi_input').css('border', 'solid 1px red');
+                
+            }
+        }
+    });
+    $("#guia_remi_input").on("keyup", function() {
+        var value = $(this).val();
+        var spaceIndex = value.indexOf(" ");
+        if (spaceIndex > -1) {
+            $('#guia_remi_input').click();
+        }
+    });
     function filterFloat(evt,input){
             var key = window.Event ? evt.which : evt.keyCode;    
             var chark = String.fromCharCode(key);
