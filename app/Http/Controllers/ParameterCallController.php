@@ -14,6 +14,8 @@ use App\Cliente;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
+use App\Tipo_operacion_f;
+use App\TipoDetraccion;
 use App\User;
 use CifrasEnLetras;
 use Swift_SmtpTransport;
@@ -435,5 +437,9 @@ class ParameterCallController extends Controller
     {
         $user = User::where('estado', 1)->get();
         return $user;
+    }
+    public function search_tipo_operacion(Request $request){
+        $tipo_operacion = TipoDetraccion::where('id',$request->get('id_tipo_detra'))->first();
+        return $tipo_operacion;
     }
 }

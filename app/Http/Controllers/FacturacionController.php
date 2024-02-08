@@ -29,10 +29,12 @@ use App\Tipo_operacion_f;
 use App\Ventas_registro;
 use App\Kardex_entrada;
 use App\kardex_entrada_registro;
+use App\MedioPagoDetraccion;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use App\Stock_almacen;
 use App\Stock_producto;
+use App\TipoDetraccion;
 use Carbon\Carbon;
 use Luecano\NumeroALetras\NumeroALetras;
 use PDF;
@@ -186,6 +188,8 @@ class FacturacionController extends Controller
         $suma=$personal_contador+1;
         $categoria='producto';
         $tipo_operacion = Tipo_operacion_f::all();
+        $detraccion = TipoDetraccion::all();
+        $medio_pago = MedioPagoDetraccion::all();
             // $empresa = Empresa::all();
             // obtencion de la sucursal
 
@@ -252,7 +256,7 @@ class FacturacionController extends Controller
         $fecha_1 = $fecha_hoy->format('Y-m-d');
         // return $modifiedMutable;
 
-        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion','fecha_1' ));
+        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion','fecha_1','medio_pago','detraccion' ));
     }
 
     public function create_ms(Request $request){
@@ -406,7 +410,7 @@ class FacturacionController extends Controller
      */
     public function store(Request $request,$id_moneda)
     {
-        // return $request;
+        return $request;
         $articulo = $request->input('articulo');
 
         // return $articulo;

@@ -194,7 +194,7 @@ class Config_fe extends Model
             // Venta - contado
             $invoice = (new Invoice())
             ->setUblVersion('2.1')
-            ->setTipoOperacion('0101') // Venta - Catalog. 51 // pagina 51 del pdf sunat 2.1
+            ->setTipoOperacion($factura->tipo_operacion->codigo) // Venta - Catalog. 51 // pagina 51 del pdf sunat 2.1
             ->setTipoDoc('01') // Factura - Catalog. 01  // pagina 33 del pdf sunat 2.1
             ->setSerie($serie)// numero de serie
             ->setCorrelativo($correlativo) // y numero correlativo  // ejemplo en seccion 2.2 pagina 20 del pdf sunat 2.1 infomracion precisa pagina 30 pdf sunat 2.1
@@ -263,7 +263,7 @@ class Config_fe extends Model
 
             $invoice = (new Invoice())
             ->setUblVersion('2.1')
-            ->setTipoOperacion('0101') // Venta - Catalog. 51 // pagina 51 del pdf sunat 2.1
+            ->setTipoOperacion($factura->tipo_operacion->codigo) // Venta - Catalog. 51 // pagina 51 del pdf sunat 2.1
             ->setTipoDoc('01') // Factura - Catalog. 01  // pagina 33 del pdf sunat 2.1
             ->setSerie($serie)// numero de serie
             ->setCorrelativo($correlativo) // y numero correlativo  // ejemplo en seccion 2.2 pagina 20 del pdf sunat 2.1 infomracion precisa pagina 30 pdf sunat 2.1

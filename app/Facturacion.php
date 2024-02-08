@@ -36,5 +36,8 @@ class Facturacion extends Model
     public function producto(){
         return $this->belongsTo(Producto::class,'producto_id');
     }
+    public function tipo_operacion(){
+        return $this->belongsTo(Tipo_operacion_f::class,'tipo_operacion_id');
+    }
 
 }
