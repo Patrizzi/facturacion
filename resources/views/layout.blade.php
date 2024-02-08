@@ -229,7 +229,7 @@
                 @endif
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/.svg')}}" class="iconos">  <span class="nav-label">Créditos</span></a>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/payment.png')}}" class="iconos">  <span class="nav-label">Créditos</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li>
                             {{-- <a href="#">Pagos</a>
