@@ -15,7 +15,6 @@ class PagadosController extends Controller
     {
         return view('inventario.pagados.index');
     }
-
     /**
      * Show the form for creating a new resource.
      *
