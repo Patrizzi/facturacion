@@ -190,6 +190,8 @@ class FacturacionController extends Controller
         $tipo_operacion = Tipo_operacion_f::all();
         $detraccion = TipoDetraccion::all();
         $medio_pago = MedioPagoDetraccion::all();
+        $tipo_cambio = TipoCambio::latest()->first();
+        // return $tipo_cambio;
             // $empresa = Empresa::all();
             // obtencion de la sucursal
 
@@ -256,7 +258,7 @@ class FacturacionController extends Controller
         $fecha_1 = $fecha_hoy->format('Y-m-d');
         // return $modifiedMutable;
 
-        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion','fecha_1','medio_pago','detraccion' ));
+        return view('transaccion.venta.facturacion.create',compact('forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','factura_numero','sucursal','empresa','tipo_operacion','fecha_1','medio_pago','detraccion','tipo_cambio'));
     }
 
     public function create_ms(Request $request){
