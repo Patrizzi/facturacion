@@ -14,6 +14,7 @@ use App\Facturacion;
 use App\Facturacion_registro;
 use App\Forma_pago;
 use App\Cuotas_credito;
+use App\Detracciones;
 use App\Guia_remision;
 use App\Igv;
 use App\Marcas;
@@ -624,13 +625,25 @@ class FacturacionController extends Controller
                 $cuota_cred->save();
             }
         }
-
+        // return $request;
         // Detracciones
         $tipo_op = $request->get('tipo_operacion');
-        return explode(' ', $tipo_op);
-        // if(){
-
-        // }
+        $tipo_ex = explode(' ', $tipo_op);
+        if($tipo_ex[0] == '1001' || $tipo_ex[0] == '1002' || $tipo_ex[0] == '1003' ||$tipo_ex[0] == '1004'){
+            //
+            // $detracciones = Tipo_operacion_f::where('codigo', $tipo_ex[0])->first();
+            $fact_detra = new Detracciones();
+            $fact_detra->factura_id = $facturacion->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $request->get('precio_final_igv');
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
+        // return $tipo_ex[0];
+       
 
         //contador de valores de cantidad
         $cantidad = $request->input('cantidad');
@@ -895,7 +908,13 @@ class FacturacionController extends Controller
         $sub_total = 0;
         $banco = Banco::where('estado', 0)->get();
         $j = 1;
-        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
+
+        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
+            $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
+        }else{
+            $detraccion = 1;
+        }
+        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion'));
 
         if ($facturacion->id_cotizador_servicio == NULL) {
             return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));

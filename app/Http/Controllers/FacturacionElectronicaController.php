@@ -24,6 +24,7 @@ use App\Nota_Debito;
 use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\config_acc_guia;
+use App\Detracciones;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -147,7 +148,16 @@ class FacturacionElectronicaController extends Controller
 
         // if($factura->tipo=="producto"){
             //factura
+        $det = Detracciones::where('factura_id', $factura->id)->first();
+        // return $det;
+        //invoce - detraccion
+        if($det !== null){
+            // return "c";
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+        }else{
+            // return "b";
             $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+        }
             
         // }elseif($factura->tipo=="servicio"){
         //     //factura
@@ -180,9 +190,17 @@ class FacturacionElectronicaController extends Controller
         }
         //configuracion de conexion
         $see= config_acceso_sunat::facturacion_electronica();
-        
-        //invoce
-        $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+
+        $det = Detracciones::where('factura_id', $factura->id)->first();
+        // return $det;
+        //invoce - detraccion
+        if($det !== null){
+            // return "c";
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+        }else{
+            // return "b";
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+        }
         //envio a SUNAT    
         $result = config_acceso_sunat::send($see, $invoice);
         // return dd($result);
@@ -228,7 +246,15 @@ class FacturacionElectronicaController extends Controller
         //configuración de conexión
         $see=config_acceso_sunat::facturacion_electronica();
 
-        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
+        $det = Detracciones::where('factura_m_id', $factura->id)->first();
+        //invoce - detraccion
+        if($det !== null){
+            // return "c";
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+        }else{
+            // return "b";
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+        }
 
         $result=config_acceso_sunat::send($see, $invoice);
 
@@ -267,7 +293,15 @@ class FacturacionElectronicaController extends Controller
         $see= config_acceso_sunat::facturacion_electronica();
         
         //invoce
-        $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
+        $det = Detracciones::where('factura_m_id', $factura->id)->first();
+        
+        if($det !== null){
+            //invoce - detraccion
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+        }else{
+            //invoce
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+        }
         //envio a SUNAT    
         $result = config_acceso_sunat::send($see, $invoice);
         

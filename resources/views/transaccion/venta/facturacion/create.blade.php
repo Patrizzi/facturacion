@@ -199,11 +199,7 @@
                                     <td>Detracción</td><td>:</td>
                                     <td>
                                         <input type="checkbox" class="js-switch" name="estado">
-                                            {{-- <button type="button" class="btn-circle" data-toggle="modal" data-target="#modal_detraccion">
-                                                <i class="fa fa-info"></i>
-                                            </button> --}}
-                                            {{-- <a href="" ><i class="fa fa-info"></i></a> --}}
-                                            <a href="" id="button_detracc" data-toggle="modal" data-target="#modal_detraccion" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                                        <a href="" id="button_detracc" data-toggle="modal" data-target="#modal_detraccion" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
                                     </td>
                                     <td>Observación</td><td>:</td>
                                     <td><textarea class="form-control" name="observacion" id="observacion">Emitimos la siguiente Factura a vuestra solicitud</textarea></td>
@@ -329,7 +325,7 @@
                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Configuración de Detracciones</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -341,7 +337,7 @@
                                                     <h3 class="text-center text-bold">Por indicaciones de Sunat la Detracción se envía en Soles.</h3>
                                                     <div class="row">
                                                         <div class="col-sm-8">
-                                                            <label for="">Tipo de Detraccion</label>
+                                                            <label for=""><strong>Tipo de Detraccion</strong></label>
                                                             <select class="select2_tipodetrac ipt_detrac" name="tipo_detraccion" id="select_tipo_pago" > 
                                                                 <option value="">Seleccionar Tipo</option>
                                                                 @foreach ($detraccion as $detra)
@@ -353,7 +349,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="">Porcentaje de Detraccion</label>
+                                                            <label for=""><strong>Porcentaje de Detraccion</strong></label>
                                                             <input type="text" class="form-control ipt_detrac" name="porcentaje_detraccion" id="porcentaje_detc" >
                                                             <div class="detracc_campo_required">
                                                                 <small>Rellena este campo</small>
@@ -363,7 +359,7 @@
                                                     <hr style="margin-top: 5px; margin-bottom: 5px">
                                                     <div class="row">
                                                         <div class="col-sm-8">
-                                                            <label for="">Medio de Pago</label>
+                                                            <label for=""><strong>Medio de Pago</strong></label>
                                                             <select class="select2_mediopago ipt_detrac" name="medio_pago_detraccion" id="" >
                                                                 <option value="">Seleccionar Medio de Pago</option>
                                                                 @foreach ($medio_pago as $m_pago)
@@ -375,7 +371,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="">Total de Detraccion</label>
+                                                            <label for=""><strong>Total de Detraccion</strong></label>
                                                             <div class="input-group m-b">
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-addon">S/.</span>
@@ -521,8 +517,6 @@
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
     switchery_2.disable();
 
-    
-
     var changeCheckbox = document.querySelector('.js-switch');
     changeCheckbox.onchange = function() {
         if(changeCheckbox.checked == true){
@@ -542,16 +536,6 @@
         
 
     $('.select2_tipo_op').select2();
-
-    $('.select2_tipo_op').on('select2:select', function (e) {
-        // var data = e.params.data;
-        // var id_data = data.id;
-        // var split_id = id_data.split(' ');
-        // console.log(id_data);
-        // if(split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' ||split_id[0] == '1004'){
-        //     $('#modal_detraccion').modal('show');
-        // }
-    });
     $('.select2_mediopago').select2();
     $('.select2_tipodetrac').select2();
     $('.select2_tipodetrac').on('select2:select', function (e) {
@@ -609,14 +593,19 @@
     });
 
     $('.select2_tipo_op').on('select2:select', function (e) {
+        
         var id = e.params.data.id;
         var split_id = id.split(' ');
         if(split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' ||split_id[0] == '1004'){
-            $('#button_detracc').attr('disabled', true);
+            console.log('a');
+            $('#button_detracc').attr('disabled', false); 
             switchery_2.enable();
+            $('.js-switch').trigger('click');
         }else{
-            // switchery_2.click();
+            console.log('b');
+            $('#button_detracc').attr('disabled', true); 
             switchery_2.disable();
+            $('.js-switch').trigger('click');
         }
         // console.log(id.split(' '));
     });
@@ -1224,6 +1213,7 @@
                             ajax(selected.substring(8)); 
                         }
                     }    
+
                     disabled_money();
                 },
             });

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\detracciones;
+use App\Detracciones;
 use Illuminate\Http\Request;
 
 class DetraccionesController extends Controller
@@ -41,10 +41,10 @@ class DetraccionesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\detracciones  $detracciones
+     * @param  \App\Detracciones  $detracciones
      * @return \Illuminate\Http\Response
      */
-    public function show(detracciones $detracciones)
+    public function show(Detracciones $detracciones)
     {
         //
     }
@@ -52,10 +52,10 @@ class DetraccionesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\detracciones  $detracciones
+     * @param  \App\Detracciones  $detracciones
      * @return \Illuminate\Http\Response
      */
-    public function edit(detracciones $detracciones)
+    public function edit(Detracciones $detracciones)
     {
         //
     }
@@ -64,7 +64,7 @@ class DetraccionesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\detracciones  $detracciones
+     * @param  \App\Detracciones  $detracciones
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, detracciones $detracciones)
@@ -75,10 +75,10 @@ class DetraccionesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\detracciones  $detracciones
+     * @param  \App\Detracciones  $detracciones
      * @return \Illuminate\Http\Response
      */
-    public function destroy(detracciones $detracciones)
+    public function destroy(Detracciones $detracciones)
     {
         //
     }

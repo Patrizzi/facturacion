@@ -23,10 +23,13 @@ use App\Tipo_operacion_f;
 use App\Banco;  
 use App\Cuotas_credito;
 use App\Codigo_guia_almacen;
+use App\Detracciones;
 use App\Facturacion_registro;
 use App\GuiaRemisionManual;
+use App\MedioPagoDetraccion;
 use App\Nota_Credito;
 use App\Nota_Debito;
+use App\TipoDetraccion;
 use PDF;
 use Carbon\Carbon;
 
@@ -153,8 +156,11 @@ class FacturacionMController extends Controller
 
         $fecha_hoy = Carbon::now();
         $fecha_1 = $fecha_hoy->format('Y-m-d');
+        $detraccion = TipoDetraccion::all();
+        $medio_pago = MedioPagoDetraccion::all();
+        $tipo_cambio = TipoCambio::latest()->first();
 
-        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes','sucursal','factura_numero','fecha_1'));
+        return view('transaccion.venta.facturacion.facturacion_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','factura_numero','empresa','tipo_operacion','almacenes','sucursal','factura_numero','fecha_1','detraccion','medio_pago','tipo_cambio'));
     }
 
     public function change_almacen_tipo(Request $request){
@@ -360,6 +366,22 @@ class FacturacionMController extends Controller
             }
         }
 
+        $tipo_op = $request->get('tipo_operacion');
+        $tipo_ex = explode(' ', $tipo_op);
+        if($tipo_ex[0] == '1001' || $tipo_ex[0] == '1002' || $tipo_ex[0] == '1003' ||$tipo_ex[0] == '1004'){
+            //
+            // $detracciones = Tipo_operacion_f::where('codigo', $tipo_ex[0])->first();
+            $fact_detra = new Detracciones();
+            $fact_detra->factura_m_id = $facturacion->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $request->get('costo_total');
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
+
         //contador de valores de cantidad
         $cantidad = $request->input('cantidad');
         $count_cantidad=count($cantidad);
@@ -462,13 +484,18 @@ class FacturacionMController extends Controller
         $empresa=Empresa::first();
         $facturacion=Facturacion_m::find($id);
         $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
+        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
+            $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+        }else{
+            $detraccion = 1;
+        }
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
         
-        return view('transaccion.venta.facturacion.facturacion_manual.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
+        return view('transaccion.venta.facturacion.facturacion_manual.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion'));
 
     }
 

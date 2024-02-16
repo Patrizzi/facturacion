@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\detracciones;
+use App\Detracciones;
 use Faker\Generator as Faker;
 
-$factory->define(detracciones::class, function (Faker $faker) {
+$factory->define(Detracciones::class, function (Faker $faker) {
     return [
         //
     ];
