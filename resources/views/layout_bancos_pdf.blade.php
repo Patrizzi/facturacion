@@ -1,6 +1,8 @@
-@php use App\Banco  @endphp
-@php use App\BancoRegistro @endphp
-@php $banco=Banco::where('estado',0)->get(); @endphp
+@php 
+    use App\Banco;
+    use App\BancoRegistro ;
+    $banco=Banco::where('estado',0)->get(); 
+@endphp
 <table style="border-collapse:separate; border-spacing:1em;margin:">
     <tr>
     @if(count($banco) != 4 )
@@ -9,10 +11,10 @@
     @foreach($banco as $bancos)
         <?php $banco_registros = BancoRegistro::where('banco_id', $bancos->id)->get() ?>
         <td class="td-head" align="center">
-            <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 70%;"><br><br>
+            <img  src="{{asset('img/logos/'.$bancos->foto)}}" style="width: 60%;"><br><br>
                 <span class="lol">
                 @foreach($banco_registros as $banco_reg)    
-                    <span class="strong">{{$banco_reg->descripcion1}} :</span> {{$banco_reg->descripcion2}} <br>
+                    <span class="strong">{{$banco_reg->tipo_cuenta}} {{$banco_reg->monedas_i->simbolo}}:</span> {{$banco_reg->nombre_cuenta}} <br>
                 @endforeach
             </span>
         </td>
@@ -40,10 +42,10 @@
     }
     .strong{
         font-weight: bold;
-        /* font-size: 13px; */
+        /* font-size: 70%; */
     }
     .lol{
-        /* font-size: 13px; */
+        font-size: 75%;
     }
     .border-none{
         border: none;

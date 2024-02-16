@@ -21,6 +21,14 @@ class TipoOperacionFSeeder extends Seeder
         ]);
         DB::table('tipo_operacion_fs')->insert([
             'id' => 2,
+            'codigo' => "1001",
+            'informacion' => "Operación Sujeta a Detracción",
+            'estado' => "0",
+            'created_at' => date('2019-08-01 00:00:00'),
+            'updated_at' => date('2019-08-01 00:00:00')
+        ]);
+        DB::table('tipo_operacion_fs')->insert([
+            'id' => 3,
             'codigo' => "0102",
             'informacion' => "Exportación",
             'estado' => "0",
@@ -28,7 +36,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 3,
+            'id' => 4,
             'codigo' => "0103",
             'informacion' => "No Domiciliados",
             'estado' => "0",
@@ -36,7 +44,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 4,
+            'id' => 5,
             'codigo' => "0104",
             'informacion' => "Venta Interna - Anticipos",
             'estado' => "0",
@@ -44,7 +52,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 5,
+            'id' => 6,
             'codigo' => "0105",
             'informacion' => "Venta Itinerante",
             'estado' => "0",
@@ -52,7 +60,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 6,
+            'id' => 7,
             'codigo' => "0106",
             'informacion' => "Factura Guía",
             'estado' => "0",
@@ -60,7 +68,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 7,
+            'id' => 8,
             'codigo' => "0107",
             'informacion' => "Venta Arroz Pilado",
             'estado' => "0",
@@ -68,7 +76,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 8,
+            'id' => 9,
             'codigo' => "0108",
             'informacion' => "Factura - Comprobante de Percepción",
             'estado' => "0",
@@ -76,7 +84,7 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 9,
+            'id' => 10,
             'codigo' => "0110",
             'informacion' => "Factura - Guía Remitente",
             'estado' => "0",
@@ -84,9 +92,26 @@ class TipoOperacionFSeeder extends Seeder
             'updated_at' => date('2019-08-01 00:00:00')
         ]);
         DB::table('tipo_operacion_fs')->insert([
-            'id' => 10,
+            'id' => 11,
             'codigo' => "0111",
             'informacion' => "Factura - Guía de Transportista",
+            'estado' => "0",
+            'created_at' => date('2019-08-01 00:00:00'),
+            'updated_at' => date('2019-08-01 00:00:00')
+        ]);
+        DB::table('tipo_operacion_fs')->insert([
+            'id' => 12,
+            'codigo' => "0111",
+            'informacion' => "Factura - Guía de Transportista",
+            'estado' => "0",
+            'created_at' => date('2019-08-01 00:00:00'),
+            'updated_at' => date('2019-08-01 00:00:00')
+        ]);
+        
+        DB::table('tipo_operacion_fs')->insert([
+            'id' => 13,
+            'codigo' => "1002",
+            'informacion' => "Operación Sujeta a Detracción - Recursos Hidrobiológicos",
             'estado' => "0",
             'created_at' => date('2019-08-01 00:00:00'),
             'updated_at' => date('2019-08-01 00:00:00')

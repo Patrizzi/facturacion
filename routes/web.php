@@ -424,6 +424,7 @@ Route::group(
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
 		Route::resource('/pagados','PagadosController');
+		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
 		// Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura
 		// PAGADOS FACTURAS
 		Route::get('/pagos/facturas','PagadosController@view_facturas')->name('pagos.view_facturas');
@@ -523,6 +524,7 @@ Route::group(
         Route::post('/categories/select_color', 'ParameterCallController@color_set')->name('category.color');
 		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
+		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 	});
 
 Auth::routes([

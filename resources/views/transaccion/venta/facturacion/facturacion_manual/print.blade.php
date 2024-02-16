@@ -220,10 +220,30 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-sm-12 form-control" style="height:  120px">
-                            <strong>Observaciones:</strong><br>
-                            {{ $facturacion->observacion }}
-                        </div>
+                        @if ($detraccion == '1')
+                            <div class="col-sm-12 form-control" style="height:  120px">
+                                <strong>Observaciones:</strong><br>
+                                {{$facturacion->observacion}}
+                            </div>
+                        @else
+                            <div class="col-sm-6 "  >
+                                <div class="form-control" style="height:  100px !important">
+                                    <strong>Informacion de Detraccion:</strong><br>
+                                    <strong>Tipo de Detraccion:</strong>
+                                    {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
+                                    <strong>Medio de Pago:</strong>
+                                    {{$detraccion->medio_pago->descripcion}} <br>
+                                    <strong>Monto de Detraccion:</strong>
+                                    S/. {{$detraccion->monto_detraccion}} <br>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 " >
+                                <div class="form-control" style="height:  100px !important">
+                                    <strong>Observaciones:</strong><br>
+                                    {{$facturacion->observacion}}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <br>
                     @include('layout_bancos')

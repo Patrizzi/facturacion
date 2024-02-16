@@ -49,7 +49,9 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoDocumentoSunatSeeder::class);
 
         $this->call(ServicioSeeder::class); //innecesario
-
+        $this->call(TipoDetraccionSeeder::class);
+        $this->call(MedioPagoDetraccionSeeder::class);
+        $this->call(LeyendasFeSeeder::class);
 
     }
 }
