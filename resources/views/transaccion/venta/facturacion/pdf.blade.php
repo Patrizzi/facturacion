@@ -215,10 +215,11 @@
                                         @if ($facturacion->moneda->id == 1)
                                             {{$monto_total_det = ($cuota->monto) -  ($detraccion->monto_detraccion)}}
                                         @else
-                                            {{$monto_total_det = $end *  ($detraccion->porcentaje_detraccion / 100)}}
+                                            {{$mont_porc = $end *  ($detraccion->porcentaje_detraccion / 100)}}
+                                            {{$monto_total_det = $end - $mont_porc}}
                                         @endif
                                     </div>
-                                    {{$facturacion->moneda->simbolo}}   {{number_format($end - $monto_total_det,2)}} <br>
+                                    {{$facturacion->moneda->simbolo}}   {{number_format($monto_total_det,2)}} <br>
                                     <strong>Fecha de Vencimiento:</strong> <br>
                                     {{$cuota->fecha_pago}} <br>
                                 </td>
