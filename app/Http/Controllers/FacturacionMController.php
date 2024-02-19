@@ -506,9 +506,17 @@ class FacturacionMController extends Controller
         $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+            if ($facturacion->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+            }else{
+                $cuotas = "not";   
+            }
+ 
         }else{
             $detraccion = "not";
+            $cuotas = "not";
         }
+
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
@@ -518,7 +526,7 @@ class FacturacionMController extends Controller
 
         // $archivo=$name.'_'.$id;
         // return $detraccion;
-        $pdf=PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','detraccion'));
+        $pdf=PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','detraccion','cuotas'));
         return $pdf->download('FacturaM - '.$facturacion->codigo_fac.'.pdf');
     }
 

@@ -178,7 +178,7 @@
                             <strong>Observaciones:</strong><br>
                             {{$facturacion->observacion}}
                         </td>
-
+        
                     </tr>
                 </table>
             @else
@@ -199,7 +199,38 @@
                             {{$facturacion->observacion}}
                         </td>
                     </tr>
+                    <br>
                 </table>
+                @if ($cuotas != 'not')
+                    <strong><h3>Informacion de Credito</h3></strong>
+                    <table style="width: 100%;border-collapse:separate;">
+                        <tr >
+                            @foreach ($cuotas as $cuota)
+                                <td  style="border: 1px #808080 solid;border-radius: 8px;width: 25%" >
+                                    <strong>Cuota:</strong> <br>
+                                    {{$cuota->numero_cuota}} <br>
+                                    <strong>Monto:</strong> <br>
+                                    <div style="display: none">
+                                        {{-- Siempre soles --}}
+                                        @if ($facturacion->moneda->id == 1)
+                                            {{$monto_total_det = ($cuota->monto) -  ($detraccion->monto_detraccion)}}
+                                        @else
+                                            {{$tipo_C = $facturacion->tipo_cambio}}
+                                            {{$tot_dol = $end * $tipo_C}}
+                                            {{$monto_total_det = $tot_dol *  ($detraccion->monto_detraccion / 100)}}
+                                        @endif
+                                    </div>
+                                    {{$facturacion->moneda->simbolo}}   {{number_format($monto_total_det,2)}} <br>
+                                    <strong>Fecha de Vencimiento:</strong> <br>
+                                    {{$cuota->fecha_pago}} <br>
+                                </td>
+                            @endforeach
+                            <th style="width: 5%;border-color: white"></th>
+                            <th style="width: 50%;border-color: white"></th>
+                            
+                        </tr>
+                    </table>
+                @endif
             @endif
             <!-- Fin Totales de Productos -->
             <br>

@@ -961,7 +961,7 @@ class FacturacionController extends Controller
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
         }else{
-            $detraccion = 1;
+            $detraccion = "not";
         }
         $sum = 0;
         $igv = Igv::first();
