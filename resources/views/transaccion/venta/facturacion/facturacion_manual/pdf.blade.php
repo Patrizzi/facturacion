@@ -222,7 +222,7 @@
                                     {{$monto_total_det = $end *  ($detraccion->porcentaje_detraccion / 100)}}
                                 @endif
                             </div>
-                            {{$facturacion->moneda->simbolo}}   {{number_format($monto_total_det,2)}} <br>
+                            {{$facturacion->moneda->simbolo}}   {{number_format($end - $monto_total_det,2)}} <br>
                             <strong>Fecha de Vencimiento:</strong> <br>
                             {{$cuota->fecha_pago}} <br>
                         </td>
