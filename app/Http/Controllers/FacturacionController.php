@@ -960,8 +960,14 @@ class FacturacionController extends Controller
         $facturacion_registro = Facturacion_registro::where('facturacion_id', $id)->get();
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
+            if ($facturacion->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+            }else{
+                $cuotas = "not";   
+            }
         }else{
             $detraccion = "not";
+            $cuotas = "not";
         }
         $sum = 0;
         $igv = Igv::first();
@@ -973,7 +979,7 @@ class FacturacionController extends Controller
         // $archivo=$name.'_'.$id;
         // return view('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
 
-        $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco', 'banco_count', 'i','detraccion'));
+        $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco', 'banco_count', 'i','detraccion','cuotas'));
         return $pdf->download('Factura - ' . $facturacion->codigo_fac . '.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
