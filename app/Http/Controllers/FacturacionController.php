@@ -961,7 +961,7 @@ class FacturacionController extends Controller
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
             if ($facturacion->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+                $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();
             }else{
                 $cuotas = "not";   
             }
