@@ -204,7 +204,7 @@
                 <strong>Medio de Pago:</strong>
                 {{$detraccion->medio_pago->descripcion}} <br>
                 <strong>Monto de Detraccion:</strong>
-                S/. {{$detraccion->monto_detraccion}} <br>
+                S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
             </div>
         </div>
         <div class="col-sm-6 " >

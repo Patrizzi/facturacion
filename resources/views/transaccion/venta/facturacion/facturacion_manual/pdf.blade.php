@@ -173,15 +173,38 @@
         </tr>
     </table>
     <br>
-    <table style="width: 100%;height: 120px;border-collapse:separate;margin-bottom: -10px">
-        <tr>
-            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
-                <strong>Observaciones:</strong><br>
-                {{$facturacion->observacion}}
-            </td>
+    <br>
+    <br>
+    @if ($detraccion == "not")
+        <table style="width: 100%;height: 120px;border-collapse:separate">
+            <tr>
+                <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+                    <strong>Observaciones:</strong><br>
+                    {{$facturacion->observacion}}
+                </td>
 
-        </tr>
-    </table>
+            </tr>
+        </table>
+    @else
+        <table style="width: 100%;border-collapse:separate;margin-top: -20px">
+            <tr >
+                <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+                    <strong>Informacion de Detraccion:</strong><br>
+                    <strong>Tipo de Detraccion:</strong>
+                    {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
+                    <strong>Medio de Pago:</strong>
+                    {{$detraccion->medio_pago->descripcion}} <br>
+                    <strong>Monto de Detraccion:</strong>
+                    S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
+                </td>
+                <th style="width: 5%;border-color: white"></th>
+                <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+                    <strong>Observaciones:</strong><br>
+                    {{$facturacion->observacion}}
+                </td>
+            </tr>
+        </table>
+    @endif
     <br>
     @include('layout_bancos_pdf')
     <div class="row">

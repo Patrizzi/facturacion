@@ -232,18 +232,18 @@
                     </div>
                 @else
                     <div class="col-sm-6 "  >
-                        <div class="form-control" style="height:  90px !important">
+                        <div class="form-control" style="height: 80px !important">
                             <strong>Informacion de Detraccion:</strong><br>
                             <strong>Tipo de Detraccion:</strong>
                             {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
                             <strong>Medio de Pago:</strong>
                             {{$detraccion->medio_pago->descripcion}} <br>
                             <strong>Monto de Detraccion:</strong>
-                            S/. {{$detraccion->monto_detraccion}} <br>
+                            S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
                         </div>
                     </div>
                     <div class="col-sm-6 " >
-                        <div class="form-control" style="height:  90px !important">
+                        <div class="form-control" style="height:  80px !important">
                             <strong>Observaciones:</strong><br>
                             {{$facturacion->observacion}}
                         </div>
