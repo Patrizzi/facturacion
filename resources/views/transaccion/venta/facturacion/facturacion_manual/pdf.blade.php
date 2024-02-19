@@ -219,9 +219,7 @@
                                 @if ($facturacion->moneda->id == 1)
                                     {{$monto_total_det = ($cuota->monto) -  ($detraccion->monto_detraccion)}}
                                 @else
-                                    {{$tipo_C = $facturacion->tipo_cambio}}
-                                    {{$tot_dol = $end * $tipo_C}}
-                                    {{$monto_total_det = $tot_dol *  ($detraccion->monto_detraccion / 100)}}
+                                    {{$monto_total_det = $end *  ($detraccion->porcentaje_detraccion / 100)}}
                                 @endif
                             </div>
                             {{$facturacion->moneda->simbolo}}   {{number_format($monto_total_det,2)}} <br>
