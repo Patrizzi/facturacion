@@ -226,13 +226,13 @@
             <br>
             <div class="row">
                 @if ($detraccion == '1')
-                    <div class="col-sm-12 form-control" style="height:  120px">
+                    <div class="col-sm-12 form-control" style="height:  100px">
                         <strong>Observaciones:</strong><br>
                         {{$facturacion->observacion}}
                     </div>
                 @else
-                    <div class="col-sm-6 "  >
-                        <div class="form-control" style="height: 80px !important">
+                    <div class="col-sm-6">
+                        <div class=" form-control" style="height: 100% !important">
                             <strong>Informacion de Detraccion:</strong><br>
                             <strong>Tipo de Detraccion:</strong>
                             {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
@@ -242,8 +242,8 @@
                             S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
                         </div>
                     </div>
-                    <div class="col-sm-6 " >
-                        <div class="form-control" style="height:  80px !important">
+                    <div class="col-sm-6">
+                        <div class="form-control" style="height: 100% !important">
                             <strong>Observaciones:</strong><br>
                             {{$facturacion->observacion}}
                         </div>

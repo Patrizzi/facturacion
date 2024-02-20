@@ -168,10 +168,10 @@
                 </tr>
             </table>
             <br>
-            <br>
-            <br>
-            <br>
             @if ($detraccion == "not")
+                <br>
+                <br>
+                <br>
                 <table style="width: 100%;height: 120px;border-collapse:separate">
                     <tr>
                         <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
