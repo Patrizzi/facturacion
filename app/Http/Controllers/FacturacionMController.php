@@ -486,8 +486,14 @@ class FacturacionMController extends Controller
         $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+            if ($facturacion->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();
+            }else{
+                $cuotas = "not";
+            }
         }else{
-            $detraccion = 1;
+            $detraccion = 'not';
+            $cuotas = "not";
         }
         $sum=0;
         $igv=Igv::first();
@@ -547,16 +553,22 @@ class FacturacionMController extends Controller
         $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+            if ($facturacion->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+            }else{
+                $cuotas = "not";
+            }
         }else{
-            $detraccion = 1;
+            $detraccion = 'not';
+            $cuotas = "not";
         }
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-        
-        return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion'));
+        // return $cuotas;
+        return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion','cuotas'));
     }
     public function ajax_remision(Request $request){
         $id_cli = $request->get('id_cliente');

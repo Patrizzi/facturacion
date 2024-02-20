@@ -225,7 +225,7 @@
             </div>
             <br>
             <div class="row">
-                @if ($detraccion == '1')
+                @if ($detraccion == 'not')
                     <div class="col-sm-12 form-control" style="height:  100px">
                         <strong>Observaciones:</strong><br>
                         {{$facturacion->observacion}}

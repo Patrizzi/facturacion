@@ -168,10 +168,10 @@
                 </tr>
             </table>
             <br>
+            <br>
+            <br>
             @if ($detraccion == "not")
-                <br>
-                <br>
-                <br>
+                
                 <table style="width: 100%;height: 120px;border-collapse:separate">
                     <tr>
                         <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
@@ -199,7 +199,6 @@
                             {{$facturacion->observacion}}
                         </td>
                     </tr>
-                    <br>
                 </table>
                 @if ($cuotas != 'not')
                     <strong><h3>Informacion de Credito</h3></strong>
@@ -221,7 +220,7 @@
                                     </div>
                                     {{$facturacion->moneda->simbolo}}   {{number_format($monto_total_det,2)}} <br>
                                     <strong>Fecha de Vencimiento:</strong> <br>
-                                    {{$cuota->fecha_pago}} <br>
+                                    {{Carbon\Carbon::parse($cuota->fecha_pago)->format('d-m-Y')}} <br>
                                 </td>
                             @endforeach
                             <th style="width: 5%;border-color: white"></th>

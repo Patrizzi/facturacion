@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,10 +15,10 @@
 
     <!-- <script src="@yield('vue_js', '#')" defer></script> -->
 
-    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 
-    <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
     {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
     <SCRIPT LANGUAGE="JavaScript">
         function cerrar() {
@@ -26,10 +27,11 @@
     </SCRIPT>
 
 </head>
+
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-    
+
     <div class=" animated fadeInRight">
-        
+
         {{-- <div class="ibox-tools">
                <a class="btn btn-success"  href="{{route('facturacion.print' , $facturacion->id)}}" target="_blank">Imprimir</a>
            </div>
@@ -37,12 +39,11 @@
 
         <div class="row">
             <div class="col-lg-12" style="margin-top: -5px;">
-                @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+                @if ($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
                     <div id="watermark">
                         <p>Anulado</p>
-                    </div>    
+                    </div>
                 @else
-
                 @endif
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                     <div class="row">
@@ -153,21 +154,29 @@
                                 <tr>
                                     <td style="text-align:center">{{ $i }} </td>
                                     @if (isset($facturacion_registros->producto))
-                                        <td style="text-align:center">{{ $facturacion_registros->producto->codigo_producto }}</td>
+                                        <td style="text-align:center">
+                                            {{ $facturacion_registros->producto->codigo_producto }}</td>
                                         <td>{{ $facturacion_registros->producto->nombre }}
-                                            {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))<br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}@endif</td>
+                                            {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                            @endif
+                                        </td>
                                     @else
-                                        <td style="text-align:center">{{ $facturacion_registros->servicio->codigo_servicio }}</td>
+                                        <td style="text-align:center">
+                                            {{ $facturacion_registros->servicio->codigo_servicio }}</td>
                                         <td>{{ $facturacion_registros->servicio->nombre }}
                                             {{ $facturacion_registros->descripcion_item }}
                                     @endif
                                     <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                    <td style="text-align:center">{{number_format($facturacion_registros->precio,2)}}</td>
+                                    <td style="text-align:center">{{ number_format($facturacion_registros->precio, 2) }}
+                                    </td>
 
-                                    <td style="text-align:center">{{number_format( $facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento/100),2) }}</td>
+                                    <td style="text-align:center">
+                                        {{ number_format($facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento) / 100, 2) }}
+                                    </td>
 
                                     <td style="display: none">
-                                        {{ $sub_total =$facturacion_registros->factura_ids->op_gravada +$facturacion_registros->factura_ids->op_inafecta +$facturacion_registros->factura_ids->op_exonerada }}
+                                        {{ $sub_total = $facturacion_registros->factura_ids->op_gravada + $facturacion_registros->factura_ids->op_inafecta + $facturacion_registros->factura_ids->op_exonerada }}
                                         {{ $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada }}
                                         {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
                                         {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
@@ -184,20 +193,21 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <h3 align="left">
-                                <?php  use Luecano\NumeroALetras\NumeroALetras;
-                                $v=new NumeroALetras() ;
-                                $letra=($v->toInvoice($end, 2));
+                                <?php use Luecano\NumeroALetras\NumeroALetras;
+                                $v = new NumeroALetras();
+                                $letra = $v->toInvoice($end, 2);
                                 // $end_final_point = strstr($end2, '.', false);
                                 // $end_final = str_replace('.', '', $end_final_point);
                                 ?>
-                                Son : {{ucfirst(strtolower($letra))}} {{$facturacion->moneda->nombre }}
+                                Son : {{ ucfirst(strtolower($letra)) }} {{ $facturacion->moneda->nombre }}
                                 {{-- {{$end2}} --}}
                             </h3>
                         </div>
                         <div class="col-sm-4 form-control">
                             {{-- <div class="col-sm-4 form-control" > --}}
                             <span style="display: block;float: left"> Sub Total:</span>
-                            <span style="display: block;float: right;"> {{ $simbologia = $facturacion->moneda->simbolo }}
+                            <span style="display: block;float: right;">
+                                {{ $simbologia = $facturacion->moneda->simbolo }}
                                 {{ number_format($sub_total, 2) }}</span>
                             <br>
                             <span style="display: block;float: left"> Op. Agravada: </span>
@@ -220,31 +230,59 @@
                     </div>
                     <br>
                     <div class="row">
-                        @if ($detraccion == '1')
+                        @if ($detraccion == 'not')
                             <div class="col-sm-12 form-control" style="height:  120px">
                                 <strong>Observaciones:</strong><br>
-                                {{$facturacion->observacion}}
+                                {{ $facturacion->observacion }}
                             </div>
                         @else
-                            <div class="col-sm-6 "  >
+                            <div class="col-sm-6 ">
                                 <div class="form-control" style="height:  100px !important">
                                     <strong>Informacion de Detraccion:</strong><br>
                                     <strong>Tipo de Detraccion:</strong>
-                                    {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
+                                    {{ $detraccion->tipo_detraccion->descripcion }} -
+                                    {{ $detraccion->porcentaje_detraccion }} %<br>
                                     <strong>Medio de Pago:</strong>
-                                    {{$detraccion->medio_pago->descripcion}} <br>
+                                    {{ $detraccion->medio_pago->descripcion }} <br>
                                     <strong>Monto de Detraccion:</strong>
-                                    S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
+                                    S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
                                 </div>
                             </div>
-                            <div class="col-sm-6 " >
+                            <div class="col-sm-6 ">
                                 <div class="form-control" style="height:  100px !important">
                                     <strong>Observaciones:</strong><br>
-                                    {{$facturacion->observacion}}
+                                    {{ $facturacion->observacion }}
                                 </div>
                             </div>
                         @endif
                     </div>
+                    <br>
+                    @if ($cuotas != 'not')
+                        <strong>Informacion de Crédito:</strong><br>
+                        <div class="row" style="justify-content: left">
+                            @foreach ($cuotas as $cuota)
+                                <div style="display: none">
+                                    @if ($facturacion->moneda->id == 1)
+                                        {{ $monto_total_det = $cuota->monto - $detraccion->monto_detraccion }}
+                                    @else
+                                        {{ $mont_porc = $end * ($detraccion->porcentaje_detraccion / 100) }}
+                                        {{ $monto_total_det = $end - $mont_porc }}
+                                    @endif
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-control">
+                                        <strong>Cuota:</strong><br>
+                                        {{ $cuota->numero_cuota }}<br>
+                                        <strong>Monto:</strong><br>
+                                        {{ $facturacion->moneda->simbolo }} {{ number_format($monto_total_det, 2) }}
+                                        <br>
+                                        <strong>Fecha de Vencimiento:</strong><br>
+                                        {{ Carbon\Carbon::parse($cuota->fecha_pago)->format('d-m-Y') }} <br>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                     <br>
                     @include('layout_bancos')
                     <br>
@@ -269,11 +307,10 @@
                     border-radius: 0px;
                     text-align: center;
                 }
-
             </style>
             {{-- Modal Configuración --}}
-            <div class="modal fade" id="config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="config" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -283,7 +320,8 @@
                             {{-- ccccccccccccccccc --}}
                             <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
 
-                                <form action="{{ route('email.config') }}" enctype="multipart/form-data" method="post">
+                                <form action="{{ route('email.config') }}" enctype="multipart/form-data"
+                                    method="post">
                                     @csrf
                                     <div class="row">
                                         <fieldset>
@@ -299,8 +337,8 @@
                                                     <label class="col-sm-2 col-form-label">Contraseña:</label>
                                                     <div class="col-sm-10">
                                                         <div class="input-group m-b">
-                                                            <input type="password" class="form-control" name="password"
-                                                                id="txtPassword" required=""
+                                                            <input type="password" class="form-control"
+                                                                name="password" id="txtPassword" required=""
                                                                 style="height: 35.2px;border-radius: 2px ">
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-addon"
@@ -322,8 +360,8 @@
 
                                                     <label class="col-sm-2 col-form-label">PORT:</label>
                                                     <div class="col-sm-4">
-                                                        <input type="text" class="form-control" name="port" value="110 "
-                                                            style="border-radius: 2px">
+                                                        <input type="text" class="form-control" name="port"
+                                                            value="110 " style="border-radius: 2px">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -341,17 +379,20 @@
                                                     <label class="col-sm-2 col-form-label">Firma (opcional):</label>
                                                     <div class="col-sm-10">
                                                         <input type="file" id="archivoInput" name="firma"
-                                                            onchange="return validarExt()" style="border-radius: 2px" />
+                                                            onchange="return validarExt()"
+                                                            style="border-radius: 2px" />
                                                         <span id="visorArchivo">
                                                             <!--Aqui se desplegará el fichero-->
-                                                            <img name="firma" src="" width="390px" height="200px" />
+                                                            <img name="firma" src="" width="390px"
+                                                                height="200px" />
                                                         </span>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <label class="col-sm-2 col-form-label">Ancho(px)</label>
                                                     <div class="col-sm-4">
-                                                        <input type="number" class="form-control" name="ancho_firma">
+                                                        <input type="number" class="form-control"
+                                                            name="ancho_firma">
                                                     </div>
                                                     <label class="col-sm-2 col-form-label">Alto(px)</label>
                                                     <div class="col-sm-4">
@@ -363,7 +404,8 @@
                                         </fieldset>
                                     </div>
                                     <button class="btn btn-primary" type="submit">Grabar</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
                                 </form>
                             </div>
                         </div>
@@ -372,10 +414,20 @@
             </div>
             {{-- Fin de modal configuración --}}
             <style>
-                *{
+                * {
                     color: black !important;
                 }
-                .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
+
+                .table>thead>tr>th,
+                .table>tbody>tr>th,
+                .table>tfoot>tr>th,
+                .table>thead>tr>td,
+                .table>tbody>tr>td,
+                .table>tfoot>tr>td {
+                    border-top-width: 0px;
+                    border-color: #3D3D3D
+                }
+
                 #auto {
                     /*padding: -100px;*/
                     /*background: orange;*/
@@ -410,7 +462,6 @@
                 #auto:hover+#div-mostrar {
                     height: 50px;
                 }
-
             </style>
 
             <style>
@@ -435,15 +486,17 @@
                     height: 100%;
                     opacity: 0;
                 }
+
                 #watermark {
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     z-index: 0;
                 }
+
                 #watermark p {
                     position: absolute;
-                    color:   rgba(120, 120, 120, 0.31);
+                    color: rgba(120, 120, 120, 0.31);
                     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
                     font-weight: bolder;
                     font-size: 95px;
@@ -454,14 +507,16 @@
                     right: 35%;
                     z-index: 0;
                 }
+
                 .form-control {
                     background-color: transparent !important;
                 }
-                p.form-control{
-                        border-color: #3D3D3D;
-                    }         
+
+                p.form-control {
+                    border-color: #3D3D3D;
+                }
             </style>
- 
+
             <!-- Mainly scripts -->
             <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
             <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -477,9 +532,10 @@
 
 
 
-{{-- IMPRIMIR --}}
-<script type="text/javascript">
-    window.print();
-</script>
+            {{-- IMPRIMIR --}}
+            <script type="text/javascript">
+                window.print();
+            </script>
 </body>
+
 </html>
