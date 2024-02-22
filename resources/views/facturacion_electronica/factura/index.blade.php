@@ -22,6 +22,7 @@
                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
                         <li><a class="nav-link" style="color:#0a0a0a;" data-toggle="tab" href="#tab-3">Facturacion Manual</a></li>
                         <li><a class="nav-link" style="color:#0a0a0a;" data-toggle="tab" href="#tab-4">Enviados</a></li>
+                        <li style="margin-left: 20px"><a class="nav-link" style="color:#0d00ff;" data-toggle="tab" href="#tab-5">Detracciones</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- Mod1 -->
@@ -240,6 +241,73 @@
                             </div>
                         </div>
                         <!-- Mod4 -->
+
+                        <!-- Mod5 -->
+                        <div role="tabpanel" id="tab-5" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="tbale-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>N° de Doc.</th>
+                                                <th>Tipo</th>
+                                                <th>Fecha de Emision</th>
+                                                <th>Moneda</th>
+                                                <th>Monto Detraccion</th>
+                                                {{-- <th>XML</th>
+                                                <th>ZIP</th> --}}
+                                                <th style="width: 25px !important">Ver</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($detraccion_facturas as $fact_det)
+                                                <tr>
+                                                    @if ($fact_det->factura_id != null)
+                                                        <td>{{$fact_det->id }}</td>
+                                                        <td>{{$fact_det->factura->codigo_fac}}</td>
+                                                        <td>Factura</td>
+                                                        <td>{{Carbon\Carbon::parse($fact_det->factura->fecha_emision)->format('d-m-Y') }}</td>
+                                                        <td>{{$fact_det->factura->moneda->simbolo }} | {{$fact_det->factura->moneda->nombre }}</td>
+                                                        <td>S/. {{$fact_det->monto_detraccion }}</td>
+                                                        {{-- @if($fact_det->factura->f_electronida == 1)
+                                                            <td align="center">
+                                                                <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$fact_det->factura->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                                            </td>
+                                                            <td align="center">
+                                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$fact_det->factura->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                            </td>
+                                                        @else
+                                                            <td  ><i>Sin enviar  a Sunat</i></td>
+                                                            <td></td>
+                                                        @endif --}}
+                                                        <td>
+                                                            <a class="btn btn-secondary" href="{{route('facturacion.show', $fact_det->factura->id)}}"><i class="fa fa-eye"></i></a>
+                                                        </td>
+                                                    @else
+                                                        <td>{{$fact_det->id }}</td>
+                                                        <td>{{$fact_det->factura_m->codigo_fac}}</td>
+                                                        <td>Factura M.</td>
+                                                        <td>{{Carbon\Carbon::parse($fact_det->factura_m->fecha_emision)->format('d-m-Y') }}</td>
+                                                        <td>{{$fact_det->factura_m->moneda->simbolo }} | {{$fact_det->factura_m->moneda->nombre }}</td>
+                                                        <td>S/. {{$fact_det->monto_detraccion }}</td>
+                                                        {{-- <td align="center">
+                                                            <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$fact_det->factura_m->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                                        </td>
+                                                        <td align="center">
+                                                            <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$fact_det->factura_m->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                        </td> --}}
+                                                        <td>
+                                                            <a class="btn btn-secondary" href="{{route('facturacion_manual.show', $fact_det->factura_m->id)}}"><i class="fa fa-eye"></i></a>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

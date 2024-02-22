@@ -12,4 +12,11 @@ class Detracciones extends Model
     public function medio_pago(){
         return $this->belongsTo(MedioPagoDetraccion::class,'id_cod_medio_pago');
     }
+
+    public function factura(){
+        return $this->belongsTo(Facturacion::class,'factura_id');
+    }
+    public function factura_m(){
+        return $this->belongsTo(Facturacion_m::class,'factura_m_id');
+    }
 }
