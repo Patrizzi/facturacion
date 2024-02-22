@@ -236,8 +236,9 @@ class NotaVentaController extends Controller
         $banco=Banco::where('estado',0)->get();
         $banco_count=$banco->count();
         $count_reg = count($nota_venta_re);
+        $igv = Igv::first();
         // return var_dump($nota_venta_re[0]->precio_nacional+"3");
-        return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg'));
+        return view('transaccion.venta.nota_venta.show',compact('nota_venta','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg','igv'));
 
     }
     /**
@@ -305,7 +306,10 @@ class NotaVentaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;
+        // return $requesXt;
+
+        
+        // return $sep_esc;
         $nota_venta = NotaVenta::where('id',$id)->first();
         if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){              
             $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
@@ -327,17 +331,26 @@ class NotaVentaController extends Controller
             }   
             //nuevos registros
             for ($h=0; $h < $n_r_ori_c ; $h++) { 
+                if (strpos($request->get('articulo')[$h], ' | ') == true) {
+                    $art = $request->get('articulo')[$h];
+                    $sep_esc = explode(' | ',$art);
+                    $producto_id = $sep_esc[3];
+                }else{
+                    $producto_id = $request->get('articulo')[$h];
+                }
+                
                 if($request->get('n_registros_ori')[$h] == "existente"){
                     $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
-                    $nota_venta_upd_new->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd_new->producto= $producto_id;
                     $nota_venta_upd_new->descripcion= $request->get('article_descripcion')[$h];
                     $nota_venta_upd_new->cantidad= $request->get('cantidad')[$h];
                     $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
                     $nota_venta_upd_new->save();
                 }else{
+                   
                     $nota_venta_upd =new NotaVentaRegistro;
                     $nota_venta_upd->nota_venta_id = $nota_venta->id;
-                    $nota_venta_upd->producto= $request->get('articulo')[$h];
+                    $nota_venta_upd->producto= $producto_id;
                     $nota_venta_upd->descripcion= $request->get('article_descripcion')[$h];
                     $nota_venta_upd->cantidad= $request->get('cantidad')[$h];
                     $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
