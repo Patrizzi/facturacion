@@ -18,12 +18,13 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row ibox-title" style="padding-right: 3.1%;margin: 0; padding-bottom: 1px">
             <div class="col-sm-6">
-                @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
+                @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null  )
                     <button class="btn-editar btn btn-warning" onclick="click_editar()"><i
                             class="fa fa-pencil"></i></button>
                     <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
                             class="fa fa-times"></i></button>
-                @else
+                {{-- @elseif($nota_venta->cotizacion_id == null || $nota_venta->cotizacion_m_id == null)
+                @else --}}
                 @endif
                 {{-- <a href="" id="btn-editar" class="btn-editar btn btn-warning">Editar</a> --}}
             </div>
@@ -78,23 +79,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-
-                            <address class="col-sm-4" align="left">
-                                <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                            <strong>{{ $empresa->razon_social }}</strong>
-                            <br>
-                            Tel.: {{ $empresa->telefono }} / Móvil: {{ $empresa->movil }}
-                            <br>
-                            {{ $empresa->correo }}
-                            <br>
-                            {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
-                            {{ $empresa->pais }}
-                        </div>
+                    <div class="row" style="align-items: center; justify-content: center">
+                        @include('layout_cabecera_ventas')
                         <div class="col-sm-4">
                             <div class="form-control" align="center" style="height: auto;">
                                 <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>

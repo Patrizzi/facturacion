@@ -23,7 +23,7 @@
 
         @page {
             size: A4;
-            font-size: 60% !important;
+            font-size: 55% !important;
         }
     </style>
 </head>
@@ -35,7 +35,7 @@
             <td style="width: 30%; ;border: 1px #808080 solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
                     <h3 style="text-align: center;margin: 1px"> R.U.C {{ $empresa->ruc }}</h3>
-                    <h2 style="font-size: 17px;text-align: center;margin: 1px">FACTURA<br>ELECTRONICA</h2>
+                    <h2 style="text-align: center;margin: 1px">FACTURA<br>ELECTRONICA</h2>
                     <h4 style="text-align: center;margin: 1px">{{ $facturacion->codigo_fac }}</h4>
                 </center>
             </td>
@@ -107,12 +107,12 @@
             <table class="table " style="border-top: 0px;border-color: #808080">
                 <thead style="border-color: #808080">
                     <tr>
-                        <th class="tr_table_item" style="width: 8%">ITEM</th>
-                        <th class="tr_table_item" style="width: 15%">Código</th>
-                        <th class="tr_table_item">Descripción</th>
-                        <th class="tr_table_item" style="width: 11%">Cantidad</th>
-                        <th class="tr_table_item" style="text-align: center;width: 8%">Precio U.</th>
-                        <th class="tr_table_item" style="text-align: center;width: 8%">Total</th>
+                        <th  style="text-align: center;width: 5%">ITEM</th>
+                        <th  style="text-align: center;width: 13%">CÓDIGO</th>
+                        <th style="text-align: left">DESCRIPCIÓN</th>
+                        <th  style="text-align: center;width: 11%">CANT.</th>
+                        <th  style="text-align: right;width: 8%">P. UNIT.</th>
+                        <th  style="text-align: right;width: 8%">TOTAL</th>
 
                     </tr>
                 </thead>

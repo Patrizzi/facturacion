@@ -84,24 +84,9 @@
 
                 @endif
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-12" align="left">
-                                <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                            <strong>{{ $empresa->razon_social }}</strong>
-                            <br>
-                            Tel.: {{ $empresa->telefono }} / Movil: {{ $empresa->movil }}
-                            <br>
-                            {{ $empresa->correo }}
-                            <br>
-                            {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
-                            {{ $empresa->pais }}
-
-
-                        </div>
+                    <div class="row" style="align-items: center; justify-content: center">
+                        {{-- Cabecera logo y informacion --}}
+                        @include('layout_cabecera_ventas')
                         <div class="col-sm-4 ">
                             <div class="form-control ruc" style="height: 125px">
                                 <center>

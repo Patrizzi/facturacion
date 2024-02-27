@@ -33,13 +33,13 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row">
+                <div class="row" style="align-items: center; justify-content: center">
                     @include('layout_cabecera_ventas')
                     <div class="col-sm-4 ">
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">RUC : {{ $empresa->ruc }}</h3>
-                                <h2>FACTURA ELECTRÓNICA</h2>
+                                <h2 style="font-size: 19px">FACTURA ELECTRÓNICA</h2>
                                 <h5> {{ $facturacion->codigo_fac }}</h5>
 
                             </center>
@@ -121,51 +121,47 @@
                     <table class="table ">
                         <thead style="font-weight: bold">
                             <tr>
-                                <th style="width: 8%">Item</th>
-                                <th style="width: 15%">Cod. de Item</th>
-                                <th>Descripción</th>
-                                <th style="width: 11%">Cantidad</th>
-                                <th style="text-align: center;width: 8%">Pr. Unit.</th>
-                                <th style="text-align: center;width: 8%">Total</th>
+                                <th style="text-align:center;width: 50px;">ITEM</th>
+                                <th style="text-align:center;width: 120px">CÓDIGO</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th style="text-align:center;width: 70px">CANT.</th>
+                                <th style="text-align:right;width: 110px">P. UNIT.</th>
+                                <th style="text-align:right;width: 110px;">TOTAL</th>
                             </tr>
                         </thead>
                         <tbody>
-
-
-                            <tr>
-                                @foreach ($facturacion_registro as $facturacion_registros)
-                                    <span hidden="hidden">{{ $i = 1 }} </span>
-                            <tr>
-                                <td>{{ $j++ }} </td>
-                                @if (isset($facturacion_registros->producto))
-                                    <td>{{ $facturacion_registros->producto->codigo_producto }}</td>
-                                    <td>{{ $facturacion_registros->producto->nombre }}
-                                        {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
-                                            <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
-                                        @endif
+                            @foreach ($facturacion_registro as $facturacion_registros)
+                                <span hidden="hidden">{{ $i = 1 }} </span>
+                                <tr>
+                                    <td style="text-align: center">{{ $j++ }} </td>
+                                    @if (isset($facturacion_registros->producto))
+                                        <td style="text-align: center">{{ $facturacion_registros->producto->codigo_producto }}</td>
+                                        <td>{{ $facturacion_registros->producto->nombre }}
+                                            {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                            @endif
+                                        </td>
+                                    @else
+                                        <td style="text-align: center">{{ $facturacion_registros->servicio->codigo_servicio }}</td>
+                                        <td>{{ $facturacion_registros->servicio->nombre }}
+                                            {{ $facturacion_registros->descripcion_item }}
+                                    @endif
+                                    <td style="text-align:center;">{{ $facturacion_registros->cantidad }}</td>
+                                    <td style="text-align:right;">
+                                        {{ number_format($facturacion_registros->precio_unitario_comi, 2) }}</td>
+                                    <td style="text-align:right;">
+                                        {{ number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad, 2) }}
                                     </td>
-                                @else
-                                    <td>{{ $facturacion_registros->servicio->codigo_servicio }}</td>
-                                    <td>{{ $facturacion_registros->servicio->nombre }}
-                                        {{ $facturacion_registros->descripcion_item }}
-                                @endif
-                                <td style="text-align:center;">{{ $facturacion_registros->cantidad }}</td>
-                                <td style="text-align:center;">
-                                    {{ number_format($facturacion_registros->precio_unitario_comi, 2) }}</td>
-                                <td style="text-align:center;">
-                                    {{ number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad, 2) }}
-                                </td>
-                                <td style="display: none">
-                                    {{ $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada }}
-                                    {{ $sub_total_gravado = $facturacion->op_gravada }}
-                                    {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                    {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                    {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                </td>
-                            </tr>
-                            <span hidden="hidden">{{ $i++ }}</span>
+                                    <td style="display: none">
+                                        {{ $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada }}
+                                        {{ $sub_total_gravado = $facturacion->op_gravada }}
+                                        {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
+                                        {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
+                                        {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
+                                    </td>
+                                </tr>
+                                <span hidden="hidden">{{ $i++ }}</span>
                             @endforeach
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -238,26 +234,26 @@
                     @endif
                 </div>
                 <br>
-                @if($cuotas != 'not')
+                @if ($cuotas != 'not')
                     <strong>Informacion de Crédito:</strong><br>
                     <div class="row" style="justify-content: left">
                         @foreach ($cuotas as $cuota)
                             <div style="display: none">
                                 @if ($facturacion->moneda->id == 1)
-                                    {{$monto_total_det = ($cuota->monto) -  ($detraccion->monto_detraccion)}}
+                                    {{ $monto_total_det = $cuota->monto - $detraccion->monto_detraccion }}
                                 @else
-                                    {{$mont_porc = $end *  ($detraccion->porcentaje_detraccion / 100)}}
-                                    {{$monto_total_det = $end - $mont_porc}}
+                                    {{ $mont_porc = $end * ($detraccion->porcentaje_detraccion / 100) }}
+                                    {{ $monto_total_det = $end - $mont_porc }}
                                 @endif
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-control">
                                     <strong>Cuota:</strong><br>
-                                    {{$cuota->numero_cuota}}<br>
+                                    {{ $cuota->numero_cuota }}<br>
                                     <strong>Monto:</strong><br>
-                                    {{$facturacion->moneda->simbolo}}   {{number_format($monto_total_det,2)}} <br>
+                                    {{ $facturacion->moneda->simbolo }} {{ number_format($monto_total_det, 2) }} <br>
                                     <strong>Fecha de Vencimiento:</strong><br>
-                                    {{  Carbon\Carbon::parse($cuota->fecha_pago)->format('d-m-Y')}} <br>
+                                    {{ Carbon\Carbon::parse($cuota->fecha_pago)->format('d-m-Y') }} <br>
                                 </div>
                             </div>
                         @endforeach

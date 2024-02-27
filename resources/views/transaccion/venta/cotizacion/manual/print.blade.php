@@ -35,7 +35,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                        <div class="row">
+                        <div class="row" style="align-items: center; justify-content: center">
                             @include('layout_cabecera_ventas')
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row" align="center" style="padding-bottom: 5px">
+                        <div class="row" align="center" style="padding-bottom: 5px;">
                             <div class="col-sm-6" align="center">
                                 <div class="form-control">
                                     <h3>Contacto Cliente</h3>
@@ -84,38 +84,38 @@
                                 <table class="table " >
                                     <thead>
                                         <tr>
-                                            <th style="text-align:center;">ITEM </th>
-                                            <th style="text-align:center;">Codigo </th>
-                                            <th>Descripcion</th>
-                                            <th style="text-align:center;">Cantidad</th>
-                                            <th style="text-align:center;">P.Unitario</th>
-                                            <th style="text-align:center;">Total<span >{{$cotizacion_m->moneda->simbolo}}</span></th>
+                                            <th style="text-align:center;width: 50px;">ITEM </th>
+                                            <th style="text-align:center;width: 120px;">CÓDIGO </th>
+                                            <th>DESCRIPCION</th>
+                                            <th style="text-align:center;width: 70px">CANT.</th>
+                                            <th style="text-align:right;width: 110px">P. UNIT.</th>
+                                            <th style="text-align:right;width: 110px;">TOTAL <span >{{$cotizacion_m->moneda->simbolo}}</span></th>
                                         </tr>
                                     </thead>
                                     <tbody >
                                         <span hidden="">{{$i=1}}</span>
                                         @foreach($cotizacion_m_reg as $cotizacion_registros)
-                                        <tr>
-                                            <td>{{$j++}} </td>
-                                            @if(isset($cotizacion_registros->producto->codigo_producto))
-                                                <td>
-                                                    {{$cotizacion_registros->producto->codigo_producto}}
-                                                </td>
-                                                <td>
-                                                    {{$cotizacion_registros->producto->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
-                                                </td>
-                                            @else
-                                                <td>
-                                                    {{$cotizacion_registros->servicio->codigo_servicio}}
-                                                </td>
-                                                <td>
-                                                    {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
-                                                </td>
-                                            @endif                        
-                                            <td>{{$cotizacion_registros->cantidad}}</td>
-                                            <td>{{number_format($cotizacion_registros->precio,2)}}</td>
-                                            <td>{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
-                                        </tr>
+                                            <tr>
+                                                <td  style="text-align: center">{{$j++}} </td>
+                                                @if(isset($cotizacion_registros->producto->codigo_producto))
+                                                    <td  style="text-align: center">
+                                                        {{$cotizacion_registros->producto->codigo_producto}}
+                                                    </td>
+                                                    <td>
+                                                        {{$cotizacion_registros->producto->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
+                                                    </td>
+                                                @else
+                                                    <td style="text-align: center">
+                                                        {{$cotizacion_registros->servicio->codigo_servicio}}
+                                                    </td>
+                                                    <td>
+                                                        {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
+                                                    </td>
+                                                @endif                        
+                                                <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
+                                                <td style="text-align: right">{{number_format($cotizacion_registros->precio,2)}}</td>
+                                                <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

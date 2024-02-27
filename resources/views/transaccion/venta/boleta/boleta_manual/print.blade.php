@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row">
+                <div class="row" style="align-items: center; justify-content: center">
                     @include('layout_cabecera_ventas')
                     <div class="col-sm-4 ">
                         <div class="form-control ruc" style="height: 125px">
@@ -108,13 +108,12 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style="text-align:center">Item</th>
-                                <th style="text-align:center">Código Producto</th>
-                                <th>Descripción</th>
-                                <th style="text-align:center">Cantidad</th>
-                                <th style="text-align:center">Valor Unitario</th>
-
-                                <th style="text-align:center">Valor Venta</th>
+                                <th style="text-align:center;width: 50px;">ITEM</th>
+                                <th style="text-align:center;width: 120px">CÓDIGO</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th style="text-align:center;width: 70px">CANT.</th>
+                                <th style="text-align:right;width: 110px">P. UNIT.</th>
+                                <th style="text-align:right;width: 110px;">TOTAL</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -144,9 +143,9 @@
                                         </td>
                                     @endif
                                     <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
-                                    <td style="text-align:center">{{number_format($boletas_registros->precio,2)}}</td>
+                                    <td style="text-align:right">{{number_format($boletas_registros->precio,2)}}</td>
 
-                                    <td style="text-align:center">{{number_format( $boletas_registros->precio * $boletas_registros->cantidad - ($boletas_registros->precio * $boletas_registros->cantidad * $boletas_registros->descuento/100),2) }}</td>
+                                    <td style="text-align:right">{{number_format( $boletas_registros->precio * $boletas_registros->cantidad - ($boletas_registros->precio * $boletas_registros->cantidad * $boletas_registros->descuento/100),2) }}</td>
 
                                 <td style="display: none">
                                     {{ $sub_total =$boletas_registros->boleta_i->op_gravada + $boletas_registros->boleta_i->op_inafecta +$boletas_registros->boleta_i->op_exonerada }}

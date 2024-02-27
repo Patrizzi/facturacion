@@ -106,7 +106,7 @@
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row">
+                <div class="row" style="align-items: center; justify-content: center">
                     {{-- Cabecera logo y informacion --}}
                     @include('layout_cabecera_ventas')
                     <div class="col-sm-4">
@@ -499,9 +499,9 @@
         box-shadow: 0px 0px 1px #000;
         display: inline-block;
     }
-    #auto:hover{
+    /* #auto:hover{
         opacity: .8;
-    }
+    } */
     #div-mostrar{
         margin: auto;
         height: 0px;
@@ -509,12 +509,12 @@
         color:white;
         text-align: right;
     }
-    #auto:hover{
+    /* #auto:hover{
         opacity: .8;
-    }
-    #auto:hover + #div-mostrar{
+    } */
+    /* #div-mostrar{
         height: 50px;
-    }
+    } */
     .form-control{border-radius: 10px; padding: 10px }
     .ibox-tools a{color: white !important}
     .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}

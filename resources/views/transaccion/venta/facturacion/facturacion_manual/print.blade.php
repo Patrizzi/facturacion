@@ -46,24 +46,9 @@
                 @else
                 @endif
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-12" align="left">
-                                <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                            <strong>{{ $empresa->razon_social }}</strong>
-                            <br>
-                            Tel.: {{ $empresa->telefono }} / Movil: {{ $empresa->movil }}
-                            <br>
-                            {{ $empresa->correo }}
-                            <br>
-                            {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
-                            {{ $empresa->pais }}
-
-
-                        </div>
+                    <div class="row" style="align-items: center; justify-content: center">
+                        {{-- Cabecera logo y informacion --}}
+                        @include('layout_cabecera_ventas')
                         <div class="col-sm-4 ">
                             <div class="form-control ruc" style="height: 125px">
                                 <center>
@@ -138,17 +123,16 @@
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th style="text-align:center">Item</th>
-                                    <th style="text-align:center">Código Producto</th>
-                                    <th>Descripción</th>
-                                    <th style="text-align:center">Cantidad</th>
-                                    <th style="text-align:center">Valor Unitario</th>
-
-                                    <th style="text-align:center">Valor Venta</th>
+                                    <th style="text-align:center;width: 50px;">ITEM</th>
+                                    <th style="text-align:center;width: 120px">CÓDIGO</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th style="text-align:center;width: 70px">CANT.</th>
+                                    <th style="text-align:right;width: 110px">P. UNIT.</th>
+                                    <th style="text-align:right;width: 110px;">TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr style="text-align: center">
                                     <span hidden="hidden">{{ $i = 1 }} </span>
                                     @foreach ($facturacion_registro as $facturacion_registros)
                                 <tr>
@@ -168,10 +152,10 @@
                                             {{ $facturacion_registros->descripcion_item }}
                                     @endif
                                     <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                    <td style="text-align:center">{{ number_format($facturacion_registros->precio, 2) }}
+                                    <td style="text-align:right">{{ number_format($facturacion_registros->precio, 2) }}
                                     </td>
 
-                                    <td style="text-align:center">
+                                    <td style="text-align:right">
                                         {{ number_format($facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento) / 100, 2) }}
                                     </td>
 

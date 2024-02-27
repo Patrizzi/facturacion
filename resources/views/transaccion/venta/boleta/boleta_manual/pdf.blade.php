@@ -21,7 +21,7 @@
         }
         @page { 
             size: A4; 
-            font-size: 60% !important;    
+            font-size: 55% !important;    
         }
         </style>
     </head>
@@ -32,7 +32,7 @@
                 <td style="width: 29%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin: 2px 0px" align="right">
                     <center>
                         <h3 style="text-align: center;margin-top: 0px"> R.U.C {{$empresa->ruc}}</h3>
-                        <h2 style="text-align: center;margin: 4px" >BOLETAELECTRÓNICA</h2>
+                        <h2 style="text-align: center;margin: 4px" >BOLETA ELECTRÓNICA</h2>
                         <h4 style="text-align: center;margin-bottom: 0px" >{{$boleta->codigo_boleta}}</h4>
                     </center>
                 </td>
@@ -81,12 +81,12 @@
                 <table class="table " style="border-top: 0px;border-color: #808080" >
                     <thead style="border-color: #808080">
                         <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
-                            <td width="10px">Item</td>
-                            <td width="60px" >Código</td>
-                            <td width="380px">Descripción</td>
-                            <td>Cantidad</td>
-                            <td >P.Unitario.</td>
-                            <td >Total</td>
+                            <th  style="text-align: center;width: 5%">ITEM</th>
+                            <th  style="text-align: center;width: 13%">CÓDIGO</th>
+                            <th style="text-align: left">DESCRIPCIÓN</th>
+                            <th  style="text-align: center;width: 11%">CANT.</th>
+                            <th  style="text-align: right;width: 8%">P. UNIT.</th>
+                            <th  style="text-align: right;width: 8%">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,8 +101,8 @@
                                 <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}
                             @endif
                             <td style="text-align:center;">{{$boleta_registros->cantidad}}</td>
-                            <td style="text-align: center;">{{number_format($boleta_registros->precio,2)}}</td>
-                            <td style="text-align: center;">{{number_format($boleta_registros->precio * $boleta_registros->cantidad ,2)}}</td>
+                            <td style="text-align: right;">{{number_format($boleta_registros->precio,2)}}</td>
+                            <td style="text-align: right;">{{number_format($boleta_registros->precio * $boleta_registros->cantidad ,2)}}</td>
                             <td style="display: none">
                                 {{$sub_total=($boleta->op_gravada)}}
                                 {{$sub_total_gravado=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}

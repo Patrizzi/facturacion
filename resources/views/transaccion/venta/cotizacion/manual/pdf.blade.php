@@ -10,7 +10,7 @@
             .form-control, .single-line {
                 background-color: #FFFFFF;
                 background-image: none;
-                border: 1px solid #3D3D3D;
+                border: 1px solid black;
                 border-radius: 1px;
                 color: inherit;
                 display: block;
@@ -20,7 +20,7 @@
             }
             @page { 
                 size: A4;
-                font-size: 60%;
+                font-size: 55%;
             }
         </style>
     </head>
@@ -28,7 +28,7 @@
         <table style="width: 100%;border-collapse:separate;height: auto;">
             <tr>
                 @include('layout_cabecera_ventas_pdf')
-                <td style="width: 30%; border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
+                <td style="width: 30%; border: 1px black solid;border-radius: 8px;margin-top: 0px" align="right">
                     <center>
                         <h3 style="text-align: center;margin-top: 2px"> R.U.C {{$empresa->ruc}}</h3>
                         <h2 style="text-align: center;margin: 2px" >COTIZACIÓN ELECTRONICA</h2>
@@ -40,7 +40,7 @@
         <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -40px ">
             <table style="width: 100%;border-collapse:separate;margin-top: -20px">
                 <tr >
-                    <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto" >
+                    <td colspan="2" style="border: 1px black solid;border-radius: 8px;width: auto" >
                         <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
                         <strong>Señor(es):</strong>&nbsp;{{$cotizacion_m->cliente->nombre}}<br>
                         <strong>{{$cotizacion_m->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion_m->cliente->numero_documento}}&nbsp;&nbsp;<br>
@@ -49,7 +49,7 @@
                         <strong>Celular:</strong>&nbsp;{{$cotizacion_m->cliente->celular}}<br>
                     </td>
                     <th style="width: 5%;border-color: white"></th>
-                    <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
+                    <td colspan="2" style="border: 1px black solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
                         <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion_m->forma_pago->nombre }}<br>
                         <strong>Validez :</strong> &nbsp;{{$cotizacion_m->validez}}<br>
@@ -69,36 +69,36 @@
             <table class="table " style="border-top: 0px" >
                 <thead align="left">
                     <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
-                        <th   style="text-align:center;">ITEM </th>
-                        <th style="text-align:center;">Codigo </th>
-                        <th >Descripcion</th>
-                        <th  style="text-align:center;" >Cantidad</th>
-                        <th   style="text-align:center;">P.Unitario</th>
-                        <th   style="text-align:center;">Total <span hidden="hidden">{{$cotizacion_m->moneda->simbolo}}</span></th>
+                        <th style="text-align:center;width: 10px;">ITM </th>
+                        <th style="text-align:center;width: 70px;">CÓDIGO </th>
+                        <th >DESCRIPCION</th>
+                        <th style="text-align:center;width: 30px;" >CANT.</th>
+                        <th style="text-align:center;width: 50px;">P. UNIT.</th>
+                        <th style="text-align:center;width: 50px;">TOTAL <span hidden="hidden">{{$cotizacion_m->moneda->simbolo}}</span></th>
                     </tr>
                 </thead>
                 <tbody align="left">
                     @foreach($cotizacion_m_reg as $cotizacion_registros)
                     <tr>
-                        <td>{{$j++}} </td>
+                        <td style="text-align: center">{{$j++}} </td>
                         @if(isset($cotizacion_registros->producto->codigo_producto))
-                            <td>
+                            <td style="text-align: center">
                                 {{$cotizacion_registros->producto->codigo_producto}}
                             </td>
                             <td>
                                 {{$cotizacion_registros->producto->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                             </td>
                         @else
-                            <td>
+                            <td style="text-align: center">
                                 {{$cotizacion_registros->servicio->codigo_servicio}}
                             </td>
-                            <td>
+                            <td >
                                 {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                             </td>
                         @endif                        
-                        <td>{{$cotizacion_registros->cantidad}}</td>
-                        <td>{{number_format($cotizacion_registros->precio,2)}}</td>
-                        <td>{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
+                        <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
+                        <td style="text-align: right">{{number_format($cotizacion_registros->precio,2)}}</td>
+                        <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -172,7 +172,7 @@
         </div>
         <style>
             *{
-                color: #495057;
+                color: black;
                 font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
             }
             .cero{
@@ -184,10 +184,10 @@
             }
             .blanco{
                 border: none;
-                border: #3D3D3D ;
+                border: black ;
             }
             .border {
-                border-color: #3D3D3D;
+                border-color: black;
                 border-width: 1px;
                 border-style: solid;
             }

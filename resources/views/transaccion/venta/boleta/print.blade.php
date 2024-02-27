@@ -28,9 +28,9 @@
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row">
+                <div class="row" style="align-items: center; justify-content: center">
                     @include('layout_cabecera_ventas')
                     <div class="col-sm-4">
                         <div class="form-control ruc" style="height: 125px">
@@ -91,15 +91,12 @@
                 <table class="table ">
                     <thead>
                         <tr>
-                            <th style="width: 8%">Item</th>
-                            <th style="width: 15%">Código de Item</th>
-                            {{-- <th  style="width: 10%">Unid.Medida</th> --}}
-                            <th >Descripción</th>
-                            <th style="width: 8%">Cantidad</th>
-                            {{-- <th>Valor Unitario</th>
-                            <th>Dscto. %</th> --}}
-                            <th  style="text-align: center;width: 8%">P.Unit.</th>
-                            <th  style="text-align: center;width: 8%">Total</th>
+                            <th style="text-align:center;width: 50px;">ITEM</th>
+                            <th style="text-align:center;width: 120px">CÓDIGO</th>
+                            <th>DESCRIPCIÓN</th>
+                            <th style="text-align:center;width: 70px">CANT.</th>
+                            <th style="text-align:right;width: 110px">P. UNIT.</th>
+                            <th style="text-align:right;width: 110px;">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,20 +104,20 @@
                             <span hidden="hidden">{{$i=1}} </span>
                             @foreach($boleta_registro as $boleta_registros)
                             <tr>
-                                <td>{{$i}} </td>
+                                <td style="text-align: center;">{{$i}} </td>
                                 @if(isset($boleta_registros->producto))
-                                    <td>{{$boleta_registros->producto->codigo_producto}}</td>
+                                    <td style="text-align: center;">{{$boleta_registros->producto->codigo_producto}}</td>
                                     {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
                                     <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
                                 @else
-                                    <td>{{$boleta_registros->servicio->codigo_servicio}}</td>
+                                    <td style="text-align: center;">{{$boleta_registros->servicio->codigo_servicio}}</td>
                                     {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
                                     <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
                                 @endif
-                                <td>{{$boleta_registros->cantidad}}</td>
+                                <td style="text-align: center">{{$boleta_registros->cantidad}}</td>
                                 {{-- <td>{{$boleta_registros->precio}}</td>
                                 <td>{{$boleta_registros->descuento}}%</td> --}}
-                                <td style="text-align: center;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
+                                <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
                                 <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
                                 <td style="display: none">
                                     {{$sub_total=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}

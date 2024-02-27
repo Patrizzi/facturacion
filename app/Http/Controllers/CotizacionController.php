@@ -1610,13 +1610,15 @@ public function print($id){
     $regla=$cotizacion->tipo;
     $sub_total=0;
     $igv=Igv::first();
-
+    // return $cotizacion;
     /*registros boleta y factura*/
-    if($regla=='factura'){
+    // if($regla=='factura'){
+    //     $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
+    // }elseif($regla=='boleta'){
         $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
-    }elseif($regla=='boleta'){
-        $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
-    }
+    // }
+    // return $cotizacion_registro;
+    
     /* FIN registros boleta y factura*/
     /*de numeros a Letras*/
 

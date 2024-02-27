@@ -1,9 +1,9 @@
-<div class="col-sm-4 text-left" align="left">
-    <address class="col-sm-4" align="left">
-        <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" width="300px">
-    </address>
+<div class="col-sm-4 text-center" align="center"  style="height: 155px">
+    {{-- <address class="col-sm-4" align="left"> --}}
+        <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" style="max-height: 100%">
+    {{-- </address> --}}
 </div>
-<div class="col-sm-4 text-center" style="font-size: 13px"><br>
+<div class="col-sm-4 text-center" style="font-size: 13px">
     <strong>{{$empresa->razon_social}}</strong>
     <br>
         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 

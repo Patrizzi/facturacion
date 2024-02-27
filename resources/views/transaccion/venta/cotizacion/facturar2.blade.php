@@ -96,10 +96,10 @@
                                     <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
                                         <div class="col-sm-3" id="colum-col">
                                             <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
-                                                <option value="{{$cotizacion->forma_pago->id}}">{{$cotizacion->forma_pago->nombre}}</option>
-                                                <option disabled>--------------------</option>
+                                                {{-- <option value="{{$cotizacion->forma_pago->id}}">{{$cotizacion->forma_pago->nombre}}</option>
+                                                <option disabled>--------------------</option> --}}
                                                 @foreach($forma_pagos as $forma_pago)
-                                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                    <option value="{{$forma_pago->id}}" @if($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>{{$forma_pago->nombre}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

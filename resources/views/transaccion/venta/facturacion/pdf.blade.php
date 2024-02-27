@@ -21,7 +21,7 @@
         }
         @page { 
             size: A4; 
-            font-size: 60%;
+            font-size: 55%;
         }
     </style>
     <body class="white-bg">
@@ -30,9 +30,12 @@
                 @include('layout_cabecera_ventas_pdf')
                 <td style="width: 30%; ;border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
                     <center>
-                        <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-                        <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRÓNICA</h2><br>
-                        <h5 style="text-align: center;margin-bottom: -1px" >{{$facturacion->codigo_fac}}</h5>
+                        {{-- <h3 style="text-align: center;padding-top:15px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
+                        <h2 style="font-size: 17px;text-align: center;margin-bottom: -28px" >FACTURA ELECTRÓNICA</h2><br>
+                        <h5 style="text-align: center;margin-bottom: -1px" >{{$facturacion->codigo_fac}}</h5> --}}
+                        <h3 style="text-align: center;margin-top: 2px"> R.U.C {{ $empresa->ruc }}</h3>
+                        <h2 style="text-align: center;margin: 2px">FACTURA ELECTRONICA</h2>
+                        <h4 style="text-align: center;margin-bottom: 2px">{{ $facturacion->codigo_fac }}</h4>
                     </center>
                 </td>
             </tr>
@@ -97,12 +100,12 @@
                 <table class="table " style="border-top: 0px;border-color: #808080" >
                     <thead style="border-color: #808080">
                         <tr >
-                        <th class="tr_table_item" style="width: 8%">Item</th>
-                        <th class="tr_table_item" style="width: 15%">Código</th>
-                        <th class="tr_table_item">Descripción</th>
-                        <th class="tr_table_item" style="width: 11%">Cantidad</th>
-                        <th class="tr_table_item"  style="text-align: center;width: 8%">P. Unit.</th>
-                        <th class="tr_table_item"  style="text-align: center;width: 8%">Total</th>
+                        <th style="text-align: center;width: 5%">ITEM</th>
+                        <th style="text-align: center;width: 13%">CÓDIGO</th>
+                        <th style="text-align: left;">DESCRIPCIÓN</th>
+                        <th style="width: 11%">CANT.</th>
+                        <th  style="text-align: right;width: 8%">P. UNIT.</th>
+                        <th  style="text-align: right;width: 8%">TOTAL</th>
 
                     </tr>
                 </thead>
@@ -118,8 +121,8 @@
                         <td>{{$facturacion_registros->servicio->nombre}} {{$facturacion_registros->descripcion_item}}
                             @endif
                             <td style="text-align:center;">{{$facturacion_registros->cantidad}}</td>
-                            <td style="text-align: center;">{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>
-                            <td style="text-align: center;">{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
+                            <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi,2)}}</td>
+                            <td style="text-align: right;">{{number_format($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad ,2)}}</td>
                             <td style="display: none">
                                 {{$sub_total=($facturacion->op_gravada)}}
                                 {{$sub_total_gravado=($facturacion->op_gravada)+($facturacion->op_inafecta)+($facturacion->op_exonerada)}}
