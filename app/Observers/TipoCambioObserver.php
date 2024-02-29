@@ -49,8 +49,6 @@ class TipoCambioObserver
         Nota_Credito::nota_credito_month();
         Tipo_operacion_f::add_new_items();
 
-        //CAMBIOS DE VALORES PARA CORRECCIONES
-        Cliente::revision_contacto();
     }
 
     /**
