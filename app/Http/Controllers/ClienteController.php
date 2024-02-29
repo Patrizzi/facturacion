@@ -112,6 +112,7 @@ class ClienteController extends Controller
       $contacto_show=Contacto::where('clientes_id','=',$id)->orderBy('primer_contacto','DESC')->get();
       $contacto_cantidad=Contacto::where('clientes_id',$id)->count();
       $contacto_cantidad_estado=Contacto::where('clientes_id',$id)->where('estado',0)->count();
+      Cliente::revision_contacto($id);
       return view('auxiliar.cliente.show',compact('cliente_show','contacto_show','contacto_cantidad','contacto_cantidad_estado','cliente_rete','cliente_sucursal'));
     }
 

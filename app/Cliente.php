@@ -21,4 +21,26 @@ class Cliente extends Model
             $cliente->save();
         }
     }
+
+    public static function revision_contacto($cliente_id){
+        // $clientes = Cliente::find($cliente_id);
+        // foreach ($clientes as $cli) {
+            $cont = Contacto::where('clientes_id', $cliente_id)->first();
+            if (!$cont) {
+                $cont = Contacto::firstOrCreate(
+                    ['clientes_id' => $cliente_id],
+                    [
+                        'primer_contacto' => 1,
+                        'nombre' => 'Contacto',
+                        'cargo' => 'Cargo',
+                        'telefono' => '0050000',
+                        'celular' => '951000000',
+                        'email' => 'correo@contacto.com',
+                        'estado' => 0,
+                    ]
+                );
+            }
+        //     $cont_2[] = $cont->id;
+        // // }/
+    }
 }

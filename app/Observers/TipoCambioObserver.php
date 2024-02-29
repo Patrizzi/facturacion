@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Cliente;
 use App\TipoCambio;
 use App\servicios;
 use App\Moneda;
@@ -47,6 +48,9 @@ class TipoCambioObserver
         //* Buscar notas de credito de hace 30 dias? 
         Nota_Credito::nota_credito_month();
         Tipo_operacion_f::add_new_items();
+
+        //CAMBIOS DE VALORES PARA CORRECCIONES
+        Cliente::revision_contacto();
     }
 
     /**

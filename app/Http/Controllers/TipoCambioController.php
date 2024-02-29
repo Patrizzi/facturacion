@@ -6,6 +6,7 @@ use App\TipoCambio;
 use App\Moneda;
 use Carbon\Carbon;
 use App\CierrePeriodo;
+use App\Cliente;
 use Illuminate\Http\Request;
 
 class TipoCambioController extends Controller
