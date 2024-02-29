@@ -53,7 +53,7 @@ class Config_fe extends Model
 
     protected $guarded = [];
 
-    public static function factura($factura, $facturas_registros, $guia, $facturacion_manual = 0)
+    public static function factura($factura, $facturas_registros, $guia, $facturacion_manual)
     {
 
         if ($facturacion_manual == 1) {
@@ -166,9 +166,9 @@ class Config_fe extends Model
                     ->setPorcentajeIgv(0)
                     ->setIgv(0)
                     ->setTipAfeIgv($afec)
-                    ->setTotalImpuestos($factura_registro->precio_unitario_comi * $factura_registro->cantidad * (($igv->igv_total) / 100))
+                    ->setTotalImpuestos(0)
                     ->setMtoValorVenta($factura_registro->precio_unitario_comi * $factura_registro->cantidad)
-                    ->setMtoPrecioUnitario($factura_registro->precio_unitario_comi + ($factura_registro->precio_unitario_comi * (($igv->igv_total) / 100)));
+                    ->setMtoPrecioUnitario($factura_registro->precio_unitario_comi);
                 $precio = $factura_registro->precio_unitario_comi * $factura_registro->cantidad + $precio;
             }
 
@@ -426,9 +426,9 @@ class Config_fe extends Model
                     ->setPorcentajeIgv(0)
                     ->setIgv(0)
                     ->setTipAfeIgv($afec)
-                    ->setTotalImpuestos($factura_registro->precio_unitario_comi * $factura_registro->cantidad * (($igv->igv_total) / 100))
+                    ->setTotalImpuestos(0)
                     ->setMtoValorVenta($factura_registro->precio_unitario_comi * $factura_registro->cantidad)
-                    ->setMtoPrecioUnitario($factura_registro->precio_unitario_comi + ($factura_registro->precio_unitario_comi * (($igv->igv_total) / 100)));
+                    ->setMtoPrecioUnitario($factura_registro->precio_unitario_comi);
                 $precio = $factura_registro->precio_unitario_comi * $factura_registro->cantidad + $precio;
             }
 

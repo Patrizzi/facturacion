@@ -462,8 +462,8 @@ class FacturacionMController extends Controller
 
         } // Final de registro de artículos
         
-
-
+        Facturacion_m::revision_cuotas($facturacion->id);
+        
 
         return redirect()->route('facturacion_manual.show',$facturacion->id);
     }

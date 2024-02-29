@@ -396,7 +396,7 @@ class BoletaMController extends Controller
                 }
             }
         }
-
+        boleta_m::revision_cuotas($boleta->id);
         return redirect()->route('boleta_manual.show',$boleta->id);
     }
 

@@ -876,6 +876,7 @@ class FacturacionController extends Controller
                 }
             }
             Kardex_entrada_registro::stock_producto_precio();
+            Facturacion::revision_cuotas($facturacion->id);
         } else {
             return redirect()->route('facturacion.create')->with('campo', 'Falto introducir un campo de la tabla productos');
         }

@@ -33,6 +33,7 @@
                     <form action="{{route('facturacion.store',$moneda->id)}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
                         @csrf
                         @method('put')
+                        <button type="submit" disabled class="none" aria-hidden="true"></button>
                         <div class="row">
                             <div class="col-sm-4 text-left" align="left">
                                 <address class="col-sm-4" align="left">

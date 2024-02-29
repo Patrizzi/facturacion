@@ -145,6 +145,7 @@ class FacturacionElectronicaController extends Controller
             $guia=1;
         }
         
+        $facturacion_manual = 0;
 
         //configuracion de conexion
         $see=config_acceso_sunat::facturacion_electronica();
@@ -159,7 +160,7 @@ class FacturacionElectronicaController extends Controller
             $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
         }else{
             // return "b";
-            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
             
         // }elseif($factura->tipo=="servicio"){
@@ -191,6 +192,7 @@ class FacturacionElectronicaController extends Controller
         }else{
             $guia=1;
         }
+        $facturacion_manual = 0;
         //configuracion de conexion
         $see= config_acceso_sunat::facturacion_electronica();
 
@@ -202,7 +204,7 @@ class FacturacionElectronicaController extends Controller
             $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
         }else{
             // return "b";
-            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
         //envio a SUNAT    
         $result = config_acceso_sunat::send($see, $invoice);
@@ -256,7 +258,7 @@ class FacturacionElectronicaController extends Controller
             $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
         }else{
             // return "b";
-            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
 
         $result=config_acceso_sunat::send($see, $invoice);
@@ -303,7 +305,7 @@ class FacturacionElectronicaController extends Controller
             $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
         }else{
             //invoce
-            $invoice=Config_fe::factura($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
         //envio a SUNAT    
         $result = config_acceso_sunat::send($see, $invoice);

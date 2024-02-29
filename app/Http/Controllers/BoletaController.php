@@ -867,6 +867,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         $boleta_registro->save();
     }
 }
+Boleta::revision_cuotas($boleta->id);
 Kardex_entrada_registro::stock_producto_precio();
 }else {
     return redirect()->route('boleta.create')->with('campo', 'Falto introducir un campo de la tabla productos');
