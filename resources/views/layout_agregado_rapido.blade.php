@@ -19,13 +19,13 @@
     <div class="modal-content">
       <div>
 
-        <div class="ibox-content" style="padding-bottom: 0px;" id="consulta-ruc">
+        {{-- <div class="ibox-content" style="padding-bottom: 0px;" id="consulta-ruc">
             <form>
                 {{ csrf_field() }}
                 <div class="row" style="padding-top:8px" >
                     <label class="col-sm-3 col-form-label">Consultar R.U.C:</label>
                     <div class="col-sm-7">
-                        <input type="text" pattern="\d*"   class="form-control" class="ruc" id="ruc_cliente" name="ruc_cliente" required="required" autocomplete="off" maxlength="11">
+                        <input type="text" pattern="\d*"   class="form-control" id="ruc_cliente" name="ruc_cliente" required="required" autocomplete="off" maxlength="11">
                     </div>
                     <div class="col-sm-2"> <button class="btn btn-info btn-lg botoncito_cliente" id="botoncito_cliente" name="btn" value="cliente"><i class="fa fa-search"></i> </button></div>
                 </div>
@@ -37,14 +37,26 @@
                 <div class="row" style="padding-top:8px" >
                     <label class="col-sm-3 col-form-label">Consultar DNI:</label>
                     <div class="col-sm-7">
-                        <input type="text" pattern="\d*" class="form-control" class="dni" id="dni_cliente" name="dni_cliente" required="required" autocomplete="off" maxlength="8">
+                        <input type="text" pattern="\d*" class="form-control" id="dni_cliente" name="dni_cliente" required="required" autocomplete="off" maxlength="8">
                     </div>
                     <div class="col-sm-2"> <button class="btn btn-info btn-lg dni_boton_cliente" id="dni_boton_cliente" name="btn" value="cliente"><i class="fa fa-search"></i> </button></div>
                 </div>
             </form>
+        </div> --}}
+        <div class="ibox-content" style="padding-bottom: 0px" id="consulta-general">
+            <form>
+                {{csrf_field()}}
+                <div class="row" style="padding-top: 8px">
+                    <label class="col-sm-3 col-form-label">Consultar (RUC - DNI)</label>
+                    <div class="col-sm-7">
+                        <input type="text" pattern="\d*" class="form-control" id="general_cliente" name="general_cliente" required="required" autocomplete="off" maxlength="11">
+                    </div>
+                    <div class="col-sm-2"> <button type="button" class="btn btn-info btn-lg dni_boton_general" id="general_boton_cliente" name="btn" value="cliente"><i class="fa fa-search"></i> </button></div>
+                </div>  
+            </form>
         </div>
-<hr >
-        <script>
+        <hr >
+        {{-- <script>
             $(function(){
                 $('#botoncito_cliente').on('click', function(){
                     var ruc_cliente = $('#ruc_cliente').val();
@@ -106,6 +118,73 @@
                         }
                     });
                     return false;
+                });
+            });
+        </script> --}}
+        <script>
+            $(function(){
+                $('#general_boton_cliente').on('click', function(){
+                    var text_cliente = $('#general_cliente').val();
+                    // console.log(text_cliente.length);
+                    if(text_cliente.length == 11){
+                        var url = "{{ url('clienteruc') }}";
+                        $.ajax({
+                            type:'GET',
+                            url:url,
+                            data:'ruc='+text_cliente,
+                            success: function(datos_dni){
+                                var datos = eval(datos_dni);
+                                if(datos[2] == 'existente'){
+                                    toastr.warning(''+datos[1]+' ya existe',
+                                    'Cliente existente', {
+                                        timeOut: 3000
+                                    });
+                                }else{
+                                    document.getElementById("cliente_doc").options.item(0).selected = 'selected';
+                                    $('#numero_ruc_cli').val(datos[0]);
+                                    $('#razon_social_cli').val(datos[1]);
+                                    $('#direccion_cli').val(datos[2]);
+                                    $('#provincia_cli').val(datos[3]);
+                                    $('#distrito_cli').val(datos[4]);
+                                    // $('#fechaInscripcion_cli').val(datos[5]);
+                                    $('#ubigeo').val(datos[5]);
+                                }
+                                
+                            }
+                        });
+                        return false;
+                    }else if(text_cliente.length == 8){
+                        var url = "{{ url('clientedni') }}";
+                        $.ajax({
+                            type:'GET',
+                            url:url,
+                            data:'dni='+text_cliente,
+                            success: function(datos_dni){
+                                var datos = eval(datos_dni);
+                                if(datos[2] == 'existente'){
+                                    toastr.warning(''+datos[1]+' ya existe.',
+                                    'Cliente existente', {
+                                        timeOut: 3000
+                                    });
+                                }else{
+                                    document.getElementById("cliente_doc").options.item(1).selected = 'selected';
+                                    $('#numero_ruc_cli').val(datos[0]);
+                                    var nombre  = datos[2]+' '+datos[3]+' '+datos[4];
+                                    $('#razon_social_cli').val(nombre);
+                                }
+                                // $('#direccion_cli').val(datos[2]);
+                                // $('#provincia_cli').val(datos[3]);
+                                // $('#distrito_cli').val(datos[4]);
+                                // $('#fechaInscripcion_cli').val(datos[5]);
+                            }
+                        });
+                        return false;
+                    }else{
+                        toastr.error('Verifique el número',
+                            'Sin registros', {
+                                timeOut: 3000
+                            });
+                    }
                 });
             });
         </script>
