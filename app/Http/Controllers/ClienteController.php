@@ -173,7 +173,12 @@ class ClienteController extends Controller
       $ruc=$request->get('ruc');
 
       $data = file_get_contents("http://jypsac.dyndns.org:190/apidata/public/v1/ruc/".$ruc."?token=rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL"); 
+      
       $info = json_decode($data, true);
+      // return $info;
+      if(!isset($info['ruc'])){
+        return array('sin','data');
+      }
 
       $clientes=Cliente::where('numero_documento',array($info['ruc']))->first();
       if (isset($clientes)) {
@@ -204,7 +209,9 @@ class ClienteController extends Controller
       $dni=$request->get('dni');
       $data = file_get_contents("http://jypsac.dyndns.org:190/apidata/public/v1/dni/".$dni."?token=rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL");
       $info = json_decode($data, true);
-
+      if(!isset($info['dni'])){
+        return array('sin','data');
+      }
       $clientes=Cliente::where('numero_documento',array($info['dni']))->first();
       if (isset($clientes)) {
         $ruc_view=$clientes->numero_documento;

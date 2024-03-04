@@ -132,11 +132,16 @@
                             type:'GET',
                             url:url,
                             data:'ruc='+text_cliente,
-                            success: function(datos_dni){
-                                var datos = eval(datos_dni);
+                            success: function(datos_ruc){
+                                var datos = eval(datos_ruc);
                                 if(datos[2] == 'existente'){
                                     toastr.warning(''+datos[1]+' ya existe',
                                     'Cliente existente', {
+                                        timeOut: 3000
+                                    });
+                                }else if(datos_ruc[0] == "sin"){
+                                    toastr.error('Verifique el número',
+                                    'Sin registros', {
                                         timeOut: 3000
                                     });
                                 }else{
@@ -164,6 +169,11 @@
                                 if(datos[2] == 'existente'){
                                     toastr.warning(''+datos[1]+' ya existe.',
                                     'Cliente existente', {
+                                        timeOut: 3000
+                                    });
+                                }else if(datos_dni[0] == "sin"){
+                                    toastr.error('Verifique el número',
+                                    'Sin registros', {
                                         timeOut: 3000
                                     });
                                 }else{
