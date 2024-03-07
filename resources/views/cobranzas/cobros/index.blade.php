@@ -337,11 +337,7 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                     </form>
-=======
-                    </div>
->>>>>>> detracciones
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -510,10 +506,7 @@
                 var val_fact = check.value;
                 ids_array.push(id_fact[1]);
             });
-<<<<<<< HEAD
             var tipo_cambio = {{$tipo_cambio->paralelo}} ;
-=======
->>>>>>> detracciones
             $.ajax({
                 type: "post",
                 url: "{{ route('pagos.lista_ajax') }}",
@@ -534,7 +527,6 @@
                                     <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_`+index+`" value="`+row.factura_cod+`">
                                 </div>
                                 <div class="col-sm-4 div_select">
-<<<<<<< HEAD
                                     <select placeholder="Seleccionar Cuotas" id="sel_`+index+`" class="select_2_multipl_`+index+` select2-selection--multiple" name="cuotas_precio_`+row.factura_cod+`[]" multiple="multiple" onchangue="select_2_(`+index+`)" required>
                                         `+ row.cuotas_array.map(function(bar){
                                             return '<option value="'+bar.id_cuota+'_'+bar.monto+'">'+'N°-'+bar.cuota_n+': '+bar.monto+'</option>'
@@ -545,15 +537,6 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">`+row.factura_simbolo+`</span>
                                     </div>
-=======
-                                    <select placeholder="Seleccionar Cuotas" id="sel_`+index+`" class="select_2_multipl_`+index+` select2-selection--multiple" name="cuotas_precio_`+row.factura_cod+`[]" multiple="multiple" onchangue="select_2_(`+index+`)">
-                                        `+ row.cuotas_array.map(function(bar){
-                                            return '<option value="'+bar.monto+'">'+bar.monto+'</option>'
-                                        }) +`
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
->>>>>>> detracciones
                                     <label class="form-control" id="lbl_tot_`+index+`">0</label>
                                     <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas_`+index+`">
                                 </div>
@@ -569,17 +552,12 @@
                             if(ant == ""){  
                                 ant = 0;
                             }
-<<<<<<< HEAD
                             var data_cuota = data.text.replace(/N°-\d+: /g, '');
                             var math_total = Math.round((parseFloat(data_cuota) + parseFloat(ant)  ) * 100 ) / 100;
-=======
-                            var math_total = Math.round((parseFloat(data.text) + parseFloat(ant)  ) * 100 ) / 100;
->>>>>>> detracciones
                             $(`#total_cuotas_`+index+``).val(math_total);
                             $(`#lbl_tot_`+index+``).html(math_total);
                             // TOTAL DE TOTALES
                             var tota_tot = $('#tota_totas').html();
-<<<<<<< HEAD
                             if(tota_tot == ""){  
                                 tota_tot = 0;
                             }
@@ -605,17 +583,6 @@
                             $('#efectivo_pago').attr('min',tot_math);
                             $('#cheque_monto').val(tot_math);
                             
-=======
-                            console.log(tota_tot);
-                            if(tota_tot == ""){  
-                                tota_tot = 0;
-                            }
-                            var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(math_total)) * 100) / 100;
-                            console.log(tot_math);
-                            
-                            
-                            console.log('a');
->>>>>>> detracciones
                         });
                         $(`.select_2_multipl_`+index+``).on('select2:unselect', function (e) {
                             var data = e.params.data;
@@ -623,7 +590,6 @@
                             if(ant == ""){  
                                 ant = 0;
                             }
-<<<<<<< HEAD
                             var data_cuota = data.text.replace(/N°-\d+: /g, '');
                             var math_total = Math.round((parseFloat(ant) - parseFloat(data_cuota)) * 100 ) / 100;
                             $(`#total_cuotas_`+index+``).val(math_total);
@@ -653,11 +619,6 @@
                             $('#cheque_monto').attr('max',tot_math);
                             $('#efectivo_pago').attr('min',tot_math);
                             $('#cheque_monto').val(tot_math);
-=======
-                            var math_total = Math.round((parseFloat(ant) - parseFloat(data.text)) * 100 ) / 100;
-                            $(`#total_cuotas_`+index+``).val(math_total);
-                            $(`#lbl_tot_`+index+``).html(math_total);
->>>>>>> detracciones
                         });
                     });
                     
@@ -676,7 +637,6 @@
         function select_pago(item){
             $('.pago_m').css('display','none');
             $(`.m_pago_`+item).css('display','flex');
-<<<<<<< HEAD
             
             $('.class_pago').attr('required', false);
             // $('.class_pago').val('');
@@ -723,14 +683,6 @@
             var vuelto  = parseFloat( this.value) - parseFloat(total);
             $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
         })
-=======
-            $('.btn_pago_selec').removeClass("active"); 
-            $(`#bm_pago_`+item).addClass("active");
-            $('#input_pago').val(item);
-           console.log(item); 
-        }
-
->>>>>>> detracciones
     </script>
 
 @endsection
