@@ -29,7 +29,7 @@
 </head>
 
 <body class="white-bg">
-    <table style="width: 100%;border-collapse:separate;height: auto;">
+    <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
         <tr>
             @include('layout_cabecera_ventas_pdf')
             <td style="width: 30%; border: 1px #3D3D3D solid;border-radius: 8px;margin-top: 0px" align="right">
@@ -41,7 +41,7 @@
             </td>
         </tr>
     </table>
-    <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -40px ">
+    <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
         <table style="width: 100%;border-collapse:separate;margin-top: -20px">
             <tr>
                 <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">

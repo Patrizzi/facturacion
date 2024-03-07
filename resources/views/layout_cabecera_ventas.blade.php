@@ -1,6 +1,6 @@
-<div class="col-sm-4 text-center" align="center"  style="height: 155px">
+<div class="col-sm-4 text-center" align="center">
     {{-- <address class="col-sm-4" align="left"> --}}
-        <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" style="max-height: 100%">
+        <img src="{{asset('img/logos/')}}/{{$empresa->foto}}" alt="" style="max-width: 100%">
     {{-- </address> --}}
 </div>
 <div class="col-sm-4 text-center" style="font-size: 13px">
