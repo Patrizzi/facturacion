@@ -2,7 +2,7 @@
 @section('title', 'Nota de Venta')
 @section('href_accion', route('nota_venta.index'))
 @section('value_accion', 'Inicio')
-@section('nombre', 'nueva cotizacion')
+{{-- @section('nombre', 'nueva cotizacion') --}}
 
 @section('button2', 'Nueva Nota de Venta')
 @section('onclick', "event.preventDefault();document.getElementById('nueva_nota').submit();")

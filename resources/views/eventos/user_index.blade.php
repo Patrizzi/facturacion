@@ -3,9 +3,9 @@
 @section('atributo_actu', 'hidden')
 @section('atributo_1', 'hidden')
 
-@section('foto', auth()->user()->avatar)
+{{-- @section('foto', auth()->user()->avatar)
 @section('nombre', auth()->user()->personal->nombres)
-@section('area', auth()->user()->name)
+@section('area', auth()->user()->name) --}}
 @section('content')
 
 
