@@ -1,4 +1,4 @@
-{{-- COTIZACIONES --}}
+{{-- COTIZACIONES
 @if (isset($cotizacion))
     <div class="row" style="align-items: flex-end;">
         @if ($cotizacion->user_personal->nombre != null)
@@ -41,7 +41,7 @@
         @endif
     </div>
 @endif
-{{-- NOTA DE VENTA --}}
+{{-- NOTA DE VENTA 
 @if (isset($nota_venta))
     <div class="row" style="align-items: flex-end;">
         @if ($nota_venta->user->nombre != null)
@@ -82,5 +82,91 @@
                     {{ $nota_venta->user->personal->apellidos }}</center>
             </div>
         @endif
+    </div>
+@endif --}}
+
+
+{{-- COTIZACIONES --}}
+@if (isset($cotizacion))
+    <div class="">
+        <table>
+            <tr>
+                @if ($cotizacion->user_personal->nombre != null)
+                    <td style="border: none">
+                        <p><u><strong>Atendido por:</strong></u></p>
+                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        <span><strong>Celular:</strong> {{ $nota_venta->user->celular }}</span><br>
+                        <span><strong>Email:</strong> {{ $nota_venta->user->email_user }}</span><br>
+                        <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
+                    </td>
+                    <td style="border: none">
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        @if (!empty($firma))
+                            <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                    width="150px" height="100px"></center>
+                        @endif
+                        <hr>
+                        <center>{{ $cotizacion->user_personal->personal->nombres }}
+                            {{ $cotizacion->user_personal->personal->apellidos }}</center>
+                    </td>
+                @else
+                @endif
+            </tr>
+        </table>
+    </div>
+@endif
+{{-- NOTA VENTA --}}
+@if (isset($nota_venta))
+    <div class="">
+        <table>
+            <tr>
+                @if ($nota_venta->user->nombre != null)
+                    <td style="border: none">
+                        <p><u><strong>Atendido por:</strong></u></p>
+                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        <span><strong>Celular:</strong> {{ $cotizacion->user_personal->celular }}</span><br>
+                        <span><strong>Email:</strong> {{ $cotizacion->user_personal->email_user }}</span><br>
+                        <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
+                    </td>
+                    <td style="border: none">
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        @if (!empty($firma))
+                            <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                    width="150px" height="100px"></center>
+                        @endif
+                        <hr>
+                        <center>{{ $cotizacion->user_personal->personal->nombres }}
+                            {{ $cotizacion->user_personal->personal->apellidos }}</center>
+                    </td>
+                @else
+                    <td style="border: none">
+                        <p><u><strong>Atendido por:</strong></u></p>
+                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        <span><strong>Celular:</strong> {{ $cotizacion->user_personal->celular }}</span><br>
+                        <span><strong>Email:</strong> {{ $cotizacion->user_personal->email_user }}</span><br>
+                        <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
+                    </td>
+                    <td style="border: none">
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        @if (!empty($firma))
+                            <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                    width="150px" height="100px"></center>
+                        @endif
+                        <hr>
+                        <center>{{ $cotizacion->user_personal->personal->nombres }}
+                            {{ $cotizacion->user_personal->personal->apellidos }}</center>
+                    </td>
+                @endif
+            </tr>
+        </table>
     </div>
 @endif

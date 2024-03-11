@@ -168,13 +168,22 @@
                                         <div class="ibox-content">
                                             <div class="">
                                                 <div class="row">
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-4">
                                                         <h4>Firma en Guia de Remision</h4>
                                                         <strong>Ocultar&nbsp;</strong><input type="checkbox" class="js-switch" name="remision_firma" @if(Auth::user()->config->guia_remision_firma == 0) checked @endif/><strong>&nbsp;Mostrar</strong>
                                                         <hr>
-
                                                     </div>
-                                                    <div class="col-lg-6 text-right">
+                                                    <div class="col-lg-4">
+                                                        <h4>Firma en Cotizacion</h4>
+                                                        <strong>Ocultar&nbsp;</strong><input type="checkbox" class="js-switch-coti" name="coti_firma" @if(Auth::user()->config->cotizacion_firma == 0) checked @endif/><strong>&nbsp;Mostrar</strong>
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <h4>Firma en Nota Venta</h4>
+                                                        <strong>Ocultar&nbsp;</strong><input type="checkbox" class="js-switch-nventa" name="nventa_firma" @if(Auth::user()->config->nventa_firma == 0) checked @endif/><strong>&nbsp;Mostrar</strong>
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-lg-12 text-right">
                                                         <br>
                                                         <button type="sumbit" class="btn btn-success"><i
                                                             class="fa fa-refresh" aria-hidden="true"></i>
@@ -253,6 +262,13 @@
         });
         var elem_2 = document.querySelector('.js-switch');
         var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+        var elem_3 = document.querySelector('.js-switch-coti');
+        var switchery_3 = new Switchery(elem_3, { color: '#ED5565' });
+
+        var elem_4 = document.querySelector('.js-switch-nventa');
+        var switchery_4 = new Switchery(elem_4, { color: '#ED5565' });
+
     </script>
 
 @endsection

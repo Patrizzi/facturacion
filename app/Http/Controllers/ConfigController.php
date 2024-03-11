@@ -88,7 +88,16 @@ class ConfigController extends Controller
         }else{
             $apariencia->guia_remision_firma = 1;
         }
-
+        if ($request->get('coti_firma') == 'on') {
+            $apariencia->cotizacion_firma = 0;
+        }else{
+            $apariencia->cotizacion_firma = 1;
+        }
+        if ($request->get('nventa_firma') == 'on') {
+            $apariencia->nventa_firma = 0;
+        }else{
+            $apariencia->nventa_firma = 1;
+        }
         $apariencia->save();
 
         return redirect()->route('apariencia.index');

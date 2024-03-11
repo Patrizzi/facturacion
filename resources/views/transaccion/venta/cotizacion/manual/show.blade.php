@@ -376,7 +376,9 @@
 <!-- Fin Totales de Productos -->
 @include('layout_bancos')
           <br>
-@include('layout_firma_pie_hoja')
+    @if ($cotizacion->user_personal->config->cotizacion_firma == 0)
+        @include('layout_firma_pie_hoja')
+    @endif
     </div>
 </div>
 </div>

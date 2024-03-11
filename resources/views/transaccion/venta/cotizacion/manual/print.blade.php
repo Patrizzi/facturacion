@@ -41,7 +41,7 @@
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
                                     <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
-                                    <h5> {{$cotizacion_m->cod_cotizacion}}</h5>
+                                    <h5> {{$cotizacion->cod_cotizacion}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -51,12 +51,12 @@
                                 <div class="form-control">
                                     <h3>Contacto Cliente</h3>
                                     <div align="left">
-                                        <strong>Señor(es):</strong> &nbsp;{{$cotizacion_m->cliente->nombre}}<br>
-                                        <strong>{{$cotizacion_m->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion_m->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Fecha:</strong> &nbsp;{{$cotizacion_m->fecha_emision}}<br>
-                                        <strong>Direccion:</strong>&nbsp; {{$cotizacion_m->cliente->direccion}}<br>
-                                        <strong>Telefono:</strong>&nbsp; {{$cotizacion_m->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Celular:</strong>&nbsp; {{$cotizacion_m->cliente->celular}}<br>
+                                        <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
+                                        <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Fecha:</strong> &nbsp;{{$cotizacion->fecha_emision}}<br>
+                                        <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                        <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
                                     </div>
                                 </div>
                             </div>
@@ -64,17 +64,17 @@
                                 <div class="form-control" >
                                     <h3>Condiciones Generales</h3>
                                     <div align="left">
-                                        <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion_m->forma_pago->nombre  }}<br>
-                                        <strong>Validez :</strong> &nbsp;{{$cotizacion_m->validez}}<br>
-                                        <strong>Garantia:</strong> &nbsp;{{$cotizacion_m->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                        <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion_m->moneda->nombre}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre  }}<br>
+                                        <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
+                                        <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                     </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12" align="center">
                                     <div class="form-control" style="border: none;height: auto" >
                                         <div align="left">
-                                            <strong>observaciones:</strong> &nbsp;{{$cotizacion_m->observacion }}<br>
+                                            <strong>observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                                             <th>DESCRIPCION</th>
                                             <th style="text-align:center;width: 70px">CANT.</th>
                                             <th style="text-align:right;width: 110px">P. UNIT.</th>
-                                            <th style="text-align:right;width: 110px;">TOTAL <span >{{$cotizacion_m->moneda->simbolo}}</span></th>
+                                            <th style="text-align:right;width: 110px;">TOTAL <span >{{$cotizacion->moneda->simbolo}}</span></th>
                                         </tr>
                                     </thead>
                                     <tbody >
@@ -129,44 +129,32 @@
                                         // $end_final_point=strstr($end2, '.', false);
                                         // $end_final=str_replace('.', '',$end_final_point);
                                         ?>
-                                        Son : {{ucfirst(strtolower($letra))}} {{$cotizacion_m->moneda->nombre }}
+                                        Son : {{ucfirst(strtolower($letra))}} {{$cotizacion->moneda->nombre }}
                                     </h3>         
                                 </div>
                                 <div class="col-sm-4 form-control ">
                                         <span style="display: block;float: left"> Subtotal:</span>
-                                        <span style="display: block;float: right;"> {{$simbologia=$cotizacion_m->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                                        <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
                                         <br>
                                         <span style="display: block;float: left"> Op. Gravada: </span>
-                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion_m->op_gravada,2)}}</span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
                                         <span style="display: block;float: left"> Op. Inafecta: </span>
-                                        <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion_m->op_inafecta,2)}}</span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
                                         <span style="display: block;float: left"> Op. Exonerada: </span>
-                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion_m->op_exonerada,2)}} </span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}} </span><br>
                                         <span style="display: block;float: left"> I.G.V.: </span>
-                                        <span style="display: block;float: right">{{$cotizacion_m->moneda->simbolo}} {{number_format(round($igv, 2),2)}}</span><br>
+                                        <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($igv, 2),2)}}</span><br>
                                         <span style="display: block;float: left"> Importe Total: </span>
-                                        <span style="display: block;float: right">{{$cotizacion_m->moneda->simbolo}} {{number_format($end,2)}}</span>
+                                        <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format($end,2)}}</span>
                                     {{-- @endif --}}
                                 </div>
                             </div>
                             <br>
                             @include('layout_bancos')
                             <br>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p><u>centro de Atencion : </u></p>
-                                    Telefono : {{$cotizacion_m->user_personal->personal->telefono }}<br>
-                                    Celular : {{$cotizacion_m->user_personal->personal->celular }}<br>
-                                    Email : {{$cotizacion_m->user_personal->personal->email }}<br>
-                                    Web : {{$empresa->pagina_web}} <br>
-                                </div>
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-3"><br><br>
-                                    <hr>
-                                    <center>{{$cotizacion_m->user_personal->personal->nombres }}</center>
-                                </div>
-                            </div>
+                            @if ($cotizacion->user_personal->config->cotizacion_firma == 0)
+                                @include('layout_firma_pie_hoja')
+                            @endif
                         </div>
                     </div>
                 </div>

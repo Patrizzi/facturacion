@@ -119,8 +119,9 @@
                                             <td>{{ $nota_venta_reg->producto }}<br>{{ $nota_venta_reg->descripcion }}
                                             </td>
                                             <td style="text-align: center">{{ $nota_venta_reg->cantidad }}</td>
-                                            <td  style="text-align: right;">{{ $simbologia }} {{ $nota_venta_reg->precio_nacional }}</td>
-                                            <td  style="text-align: right;">{{ $simbologia }}
+                                            <td style="text-align: right;">{{ $simbologia }}
+                                                {{ $nota_venta_reg->precio_nacional }}</td>
+                                            <td style="text-align: right;">{{ $simbologia }}
                                                 {{ $nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional }}</td>
                                             <span
                                                 hidden>{{ $sume = $nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional + $sume }}</span>
@@ -155,98 +156,95 @@
                         @include('layout_bancos')
                         <!-- Fin Totales de Productos -->
                         <br>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p><u>Atendido Por: </u></p>
-                                Teléfono : {{ $empresa->telefono }}<br>
-                                Celular : {{ $nota_venta->user->celular }}<br>
-                                Email : {{ $nota_venta->user->email_user }}<br>
-                                Web : {{ $empresa->pagina_web }} <br>
-                            </div>
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-3"><br><br>
-                            </div>
+                        @if ($nota_venta->user->config->nventa_firma == 0)
+                            @include('layout_firma_pie_hoja')
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 
-                            {{-- <!-- </div> -->  --}}
+{{-- <!-- </div> -->  --}}
 
-                            <style>
-                                .form-control {
-                                    margin-top: 5px;
-                                    border-radius: 5px
-                                }
+<style>
+    .form-control {
+        margin-top: 5px;
+        border-radius: 5px
+    }
 
-                                p#texto {
-                                    text-align: center;
-                                    color: black;
-                                }
+    p#texto {
+        text-align: center;
+        color: black;
+    }
 
-                                input#archivoInput {
-                                    position: absolute;
-                                    top: 0px;
-                                    left: 0px;
-                                    right: 0px;
-                                    bottom: 0px;
-                                    width: 100%;
-                                    height: 100%;
-                                    opacity: 0;
-                                }
-                            </style>
-                            <style type="text/css">
-                                * {
-                                    color: black;
-                                }
+    input#archivoInput {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+</style>
+<style type="text/css">
+    * {
+        color: black;
+    }
 
-                                .form-control {
-                                    border-radius: 10px;
-                                    padding: 10px;
-                                    border-color: #3D3D3D
-                                }
+    .form-control {
+        border-radius: 10px;
+        padding: 10px;
+        border-color: #3D3D3D
+    }
 
-                                .ibox-tools a {
-                                    color: white !important
-                                }
+    .ibox-tools a {
+        color: white !important
+    }
 
-                                .a {
-                                    height: 37px;
-                                    margin: 0;
-                                    border-radius: 0px;
-                                    text-align: center;
-                                }
+    .a {
+        height: 37px;
+        margin: 0;
+        border-radius: 0px;
+        text-align: center;
+    }
 
-                                .table>thead>tr>th,
-                                .table>tbody>tr>th,
-                                .table>tfoot>tr>th,
-                                .table>thead>tr>td,
-                                .table>tbody>tr>td,
-                                .table>tfoot>tr>td {
-                                    border-top-width: 0px;
-                                    border-color: #3D3D3D
-                                }
+    .table>thead>tr>th,
+    .table>tbody>tr>th,
+    .table>tfoot>tr>th,
+    .table>thead>tr>td,
+    .table>tbody>tr>td,
+    .table>tfoot>tr>td {
+        border-top-width: 0px;
+        border-color: #3D3D3D
+    }
 
-                                p.form-control {
-                                    border-color: #3D3D3D;
-                                }
+    p.form-control {
+        border-color: #3D3D3D;
+    }
 
-                                .form-control {
-                                    background-color: transparent !important;
-                                }
+    .form-control {
+        background-color: transparent !important;
+    }
 
-                                * {
-                                    color: black;
-                                }
-                            </style>
+    * {
+        color: black;
+    }
+</style>
 
-                            <!-- Mainly scripts -->
-                            <script src="js/jquery-3.1.1.min.js"></script>
-                            <script src="js/popper.min.js"></script>
-                            <script src="js/bootstrap.js"></script>
-                            <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<!-- Mainly scripts -->
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
 
-                            <!-- Custom and plugin javascript -->
-                            <script src="js/inspinia.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
 
-                            {{-- IMPRIMIR --}}
-                            <script type="text/javascript">
-                                window.print();
-                            </script>
+{{-- IMPRIMIR --}}
+<script type="text/javascript">
+    window.print();
+</script>
