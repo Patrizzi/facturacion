@@ -12,12 +12,14 @@
             <div class="col-sm-6">
             </div>
             <div class="col-sm-3">
-                @if (!empty($firma))
-                    <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
-                            width="150px" height="100px"></center>
+                @if ($cotizacion->user_personal->config->cotizacion_firma == 0)
+                    @if (!empty($firma))
+                        <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                width="150px" height="100px"></center>
+                    @endif
+                    <hr>
+                    <center>{{ $cotizacion->user_personal->nombre }}</center>
                 @endif
-                <hr>
-                <center>{{ $cotizacion->user_personal->nombre }}</center>
             </div>
         @else
             <div class="col-sm-3">
@@ -30,13 +32,15 @@
             <div class="col-sm-6">
             </div>
             <div class="col-sm-3">
-                @if (!empty($firma))
-                    <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
-                            width="150px" height="100px"></center>
+                @if ($cotizacion->user_personal->config->cotizacion_firma == 0)
+                    @if (!empty($firma))
+                        <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                width="150px" height="100px"></center>
+                    @endif
+                    <hr>
+                    <center>{{ $cotizacion->user_personal->personal->nombres }}
+                        {{ $cotizacion->user_personal->personal->apellidos }}</center>
                 @endif
-                <hr>
-                <center>{{ $cotizacion->user_personal->personal->nombres }}
-                    {{ $cotizacion->user_personal->personal->apellidos }}</center>
             </div>
         @endif
     </div>
@@ -55,12 +59,14 @@
             <div class="col-sm-6">
             </div>
             <div class="col-sm-3">
-                @if (!empty($firma))
-                    <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
-                            width="150px" height="100px"></center>
+                @if ($nota_venta->user->config->nventa_firma == 0)
+                    @if (!empty($firma))
+                        <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                width="150px" height="100px"></center>
+                    @endif
+                    <hr>
+                    <center>{{ $nota_venta->user->nombre }}</center>
                 @endif
-                <hr>
-                <center>{{ $nota_venta->user->nombre }}</center>
             </div>
         @else
             <div class="col-sm-3">
@@ -73,13 +79,15 @@
             <div class="col-sm-6">
             </div>
             <div class="col-sm-3">
-                @if (!empty($firma))
-                    <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
-                            width="150px" height="100px"></center>
+                @if ($nota_venta->user->config->nventa_firma == 0)
+                    @if (!empty($firma))
+                        <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
+                                width="150px" height="100px"></center>
+                    @endif
+                    <hr>
+                    <center>{{ $nota_venta->user->personal->nombres }}
+                        {{ $nota_venta->user->personal->apellidos }}</center>
                 @endif
-                <hr>
-                <center>{{ $nota_venta->user->personal->nombres }}
-                    {{ $nota_venta->user->personal->apellidos }}</center>
             </div>
         @endif
     </div>

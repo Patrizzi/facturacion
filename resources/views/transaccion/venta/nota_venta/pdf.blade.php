@@ -112,8 +112,10 @@
                             <td style="text-align: center;">{{ $i++ }} </td>
                             <td>{{ $nota_venta_reg->producto }}<br>{{ $nota_venta_reg->descripcion }}</td>
                             <td style="text-align: center;">{{ $nota_venta_reg->cantidad }}</td>
-                            <td style="text-align: right;">{{ $simbologia }} {{ number_format($nota_venta_reg->precio_nacional,2) }}</td>
-                            <td style="text-align: right;">{{ $simbologia }} {{ number_format($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional, 2) }}
+                            <td style="text-align: right;">{{ $simbologia }}
+                                {{ number_format($nota_venta_reg->precio_nacional, 2) }}</td>
+                            <td style="text-align: right;">{{ $simbologia }}
+                                {{ number_format($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional, 2) }}
                             </td>
                             <span
                                 style="display:none">{{ $sume = $nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional + $sume }}</span>
@@ -158,59 +160,40 @@
 
             @include('layout_bancos_pdf')
             <br>
-            <div class="row">
-                <br>
-                <table style="border:  0px solid white">
-                    <tr style="border:  0px solid white">
-                        <td>
-                            <p><u>Atendido Por: </u></p>
-                            Teléfono : {{ $empresa->telefono }}<br>
-                            Celular : {{ $nota_venta->user->celular }}<br>
-                            Email : {{ $nota_venta->user->email_user }}<br>
-                            Web : {{ $empresa->pagina_web }} <br>
-                        </td>
-                        <td>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            @include('layout_firma_pie_hoja_pdf')
         </footer>
-        {{--  --}}
-        <style>
-            * {
-                font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                color: black;
-            }
+    </div>
+</body>
+{{--  --}}
+<style>
+    * {
+        font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        color: black;
+    }
 
-            .table-bordered .blanco {
-                border: none;
-            }
+    .table-bordered .blanco {
+        border: none;
+    }
 
-            .blanco {
-                border: none;
-                border: medium transparent;
-            }
+    .blanco {
+        border: none;
+        border: medium transparent;
+    }
 
-            .border {
-                border-color: #3D3D3D;
-                border-width: 1px;
-                border-style: solid;
-            }
+    .border {
+        border-color: #3D3D3D;
+        border-width: 1px;
+        border-style: solid;
+    }
 
-            .table {
-                width: 100%;
-                max-width: 100%;
-                margin-bottom: 1rem;
-                background-color: transparent;
-                border-top-width: 0px;
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+        border-top-width: 0px;
 
-            }
-        </style>
+    }
+</style>
 
 </html>

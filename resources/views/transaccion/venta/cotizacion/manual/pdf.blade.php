@@ -32,7 +32,7 @@
                     <center>
                         <h3 style="text-align: center;margin-top: 2px"> R.U.C {{$empresa->ruc}}</h3>
                         <h2 style="text-align: center;margin: 2px" >COTIZACIÓN ELECTRONICA</h2>
-                        <h4 style="text-align: center;margin-bottom: 2px" >{{$cotizacion_m->cod_cotizacion}}</h4>
+                        <h4 style="text-align: center;margin-bottom: 2px" >{{$cotizacion->cod_cotizacion}}</h4>
                     </center>
                 </td>
             </tr>
@@ -42,25 +42,25 @@
                 <tr >
                     <td colspan="2" style="border: 1px black solid;border-radius: 8px;width: auto" >
                         <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
-                        <strong>Señor(es):</strong>&nbsp;{{$cotizacion_m->cliente->nombre}}<br>
-                        <strong>{{$cotizacion_m->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion_m->cliente->numero_documento}}&nbsp;&nbsp;<br>
-                        <strong>Fecha:</strong>&nbsp;{{$cotizacion_m->fecha_emision}}<br>
-                        <strong>Telefono:</strong>&nbsp;{{$cotizacion_m->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <strong>Celular:</strong>&nbsp;{{$cotizacion_m->cliente->celular}}<br>
+                        <strong>Señor(es):</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
+                        <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
+                        <strong>Fecha:</strong>&nbsp;{{$cotizacion->fecha_emision}}<br>
+                        <strong>Telefono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
                     </td>
                     <th style="width: 5%;border-color: white"></th>
                     <td colspan="2" style="border: 1px black solid;border-radius: 8px;width: auto">
                         <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
-                        <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion_m->forma_pago->nombre }}<br>
-                        <strong>Validez :</strong> &nbsp;{{$cotizacion_m->validez}}<br>
-                        <strong>Garantia:</strong> &nbsp;{{$cotizacion_m->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                        <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion_m->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}<br>
+                        <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
+                        <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                     </td>
                 </tr>
             </table>
         <div class="form-control" style="border: none;height: auto" >
             <div align="left">
-                <strong>Observaciones:</strong> &nbsp;{{$cotizacion_m->observacion }}<br>
+                <strong>Observaciones:</strong> &nbsp;{{$cotizacion->observacion }}<br>
             </div>
         </div>
         <br>
@@ -74,7 +74,7 @@
                         <th >DESCRIPCION</th>
                         <th style="text-align:center;width: 30px;" >CANT.</th>
                         <th style="text-align:center;width: 50px;">P. UNIT.</th>
-                        <th style="text-align:center;width: 50px;">TOTAL <span hidden="hidden">{{$cotizacion_m->moneda->simbolo}}</span></th>
+                        <th style="text-align:center;width: 50px;">TOTAL <span hidden="hidden">{{$cotizacion->moneda->simbolo}}</span></th>
                     </tr>
                 </thead>
                 <tbody align="left">
@@ -116,7 +116,7 @@
                             // $end_final_point=strstr($end2, '.',false);
                             // $end_final=str_replace('.', '',$end_final_point);
                         ?>
-                        Son : {{ucfirst(strtolower($letra))}} {{$cotizacion_m->moneda->nombre }}
+                        Son : {{ucfirst(strtolower($letra))}} {{$cotizacion->moneda->nombre }}
                         </h3>
                     </td>
                     <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
@@ -128,10 +128,10 @@
                         <span > Importe Total:</span><br>
                     </td>
                     <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
-                        <span>{{$simbologia=$cotizacion_m->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($cotizacion_m->op_gravada,2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($cotizacion_m->op_inafecta,2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($cotizacion_m->op_exonerada,2)}}</span><br>
+                        <span>{{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($cotizacion->op_inafecta,2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}}</span><br>
                         <span>{{$simbologia}} {{number_format(round($igv, 2),2)}}</span><br>
                         <span>{{$simbologia}} {{number_format($end,2)}}</span>
                     </td>
@@ -142,34 +142,8 @@
         <!-- Fin Totales de Productos -->
         <br>
         @include('layout_bancos_pdf')
-        <div class="">
-            <table >
-                <tr>
-                    <td style="border: none">
-                        <p><u>Atendido por: </u></p>
-
-                        Teléfono : {{$empresa->telefono}}<br>
-                        Celular : {{$cotizacion_m->user_personal->celular }}<br>
-                        Email : {{$cotizacion_m->user_personal->email_user}}<br>
-                        Web : {{$empresa->pagina_web}} <>
-                    </td>
-                    <td style="border: none">
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        @if(isset($firma))
-                            <center><img src="{{asset('archivos/imagenes/firma_digital/'.$firma)}}" style="" width="150px" height="100px"></center>
-                        @else
-                            <br>
-                            <br>
-                        @endif
-                        <hr style="width:250px">
-                        <center>{{$cotizacion_m->user_personal->nombre}}</center>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <br>
+        @include('layout_firma_pie_hoja_pdf')
         <style>
             *{
                 color: black;

@@ -548,7 +548,7 @@ class CotizacionManualController extends Controller
 
         $name = $request->get('name');
         $empresa=Empresa::first();
-        $cotizacion_m=CotizacionManual::find($id);
+        $cotizacion=CotizacionManual::find($id);
         $cotizacion_m_reg=CotizacionManual_registros::where('cotizacion_m_id',$id)->get();
         $sum=0;
         $igv=Igv::first();
@@ -559,17 +559,17 @@ class CotizacionManualController extends Controller
         $j = 1;
 
         //SUBTOTAL
-        $sub_total = $cotizacion_m->op_gravada + $cotizacion_m->op_inafecta + $cotizacion_m->op_exonerada;
+        $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
-        $igv = round( $cotizacion_m->op_gravada ,2) * $igv->igv_total/100;
+        $igv = round( $cotizacion->op_gravada ,2) * $igv->igv_total/100;
         //TOTAL 
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
         
         // $archivo=$name.'_'.$id;
         
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2'));
-        return $pdf->download($cotizacion_m->cod_cotizacion.'.pdf');
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2'));
+        return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
 
     }
     /**

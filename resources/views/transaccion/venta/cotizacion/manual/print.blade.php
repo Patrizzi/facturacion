@@ -152,9 +152,7 @@
                             <br>
                             @include('layout_bancos')
                             <br>
-                            @if ($cotizacion->user_personal->config->cotizacion_firma == 0)
-                                @include('layout_firma_pie_hoja')
-                            @endif
+                            @include('layout_firma_pie_hoja')
                         </div>
                     </div>
                 </div>

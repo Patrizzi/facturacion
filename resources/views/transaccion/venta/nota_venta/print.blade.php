@@ -156,9 +156,7 @@
                         @include('layout_bancos')
                         <!-- Fin Totales de Productos -->
                         <br>
-                        @if ($nota_venta->user->config->nventa_firma == 0)
-                            @include('layout_firma_pie_hoja')
-                        @endif
+                        @include('layout_firma_pie_hoja')
                     </div>
                 </div>
             </div>

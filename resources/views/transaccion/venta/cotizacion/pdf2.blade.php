@@ -152,35 +152,7 @@
         @include('layout_bancos_pdf')
         <!-- Fin Totales de Productos -->
         <br>
-        <div class="">
-            <table>
-                <tr>
-                    <td style="border: none">
-                        <p><u>Atendido por: </u></p>
-
-                        Teléfono : {{ $empresa->telefono }}<br>
-                        Celular : {{ $cotizacion->user_personal->celular }}<br>
-                        Email : {{ $cotizacion->user_personal->email_user }}<br>
-                        Web : {{ $empresa->pagina_web }} <br>
-                    </td>
-                    <td style="border: none">
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        @if (isset($firma))
-                            <center><img src="{{ asset('archivos/imagenes/firma_digital/' . $firma) }}" style=""
-                                    width="150px" height="100px"></center>
-                        @else
-                            <br>
-                            <br>
-                        @endif
-                        <hr>
-                        <center>{{ $cotizacion->user_personal->nombre }}</center>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        @include('layout_firma_pie_hoja_pdf')
     </div>
     <style>
         * {
