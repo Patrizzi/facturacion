@@ -256,7 +256,7 @@
 {{-- @include('layout_bancos') --}}
 
       <br>
-      <div class="row">
+      {{-- <div class="row">
         <div class="col-sm-3">
             <p><u>centro de Atencion : </u></p>
             Telefono : {{$guia_remision->user_personal->personal->telefono }}<br>
@@ -273,7 +273,8 @@
             @endif
         </div>
 
-    </div>
+    </div> --}}
+    @include('layout_firma_pie_hoja')
 
 </div>
 </div>

@@ -178,23 +178,7 @@
                 <br>
                 {{-- @include('layout_bancos') --}}
                 <br>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p><u>centro de Atencion : </u></p>
-                        Telefono : {{$guia_remision_m->user_personal->personal->telefono }}<br>
-                        Celular : {{$guia_remision_m->user_personal->personal->celular }}<br>
-                        Email : {{$guia_remision_m->user_personal->personal->email }}<br>
-                        Web : {{$empresa->pagina_web}}<br>
-                    </div>
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-3"><br><br>
-                        @if (Auth::user()->config->guia_remision_firma == 0)
-                            <hr>
-                            <center>{{$guia_remision_m->user_personal->personal->nombres }}</center>
-                        @endif
-                    </div>
-                </div>
+                @include('layout_firma_pie_hoja')
             </div>
         </div>
     </div>
