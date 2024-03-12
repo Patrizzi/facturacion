@@ -72,6 +72,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
+                    {{-- <div class="ibox-title">
+
+                    </div> --}}
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-sm-6">
@@ -108,6 +111,7 @@
                                         <th>Ruc/DNI</th>
                                         <th>Cliente</th>
                                         <th>Fecha Emision</th>
+                                        <th style="display: none"></th>
                                         <th>Importe T.</th>
                                         <th>Ver</th>
                                         <th>Estado</th>
@@ -117,6 +121,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     @foreach ($cotizacion as $cotizacions)
                                         <tr class="gradeX">
                                             <span hidden>{{ $subtotal = 0 }}</span>
@@ -124,12 +129,25 @@
                                             <td>{{ $cotizacions->cod_cotizacion }}</td>
                                             <td>{{ $cotizacions->cliente->numero_documento }}</td>
                                             <td>{{ $cotizacions->cliente->nombre }}</td>
-                                            <td>{{ $cotizacions->created_at }}</td>
+                                            <td>{{ Carbon\Carbon::parse($cotizacions->created_at)->format('d-m-Y') }}</td>
                                             <span hidden>
                                                 {{ $subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }}
                                             </span>
+                                            <span hidden>
+                                                @if ($cotizacions->moneda_id == 2)
+                                                    {{-- Dolares --}}
+                                                    {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                    {{ $total_conv = $total * $cotizacions->cambio }}
+                                                @else
+                                                    {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                    {{ $total_conv = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                @endif
+                                            </span>
+                                            <td style="display: none">
+                                                {{ $total_conv }}
+                                            </td>
                                             <td>{{ $cotizacions->moneda->simbolo }}
-                                                {{ number_format(round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                {{ number_format(round($total, 2), 2) }}
                                             </td>
                                             <td>
                                                 <center><a href="{{ route('cotizacion.show', $cotizacions->id) }}"><button
@@ -175,6 +193,12 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="5" class="text-right">Total General</th>
+                                        <th colspan="4"></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -187,13 +211,16 @@
             left: 70px;
             padding: 20px 0;
         }
-        #DataTables_Table_0_wrapper{
+
+        #DataTables_Table_0_wrapper {
             padding-right: 0px;
         }
-        .table{
+
+        .table {
             width: 100% !important;
         }
-        .ibox-content > .row{
+
+        .ibox-content>.row {
             margin: auto;
         }
     </style>
@@ -206,6 +233,9 @@
 
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -220,10 +250,39 @@
                 ],
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
+                footerCallback: function(tr, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    // Total over all pages
+                    total = api
+                        .column(5)
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total filtered rows on the selected column (code part added)
+                    var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                        intVal(b), 0);
+
+                    // Update footer
+                    $(api.column(5).footer()).html(
+                        'S/ ' + Math.round(sumCol4Filtered * 100) / 100
+                    );
+                },
                 buttons: []
             });
 
-            table.column(4).search(`{{ date('m-Y')}}`).draw();
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
 
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
@@ -283,8 +342,46 @@
                 }
             );
         });
-        function limpiar_select(){
+
+        function limpiar_select() {
             table.column(4).search("").draw();
         }
+        // $('.dataTables-example-facturacion').DataTable({
+        //     "footerCallback": function(row, data, start, end, display) {
+        //         var api = this.api(),
+        //             data;
+
+        //         // Remove the formatting to get integer data for summation
+        //         var intVal = function(i) {
+        //             return typeof i === 'string' ?
+        //                 i.replace(/[\$,]/g, '') * 1 :
+        //                 typeof i === 'number' ?
+        //                 i : 0;
+        //         };
+
+        //         // Total over all pages
+        //         total = api
+        //             .column(5)
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
+
+        //         // Total over this page
+        //         pageTotal = api
+        //             .column(5, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
+
+        //         // Update footer
+        //         $(api.column(5).footer()).html(
+        //             'S/.' + pageTotal
+        //         );
+        //     }
+        // });
     </script>
 @endsection

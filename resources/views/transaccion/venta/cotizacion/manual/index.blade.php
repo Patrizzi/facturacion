@@ -67,7 +67,8 @@
                                         <th>Codigo de Cotizacion</th>
                                         <th>Cliente</th>
                                         <th>N°Documento</th>
-                                        <th>Fecha </th>
+                                        <th>Fecha Emi. </th>
+                                        <th style="display: none"></th>
                                         <th>Importe T.</th>
                                         <th>Ver</th>
                                         <th>Estado</th>
@@ -87,6 +88,19 @@
                                             <span
                                                 hidden>{{ $subtotal = $cotizaciones->op_gravada + $cotizaciones->op_inafecta + $cotizaciones->op_exonerada }}
                                             </span>
+                                            <span hidden>
+                                                @if ($cotizaciones->moneda_id == 2)
+                                                    {{-- Dolares --}}
+                                                    {{ $total = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
+                                                    {{ $total_conv = $total * $cotizaciones->cambio }}
+                                                @else
+                                                    {{ $total = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
+                                                    {{ $total_conv = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
+                                                @endif
+                                            </span>
+                                            <td style="display: none">
+                                                {{ $total_conv }}
+                                            </td>
                                             <td>{{ $cotizaciones->moneda->simbolo }}
                                                 {{ number_format(round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2), 2) }}
                                             </td>
@@ -111,6 +125,12 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="5" class="text-right">Total General</th>
+                                        <th colspan="4"></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -161,6 +181,35 @@
                 ],
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
+                footerCallback: function(tr, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    // Total over all pages
+                    total = api
+                        .column(5)
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total filtered rows on the selected column (code part added)
+                    var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                        intVal(b), 0);
+
+                    // Update footer
+                    $(api.column(5).footer()).html(
+                        'S/ ' + Math.round(sumCol4Filtered * 100) / 100
+                    );
+                },  
                 buttons: []
             });
 
