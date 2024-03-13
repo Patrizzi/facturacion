@@ -40,10 +40,16 @@
                                     <input class="form-control" type="text" name="daterange"
                                         value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                     <span class="input-group-append">
+                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                            <i class="fa fa-history"></i>
+                                        </button>
+                                    </span>
+                                    <span class="input-group-append">
                                         <button type="button" class="btn btn-primary" onclick="limpiar_select()">
                                             <i class="fa fa-eraser"></i>
                                         </button>
                                     </span>
+                                    
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -213,7 +219,7 @@
                 buttons: []
             });
 
-            table.column(4).search(`{{ date('m-Y')}}`).draw();
+            revert_select();
             
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
@@ -275,6 +281,9 @@
         });
         function limpiar_select(){
             table.column(4).search("").draw();
+        }
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
 @endsection

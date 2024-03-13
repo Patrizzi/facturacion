@@ -83,8 +83,8 @@
                                     <input class="form-control" type="text" name="daterange"
                                         value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                     <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
+                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                            <i class="fa fa-history"></i>
                                         </button>
                                     </span>
                                     <span class="input-group-append">
@@ -287,7 +287,7 @@
                 buttons: []
             });
 
-            table.column(4).search(`{{ date('m-Y') }}`).draw();
+            revert_select();
 
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
@@ -351,42 +351,8 @@
         function limpiar_select() {
             table.column(4).search("").draw();
         }
-        // $('.dataTables-example-facturacion').DataTable({
-        //     "footerCallback": function(row, data, start, end, display) {
-        //         var api = this.api(),
-        //             data;
-
-        //         // Remove the formatting to get integer data for summation
-        //         var intVal = function(i) {
-        //             return typeof i === 'string' ?
-        //                 i.replace(/[\$,]/g, '') * 1 :
-        //                 typeof i === 'number' ?
-        //                 i : 0;
-        //         };
-
-        //         // Total over all pages
-        //         total = api
-        //             .column(5)
-        //             .data()
-        //             .reduce(function(a, b) {
-        //                 return intVal(a) + intVal(b);
-        //             }, 0);
-
-        //         // Total over this page
-        //         pageTotal = api
-        //             .column(5, {
-        //                 page: 'current'
-        //             })
-        //             .data()
-        //             .reduce(function(a, b) {
-        //                 return intVal(a) + intVal(b);
-        //             }, 0);
-
-        //         // Update footer
-        //         $(api.column(5).footer()).html(
-        //             'S/.' + pageTotal
-        //         );
-        //     }
-        // });
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
     </script>
 @endsection
