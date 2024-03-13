@@ -87,6 +87,11 @@
                                             <i class="fa fa-eraser"></i>
                                         </button>
                                     </span>
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                            <i class="fa fa-eraser"></i>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -287,7 +292,7 @@
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
                 // console.log(nombre);
-                table.column(10).search(nombre).draw();
+                table.column(11).search(nombre).draw();
             });
             $('input[name="daterange"]').daterangepicker({
                     "locale": {

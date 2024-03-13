@@ -218,7 +218,7 @@
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
                 // console.log(nombre);
-                table.column(8).search(nombre).draw();
+                table.column(9).search(nombre).draw();
             });
             $('input[name="daterange"]').daterangepicker({
                     "locale": {
