@@ -238,7 +238,7 @@
                                 <li><a href="{{route('pagos.view_facturas_m')}}">Facturas M.</a></li>
                                 <li><a href="{{route('pagos.view_boletas')}}">Boletas</a></li>
                                 <li><a href="{{route('pagos.view_boletas_m')}}">Boletas M.</a></li>
-                                <li><a href="{{route('pagos.view_facturas')}}">Nota de Venta</a></li>
+                                <li><a href="{{route('pagos.view_nota_venta')}}">Nota de Venta</a></li>
                                 {{-- <li><a href="">Cobrar</a></li> --}}
                             {{-- </ul> --}}
                         </li>
