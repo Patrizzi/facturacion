@@ -789,7 +789,7 @@ class PagadosController extends Controller
     // FACTURAS
     public function view_facturas()
     {
-        $facturas_sp = Facturacion::orderByDesc('id')->get();
+        $facturas_sp = Facturacion::orderByDesc('id')->where('f_electronica', 1)->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -804,9 +804,9 @@ class PagadosController extends Controller
         $clientes =  Cliente::whereIn('id', $client_id)->get();
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
-            $count_tot = Facturacion::where('cliente_id',$client->id)->count();
+            $count_tot = Facturacion::where('cliente_id',$client->id)->where('f_electronica', 1)->count();
             $client['cantidad_fact'] = $count_tot;
-            $facturas = Facturacion::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
+            $facturas = Facturacion::where('cliente_id',$client->id)->where('f_electronica', 1)->where('forma_pago_id',2)->get();
             if (count($facturas) != 0) {
                 foreach ($facturas as $key => $f_sp) {
                     $cuota_lopp[] = Cuotas_credito::where('facturacion_id', $f_sp->id)->where('estado', 1)->get();
@@ -825,7 +825,7 @@ class PagadosController extends Controller
         }        
         $q_1 = array_values(array_unique($client_id2));
         foreach ($clientes as $key => $client_2) {
-            $facturas_3 = Facturacion::where('cliente_id', $client_2->id)->where('estado_pago', 2)->get();
+            $facturas_3 = Facturacion::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
             $cli_3 = Cliente::where('id', $client_2->id)->first();
             $precio_fact_cli = 0;
             $precio_fact_cli_dol = 0;
@@ -1021,7 +1021,7 @@ class PagadosController extends Controller
     // FACTURAS MANUALES
     public function view_facturas_m()
     {
-        $facturas_m = Facturacion_m::orderByDesc('id')->get();
+        $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
         $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
         
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -1037,9 +1037,9 @@ class PagadosController extends Controller
         $clientes =  Cliente::whereIn('id', $client_id)->get();
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
-            $count_tot = Facturacion_m::where('cliente_id',$client->id)->count();
+            $count_tot = Facturacion_m::where('cliente_id',$client->id)->where('f_electronica', 1)->count();
             $client['cantidad_fact'] = $count_tot;
-            $facturas = Facturacion_m::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
+            $facturas = Facturacion_m::where('cliente_id',$client->id)->where('forma_pago_id',2)->where('f_electronica', 1)->get();
             if (count($facturas) != 0) {
                 foreach ($facturas as $key => $f_sp) {
                     $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
@@ -1058,7 +1058,7 @@ class PagadosController extends Controller
         }        
         $q_1 = array_values(array_unique($client_id2));
         foreach ($clientes as $key => $client_2) {
-            $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->get();
+            $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
             $cli_3 = Cliente::where('id', $client_2->id)->first();
             $precio_fact_cli = 0;
             $precio_fact_cli_dol = 0;
@@ -1256,7 +1256,7 @@ class PagadosController extends Controller
     // BOLETA
     public function view_boletas()
     {
-        $boletas = Boleta::orderByDesc('id')->get();
+        $boletas = Boleta::orderByDesc('id')->where('b_electronica', 1)->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -1271,9 +1271,9 @@ class PagadosController extends Controller
         $clientes =  Cliente::whereIn('id', $client_id)->get();
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
-            $count_tot = Boleta::where('cliente_id',$client->id)->count();
+            $count_tot = Boleta::where('cliente_id',$client->id)->where('b_electronica', 1)->count();
             $client['cantidad_bol'] = $count_tot;
-            $facturas = Boleta::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
+            $facturas = Boleta::where('cliente_id',$client->id)->where('forma_pago_id',2)->where('b_electronica', 1)->get();
             if (count($facturas) != 0) {
                 foreach ($facturas as $key => $f_sp) {
                     $cuota_lopp[] = Cuotas_credito::where('boleta_id', $f_sp->id)->where('estado', 1)->get();
@@ -1292,7 +1292,7 @@ class PagadosController extends Controller
         }        
         $q_1 = array_values(array_unique($client_id2));
         foreach ($clientes as $key => $client_2) {
-            $boleta_2 = Boleta::where('cliente_id', $client_2->id)->where('estado_pago', 2)->get();
+            $boleta_2 = Boleta::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('b_electronica', 1)->get();
             $cli_3 = Cliente::where('id', $client_2->id)->first();
             $precio_bol_cli = 0;
             $precio_bol_cli_dol = 0;
@@ -1489,7 +1489,7 @@ class PagadosController extends Controller
     // BOLETAS MANUALES
     public function view_boletas_m()
     {
-        $boletas = Boleta_m::orderByDesc('id')->get();
+        $boletas = Boleta_m::orderByDesc('id')->where('b_electronica', 1)->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('boleta_m_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -1504,9 +1504,9 @@ class PagadosController extends Controller
         $clientes =  Cliente::whereIn('id', $client_id)->get();
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
-            $count_tot = Boleta_m::where('cliente_id',$client->id)->count();
+            $count_tot = Boleta_m::where('cliente_id',$client->id)->where('b_electronica', 1)->count();
             $client['cantidad_bol'] = $count_tot;
-            $facturas = Boleta::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
+            $facturas = Boleta_m::where('cliente_id',$client->id)->where('forma_pago_id',2)->where('b_electronica', 1)->get();
             if (count($facturas) != 0) {
                 foreach ($facturas as $key => $f_sp) {
                     $cuota_lopp[] = Cuotas_credito::where('boleta_m_id', $f_sp->id)->where('estado', 1)->get();
@@ -1525,7 +1525,7 @@ class PagadosController extends Controller
         }        
         $q_1 = array_values(array_unique($client_id2));
         foreach ($clientes as $key => $client_2) {
-            $boleta_2 = Boleta_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->get();
+            $boleta_2 = Boleta_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('b_electronica', 1)->get();
             $cli_3 = Cliente::where('id', $client_2->id)->first();
             $precio_bol_cli = 0;
             $precio_bol_cli_dol = 0;
