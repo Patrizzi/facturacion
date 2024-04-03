@@ -186,8 +186,19 @@
                                                                 href="{{ route('pagos.show_facturas_m', $f_sp->codigo_fac) }}">Detalles</a>
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-primary"
-                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
+                                                            {{-- <button class="btn btn-primary"
+                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button> --}}
+                                                            {{-- <div class="btn-group">
+                                                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item" onclick="pago_factura( {{ $f_sp->id }})" >Pagar</a></li>
+                                                                    <li><a class="dropdown-item" onclick="pago_adelanto( {{ $f_sp->id }})">Adelantar</a></li>
+                                                                </ul>
+                                                            </div> --}}
+                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$f_sp->id}})">
+                                                                Large Modal
+                                                            </button>
+                                                            
                                                         </td>
                                                     </tr>
                                                 @endif
@@ -459,6 +470,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <h3 class="text-center">N° de Factura</h3>
+                                    
                                 </div>
                                 <div class="col-sm-4">
                                     <h3 class="text-center">Cuotas por Factura</h3>
@@ -741,6 +753,7 @@
             </div>
         </div>
     </div>
+    
     <style>
         .pago_m {
             display: none;
@@ -749,14 +762,6 @@
         .pago_m.m_pago_1 {
             display: flex;
         }
-
-        .nav.nav-tabs {
-            /* display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            flex-wrap: nowrap; */
-        }
-
         #view_all {
             display: none;
         }
@@ -854,7 +859,10 @@
 
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    @include('cobranzas.adelanto')
     <script>
+        $("#select_cuenta_adl").select2();
+        $("#select_cuenta_adl_transf").select2();
         $(document).ready(function() {
             $('input[name="daterange"]').daterangepicker({
                     "locale": {
@@ -1548,5 +1556,6 @@
                 table_lp.column(6).search('credito', true, false).draw();
             }
         });
+        
     </script>
 @endsection

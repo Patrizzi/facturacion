@@ -222,7 +222,7 @@
                                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Adelantos</a>
                                         </li>
                                     </ul>
-                                    <div class="tabs-content">
+                                    <div class="tab-content">
                                         <div role="tabpanel" id="tab-1" class="tab-pane active">
                                             <div class="panel-body">
                                                 <br>
@@ -266,7 +266,7 @@
                                                                 {{-- <th data-hide="all"></th> --}}
                                                                 <th>Metodo de Pago</th>
                                                                 <th>Fecha de Pago</th>
-                                                                <th data-sort-ignore="true" style="width: 170px">Pagar
+                                                                <th data-sort-ignore="true" style="width: 170px">Pagar | Adelantar
                                                                 </th>
                                                                 {{-- <th>P</th> --}}
                                                                 {{-- <th>Pagar Lote</th> --}}
@@ -374,13 +374,17 @@
                                                                         @if ($fc_cuota->estado == 1)
                                                                             <button class="btn btn-primary" id="pago"
                                                                                 disabled>Pagar</button>
-                                                                            {{-- <button class="btn btn-primary" disabled>Adelanto</button> --}}
                                                                         @else
                                                                             <button class="btn btn-primary" id="pago"
                                                                                 onclick="modal_pagos({{ $fc_cuota->id }})">Pagar</button>
-                                                                            {{-- <button class="btn btn-primary">Adelanto</button> --}}
                                                                         @endif
-
+                                                                        {{-- <div class="btn-group">
+                                                                            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li><a class="dropdown-item" href="#">Pagar</a></li>
+                                                                                <li><a class="dropdown-item" href="#" class="font-bold">Another action</a></li>
+                                                                            </ul>
+                                                                        </div> --}}
                                                                     </td>
                                                                     <td>
                                                                         {{-- MODAL DE VER DETALLES  --}}
@@ -608,6 +612,11 @@
                                                         @endif
                                                     </div>
                                                 @endif
+                                            </div>
+                                        </div>
+                                        <div class="tabpanel" id="tab-2" class="tab-pane">
+                                            <div class="panel-body">
+
                                             </div>
                                         </div>
                                     </div>

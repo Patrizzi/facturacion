@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Banco;
+use App\BancoRegistro;
 use App\Boleta;
 use App\Boleta_m;
 use App\Cliente;
@@ -790,6 +792,9 @@ class PagadosController extends Controller
     public function view_facturas()
     {
         $facturas_sp = Facturacion::orderByDesc('id')->get();
+        $bancos = Banco::where('estado', 0)->pluck('id');
+        $cuentas = BancoRegistro::whereIn('banco_id',$bancos)->where('estado_detraccion', 0)->get();
+        // return $cuentas;
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -859,7 +864,7 @@ class PagadosController extends Controller
             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli,2),2) , "tot_dol" => number_format(round($precio_fact_cli_dol,2),2));
         }
 
-        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot'));
+        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas'));
     }
     public function lista_ajax_fact(Request $request)
     {
@@ -1023,7 +1028,8 @@ class PagadosController extends Controller
     {
         $facturas_m = Facturacion_m::orderByDesc('id')->get();
         $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
-        
+        $bancos = Banco::where('estado', 0)->pluck('id');
+        $cuentas = BancoRegistro::whereIn('banco_id',$bancos)->where('estado_detraccion', 0)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
         $igv = Igv::first();
@@ -1092,7 +1098,7 @@ class PagadosController extends Controller
             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli,2),2) , "tot_dol" => number_format(round($precio_fact_cli_dol,2),2));
         }
         // return $var_precio_tot;
-        return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot'));
+        return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas'));
     }
     public function lista_ajax_fact_m(Request $request)
     {

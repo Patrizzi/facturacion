@@ -424,6 +424,8 @@ Route::group(
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
 		Route::resource('/pagados','PagadosController');
+		Route::post('/adelantos/lista_ajax', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
+		Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
 		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
 		// Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura
 		// PAGADOS FACTURAS
