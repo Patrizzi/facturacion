@@ -614,9 +614,35 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="tabpanel" id="tab-2" class="tab-pane">
+                                        <div role="tabpanel" id="tab-2" class="tab-pane">
                                             <div class="panel-body">
-
+                                                <h3>ADELANTOS</h3>
+                                                <div class="table-responsive">
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>METODO PAGO</th>
+                                                                <th>CUOTA ASOCIADA</th>
+                                                                <th>MONTO DE ADELANTO</th>
+                                                                <th>FECHA DE ADELANTO</th>
+                                                                <th>MAS DETALLES</th>
+                                                                <th>VER COMPROBANTE</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -857,10 +857,15 @@
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
+    <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+    
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     @include('cobranzas.adelanto')
     <script>
+        
         $("#select_cuenta_adl").select2();
         $("#select_cuenta_adl_transf").select2();
         $(document).ready(function() {

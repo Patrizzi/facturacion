@@ -25,11 +25,11 @@ class CreateCreditosAdelantosTable extends Migration
             $table->foreign('boleta_m_id')->references('id')->on('boleta_m')->onDelete('cascade');
             $table->unsignedBigInteger('nota_ven_id')->nullable();  // NOTA VENTA
             $table->foreign('nota_ven_id')->references('id')->on('nota_venta')->onDelete('cascade');
-            $table->unsignedBigInteger('cuota_cred_id')->nullable();  // CUOTA
-            $table->foreign('cuota_cred_id')->references('id')->on('cuotas_creditos')->onDelete('cascade');
-            $table->date('fecha_pago');
-            $table->string('precio_total_pago');
-            $table->string('precio_adelanto');
+            // $table->unsignedBigInteger('cuota_cred_id')->nullable();  // CUOTA
+            // $table->foreign('cuota_cred_id')->references('id')->on('cuotas_creditos')->onDelete('cascade');
+            $table->date('ultima_fecha')->nullable();
+            $table->string('precio_total_pago')->nullable();
+            $table->string('precio_adelanto')->nullable(); //auto suma cada registro
             $table->string('notas_adicionales', 764)->nullable();
             $table->timestamps();
         });

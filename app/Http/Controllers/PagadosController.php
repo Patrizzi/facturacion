@@ -10,6 +10,8 @@ use App\Cliente;
 use App\ComprobantesPagos;
 use App\ComprobantesPagosDetalle;
 use App\ComprobantesPagosRegistros;
+use App\CreditosAdelantos;
+use App\CreditosAdelantosRegistros;
 use App\Cuotas_credito;
 use App\Empresa;
 use App\Facturacion;
@@ -1172,9 +1174,9 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $pagos_reg[0];
-        // return $reg_b->where('estado',1)->sum('monto');
-        // return $pagos_reg; 
+        $adelantos = CreditosAdelantos::where('factura_m_id', $id)->get();
+        $adelantos_reg = CreditosAdelantosRegistros::where('creditso_adl_id', $adelantos->id)->get();
+        
         return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv'));
     }
 

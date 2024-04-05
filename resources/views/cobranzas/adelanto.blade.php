@@ -15,9 +15,14 @@
                 <div class="modal-body">
                     <div class="metodo_adelanto">
                         <input type="hidden" name="input_adelanto" id="input_adelanto" value="1">
+                        <input type="hidden" name="tipo_comprobante" value="factura_manual">
+                        <div id="id_factura_adl">
+
+                        </div>
+                        
                         <div class="row">
                             <div class="col-sm-3">
-                                <h3 class="text-center">Metodos de Adelanto</h3>
+                                <h3 class="text-center">Adelanto para Facturas M.</h3>
                                 {{-- <div class="col-lg-12"> --}}
                                     <button type="button" value="btn_adelanto_1"
                                         class="btn btn-block btn-primary btn_adelanto_selec active" id="bm_adelanto_1" onclick="select_adelanto_click(1)">Cheque</button>
@@ -43,13 +48,8 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="col-form-label">¿Es cheque diferido? </label>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <input class="" type="checkbox" name="" id=""> Si
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input class="" type="checkbox" name="" id=""> No
-                                                </div>
+                                            <div class="">
+                                                <span>No&nbsp;</span><input type="checkbox" class="js-switch" name="cheque_diferido" /><span>&nbsp;Si</span>
                                             </div>
                                         </div>
                                     </div>
@@ -83,17 +83,17 @@
                                             <input type="text" id="cheque_beneficiario_adl" name="cheque_beneficiario_adl" value="" placeholder="Beneficiario" class="form-control adelanto_class_1 class_adelanto" required>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label">Monto</label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="simbolo_adelanto_vuelto">S/</span>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Monto</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="simbolo_adelanto_vuelto">S/</span>
+                                                    </div>
+                                                    <input type="number" id="cheque_adl_monto" name="cheque_monto" value="" placeholder="Monto" class="form-control adelanto_class_1 class_adelanto" required step="0.01">
                                                 </div>
-                                                <input type="number" id="cheque_adl_monto" name="cheque_monto" value="" placeholder="Monto" class="form-control adelanto_class_1 class_adelanto" required step="0.01">
                                             </div>
                                         </div>
-                                    </div>
                                     <div class="col-sm-6">
                                         <div class="form-group form_adelanto">
                                             <label class="col-form-label">N° de Cuenta</label>
@@ -126,7 +126,7 @@
                                             <input type="text" id="" name="tarjeta_titular_adl" value="" placeholder="Titular de la Tajeta" class="form-control adelanto_class_2 class_adelanto">
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="col-form-label">Banco</label>
                                             <select class="form-control adelanto_class_2 class_adelanto" name="tarjeta_banco_adl" id="tarjeta_banco_adl">
@@ -136,6 +136,18 @@
                                                 <option value="BBVA">BBVA</option>
                                                 <option value="SCOTIABANK">SCOTIABANK</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label">Monto</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="simbolo_adelanto_tarjeta">S/</span>
+                                                </div>
+                                                <input type="text" class="form-control adelanto_class_2 class_adelanto" name="tarjeta_mondo_adl" id="monto_tarjeta_adl" step="0.01" placeholder="Monto">
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -175,17 +187,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label">Vuelto</label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="simbolo_adelanto_vuelto">S/</span>
-                                                </div>
-                                                <input type="text" name="monto_vuelto" id="efectivo_vuelto_adl" class="form-control adelanto_class_3 class_adelanto" placeholder="">
-                                            </div>
-                                        </div>
-                                    </div> --}}
                                 </div>
                                 <div class="row adelanto_m m_adelanto_4"> {{-- Metodo de Pago 4 - TRANSFERENCIA --}}
                                     <div class="col-sm-12">
@@ -220,20 +221,31 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label class="col-form-label">Comprobante</label>
-                                            <input type="file" class="form-control adelanto_class_4 class_adelanto file_input" name="transferencia_comprobante_adl" id="" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label">Banco</label>
-                                            <select class="form-control adelanto_class_2 class_adelanto" name="tarjeta_banco_adl" id="">
+                                            <label class="col-form-label">Banco Emisor</label>
+                                            <select class="form-control adelanto_class_4 class_adelanto" name="transferencia_banco_adl" id="">
                                                 <option value="">Seleccionar Banco</option>
                                                 <option value="BCP">BCP</option>
                                                 <option value="INTERBANK">INTERBANK</option>
                                                 <option value="BBVA">BBVA</option>
                                                 <option value="SCOTIABANK">SCOTIABANK</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label">Monto</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="simbolo_adelanto_transferencia">S/</span>
+                                                </div>
+                                                <input type="number" id="tranferencia_adl_monto" name="transferencia_monto" value="" placeholder="Monto" class="form-control adelanto_class_4 class_adelanto" step="0.01">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label">Comprobante</label>
+                                            <input type="file" class="form-control adelanto_class_4 class_adelanto file_input" name="transferencia_comprobante_adl" id="">
                                         </div>
                                     </div>
                                 </div>
@@ -282,14 +294,16 @@
     }
 </style>
 <script>
+    var elem_2 = document.querySelector('.js-switch');
+    var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
     function pago_adelanto_m(n_factura){
         $('#adelanto_header').empty();
         // $('#tot_simbolo').empty();
         // $('#ids_divs_factura').empty();
         // $('#todo_pago').modal('show');
 
-        var html_id_fact = `<input type="hidden" name="adelanto_fact_m" id="id_fact`+n_factura+`"> value="n_factura"`;
-        $('#id_factura_m_adl').append(html_id_fact);
+        var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
+        $('#id_factura_adl').append(html_id_fact);
 
         $.ajax({
             type: "post",
@@ -307,7 +321,7 @@
                     </div>
                     <div class="col-sm-4">
                         <h3 class="text-center">Cuota</h3>
-                        <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.factura_cod + `[]"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
+                        <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.factura_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
                                 if (bar.estado == 0) {
                                     return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                         '">' +
@@ -337,60 +351,24 @@
                     var math_total = data.text.replace(/N°-\d+: /g, '');
                     var igual = $("#simbolor_label").html();
                     $(`#lbl_tot`).html(math_total);
-                    // if (igual == msg.factura_simbolo) {
+
                         var tot_math = Math.round(math_total * 100) / 100;
-                    // } else {
-                    //     if (msg.factura_moneda == "soles" && igual ==
-                    //         '$') { //DE DOLAR A SOL
-                    //         var new_val = parseFloat(math_total) / tipo_cambio;
-                    //         var tot_math = Math.round(
-                    //             parseFloat(new_val) * 100) / 100;
-                    //         // console.log('a');
-                    //     } else { // DE SOL A DOLAR
-                    //         var new_val = parseFloat(math_total) * tipo_cambio;
-                    //         var tot_math = Math.round(
-                    //             parseFloat(new_val) * 100) / 100;
-                    //         // console.log('b');
-                    //     }
-                    // }
+    
+                    $('#simbolo_adelanto').html(igual);
                     $('#simbolo_adelanto_vuelto').html(igual);
+                    $('#simbolo_adelanto_tarjeta').html(igual);
+                    $('#simbolo_adelanto_transferencia').html(igual);
+                    
+
                     $('#cheque_adl_monto').attr('max', tot_math);
+                    $('#efectivo_adelanto').attr('max', tot_math);
+                    $('#monto_tarjeta_adl').attr('max', tot_math);
                     $('#efectivo_adelanto').attr('max', tot_math);
                     n_cheque_adl
                     // $('#').
                     
                     console.log(tot_math);
-                    // var ant = $(`#total_cuotas`).val();
-                    // if (ant == "") {
-                    //     ant = 0;
-                    // }
-                    // var data_cuota = data.text.replace(/N°-\d+: /g, '');
-                    // var math_total = Math.round((parseFloat(data_cuota) + parseFloat(ant)) * 100) / 100;
-                    // $(`#total_cuotas`).val(math_total);
-                    // $(`#lbl_tot`).html(math_total);
-                    // // TOTAL DE TOTALES
-
-                    // if (igual == msg.factura_simbolo) {
-                    //     var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
-                    //         data_cuota)) * 100) / 100;
-                    // } else {
-                    //     if (msg.factura_moneda == "soles" && igual ==
-                    //         '$') { //DE DOLAR A SOL
-                    //         var new_val = parseFloat(data_cuota) / tipo_cambio;
-                    //         var tot_math = Math.round((parseFloat(tota_tot) +
-                    //             parseFloat(new_val)) * 100) / 100;
-                    //         // console.log('a');
-                    //     } else { // DE SOL A DOLAR
-                    //         var new_val = parseFloat(data_cuota) * tipo_cambio;
-                    //         var tot_math = Math.round((parseFloat(tota_tot) +
-                    //             parseFloat(new_val)) * 100) / 100;
-                    //         // console.log('b');
-                    //     }
-                    // }
-                    // $('#tota_totas').html(tot_math);
-                    // $('#cheque_adl_monto').attr('max', tot_math);
-                    // $('#efectivo_adl_pago').attr('min', tot_math);
-                    // $('#cheque_adl_monto').val(tot_math);
+       
                 });
             }
         });
