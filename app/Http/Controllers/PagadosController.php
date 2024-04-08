@@ -1174,10 +1174,14 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        $adelantos = CreditosAdelantos::where('factura_m_id', $id)->get();
-        $adelantos_reg = CreditosAdelantosRegistros::where('creditso_adl_id', $adelantos->id)->get();
         
-        return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv'));
+        $adelantos = CreditosAdelantos::where('factura_m_id', $factura->id)->first();       
+        if (isset($adelantos)) {
+            $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
+        }else{
+            $adelantos_reg = 0;
+        } 
+        return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv','adelantos', 'adelantos_reg'));
     }
 
     public function show_cliente_factura_m($ruc_cli){

@@ -103,30 +103,18 @@ class CreditosAdelantosController extends Controller
                 break;
         }
         //* cambios en cuotas y creditos cuotas
-
+        
         //guardado cabecera adelanto
         $igv = Igv::first();
         if($tipo_doc == "factura"){    
             $factura_search  = Facturacion::where('id', $id_fact)->first();
-            $exist_Adl = CreditosAdelantos::where('factura_id',$factura_search->id);
+            $exist_Adl = CreditosAdelantos::where('factura_id',$factura_search->id)->first();
         }else{            
             $factura_search  = Facturacion_m::where('id', $id_fact)->first();
-            $exist_Adl = CreditosAdelantos::where('factura_m_id',$factura_search->id);
+            $exist_Adl = CreditosAdelantos::where('factura_m_id',$factura_search->id)->first();
         }
-        
         // return $exist_Adl;
-        if (!isset($exist_Adl)) {
-            $adelanto = new CreditosAdelantos();
-            if($tipo_doc == "factura"){    
-                $adelanto->factuacion_id = $factura_search->id;
-            }else{            
-                $adelanto->factura_m_id = $factura_search->id;
-            }
-            $adelanto->save();
-        }else{
-            $adelanto = $exist_Adl;
-        }
-        return $adelanto;
+        
 
         $cuotas_pre = $request->get('cuotas_precio_' . $n_fact_s);
         $monto_cuota = explode('_', $cuotas_pre);
@@ -135,12 +123,25 @@ class CreditosAdelantosController extends Controller
             $total_cuota = round($cuota_cre->monto,2);
         }else{ //contado
             // precio total de la factura en caso de contado
-            $sub_total = $factura_search->op_gravada + $factura_search->op_inafecta + $factura_search->op_gravada;
+            $sub_total = $factura_search->op_gravada + $factura_search->op_inafecta + $factura_search->op_exonerada;
             $total = $sub_total + ($sub_total * ($igv->igv_total / 100));
             $total_cuota = round($total,2);
         }
 
-        
+        if (!isset($exist_Adl)) {
+            $adelanto = new CreditosAdelantos();
+            if($tipo_doc == "factura"){    
+                $adelanto->factuacion_id = $factura_search->id;
+            }else{            
+                $adelanto->factura_m_id = $factura_search->id;
+            }
+            $adelanto->precio_total_pago = $total_cuota;
+            $adelanto->save();
+        }else{
+            $adelanto = $exist_Adl;
+
+        }
+
         //guardado  registros
         $adl_regist = new CreditosAdelantosRegistros();
         // $adelanto_reg
@@ -177,11 +178,11 @@ class CreditosAdelantosController extends Controller
                 $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
                 $adl_regist->save();
                 
-                $adelant_head = CreditosAdelantos::find($adelanto->id);
-                $adelant_head->fecha_pago =  $adl_regist->fechas_input;
-                $adelant_head->precio_total_pago =  $total_cuota;
-                $adelant_head->precio_adelanto =  $adl_regist->montos_input;
-                $adelant_head->save();
+                // $adelant_head = CreditosAdelantos::find($adelanto->id);
+                // $adelant_head->fecha_pago =  $adl_regist->fechas_input;
+                // $adelant_head->precio_total_pago =  $total_cuota;
+                // $adelant_head->precio_adelanto =  $adl_regist->montos_input;
+                // $adelant_head->save();
 
             break;
             case '2': //tarjeta
@@ -204,11 +205,11 @@ class CreditosAdelantosController extends Controller
                 $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
                 $adl_regist->save();
 
-                $adelant_head = CreditosAdelantos::find($adelanto->id);
-                $adelant_head->fecha_pago = $adl_regist->fechas_input;
-                $adelant_head->precio_total_pago = $total_cuota;
-                $adelant_head->precio_adelanto = $adl_regist->montos_input;
-                $adelant_head->save();
+                // $adelant_head = CreditosAdelantos::find($adelanto->id);
+                // $adelant_head->ultima_fecha = $adl_regist->fechas_input;
+                // $adelant_head->precio_total_pago = $total_cuota;
+                // $adelant_head->precio_adelanto = $adl_regist->montos_input;
+                // $adelant_head->save();
                 
             break;
             case '3': // efectivo
@@ -221,11 +222,11 @@ class CreditosAdelantosController extends Controller
                 $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
                 $adl_regist->save();
                 	
-                $adelant_head = CreditosAdelantos::find($adelanto->id);
-                $adelant_head->fecha_pago = $adl_regist->fechas_input;
-                $adelant_head->precio_total_pago = $total_cuota;
-                $adelant_head->precio_adelanto = $adl_regist->montos_input;
-                $adelant_head->save();
+                // $adelant_head = CreditosAdelantos::find($adelanto->id);
+                // $adelant_head->ultima_fecha = $adl_regist->fechas_input;
+                // $adelant_head->precio_total_pago = $total_cuota;
+                // $adelant_head->precio_adelanto = $adl_regist->montos_input;
+                // $adelant_head->save();
 
             break;
             case '4': //transferencia
@@ -248,17 +249,24 @@ class CreditosAdelantosController extends Controller
                 $adl_regist->bancos_input = $request->get('transferencia_banco_adl');
                 $adl_regist->montos_inputs = $request->get('transferencia_monto');
                 $adl_regist->file_input = $name_file;
-                
                 // numero de cuenta
                 $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
-                $adelant_head = CreditosAdelantos::find($adelanto->id);
-                $adelant_head->fecha_pago = $adl_regist->fechas_input;
-                $adelant_head->precio_total_pago = $total_cuota;
-                $adelant_head->precio_adelanto = $adl_regist->montos_input;
-                $adelant_head->save();
+                $adl_regist->save();
+
+                // $adelant_head = CreditosAdelantos::find($adelanto->id);
+                // $adelant_head->ultima_fecha = $adl_regist->fechas_input;
+                // $adelant_head->precio_total_pago = $total_cuota;
+                // $adelant_head->precio_adelanto = $adl_regist->montos_input;
+                // $adelant_head->save();
 
             break; 
         }
+
+        // AUMENTAR LA SUMA DE ADELANTOS
+        $adelanto->ultima_fecha = $adl_regist->fechas_input;
+        $adelanto->precio_adelanto = $adelanto->precio_adelanto +$adl_regist->montos_input;
+        $adelanto->save();
+        return $adelanto;
 
         // SI LA CUOTA ESTA CREADA NO CREAR CABECERA SOLO AÑADIR REGISTRO Y SUMNAR EN CABEZERA LOS MONTOS Y LA ULTIMA FECHA DE ADELANTO
         return redirect()->back();

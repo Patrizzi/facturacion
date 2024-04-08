@@ -226,7 +226,7 @@
                                         <div role="tabpanel" id="tab-1" class="tab-pane active">
                                             <div class="panel-body">
                                                 <br>
-                                                @if ($factura->forma_pago_id == 2)
+                                                 @if ($factura->forma_pago_id == 2) {{-- CREDITO --}}
                                                     <div class="row">
                                                         <div class="col-sm-4">
                                                             <input type="text"
@@ -618,29 +618,75 @@
                                             <div class="panel-body">
                                                 <h3>ADELANTOS</h3>
                                                 <div class="table-responsive">
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>METODO PAGO</th>
-                                                                <th>CUOTA ASOCIADA</th>
-                                                                <th>MONTO DE ADELANTO</th>
-                                                                <th>FECHA DE ADELANTO</th>
-                                                                <th>MAS DETALLES</th>
-                                                                <th>VER COMPROBANTE</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tbody>
+                                                    <table class="table table-striped table-bordered table-hover dataTables-examaple">
+                                                        {{-- @if ($factura->forma_pago_id = 1) --}}
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>METODO PAGO</th>
+                                                                    <th>CUOTA ASOCIADA</th>
+                                                                    <th>MONTO DE ADELANTO</th>
+                                                                    <th>FECHA DE ADELANTO</th>
+                                                                    <th>MAS DETALLES</th>
+                                                                    <th>VER COMPROBANTE</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (is_object($adelantos_reg))
+                                                                    @foreach ($adelantos_reg as $adl_reg)
+                                                                        <tr>
+                                                                            <td>{{$adl_reg->id}}</td>
+                                                                            {{-- <td>{{$adl_reg->}}</td> --}}
+                                                                            <td>
+                                                                                <h3 class="text-right">
+                                                                                    {{ ucfirst($adl_reg->pluck('tipo_pago')->first()) }}
+                                                                                </h3>
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($adl_reg->cuota_cred_id == null)
+                                                                                    <strong>Adelanto a Contado</strong>
+                                                                                @else
+                                                                                    <strong>Cuota: {{$adl_reg->cuota}}</strong>
+                                                                                @endif
+                                                                            </td>
+                                                                            <td>{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</td>
+                                                                            <td>{{$adl_reg->fechas_input}}</td>
+                                                                            <td>
+                                                                                <button class="btn btn-primary"></button>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-secondary"></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                @endif
+                                                            </tbody>
+                                                        {{-- @else
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>METODO PAGO</th>
+                                                                    <th>CUOTA ASOCIADA</th>
+                                                                    <th>MONTO DE ADELANTO</th>
+                                                                    <th>FECHA DE ADELANTO</th>
+                                                                    <th>MAS DETALLES</th>
+                                                                    <th>VER COMPROBANTE</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($adelantos_reg as $item)
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        @endif --}}
                                                     </table>
                                                 </div>
                                             </div>
@@ -1110,6 +1156,12 @@
     <script>
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+            $('.dataTables-examaple').DataTable({
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
