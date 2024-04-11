@@ -10,6 +10,8 @@ use App\Facturacion_m;
 use App\Igv;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isNull;
+
 class CreditosAdelantosController extends Controller
 {
     /**
@@ -28,13 +30,22 @@ class CreditosAdelantosController extends Controller
         $id_fact_m =  $request->id_factura_m;
         $igv = Igv::first();
         $factura = Facturacion_m::find($id_fact_m);
+        $monto_adl = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
+        // return $monto_adl;
+        if(isNull($monto_adl)){
+            $monto_adl_precio = 0;
+        }else{
+            $monto_adl_precio = $monto_adl->precio_adelanto;
+        }
         if ($factura->forma_pago_id == 2) {
             $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
             foreach ($cuotas as $llave => $cuota) {
+                $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
+                $new_monto =  round($cuota->monto - $monto_adl_precio,2);
                 $array_cuot[$llave] = array(
                     'id_cuota' => $cuota->id,
                     'cuota_n' => $cuota->numero_cuota,
-                    'monto' => $cuota->monto,
+                    'monto' => $new_monto,
                     'fecha_pago' => $cuota->fecha_pago,
                     'estado' =>  $cuota->estado
                 );
@@ -47,7 +58,7 @@ class CreditosAdelantosController extends Controller
             $array_cuot[0] = array(
                 'id_cuota' => '1',
                 'cuota_n' => '1',
-                'monto' => $pago_tot,
+                'monto' => round($pago_tot - $monto_adl_precio,2),
                 'fecha_pago' => $factura->fecha_vencimiento,
                 'estado' =>  '0'
             );
@@ -86,7 +97,7 @@ class CreditosAdelantosController extends Controller
 
         $tipo_adelanto = $request->get('input_adelanto');  
         $tipo_doc = $request->get('tipo_comprobante');
-        $n_fact_s = $request->get('numero_factura');
+        
         $id_fact = $request->get('id_factura');
         switch ($tipo_adelanto) {
             case '1':
@@ -109,17 +120,22 @@ class CreditosAdelantosController extends Controller
         if($tipo_doc == "factura"){    
             $factura_search  = Facturacion::where('id', $id_fact)->first();
             $exist_Adl = CreditosAdelantos::where('factura_id',$factura_search->id)->first();
+            $n_fact_s = $request->get('numero_factura');
         }else{            
             $factura_search  = Facturacion_m::where('id', $id_fact)->first();
             $exist_Adl = CreditosAdelantos::where('factura_m_id',$factura_search->id)->first();
+            $n_fact_s = $request->get('numero_factura_m');
         }
-        // return $exist_Adl;
-        
+        // GUARDADO DE FACTURA
+        $factura_search->estado_pago = 1;
+        $factura_search->save();
 
         $cuotas_pre = $request->get('cuotas_precio_' . $n_fact_s);
         $monto_cuota = explode('_', $cuotas_pre);
+        //   $cuotas_pre;
         if($factura_search->forma_pago_id == 2){ // credito
             $cuota_cre = Cuotas_credito::where('id', $monto_cuota[0])->first();
+            // return $cuota_cre;
             $total_cuota = round($cuota_cre->monto,2);
         }else{ //contado
             // precio total de la factura en caso de contado
@@ -139,11 +155,15 @@ class CreditosAdelantosController extends Controller
             $adelanto->save();
         }else{
             $adelanto = $exist_Adl;
-
         }
-
+        // return $request;
         //guardado  registros
         $adl_regist = new CreditosAdelantosRegistros();
+        $adl_regist->creditos_adl_id = $adelanto->id;
+        if($factura_search->forma_pago_id == 2){ // credito
+            $adl_regist->cuota_cred_id = $cuota_cre->id;
+        }
+        
         // $adelanto_reg
         switch ($tipo_adelanto) {
             case '1': // CHEQUE
@@ -156,7 +176,7 @@ class CreditosAdelantosController extends Controller
                     $name_file = null;
                 }
 
-                $adl_regist->creditos_adl_id = $adelanto->id;
+                
                 $adl_regist->tipo_pago = "cheque";
                 if ($request->get('cheque_diferido') == 'on') { //registro de cheque diferido
                     $adl_regist->option_input = 1;
@@ -195,7 +215,7 @@ class CreditosAdelantosController extends Controller
                 } else {
                     $name_file = null;
                 }
-                $adl_regist->creditos_adl_id = $adelanto->id;
+                // 
                 $adl_regist->tipo_pago = 'tarjeta';
                 $adl_regist->persona_input = $request->get('tarjeta_titular_adl');
                 $adl_regist->bancos_input = $request->get('tarjeta_banco_adl');
@@ -214,11 +234,11 @@ class CreditosAdelantosController extends Controller
             break;
             case '3': // efectivo
 
-                $adl_regist->creaditos_adl_id = $adelanto->id;
+                // 
                 $adl_regist->tipo_pago = 'efectivo';
                 $adl_regist->persona_input = $request->get('efectivo_persona_adl');
-                $adl_regist->fechas_inputs = $request->get('fecha_efectivo_adl');
-                $adl_regist->montos_inputs = $request->get('monto_adelanto_efectivo_adl');
+                $adl_regist->fechas_input = $request->get('fecha_efectivo_adl');
+                $adl_regist->montos_input = $request->get('monto_adelanto_efectivo_adl');
                 $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
                 $adl_regist->save();
                 	
@@ -240,14 +260,14 @@ class CreditosAdelantosController extends Controller
                     $name_file = null;
                 }
 
-                $adl_regist->creaditos_adl_id = $adelanto->id;
+                // $adl_regist->creaditos_adl_id = $adelanto->id;
                 $adl_regist->tipo_pago = 'transferencia';
                 $adl_regist->persona_input = $request->get('transferencia_titular_adl');
                 $adl_regist->fechas_input = $request->get('transferencia_fecha_adl');
                 $adl_regist->adicional_input = $request->get('transferencia_n_cuenta');
                 $adl_regist->numero_input = $request->get('transferencia_operacion_adl');
                 $adl_regist->bancos_input = $request->get('transferencia_banco_adl');
-                $adl_regist->montos_inputs = $request->get('transferencia_monto');
+                $adl_regist->montos_input = $request->get('transferencia_monto');
                 $adl_regist->file_input = $name_file;
                 // numero de cuenta
                 $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
@@ -323,5 +343,8 @@ class CreditosAdelantosController extends Controller
     public function destroy(CreditosAdelantos $creditosAdelantos)
     {
         //
+    }
+    public function comprobante_facturas(Request $request){
+        return $request;
     }
 }

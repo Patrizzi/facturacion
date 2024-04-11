@@ -420,12 +420,16 @@ Route::group(
 		Route::get('/cierre-periodo/pdf/{id}','CierrePeriodoController@pdf')->name('cierre-periodo.pdf');
 
 		//Fin de inventarios
+		
 		Route::resource('/motivo','MotivoController');
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
-		Route::resource('/pagados','PagadosController');
+		// ADELANTOS
 		Route::post('/adelantos/lista_ajax', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
 		Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
+		Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
+		// PAGADOS
+		Route::resource('/pagados','PagadosController');
 		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
 		// Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura
 		// PAGADOS FACTURAS

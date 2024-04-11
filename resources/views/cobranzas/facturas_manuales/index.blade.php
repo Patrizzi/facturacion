@@ -101,8 +101,8 @@
                                                 <th>Fecha de Emision</th>
                                                 <th>Tipo de Pago</th>
                                                 <th>Total Cuotas</th>
-                                                <th>Debe | Cuotas</th>
-                                                <th>Pagó | Cuotas</th>
+                                                <th>Total</th>
+                                                <th>Pagado o Adelantado</th>
                                                 <th>Ultima Fecha de Pago</th>
                                                 <th>Detalles</th>
                                                 <th>Pagar</th>
@@ -162,13 +162,25 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ $f_sp->moneda->simbolo }}
-                                                            @if ($f_sp->forma_pago_id == 2)
+                                                            {{-- @if ($f_sp->forma_pago_id == 2)
                                                                 {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
                                                                 <strong>|</strong>
                                                                 {{ $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->count() }}
                                                             @else
                                                                 0.00
+                                                            @endif --}}
+
+                                                            @if ($f_sp->estado_pago == 1) {{--ESTADO PAGADO PARCIAL / ADELANTO  --}}
+                                                                {{-- SUMA DE TODOS LOS ADELANTOS + PAGOS --}}
+                                                                <div style="display: none">
+                                                                    {{$pago_cuota = $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto')}}
+                                                                    {{$adel_pago = $adelantos->where('factura_m_id', $f_sp->id)->first()}}
+                                                                </div>
+                                                                    {{number_format(round($pago_cuota + $adel_pago->precio_adelanto,2 ), 2)}}
+                                                            @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
+                                                                    0.00
                                                             @endif
+                                                            
                                                         </td>
                                                         <td>
                                                             @if ($f_sp->forma_pago_id == 2)
@@ -186,8 +198,8 @@
                                                                 href="{{ route('pagos.show_facturas_m', $f_sp->codigo_fac) }}">Detalles</a>
                                                         </td>
                                                         <td>
-                                                            {{-- <button class="btn btn-primary"
-                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button> --}}
+                                                            <button class="btn btn-primary"
+                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
                                                             {{-- <div class="btn-group">
                                                                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
                                                                 <ul class="dropdown-menu">
@@ -212,7 +224,7 @@
                             <div class="panel-body">
                                 <div class="row" style="margin-right: 5px">
                                     <div class="col-sm-4">
-                                        <div class="form-group row" style="margin-left: 15px">
+                                        <div class="form-up row" style="margin-left: 15px">
                                             <label class="col-sm-3 col-form-label">Cliente:</label>
                                             <div class="col-sm-9">
                                                 <div class="input-group">
