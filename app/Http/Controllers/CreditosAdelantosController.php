@@ -286,10 +286,11 @@ class CreditosAdelantosController extends Controller
         $adelanto->ultima_fecha = $adl_regist->fechas_input;
         $adelanto->precio_adelanto = $adelanto->precio_adelanto +$adl_regist->montos_input;
         $adelanto->save();
-        return $adelanto;
+        // return $adelanto;
 
         // SI LA CUOTA ESTA CREADA NO CREAR CABECERA SOLO AÑADIR REGISTRO Y SUMNAR EN CABEZERA LOS MONTOS Y LA ULTIMA FECHA DE ADELANTO
-        return redirect()->back();
+        // return view('pagos') 
+        return redirect()->route('pagos.show_facturas_m', $factura_search->codigo_fac);
     }
 
     public function store(Request $request)

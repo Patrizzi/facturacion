@@ -77,7 +77,8 @@
                                                     <div class="col-sm-7">
                                                         {{-- @if ($fact_cuotas->sum('monto') != 0) --}}
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                            {{ $sum_total = number_format($fact_cuotas->sum('monto'), 2) }}
+                                                            <span hidden>{{ $sum_total = $fact_cuotas->sum('monto')}}</span>
+                                                            {{number_format($sum_total, 2) }}
                                                         </p>
                                                         {{-- @else
                                                             <p class="form-control">{{ $factura->moneda->simbolo }} {{ $sum_total = 0}}</p>
@@ -91,7 +92,8 @@
                                                         {{-- {{$adelantos_reg->sum('montos_input')}} --}}
                                                         @if ( $fact_cuotas->where('estado', 1)->sum('monto') != 0 || is_object($adelantos_reg))
                                                             <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{ $pago_total = number_format($fact_cuotas->where('estado', 1)->sum('monto') + $adelantos_reg->sum('montos_input'), 2) }}
+                                                                <span hidden>{{ $pago_total = $fact_cuotas->where('estado', 1)->sum('monto') + $adelantos_reg->sum('montos_input') }}</span>
+                                                                {{number_format($pago_total, 2) }}
                                                                 {{-- {{ $sum_total = number_format(round($fact_cuotas->sum('monto') + $adelantos_reg->sum('monto_pagado'),2), 2) }} --}}
                                                             </p>
                                                         @else
@@ -105,7 +107,7 @@
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                            {{ number_format($fact_cuotas->sum('monto') - $fact_cuotas->where('estado', 1)->sum('monto'), 2) }}
+                                                            {{ number_format($sum_total - $pago_total, 2) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -251,7 +253,7 @@
                                                     </div>
                                                     <br>
                                                     <table
-                                                        class="footable table table-stripped table-bordered table-hover toggle-arrow-tiny"
+                                                        class="footable table table-stripped table-bordered  toggle-arrow-tiny"
                                                         data-page-size="8" data-filter="#filter">
                                                         <thead>
                                                             <tr>
@@ -259,19 +261,20 @@
                                                                     style="width: 50px;text-align: center">Ver más
                                                                 </th>
                                                                 @if ($fact_cuotas->where('facturacion_id', $factura->id)->where('estado', 1)->count() != $fact_cuotas->count())
-                                                                    <th data-sort-ignore="true">Pago Lote</th>
+                                                                    <th data-sort-ignore="true">Pagar</th>
                                                                 @endif
                                                                 <th style="width: 25px" data-sort-ignore="true">Estado</th>
                                                                 <th style="width: 25px" data-sort-ignore="true">Adelantado</th>
                                                                 <th>N° Cuota </th>
-                                                                <th>MONTO</th>
+                                                                <th>Monto Tot</th>
+                                                                <th>Monto Canc.</th>
                                                                 <th>Fecha Inicio</th>
-                                                                <th>Fecha Vencimiento</th>
+                                                                <th>Fecha Ven.</th>
                                                                 <th data-hide="all" style="display: none !important;">Dias de Restraso:
                                                                 </th>
                                                                 <th data-hide="all">Adelantos Registrados</th>
                                                                 {{-- <th data-hide="all"></th> --}}
-                                                                <th>Metodo de Pago</th>
+                                                                {{-- <th>Metodo de Pago</th> --}}
                                                                 <th>Fecha de Pago</th>
                                                                 <th data-sort-ignore="true" style="width: 170px">Pagar | Adelantar</th>
                                                                 {{-- <th>P</th> --}}
@@ -309,8 +312,12 @@
                                                                     </td>
                                                                     <td>
                                                                         {{-- Acá va el adelanto / estados --}}
-                                                                        @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
-                                                                            <i class="fa fa-circle" style="color: green"></i>    
+                                                                        @if (is_object($adelantos_reg))
+                                                                            @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
+                                                                                <i class="fa fa-circle" style="color: green"></i>    
+                                                                            @else
+                                                                                <i class="fa fa-circle" style="color: red"></i>
+                                                                            @endif
                                                                         @else
                                                                             <i class="fa fa-circle" style="color: red"></i>
                                                                         @endif
@@ -320,13 +327,24 @@
                                                                     <td>
                                                                         {{ $factura->moneda->simbolo }}
                                                                         <span style="display: none">{{$tot = 0 }}</span>
-                                                                        @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
-                                                                            <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->sum('montos_input')}}</span>
+                                                                        {{-- {{$adelantos_reg}} --}}
+                                                                        @if (is_object($adelantos_reg))
+                                                                            @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
+                                                                                <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->sum('montos_input')}}</span>    
+                                                                            @endif
                                                                         @endif
                                                                         {{ number_format($fc_cuota->monto - $tot, 2)}} 
                                                                         <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}" value="{{ $fc_cuota->numero_cuota }}">
                                                                         <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}" value="{{ $factura->moneda->simbolo }} {{ $fc_cuota->monto }}">
                                                                         <input type="hidden" name="" id="total_{{ $fc_cuota->id }}" value="{{ $fc_cuota->monto }}">
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $factura->moneda->simbolo }}
+                                                                        @if ($fc_cuota->estado == 2)
+                                                                            {{number_format($fc_cuota->monto,2)}}
+                                                                        @else
+                                                                            {{number_format($tot,2)}}
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         @if ($index == 0)
@@ -352,65 +370,52 @@
                                                                                 días de Retraso
                                                                             @endif
                                                                         @else
-                                                                            Aun no ha sido pagado
+                                                                            Aun no ha sido pagado 
                                                                         @endif
                                                                     </td>
                                                                     <td>
+                                                                        @if (is_object($adelantos_reg))
                                                                         <hr>
-                                                                        @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
-                                                                        <strong>Adelantos:</strong>
-                                                                            <table class="table-mini">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>ID</th>
-                                                                                        <th>METODO PAGO</th>
-                                                                                        <th>CUOTA ASOCIADA</th>
-                                                                                        <th>MONTO DE ADELANTO</th>
-                                                                                        <th>FECHA DE ADELANTO</th>
-                                                                                        <th>MAS DETALLES</th>
-                                                                                        <th>VER COMPROBANTE</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @if (is_object($adelantos_reg))
-                                                                                        @foreach ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id ) as $adl_reg)
-                                                                                            <tr>
-                                                                                                <td>{{$adl_reg->id}}</td>
-                                                                                                <td>
+                                                                            @if($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
+                                                                                <h4><strong>Informe de Adelantos:</strong></h4>
+                                                                                <div class="table_div_adelantos">
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-1"><strong>Id</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Metodo de Pago</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Monto</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Fecha</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Detalles</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Comprobante</strong></div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        @if (is_object($adelantos_reg))
+                                                                                            @foreach ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id ) as $adl_reg)
+                                                                                                <div class="col-sm-1">
+                                                                                                    {{$adl_reg->id}}
+                                                                                                </div>
+                                                                                                <div class="col-sm-2">
                                                                                                     <span class="text-right">
                                                                                                         {{ ucfirst($adl_reg->pluck('tipo_pago')->first()) }}
                                                                                                     </span>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    @if ($adl_reg->cuota_cred_id == null)
-                                                                                                        <strong>Adelanto a Contado</strong>
-                                                                                                    @else
-                                                                                                        <strong>Cuota: {{$adl_reg->cuota}}</strong>
-                                                                                                    @endif
-                                                                                                </td>
-                                                                                                <td>{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</td>
-                                                                                                <td>{{$adl_reg->fechas_input}}</td>
-                                                                                                <td>
-                                                                                                    <button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <button class="btn btn-secondary btn-sm" id=""><i class="fa fa-file"></i></button>
-                                                                                                    {{-- <a href="{{}}"></a> --}}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        @endforeach
-                                                                                    @endif
-                                                                                </tbody>
-                                                                            </table>
+                                                                                                </div>
+                                                                                                <div class="col-sm-2">{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
+                                                                                                <div class="col-sm-2">{{$adl_reg->fechas_input}}</div>
+                                                                                                <div class="col-sm-2"><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></div>
+                                                                                                <div class="col-sm-2"><button class="btn btn-secondary btn-sm" id=""><i class="fa fa-file"></i></button></div>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endif
                                                                         @endif
                                                                     </td>
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         @if (isset($pagos_reg[$index]))
                                                                             <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
                                                                         @else
                                                                             <strong>Sin Pago</strong>
                                                                         @endif
-                                                                    </td>
+                                                                    </td> --}}
 
                                                                     <td>
                                                                         @if ($fc_cuota->estado == 0)
@@ -802,11 +807,11 @@
                     </div>
                     <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id_factura" id="id_factura[]" value="{{ $factura->id }}">
+                        <input type="hidden" name="id_factura_m[]" id="id_factura" value="{{ $factura->id }}">
                         <div class="display: none" id="ids_divs_factura">
 
                         </div>
-                        <input type="hidden" name="numero_factura[]" id="cod_factura" value="{{ $cod_fact }}">
+                        <input type="hidden" name="numero_factura_m[]" id="cod_factura" value="{{ $cod_fact }}">
                         <input type="hidden" name="tot_cuotas[]" id="total_cuota" value="">
                         {{-- <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio"value=""> --}}
 
@@ -1203,7 +1208,15 @@
         .footable-row-detail-inner{
             width: 100%;
         }
-        .table-mini{
+        .table_div_adelantos{
+            margin-right: 15px;
+            margin-left: 15px;
+        }
+        .table_div_adelantos > div > div{
+            border: 1px solid #dee2e6;
+            padding: 5px 15px;
+        }
+        /* .table-mini{
             font-size: 10px;
         }
         .table-mini > thead > tr > th{ 
@@ -1213,7 +1226,7 @@
         }
         .table-mini > tbody > tr > td{
             padding: 5px 15px;
-        }
+        } */
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

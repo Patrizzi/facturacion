@@ -125,7 +125,7 @@ class PagadosController extends Controller
             $comprobante_pago->tipo_pago = $tipo_pago_txt;
 
             // $comprobante_pago->fecha_registro =  ;
-            $comprobante_pago->save();
+            // $comprobante_pago->save();
             
             // return $request;
             foreach ($n_fact_s as $key => $value) {
@@ -1099,7 +1099,7 @@ class PagadosController extends Controller
             }
             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli,2),2) , "tot_dol" => number_format(round($precio_fact_cli_dol,2),2));
         }
-        // return $var_precio_tot;
+        // return $adelantos_reg;
         return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos'));
     }
     public function lista_ajax_fact_m(Request $request)
