@@ -75,6 +75,19 @@ class CreditosAdelantosController extends Controller
         );
         return $array_end;
     }
+
+    public function view_adl_registro(Request $request){
+        $numero_adl = $request->id_adl_reg;
+        $adl_reg = CreditosAdelantosRegistros::where('id', $numero_adl)->first();
+        $cre = Cuotas_credito::where('id',$adl_reg->cuota_cred_id)->first();
+        $adl_reg->montos_input = $cre->factura_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+        if ($adl_reg->notas_adicionales == null) {
+            $adl_reg->notas_adicionales = '<i>Sin notas Adicionales</i>';
+        }else{
+            $adl_reg->notas_adicionales =  $adl_reg->notas_adicionales;
+        }
+        return $adl_reg;
+    }
     /**
      * Show the form for creating a new resource.
      *

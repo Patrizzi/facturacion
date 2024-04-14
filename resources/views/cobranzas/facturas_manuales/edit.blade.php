@@ -395,13 +395,13 @@
                                                                                                 </div>
                                                                                                 <div class="col-sm-2">
                                                                                                     <span class="text-right">
-                                                                                                        {{ ucfirst($adl_reg->pluck('tipo_pago')->first()) }}
+                                                                                                        {{ ucfirst($adl_reg->tipo_pago) }}
                                                                                                     </span>
                                                                                                 </div>
                                                                                                 <div class="col-sm-2">{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
                                                                                                 <div class="col-sm-2">{{$adl_reg->fechas_input}}</div>
-                                                                                                <div class="col-sm-2"><button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button></div>
-                                                                                                <div class="col-sm-2"><button class="btn btn-secondary btn-sm" id=""><i class="fa fa-file"></i></button></div>
+                                                                                                <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
+                                                                                                <div class="col-sm-2"><button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button></div>
                                                                                             @endforeach
                                                                                         @endif
                                                                                     </div>
@@ -735,10 +735,9 @@
                                                                 @foreach ($adelantos_reg as $adl_reg)
                                                                     <tr>
                                                                         <td>{{$adl_reg->id}}</td>
-                                                                        {{-- <td>{{$adl_reg->}}</td> --}}
                                                                         <td>
                                                                             <h3 class="text-right">
-                                                                                {{ ucfirst($adl_reg->pluck('tipo_pago')->first()) }}
+                                                                                {{ ucfirst($adl_reg->tipo_pago) }}
                                                                             </h3>
                                                                         </td>
                                                                         <td>{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</td>
@@ -1242,6 +1241,8 @@
 
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    @include('cobranzas.adelanto_view')
     <script>
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({

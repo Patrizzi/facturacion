@@ -425,6 +425,7 @@ Route::group(
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
 		// ADELANTOS
+		Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
 		Route::post('/adelantos/lista_ajax', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
 		Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
 		Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
