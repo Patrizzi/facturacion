@@ -28,6 +28,16 @@
     </style>
 </head>
 <hr>
+@switch($adl_header)
+    @case($adl_header->facturacion_id != null)
+        {{$facturacion}}
+        @break
+    @case(isset($adl_header))
+        
+        @break
+    @default
+        
+@endswitch
 <body class="white-bg">
     <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
         <tr>
@@ -62,7 +72,7 @@
                     <strong>Tipo de Moneda:</strong>
                     @if ($adelanto_reg->cuota_cread_id == null)
                         {{-- CREDITO --}}
-                        <strong>Cuota al:</strong>&nbsp;&nbsp;Crédito<br>
+                        <strong>Emitida:</strong>&nbsp;&nbsp;Crédito<br>
                         <strong>Cuota N°:</strong>&nbsp;&nbsp;{{ $n_cuota = $adelanto_reg->cuotas->numero_cuota }} <br>
                     @else
                         <strong>Cuota al:</strong>&nbsp;&nbsp;Contado<br>
@@ -70,6 +80,8 @@
                     @endif
                     <strong>Tipo de Moneda:</strong>
                     &nbsp;{{ $moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    <strong>Tipo de Pago:</strong>
+                    &nbsp;{{ ucfirst($adelanto_reg->tipo_pago) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                 </td>
             </tr>
         </table>
@@ -81,196 +93,263 @@
                 {{ $n_cuota }} del comprobante {{ $comprobante_num }}.</p>
             <strong>Detalles del Adelanto </strong>
         </div>
-        @switch(true)
-            @case($adelanto_reg->tipo_pago == 'cheque')
-                <table class="table " style="border-top: 0px;">
+        <div class="div-header-table">
+            @switch(true)
+                @case($adelanto_reg->tipo_pago == 'cheque')
+                    <table class="table  table-pagos" style="border-top: 0px;" >
+                        <tbody>
+                            <tr>
+                                <td style="width: 35%"><strong>¿Es Diferido?</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->option_input == 1)
+                                        Si
+                                    @else
+                                        No
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Numero de Cheque</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->numero_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Fecha de Cobro</strong></td>
+                                <td colspan="2">{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Banco Emisor</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->bancos_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Beneficiario</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->persona_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Monto</strong></td>
+                                <td colspan="2">{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>N° de Cuenta</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->adicional_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Fecha de Emision</strong></td>
+                                <td colspan="2">{{ Carbon\Carbon::parse($adelanto_reg->fecha_emision_input)->format('d-m-Y') }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Comprobante</strong></td>
+                                <td>
+                                    @if ($adelanto_reg->comprobante == null)
+                                        <i>Sin comprobante</i>
+                                    @else
+                                        Con Documento Asociado
+                                    @endif
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Notas Adicionales</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->notas_adicionales == null)
+                                        <i>Sin Notas Adicionales</i>
+                                    @else
+                                        {{ $adelanto_reg->notas_adicionales }}
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @break
+
+                @case($adelanto_reg->tipo_pago == 'tarjeta')
+                    <table class="table table-pagos" style="border-top: 0px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 35%"><strong>Titular de la Tarjeta</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->persona_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Banco</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->bancos_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Monto</strong></td>
+                                <td colspan="2">{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Fecha</strong></td>
+                                <td colspan="2">{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Comprobante</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->comprobante == null)
+                                        <i>Sin comprobante</i>
+                                    @else
+                                        Con Documento Asociado
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Notas Adicionales</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->notas_adicionales == null)
+                                        <i>Sin Notas Adicionales</i>
+                                    @else
+                                        {{ $adelanto_reg->notas_adicionales }}
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @break
+
+                @case($adelanto_reg->tipo_pago == 'efectivo')
+                    <table class="table table-pagos" style="border-top: 0px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 35%"><strong>Persona que cancela:</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->persona_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Fecha:</strong></td>
+                                <td colspan="2">{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Monto:</strong></td>
+                                <td colspan="2">{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Notas Adicionales:</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->notas_adicionales == null)
+                                        <i>Sin Notas Adicionales</i>
+                                    @else
+                                        {{ $adelanto_reg->notas_adicionales }}
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @break
+
+                @case($adelanto_reg->tipo_pago == 'transferencia')
+                    <table class="table table-pagos" style="border-top: 0px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 35%"><strong>Titular:</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->persona_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Fecha:</strong></td>
+                                <td colspan="2">{{ Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>N° de Cuenta Bancaria:</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->adicional_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>N° de Operacion:</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->numero_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%"><strong>Banco Emisor:</strong></td>
+                                <td colspan="2">{{ $adelanto_reg->bancos_input }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Monto:</strong></td>
+                                <td colspan="2">{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Comprobante:</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->comprobante == null)
+                                        <i>Sin comprobante</i>
+                                    @else
+                                        Con Documento Asociado
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Notas Adicionales:</strong></td>
+                                <td colspan="2">
+                                    @if ($adelanto_reg->notas_adicionales == null)
+                                        <i>Sin Notas Adicionales</i>
+                                    @else
+                                        {{ $adelanto_reg->notas_adicionales }}
+                                    @endif
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @break
+            @endswitch
+        </div>
+        <div>
+            <p>Este adelanto será aplicado a la cuota correspondiente de tu comprobante {{$comprobante_num}}. Agradecemos tu pronta atención a este asunto y esperamos poder seguir cumpliendo con tus expectativas.</p>
+            <br>
+        </div>
+        <div >
+            <p><strong>Detalle de la Cuota</strong></p>
+            <div class="div-header-table">
+                <table class="table table-pagos" style="border-top: 0px;" >
                     <tbody>
                         <tr>
-                            <td><strong>¿Es Diferido?</strong></td>
+                            <td style="width: 35%"><strong>Cuota Asociada:</strong></td>
+                            <td colspan="2">Cuota N° {{$adelanto_reg->cuotas->numero_cuota}}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 35%"><strong>Monto total de Pago:</strong></td>
+                            <td colspan="2">{{$moneda->simbolo}} {{number_format($adl_header->precio_total_pago, 2)}}</td>
                             <td>
-                                @if ($adelanto_reg->option_input == 1)
-                                    Si
-                                @else
-                                    No
-                                @endif
+                                
                             </td>
                         </tr>
                         <tr>
-                            <td><strong>Numero de Cheque</strong></td>
-                            <td>{{ $adelanto_reg->numero_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fecha de Cobro</strong></td>
-                            <td>{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Banco Emisor</strong></td>
-                            <td>{{ $adelanto_reg->bancos_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Beneficiario</strong></td>
-                            <td>{{ $adelanto_reg->persona_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Monto</strong></td>
-                            <td>{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>N° de Cuenta</strong></td>
-                            <td>{{ $adelanto_reg->adicional_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fecha de Emision</strong></td>
-                            <td>{{ Carbon\Carbon::parse($adelanto_reg->fecha_emision_input)->format('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Comprobante</strong></td>
-                            <td>
-                                @if ($adelanto_reg->comprobante == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    Con Documento Asociado
-                                @endif
+                            <td style="width: 35%"><strong>Monto Restante:</strong></td>
+                            <td colspan="2">
+                                <span style="display: none;">{{$total_resta = $adl_header->precio_total_pago - $adl_header->precio_adelanto}}</span>
+                                {{$moneda->simbolo}} {{number_format($total_resta, 2)}}
                             </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Notas Adicionales</strong></td>
-                            <td>
-                                @if ($adelanto_reg->notas_adicionales == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    {{ $adelanto_reg->notas_adicionales }}
-                                @endif
-                            </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
-            @break
-
-            @case($adelanto_reg->tipo_pago == 'tarjeta')
-                <table class="table " style="border-top: 0px;">
-                    <tbody>
-                        <tr>
-                            <td><strong>Titular de la Tarjeta</strong></td>
-                            <td>{{ $adelanto_reg->persona_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Banco</strong></td>
-                            <td>{{ $adelanto_reg->bancos_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Monto</strong></td>
-                            <td>{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fecha</strong></td>
-                            <td>{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Comprobante</strong></td>
-                            <td>
-                                @if ($adelanto_reg->comprobante == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    Con Documento Asociado
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Notas Adicionales</strong></td>
-                            <td>
-                                @if ($adelanto_reg->notas_adicionales == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    {{ $adelanto_reg->notas_adicionales }}
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            @break
-
-            @case($adelanto_reg->tipo_pago == 'efectivo')
-                <table class="table " style="border-top: 0px;">
-                    <tbody>
-                        <tr>
-                            <td><strong>Persona que cancela</strong></td>
-                            <td>{{ $adelanto_reg->persona_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fecha</strong></td>
-                            <td>{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Monto</strong></td>
-                            <td>{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Notas Adicionales</strong></td>
-                            <td>
-                                @if ($adelanto_reg->notas_adicionales == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    {{ $adelanto_reg->notas_adicionales }}
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            @break
-
-            @case($adelanto_reg->tipo_pago == 'transferencia')
-                <table class="table " style="border-top: 0px;">
-                    <tbody>
-                        <tr>
-                            <td><strong>Titular</strong></td>
-                            <td>{{ $adelanto_reg->persona_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fecha</strong></td>
-                            <td>{{ Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>N° de Cuenta Bancaria</strong></td>
-                            <td>{{ $adelanto_reg->adicional_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>N° de Operacion</strong></td>
-                            <td>{{ $adelanto_reg->numero_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Banco Emisior</strong></td>
-                            <td>{{ $adelanto_reg->bancos_input }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Monto</strong></td>
-                            <td>{{ $moneda->simbolo }} {{ number_format($adelanto_reg->montos_input, 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Comprobante</strong></td>
-                            <td>
-                                @if ($adelanto_reg->comprobante == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    Con Documento Asociado
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Notas Adicionales</strong></td>
-                            <td>
-                                @if ($adelanto_reg->notas_adicionales == null)
-                                    <i>Sin comprobante</i>
-                                @else
-                                    {{ $adelanto_reg->notas_adicionales }}
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            @break
-
-        @endswitch
+            </div>
+        </div>
+        <div>
+            <p>Si necesitas más información o tienes alguna pregunta adicional, no dudes en ponerte en contacto con nosotros. Estamos aquí para ayudarte en cualquier momento.</p>
+            <br>
+        </div>
+        {{-- @include('layout.firma_pie_hoja_pdf') --}}
     </div>
 </body>
 <style>
@@ -306,6 +385,12 @@
         margin-bottom: 1rem;
         background-color: transparent;
         border-top-width: 0px;
+
+    }
+    .div-header-table{
+        margin: 15px  25%;
+    }
+    .table-pagos{
 
     }
 </style>

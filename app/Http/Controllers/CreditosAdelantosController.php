@@ -391,7 +391,6 @@ class CreditosAdelantosController extends Controller
                 $cli_id = $doc->cliente_id;
                 $moneda = $doc->moneda;
                 $comprobante_num = $doc->codigo_fac;
-                
             break;
             case $adl_header->factura_m_id != null:
                 $doc = Facturacion_m::where('id', $adl_header->factura_m_id)->first();
@@ -412,10 +411,11 @@ class CreditosAdelantosController extends Controller
                 $comprobante_num = $doc->codigo_boleta;
             break;
         }
+        // $monto_restante_cuota = $ad
         $cliente = Cliente::where('id', $cli_id)->first();
         // return $cliente;
         // return view('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num'));
-        $pdf = PDF::loadView('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num'));
+        $pdf = PDF::loadView('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num','adl_header','doc'));
         return $pdf->download('comprobante.pdf');
     }
 }
