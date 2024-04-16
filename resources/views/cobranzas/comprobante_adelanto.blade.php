@@ -27,7 +27,7 @@
         }
     </style>
 </head>
-
+<hr>
 <body class="white-bg">
     <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
         <tr>
