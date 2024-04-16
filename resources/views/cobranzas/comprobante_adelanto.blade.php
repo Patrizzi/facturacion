@@ -70,13 +70,13 @@
                     <center><strong style="align-content: center;margin: 5px">Datos de Comprobante</strong></center>
                     <br>
                     <strong>Tipo de Moneda:</strong>
-                    @if ($adelanto_reg->cuota_cread_id == null)
+                    @if ($adelanto_reg->cuota_cread_id != null)
                         {{-- CREDITO --}}
                         <strong>Emitida:</strong>&nbsp;&nbsp;Crédito<br>
                         <strong>Cuota N°:</strong>&nbsp;&nbsp;{{ $n_cuota = $adelanto_reg->cuotas->numero_cuota }} <br>
                     @else
                         <strong>Cuota al:</strong>&nbsp;&nbsp;Contado<br>
-                        <strong>Cuota N°:</strong>&nbsp;&nbsp; {{ $n_cuota = 1 }}
+                        <strong>Cuota N°:</strong>&nbsp;&nbsp; {{ $n_cuota = 1 }} <br>
                     @endif
                     <strong>Tipo de Moneda:</strong>
                     &nbsp;{{ $moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -323,7 +323,11 @@
                     <tbody>
                         <tr>
                             <td style="width: 35%"><strong>Cuota Asociada:</strong></td>
-                            <td colspan="2">Cuota N° {{$adelanto_reg->cuotas->numero_cuota}}</td>
+                            @if ($adelanto_reg->cuota_cread_id != null)
+                                <td colspan="2">Cuota N° {{$adelanto_reg->cuotas->numero_cuota}}</td>
+                            @else
+                                <td colspan="2">Pago Contado N° 1</td>
+                            @endif
                             <td></td>
                         </tr>
                         <tr>

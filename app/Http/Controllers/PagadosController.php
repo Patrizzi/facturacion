@@ -1119,7 +1119,8 @@ class PagadosController extends Controller
                 $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
                 foreach ($cuotas as $llave => $cuota) {
                     $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
-                    $new_monto =  round($cuota->monto -  $monto_adl_cuota->precio_adelanto,2);
+                    // return $monto_adl_cuota;
+                    $new_monto =  round($cuota->monto - $monto_adl_cuota->precio_adelanto,2);
                     $array_cuot[$llave] = array(
                         'id_cuota' => $cuota->id,
                         'cuota_n' => $cuota->numero_cuota,
@@ -1136,7 +1137,7 @@ class PagadosController extends Controller
                 $array_cuot[0] = array(
                     'id_cuota' => '1',
                     'cuota_n' => '1',
-                    'monto' => round($pago_tot - $monto_adl->precio_adelanto,2),
+                    'monto' => round($pago_tot),
                     'fecha_pago' => $factura->fecha_vencimiento,
                     'estado' =>  '0'
                 );

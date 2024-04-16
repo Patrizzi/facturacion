@@ -476,7 +476,7 @@
                                                             <div class="form-control">
                                                                 <p><strong>Tipo de Pago:</strong></p>
                                                                 <hr>
-                                                                @if ($factura->estado_pago != 0)
+                                                                @if ($factura->estado_pago == 2 )
                                                                     <h3 class="text-right">
                                                                         {{ ucfirst($pagos->pluck('tipo_pago')->first()) }}
                                                                     </h3>
@@ -749,8 +749,7 @@
                                                                             <button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn btn-secondary btn-sm" id=""><i class="fa fa-file"></i></button>
-                                                                            <a href="{{route('adelantos.comprobantes_pdf',$adl_reg->id)}}"><i class="fa fa-file"></i></a>
+                                                                            <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
