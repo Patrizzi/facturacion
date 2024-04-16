@@ -429,6 +429,7 @@ Route::group(
 		Route::post('/adelantos/lista_ajax', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
 		Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
 		Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
+		Route::get('/adelantos/comprobantes_pdf/{id}','CreditosAdelantosController@comprobantes_pdf')->name('adelantos.comprobantes_pdf');
 		// PAGADOS
 		Route::resource('/pagados','PagadosController');
 		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');

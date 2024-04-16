@@ -76,7 +76,7 @@
                                             <dt>Fecha Cobro:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1" id="fecha_cobro_cheque_adelanto">`+msg.fechas_input+`</dd>
+                                            <dd class="mb-1" id="fecha_cobro_cheque_adelanto">`+msg.fechas_input.split('-').reverse().join('-')+`</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
@@ -118,7 +118,7 @@
                                             <dt>Fecha Emision:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1" id="fecha_emision_cheque_adelanto">`+msg.fecha_emision_input+`</dd>
+                                            <dd class="mb-1" id="fecha_emision_cheque_adelanto">`+msg.fecha_emision_input.split('-').reverse().join('-')+`</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
@@ -180,17 +180,17 @@
                                             <dt>Monto:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1" id="monto_tarjeta_adelanto">`+msg.fechas_input+`</dd>
+                                            <dd class="mb-1" id="monto_tarjeta_adelanto">`+msg.montos_input+`</dd>
                                         </div>
                                     </dl>
                                 </div>
                                 <div class="col-lg-6">
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>Feha:</dt>
+                                            <dt>Fecha:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1" id="fecha_tarjeta_adelanto">`+msg.montos_input+`</dd>
+                                            <dd class="mb-1" id="fecha_tarjeta_adelanto">`+msg.fechas_input.split('-').reverse().join('-')+`</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
@@ -244,7 +244,7 @@
                                             <dt>Fecha:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1" id="fecha_efectivo_adelanto">`+msg.fechas_input+`</dd>
+                                            <dd class="mb-1" id="fecha_efectivo_adelanto">`+msg.fechas_input.split('-').reverse().join('-')+`</dd>
                                         </div>
                                     </dl>
                                 </div>
@@ -300,7 +300,7 @@
                                             <dt>Fecha:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1" id="fecha_transferencia_adelanto">`+msg.fechas_input+`</dd>
+                                            <dd class="mb-1" id="fecha_transferencia_adelanto">`+msg.fechas_input.split('-').reverse().join('-')+`</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">

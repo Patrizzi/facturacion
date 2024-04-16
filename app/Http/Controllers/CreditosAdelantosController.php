@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Boleta;
+use App\Cliente;
 use App\CreditosAdelantos;
 use App\CreditosAdelantosRegistros;
 use App\Cuotas_credito;
+use App\Empresa;
 use App\Facturacion;
 use App\Facturacion_m;
 use App\Igv;
+use PDF;
 use Illuminate\Http\Request;
 
 use function PHPUnit\Framework\isNull;
@@ -80,7 +84,21 @@ class CreditosAdelantosController extends Controller
         $numero_adl = $request->id_adl_reg;
         $adl_reg = CreditosAdelantosRegistros::where('id', $numero_adl)->first();
         $cre = Cuotas_credito::where('id',$adl_reg->cuota_cred_id)->first();
-        $adl_reg->montos_input = $cre->factura_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+        switch (true) {
+            case $cre->facturacion_id != null:
+                $adl_reg->montos_input = $cre->factura_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                break;
+            case $cre->facturacion_m_id != null:
+                $adl_reg->montos_input = $cre->factura_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                break;
+            case $cre->boleta_id != null:
+                $adl_reg->montos_input = $cre->boleta_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                break;
+            case $cre->boleta_m_id != null:
+                $adl_reg->montos_input = $cre->boleta_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                break;
+        }
+
         if ($adl_reg->notas_adicionales == null) {
             $adl_reg->notas_adicionales = '<i>Sin notas Adicionales</i>';
         }else{
@@ -360,5 +378,44 @@ class CreditosAdelantosController extends Controller
     }
     public function comprobante_facturas(Request $request){
         return $request;
+    }
+
+    public function comprobantes_pdf($id){
+        $empresa = Empresa::first();
+        $adelanto_reg = CreditosAdelantosRegistros::where('id', $id)->first();
+        $adl_header = CreditosAdelantos::where('id', $adelanto_reg->creditos_adl_id)->first();
+        // return $adl_header;
+        switch (true) {
+            case $adl_header->factura_id != null:
+                $doc = Facturacion::where('id', $adl_header->factura_id)->first();
+                $cli_id = $doc->cliente_id;
+                $moneda = $doc->moneda;
+                $comprobante_num = $doc->codigo_fac;
+                
+            break;
+            case $adl_header->factura_m_id != null:
+                $doc = Facturacion_m::where('id', $adl_header->factura_m_id)->first();
+                $cli_id = $doc->cliente_id;
+                $moneda = $doc->moneda;
+                $comprobante_num = $doc->codigo_fac;
+            break;
+            case $adl_header->boleta_id != null:
+                $doc = Boleta::where('id', $adl_header->boleta_id)->first();
+                $cli_id = $doc->cliente_id;
+                $moneda = $doc->moneda;
+                $comprobante_num = $doc->codigo_boleta;
+            break;
+            case $adl_header->boleta_m_id != null:
+                $doc = Boleta::where('id', $adl_header->boleta_m_id)->first();
+                $cli_id = $doc->cliente_id;
+                $moneda = $doc->moneda;
+                $comprobante_num = $doc->codigo_boleta;
+            break;
+        }
+        $cliente = Cliente::where('id', $cli_id)->first();
+        // return $cliente;
+        // return view('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num'));
+        $pdf = PDF::loadView('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num'));
+        return $pdf->download('comprobante.pdf');
     }
 }

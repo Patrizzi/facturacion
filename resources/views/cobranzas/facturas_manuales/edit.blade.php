@@ -401,7 +401,10 @@
                                                                                                 <div class="col-sm-2">{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
                                                                                                 <div class="col-sm-2">{{$adl_reg->fechas_input}}</div>
                                                                                                 <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
-                                                                                                <div class="col-sm-2"><button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button></div>
+                                                                                                <div class="col-sm-2">
+                                                                                                    {{-- <button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button> --}}
+                                                                                                    <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
+                                                                                                </div>
                                                                                             @endforeach
                                                                                         @endif
                                                                                     </div>
@@ -747,7 +750,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <button class="btn btn-secondary btn-sm" id=""><i class="fa fa-file"></i></button>
-                                                                            {{-- <a href="{{}}"></a> --}}
+                                                                            <a href="{{route('adelantos.comprobantes_pdf',$adl_reg->id)}}"><i class="fa fa-file"></i></a>
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
