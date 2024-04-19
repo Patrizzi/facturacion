@@ -88,6 +88,7 @@ Route::group(
 
 		// Route::put('/cotizacion/store/{id_moneda}','CotizacionController@store')->name('cotizacion.store');
 		Route::resource('/empresa/banco','BancoController'); //Banco
+		Route::post('/bancos/search', 'BancoController@search_registros')->name('bancos.registros_search');
 
 //COTIZACIOBNES SERVICIO
 		//FACTURA

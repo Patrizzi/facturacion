@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BancoRegistro;
 use App\Boleta;
 use App\Cliente;
 use App\CreditosAdelantos;
@@ -13,6 +14,7 @@ use App\Facturacion_m;
 use App\Igv;
 use PDF;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 
 use function PHPUnit\Framework\isNull;
 
@@ -56,8 +58,13 @@ class CreditosAdelantosController extends Controller
             }
             $pago_tot = round($cuotas->sum('monto'), 2);
         }else{
+            $adle_header = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
             $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada;
             $pago_tot = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2);
+            if(isset($adle_header)){
+                // return $adle_header;
+                $pago_tot = $pago_tot - $adle_header->precio_adelanto;
+            }
 
             $array_cuot[0] = array(
                 'id_cuota' => '1',
@@ -83,27 +90,37 @@ class CreditosAdelantosController extends Controller
     public function view_adl_registro(Request $request){
         $numero_adl = $request->id_adl_reg;
         $adl_reg = CreditosAdelantosRegistros::where('id', $numero_adl)->first();
-        $cre = Cuotas_credito::where('id',$adl_reg->cuota_cred_id)->first();
-        switch (true) {
-            case $cre->facturacion_id != null:
-                $adl_reg->montos_input = $cre->factura_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
-                break;
-            case $cre->facturacion_m_id != null:
-                $adl_reg->montos_input = $cre->factura_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
-                break;
-            case $cre->boleta_id != null:
-                $adl_reg->montos_input = $cre->boleta_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
-                break;
-            case $cre->boleta_m_id != null:
-                $adl_reg->montos_input = $cre->boleta_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
-                break;
-        }
-
+        //  if ($adl_reg->cuota_cred_id != null) {  //CREDITO
+            // $cre = Cuotas_credito::where('id',$adl_reg->cuota_cred_id)->first();
+            $cre = CreditosAdelantos::where('id', $adl_reg->creditos_adl_id)->first();
+            switch (true) {
+                case $cre->factura_id != null:
+                    $adl_reg->montos_input = $cre->factura_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                    break;
+                case $cre->factura_m_id != null:
+                    $adl_reg->montos_input = $cre->factura_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                    break;
+                case $cre->boleta_id != null:
+                    $adl_reg->montos_input = $cre->boleta_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                    break;
+                case $cre->boleta_m_id != null:
+                    $adl_reg->montos_input = $cre->boleta_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                    break;
+                case $cre->nota_ven_id != null:
+                    $adl_reg->montos_input = $cre->nota_venta_id->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+                    break;
+            }
+        // }else{
+        //     $adl_reg->montos_input = $cre->boleta_m_ids->moneda->simbolo.' '.number_format($adl_reg->montos_input,2);
+        // }
         if ($adl_reg->notas_adicionales == null) {
             $adl_reg->notas_adicionales = '<i>Sin notas Adicionales</i>';
-        }else{
-            $adl_reg->notas_adicionales =  $adl_reg->notas_adicionales;
         }
+        if($adl_reg->adicional_input != null){
+            $banco_reg = BancoRegistro::where('id', $adl_reg->adicional_input)->first();
+            $adl_reg->adicional_input = $banco_reg->tipo_cuenta.' - '.$banco_reg->nombre_cuenta;
+        }
+        // $adl_reg->adicional_input = BancoRegistro::where('id', $adl_reg->adicional_input)->first();
         return $adl_reg;
     }
     /**
@@ -411,11 +428,15 @@ class CreditosAdelantosController extends Controller
                 $comprobante_num = $doc->codigo_boleta;
             break;
         }
+        if(isset($adelanto_reg->adicional_input)){
+            $banco_reg = BancoRegistro::where('id', $adelanto_reg->adicional_input)->first();
+            $adelanto_reg->adicional_input = $banco_reg->tipo_cuenta.' - '.$banco_reg->nombre_cuenta;
+        }
         // $monto_restante_cuota = $ad
         $cliente = Cliente::where('id', $cli_id)->first();
         // return $cliente;
-        // return view('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num'));
-        $pdf = PDF::loadView('cobranzas.comprobante_adelanto',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num','adl_header','doc'));
+        // return view('cobranzas.comprobante_adelanto_pdf',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num','adl_header','doc'));
+        $pdf = PDF::loadView('cobranzas.comprobante_adelanto_pdf',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num','adl_header','doc'));
         return $pdf->download('comprobante.pdf');
     }
 }

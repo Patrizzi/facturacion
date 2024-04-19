@@ -72,17 +72,12 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Monto
-                                                            Total:</strong></label>
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto Total:</strong></label>
                                                     <div class="col-sm-7">
-                                                        {{-- @if ($fact_cuotas->sum('monto') != 0) --}}
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
                                                             <span hidden>{{ $sum_total = $fact_cuotas->sum('monto')}}</span>
                                                             {{number_format($sum_total, 2) }}
                                                         </p>
-                                                        {{-- @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }} {{ $sum_total = 0}}</p>
-                                                        @endif --}}
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -170,16 +165,23 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Monto
-                                                            Pagado: </strong></label>
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto Pagado: </strong></label>{{-- PAGO + ADELANTO  --}}
                                                     <div class="col-sm-7">
-                                                        @if ($factura->estado_pago == 2)
+                                                         @if ($factura->estado_pago == 2) {{-- Pagado Total  --}}
                                                             <p class="form-control">{{ $factura->moneda->simbolo }}
                                                                 {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                             </p>
-                                                        @else
+                                                        @endif
+                                                        @if ($factura->estado_pago == 1) {{-- Pagado Parcial --}}
                                                             <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{ $pago_total = 0.0 }}</p>
+                                                                <span hidden>{{ $pago_total = $subtotal + ($factura->op_gravada * $igv->renta) / 100 + $adelantos_reg->sum('montos_input') }}</span>
+                                                                {{number_format($pago_total, 2) }}
+                                                            </p>
+                                                        @endif
+                                                        @if($factura->estado_pago == 0) {{-- SIN PAGO --}}
+                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                                0.00
+                                                            </p>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -333,10 +335,10 @@
                                                                                 <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->sum('montos_input')}}</span>    
                                                                             @endif
                                                                         @endif
-                                                                        {{ number_format($fc_cuota->monto - $tot, 2)}} 
+                                                                        {{ $tot_monto =  number_format($fc_cuota->monto - $tot, 2)}} 
                                                                         <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}" value="{{ $fc_cuota->numero_cuota }}">
-                                                                        <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}" value="{{ $factura->moneda->simbolo }} {{ $fc_cuota->monto }}">
-                                                                        <input type="hidden" name="" id="total_{{ $fc_cuota->id }}" value="{{ $fc_cuota->monto }}">
+                                                                        <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}" value="{{ $factura->moneda->simbolo }} {{ $tot_monto }}">
+                                                                        <input type="hidden" name="" id="total_{{ $fc_cuota->id }}" value="{{ $tot_monto }}">
                                                                     </td>
                                                                     <td>
                                                                         {{ $factura->moneda->simbolo }}
@@ -389,9 +391,9 @@
                                                                                     </div>
                                                                                     <div class="row">
                                                                                         @if (is_object($adelantos_reg))
-                                                                                            @foreach ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id ) as $adl_reg)
+                                                                                            @foreach ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id ) as $a => $adl_reg)
                                                                                                 <div class="col-sm-1">
-                                                                                                    {{$adl_reg->id}}
+                                                                                                    {{$a+1}}
                                                                                                 </div>
                                                                                                 <div class="col-sm-2">
                                                                                                     <span class="text-right">
@@ -399,7 +401,7 @@
                                                                                                     </span>
                                                                                                 </div>
                                                                                                 <div class="col-sm-2">{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
-                                                                                                <div class="col-sm-2">{{$adl_reg->fechas_input}}</div>
+                                                                                                <div class="col-sm-2">{{Carbon\Carbon::parse($adl_reg->fechas_input)->format('d-m-Y')}}</div>
                                                                                                 <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
                                                                                                 <div class="col-sm-2">
                                                                                                     {{-- <button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button> --}}
@@ -412,14 +414,6 @@
                                                                             @endif
                                                                         @endif
                                                                     </td>
-                                                                    {{-- <td>
-                                                                        @if (isset($pagos_reg[$index]))
-                                                                            <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
-                                                                        @else
-                                                                            <strong>Sin Pago</strong>
-                                                                        @endif
-                                                                    </td> --}}
-
                                                                     <td>
                                                                         @if ($fc_cuota->estado == 0)
                                                                             <strong>PENDIENTE</strong>
@@ -470,7 +464,14 @@
                                                         </tfoot>
                                                     </table>
                                                 @else
-                                                    <h3>Informacion del Pago</h3>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <h3>Informacion del Pago</h3>
+                                                        </div>
+                                                        <div class="col-sm-6 text-right" >
+                                                            <button class="btn btn-primary" id="pago" onclick="modal_pagos_cont({{$factura->id}})">Pagar</button>
+                                                        </div>
+                                                    </div>
                                                     <div class="row contado_pago">
                                                         <div class="col-sm-3">
                                                             <div class="form-control">
@@ -555,7 +556,7 @@
                                                                             <strong>Monto total Adelantado:</strong>
                                                                             <hr>
                                                                             <p class="text-right">
-                                                                                {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
+                                                                                {{$factura->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -594,7 +595,7 @@
                                                                             <strong>Monto total Adelantado:</strong>
                                                                             <hr>
                                                                             <p class="text-right">
-                                                                                {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
+                                                                                {{$factura->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -625,7 +626,7 @@
                                                                             <strong>Monto total Adelantado:</strong>
                                                                             <hr>
                                                                             <p class="text-right">
-                                                                                {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
+                                                                                {{$factura->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -673,7 +674,7 @@
                                                                             <strong>Monto total Adelantado:</strong>
                                                                             <hr>
                                                                             <p class="text-right">
-                                                                                {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
+                                                                                {{$factura->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -729,24 +730,24 @@
                                                                 {{-- <th>CUOTA ASOCIADA</th> --}}
                                                                 <th>MONTO DE ADELANTO</th>
                                                                 <th>FECHA DE ADELANTO</th>
-                                                                <th>MAS DETALLES</th>
+                                                                <th>VER DETALLES</th>
                                                                 <th>VER COMPROBANTE</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @if (is_object($adelantos_reg))
-                                                                @foreach ($adelantos_reg as $adl_reg)
+                                                                @foreach ($adelantos_reg as $index =>  $adl_reg)
                                                                     <tr>
-                                                                        <td>{{$adl_reg->id}}</td>
+                                                                        <td>{{$index+1}}</td>
                                                                         <td>
-                                                                            <h3 class="text-right">
+                                                                            <p class="text-left">
                                                                                 {{ ucfirst($adl_reg->tipo_pago) }}
-                                                                            </h3>
+                                                                            </p>
                                                                         </td>
                                                                         <td>{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</td>
-                                                                        <td>{{$adl_reg->fechas_input}}</td>
+                                                                        <td>{{Carbon\Carbon::parse($adl_reg->fechas_input)->format('d-m-Y')}}</td>
                                                                         <td>
-                                                                            <button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
+                                                                            <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
                                                                         </td>
                                                                         <td>
                                                                             <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
@@ -771,7 +772,7 @@
     {{-- AGREGAR PAGO / POSIBILIDAD DE REUTILIZAR --}}
     <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-lg" >
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -779,35 +780,35 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="metodo_pago_header">
-                        <div id="only_pago">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <h3 class="text-center">Cuota N° | Monto</h3>
-                                    <p class="text-center"><label id="cuota_n"></label> | <label
-                                            id="monto_n"></label>
-                                    </p>
-                                    <input class="monto_total" type="hidden" name="" id="monto_value"
-                                        value="0">
+                <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="metodo_pago_header">
+                            <div id="only_pago">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <h3 class="text-center">Cuota N° | Monto</h3>
+                                        <p class="text-center"><label id="cuota_n"></label> | <label
+                                                id="monto_n"></label>
+                                        </p>
+                                        <input class="monto_total" type="hidden" name="" id="monto_value"
+                                            value="0">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h3 class="text-center">Fecha de Vencimiento</h3>
+                                        <p class="text-center"><label id="fecha_ven"></label></p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h3 class="text-center">Estado</h3>
+                                        <p class="text-center"><label id="estado_n"></label></p>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <h3 class="text-center">Fecha de Vencimiento</h3>
-                                    <p class="text-center"><label id="fecha_ven"></label></p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <h3 class="text-center">Estado</h3>
-                                    <p class="text-center"><label id="estado_n"></label></p>
-                                </div>
+                                <hr>
                             </div>
-                            <hr>
-                        </div>
-                        <div id="lote_pago">
+                            <div id="lote_pago">
 
+                            </div>
                         </div>
-                    </div>
-                    <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
                         <input type="hidden" name="id_factura_m[]" id="id_factura" value="{{ $factura->id }}">
                         <div class="display: none" id="ids_divs_factura">
 
@@ -849,6 +850,14 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label">¿Es cheque diferido? </label>
+                                                <div class="">
+                                                    <span>No&nbsp;</span><input type="checkbox" class="js-switch-pago" name="cheque_diferido" /><span>&nbsp;Si</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label">Numero de Cheque</label>
@@ -903,12 +912,29 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
+                                                <label class="col-form-label">Banco de la Empresa</label>
+                                                <select name="banco_cuenta" id="select_banco_pagos" class="form-control select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    @foreach ($bancos as $banco)
+                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">N° de Cuenta</label>
+                                                <select name="cheque_n_cuenta" class="form-control pago_class_1 class_pago" id="select_cuenta_pago">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {{-- <div class="col-sm-6">
+                                            <div class="form-group">
                                                 <label class="col-form-label">N° de Cuenta</label>
                                                 <input type="text" value="" name="cheque_n_cuenta"
                                                     placeholder="N° de Cuenta"
                                                     class="form-control pago_class_1 class_pago" required>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label">Fecha de Emision</label>
@@ -1027,6 +1053,30 @@
                                                     value="{{ $fecha_hoy }}">
                                             </div>
                                         </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">Banco de la Empresa</label>
+                                                <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_adelanto" onchange="changue_bancos_pago_tr()">
+                                                    @foreach ($bancos as $banco)
+                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">N° de Cuenta Bancaria</label>
+                                                <select name="transferencia_n_cuenta" class="form-control pago_class_4 class_adelanto" id="select_cuenta_adl_pag">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">N° de Operación</label>
+                                                <input type="text"
+                                                    class="form-control pago_class_4 class_adelanto" name="transferencia_operacion_pag" id="transferencia_oper_pag" >
+                                            </div>
+                                        </div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label">Comprobante</label>
@@ -1044,23 +1094,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12 text-center">
-                                            <button type="submit" class="btn btn-primary">Enviar</button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    {{-- </div> --}}
     {{-- ! AGREGAR ADELANTO --}}
 
 
@@ -1228,6 +1274,12 @@
         .table-mini > tbody > tr > td{
             padding: 5px 15px;
         } */
+        .select2.select2-container.select2-container--default{
+            width: 100% !important;
+        }
+        span.select2-container.select2-container--default.select2-container--open{
+            z-index: 99999 !important;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1239,13 +1291,23 @@
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
+
+    <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
 
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     @include('cobranzas.adelanto_view')
+
     <script>
+        var elem_2 = document.querySelector('.js-switch-pago');
+        var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({
                 pageLength: 25,
@@ -1260,7 +1322,86 @@
                 buttons: []
             });
             $('.footable').footable();
+         
+            $('#select_banco_pagos').select2({
+                placeholder: "Seleccionar",
+            });
+            $('#select_cuenta_pago').select2({
+                placeholder: "Seleccionar",
+            });
+            
+            $('#select_banco_transf_pag').select2({
+                placeholder: "Seleccionar",
+            });
+            $('#select_cuenta_adl_pag').select2({
+                placeholder: "Seleccionar",
+            });
         });
+
+        function changue_bancos_pagos(){
+            // $("#select_banco_adl").attr('disabled', false);
+            console.log('a');
+            var id_banc = $("#select_banco_pagos").val();
+            $('#select_cuenta_pago').select2({
+                placeholder: "Seleccionar",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{route('bancos.registros_search')}}",
+                    dataType: 'json',
+                    type: "POST",
+                    data: function (params) {
+                        return {
+                            '_token': $('input[name=_token]').val(),
+                            'id_bancos': id_banc
+                        };
+                    },
+                    processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                            };
+                        })
+                    };
+                    },
+                    cache: true
+                }
+            });
+        }
+        function changue_bancos_pago_tr(){
+            // $("#select_banco_adl").attr('disabled', false);
+            console.log('a');
+            var id_banc = $("#select_banco_transf_pag").val();
+            $('#select_cuenta_adl_pag').select2({
+                placeholder: "Seleccionar",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{route('bancos.registros_search')}}",
+                    dataType: 'json',
+                    type: "POST",
+                    data: function (params) {
+                        return {
+                            '_token': $('input[name=_token]').val(),
+                            'id_bancos': id_banc
+                        };
+                    },
+                    processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                            };
+                        })
+                    };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        
     </script>
     <script>
         function modal_pagos(value) {

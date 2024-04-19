@@ -28,24 +28,26 @@
             },
             success: function(msg){
                 $('#body_adelantos').empty();
-                if (msg.file_input == null) {
-                    var comprobante =  `<dd class="mb-1" id="sin_comprobante_cheque_adelanto"><i>Sin Comprobante</i></dd>`;
-                }else{
+                var comprobante =  `<dd class="mb-1" id="sin_comprobante_cheque_adelanto"><i>Sin Comprobante</i></dd>`;
+                if (msg.file_input != null) {
                     var comprobante = `<a href="{{asset('/facturas_electronicas/'.`+msg.file_input+`)}}" download="{{`+msg.file_input+`}}" class="btn btn-primary btn-sm" id="comprobante_download_cheque_adelanto"><i class="fa fa-download"></i>&nbsp; Descargar</a>`;
+                }
+                var tipo_fomat = 'Contado';
+                if(msg.cuota_cred_id != null){
+                    var tipo_fomat = 'Credito';
                 }
                 switch (msg.tipo_pago) {
                     case "cheque":
+                        var diferido =`<span class="label label-danger">No</span>`;
                         if (msg.option_input != null) {
                            var diferido =  `<span class="label label-primary">Si</span>`;
-                        }else{
-                            var diferido =`<span class="label label-danger">No</span>`;
                         }
                         var html_adelanto = `
                         <div id="adelanto_cheque"> {{-- CHEQUE  --}}
                             <div class="row" id="">
                                 <div class="col-lg-12">
                                     <div class="m-b-md">
-                                        <a href="#" class="btn btn-white btn-xs float-right">Edit project</a>
+                                        <a href="#" class="btn btn-white btn-xs float-right">`+ tipo_fomat +`</a>
                                         <h2 id="">CHEQUE</h2>
                                     </div>
                                 </div>
@@ -126,7 +128,7 @@
                                             <dt>Comprobante:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            `+msg.montos_input+`
+                                            `+comprobante+`
                                         </div>
                                     </dl>
                                 </div>
@@ -135,7 +137,7 @@
                                 <div class="col-lg-12">
                                     <dl class="row mb-0">
                                         <div class="col-sm-2 text-sm-right">
-                                            <dt>Notas Adicionales.:</dt>
+                                            <dt>Notas Adicionales:</dt>
                                         </div>
                                         <div class="col-sm-10 text-sm-left">
                                             <dd class="mb-1" id="notas_cheque_adelanto">`+msg.notas_adicionales+`</dd>
@@ -152,7 +154,7 @@
                             <div class="row" id="">
                                 <div class="col-lg-12">
                                     <div class="m-b-md">
-                                        <a href="#" class="btn btn-white btn-xs float-right">Edit project</a>
+                                        <a href="#" class="btn btn-white btn-xs float-right">`+ tipo_fomat +`</a>
                                         <h2 id="">TARJETA</h2>
                                     </div>
                                 </div>
@@ -224,7 +226,7 @@
                             <div class="row" id="">
                                 <div class="col-lg-12">
                                     <div class="m-b-md">
-                                        <a href="#" class="btn btn-white btn-xs float-right">Edit project</a>
+                                        <a href="#" class="btn btn-white btn-xs float-right">`+ tipo_fomat +`</a>
                                         <h2 id="">Efectivo</h2>
                                     </div>
                                 </div>
@@ -280,7 +282,7 @@
                             <div class="row" id="">
                                 <div class="col-lg-12">
                                     <div class="m-b-md">
-                                        <a href="#" class="btn btn-white btn-xs float-right">Edit project</a>
+                                        <a href="#" class="btn btn-white btn-xs float-right">`+ tipo_fomat +`</a>
                                         <h2 id="">Transferencia</h2>
                                     </div>
                                 </div>

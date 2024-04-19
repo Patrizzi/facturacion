@@ -262,7 +262,7 @@
                             </tr>
                             <tr>
                                 <td style="width: 35%"><strong>Fecha:</strong></td>
-                                <td colspan="2">{{ Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
+                                <td colspan="2">{{ Carbon\Carbon::parse($adelanto_reg->fechas_input)->format('d-m-Y') }}</td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -340,8 +340,12 @@
                         <tr>
                             <td style="width: 35%"><strong>Monto Restante:</strong></td>
                             <td colspan="2">
-                                <span style="display: none;">{{$total_resta = $adl_header->precio_total_pago - $adl_header->precio_adelanto}}</span>
-                                {{$moneda->simbolo}} {{number_format($total_resta, 2)}}
+                                @if ($doc->estado_pago != 2) {{-- Aun hay monto para pagar o adelantar  --}}
+                                    <span style="display: none;">{{$total_resta = $adl_header->precio_total_pago - $adl_header->precio_adelanto}}</span>
+                                    {{$moneda->simbolo}} {{number_format($total_resta, 2)}}
+                                @else
+                                    {{$moneda->simbolo}} 0.00
+                                @endif
                             </td>
                             <td></td>
                         </tr>

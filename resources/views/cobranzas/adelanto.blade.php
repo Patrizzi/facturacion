@@ -43,6 +43,7 @@
                                         class="btn btn-block btn-primary btn_adelanto_selec" id="bm_adelanto_4" onclick="select_adelanto_click(4)">Transferencia</button>
                                 {{-- </div> --}}
                             </div>
+                            <input type="hidden" name="" id="value_option_type" value="1">
                             <div class="col-sm-9">
                                 <div class="row adelanto_m m_adelanto_1"> {{-- Metodo de Adelanto 1 - CHEQUE --}}
                                     <div class="col-sm-6">
@@ -83,25 +84,34 @@
                                             <input type="text" id="cheque_beneficiario_adl" name="cheque_beneficiario_adl" value="" placeholder="Beneficiario" class="form-control adelanto_class_1 class_adelanto" required>
                                         </div>
                                     </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Monto</label>
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="simbolo_adelanto_vuelto">S/</span>
-                                                    </div>
-                                                    <input type="number" id="cheque_adl_monto" name="cheque_monto" value="" placeholder="Monto" class="form-control adelanto_class_1 class_adelanto" required step="0.01">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label">Monto</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="simbolo_adelanto_vuelto">S/</span>
                                                 </div>
+                                                <input type="number" id="cheque_adl_monto" name="cheque_monto" value="" placeholder="Monto" class="form-control adelanto_class_1 class_adelanto" required step="0.01">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group form_adelanto">
+                                            <label class="col-form-label">Banco de la Empresa</label>
+                                            <select name="banco_cuenta" id="select_banco_adl" class="select2_banco adelanto_class_1 class_adelanto" onchange="changue_bancos()">
+                                                @foreach ($bancos as $banco)
+                                                    <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-sm-6">
                                         <div class="form-group form_adelanto">
                                             <label class="col-form-label">N° de Cuenta</label>
-                                            {{-- <input type="text" value="" name="cheque_n_cuenta" placeholder="N° de Cuenta" class="form-control adelanto_class_1 class_adelanto" required> --}}
                                             <select name="cheque_n_cuenta" class="form-control adelanto_class_1 class_adelanto" id="select_cuenta_adl">
-                                                @foreach ($cuentas as $banco_reg)
+                                                {{-- @foreach ($cuentas as $banco_reg)
                                                     <option value="{{$banco_reg->id}}">{{$banco_reg->tipo_cuenta}} - {{$banco_reg->monedas_i->simbolo}} - {{$banco_reg->nombre_cuenta}}</option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
@@ -204,11 +214,21 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group form_adelanto">
+                                            <label class="col-form-label">Banco de la Empresa</label>
+                                            <select name="banco_cuenta_transf" id="select_banco_transf_adl" class="select3_banco adelanto_class_4 class_adelanto" onchange="changue_bancos_trans()">
+                                                @foreach ($bancos as $banco)
+                                                    <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group form_adelanto">
                                             <label class="col-form-label">N° de Cuenta Bancaria</label>
                                             <select name="transferencia_n_cuenta" class="form-control adelanto_class_4 class_adelanto" id="select_cuenta_adl_transf">
-                                                @foreach ($cuentas as $banco_reg)
+                                                {{-- @foreach ($cuentas as $banco_reg)
                                                     <option value="{{$banco_reg->id}}">{{$banco_reg->tipo_cuenta}} - {{$banco_reg->monedas_i->simbolo}} - {{$banco_reg->nombre_cuenta}}</option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
@@ -267,8 +287,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardar_adelanto">Guardar</button>
+                    <button type="submit" style="display: none" id="button_submit_adelanto" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
@@ -294,9 +315,91 @@
     }
 </style>
 <script>
+    $( document ).ready(function() {
+        $('#select_banco_adl').select2({
+            placeholder: "Seleccionar",
+        });
+        $('#select_cuenta_adl').select2({
+            placeholder: "Seleccionar",
+        });
+        $('#select_banco_transf_adl').select2({
+            placeholder: "Seleccionar",
+        });
+        $('#select_cuenta_adl_transf').select2({
+            placeholder: "Seleccionar",
+        });
+        
+    });
+
+    
+    function changue_bancos(){
+        // $("#select_banco_adl").attr('disabled', false);
+        console.log('a');
+        var id_banc = $("#select_banco_adl").val();
+        $('#select_cuenta_adl').select2({
+            placeholder: "Seleccionar",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{route('bancos.registros_search')}}",
+                dataType: 'json',
+                type: "POST",
+                data: function (params) {
+                    return {
+                        '_token': $('input[name=_token]').val(),
+                        'id_bancos': id_banc
+                    };
+                },
+                processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                        };
+                    })
+                };
+                },
+                cache: true
+            }
+        });
+    }
+    
+    function changue_bancos_trans(){
+        console.log('b');
+        var id_banc = $("#select_banco_transf_adl").val();
+        $('#select_cuenta_adl_transf').select2({
+            placeholder: "Seleccionar",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{route('bancos.registros_search')}}",
+                dataType: 'json',
+                type: "POST",
+                data: function (params) {
+                    return {
+                        '_token': $('input[name=_token]').val(),
+                        'id_bancos': id_banc
+                    };
+                },
+                processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                        };
+                    })
+                };
+                },
+                cache: true
+            }
+        });
+    }
+
     var elem_2 = document.querySelector('.js-switch');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
     function pago_adelanto_m(n_factura){
+        
         $('#adelanto_header').empty();
         // $('#tot_simbolo').empty();
         // $('#ids_divs_factura').empty();
@@ -363,44 +466,24 @@
                     $('#cheque_adl_monto').attr('max', tot_math);
                     $('#efectivo_adelanto').attr('max', tot_math);
                     $('#monto_tarjeta_adl').attr('max', tot_math);
-                    $('#efectivo_adelanto').attr('max', tot_math);
-                    n_cheque_adl
+                    $('#tranferencia_adl_monto').attr('max', tot_math);
+                    
                     // $('#').
                     
                     console.log(tot_math);
-       
+                    
                 });
             }
         });
     }
     function select_adelanto_click(item) {
         clean_requires();
-        // switch (item) {
-        //     case '1': //cheque
-        //         $('#n_cheque_adl').attr('required', true);
-        //         $('#cheque_emisor_adl').attr('required', true);
-        //         $('#cheque_beneficiario_adl').attr('required', true);
-        //         $('#cheque_monto_adl').attr('required', true);
-        //         $('#banco_emisor_adl').attr('required', true);
-        //         $('#cheque_adl_monto').attr('required', true);
-                
-        //         break;
-        //     case '2': //tarjeta
-                
-        //         break; 
-        //     case '3': //efectivo0
-                
-        //         break;
-        //     case '4': //transferencia
-                
-        //         break;
-        // }
-        
+        $('#value_option_type').val(item)
         $('.adelanto_m').css('display', 'none');
         $(`.m_adelanto_` + item).css('display', 'flex');
 
         $('.class_adelanto').attr('required', false);
-        // $('.class_pago').val('');
+        
         $(`.adelanto_class_` + item).attr('required', true);
         $(`.file_input`).attr('required', false);
 
@@ -412,13 +495,43 @@
         // console.log(fecha);
         $('.fecha_hoy').val(fecha);
     }
-    // $('#efectivo_adelanto').on('keyup', function() {
-    //     var pago = this.value;
-    //     var total = $('#lbl_tot').text();
-    //     var vuelto = parseFloat(this.value) - parseFloat(total);
-    //     $('#efectivo_vuelto_adl').val(Math.round(vuelto * 100) / 100);
-    // })
+    
     function clean_requires(){
         $('.class_adelanto').attr('required', false);
     }
+
+    $('#guardar_adelanto').on('click', function (){
+        //* seleccion basada en el input select
+        var total = $(`#lbl_tot`).html();
+        var item  = $('#value_option_type').val();
+        console.log(total);
+        switch (item) {
+            case '1': //cheque
+                var total_input_monto = $('#cheque_adl_monto').val();    
+                var input = $('#cheque_adl_monto');    
+                break;
+            case '2': //tarjeta
+                var total_input_monto = $('#monto_tarjeta_adl').val();    
+                var input = $('#monto_tarjeta_adl');    
+                break;
+            case '3': //efectivo
+                var total_input_monto = $('#efectivo_adelanto').val();
+                var input = $('#efectivo_adelanto');
+                break;
+            case '4': //transferencia
+                var total_input_monto = $('#tranferencia_adl_monto').val();    
+                var input = $('#tranferencia_adl_monto');    
+                break;
+        }
+        input.css('border-color', 'none');
+        console.log(total_input_monto);
+
+        if(total_input_monto >= total){
+            console.log(total_input_monto);
+            input.css('border-color', 'red');
+        }else{
+            $('#button_submit_adelanto').click();
+        }
+    });
+
 </script>
