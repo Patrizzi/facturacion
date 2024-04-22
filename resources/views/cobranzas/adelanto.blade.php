@@ -1,7 +1,7 @@
 <div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{route('adelantos.store_adelanto_factura')}}" method="post" >
+            <form action="{{route('adelantos.store_adelanto_factura')}}" method="post" >  {{-- FACTURA Y FACTURA MANUAL --}}
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -15,7 +15,7 @@
                 <div class="modal-body">
                     <div class="metodo_adelanto">
                         <input type="hidden" name="input_adelanto" id="input_adelanto" value="1">
-                        <input type="hidden" name="tipo_comprobante" value="factura_manual">
+                        <input type="hidden" name="tipo_comprobante" value="" id="tipo_comprobante_form">
                         <div id="id_factura_adl">
 
                         </div>
@@ -314,8 +314,14 @@
         display: none;
     }
 </style>
+
+
 <script>
     $( document ).ready(function() {
+
+        var t_comp_view = $('#tipo_comprobante_view').val();
+        $('#tipo_comprobante_form').val(t_comp_view);
+
         $('#select_banco_adl').select2({
             placeholder: "Seleccionar",
         });
@@ -398,83 +404,120 @@
     var elem_2 = document.querySelector('.js-switch');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 
-    function pago_adelanto_m(n_factura){
-        
+    function pago_adelanto_m(n_factura, tipo, cuota_id){
+        // alert(tipo);
         $('#adelanto_header').empty();
-        // $('#tot_simbolo').empty();
-        // $('#ids_divs_factura').empty();
-        // $('#todo_pago').modal('show');
-
-        var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
-        $('#id_factura_adl').append(html_id_fact);
-
-        $.ajax({
-            type: "post",
-            url: "{{route('adelantos.ajax_fact')}}",
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'id_factura_m': n_factura
-            },
-            success: function(msg){
-                var data_msg = `
-                    <div class="col-sm-4">
-                        <h3 class="text-center">N° de Factura</h3>
-                        <label class="form-control">` + msg.factura_cod +`</label>
-                        <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="` + msg.factura_cod + `">
-                    </div>
-                    <div class="col-sm-4">
-                        <h3 class="text-center">Cuota</h3>
-                        <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.factura_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
-                                if (bar.estado == 0) {
-                                    return '<option value="' + bar.id_cuota + '_' + bar.monto +
-                                        '">' +
-                                        'N°-' + bar.cuota_n + ': ' + bar.monto + '</option>'
-                                }
-                            }) + `
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <h3 class="text-center">Total</h3>
-                        <div class="input-group col-sm-12">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="simbolor_label">` + msg.factura_simbolo + `</span>
-                            </div>
-                            <label class="form-control" id="lbl_tot">0</label>
-                            <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
+        if (tipo == "full") {
+            var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
+            $('#id_factura_adl').append(html_id_fact);
+            $.ajax({
+                type: "post",
+                url: "{{route('adelantos.ajax_fact')}}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'id_factura_m': n_factura
+                },
+                success: function(msg){
+                    var data_msg = `
+                        <div class="col-sm-4">
+                            <h3 class="text-center">N° de Factura</h3>
+                            <label class="form-control">` + msg.factura_cod +`</label>
+                            <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="` + msg.factura_cod + `">
                         </div>
-                    </div>
-                `;
-                $('#adelanto_header').append(data_msg);
-                        
-                $('#select_adelanto').select2({
-                    placeholder: "Seleccionar Cuotas"
-                });
-                $(`#select_adelanto`).on('select2:select', function(e) {
-                    var data = e.params.data;
-                    var math_total = data.text.replace(/N°-\d+: /g, '');
-                    var igual = $("#simbolor_label").html();
-                    $(`#lbl_tot`).html(math_total);
+                        <div class="col-sm-4">
+                            <h3 class="text-center">Cuota</h3>
+                            <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.factura_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
+                                    if (bar.estado == 0) {
+                                        return '<option value="' + bar.id_cuota + '_' + bar.monto +
+                                            '">' +
+                                            'N°-' + bar.cuota_n + ': ' + bar.monto + '</option>'
+                                    }
+                                }) + `
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <h3 class="text-center">Total</h3>
+                            <div class="input-group col-sm-12">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="simbolor_label">` + msg.factura_simbolo + `</span>
+                                </div>
+                                <label class="form-control" id="lbl_tot">0</label>
+                                <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
+                            </div>
+                        </div>
+                    `;
+                    $('#adelanto_header').append(data_msg);
+                            
+                    $('#select_adelanto').select2({
+                        placeholder: "Seleccionar Cuotas"
+                    });
+                    $(`#select_adelanto`).on('select2:select', function(e) {
+                        var data = e.params.data;
+                        var math_total = data.text.replace(/N°-\d+: /g, '');
+                        var igual = $("#simbolor_label").html();
+                        $(`#lbl_tot`).html(math_total);
 
                         var tot_math = Math.round(math_total * 100) / 100;
-    
-                    $('#simbolo_adelanto').html(igual);
-                    $('#simbolo_adelanto_vuelto').html(igual);
-                    $('#simbolo_adelanto_tarjeta').html(igual);
-                    $('#simbolo_adelanto_transferencia').html(igual);
-                    
+        
+                        $('#simbolo_adelanto').html(igual);
+                        $('#simbolo_adelanto_vuelto').html(igual);
+                        $('#simbolo_adelanto_tarjeta').html(igual);
+                        $('#simbolo_adelanto_transferencia').html(igual);
+                        
 
-                    $('#cheque_adl_monto').attr('max', tot_math);
-                    $('#efectivo_adelanto').attr('max', tot_math);
-                    $('#monto_tarjeta_adl').attr('max', tot_math);
-                    $('#tranferencia_adl_monto').attr('max', tot_math);
-                    
-                    // $('#').
-                    
-                    console.log(tot_math);
-                    
-                });
-            }
-        });
+                        $('#cheque_adl_monto').attr('max', tot_math);
+                        $('#efectivo_adelanto').attr('max', tot_math);
+                        $('#monto_tarjeta_adl').attr('max', tot_math);
+                        $('#tranferencia_adl_monto').attr('max', tot_math);
+                                        
+                    });
+                }
+            });
+        } else {
+
+            var serie = $('#serie_comp').val();
+            var n_cuota = $(`#n_cuota_`+cuota_id).html();
+            var simbolo_precio = $('#simbolo_precio').val();
+            var tota_cuota = $(`#total_`+cuota_id).val();
+            var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
+            
+            var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
+            $('#id_factura_adl').append(html_id_fact);
+
+            var data_html = `
+                <div class="col-sm-4">
+                    <h3 class="text-center">N° de Factura</h3>
+                    <label class="form-control">`+ serie +`</label>
+                    <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="`+ serie +`">
+                </div>
+                <div class="col-sm-4">
+                    <h3 class="text-center">Cuota N</h3>
+                    <label class="form-control">Cuota N  `+ n_cuota +`</label>
+                    <input type="hidden" name="cuotas_precio_`+ serie +`" id="" value="`+ n_cuota +`_`+monto_sin_for+`">
+                </div>
+                <div class="col-sm-4">
+                    <h3 class="text-center">Total</h3>
+                    <div class="input-group col-sm-12">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="simbolor_label">` + simbolo_precio   + `</span>
+                        </div>
+                        <label class="form-control" id="lbl_tot">` + tota_cuota   + `</label>
+                        <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
+                    </div>
+                </div>
+            `;
+            $('#adelanto_header').append(data_html);
+            $('#simbolo_adelanto').html(simbolo_precio);
+            $('#simbolo_adelanto_vuelto').html(simbolo_precio);
+            $('#simbolo_adelanto_tarjeta').html(simbolo_precio);
+            $('#simbolo_adelanto_transferencia').html(simbolo_precio);
+            
+
+            $('#cheque_adl_monto').attr('max', tota_cuota);
+            $('#efectivo_adelanto').attr('max', tota_cuota);
+            $('#monto_tarjeta_adl').attr('max', tota_cuota);
+            $('#tranferencia_adl_monto').attr('max', tota_cuota);
+        }
     }
     function select_adelanto_click(item) {
         clean_requires();

@@ -3,6 +3,7 @@
 @section('title', 'Pagos de Facturas Manuales')
 @section('content')
 
+    <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -207,7 +208,7 @@
                                                                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
                                                                 <ul class="dropdown-menu">
                                                                     <li><a class="dropdown-item" class="btn btn-primary" onclick="pago_factura( {{ $f_sp->id }})" >Pagar</a></li>
-                                                                    <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$f_sp->id}})">Adelantar</a></li>
+                                                                    <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$f_sp->id}},'full','0')">Adelantar</a></li>
                                                                 </ul>
                                                             </div>
                                                         </td>

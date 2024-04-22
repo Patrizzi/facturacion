@@ -141,7 +141,7 @@ class CreditosAdelantosController extends Controller
      */
     public function store_adelanto_factura(Request $request)
     {
-        // return $request;  
+        return $request;  
 
         $tipo_adelanto = $request->get('input_adelanto');  
         $tipo_doc = $request->get('tipo_comprobante');

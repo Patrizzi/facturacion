@@ -2,7 +2,10 @@
 
 @section('title', 'Registros ' . $cod_fact)
 @section('content')
-    {{-- <h1>{{ $cod_fact }}</h1> --}}
+    <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
+    <input type="hidden" name="" id="serie_comp" value="{{$cod_fact}}">
+    <input type="hidden" name="" id="simbolo_precio" value="{{$factura->moneda->simbolo}}">
+    
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -325,7 +328,7 @@
                                                                         @endif
                                                                         
                                                                     </td>
-                                                                    <td>Cuota N° {{ $fc_cuota->numero_cuota }}</td>
+                                                                    <td>Cuota N° <span id="n_cuota_{{ $fc_cuota->id }}">{{ $fc_cuota->numero_cuota }}</span></td>
                                                                     <td>
                                                                         {{ $factura->moneda->simbolo }}
                                                                         <span style="display: none">{{$tot = 0 }}</span>
@@ -338,6 +341,7 @@
                                                                         {{ $tot_monto =  number_format($fc_cuota->monto - $tot, 2)}} 
                                                                         <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}" value="{{ $fc_cuota->numero_cuota }}">
                                                                         <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}" value="{{ $factura->moneda->simbolo }} {{ $tot_monto }}">
+                                                                        <input type="hidden" name="" id="monto_sin_format_{{ $fc_cuota->id }}" value="{{ round($fc_cuota->monto - $tot,2) }}">
                                                                         <input type="hidden" name="" id="total_{{ $fc_cuota->id }}" value="{{ $tot_monto }}">
                                                                     </td>
                                                                     <td>
@@ -386,7 +390,7 @@
                                                                                         <div class="col-sm-2"><strong>Metodo de Pago</strong></div>
                                                                                         <div class="col-sm-2"><strong>Monto</strong></div>
                                                                                         <div class="col-sm-2"><strong>Fecha</strong></div>
-                                                                                        <div class="col-sm-2"><strong>Detalles</strong></div>
+                                                                                        <div class="col-sm-3"><strong>Detalles</strong></div>
                                                                                         <div class="col-sm-2"><strong>Comprobante</strong></div>
                                                                                     </div>
                                                                                     <div class="row">
@@ -402,7 +406,7 @@
                                                                                                 </div>
                                                                                                 <div class="col-sm-2">{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
                                                                                                 <div class="col-sm-2">{{Carbon\Carbon::parse($adl_reg->fechas_input)->format('d-m-Y')}}</div>
-                                                                                                <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
+                                                                                                <div class="col-sm-3"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
                                                                                                 <div class="col-sm-2">
                                                                                                     {{-- <button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button> --}}
                                                                                                     <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
@@ -424,20 +428,11 @@
                                                                         @endif
                                                                     </td>
                                                                     <td>
-                                                                        @if ($fc_cuota->estado == 1)
-                                                                            <button class="btn btn-primary" id="pago"
-                                                                                disabled>Pagar</button>
-                                                                        @else
-                                                                            <button class="btn btn-primary" id="pago"
-                                                                                onclick="modal_pagos({{ $fc_cuota->id }})">Pagar</button>
-                                                                        @endif
-                                                                        {{-- <div class="btn-group">
-                                                                            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
-                                                                            <ul class="dropdown-menu">
-                                                                                <li><a class="dropdown-item" href="#">Pagar</a></li>
-                                                                                <li><a class="dropdown-item" href="#" class="font-bold">Another action</a></li>
-                                                                            </ul>
-                                                                        </div> --}}
+                                                                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a class="dropdown-item" class="btn btn-primary" @if ($fc_cuota->estado == 1) disabled @endif onclick="modal_pagos( {{ $fc_cuota->id }})" >Pagar</a></li>
+                                                                            <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$factura->id}},'only',{{$fc_cuota->id}}) @if ($fc_cuota->estado == 1) disabled @endif">Adelantar</a></li>
+                                                                        </ul>
                                                                     </td>
                                                                     <td>
                                                                         {{-- MODAL DE VER DETALLES  --}}
@@ -720,7 +715,14 @@
                                         </div>
                                         <div role="tabpanel" id="tab-2" class="tab-pane">
                                             <div class="panel-body">
-                                                <h3>ADELANTOS</h3>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <h3>Informacion de Adelantos</h3>
+                                                    </div>
+                                                    <div class="col-sm-6 text-right" >
+                                                        <button class="btn btn-primary" id="adelantos_" onclick="pago_adelanto_m({{$factura->id}})">Adelantar</button>
+                                                    </div>
+                                                </div>
                                                 <div class="table-responsive">
                                                     <table class="table table-striped table-bordered table-hover dataTables-examaple">
                                                         <thead>
@@ -1109,9 +1111,6 @@
     {{-- </div> --}}
     {{-- ! AGREGAR ADELANTO --}}
 
-
-
-
     {{-- ! VER DETALLE PAGO --}}
     <div class="modal fade bd-example-modal-lg" id="detalle_pago" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1303,7 +1302,7 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     @include('cobranzas.adelanto_view')
-
+    @include('cobranzas.adelanto')
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');
         var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
