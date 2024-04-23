@@ -25,4 +25,22 @@ class CreditosAdelantos extends Model
     public function nota_venta_id(){
         return $this->belongsTo(NotaVenta::class,'nota_ven_id');
     }
+
+    public static function cambio_estado_adl($id_cuota){
+        $cuota_change = Cuotas_credito::find($id_cuota);
+        $cuota_change->estado = 1;
+        $cuota_change->save;
+    }
+
+    public static function cambio_estado_facturas_adl   ($id_factura, $tipo){
+        if ($tipo == "factura") {
+            $factura = Facturacion::find($id_factura);
+            $factura->estado_pago = 1;
+            $factura->save();
+        }else{
+            $factura = Facturacion_m::find($id_factura);
+            $factura->estado_pago = 1;
+            $factura->save();
+        }
+    }
 }

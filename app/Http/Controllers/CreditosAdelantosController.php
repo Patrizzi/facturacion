@@ -141,7 +141,7 @@ class CreditosAdelantosController extends Controller
      */
     public function store_adelanto_factura(Request $request)
     {
-        return $request;  
+        // return $request;  
 
         $tipo_adelanto = $request->get('input_adelanto');  
         $tipo_doc = $request->get('tipo_comprobante');
@@ -185,11 +185,13 @@ class CreditosAdelantosController extends Controller
             $cuota_cre = Cuotas_credito::where('id', $monto_cuota[0])->first();
             // return $cuota_cre;
             $total_cuota = round($cuota_cre->monto,2);
+            CreditosAdelantos::cambio_estado_adl($cuota_cre->id);
         }else{ //contado
             // precio total de la factura en caso de contado
             $sub_total = $factura_search->op_gravada + $factura_search->op_inafecta + $factura_search->op_exonerada;
             $total = $sub_total + ($sub_total * ($igv->igv_total / 100));
             $total_cuota = round($total,2);
+            CreditosAdelantos::cambio_estado_facturas_adl($factura_search->id, $tipo_doc);
         }
 
         if (!isset($exist_Adl)) {

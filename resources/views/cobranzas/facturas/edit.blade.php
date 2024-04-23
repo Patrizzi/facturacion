@@ -2,7 +2,9 @@
 
 @section('title', 'Registros '.$cod_fact)
 @section('content')
-    {{-- <h1>{{ $cod_fact }}</h1> --}}
+    <input type="hidden" name="" id="tipo_comprobante_view" value="factura">
+    <input type="hidden" name="" id="serie_comp" value="{{$cod_fact}}">
+    <input type="hidden" name="" id="simbolo_precio" value="{{$factura->moneda->simbolo}}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -69,33 +71,47 @@
                                                         <p class="form-control">{{ $fact_cuotas->count() }}</p>
                                                     </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-5 col-form-label"><strong>Estado:</strong></label>
+                                                    <div class="col-sm-7">
+                                                        @if ($factura->estado_pago == 0)
+                                                            <button class="btn btn-danger btn-block" disabled><i class="fa fa-times"></i>&nbsp;&nbsp;Sin Pago</button>
+                                                        @endif
+                                                        @if ($factura->estado_pago == 1)
+                                                            <button class="btn btn-warning btn-block" disabled><i class="fa fa-warning"></i>&nbsp;&nbsp;Adelantado</button>
+                                                        @endif
+                                                        @if ($factura->estado_pago == 2)
+                                                            <button class="btn btn-primary btn-block" disabled><i class="fa fa-check"></i>&nbsp;&nbsp;Pagado</button>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Monto
-                                                            Total:</strong></label>
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto Total:</strong></label>
                                                     <div class="col-sm-7">
-                                                        {{-- @if ($fact_cuotas->sum('monto') != 0) --}}
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
                                                             {{ $sum_total = number_format($fact_cuotas->sum('monto'), 2) }}
                                                         </p>
-                                                        {{-- @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }} {{ $sum_total = 0}}</p>
-                                                        @endif --}}
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Monto
-                                                            Pagado</strong></label>
-                                                    <div class="col-sm-7">
-                                                        @if ($fact_cuotas->where('estado', 1)->sum('monto') != 0)
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{ $pago_total = number_format($fact_cuotas->where('estado', 1)->sum('monto'), 2) }}
-                                                            </p>
-                                                        @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{ $pago_total = 0 }}</p>
-                                                        @endif
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto | Adelanto</strong></label>
+                                                    <div class="col-sm-7"> {{-- SUMA DE MONTO + ADELANTE --}}
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                            @if($factura->estado_pago ==  2) {{--  PAGO TOTAL --}}
+                                                                {{ $monto = number_format($fact_cuotas->sum('montos'),2)}}
+                                                            @else {{--  PARCIAL O SIN PAGO  --}}
+                                                                @php
+                                                                    $precio_adel = 0.00;
+                                                                    if(isset($adelantos)){
+                                                                        $precio_adel = $adelantos->precio_adelanto;
+                                                                    }
+                                                                @endphp
+                                                                <span hidden>{{ $monto = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
+                                                                {{number_format( $monto ,2)}}
+                                                            @endif
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">

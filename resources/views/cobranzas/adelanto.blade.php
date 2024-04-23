@@ -405,7 +405,7 @@
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 
     function pago_adelanto_m(n_factura, tipo, cuota_id){
-        // alert(tipo);
+        // tipo === ONLY : VIEW EDIT || FULL || INDEX
         $('#adelanto_header').empty();
         if (tipo == "full") {
             var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
@@ -441,7 +441,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="simbolor_label">` + msg.factura_simbolo + `</span>
                                 </div>
-                                <label class="form-control" id="lbl_tot">0</label>
+                                <label class="form-control" id="lbl_tot_adl">0</label>
                                 <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
                             </div>
                         </div>
@@ -455,7 +455,7 @@
                         var data = e.params.data;
                         var math_total = data.text.replace(/N°-\d+: /g, '');
                         var igual = $("#simbolor_label").html();
-                        $(`#lbl_tot`).html(math_total);
+                        $(`#lbl_tot_adl`).html(math_total);
 
                         var tot_math = Math.round(math_total * 100) / 100;
         
@@ -501,7 +501,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="simbolor_label">` + simbolo_precio   + `</span>
                         </div>
-                        <label class="form-control" id="lbl_tot">` + tota_cuota   + `</label>
+                        <label class="form-control" id="lbl_tot_adl">` + monto_sin_for   + `</label>
                         <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
                     </div>
                 </div>
@@ -545,7 +545,7 @@
 
     $('#guardar_adelanto').on('click', function (){
         //* seleccion basada en el input select
-        var total = $(`#lbl_tot`).html();
+        var total = $(`#lbl_tot_adl`).html();
         var item  = $('#value_option_type').val();
         console.log(total);
         switch (item) {
@@ -570,7 +570,7 @@
         console.log(total_input_monto);
 
         if(total_input_monto >= total){
-            console.log(total_input_monto);
+            // console.log(total_input_monto);
             input.css('border-color', 'red');
         }else{
             $('#button_submit_adelanto').click();

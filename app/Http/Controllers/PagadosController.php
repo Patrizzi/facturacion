@@ -135,10 +135,9 @@ class PagadosController extends Controller
                     // $monto_cuota = explode('_', $value2);
                     if ($factura_search->forma_pago_id == 2) {
                         $couta = Cuotas_credito::where('id', $monto_cuota[0])->first();
-                        $couta->estado = 1;
+                        $couta->estado = 2;
                         $couta->save();
 
-                        
                         if($tipo == "factura"){
                             $cuotas_all = Cuotas_credito::where('facturacion_id', $couta->facturacion_id)->get();
                             $factura_estado = Facturacion::where('id',$fc_comp)->first();
@@ -147,15 +146,13 @@ class PagadosController extends Controller
                             $factura_estado = Facturacion_m::where('id',$fc_comp)->first();
                         }
                         // Verifica si todos los elementos tienen estado igual a 1
-                        $todosEstadoUno = $cuotas_all->every(function ($cuota) {
+                        $search_one = $cuotas_all->every(function ($cuota) {
                             return $cuota->estado == 1;
                         });
-                        if($todosEstadoUno == true){
-                            
+                        if($search_one == true){
                             $factura_estado->estado_pago = 2;
                             $factura_estado->save();
                         }else{
-                            
                             $factura_estado->estado_pago = 1;
                             $factura_estado->save();
                         }
@@ -404,10 +401,10 @@ class PagadosController extends Controller
                             $boleta_estado = Boleta_m::where('id',$fc_comp)->first();
                         }
                         // Verifica si todos los elementos tienen estado igual a 1
-                        $todosEstadoUno = $cuotas_all->every(function ($cuota) {
-                            return $cuota->estado == 1;
+                        $search_one = $cuotas_all->every(function ($cuota) {
+                            return $cuota->estado == 2;
                         });
-                        if($todosEstadoUno == true){
+                        if($search_one == true){
                             
                             $boleta_estado->estado_pago = 2;
                             $boleta_estado->save();
@@ -808,21 +805,23 @@ class PagadosController extends Controller
     // FACTURAS
     public function view_facturas()
     {
-        $facturas_sp = Facturacion::orderByDesc('id')->get();
-        $bancos = Banco::where('estado', 0)->pluck('id');
-        $cuentas = BancoRegistro::whereIn('banco_id',$bancos)->where('estado_detraccion', 0)->get();
-        // return $cuentas;
-        // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
         $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
+        $facturas_sp = Facturacion::orderByDesc('id')->get();
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id',$bancos_pluck )->get();
+        // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
+        $cuentas = BancoRegistro::whereIn('banco_id',$bancos_pluck)->where('estado_detraccion', 0)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
+        $adelantos = CreditosAdelantos::where('factura_id', '!=', null)->get();
         $igv = Igv::first();
         foreach ($facturas_sp as $key => $f_sp) {
             $cuotas[$key] = Cuotas_credito::where('facturacion_id', $f_sp->id)->count();
             $client_id[$key] = $f_sp->cliente_id;
         }
-        $cuotas = [];
+        // $cuotas = [];
         $tipo_cambio = TipoCambio::latest('created_at')->first();
+        // SOLICITAR INFORMACION AL CLIENTE
         $clientes =  Cliente::whereIn('id', $client_id)->get();
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
@@ -881,7 +880,7 @@ class PagadosController extends Controller
             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli,2),2) , "tot_dol" => number_format(round($precio_fact_cli_dol,2),2));
         }
 
-        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas'));
+        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos', 'bancos'));
     }
     public function lista_ajax_fact(Request $request)
     {
@@ -1116,7 +1115,7 @@ class PagadosController extends Controller
             }
             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli,2),2) , "tot_dol" => number_format(round($precio_fact_cli_dol,2),2));
         }
-        // return $adelantos_reg;
+        // return $adelantos;
         return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
     }
     public function lista_ajax_fact_m(Request $request)

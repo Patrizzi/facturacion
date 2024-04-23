@@ -101,8 +101,8 @@
                                                 <th>Cliente</th>
                                                 <th>Fecha de Emision</th>
                                                 <th>Tipo de Pago</th>
-                                                <th>Total Cuotas</th>
-                                                <th>Total</th>
+                                                <th>Monto y Cuotas</th>
+                                                {{-- <th>Total</th> --}}
                                                 <th>Pagado o Adelantado</th>
                                                 <th>Ultima Fecha de Pago</th>
                                                 <th>Detalles</th>
@@ -113,8 +113,7 @@
                                             @foreach ($facturas_m as $index => $f_sp)
                                                 @if ($f_sp->estado_pago != 2)
                                                     <tr>
-                                                        <td>{{ $f_sp->id }}</td>
-
+                                                        <td> {{ $f_sp->id }} </td>
                                                         <td>
                                                             {{-- @if ($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 0)->count() > 0) --}}
                                                             <input type="checkbox" name=""
@@ -124,59 +123,39 @@
                                                         </td>
                                                         <td class="tooltip-demo">
                                                             <center>
-                                                                {{-- @if ($f_sp->forma_pago_id == 2) --}}
-                                                                    @if ($f_sp->estado_pago == 1)
-                                                                        {{-- <button id="parcial" disabled class="btn btn-success btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado"> <i class="fa fa-check"></i> </button>
-                                                                    @elseif($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 0)->count() < $cuotas_all->where('facturacion_m_id', $f_sp->id)->count()) --}}
-                                                                        <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>
-                                                                    @endif
-                                                                    @if ($f_sp->estado_pago == 0)
-                                                                        <button id="nulo" disabled class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Pago"> <i class="fa fa-times"></i> </button>
-                                                                    @endif
-                                                                {{-- @else
+                                                                @if ($f_sp->estado_pago == 1)
+                                                                    <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>
+                                                                @endif
+                                                                @if ($f_sp->estado_pago == 0)
                                                                     <button id="nulo" disabled class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Pago"> <i class="fa fa-times"></i> </button>
-                                                                @endif --}}
+                                                                @endif
                                                             </center>
                                                         </td>
                                                         <td>{{ $f_sp->codigo_fac }}</td>
                                                         <td>{{ $f_sp->cliente->nombre }}</td>
                                                         <td>{{ Carbon\Carbon::parse($f_sp->fecha_emision)->format('d-m-Y') }}</td>
                                                         <td>{{ $f_sp->forma_pago->nombre }}</td>
-                                                        <td>
-                                                            @if ($f_sp->forma_pago->id == 2)
-                                                                {{ $cuotas_all->where('facturacion_m_id', $f_sp->id)->count() }}
+                                                        <td>{{ $f_sp->moneda->simbolo }}
+                                                            @if ($f_sp->forma_pago_id == 2) {{-- CREDITO  --}}
+                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('facturacion_m_id', $f_sp->id)->count()}}
                                                             @else
-                                                                1
+                                                                <span hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}</span>
+                                                                {{ number_format(round($subtotal + ($f_sp->op_gravada * $igv->renta) / 100, 2), 2) }}   |   1
                                                             @endif
                                                         </td>
                                                         <td>{{ $f_sp->moneda->simbolo }}
-                                                            @if ($f_sp->forma_pago_id == 2)
-                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 0)->sum('monto'),2) }}
-                                                                <strong>|</strong>
-                                                                {{ $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 0)->count() }}
-                                                            @else
-                                                                <span
-                                                                    hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}
-                                                                </span>
-                                                                {{ number_format(round($subtotal + ($f_sp->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                            @endif
-                                                        </td>
-                                                        <td>{{ $f_sp->moneda->simbolo }}
-                                                            {{-- @if ($f_sp->forma_pago_id == 2)
-                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
-                                                                <strong>|</strong>
-                                                                {{ $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->count() }}
-                                                            @else
-                                                                0.00
-                                                            @endif --}}
-
                                                             @if ($f_sp->estado_pago == 1) {{--ESTADO PAGADO PARCIAL / ADELANTO  --}}
                                                                 {{-- SUMA DE TODOS LOS ADELANTOS + PAGOS --}}
+                                                                <span hidden>{{$exist = $adelantos->where('factura_m_id', $f_sp->id)->first()}}</span>
                                                                 <div style="display: none">
+                                                                    @if ( isset( $exist ) )
+                                                                        <span hidden>{{$precio_adelantado = $adelantos->where('factura_m_id', $f_sp->id)->first()->pluck('precio_adelanto')->first()}}</span>
+                                                                    @else
+                                                                        <span hidden>{{$precio_adelantado =  0}}</span>
+                                                                    @endif
                                                                     {{$pago_cuota = $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto')}}
-                                                                    {{$adel_pago = $adelantos->where('factura_m_id', $f_sp->id)->first()}}
                                                                 </div>
-                                                                    {{number_format(round($pago_cuota + $adel_pago->precio_adelanto,2 ), 2)}}
+                                                                    {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
                                                             @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
                                                                     0.00
                                                             @endif
@@ -198,12 +177,6 @@
                                                                 href="{{ route('pagos.show_facturas_m', $f_sp->codigo_fac) }}">Detalles</a>
                                                         </td>
                                                         <td>
-                                                            {{-- <button class="btn btn-primary"
-                                                                onclick="pago_factura( {{ $f_sp->id }} )">Pagar</button>
-                                                            
-                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$f_sp->id}})">
-                                                                Adelanto
-                                                            </button> --}}
                                                             <div class="btn-group">
                                                                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
                                                                 <ul class="dropdown-menu">

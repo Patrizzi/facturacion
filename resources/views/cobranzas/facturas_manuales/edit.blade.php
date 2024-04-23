@@ -49,7 +49,7 @@
                                 <div class="form-control">
                                     <h2 class="text-center"><strong>Datos de Comprobante</strong></h2>
                                     <br>
-                                    @if ($factura->forma_pago_id == 2)
+                                     @if ($factura->forma_pago_id == 2)  {{-- CREDITOS --}}
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
@@ -72,6 +72,20 @@
                                                         <p class="form-control">{{ $fact_cuotas->count() }}</p>
                                                     </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-5 col-form-label"><strong>Estado:</strong></label>
+                                                    <div class="col-sm-7">
+                                                        @if ($factura->estado_pago == 0)
+                                                            <button class="btn btn-danger btn-block" disabled><i class="fa fa-times"></i>&nbsp;&nbsp;Sin Pago</button>
+                                                        @endif
+                                                        @if ($factura->estado_pago == 1)
+                                                            <button class="btn btn-warning btn-block" disabled><i class="fa fa-warning"></i>&nbsp;&nbsp;Adelantado</button>
+                                                        @endif
+                                                        @if ($factura->estado_pago == 2)
+                                                            <button class="btn btn-primary btn-block" disabled><i class="fa fa-check"></i>&nbsp;&nbsp;Pagado</button>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
@@ -84,39 +98,31 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Monto
-                                                             | Adelanto</strong></label>
-                                                    <div class="col-sm-7">
-                                                        {{-- {{$adelantos_reg->sum('montos_input')}} --}}
-                                                        @if ( $fact_cuotas->where('estado', 1)->sum('monto') != 0 || is_object($adelantos_reg))
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                <span hidden>{{ $pago_total = $fact_cuotas->where('estado', 1)->sum('monto') + $adelantos_reg->sum('montos_input') }}</span>
-                                                                {{number_format($pago_total, 2) }}
-                                                                {{-- {{ $sum_total = number_format(round($fact_cuotas->sum('monto') + $adelantos_reg->sum('monto_pagado'),2), 2) }} --}}
-                                                            </p>
-                                                        @else
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }} 
-                                                                {{ $pago_total = 2 }}</p>
-                                                        @endif
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto | Adelanto</strong></label>
+                                                    <div class="col-sm-7"> {{-- SUMA DE MONTO + ADELANTE --}}
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                            @if($factura->estado_pago ==  2) {{--  PAGO TOTAL --}}
+                                                                {{ $monto = number_format($fact_cuotas->sum('montos'),2)}}
+                                                            @else {{--  PARCIAL O SIN PAGO  --}}
+                                                                @php
+                                                                    $precio_adel = 0.00;
+                                                                    if(isset($adelantos)){
+                                                                        $precio_adel = $adelantos->precio_adelanto;
+                                                                    }
+                                                                @endphp
+                                                                <span hidden>{{ $monto = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
+                                                                {{number_format( $monto ,2)}}
+                                                            @endif
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                            {{ number_format($sum_total - $pago_total, 2) }}
-                                                        </p>
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $monto,2) }}</p>
                                                     </div>
                                                 </div>
-                                                {{-- <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Interes:</strong></label>
-                                                    <div class="col-sm-7">
-                                                        <p class="form-control">
-                                                            {{ $factura->moneda->simbolo }} {{number_format($sum_total - $pago_total,2)}}
-                                                        </p>
-                                                    </div>
-                                                </div> --}}
                                             </div>
 
                                             <div class="col-sm-4">
@@ -126,10 +132,15 @@
                                                         href="{{ route('pagos.print_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
+                                                <div class="form-group row justify-content-center">
+                                                    <a class="btn btn-secondary"
+                                                        href="{{ route('facturacion_manual.show', $factura->id) }}"
+                                                        target="_blank">Ver Factura</a>
+                                                </div>
                                             </div>
 
                                         </div>
-                                    @else
+                                    @else {{-- CONTADO --}}
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
@@ -150,6 +161,20 @@
                                                             Pago:</strong></label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">Contado</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-5 col-form-label"><strong>Estado:</strong></label>
+                                                    <div class="col-sm-7">
+                                                        @if ($factura->estado_pago == 0)
+                                                        <button class="btn btn-danger btn-block" disabled><i class="fa fa-times"></i>&nbsp;&nbsp;Sin Pago</button>
+                                                        @endif
+                                                        @if ($factura->estado_pago == 1)
+                                                            <button class="btn btn-warning btn-block" disabled><i class="fa fa-warning"></i>&nbsp;&nbsp;Adelantado</button>
+                                                        @endif
+                                                        @if ($factura->estado_pago == 2)
+                                                            <button class="btn btn-primary btn-block" disabled><i class="fa fa-check"></i>&nbsp;&nbsp;Pagado</button>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -174,30 +199,38 @@
                                                             <p class="form-control">{{ $factura->moneda->simbolo }}
                                                                 {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                             </p>
+                                                            <span hidden>{{$pago_total = 0}}</span>
                                                         @endif
                                                         @if ($factura->estado_pago == 1) {{-- Pagado Parcial --}}
                                                             <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                <span hidden>{{ $pago_total = $subtotal + ($factura->op_gravada * $igv->renta) / 100 + $adelantos_reg->sum('montos_input') }}</span>
+                                                                <span hidden>{{ $pago_total = ($subtotal + (($factura->op_gravada * $igv->renta) / 100 )) - $adelantos->precio_adelanto }}</span>
                                                                 {{number_format($pago_total, 2) }}
                                                             </p>
                                                         @endif
                                                         @if($factura->estado_pago == 0) {{-- SIN PAGO --}}
                                                             <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                0.00
+                                                                {{-- @php  @endphp --}}
+                                                                <span hidden>{{ $pago_total = ($subtotal + (($factura->op_gravada * $igv->renta) / 100 )) - 0 }}</span>
+                                                                {{number_format($pago_total, 2) }}
                                                             </p>
+                                                            {{-- <span hidden>{{$pago_total = 0}}</span> --}}
                                                         @endif
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="" class="col-sm-5 col-form-label">
-                                                        <strong>Fecha de Pago</strong>
+                                                        <strong>Ultima Fecha de Pago:</strong>
                                                     </label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">
-                                                            @if ($factura->estado_pago == 1)
-                                                                Sin Pago
-                                                            @else
+                                                            @if($factura->estado_pago == 2)
                                                                 {{ Carbon\Carbon::parse($pagos->pluck('fecha_registro')->first())->format('d-m-Y') }}
+                                                            @endif
+                                                            @if($factura->estado_pago == 1)
+                                                                {{ Carbon\Carbon::parse($adelanto->fecha_registro)->format('d-m-Y') }}
+                                                            @endif
+                                                            @if($factura->estado_pago == 0)
+                                                                <i>Sin Pago</i>
                                                             @endif
                                                         </p>
                                                     </div>
@@ -240,19 +273,14 @@
                                         <div role="tabpanel" id="tab-1" class="tab-pane active">
                                             <div class="panel-body">
                                                 <br>
-                                                 @if ($factura->forma_pago_id == 2) {{-- CREDITO --}}
+                                                @if ($factura->forma_pago_id == 2) {{-- CREDITO --}}
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <input type="text"
-                                                                class="form-control form-control-sm m-b-xs" id="filter"
-                                                                placeholder="Search in table">
+                                                            <input type="text" class="form-control form-control-sm m-b-xs" id="filter" placeholder="Search in table">
                                                         </div>
                                                         <div class="col-sm-8 text-right">
                                                             @if ($fact_cuotas->where('facturacion_id', $factura->id)->where('estado', 1)->count() != $fact_cuotas->count())
-                                                                <button class="btn btn-secondary pago_all_lote"
-                                                                    id="pago_lote" disabled>Pagar
-                                                                    en
-                                                                    Lote</button>
+                                                                <button class="btn btn-secondary pago_all_lote" id="pago_lote" disabled>Pagar en Lote</button>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -278,12 +306,8 @@
                                                                 <th data-hide="all" style="display: none !important;">Dias de Restraso:
                                                                 </th>
                                                                 <th data-hide="all">Adelantos Registrados</th>
-                                                                {{-- <th data-hide="all"></th> --}}
-                                                                {{-- <th>Metodo de Pago</th> --}}
                                                                 <th>Fecha de Pago</th>
                                                                 <th data-sort-ignore="true" style="width: 170px">Pagar | Adelantar</th>
-                                                                {{-- <th>P</th> --}}
-                                                                {{-- <th>Pagar Lote</th> --}}
                                                                 <th data-sort-ignore="true"> Detalle</th>
                                                             </tr>
                                                         </thead>
@@ -302,16 +326,19 @@
                                                                     @endif
                                                                     <td>
                                                                         @if ($fc_cuota->estado == 0)
-                                                                            <i class="fa fa-circle" style="color: yellow"></i>
-                                                                            {{-- <button id="pendiente" class="btn btn-primary" disabled><strong>PENDIENTE</strong></button> --}}
+                                                                            <button class="btn btn-danger btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
                                                                             <input type="hidden" name="" id="estado_{{ $fc_cuota->id }}" value="PENDIENTE">
                                                                         @elseif($fc_cuota->estado == 1)
-                                                                            <i class="fa fa-circle" style="color: green"></i>
-                                                                            {{-- <button id="pagado" class="btn btn-primary" disabled><strong>PAGADO</strong></button> --}}
+                                                                            <button class="btn btn-warning btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-warning"></i>
+                                                                            </button>
                                                                             <input type="hidden" name="" id="estado_{{ $fc_cuota->id }}" value="PAGADO">
                                                                         @else
-                                                                            <i class="fa fa-circle" style="color: red"></i>
-                                                                            {{-- <button id="retrasado" class="btn btn-primary" disabled><strong>RETRASADO</strong></button> --}}
+                                                                            <button class="btn btn-primary btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
                                                                             <input type="hidden" name="" id="estado_{{ $fc_cuota->id }}" value="RETRASADO">
                                                                         @endif
                                                                     </td>
@@ -319,16 +346,22 @@
                                                                         {{-- Acá va el adelanto / estados --}}
                                                                         @if (is_object($adelantos_reg))
                                                                             @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
-                                                                                <i class="fa fa-circle" style="color: green"></i>    
+                                                                                <button class="btn btn-primary btn-sm btn-circle" disabled>
+                                                                                    <i class="fa fa-check"></i>
+                                                                                </button>
                                                                             @else
-                                                                                <i class="fa fa-circle" style="color: red"></i>
+                                                                                <button class="btn btn-danger btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
                                                                             @endif
                                                                         @else
-                                                                            <i class="fa fa-circle" style="color: red"></i>
+                                                                            <button class="btn btn-danger btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
                                                                         @endif
                                                                         
                                                                     </td>
-                                                                    <td>Cuota N° <span id="n_cuota_{{ $fc_cuota->id }}">{{ $fc_cuota->numero_cuota }}</span></td>
+                                                                    <td>Cuota N° {{ $fc_cuota->numero_cuota }} <span hidden id="n_cuota_{{ $fc_cuota->id }}">{{ $fc_cuota->id }}</span></td>
                                                                     <td>
                                                                         {{ $factura->moneda->simbolo }}
                                                                         <span style="display: none">{{$tot = 0 }}</span>
@@ -366,7 +399,7 @@
                                                                             value="{{ $fc_cuota->fecha_pago }}">
                                                                     </td>
                                                                     <td>
-                                                                        @if ($fc_cuota->estado == 1)
+                                                                        @if ($fc_cuota->estado == 2)
                                                                             @if ($pagos_reg[$index]->fecha_pago == $fc_cuota->fecha_pago)
                                                                                 Se pagó el mismo día
                                                                             @elseif(Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago) > 0)
@@ -421,30 +454,26 @@
                                                                     <td>
                                                                         @if ($fc_cuota->estado == 0)
                                                                             <strong>PENDIENTE</strong>
-                                                                        @elseif($fc_cuota->estado == 1)
+                                                                        @elseif($fc_cuota->estado == 2)
                                                                             <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_pago)->format('d/m/Y') }}</strong>
                                                                         @else
                                                                             <strong>RETRASADO</strong>
                                                                         @endif
                                                                     </td>
                                                                     <td>
-                                                                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
+                                                                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" @if ($fc_cuota->estado == 2) disabled @endif>Seleccionar</button>
                                                                         <ul class="dropdown-menu">
-                                                                            <li><a class="dropdown-item" class="btn btn-primary" @if ($fc_cuota->estado == 1) disabled @endif onclick="modal_pagos( {{ $fc_cuota->id }})" >Pagar</a></li>
-                                                                            <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$factura->id}},'only',{{$fc_cuota->id}}) @if ($fc_cuota->estado == 1) disabled @endif">Adelantar</a></li>
+                                                                            <li><a class="dropdown-item" class="btn btn-primary" @if ($fc_cuota->estado != 2)  onclick="modal_pagos( {{ $fc_cuota->id }},'credito')" @endif>Pagar</a></li>
+                                                                            <li><a class="dropdown-item" class="btn btn-primary" @if ($fc_cuota->estado != 2) data-toggle="modal" data-target="#myModal5" z  onclick="pago_adelanto_m({{$factura->id}},'only',{{$fc_cuota->id}})" @endif>Adelantar</a></li>
                                                                         </ul>
                                                                     </td>
                                                                     <td>
                                                                         {{-- MODAL DE VER DETALLES  --}}
-                                                                        @if ($fc_cuota->estado != 1)
-                                                                            <button class="btn btn-primary" disabled>Ver
-                                                                                detalles</button>
+                                                                        @if ($fc_cuota->estado != 2)
+                                                                            <button class="btn btn-primary" disabled>Ver detalles</button>
                                                                         @else
-                                                                            <button class="btn btn-primary"
-                                                                                onclick="detalle_cuota({{ $fc_cuota->id }})">Ver
-                                                                                detalles</button>
-                                                                            <input type="hidden" name=""
-                                                                                id="">
+                                                                            <button class="btn btn-primary" onclick="detalle_cuota({{ $fc_cuota->id }})">Ver detalles</button>
+                                                                            <input type="hidden" name="" id="">
                                                                         @endif
                                                                     </td>
                                                                 </tr>
@@ -459,12 +488,20 @@
                                                         </tfoot>
                                                     </table>
                                                 @else
+                                                    <input type="hidden" name="" id="monto_contado" value="{{ number_format($pago_total,2) }}">
+                                                    <input type="hidden" name="" id="simbolo_monto" value="{{ $factura->moneda->simbolo }}">
+                                                    <input type="hidden" name="" id="fecha_vencimiento" value="{{ Carbon\Carbon::parse($factura->fecha_vencimiento)->format('d-m-Y') }}">
+                                                    <input type="hidden" name="" id="monto_sin_format_0" value="{{ round($pago_total,2)}}">
+                                                    <input type="hidden" name="" id="total_0" value="{{ $pago_total }}">
+                                                    <span hidden id="n_cuota_0">0</span>
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <h3>Informacion del Pago</h3>
                                                         </div>
                                                         <div class="col-sm-6 text-right" >
-                                                            <button class="btn btn-primary" id="pago" onclick="modal_pagos_cont({{$factura->id}})">Pagar</button>
+                                                            @if ($factura->estado_pago != 2)
+                                                                <button class="btn btn-primary" id="pago" onclick="modal_pagos({{$factura->id}},'contado')">Pagar</button>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div class="row contado_pago">
@@ -720,7 +757,9 @@
                                                         <h3>Informacion de Adelantos</h3>
                                                     </div>
                                                     <div class="col-sm-6 text-right" >
-                                                        <button class="btn btn-primary" id="adelantos_" onclick="pago_adelanto_m({{$factura->id}})">Adelantar</button>
+                                                        @if ($factura->estado_pago != 2)
+                                                            <button class="btn btn-primary" id="adelantos_0"  data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$factura->id}},'only','0')">Adelantar</button>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="table-responsive">
@@ -771,344 +810,7 @@
             </div>
         </div>
     </div>
-    {{-- AGREGAR PAGO / POSIBILIDAD DE REUTILIZAR --}}
-    <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="metodo_pago_header">
-                            <div id="only_pago">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <h3 class="text-center">Cuota N° | Monto</h3>
-                                        <p class="text-center"><label id="cuota_n"></label> | <label
-                                                id="monto_n"></label>
-                                        </p>
-                                        <input class="monto_total" type="hidden" name="" id="monto_value"
-                                            value="0">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <h3 class="text-center">Fecha de Vencimiento</h3>
-                                        <p class="text-center"><label id="fecha_ven"></label></p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <h3 class="text-center">Estado</h3>
-                                        <p class="text-center"><label id="estado_n"></label></p>
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
-                            <div id="lote_pago">
 
-                            </div>
-                        </div>
-                        <input type="hidden" name="id_factura_m[]" id="id_factura" value="{{ $factura->id }}">
-                        <div class="display: none" id="ids_divs_factura">
-
-                        </div>
-                        <input type="hidden" name="numero_factura_m[]" id="cod_factura" value="{{ $cod_fact }}">
-                        <input type="hidden" name="tot_cuotas[]" id="total_cuota" value="">
-                        {{-- <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio"value=""> --}}
-
-                        <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">
-                        {{-- <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_`+index+`" value="`+row.factura_cod+`"> --}}
-                        <div class="metodo_pago">
-                            <input type="hidden" name="input_pago" id="input_pago" value="1">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h3 class="text-center">Metodos de Pago</h3>
-                                    <div class="col-lg-12">
-                                        <button type="button" value="btn_pago_1"
-                                            class="btn btn-block btn-primary btn_pago_selec active" id="bm_pago_1"
-                                            onclick="select_pago(1)">Cheque</button>
-                                    </div>
-                                    <br>
-                                    <div class="col-lg-12">
-                                        <button type="button" value="btn_pago_2"
-                                            class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_2"
-                                            onclick="select_pago(2)">Tarjeta</button>
-                                    </div>
-                                    <br>
-                                    <div class="col-lg-12">
-                                        <button type="button" value="btn_pago_3"
-                                            class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_3"
-                                            onclick="select_pago(3)">Efectivo</button>
-                                    </div>
-                                    <br>
-                                    <div class="col-lg-12">
-                                        <button type="button" value="btn_pago_4"
-                                            class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_4"
-                                            onclick="select_pago(4)">Transferencia</button>
-                                    </div>
-                                </div>
-                                <div class="col-sm-9">
-                                    <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">¿Es cheque diferido? </label>
-                                                <div class="">
-                                                    <span>No&nbsp;</span><input type="checkbox" class="js-switch-pago" name="cheque_diferido" /><span>&nbsp;Si</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Numero de Cheque</label>
-                                                <input type="text" id="" name="cheque_name" value=""
-                                                    placeholder="Numero de Cheque"
-                                                    class="form-control pago_class_1 class_pago" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Fecha de Cobro</label>
-                                                <input type="date" id="" name="cheque_fecha_cobro"
-                                                    value="{{ $fecha_hoy }}" placeholder="Fecha de Cobro"
-                                                    class="form-control pago_class_1 class_pago fecha_hoy" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Banco Emisor</label>
-                                                {{-- <input type="text" id="" name="cheque_banco_emisor" value="" placeholder="Banco Emisor" class="form-control pago_class_1 class_pago" required> --}}
-                                                <select class="form-control pago_class_1 class_pago"
-                                                    name="cheque_banco_emisor" id="" required>
-                                                    <option value="">Seleccionar Banco</option>
-                                                    <option value="BCP">BCP</option>
-                                                    <option value="INTERBANK">INTERBANK</option>
-                                                    <option value="BBVA">BBVA</option>
-                                                    <option value="SCOTIABANK">SCOTIABANK</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Beneficiario</label>
-                                                <input type="text" id="" name="cheque_beneficiario"
-                                                    value="" placeholder="Beneficiario"
-                                                    class="form-control pago_class_1 class_pago" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Monto</label>
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="simbolo_pago_vuelto">S/</span>
-                                                    </div>
-                                                    <input type="number" id="cheque_monto" name="cheque_monto"
-                                                        value="" placeholder="Monto"
-                                                        class="form-control pago_class_1 class_pago" required
-                                                        step="0.01">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Banco de la Empresa</label>
-                                                <select name="banco_cuenta" id="select_banco_pagos" class="form-control select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
-                                                    @foreach ($bancos as $banco)
-                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">N° de Cuenta</label>
-                                                <select name="cheque_n_cuenta" class="form-control pago_class_1 class_pago" id="select_cuenta_pago">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        {{-- <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">N° de Cuenta</label>
-                                                <input type="text" value="" name="cheque_n_cuenta"
-                                                    placeholder="N° de Cuenta"
-                                                    class="form-control pago_class_1 class_pago" required>
-                                            </div>
-                                        </div> --}}
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Fecha de Emision</label>
-                                                <input type="date" value="{{ $fecha_hoy }}"
-                                                    name="cheque_fecha_emision" placeholder="Fecha de Emision"
-                                                    class="form-control pago_class_1 class_pago" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Comprobante
-                                                    <small>(opcional)</small></label>
-                                                <input type="file" name="cheque_file" id=""
-                                                    class="form-control pago_class_1 class_pago file_input">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- {{$fecha_hoy}} --}}
-                                    <div class="row pago_m m_pago_2"> {{-- Metodo de Pago 2 - TARJETA --}}
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Titular de la Tajeta</label>
-                                                <input type="text" id="" name="tarjeta_titular"
-                                                    value="" placeholder="Titular de la Tajeta"
-                                                    class="form-control pago_class_2 class_pago">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Banco</label>
-                                                <select class="form-control pago_class_2 class_pago" name="tarjeta_banco"
-                                                    id="">
-                                                    <option value="">Seleccionar Banco</option>
-                                                    <option value="BCP">BCP</option>
-                                                    <option value="INTERBANK">INTERBANK</option>
-                                                    <option value="BBVA">BBVA</option>
-                                                    <option value="SCOTIABANK">SCOTIABANK</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Fecha</label>
-                                                <input type="date" value="{{ $fecha_hoy }}"
-                                                    class="form-control pago_class_2 class_pago fecha_hoy"
-                                                    name="tarjeta_fecha" id="">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Comprobante</label>
-                                                <input type="file"
-                                                    class="form-control pago_class_2 class_pago file_input"
-                                                    name="tarjeta_file" id="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row pago_m m_pago_3"> {{-- Metodo de Pago 3 - EFECTIVO --}}
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Persona que Cancela</label>
-                                                <input type="text" id="" name="efectivo_persona"
-                                                    value="" placeholder="Titular"
-                                                    class="form-control pago_class_3 class_pago">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Fecha</label>
-                                                <input type="date" name="fecha_efectivo"
-                                                    class="form-control pago_class_3 class_pago fecha_hoy" id=""
-                                                    value="{{ $fecha_hoy }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Monto de Pago</label>
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="simbolo_pago">S/</span>
-                                                    </div>
-                                                    <input type="number" name="monto_pago_efectivo" id="efectivo_pago"
-                                                        class="form-control pago_class_3 class_pago" placeholder=""
-                                                        step="0.01">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Vuelto</label>
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="simbolo_pago_vuelto">S/</span>
-                                                    </div>
-                                                    <input type="text" name="monto_vuelto" id="efectivo_vuelto"
-                                                        class="form-control pago_class_3 class_pago" placeholder="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row pago_m m_pago_4"> {{-- Metodo de Pago 4 - TRANSFERENCIA --}}
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Titular</label>
-                                                <input type="text" id="" name="transferencia_titular"
-                                                    value="" placeholder="Titular"
-                                                    class="form-control pago_class_4 class_pago">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Fecha</label>
-                                                <input type="date"
-                                                    class="form-control pago_class_4 class_pago fecha_hoy"
-                                                    name="transferencia_fecha" id=""
-                                                    value="{{ $fecha_hoy }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group form_adelanto">
-                                                <label class="col-form-label">Banco de la Empresa</label>
-                                                <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_adelanto" onchange="changue_bancos_pago_tr()">
-                                                    @foreach ($bancos as $banco)
-                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group form_adelanto">
-                                                <label class="col-form-label">N° de Cuenta Bancaria</label>
-                                                <select name="transferencia_n_cuenta" class="form-control pago_class_4 class_adelanto" id="select_cuenta_adl_pag">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">N° de Operación</label>
-                                                <input type="text"
-                                                    class="form-control pago_class_4 class_adelanto" name="transferencia_operacion_pag" id="transferencia_oper_pag" >
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Comprobante</label>
-                                                <input type="file"
-                                                    class="form-control pago_class_4 class_pago file_input"
-                                                    name="transferencia_comprobante" id="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row"> {{--  NOTAS PARA TODOS --}}
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label">Notas Adicionales</label>
-                                                <textarea class="form-control" name="notas_adicionales" id="" rows="4"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    {{-- </div> --}}
     {{-- ! AGREGAR ADELANTO --}}
 
     {{-- ! VER DETALLE PAGO --}}
@@ -1303,6 +1005,7 @@
 
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto')
+    @include('cobranzas.pago_contado')
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');
         var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
@@ -1403,84 +1106,76 @@
         
     </script>
     <script>
-        function modal_pagos(value) {
-            $('.input_check').remove();
-            $('.cuota_prec_fact').remove();
-            $('#lote_pago').css('display', 'none');
-            $('#only_pago').css('display', 'block');
+        // function modal_pagos(value) {
+        //     $('.input_check').remove();
+        //     $('.cuota_prec_fact').remove();
+        //     $('#lote_pago').css('display', 'none');
+        //     $('#only_pago').css('display', 'block');
 
-            $('#todo_pago').modal('show');
-            //se abre modal, llamado de ajax para chapar el detalle de cuota? 
-            var numero = $(`#numero_` + value).val();
-            var monto = $(`#monto_` + value).val();
-            var vencimiento = $(`#fecha_ven_` + value).val();
-            var estado = $(`#estado_` + value).val();
-            var total_c = $(`#total_` + value).val();
-            var ids = `
-                <input class="input_check" type="hidden" name="id_cuota[]" value="` + value + `">
-                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
-                `" value="` + value + '_' + total_c + `" class="cuota_prec_fact">
-            `;
-            $('#ids_divs_factura').append(ids);
+        //     $('#todo_pago').modal('show');
+        //     //se abre modal, llamado de ajax para chapar el detalle de cuota? 
+        //     var numero = $(`#numero_` + value).val();
+        //     var monto = $(`#monto_` + value).val();
+        //     var vencimiento = $(`#fecha_ven_` + value).val();
+        //     var estado = $(`#estado_` + value).val();
+        //     var total_c = $(`#total_` + value).val();
+        //     var ids = `
+        //         <input class="input_check" type="hidden" name="id_cuota[]" value="` + value + `">
+        //         <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
+        //         `" value="` + value + '_' + total_c + `" class="cuota_prec_fact">
+        //     `;
+        //     $('#ids_divs_factura').append(ids);
+ 
 
-            // console.log(total_c);
-            // var ids = `
-        //     <input class="input_check" type="hidden" name="id_cuota[]" value="`+value+`">
-        //     <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio" value="`+value + '_' + total_c+`" class="cuota_prec_fact">
-        // `;
-            // $('#ids_divs_factura').append(ids);
+        //     console.log(total_c);
+        //     $('#cuota_n').html(numero);
+        //     $('#monto_n').html(monto);
+        //     $('#monto_value').val(total_c);
+        //     $('#fecha_ven').html(vencimiento);
+        //     $('#estado_n').html(estado);
+        //     $('#efectivo_pago').attr('min', total_c);
+        //     // var id_cuota = $(`#estado_`+value).val();
+        //     $('#id_cuota_select').val(value);
+        //     console.log('a: ' + total_c)
+        //     $('#total_cuota').val(total_c);
 
-            console.log(total_c);
-            $('#cuota_n').html(numero);
-            $('#monto_n').html(monto);
-            $('#monto_value').val(total_c);
-            $('#fecha_ven').html(vencimiento);
-            $('#estado_n').html(estado);
-            $('#efectivo_pago').attr('min', total_c);
-            // var id_cuota = $(`#estado_`+value).val();
-            $('#id_cuota_select').val(value);
-            console.log('a: ' + total_c)
-            $('#total_cuota').val(total_c);
-            // $(`#cuota_precio`).val(value + '_' + total_c);
-            // $('#cuota_precio').val(total_c);
 
-            // cuotas_precio_
+        // }
 
-        }
+        // function select_pago(item) {
+        //     $('.pago_m').css('display', 'none');
+        //     $(`.m_pago_` + item).css('display', 'flex');
 
-        function select_pago(item) {
-            $('.pago_m').css('display', 'none');
-            $(`.m_pago_` + item).css('display', 'flex');
-
-            $('.class_pago').attr('required', false);
-            // $('.class_pago').val('');
-            $(`.pago_class_` + item).attr('required', true);
-            $(`.file_input`).attr('required', false);
+        //     $('.class_pago').attr('required', false);
+        //     // $('.class_pago').val('');
+        //     $(`.pago_class_` + item).attr('required', true);
+        //     $(`.file_input`).attr('required', false);
 
 
 
-            $('.btn_pago_selec').removeClass("active");
-            $(`#bm_pago_` + item).addClass("active");
-            $('#input_pago').val(item);
+        //     $('.btn_pago_selec').removeClass("active");
+        //     $(`#bm_pago_` + item).addClass("active");
+        //     $('#input_pago').val(item);
 
-            var fecha = $('#fecha_value_php').val();
-            console.log(fecha);
-            $('.fecha_hoy').val(fecha);
+        //     var fecha = $('#fecha_value_php').val();
+        //     console.log(fecha);
+        //     $('.fecha_hoy').val(fecha);
 
-        }
-        $('#efectivo_pago').on('keyup', function() {
-            var pago = this.value;
-            // var total = $('.monto_total').text();
-            var total_monto = $('[class="monto_total"]');
-            var tot_mont = 0;
+        // }
 
-            total_monto.each(function() {
-                tot_mont += parseFloat($(this).val());
-            });
-            console.log(total_monto);
-            var vuelto = parseFloat(this.value) - parseFloat(tot_mont);
-            $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
-        })
+        // $('#efectivo_pago').on('keyup', function() {
+        //     var pago = this.value;
+        //     // var total = $('.monto_total').text();
+        //     var total_monto = $('[class="monto_total"]');
+        //     var tot_mont = 0;
+
+        //     total_monto.each(function() {
+        //         tot_mont += parseFloat($(this).val());
+        //     });
+        //     console.log(total_monto);
+        //     var vuelto = parseFloat(this.value) - parseFloat(tot_mont);
+        //     $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
+        // })
 
         function detalle_cuota(item) {
             $('#detalle_pago').modal('show');
