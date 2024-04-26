@@ -32,7 +32,7 @@ class CreditosAdelantos extends Model
         $cuota_change->save;
     }
 
-    public static function cambio_estado_facturas_adl   ($id_factura, $tipo){
+    public static function cambio_estado_facturas_adl($id_factura, $tipo){
         if ($tipo == "factura") {
             $factura = Facturacion::find($id_factura);
             $factura->estado_pago = 1;
@@ -41,6 +41,18 @@ class CreditosAdelantos extends Model
             $factura = Facturacion_m::find($id_factura);
             $factura->estado_pago = 1;
             $factura->save();
+        }
+    }
+
+    public static function cambio_estado_boletas_adl($id_boleta, $tipo){
+        if ($tipo == "boleta") {
+            $boleta = Boleta::find($id_boleta);
+            $boleta->estado_pago = 1;
+            $boleta->save();
+        }else{
+            $boleta = Boleta_m::find($id_boleta);
+            $boleta->estado_pago = 1;
+            $boleta->save();
         }
     }
 }

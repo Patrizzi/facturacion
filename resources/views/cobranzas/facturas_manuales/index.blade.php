@@ -102,7 +102,6 @@
                                                 <th>Fecha de Emision</th>
                                                 <th>Tipo de Pago</th>
                                                 <th>Monto y Cuotas</th>
-                                                {{-- <th>Total</th> --}}
                                                 <th>Pagado o Adelantado</th>
                                                 <th>Ultima Fecha de Pago</th>
                                                 <th>Detalles</th>
@@ -115,7 +114,6 @@
                                                     <tr>
                                                         <td> {{ $f_sp->id }} </td>
                                                         <td>
-                                                            {{-- @if ($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 0)->count() > 0) --}}
                                                             <input type="checkbox" name=""
                                                                 id="check_{{ $f_sp->id }}"
                                                                 class="form-control check_only check_lost_{{ $index }} {{ $f_sp->moneda->nombre }}"
@@ -149,7 +147,7 @@
                                                                 <span hidden>{{$exist = $adelantos->where('factura_m_id', $f_sp->id)->first()}}</span>
                                                                 <div style="display: none">
                                                                     @if ( isset( $exist ) )
-                                                                        <span hidden>{{$precio_adelantado = $adelantos->where('factura_m_id', $f_sp->id)->first()->pluck('precio_adelanto')->first()}}</span>
+                                                                        <span hidden>{{$precio_adelantado = $exist->precio_adelanto}}</span>
                                                                     @else
                                                                         <span hidden>{{$precio_adelantado =  0}}</span>
                                                                     @endif
@@ -159,7 +157,6 @@
                                                             @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
                                                                     0.00
                                                             @endif
-                                                            
                                                         </td>
                                                         <td>
                                                             @if ($f_sp->forma_pago_id == 2)
@@ -774,7 +771,6 @@
             </div>
         </div>
     </div>
-    
     <style>
         .pago_m {
             display: none;
@@ -874,7 +870,7 @@
 
     <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script> 
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
@@ -888,6 +884,7 @@
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');
         var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
         $( document ).ready(function() {
             $('#select_banco_pagos').select2({
                 placeholder: "Seleccionar",

@@ -1,7 +1,7 @@
 <div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{route('adelantos.store_adelanto_factura')}}" method="post" >  {{-- FACTURA Y FACTURA MANUAL --}}
+            <form action="{{route('adelantos.store_adelanto_boleta')}}" method="post" >  {{-- BOLETA Y BOLETA MANUAL --}}
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -16,13 +16,13 @@
                     <div class="metodo_adelanto">
                         <input type="hidden" name="input_adelanto" id="input_adelanto" value="1">
                         <input type="hidden" name="tipo_comprobante" value="" id="tipo_comprobante_form_adl">
-                        <div id="id_factura_adl">
+                        <div id="id_boleta_adl">
 
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-3">
-                                <h3 class="text-center">Adelanto para Facturas M.</h3>
+                                <h3 class="text-center">Adelanto para Boleta</h3>
                                 {{-- <div class="col-lg-12"> --}}
                                     <button type="button" value="btn_adelanto_1"
                                         class="btn btn-block btn-primary btn_adelanto_selec active" id="bm_adelanto_1" onclick="select_adelanto_click(1)">Cheque</button>
@@ -318,7 +318,6 @@
 
 <script>
     $( document ).ready(function() {
-        
         var t_comp_view = $('#tipo_comprobante_view').val();
         $('#tipo_comprobante_form_adl').val(t_comp_view);
 
@@ -334,9 +333,9 @@
         $('#select_cuenta_adl_transf').select2({
             placeholder: "Seleccionar",
         });
-        
     });
-
+</script>
+<script>
     
     function changue_bancos(){
         // $("#select_banco_adl").attr('disabled', false);
@@ -404,30 +403,30 @@
     var elem_2 = document.querySelector('.js-switch');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 
-     function pago_adelanto(n_factura, tipo, cuota_id){  // PARA FACTURA NORMAL
+    function pago_adelanto(n_boleta, tipo, cuota_id){  // PARA BOLETA NORMAL
         // tipo === ONLY : VIEW EDIT || FULL || INDEX
         console.log(tipo);
         $('#adelanto_header').empty();
         if (tipo == "full") {
-            var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
-            $('#id_factura_adl').append(html_id_fact);
+            var html_id_bol = `<input type="hidden" name="id_boleta" id="id_boleta_` + n_boleta + `" value="` + n_boleta + `">`;
+            $('#id_boleta_adl').append(html_id_bol);
             $.ajax({
                 type: "post",
-                url: "{{route('adelantos.ajax_fact')}}",
+                url: "{{route('adelantos.ajax_bol')}}",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'id_factura_m': n_factura
+                    'id_boleta': n_boleta
                 },
                 success: function(msg){
                     var data_msg = `
                         <div class="col-sm-4">
-                            <h3 class="text-center">N° de Factura</h3>
-                            <label class="form-control">` + msg.factura_cod +`</label>
-                            <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="` + msg.factura_cod + `">
+                            <h3 class="text-center">N° de Boleta</h3>
+                            <label class="form-control">` + msg.boleta_cod +`</label>
+                            <input class="" type="hidden" name="numero_boleta" id="numero_bol" value="` + msg.boleta_cod + `">
                         </div>
                         <div class="col-sm-4">
                             <h3 class="text-center">Cuota</h3>
-                            <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.factura_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
+                            <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.boleta_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
                                     if (bar.estado == 0) {
                                         return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                             '">' +
@@ -440,7 +439,7 @@
                             <h3 class="text-center">Total</h3>
                             <div class="input-group col-sm-12">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="simbolor_label">` + msg.factura_simbolo + `</span>
+                                    <span class="input-group-text" id="simbolor_label">` + msg.boleta_simbolo + `</span>
                                 </div>
                                 <label class="form-control" id="lbl_tot_adl">0</label>
                                 <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
@@ -482,14 +481,14 @@
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
             
-            var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
-            $('#id_factura_adl').append(html_id_fact);
+            var html_id_bol = `<input type="hidden" name="id_boleta" id="id_boleta_` + n_boleta + `" value="` + n_boleta + `">`;
+            $('#id_boleta_adl').append(html_id_bol);
 
             var data_html = `
                 <div class="col-sm-4">
-                    <h3 class="text-center">N° de Factura</h3>
+                    <h3 class="text-center">N° de Boleta</h3>
                     <label class="form-control">`+ serie +`</label>
-                    <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="`+ serie +`">
+                    <input class="" type="hidden" name="numero_boleta" id="numero_bol" value="`+ serie +`">
                 </div>
                 <div class="col-sm-4">
                     <h3 class="text-center">Cuota N</h3>
@@ -522,29 +521,29 @@
     }
 
 
-    function pago_adelanto_m(n_factura, tipo, cuota_id){
+    function pago_adelanto_m(n_boleta, tipo, cuota_id){  // BOLETA MANUAL
         // tipo === ONLY : VIEW EDIT || FULL || INDEX
         $('#adelanto_header').empty();
         if (tipo == "full") {
-            var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
-            $('#id_factura_adl').append(html_id_fact);
+            var html_id_bol = `<input type="hidden" name="id_boleta" id="id_boleta_` + n_boleta + `" value="` + n_boleta + `">`;
+            $('#id_boleta_adl').append(html_id_bol);
             $.ajax({
                 type: "post",
-                url: "{{route('adelantos.ajax_fact_m')}}",
+                url: "{{route('adelantos.ajax_bol_m')}}",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'id_factura_m': n_factura
+                    'id_boleta_m': n_boleta
                 },
                 success: function(msg){
                     var data_msg = `
                         <div class="col-sm-4">
-                            <h3 class="text-center">N° de Factura</h3>
-                            <label class="form-control">` + msg.factura_cod +`</label>
-                            <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="` + msg.factura_cod + `">
+                            <h3 class="text-center">N° de Boleta</h3>
+                            <label class="form-control">` + msg.boleta_cod +`</label>
+                            <input class="" type="hidden" name="numero_boleta" id="numero_bol" value="` + msg.boleta_cod + `">
                         </div>
                         <div class="col-sm-4">
                             <h3 class="text-center">Cuota</h3>
-                            <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.factura_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
+                            <select placeholder="" id="select_adelanto" class="select_2_multipl" name="cuotas_precio_` + msg.boleta_cod + `"  onchangue="select_2_adelanto()" required> <option value="" selected disabled style="display:none;">Selecciona una opción</option> ` + msg.cuotas_array.map(function(bar) {
                                     if (bar.estado == 0) {
                                         return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                             '">' +
@@ -557,7 +556,7 @@
                             <h3 class="text-center">Total</h3>
                             <div class="input-group col-sm-12">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="simbolor_label">` + msg.factura_simbolo + `</span>
+                                    <span class="input-group-text" id="simbolor_label">` + msg.boleta_simbolo + `</span>
                                 </div>
                                 <label class="form-control" id="lbl_tot_adl">0</label>
                                 <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas">
@@ -599,14 +598,14 @@
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
             
-            var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
-            $('#id_factura_adl').append(html_id_fact);
+            var html_id_bol = `<input type="hidden" name="id_boleta" id="id_boleta_` + n_boleta + `" value="` + n_boleta + `">`;
+            $('#id_boleta_adl').append(html_id_bol);
 
             var data_html = `
                 <div class="col-sm-4">
-                    <h3 class="text-center">N° de Factura</h3>
+                    <h3 class="text-center">N° de Boleta</h3>
                     <label class="form-control">`+ serie +`</label>
-                    <input class="" type="hidden" name="numero_factura_m" id="numero_fac_m" value="`+ serie +`">
+                    <input class="" type="hidden" name="numero_boleta" id="numero_bol" value="`+ serie +`">
                 </div>
                 <div class="col-sm-4">
                     <h3 class="text-center">Cuota N</h3>
@@ -662,6 +661,7 @@
     }
 
     $('#guardar_adelanto').on('click', function (){
+        console.log('a');
         //* seleccion basada en el input select
         var total = $(`#lbl_tot_adl`).html();
         var item  = $('#value_option_type').val();
@@ -687,7 +687,7 @@
         input.css('border-color', 'none');
         console.log(typeof(total_input_monto));
 
-        if(total_input_monto >= total){
+        if(parseFloat(total_input_monto) >= parseFloat(total)){
             // console.log(total_input_monto);
             input.css('border-color', 'red');
         }else{

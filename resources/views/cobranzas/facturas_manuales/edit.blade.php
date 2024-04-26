@@ -127,7 +127,6 @@
 
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
                                                     <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
@@ -157,8 +156,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Tipo de
-                                                            Pago:</strong></label>
+                                                    <label class="col-sm-5 col-form-label"><strong>Tipo de Pago:</strong></label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">Contado</p>
                                                     </div>
@@ -195,26 +193,20 @@
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Monto Pagado: </strong></label>{{-- PAGO + ADELANTO  --}}
                                                     <div class="col-sm-7">
-                                                         @if ($factura->estado_pago == 2) {{-- Pagado Total  --}}
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                        <p class="form-control"> {{ $factura->moneda->simbolo }}
+                                                            @if ($factura->estado_pago == 2) {{-- Pagado Total  --}}
                                                                 {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                            </p>
-                                                            <span hidden>{{$pago_total = 0}}</span>
-                                                        @endif
-                                                        @if ($factura->estado_pago == 1) {{-- Pagado Parcial --}}
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
+                                                                <span hidden>{{$pago_total = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2}}</span>
+                                                            @endif
+                                                            @if ($factura->estado_pago == 1) {{-- Pagado Parcial --}}
                                                                 <span hidden>{{ $pago_total = ($subtotal + (($factura->op_gravada * $igv->renta) / 100 )) - $adelantos->precio_adelanto }}</span>
                                                                 {{number_format($pago_total, 2) }}
-                                                            </p>
-                                                        @endif
-                                                        @if($factura->estado_pago == 0) {{-- SIN PAGO --}}
-                                                            <p class="form-control">{{ $factura->moneda->simbolo }}
-                                                                {{-- @php  @endphp --}}
-                                                                <span hidden>{{ $pago_total = ($subtotal + (($factura->op_gravada * $igv->renta) / 100 )) - 0 }}</span>
-                                                                {{number_format($pago_total, 2) }}
-                                                            </p>
-                                                            {{-- <span hidden>{{$pago_total = 0}}</span> --}}
-                                                        @endif
+                                                            @endif
+                                                            @if($factura->estado_pago == 0) {{-- SIN PAGO --}}
+                                                                <span hidden>{{ $pago_total = 0 }}</span>
+                                                                {{number_format($pago_total,  2) }}                                                              
+                                                            @endif
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -227,7 +219,7 @@
                                                                 {{ Carbon\Carbon::parse($pagos->pluck('fecha_registro')->first())->format('d-m-Y') }}
                                                             @endif
                                                             @if($factura->estado_pago == 1)
-                                                                {{ Carbon\Carbon::parse($adelanto->fecha_registro)->format('d-m-Y') }}
+                                                                {{ Carbon\Carbon::parse($adelantos->fecha_registro)->format('d-m-Y') }}
                                                             @endif
                                                             @if($factura->estado_pago == 0)
                                                                 <i>Sin Pago</i>
@@ -439,7 +431,7 @@
                                                                                                 </div>
                                                                                                 <div class="col-sm-2">{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
                                                                                                 <div class="col-sm-2">{{Carbon\Carbon::parse($adl_reg->fechas_input)->format('d-m-Y')}}</div>
-                                                                                                <div class="col-sm-3"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
+                                                                                                <div class="col-sm-3"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_adelantos({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
                                                                                                 <div class="col-sm-2">
                                                                                                     {{-- <button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button> --}}
                                                                                                     <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
@@ -788,7 +780,7 @@
                                                                         <td>{{$factura->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</td>
                                                                         <td>{{Carbon\Carbon::parse($adl_reg->fechas_input)->format('d-m-Y')}}</td>
                                                                         <td>
-                                                                            <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_factura_m({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
+                                                                            <div class="col-sm-2"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_adelantos({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
                                                                         </td>
                                                                         <td>
                                                                             <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
@@ -1003,9 +995,10 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    @include('cobranzas.pago_contado')
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto')
-    @include('cobranzas.pago_contado')
+    
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');
         var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
@@ -1038,6 +1031,9 @@
             $('#select_cuenta_adl_pag').select2({
                 placeholder: "Seleccionar",
             });
+
+            $('#id_factura').attr('name', 'id_factura_m[]');
+            $('#cod_factura').attr('name', 'numero_factura_m[]');
         });
 
         function changue_bancos_pagos(){
@@ -1106,76 +1102,6 @@
         
     </script>
     <script>
-        // function modal_pagos(value) {
-        //     $('.input_check').remove();
-        //     $('.cuota_prec_fact').remove();
-        //     $('#lote_pago').css('display', 'none');
-        //     $('#only_pago').css('display', 'block');
-
-        //     $('#todo_pago').modal('show');
-        //     //se abre modal, llamado de ajax para chapar el detalle de cuota? 
-        //     var numero = $(`#numero_` + value).val();
-        //     var monto = $(`#monto_` + value).val();
-        //     var vencimiento = $(`#fecha_ven_` + value).val();
-        //     var estado = $(`#estado_` + value).val();
-        //     var total_c = $(`#total_` + value).val();
-        //     var ids = `
-        //         <input class="input_check" type="hidden" name="id_cuota[]" value="` + value + `">
-        //         <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
-        //         `" value="` + value + '_' + total_c + `" class="cuota_prec_fact">
-        //     `;
-        //     $('#ids_divs_factura').append(ids);
- 
-
-        //     console.log(total_c);
-        //     $('#cuota_n').html(numero);
-        //     $('#monto_n').html(monto);
-        //     $('#monto_value').val(total_c);
-        //     $('#fecha_ven').html(vencimiento);
-        //     $('#estado_n').html(estado);
-        //     $('#efectivo_pago').attr('min', total_c);
-        //     // var id_cuota = $(`#estado_`+value).val();
-        //     $('#id_cuota_select').val(value);
-        //     console.log('a: ' + total_c)
-        //     $('#total_cuota').val(total_c);
-
-
-        // }
-
-        // function select_pago(item) {
-        //     $('.pago_m').css('display', 'none');
-        //     $(`.m_pago_` + item).css('display', 'flex');
-
-        //     $('.class_pago').attr('required', false);
-        //     // $('.class_pago').val('');
-        //     $(`.pago_class_` + item).attr('required', true);
-        //     $(`.file_input`).attr('required', false);
-
-
-
-        //     $('.btn_pago_selec').removeClass("active");
-        //     $(`#bm_pago_` + item).addClass("active");
-        //     $('#input_pago').val(item);
-
-        //     var fecha = $('#fecha_value_php').val();
-        //     console.log(fecha);
-        //     $('.fecha_hoy').val(fecha);
-
-        // }
-
-        // $('#efectivo_pago').on('keyup', function() {
-        //     var pago = this.value;
-        //     // var total = $('.monto_total').text();
-        //     var total_monto = $('[class="monto_total"]');
-        //     var tot_mont = 0;
-
-        //     total_monto.each(function() {
-        //         tot_mont += parseFloat($(this).val());
-        //     });
-        //     console.log(total_monto);
-        //     var vuelto = parseFloat(this.value) - parseFloat(tot_mont);
-        //     $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
-        // })
 
         function detalle_cuota(item) {
             $('#detalle_pago').modal('show');
@@ -1201,7 +1127,6 @@
                 }
             });
         }
-        // $('#detalle_pago')
         $('#detalle_pago').on('hidden.bs.modal', function(e) {
             $('#body_pago_detail').empty();
         });

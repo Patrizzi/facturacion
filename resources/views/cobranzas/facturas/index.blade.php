@@ -3,6 +3,7 @@
 @section('title', 'Pagos de Facturas')
 @section('content')
 
+    <input type="hidden" name="" id="tipo_comprobante_view" value="factura">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -133,7 +134,7 @@
                                                         <td>{{ $f_sp->forma_pago->nombre }}</td>
                                                         <td>{{ $f_sp->moneda->simbolo }}
                                                             @if ($f_sp->forma_pago_id == 2) {{-- CREDITO  --}}
-                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('facturacion_m_id', $f_sp->id)->count()}}
+                                                                {{ number_format($cuotas_all->where('facturacion_id', $f_sp->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('facturacion_id', $f_sp->id)->count()}}
                                                             @else
                                                                 <span hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}</span>
                                                                 {{ number_format(round($subtotal + ($f_sp->op_gravada * $igv->renta) / 100, 2), 2) }}   |   1
@@ -142,14 +143,14 @@
                                                         <td>{{ $f_sp->moneda->simbolo }}
                                                             @if ($f_sp->estado_pago == 1) {{--ESTADO PAGADO PARCIAL / ADELANTO  --}}
                                                                 {{-- SUMA DE TODOS LOS ADELANTOS + PAGOS --}}
-                                                                <span hidden>{{$exist = $adelantos->where('factura_m_id', $f_sp->id)->first()}}</span>
+                                                                <span hidden>{{$exist = $adelantos->where('factura_id', $f_sp->id)->first()}}</span>
                                                                 <div style="display: none">
                                                                     @if ( isset( $exist ) )
-                                                                        <span hidden>{{$precio_adelantado = $adelantos->where('factura_m_id', $f_sp->id)->first()->pluck('precio_adelanto')->first()}}</span>
+                                                                        <span hidden >{{$precio_adelantado = $exist->precio_adelanto}}</span>
                                                                     @else
-                                                                        <span hidden>{{$precio_adelantado =  0}}</span>
+                                                                        <span hidden >{{$precio_adelantado =  0}}</span>
                                                                     @endif
-                                                                    {{$pago_cuota = $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto')}}
+                                                                    {{$pago_cuota = $cuotas_all->where('facturacion_id', $f_sp->id)->where('estado', 1)->sum('monto')}}
                                                                 </div>
                                                                     {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
                                                             @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
@@ -176,7 +177,7 @@
                                                                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
                                                                 <ul class="dropdown-menu">
                                                                     <li><a class="dropdown-item" class="btn btn-primary" onclick="pago_factura( {{ $f_sp->id }})" >Pagar</a></li>
-                                                                    <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$f_sp->id}},'full','0')">Adelantar</a></li>
+                                                                    <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto({{$f_sp->id}},'full','0')">Adelantar</a></li>
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -431,16 +432,16 @@
     <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
+            <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <input type="hidden" name="tipo_comprobante" value="factura">
                         <div class="display: none" id="ids_divs_factura">
 
@@ -715,21 +716,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-sm-12 text-center">
                                             <button type="submit" class="btn btn-primary">Enviar</button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <style>
@@ -843,8 +844,13 @@
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
+    <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    
     @include('cobranzas.adelanto')
 
     <script>

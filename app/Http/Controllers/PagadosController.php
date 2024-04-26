@@ -402,10 +402,9 @@ class PagadosController extends Controller
                         }
                         // Verifica si todos los elementos tienen estado igual a 1
                         $search_one = $cuotas_all->every(function ($cuota) {
-                            return $cuota->estado == 2;
+                            return $cuota->estado == 1;
                         });
-                        if($search_one == true){
-                            
+                        if($search_one == true){                           
                             $boleta_estado->estado_pago = 2;
                             $boleta_estado->save();
                         }else{
@@ -447,6 +446,15 @@ class PagadosController extends Controller
                             $pago_reg_1->comprobante_pago_id = $comprobante_pago->id;
                             $pago_reg_1->comprobante_pago_reg_id = $comprobante_pago_reg->id;
                             $pago_reg_1->tipo_pago = "cheque";
+                            if ($request->get('cheque_diferido') == 'on') { //registro de cheque diferido
+                                $pago_reg_1->option_input = 1;
+                                //cambio de estado a 2 para pendiente -> nuevo formulario para saber si ya pasó
+                                //estado  0 = sin pagara |||  1 = pagado medio  ||| 2 pagado parcial
+                                $pago_reg_1->estado = 2;
+                            }else{
+                                //option input para cheque es para saber si es diferido o no
+                                $pago_reg_1->option_input = 0;
+                            }
                             $pago_reg_1->numero_input = $request->get('cheque_name');
                             $pago_reg_1->fechas_input = $request->get('cheque_fecha_cobro');
                             $pago_reg_1->bancos_input = $request->get('cheque_banco_emisor');
@@ -528,6 +536,10 @@ class PagadosController extends Controller
                             $pago_reg_4->tipo_pago = "transferencia";
                             $pago_reg_4->persona_input = $request->get('transferencia_titular');
                             $pago_reg_4->fechas_input = $request->get('transferencia_fecha');
+                            $pago_reg_4->numero_input = $request->get('transferencia_operacion_pag');
+
+                            $pago_reg_4->adicional_input = $request->get('transferencia_n_cuenta');
+
                             $pago_reg_4->file_input = $name_file;
                             $pago_reg_4->notas_adicionales = $request->get('notas_adicionales');
                             $pago_reg_4->save();
@@ -894,27 +906,36 @@ class PagadosController extends Controller
         }
         $facturas = Facturacion::WhereIn('id', $var)->get();
         foreach ($facturas as $key => $factura) {
-            // $array_cuot = [];
+            $monto_adl = CreditosAdelantos::where('factura_id',$factura->id)->first();
             if ($factura->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
                 foreach ($cuotas as $llave => $cuota) {
+                    $new_monto = round($cuota->monto,2);
+                    if(isset($monto_adl)){
+                        $new_monto = round($cuota->monto - $monto_adl->precio_adelanto, 2);
+                    }
+
                     $array_cuot[$llave] = array(
                         'id_cuota' => $cuota->id,
                         'cuota_n' => $cuota->numero_cuota,
-                        'monto' => $cuota->monto,
+                        'monto' => $new_monto,
                         'fecha_pago' => $cuota->fecha_pago,
                         'estado' =>  $cuota->estado
                     );
                 }
                 $pago_tot = round($cuotas->sum('monto'), 2);
             }else{
+
                 $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada;
                 $pago_tot = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2);
+                if(isset($monto_adl)){
+                    $pago_tot = $pago_tot - $monto_adl->precio_adelanto;
+                }
 
                 $array_cuot[0] = array(
                     'id_cuota' => '1',
                     'cuota_n' => '1',
-                    'monto' => $pago_tot,
+                    'monto' => round($pago_tot,2),
                     'fecha_pago' => $factura->fecha_vencimiento,
                     'estado' =>  '0'
                 );
@@ -927,7 +948,7 @@ class PagadosController extends Controller
                 'cliente_nombre' => $factura->cliente->nombre,
                 'factura_moneda' => $factura->moneda->nombre,
                 'factura_simbolo' => $factura->moneda->simbolo,
-                'total_factura' => $pago_tot,
+                'total_factura' => round($pago_tot,2),
                 'cuotas_array' => $array_cuot
             );
         }
@@ -937,6 +958,9 @@ class PagadosController extends Controller
     {
         // POR AHORA EL ID ES EL CODIGO DE FACTURA
         $cod_fact = $id;
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id',$bancos_pluck )->get();
+        $cuentas = BancoRegistro::whereIn('banco_id',$bancos_pluck)->where('estado_detraccion', 0)->get();
         $factura = Facturacion::where('codigo_fac', $id)->first();
         $fact_cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -954,10 +978,14 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $pagos_reg[0];
-        // return $reg_b->where('estado',1)->sum('monto');
-        // return $pagos;
-        return view('cobranzas.facturas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv'));
+        $adelantos = CreditosAdelantos::where('factura_id', $factura->id)->first();
+        if (isset($adelantos)) {
+            $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
+        }else{
+            $adelantos_reg = 0;
+        }
+
+        return view('cobranzas.facturas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv','adelantos', 'adelantos_reg','bancos'));
     }
     public function show_cliente_factura($ruc_cli){
         $ruc = $ruc_cli;
@@ -1300,11 +1328,16 @@ class PagadosController extends Controller
     // BOLETA
     public function view_boletas()
     {
+        $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         $boletas = Boleta::orderByDesc('id')->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
+        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
+        $adelantos = CreditosAdelantos::where('boleta_id', '!=', null)->get();
         $igv = Igv::first();
         foreach ($boletas as $key => $f_sp) {
             $cuotas[$key] = Cuotas_credito::where('boleta_id', $f_sp->id)->count();
@@ -1312,14 +1345,15 @@ class PagadosController extends Controller
         }
         $cuotas = [];
         $tipo_cambio = TipoCambio::latest('created_at')->first();
+
         $clientes =  Cliente::whereIn('id', $client_id)->get();
         foreach($clientes as $kry => $client){
             // BUSCAR FACTURAS POR CLIENTE
             $count_tot = Boleta::where('cliente_id',$client->id)->count();
             $client['cantidad_bol'] = $count_tot;
-            $facturas = Boleta::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
-            if (count($facturas) != 0) {
-                foreach ($facturas as $key => $f_sp) {
+            $boleta_3 = Boleta::where('cliente_id',$client->id)->where('forma_pago_id',2)->get();
+            if (count($boleta_3) != 0) {
+                foreach ($boleta_3 as $key => $f_sp) {
                     $cuota_lopp[] = Cuotas_credito::where('boleta_id', $f_sp->id)->where('estado', 1)->get();
                     if(count($cuota_lopp) > 0){
                         $cuot[$key] = $cuota_lopp;
@@ -1370,7 +1404,7 @@ class PagadosController extends Controller
             $var_precio_tot[] = array("tot" => number_format(round($precio_bol_cli,2),2) , "tot_dol" => number_format(round($precio_bol_cli_dol,2),2));
         }
 
-        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot'));
+        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
     }
 
     public function lista_ajax_boleta(Request $request)
@@ -1385,14 +1419,18 @@ class PagadosController extends Controller
         }
         $boletas = Boleta::WhereIn('id', $var)->get();
         foreach ($boletas as $key => $boleta) {
-            // $array_cuot = [];
+            $monto_adl = CreditosAdelantos::where('boleta_id', $boleta->id)->first();
             if ($boleta->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('boleta_id', $boleta->id)->get(); //* Codicional el estado de los cuales falta pagar 
                 foreach ($cuotas as $llave => $cuota) {
+                    $new_monto = round($cuota->monto, 2);
+                    if(isset($monto_adl)){
+                        $new_monto = round($cuota->monto, - $monto_adl->precio_adelanto, 2);
+                    }
                     $array_cuot[$llave] = array(
                         'id_cuota' => $cuota->id,
                         'cuota_n' => $cuota->numero_cuota,
-                        'monto' => $cuota->monto,
+                        'monto' => $new_monto,
                         'fecha_pago' => $cuota->fecha_pago,
                         'estado' =>  $cuota->estado
                     );
@@ -1401,11 +1439,14 @@ class PagadosController extends Controller
             }else{
                 $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada;
                 $pago_tot = round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2);
+                if (isset($monto_adl)) {
+                    $pago_tot = $pago_tot - $monto_adl->precio_adelanto;
+                }
 
                 $array_cuot[0] = array(
                     'id_cuota' => '1',
                     'cuota_n' => '1',
-                    'monto' => $pago_tot,
+                    'monto' => round($pago_tot,2),
                     'fecha_pago' => $boleta->fecha_vencimiento,
                     'estado' =>  '0'
                 );
@@ -1418,7 +1459,7 @@ class PagadosController extends Controller
                 'cliente_nombre' => $boleta->cliente->nombre,
                 'boleta_moneda' => $boleta->moneda->nombre,
                 'boleta_simbolo' => $boleta->moneda->simbolo,
-                'total_boleta' => $pago_tot,
+                'total_boleta' => round($pago_tot,2),
                 'cuotas_array' => $array_cuot
             );
         }
@@ -1430,6 +1471,10 @@ class PagadosController extends Controller
         // return "a";
         // POR AHORA EL ID ES EL CODIGO DE FACTURA
         $cod_bol = $id;
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+
+        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         $boleta = Boleta::where('codigo_boleta', $id)->first();
         $bol_cuotas = Cuotas_credito::where('boleta_id', $boleta->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -1447,8 +1492,12 @@ class PagadosController extends Controller
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $pagos;
-        return view('cobranzas.boletas.edit', compact('cod_bol', 'boleta', 'bol_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv'));
+        $adelantos = CreditosAdelantos::where('boleta_id', $boleta->id)->first();
+        $adelantos_reg = 0;
+        if(isset($adelantos)){
+            $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
+        }
+        return view('cobranzas.boletas.edit', compact('cod_bol', 'boleta', 'bol_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta','igv','adelantos', 'adelantos_reg','bancos'));
     }
 
     public function show_cliente_boleta($ruc_cli){
@@ -1534,10 +1583,14 @@ class PagadosController extends Controller
     public function view_boletas_m()
     {
         $boletas = Boleta_m::orderByDesc('id')->get();
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
+        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         $cuotas_all = Cuotas_credito::where('boleta_m_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
+        $adelantos = CreditosAdelantos::where('boleta_m_id', '!=', null)->get();
         $igv = Igv::first();
         foreach ($boletas as $key => $f_sp) {
             $cuotas[$key] = Cuotas_credito::where('boleta_m_id', $f_sp->id)->count();
@@ -1603,7 +1656,7 @@ class PagadosController extends Controller
             $var_precio_tot[] = array("tot" => number_format(round($precio_bol_cli,2),2) , "tot_dol" => number_format(round($precio_bol_cli_dol,2),2));
         }
 
-        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot'));
+        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
     }
 
     public function lista_ajax_boletas_m(Request $request)

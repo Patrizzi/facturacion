@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('pagos.store_boleta') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="metodo_pago_header">
@@ -37,11 +37,11 @@
                         </div>
                     </div>
                     
-                    <div class="display: none" id="ids_divs_factura">
+                    <div class="display: none" id="ids_divs_boleta">
 
                     </div>
-                    <input type="hidden" name="id_factura_m[]" id="id_factura" value="{{ $factura->id }}">
-                    <input type="hidden" name="numero_factura_m[]" id="cod_factura" value="{{ $cod_fact }}">
+                    <input type="hidden" name="id_boleta_m[]" id="id_boleta" value="{{ $boleta->id }}">
+                    <input type="hidden" name="numero_boleta_m[]" id="cod_boleta" value="{{ $cod_bol }}">
                     <input type="hidden" name="tot_cuotas[]" id="total_cuota" value="">
                     <input type="hidden" name="tipo_comprobante" value="" id="tipo_comprobante_form">
                     <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">
@@ -361,7 +361,7 @@
     function modal_pagos(value,tipo) {
         console.log(value);
         $('.input_check').remove();
-        $('.cuota_prec_fact').remove()
+        $('.cuota_prec_bol').remove()
         $('#lote_pago').css('display', 'none');
         $('#only_pago').css('display', 'block');
         $('#row_pago').empty();
@@ -374,10 +374,10 @@
             var total_c = $(`#total_` + value).val();
             var ids = `
                 <input class="input_check" type="hidden" name="id_cuota[]" value="` + value + `">
-                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
-                `" value="` + value + '_' + total_c + `" class="cuota_prec_fact">
+                <input type="hidden" name="cuotas_precio_{{ $cod_bol }}[]" id="cuota_precio_` + value +
+                `" value="` + value + '_' + total_c + `" class="cuota_prec_bol">
             `;
-            $('#ids_divs_factura').append(ids);
+            $('#ids_divs_boleta').append(ids);
 
             // cambio en el html 1
             var html_new = `
@@ -396,12 +396,7 @@
                     <p class="text-center"><label id="estado_n">`+estado+`</label></p>
                 </div>
             `;
-            $('#row_pago').append(html_new);
-            // $('#cuota_n').html(numero);
-            // $('#monto_n').html(monto);
-            // $('#monto_value').val(total_c);
-            // $('#fecha_ven').html(vencimiento);
-            // $('#estado_n').html(estado);
+            $('#row_pago').append(html_new);;
             $('#efectivo_pago').attr('min', total_c);
             $('#id_cuota_select').val(value);
             console.log('a: ' + total_c)
@@ -416,10 +411,10 @@
             // var total_c = $(`#total_` + value).val();
             var ids = `
                 <input class="input_check" type="hidden" name="id_cuota[]" value=" `+  value + `">
-                <input type="hidden" name="cuotas_precio_{{ $cod_fact }}[]" id="cuota_precio_` + value +
-                `" value="` + value + '_' + monto + `" class="cuota_prec_fact">
+                <input type="hidden" name="cuotas_precio_{{ $cod_bol }}[]" id="cuota_precio_` + value +
+                `" value="` + value + '_' + monto + `" class="cuota_prec_bol">
             `;
-            $('#ids_divs_factura').append(ids);
+            $('#ids_divs_boleta').append(ids);
             var html_new = `
                 <div class="col-sm-4">
                     <h3 class="text-center">Monto</h3>

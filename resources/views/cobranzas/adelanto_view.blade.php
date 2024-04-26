@@ -18,7 +18,7 @@
 </div>
 <script>
     
-    function search_factura_m(id_adl){
+    function search_adelantos(id_adl){
         $.ajax({
             type: "post",
             url: "{{route('adelantos.ajax_registro')}}",
