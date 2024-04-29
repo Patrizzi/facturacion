@@ -88,6 +88,7 @@ Route::group(
 
 		// Route::put('/cotizacion/store/{id_moneda}','CotizacionController@store')->name('cotizacion.store');
 		Route::resource('/empresa/banco','BancoController'); //Banco
+		Route::post('/bancos/search', 'BancoController@search_registros')->name('bancos.registros_search');
 
 //COTIZACIOBNES SERVICIO
 		//FACTURA
@@ -420,9 +421,30 @@ Route::group(
 		Route::get('/cierre-periodo/pdf/{id}','CierrePeriodoController@pdf')->name('cierre-periodo.pdf');
 
 		//Fin de inventarios
+		
 		Route::resource('/motivo','MotivoController');
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
+		// ADELANTOS
+		Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
+		// FACTURA
+		Route::post('/adelantos/lista_ajax_fact', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
+		Route::post('/adelantos/lista_ajax_fact_m', 'CreditosAdelantosController@ajax_fact_m')->name('adelantos.ajax_fact_m');
+		Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
+		
+		// BOLETA
+		Route::post('/adelantos/lista_ajax_bol', 'CreditosAdelantosController@ajax_bol')->name('adelantos.ajax_bol');
+		Route::post('/adelantos/lista_ajax_bol_m', 'CreditosAdelantosController@ajax_bol_m')->name('adelantos.ajax_bol_m');
+		Route::post('/adelantos/store_boleta', 'CreditosAdelantosController@store_adelanto_boleta')->name('adelantos.store_adelanto_boleta');
+
+		// NOTA VENTA
+		Route::post('/adelantos/store_nota_venta', 'CreditosAdelantosController@store_nota_venta')->name('adelantos.store_nota_venta');
+
+		
+
+		Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
+		Route::get('/adelantos/comprobantes_pdf/{id}','CreditosAdelantosController@comprobantes_pdf')->name('adelantos.comprobantes_pdf');
+		// PAGADOS
 		Route::resource('/pagados','PagadosController');
 		Route::post('/pagados/lista_ajax','PagadosController@lista_ajax')->name('pagos.lista_ajax');
 		// Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura

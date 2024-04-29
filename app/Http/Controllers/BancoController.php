@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class BancoController extends Controller
 {
+    public function search_registros(Request $request){
+        $id_banco = $request->get('id_bancos');
+        $banco_reg = BancoRegistro::where('banco_id', $id_banco)->get();
+        return $banco_reg;
+    }
     /**
      * Display a listing of the resource.
      *
