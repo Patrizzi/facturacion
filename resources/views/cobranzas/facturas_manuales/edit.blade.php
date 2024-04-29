@@ -102,7 +102,7 @@
                                                     <div class="col-sm-7"> {{-- SUMA DE MONTO + ADELANTE --}}
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
                                                             @if($factura->estado_pago ==  2) {{--  PAGO TOTAL --}}
-                                                                {{ $monto = number_format($fact_cuotas->sum('montos'),2)}}
+                                                                {{ $pago_total = number_format($fact_cuotas->sum('montos'),2)}}
                                                             @else {{--  PARCIAL O SIN PAGO  --}}
                                                                 @php
                                                                     $precio_adel = 0.00;
@@ -110,8 +110,8 @@
                                                                         $precio_adel = $adelantos->precio_adelanto;
                                                                     }
                                                                 @endphp
-                                                                <span hidden>{{ $monto = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
-                                                                {{number_format( $monto ,2)}}
+                                                                <span hidden>{{ $pago_total = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
+                                                                {{number_format( $pago_total ,2)}}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -120,7 +120,7 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $monto,2) }}</p>
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $pago_total,2) }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -185,21 +185,23 @@
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
                                                             <span
                                                                 hidden>{{ $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada }}
+                                                                {{ $tot = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2)}}
                                                             </span>
-                                                            {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                            {{ number_format($tot, 2) }}
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-5 col-form-label"><strong>Monto Pagado: </strong></label>{{-- PAGO + ADELANTO  --}}
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto
+                                                            Pagado: </strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control"> {{ $factura->moneda->simbolo }}
+                                                        <p class="form-control"> {{$factura->moneda->simbolo}}
                                                             @if ($factura->estado_pago == 2) {{-- Pagado Total  --}}
-                                                                {{ number_format(round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                                <span hidden>{{$pago_total = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2), 2}}</span>
+                                                                {{ number_format($tot, 2) }}
+                                                                <span hidden>{{$pago_total = $tot, 2}}</span>
                                                             @endif
                                                             @if ($factura->estado_pago == 1) {{-- Pagado Parcial --}}
-                                                                <span hidden>{{ $pago_total = ($subtotal + (($factura->op_gravada * $igv->renta) / 100 )) - $adelantos->precio_adelanto }}</span>
+                                                                <span hidden>{{ $pago_total = $adelantos->precio_adelanto }}</span>
                                                                 {{number_format($pago_total, 2) }}
                                                             @endif
                                                             @if($factura->estado_pago == 0) {{-- SIN PAGO --}}
@@ -210,8 +212,17 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
+                                                    <label class="col-sm-5 col-form-label"><strong>Monto faltante</strong></label>
+                                                    <div class="col-sm-7">
+                                                        <p class="form-control">{{$factura->moneda->simbolo}}
+                                                            <span hidden>{{$tot_pagar = round($tot - $pago_total,2)}}</span>
+                                                            {{number_format($tot_pagar,2)}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
                                                     <label for="" class="col-sm-5 col-form-label">
-                                                        <strong>Ultima Fecha de Pago:</strong>
+                                                        <strong>Fecha de Pago</strong>
                                                     </label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">
@@ -351,9 +362,8 @@
                                                                                 <i class="fa fa-times"></i>
                                                                             </button>
                                                                         @endif
-                                                                        
                                                                     </td>
-                                                                    <td>Cuota N° {{ $fc_cuota->numero_cuota }} <span hidden id="n_cuota_{{ $fc_cuota->id }}">{{ $fc_cuota->id }}</span></td>
+                                                                    <td>Cuota N° <span id="cuota_view_n_{{ $fc_cuota->id }}">{{ $fc_cuota->numero_cuota }}</span> <span hidden id="n_cuota_{{ $fc_cuota->id }}">{{ $fc_cuota->id }}</span></td>
                                                                     <td>
                                                                         {{ $factura->moneda->simbolo }}
                                                                         <span style="display: none">{{$tot = 0 }}</span>
@@ -479,13 +489,7 @@
                                                             </tr>
                                                         </tfoot>
                                                     </table>
-                                                @else
-                                                    <input type="hidden" name="" id="monto_contado" value="{{ number_format($pago_total,2) }}">
-                                                    <input type="hidden" name="" id="simbolo_monto" value="{{ $factura->moneda->simbolo }}">
-                                                    <input type="hidden" name="" id="fecha_vencimiento" value="{{ Carbon\Carbon::parse($factura->fecha_vencimiento)->format('d-m-Y') }}">
-                                                    <input type="hidden" name="" id="monto_sin_format_0" value="{{ round($pago_total,2)}}">
-                                                    <input type="hidden" name="" id="total_0" value="{{ $pago_total }}">
-                                                    <span hidden id="n_cuota_0">0</span>
+                                                @else                                                    
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <h3>Informacion del Pago</h3>
@@ -707,7 +711,7 @@
 
                                                             @default
                                                         @endswitch
-                                                        @if ($factura->estado_pago != 0)
+                                                        @if ($factura->estado_pago == 2)
                                                             <div class="col-sm-3">
                                                                 <div class="form-control">
                                                                     <strong>Comprobante</strong>
@@ -744,6 +748,13 @@
                                         </div>
                                         <div role="tabpanel" id="tab-2" class="tab-pane">
                                             <div class="panel-body">
+                                                <input type="hidden" name="" id="monto_contado" value="{{ number_format($tot_pagar,2) }}">
+                                                <input type="hidden" name="" id="simbolo_monto" value="{{ $factura->moneda->simbolo }}">
+                                                <input type="hidden" name="" id="fecha_vencimiento" value="{{ Carbon\Carbon::parse($factura->fecha_vencimiento)->format('d-m-Y') }}">
+                                                <input type="hidden" name="" id="monto_sin_format_0" value="{{ $tot_pagar}}">
+                                                <input type="hidden" name="" id="total_0" value="{{ $tot_pagar }}">
+                                                <span hidden id="n_cuota_0">0</span>
+                                                <span hidden id="cuota_view_n_0">1</span>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <h3>Informacion de Adelantos</h3>

@@ -55,4 +55,10 @@ class CreditosAdelantos extends Model
             $boleta->save();
         }
     }
+
+    public static function cambio_estado_nota_adl($id_nota){
+        $nota_venta = NotaVenta::find($id_nota);
+        $nota_venta->estado_pago = 1;
+        $nota_venta->save();
+    }
 }

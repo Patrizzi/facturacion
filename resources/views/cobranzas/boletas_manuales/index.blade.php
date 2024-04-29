@@ -3,427 +3,433 @@
 @section('title', 'Pagos de Boletas M.')
 @section('content')
     
+    <input type="hidden" name="" id="tipo_comprobante_view" value="boleta_manual">
     <div class="wrapper wrapper-content animated fadeInRight">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Sin Pagar</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Pagados</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">Cliente</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body">
-                                    <br>
-                                    <hr>
-                                    <div class="row" style="margin-right: 5px">
-                                        <div class="col-sm-3 text-right">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                <label class="col-sm-3 col-form-label">Estado:</label>
-                                                <div class="col-sm-9">
-                                                    <div class="input-group">
-                                                        <input class="form-control" type="text" name="daterange"
-                                                            value="01-01-2024  31-01-2024" />
-                                                        <span class="input-group-append">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="limpiar_fechas()">
-                                                                <i class="fa fa-eraser"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Sin Pagar</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#tab-2">Pagados</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#tab-3">Cliente</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                            <div class="panel-body">
+                                <br>
+                                <hr>
+                                <div class="row" style="margin-right: 5px">
+                                    <div class="col-sm-3 text-right">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Estado:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        value="01-01-2024  31-01-2024" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_fechas()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                <label class="col-sm-3 col-form-label">Cliente:</label>
-                                                <div class="col-sm-9">
-                                                    <div class="input-group">
-                                                        <select class="select2_demo_client" name="cliente" id="cliente"
-                                                            required=""></select>
-                                                        <span class="input-group-append">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="limpiar_select()">
-                                                                <i class="fa fa-eraser"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                <label class="col-sm-3 col-form-label">Estado:</label>
-                                                <div class="col-sm-9">
-                                                    <select class="select_2_estado" name="" id="select_estado">
-                                                        <option value="">Seleccionar una opción</option>
-                                                        <option value="sin">Sin Pagar</option>
-                                                        <option value="parcial">Pagado Parcial</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                <label class="col-sm-3 col-form-label font-weight-bold ">Tipo:</label>
-                                                <div class="col-sm-9">
-                                                    <div class="input-group" style="align-items: center">
-                                                        Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                            name="" id="contad_check">&nbsp;&nbsp;
-                                                        Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                            name="" id="credit_check">
-                                                        <span class="input-group-append">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="limpiar_select_estado()" style="visibility: hidden">
-                                                                <i class="fa fa-eraser"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 text-right">
-                                            <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
-                                                Lote</button>
                                         </div>
                                     </div>
-                                    <hr>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-example">
-                                            <thead>
-                                                <tr>
-                                                    <th >Item</th>
-                                                    <th>Pagar</th>
-                                                    <th>Estado</th>
-                                                    <th style="width: 140px !important">N° Boleta</th>
-                                                    <th>Cliente</th>
-                                                    <th>Fecha de Emision</th>
-                                                    <th>Tipo de Pago</th>
-                                                    <th>Monto y Cuotas</th>
-                                                    <th>Pagado o Adelantado</th>
-                                                    <th>Ultima Fecha de Pago</th>
-                                                    <th>Detalles</th>
-                                                    <th>Pagar</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($boletas as $index => $bol)
-                                                    @if ($bol->estado_pago != 2)
-                                                        <tr>
-                                                            <td>{{ $bol->id }}</td>
-    
-                                                            <td>
-                                                                {{-- @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() > 0) --}}
-                                                                <input type="checkbox" name=""
-                                                                    id="check_{{ $bol->id }}"
-                                                                    class="form-control check_only check_lost_{{ $index }} {{ $bol->moneda->nombre }}"
-                                                                    onclick="check_lote({{ $index }})">
-                                                            </td>
-                                                            <td>
-                                                                <center>
-                                                                    @if ($bol->estado_pago == 1)
-                                                                        <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>
-                                                                    @endif
-                                                                    @if ($bol->estado_pago == 0)
-                                                                        <button id="nulo" disabled class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Pago"> <i class="fa fa-times"></i> </button>
-                                                                    @endif
-                                                                </center>
-                                                            </td>
-                                                            <td>{{ $bol->codigo_boleta }}</td>
-                                                            <td>{{ $bol->cliente->nombre }}</td>
-                                                            <td>{{ Carbon\Carbon::parse($bol->fecha_emision)->format('d-m-Y') }}</td>
-                                                            <td>{{ $bol->forma_pago->nombre }}</td>
-                                                            <td>{{ $bol->moneda->simbolo}}
-                                                                @if ($bol->forma_pago_id == 2) {{-- CREDITO  --}}
-                                                                    {{ number_format($cuotas_all->where('boleta_id', $bol->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('boleta_id', $bol->id)->count()}}
-                                                                @else
-                                                                    <span hidden>{{ $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada }}</span>
-                                                                    {{ number_format(round($subtotal + ($bol->op_gravada * $igv->renta) / 100, 2), 2) }}   |   1
-                                                                @endif
-                                                            </td>
-                                                            <td>{{ $bol->moneda->simbolo }}
-                                                                @if ($bol->estado_pago == 1) {{--ESTADO PAGADO PARCIAL / ADELANTO  --}}
-                                                                    {{-- SUMA DE TODOS LOS ADELANTOS + PAGOS --}}
-                                                                    <span hidden>{{$exist = $adelantos->where('boleta_id', $bol->id)->first()}}</span>
-                                                                    <div style="display: none">
-                                                                        @if ( isset( $exist ) )
-                                                                            <span hidden>{{$precio_adelantado = $exist->precio_adelanto}}</span>
-                                                                        @else
-                                                                            <span hidden>{{$precio_adelantado =  0}}</span>
-                                                                        @endif
-                                                                        {{$pago_cuota = $cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->sum('monto')}}
-                                                                    </div>
-                                                                        {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
-                                                                @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
-                                                                        0.00
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($bol->forma_pago_id == 2)
-                                                                    @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first() != null)
-                                                                        {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
-                                                                    @else
-                                                                        <strong>Pendiente</strong>
-                                                                    @endif
-                                                                @else
-                                                                    {{$bol->fecha_vencimiento}}
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                <a class="btn btn-primary"
-                                                                    href="{{ route('pagos.show_boletas_m', $bol->codigo_boleta) }}">Detalles</a>
-                                                            </td>
-                                                            <td>
-                                                                <button class="btn btn-primary"
-                                                                    onclick="pago_boleta( {{ $bol->id }} )">Pagar</button>
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <div class="col-sm-3">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Cliente:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <select class="select2_demo_client" name="cliente" id="cliente"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Estado:</label>
+                                            <div class="col-sm-9">
+                                                <select class="select_2_estado" name="" id="select_estado">
+                                                    <option value="">Seleccionar una opción</option>
+                                                    <option value="sin">Sin Pagar</option>
+                                                    <option value="parcial">Pagado Parcial</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label font-weight-bold ">Tipo:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group" style="align-items: center">
+                                                    Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
+                                                        name="" id="contad_check">&nbsp;&nbsp;
+                                                    Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
+                                                        name="" id="credit_check">
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_estado()" style="visibility: hidden">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 text-right">
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled>Pagar
+                                            Lote</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
-                                <div class="panel-body">
-                                    <div class="row" style="margin-right: 5px">
-                                        <div class="col-sm-4">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                <label class="col-sm-3 col-form-label">Cliente:</label>
-                                                <div class="col-sm-9">
-                                                    <div class="input-group">
-                                                        <select class="select2_demo_client_2" name="cliente_2" id="cliente_2"
-                                                            required=""></select>
-                                                        <span class="input-group-append">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="limpiar_select_2()">
-                                                                <i class="fa fa-eraser"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                <label class="col-sm-3 col-form-label">Ultima Fecha de Pago:</label>
-                                                <div class="col-sm-9">
-                                                    <div class="input-group">
-                                                        <input class="form-control" type="text" name="daterange2"
-                                                            value="01-01-2024  31-01-2024" />
-                                                        <span class="input-group-append">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="limpiar_fechas_2()">
-                                                                <i class="fa fa-eraser"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4 text-right">
-                                            <button class="btn btn-primary" type="button" id="pago_lote_total"
-                                                disabled>Pagar
-                                                Lote</button>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-examaple-2">
-                                            <thead>
-                                                <tr>
-                                                    <th>Item</th>
-                                                    <th>Estado</th>
-                                                    <th>N° Boleta</th>
-                                                    <th>Cliente</th>
-                                                    <th>Tipo</th>
-                                                    <th>Total Pagado</th>
-                                                    <th>Ultima Fecha de Pago</th>
-                                                    <th>Detalles</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($boletas as $index => $bol)
-                                                    @if ($bol->estado_pago == 2)
-                                                        <tr>
-                                                            <td>{{ $bol->id }}</td>
-                                                            <td>
-                                                                @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() == 0)
-                                                                    <button id="cancelado" class="btn btn-primary"
-                                                                        disabled><strong>PAGADO</strong></button>
-                                                                @elseif($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() < $cuotas_all->where('boleta_id', $bol->id)->count())
-                                                                    <button id="parcial" class="btn btn-warning"
-                                                                        disabled><strong>PARCIAL</strong></button>
-                                                                @else
-                                                                    <button id="nulo" class="btn btn-danger"
-                                                                        disabled><strong>SIN PAGO</strong></button>
+                                <hr>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th >Item</th>
+                                                <th>Pagar</th>
+                                                <th>Estado</th>
+                                                <th style="width: 140px !important">N° Boleta</th>
+                                                <th>Cliente</th>
+                                                <th>Fecha de Emision</th>
+                                                <th>Tipo de Pago</th>
+                                                <th>Monto y Cuotas</th>
+                                                <th>Pagado o Adelantado</th>
+                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Detalles</th>
+                                                <th>Pagar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($boletas as $index => $bol)
+                                                @if ($bol->estado_pago != 2)
+                                                    <tr>
+                                                        <td>{{ $bol->id }}</td>
+
+                                                        <td>
+                                                            {{-- @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() > 0) --}}
+                                                            <input type="checkbox" name=""
+                                                                id="check_{{ $bol->id }}"
+                                                                class="form-control check_only check_lost_{{ $index }} {{ $bol->moneda->nombre }}"
+                                                                onclick="check_lote({{ $index }})">
+                                                        </td>
+                                                        <td>
+                                                            <center>
+                                                                @if ($bol->estado_pago == 1)
+                                                                    <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>
                                                                 @endif
-                                                            </td>
-                                                            <td>{{ $bol->codigo_boleta }}</td>
-                                                            <td>{{ $bol->cliente->nombre }}</td>
-                                                            <td>{{ $bol->forma_pago->nombre }}</td>
-                                                            <td>
-                                                                {{ $bol->moneda->simbolo }}
-                                                                @if ($bol->forma_pago_id == 2)
-                                                                    {{ number_format($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->sum('monto'),2) }}
-                                                                @else
-                                                                    <span
-                                                                        hidden>{{ $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada }}
-                                                                    </span>
-                                                                    {{ number_format(round($subtotal + ($bol->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                                @if ($bol->estado_pago == 0)
+                                                                    <button id="nulo" disabled class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Pago"> <i class="fa fa-times"></i> </button>
                                                                 @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($bol->forma_pago_id == 2)
-                                                                    @if ($cuotas_all)
-                                                                        {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
-                                                                    @else
-                                                                        <strong>Pendiente</strong>
-                                                                    @endif
-                                                                @else
-                                                                    {{$bol->fecha_vencimiento}}
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                <a class="btn btn-primary"
-                                                                    href="{{ route('pagos.show_boletas_m', $bol->codigo_boleta) }}">Detalles</a>
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" id="tab-3" class="tab-pane">
-                                <div class="panel-body">
-                                    <div class="row" style="margin-right: 5px">
-                                        <div class="col-sm-4">
-                                            <div class="form-group row" style="margin-left: 15px">
-                                                {{-- <label class="col-sm-3 col-form-label">Cliente:</label> --}}
-                                                <div class="col-sm-9">
-                                                    {{-- <div class="input-group">
-                                                        <select class="select2_demo_client_2" name="cliente" id="cliente_2"
-                                                            required=""></select>
-                                                        <span class="input-group-append">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="limpiar_select_2()">
-                                                                <i class="fa fa-eraser"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div> --}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-    
-                                        </div>
-                                        <div class="col-sm-4 text-right">
-                                            <button class="btn btn-primary" type="button" id="pago_lote_total"
-                                                disabled>Pagar
-                                                Lote</button>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-examaple-3">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th style="width: 150px">Cliente</th>
-                                                    <th>Documento</th>
-                                                    <th>Boletas Creadas</th>
-                                                    <th>Boletas Pagadas completas</th>
-                                                    <th>Monto Soles Pagados de Boletas Completas</th>
-                                                    {{-- <th style="width: 63px !important">T.C Promedio</th> --}}
-                                                    <th>Monto Dolares Pagados de Boletas Completas</th>
-                                                    <th>Detalles</th>
-                                                    {{-- <th>Cliente</th>
-                                                    <th>Total Pagado</th>
-                                                    <th>Ultima Fecha de Pago</th>
-                                                    <th>Detalles</th> --}}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($clientes as $index3 => $clie)
-                                                    @if ( count($boletas->where('cliente_id', $clie->id)) >= 1)
-                                                        <div class="display: none">
-                                                            <div style="display: none">                                                        
-                                                                {{ $cal_sol = 0 }} {{ $cal_dol = 0 }} {{ $count_boleta_pag = 0 }}
-                                                                {{ $prom_tc = 0 }} {{ $cant = 1 }}
-                                                            </div>
-                                                            @foreach ($boletas->where('cliente_id', $clie->id) as $boleta_2)
+                                                            </center>
+                                                        </td>
+                                                        <td>{{ $bol->codigo_boleta }}</td>
+                                                        <td>{{ $bol->cliente->nombre }}</td>
+                                                        <td>{{ Carbon\Carbon::parse($bol->fecha_emision)->format('d-m-Y') }}</td>
+                                                        <td>{{ $bol->forma_pago->nombre }}</td>
+                                                        <td>{{ $bol->moneda->simbolo}}
+                                                            @if ($bol->forma_pago_id == 2) {{-- CREDITO  --}}
+                                                                {{ number_format($cuotas_all->where('boleta_id', $bol->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('boleta_id', $bol->id)->count()}}
+                                                            @else
+                                                                <span hidden>{{ $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada }}</span>
+                                                                {{ number_format(round($subtotal + ($bol->op_gravada * $igv->renta) / 100, 2), 2) }}   |   1
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $bol->moneda->simbolo }}
+                                                            @if ($bol->estado_pago == 1) {{--ESTADO PAGADO PARCIAL / ADELANTO  --}}
+                                                                {{-- SUMA DE TODOS LOS ADELANTOS + PAGOS --}}
+                                                                <span hidden>{{$exist = $adelantos->where('boleta_id', $bol->id)->first()}}</span>
                                                                 <div style="display: none">
-                                                                    {{ $std_cuot = $cuotas_all->where('boleta_id', $boleta_2->id)->where('estado', 1)->count() }}
-                                                                    {{ $std_cuot2 = $cuotas_all->where('boleta_id', $boleta_2->id)->count() }}
-    
-                                                                </div>
-                                                                @if ($std_cuot == $std_cuot2)
-                                                                    <div style="display: none">
-                                                                        {{ $prom_tc += $boleta_2->cambio }}
-                                                                        {{ $cant += 1 }}
-                                                                    </div>
-                                                                    @if ($boleta_2->moneda->nombre == 'soles')
-                                                                        {{-- CONVERTIR EN SOLES MONT TOTAL / TIPO CAMBIO EN ESE DIA --}}
-                                                                        <div style="display: none">
-                                                                            {{ $simbolo_mon_sol = 'S/.' }}
-                                                                            {{ $simbolo_mon_dol = '$' }}
-                                                                            {{ $cal_sol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') }}
-                                                                            {{ $cal_dol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') / $boleta_2->cambio }}
-                                                                        </div>
+                                                                    @if ( isset( $exist ) )
+                                                                        <span hidden>{{$precio_adelantado = $exist->precio_adelanto}}</span>
                                                                     @else
-                                                                        {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
-                                                                        <div style="display: none">
-                                                                            {{ $simbolo_mon_dol = '$' }}
-                                                                            {{ $simbolo_mon_sol = 'S/.' }}
-                                                                            {{ $cal_dol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') }}
-                                                                            {{ $cal_sol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') * $boleta_2->cambio }}
-                                                                        </div>
+                                                                        <span hidden>{{$precio_adelantado =  0}}</span>
                                                                     @endif
+                                                                    {{$pago_cuota = $cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->sum('monto')}}
+                                                                </div>
+                                                                    {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
+                                                            @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
+                                                                    0.00
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($bol->forma_pago_id == 2)
+                                                                @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first() != null)
+                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                @else
+                                                                    <strong>Pendiente</strong>
                                                                 @endif
-                                                            @endforeach
-                                                        </div>
-                                                        {{-- COLUMNAS PARA MONTO SOLES Y MONTO DOLARES, COLUMNA ADICIONAL CON LOS 2 PRECIO TOTALES POR CLIENTE --}}
-                                                        <tr>
-                                                            <td>{{ $index++ }}</td>
-                                                            <td>{{ $clie->nombre }}</td>
-                                                            <td>{{ $clie->numero_documento }}</td>
-                                                            {{-- <td></td>
-                                                            <td></td> --}}
-                                                            <td>
-                                                                {{ $clie->cantidad_bol }}
-                                                            </td>
-                                                            <td>
-                                                                {{ $boletas->where('cliente_id', $clie->id)->where('estado_pago', 2)->count() }}
-                                                            </td>
-                                                            <td>
-                                                                {{ $simbolo_mon_sol }} {{ $var_precio_tot[$index3]['tot'] }}
-                                                            </td>
-                                                            {{-- <td>
-                                                                {{ number_format($prom_tc / $cant, 2) }}
-                                                            </td> --}}
-                                                            <td>
-                                                                {{ $simbolo_mon_dol }} {{ $var_precio_tot[$index3]['tot_dol'] }}
-                                                            </td>
-                                                            <td>
-                                                                {{-- <button class="btn btn-secondary">Ver detalles</button> --}}
-                                                                <a href="{{ route('pagos.show_cliente_boleta_m', $clie->numero_documento) }}"
-                                                                    class="btn btn-secondary">Ver Detalles</a>
-                                                            </td>
-                                                        </tr>
-                                                    @endif                                                
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                            @else
+                                                                {{$bol->fecha_vencimiento}}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-primary"
+                                                                href="{{ route('pagos.show_boletas_m', $bol->codigo_boleta) }}">Detalles</a>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item" class="btn btn-primary" onclick="pago_boleta( {{ $bol->id }})" >Pagar</a></li>
+                                                                    <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto_m({{$bol->id}},'full','0')">Adelantar</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row" style="margin-right: 5px">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Cliente:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <select class="select2_demo_client_2" name="cliente_2" id="cliente_2"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_2()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            <label class="col-sm-3 col-form-label">Ultima Fecha de Pago:</label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange2"
+                                                        value="01-01-2024  31-01-2024" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_fechas_2()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 text-right">
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total"
+                                            disabled>Pagar
+                                            Lote</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-examaple-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Estado</th>
+                                                <th>N° Boleta</th>
+                                                <th>Cliente</th>
+                                                <th>Tipo</th>
+                                                <th>Total Pagado</th>
+                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($boletas as $index => $bol)
+                                                @if ($bol->estado_pago == 2)
+                                                    <tr>
+                                                        <td>{{ $bol->id }}</td>
+                                                        <td>
+                                                            @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() == 0)
+                                                                <button id="cancelado" class="btn btn-primary"
+                                                                    disabled><strong>PAGADO</strong></button>
+                                                            @elseif($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() < $cuotas_all->where('boleta_id', $bol->id)->count())
+                                                                <button id="parcial" class="btn btn-warning"
+                                                                    disabled><strong>PARCIAL</strong></button>
+                                                            @else
+                                                                <button id="nulo" class="btn btn-danger"
+                                                                    disabled><strong>SIN PAGO</strong></button>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $bol->codigo_boleta }}</td>
+                                                        <td>{{ $bol->cliente->nombre }}</td>
+                                                        <td>{{ $bol->forma_pago->nombre }}</td>
+                                                        <td>
+                                                            {{ $bol->moneda->simbolo }}
+                                                            @if ($bol->forma_pago_id == 2)
+                                                                {{ number_format($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->sum('monto'),2) }}
+                                                            @else
+                                                                <span
+                                                                    hidden>{{ $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada }}
+                                                                </span>
+                                                                {{ number_format(round($subtotal + ($bol->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($bol->forma_pago_id == 2)
+                                                                @if ($cuotas_all)
+                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                @else
+                                                                    <strong>Pendiente</strong>
+                                                                @endif
+                                                            @else
+                                                                {{$bol->fecha_vencimiento}}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-primary"
+                                                                href="{{ route('pagos.show_boletas_m', $bol->codigo_boleta) }}">Detalles</a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row" style="margin-right: 5px">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row" style="margin-left: 15px">
+                                            {{-- <label class="col-sm-3 col-form-label">Cliente:</label> --}}
+                                            <div class="col-sm-9">
+                                                {{-- <div class="input-group">
+                                                    <select class="select2_demo_client_2" name="cliente" id="cliente_2"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_2()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div> --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-4 text-right">
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total"
+                                            disabled>Pagar
+                                            Lote</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-examaple-3">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th style="width: 150px">Cliente</th>
+                                                <th>Documento</th>
+                                                <th>Boletas Creadas</th>
+                                                <th>Boletas Pagadas completas</th>
+                                                <th>Monto Soles Pagados de Boletas Completas</th>
+                                                {{-- <th style="width: 63px !important">T.C Promedio</th> --}}
+                                                <th>Monto Dolares Pagados de Boletas Completas</th>
+                                                <th>Detalles</th>
+                                                {{-- <th>Cliente</th>
+                                                <th>Total Pagado</th>
+                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Detalles</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($clientes as $index3 => $clie)
+                                                @if ( count($boletas->where('cliente_id', $clie->id)) >= 1)
+                                                    <div class="display: none">
+                                                        <div style="display: none">                                                        
+                                                            {{ $cal_sol = 0 }} {{ $cal_dol = 0 }} {{ $count_boleta_pag = 0 }}
+                                                            {{ $prom_tc = 0 }} {{ $cant = 1 }}
+                                                        </div>
+                                                        @foreach ($boletas->where('cliente_id', $clie->id) as $boleta_2)
+                                                            <div style="display: none">
+                                                                {{ $std_cuot = $cuotas_all->where('boleta_id', $boleta_2->id)->where('estado', 1)->count() }}
+                                                                {{ $std_cuot2 = $cuotas_all->where('boleta_id', $boleta_2->id)->count() }}
+
+                                                            </div>
+                                                            @if ($std_cuot == $std_cuot2)
+                                                                <div style="display: none">
+                                                                    {{ $prom_tc += $boleta_2->cambio }}
+                                                                    {{ $cant += 1 }}
+                                                                </div>
+                                                                @if ($boleta_2->moneda->nombre == 'soles')
+                                                                    {{-- CONVERTIR EN SOLES MONT TOTAL / TIPO CAMBIO EN ESE DIA --}}
+                                                                    <div style="display: none">
+                                                                        {{ $simbolo_mon_sol = 'S/.' }}
+                                                                        {{ $simbolo_mon_dol = '$' }}
+                                                                        {{ $cal_sol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') }}
+                                                                        {{ $cal_dol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') / $boleta_2->cambio }}
+                                                                    </div>
+                                                                @else
+                                                                    {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
+                                                                    <div style="display: none">
+                                                                        {{ $simbolo_mon_dol = '$' }}
+                                                                        {{ $simbolo_mon_sol = 'S/.' }}
+                                                                        {{ $cal_dol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') }}
+                                                                        {{ $cal_sol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') * $boleta_2->cambio }}
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    {{-- COLUMNAS PARA MONTO SOLES Y MONTO DOLARES, COLUMNA ADICIONAL CON LOS 2 PRECIO TOTALES POR CLIENTE --}}
+                                                    <tr>
+                                                        <td>{{ $index++ }}</td>
+                                                        <td>{{ $clie->nombre }}</td>
+                                                        <td>{{ $clie->numero_documento }}</td>
+                                                        {{-- <td></td>
+                                                        <td></td> --}}
+                                                        <td>
+                                                            {{ $clie->cantidad_bol }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $boletas->where('cliente_id', $clie->id)->where('estado_pago', 2)->count() }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $simbolo_mon_sol }} {{ $var_precio_tot[$index3]['tot'] }}
+                                                        </td>
+                                                        {{-- <td>
+                                                            {{ number_format($prom_tc / $cant, 2) }}
+                                                        </td> --}}
+                                                        <td>
+                                                            {{ $simbolo_mon_dol }} {{ $var_precio_tot[$index3]['tot_dol'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{-- <button class="btn btn-secondary">Ver detalles</button> --}}
+                                                            <a href="{{ route('pagos.show_cliente_boleta_m', $clie->numero_documento) }}"
+                                                                class="btn btn-secondary">Ver Detalles</a>
+                                                        </td>
+                                                    </tr>
+                                                @endif                                                
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 
     <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog"

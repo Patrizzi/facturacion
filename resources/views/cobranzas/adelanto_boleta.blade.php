@@ -477,6 +477,7 @@
 
             var serie = $('#serie_comp').val();
             var n_cuota = $(`#n_cuota_`+cuota_id).html();
+            var n_cuota_view = $(`#cuota_view_n_`+cuota_id).html();
             var simbolo_precio = $('#simbolo_precio').val();
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
@@ -492,7 +493,7 @@
                 </div>
                 <div class="col-sm-4">
                     <h3 class="text-center">Cuota N</h3>
-                    <label class="form-control">Cuota N  `+ n_cuota +`</label>
+                    <label class="form-control">Cuota N  `+ n_cuota_view +`</label>
                     <input type="hidden" name="cuotas_precio_`+ serie +`" id="" value="`+ n_cuota +`_`+monto_sin_for+`">
                 </div>
                 <div class="col-sm-4">

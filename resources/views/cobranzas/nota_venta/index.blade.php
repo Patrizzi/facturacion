@@ -56,11 +56,11 @@
                                         <div class="form-group row" style="margin-left: 15px">
                                             <label class="col-sm-3 col-form-label">Estado:</label>
                                             <div class="col-sm-9">
-                                                {{-- <select class="select_2_estado" name="" id="select_estado">
+                                                <select class="select_2_estado" name="" id="select_estado">
                                                     <option value="">Seleccionar una opción</option>
                                                     <option value="sin">Sin Pagar</option>
                                                     <option value="parcial">Pagado Parcial</option>
-                                                </select> --}}
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -93,22 +93,22 @@
                                     <table class="table table-striped table-bordered table-hover dataTables-example">
                                         <thead>
                                             <tr>
-                                                <th>Item</th>
+                                                <th >Item</th>
                                                 <th>Pagar</th>
                                                 <th>Estado</th>
-                                                <th>N° Nota de Venta</th>
+                                                <th style="width: 140px !important">N° NV</th>
                                                 <th>Cliente</th>
                                                 <th>Fecha de Emision</th>
                                                 <th>Tipo de Pago</th>
-                                                <th>Total</th>
-                                                {{-- <th>Debe</th> --}}
-                                                {{-- <th>Ultima Fecha de Pago</th> --}}
+                                                <th>Monto Total</th>
+                                                {{-- <th>Total</th> --}}
+                                                <th>Adelantado</th>
                                                 <th>Detalles</th>
                                                 <th>Pagar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($nota_venta->where('estado_pago', 0) as $index => $n_v)
+                                            @foreach ($nota_venta->where('estado_pago', '!=' , 2) as $index => $n_v)
                                                 <tr>
                                                     <td>{{$n_v->id}}</td>
                                                     <td>
@@ -117,12 +117,20 @@
                                                             class="form-control check_only check_lost_{{ $index }} {{ $n_v->moneda->nombre }}"
                                                             onclick="check_lote({{ $index }})">
                                                     </td>
-                                                    <td>
-                                                        <button id="nulo" class="btn btn-danger"
-                                                            disabled><strong>SIN PAGO</strong></button>
+                                                    <td class="tooltip-demo">
+                                                        <center>
+                                                            @if ($n_v->estado_pago == 1)
+                                                                <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>
+                                                            @endif
+                                                            @if ($n_v->estado_pago == 0)
+                                                                <button id="nulo" disabled class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Pago"> <i class="fa fa-times"></i> </button>
+                                                            @endif
+                                                        </center>
                                                     </td>
                                                     <td>
                                                         {{$n_v->cod_nota_venta}}
+                                                        <input type="hidden" value="{{$n_v->cod_nota_venta}}" id="serie_comp_{{$n_v->id}}">
+                                                        <input type="hidden" value="{{$n_v->moneda->simbolo}}" id="simbolo_precio_{{$n_v->id}}">
                                                     </td>
                                                     <td>
                                                         {{$n_v->cliente->nombre}}
@@ -138,15 +146,34 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        {{$n_v->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}
+                                                        {{$n_v->moneda->simbolo}} 
+                                                        <span hidden>{{ $tot = round($totales[$index],2)}}</span> 
+                                                        
+                                                        {{number_format(round($totales[$index],2),2)}}
+                                                    </td>
+                                                    <td> {{$n_v->moneda->simbolo}}
+                                                        @if ($n_v->estado_pago == 1)
+                                                            <span hidden>{{ $exists = $adelantos->where('nota_ven_id', $n_v->id)->first()}}</span>
+                                                            {{number_format(round($exists->precio_adelanto,2),2)}}
+                                                        @else
+                                                            <span hidden>{{$exists->precio_adelanto = 0.00 }}</span>
+                                                            0.00
+                                                        @endif
+                                                        <input type="hidden" value="{{number_format(round($tot - $exists->precio_adelanto,2),2)}}" id="total_{{$n_v->id}}">
+                                                        <input type="hidden" value="{{round($tot - $exists->precio_adelanto,2)}}" id="monto_sin_format_{{$n_v->id}}">
                                                     </td>
                                                     <td>
                                                         <a class="btn btn-primary"
                                                             href="{{ route('pagos.show_nota_venta', $n_v->cod_nota_venta) }}">Detalles</a>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-primary"
-                                                            onclick="pago_n_venta( {{ $n_v->id }} )">Pagar</button>
+                                                        <div class="btn-group">
+                                                            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Seleccionar</button>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" class="btn btn-primary" onclick="pago_n_venta( {{ $n_v->id }})" >Pagar</a></li>
+                                                                <li><a class="dropdown-item" class="btn btn-primary" data-toggle="modal" data-target="#myModal5" onclick="pago_adelanto({{$n_v->id}},'full',{{$n_v->id}})">Adelantar</a></li>
+                                                            </ul>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -640,6 +667,11 @@
             </div>
         </div>
     </div>
+
+
+    
+
+
     <style>
         .pago_m {
             display: none;
@@ -648,14 +680,6 @@
         .pago_m.m_pago_1 {
             display: flex;
         }
-
-        .nav.nav-tabs {
-            /* display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            flex-wrap: nowrap; */
-        }
-
         #view_all {
             display: none;
         }
@@ -747,12 +771,18 @@
 
     <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script> 
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
+    <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+    
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    @include('cobranzas.nota_venta.adelanto')
     <script>
         $(document).ready(function() {
             $('input[name="daterange"]').daterangepicker({

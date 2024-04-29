@@ -404,7 +404,7 @@
     var elem_2 = document.querySelector('.js-switch');
     var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
 
-     function pago_adelanto(n_factura, tipo, cuota_id){  // PARA FACTURA NORMAL
+    function pago_adelanto(n_factura, tipo, cuota_id){  // PARA FACTURA NORMAL
         // tipo === ONLY : VIEW EDIT || FULL || INDEX
         console.log(tipo);
         $('#adelanto_header').empty();
@@ -475,12 +475,13 @@
                 }
             });
         } else {
-
             var serie = $('#serie_comp').val();
             var n_cuota = $(`#n_cuota_`+cuota_id).html();
+            var n_cuota_view = $(`#cuota_view_n_`+cuota_id).html();
             var simbolo_precio = $('#simbolo_precio').val();
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
+            console.log(n_cuota);
             
             var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
             $('#id_factura_adl').append(html_id_fact);
@@ -493,7 +494,7 @@
                 </div>
                 <div class="col-sm-4">
                     <h3 class="text-center">Cuota N</h3>
-                    <label class="form-control">Cuota N  `+ n_cuota +`</label>
+                    <label class="form-control">Cuota N  `+ n_cuota_view +`</label>
                     <input type="hidden" name="cuotas_precio_`+ serie +`" id="" value="`+ n_cuota +`_`+monto_sin_for+`">
                 </div>
                 <div class="col-sm-4">
@@ -520,7 +521,6 @@
             $('#tranferencia_adl_monto').attr('max', tota_cuota);
         }
     }
-
 
     function pago_adelanto_m(n_factura, tipo, cuota_id){
         // tipo === ONLY : VIEW EDIT || FULL || INDEX
@@ -595,6 +595,7 @@
 
             var serie = $('#serie_comp').val();
             var n_cuota = $(`#n_cuota_`+cuota_id).html();
+            var n_cuota_view = $(`#cuota_view_n_`+cuota_id).html();
             var simbolo_precio = $('#simbolo_precio').val();
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
@@ -610,7 +611,7 @@
                 </div>
                 <div class="col-sm-4">
                     <h3 class="text-center">Cuota N</h3>
-                    <label class="form-control">Cuota N  `+ n_cuota +`</label>
+                    <label class="form-control">Cuota N  `+ n_cuota_view +`</label>
                     <input type="hidden" name="cuotas_precio_`+ serie +`" id="" value="`+ n_cuota +`_`+monto_sin_for+`">
                 </div>
                 <div class="col-sm-4">
@@ -687,7 +688,7 @@
         input.css('border-color', 'none');
         console.log(typeof(total_input_monto));
 
-        if(total_input_monto >= total){
+        if(parseFloat(total_input_monto) >= parseFloat(total)){
             // console.log(total_input_monto);
             input.css('border-color', 'red');
         }else{

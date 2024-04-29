@@ -102,7 +102,7 @@
                                                     <div class="col-sm-7"> {{-- SUMA DE MONTO + ADELANTE --}}
                                                         <p class="form-control">{{ $boleta->moneda->simbolo }}
                                                             @if($boleta->estado_pago ==  2) {{--  PAGO TOTAL --}}
-                                                                {{ $monto = number_format($bol_cuotas->sum('montos'),2)}}
+                                                                {{ $pago_total = number_format($bol_cuotas->sum('montos'),2)}}
                                                             @else {{--  PARCIAL O SIN PAGO  --}}
                                                                 @php
                                                                     $precio_adel = 0.00;
@@ -110,8 +110,8 @@
                                                                         $precio_adel = $adelantos->precio_adelanto;
                                                                     }
                                                                 @endphp
-                                                                <span hidden>{{ $monto = $bol_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
-                                                                {{number_format( $monto ,2)}}
+                                                                <span hidden>{{ $pago_total = $bol_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
+                                                                {{number_format( $pago_total ,2)}}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -120,7 +120,7 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $boleta->moneda->simbolo }} {{ number_format($sum_total -  $monto,2) }}</p>
+                                                        <p class="form-control">{{ $boleta->moneda->simbolo }} {{ number_format($sum_total -  $pago_total,2) }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -130,6 +130,9 @@
                                                     <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_cuotas', $boleta->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
+                                                </div>
+                                                <div class="form-group row justify-content-center">
+                                                    <a class="btn btn-secondary" href="{{ route('boleta.show', $boleta->id) }}" target="_blank">Ver Factura</a>
                                                 </div>
                                             </div>
 
@@ -193,25 +196,26 @@
                                                     <div class="col-sm-7">
                                                         <p class="form-control"> {{$boleta->moneda->simbolo}}
                                                             @if ($boleta->estado_pago == 2) {{-- Pagado Total  --}}
-                                                                {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                                <span hidden>{{$pago_total = round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2)}}</span>
+                                                                {{ number_format( $tot, 2) }}
+                                                                <span hidden>{{$pago_total = $tot, 2}}</span>
                                                             @endif
                                                             @if ($boleta->estado_pago == 1) {{-- Pagado Parcial --}}
-                                                                <span hidden>{{ $pago_total = ($subtotal + (($boleta->op_gravada * $igv->renta) / 100 )) - $adelantos->precio_adelanto }}</span>
+                                                                <span hidden>{{ $pago_total = $adelantos->precio_adelanto }}</span>
                                                                 {{number_format($pago_total, 2) }}
                                                             @endif
                                                             @if($boleta->estado_pago == 0) {{-- SIN PAGO --}}
                                                                 <span hidden>{{ $pago_total = 0 }}</span>
-                                                                {{number_format($pago_total, 2) }}
+                                                                {{number_format($pago_total,  2) }}                                                              
                                                             @endif
                                                         </p>
                                                     </div>
-                                                </div> 
+                                                </div>
                                                 <div class="form-group row">
                                                     <label class="col-sm-5 col-form-label"><strong>Monto faltante</strong></label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">{{$boleta->moneda->simbolo}}
-                                                            {{number_format(round($tot - $pago_total,2),2)}}
+                                                            <span hidden>{{$tot_pagar = round($tot - $pago_total,2)}}</span>
+                                                            {{number_format($tot_pagar,2)}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -293,75 +297,103 @@
                                                         data-page-size="8" data-filter="#filter">
                                                         <thead>
                                                             <tr>
-                                                                <th data-sort-ignore="true" style="width: 50px;text-align: center">Ver más
+                                                                <th data-sort-ignore="true"
+                                                                    style="width: 50px;text-align: center">Ver más
                                                                 </th>
                                                                 @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
-                                                                    <th data-sort-ignore="true">Pago Lote</th>
+                                                                    <th data-sort-ignore="true">Pagar</th>
                                                                 @endif
-                                                                <th style="width: 25px">Estado</th>
+                                                                <th style="width: 25px" data-sort-ignore="true">Estado</th>
+                                                                <th style="width: 25px" data-sort-ignore="true">Adelantado</th>
                                                                 <th>N° Cuota </th>
-                                                                <th>MONTO</th>
+                                                                <th>Monto Tot</th>
+                                                                <th>Monto Canc.</th>
                                                                 <th>Fecha Inicio</th>
-                                                                <th>Fecha Vencimiento</th>
+                                                                <th>Fecha Ven.</th>
                                                                 <th data-hide="all" style="display: none !important;">Dias de Restraso:
                                                                 </th>
-                                                                {{-- <th data-hide="all"></th> --}}
-                                                                <th>Metodo de Pago</th>
+                                                                <th data-hide="all">Adelantos Registrados</th>
                                                                 <th>Fecha de Pago</th>
-                                                                <th data-sort-ignore="true" style="width: 170px">Pagar</th>
-                                                                {{-- <th>P</th> --}}
-                                                                {{-- <th>Pagar Lote</th> --}}
+                                                                <th data-sort-ignore="true" style="width: 170px">Pagar | Adelantar</th>
                                                                 <th data-sort-ignore="true"> Detalle</th>
                                                             </tr>
                                                         </thead>
+                                                        </thead>
                                                         <tbody>
-                                                            @foreach ($bol_cuotas as $index => $fc_cuota)
+                                                            @foreach ($bol_cuotas as $index => $bol_cuot)
                                                                 <tr>
                                                                     <td>
 
                                                                     </td>
                                                                     @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
                                                                         <td>
-                                                                            @if ($fc_cuota->estado == 0)
+                                                                            @if ($bol_cuot->estado == 0)
                                                                                 <input type="checkbox" name=""
-                                                                                    id="check_{{ $fc_cuota->id }}"
+                                                                                    id="check_{{ $bol_cuot->id }}"
                                                                                     class="form-control check_only"
                                                                                     onclick="check_lote({{ $index }})">
                                                                             @endif
                                                                         </td>
                                                                     @endif
-
                                                                     <td>
-                                                                        @if ($fc_cuota->estado == 0)
-                                                                            <button id="pendiente" class="btn btn-primary"
-                                                                                disabled><strong>PENDIENTE</strong></button>
-                                                                            <input type="hidden" name=""
-                                                                                id="estado_{{ $fc_cuota->id }}" value="PENDIENTE">
-                                                                        @elseif($fc_cuota->estado == 1)
-                                                                            <button id="pagado" class="btn btn-primary"
-                                                                                disabled><strong>PAGADO</strong></button>
-                                                                            <input type="hidden" name=""
-                                                                                id="estado_{{ $fc_cuota->id }}" value="PAGADO">
+                                                                        @if ($bol_cuot->estado == 0)
+                                                                            <button class="btn btn-danger btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
+                                                                            <input type="hidden" name="" id="estado_{{ $bol_cuot->id }}" value="PENDIENTE">
+                                                                        @elseif($bol_cuot->estado == 1)
+                                                                            <button class="btn btn-warning btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-warning"></i>
+                                                                            </button>
+                                                                            <input type="hidden" name="" id="estado_{{ $bol_cuot->id }}" value="PAGADO">
                                                                         @else
-                                                                            <button id="retrasado" class="btn btn-primary"
-                                                                                disabled><strong>RETRASADO</strong></button>
-                                                                            <input type="hidden" name=""
-                                                                                id="estado_{{ $fc_cuota->id }}" value="RETRASADO">
+                                                                            <button class="btn btn-primary btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
+                                                                            <input type="hidden" name="" id="estado_{{ $bol_cuot->id }}" value="RETRASADO">
                                                                         @endif
                                                                     </td>
-                                                                    <td>Cuota N° {{ $fc_cuota->numero_cuota }}</td>
+                                                                    <td>
+                                                                        {{-- Acá va el adelanto / estados --}}
+                                                                        @if (is_object($adelantos_reg))
+                                                                            @if ($adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->count() != 0)
+                                                                                <button class="btn btn-primary btn-sm btn-circle" disabled>
+                                                                                    <i class="fa fa-check"></i>
+                                                                                </button>
+                                                                            @else
+                                                                                <button class="btn btn-danger btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
+                                                                            @endif
+                                                                        @else
+                                                                            <button class="btn btn-danger btn-sm btn-circle" disabled>
+                                                                                <i class="fa fa-times"></i>
+                                                                            </button>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>Cuota N° <span id="cuota_view_n_{{ $bol_cuot->id }}">{{ $bol_cuot->numero_cuota }}</span> <span hidden id="n_cuota_{{ $bol_cuot->id }}">{{ $bol_cuot->id }}</span></td>
                                                                     <td>
                                                                         {{ $boleta->moneda->simbolo }}
-                                                                        {{ number_format($fc_cuota->monto, 2) }}
-                                                                        <input type="hidden" name=""
-                                                                            id="numero_{{ $fc_cuota->id }}"
-                                                                            value="{{ $fc_cuota->numero_cuota }}">
-                                                                        <input type="hidden" name=""
-                                                                            id="monto_{{ $fc_cuota->id }}"
-                                                                            value="{{ $boleta->moneda->simbolo }} {{ $fc_cuota->monto }}">
-                                                                        <input type="hidden" name=""
-                                                                            id="total_{{ $fc_cuota->id }}"
-                                                                            value="{{ $fc_cuota->monto }}">
+                                                                        <span style="display: none">{{$tot = 0 }}</span>
+                                                                        {{-- {{$adelantos_reg}} --}}
+                                                                        @if (is_object($adelantos_reg))
+                                                                            @if ($adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->count() != 0)
+                                                                                <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->sum('montos_input')}}</span>    
+                                                                            @endif
+                                                                        @endif
+                                                                        {{ $tot_monto =  number_format($bol_cuot->monto - $tot, 2)}} 
+                                                                        <input type="hidden" name="" id="numero_{{ $bol_cuot->id }}" value="{{ $bol_cuot->numero_cuota }}">
+                                                                        <input type="hidden" name="" id="monto_{{ $bol_cuot->id }}" value="{{ $boleta->moneda->simbolo }} {{ $tot_monto }}">
+                                                                        <input type="hidden" name="" id="monto_sin_format_{{ $bol_cuot->id }}" value="{{ round($bol_cuot->monto - $tot,2) }}">
+                                                                        <input type="hidden" name="" id="total_{{ $bol_cuot->id }}" value="{{ $tot_monto }}">
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $boleta->moneda->simbolo }}
+                                                                        @if ($bol_cuot->estado == 2)
+                                                                            {{number_format($bol_cuot->monto,2)}}
+                                                                        @else
+                                                                            {{number_format($tot,2)}}
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         @if ($index == 0)
@@ -371,60 +403,86 @@
                                                                         @endif
                                                                     </td>
                                                                     <td>
-                                                                        {{ Carbon\Carbon::parse($fc_cuota->fecha_pago)->format('d/m/Y') }}
+                                                                        {{ Carbon\Carbon::parse($bol_cuot->fecha_pago)->format('d/m/Y') }}
                                                                         <input type="hidden" name=""
-                                                                            id="fecha_ven_{{ $fc_cuota->id }}"
-                                                                            value="{{ $fc_cuota->fecha_pago }}">
+                                                                            id="fecha_ven_{{ $bol_cuot->id }}"
+                                                                            value="{{ $bol_cuot->fecha_pago }}">
                                                                     </td>
                                                                     <td>
-                                                                        @if ($fc_cuota->estado == 1)
-                                                                            @if($pagos_reg[$index]->fecha_pago == $fc_cuota->fecha_pago)
+                                                                        @if ($bol_cuot->estado == 1)
+                                                                            @if($pagos_reg[$index]->fecha_pago == $bol_cuot->fecha_pago)
                                                                                 Se pagó el mismo día     
-                                                                            @elseif(Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago) > 0)
+                                                                            @elseif(Carbon\Carbon::parse($bol_cuot->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago) > 0)
                                                                                 Se pagó a tiempo
                                                                             @else
-                                                                                Tiene {{Carbon\Carbon::parse($fc_cuota->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago)}} días de Retraso
+                                                                                Tiene {{Carbon\Carbon::parse($bol_cuot->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago)}} días de Retraso
                                                                             @endif
                                                                         @else
                                                                             Aun no ha sido pagado
                                                                         @endif
                                                                     </td>
                                                                     <td>
-                                                                        @if (isset($pagos_reg[$index]))
-                                                                            <strong>{{ strtoupper($pagos_reg[$index]->comprobante_pago->tipo_pago) }}</strong>
-                                                                        @else
-                                                                            <strong>Sin Pago</strong>
+                                                                        @if (is_object($adelantos_reg))
+                                                                            <hr>
+                                                                            @if($adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->count() != 0)
+                                                                                <h4><strong>Informe de Adelantos:</strong></h4>
+                                                                                <div class="table_div_adelantos">
+                                                                                    <div class="row">
+                                                                                        <div class="col-sm-1"><strong>Id</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Metodo de Pago</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Monto</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Fecha</strong></div>
+                                                                                        <div class="col-sm-3"><strong>Detalles</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Comprobante</strong></div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        @if (is_object($adelantos_reg))
+                                                                                            @foreach ($adelantos_reg->where('cuota_cred_id', $bol_cuot->id ) as $a => $adl_reg)
+                                                                                                <div class="col-sm-1">
+                                                                                                    {{$a+1}}
+                                                                                                </div>
+                                                                                                <div class="col-sm-2">
+                                                                                                    <span class="text-right">
+                                                                                                        {{ ucfirst($adl_reg->tipo_pago) }}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                                <div class="col-sm-2">{{$boleta->moneda->simbolo}} {{number_format($adl_reg->montos_input,2)}}</div>
+                                                                                                <div class="col-sm-2">{{Carbon\Carbon::parse($adl_reg->fechas_input)->format('d-m-Y')}}</div>
+                                                                                                <div class="col-sm-3"><button type="button" class="btn btn-primary btn-sm" id="view_detail_adelanto" onclick="search_adelantos({{$adl_reg->id}})" ><i class="fa fa-eye"></i></button></div>
+                                                                                                <div class="col-sm-2">
+                                                                                                    {{-- <button type="button" class="btn btn-secondary btn-sm" id=""><i class="fa fa-download"></i></button> --}}
+                                                                                                    <a class="btn btn-secondary btn-sm" href="{{route('adelantos.comprobantes_pdf', $adl_reg->id)}}"><i class="fa fa-download"></i></a>
+                                                                                                </div>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endif
                                                                         @endif
                                                                     </td>
-
                                                                     <td>
-                                                                        @if ($fc_cuota->estado == 0)
+                                                                        @if ($bol_cuot->estado == 0)
                                                                             <strong>PENDIENTE</strong>
-                                                                        @elseif($fc_cuota->estado == 1)
+                                                                        @elseif($bol_cuot->estado == 1)
                                                                             <strong>{{ Carbon\Carbon::parse($pagos_reg[$index]->fecha_pago)->format('d/m/Y') }}</strong>
                                                                         @else
                                                                             <strong>RETRASADO</strong>
                                                                         @endif
                                                                     </td>
                                                                     <td>
-                                                                        @if ($fc_cuota->estado == 1)
-                                                                            <button class="btn btn-primary" id="pago"
-                                                                                disabled>Pagar</button>
-                                                                            {{-- <button class="btn btn-primary" disabled>Adelanto</button> --}}
-                                                                        @else
-                                                                            <button class="btn btn-primary" id="pago"
-                                                                                onclick="modal_pagos({{ $fc_cuota->id }},'credito')">Pagar</button>
-                                                                            {{-- <button class="btn btn-primary">Adelanto</button> --}}
-                                                                        @endif
-
+                                                                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" @if ($bol_cuot->estado == 2) disabled @endif>Seleccionar</button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a class="dropdown-item" class="btn btn-primary" @if ($bol_cuot->estado != 2)  onclick="modal_pagos( {{ $bol_cuot->id }},'credito')" @endif>Pagar</a></li>
+                                                                            <li><a class="dropdown-item" class="btn btn-primary" @if ($bol_cuot->estado != 2) data-toggle="modal" data-target="#myModal5"   onclick="pago_adelanto({{$boleta->id}},'only',{{$bol_cuot->id}})" @endif>Adelantar</a></li>
+                                                                        </ul>
                                                                     </td>
                                                                     <td>
                                                                         {{-- MODAL DE VER DETALLES  --}}
-                                                                        @if ($fc_cuota->estado != 1)
+                                                                        @if ($bol_cuot->estado != 1)
                                                                             <button class="btn btn-primary" disabled>Ver detalles</button>
                                                                         @else
                                                                             <button class="btn btn-primary"
-                                                                                onclick="detalle_cuota({{ $fc_cuota->id }})">Ver
+                                                                                onclick="detalle_cuota({{ $bol_cuot->id }})">Ver
                                                                                 detalles</button>
                                                                             <input type="hidden" name="" id="">
                                                                         @endif
@@ -510,17 +568,6 @@
                                                                         <p class="text-right">{{Carbon\Carbon::parse($pagos_deta[0]->fecha_emision_input)->format('d-m-Y')}}</p>
                                                                     </div>
                                                                 </div>
-                                                                @if (is_object($adelantos_reg))
-                                                                    <div class="col-sm-3">
-                                                                        <div class="form-control">
-                                                                            <strong>Monto total Adelantado:</strong>
-                                                                            <hr>
-                                                                            <p class="text-right">
-                                                                                {{$boleta->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
                                                                 @break
                                                             @case("tarjeta")
                                                                 <div class="col-sm-3">
@@ -544,17 +591,6 @@
                                                                         <p class="text-right">{{Carbon\Carbon::parse($pagos_deta[0]->fechas_input)->format('d-m-Y')}}</p>
                                                                     </div>
                                                                 </div>
-                                                                @if (is_object($adelantos_reg))
-                                                                    <div class="col-sm-3">
-                                                                        <div class="form-control">
-                                                                            <strong>Monto total Adelantado:</strong>
-                                                                            <hr>
-                                                                            <p class="text-right">
-                                                                                {{$boleta->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
                                                                 @break
                                                             @case("efectivo")
                                                                 <div class="col-sm-3">
@@ -571,17 +607,6 @@
                                                                         <p class="text-right">{{Carbon\Carbon::parse($pagos_deta[0]->fechas_input)->format('d-m-Y')}}</p>
                                                                     </div>
                                                                 </div>
-                                                                @if (is_object($adelantos_reg))
-                                                                    <div class="col-sm-3">
-                                                                        <div class="form-control">
-                                                                            <strong>Monto total Adelantado:</strong>
-                                                                            <hr>
-                                                                            <p class="text-right">
-                                                                                {{$boleta->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
                                                                 <div class="col-sm-3">
                                                                     <div class="form-control">
                                                                         <strong>Monto de Pago</strong>
@@ -612,21 +637,10 @@
                                                                         <p class="text-right">{{Carbon\Carbon::parse($pagos_deta[0]->fechas_input)->format('d-m-Y')}}</p>
                                                                     </div>
                                                                 </div>
-                                                                @if (is_object($adelantos_reg))
-                                                                    <div class="col-sm-3">
-                                                                        <div class="form-control">
-                                                                            <strong>Monto total Adelantado:</strong>
-                                                                            <hr>
-                                                                            <p class="text-right">
-                                                                                {{$boleta->moneda->simbolo}} {{number_format(round($adelantos_reg->sum('montos_input'),2),2)}}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
                                                                 @break
                                                             @default
                                                         @endswitch
-                                                        @if ($boleta->estado_pago != 0)
+                                                        @if ($boleta->estado_pago == 2)
                                                             <div class="col-sm-3">
                                                                 <div class="form-control">
                                                                     <strong>Comprobante</strong><hr>
@@ -656,12 +670,13 @@
                                         </div>
                                         <div role="tabpanel" id="tab-2" class="tab-pane">
                                             <div class="panel-body">
-                                                <input type="hidden" name="" id="monto_contado" value="{{ number_format($pago_total,2) }}">
+                                                <input type="hidden" name="" id="monto_contado" value="{{ number_format($tot_pagar,2) }}">
                                                 <input type="hidden" name="" id="simbolo_monto" value="{{ $boleta->moneda->simbolo }}">
                                                 <input type="hidden" name="" id="fecha_vencimiento" value="{{ Carbon\Carbon::parse($boleta->fecha_vencimiento)->format('d-m-Y') }}">
-                                                <input type="hidden" name="" id="monto_sin_format_0" value="{{ round($pago_total,2)}}">
-                                                <input type="hidden" name="" id="total_0" value="{{ $pago_total }}">
+                                                <input type="hidden" name="" id="monto_sin_format_0" value="{{ $tot_pagar}}">
+                                                <input type="hidden" name="" id="total_0" value="{{ $tot_pagar }}">
                                                 <span hidden id="n_cuota_0">0</span>
+                                                <span hidden id="cuota_view_n_0">1</span>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <h3>Informacion de Adelantos</h3>

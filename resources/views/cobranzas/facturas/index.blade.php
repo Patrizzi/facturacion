@@ -525,6 +525,14 @@
                                     <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
+                                                <label class="col-form-label">¿Es cheque diferido? </label>
+                                                <div class="">
+                                                    <span>No&nbsp;</span><input type="checkbox" class="js-switch-pago" name="cheque_diferido" /><span>&nbsp;Si</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
                                                 <label class="col-form-label">Numero de Cheque</label>
                                                 <input type="text" id="" name="cheque_name" value=""
                                                     placeholder="Numero de Cheque"
@@ -560,6 +568,7 @@
                                                     class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-form-label">Monto</label>
@@ -575,11 +584,20 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div class="form-group">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">Banco de la Empresa</label>
+                                                <select name="banco_cuenta" id="select_banco_pagos" class="select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    @foreach ($bancos as $banco)
+                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
                                                 <label class="col-form-label">N° de Cuenta</label>
-                                                <input type="text" value="" name="cheque_n_cuenta"
-                                                    placeholder="N° de Cuenta"
-                                                    class="form-control pago_class_1 class_pago" required>
+                                                <select name="cheque_n_cuenta" class="form-control pago_class_1 class_pago" id="select_cuenta_pago">
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -697,6 +715,30 @@
                                                     class="form-control pago_class_4 class_pago fecha_hoy"
                                                     name="transferencia_fecha" id=""
                                                     value="{{ $fecha_hoy }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">Banco de la Empresa</label>
+                                                <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_pago" onchange="changue_bancos_pago_tr()">
+                                                    @foreach ($bancos as $banco)
+                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">N° de Cuenta Bancaria</label>
+                                                <select name="transferencia_n_cuenta" class="form-control pago_class_4 class_pago" id="select_cuenta_adl_pag">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">N° de Operación</label>
+                                                <input type="text"
+                                                    class="form-control pago_class_4 class_pago" name="transferencia_operacion_pag" id="transferencia_oper_pag" >
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -854,6 +896,90 @@
     @include('cobranzas.adelanto')
 
     <script>
+        var elem_2 = document.querySelector('.js-switch-pago');
+        var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+        $( document ).ready(function() {
+            $('#select_banco_pagos').select2({
+                placeholder: "Seleccionar",
+            });
+            $('#select_cuenta_pago').select2({
+                placeholder: "Seleccionar",
+            });
+            
+            $('#select_banco_transf_pag').select2({
+                placeholder: "Seleccionar",
+            });
+            $('#select_cuenta_adl_pag').select2({
+                placeholder: "Seleccionar",
+            });
+        });
+
+        function changue_bancos_pagos(){
+            // $("#select_banco_adl").attr('disabled', false);
+            console.log('a');
+            var id_banc = $("#select_banco_pagos").val();
+            $('#select_cuenta_pago').select2({
+                placeholder: "Seleccionar",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{route('bancos.registros_search')}}",
+                    dataType: 'json',
+                    type: "POST",
+                    data: function (params) {
+                        return {
+                            '_token': $('input[name=_token]').val(),
+                            'id_bancos': id_banc
+                        };
+                    },
+                    processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                            };
+                        })
+                    };
+                    },
+                    cache: true
+                }
+            });
+        }
+        function changue_bancos_pago_tr(){
+            // $("#select_banco_adl").attr('disabled', false);
+            console.log('a');
+            var id_banc = $("#select_banco_transf_pag").val();
+            $('#select_cuenta_adl_pag').select2({
+                placeholder: "Seleccionar",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{route('bancos.registros_search')}}",
+                    dataType: 'json',
+                    type: "POST",
+                    data: function (params) {
+                        return {
+                            '_token': $('input[name=_token]').val(),
+                            'id_bancos': id_banc
+                        };
+                    },
+                    processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                            };
+                        })
+                    };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        $("#select_cuenta_adl").select2();
+        $("#select_cuenta_adl_transf").select2();
         $(document).ready(function() {
             $('input[name="daterange"]').daterangepicker({
                     "locale": {

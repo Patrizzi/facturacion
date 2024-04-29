@@ -13,6 +13,8 @@ use App\Empresa;
 use App\Facturacion;
 use App\Facturacion_m;
 use App\Igv;
+use App\NotaVenta;
+use App\NotaVentaRegistro;
 use PDF;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Return_;
@@ -45,7 +47,7 @@ class CreditosAdelantosController extends Controller
         if ($factura->forma_pago_id == 2) {
             $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
             foreach ($cuotas as $llave => $cuota) {
-                $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
+                // $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
                 $new_monto =  round($cuota->monto - $monto_adl_precio,2);
                 $array_cuot[$llave] = array(
                     'id_cuota' => $cuota->id,
@@ -101,7 +103,7 @@ class CreditosAdelantosController extends Controller
         if ($factura->forma_pago_id == 2) {
             $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar 
             foreach ($cuotas as $llave => $cuota) {
-                $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
+                // $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
                 $new_monto =  round($cuota->monto - $monto_adl_precio,2);
                 $array_cuot[$llave] = array(
                     'id_cuota' => $cuota->id,
@@ -155,7 +157,7 @@ class CreditosAdelantosController extends Controller
         if ($boleta->forma_pago_id == 2 ){
             $cuotas = Cuotas_credito::where('boleta_id',$boleta->id)->get();
             foreach ($cuotas as $llave => $cuota) {
-                $monto_adl_cuota = CreditosAdelantos::where('cuota_cred_id', $cuota->id)->sum('montos_inputs');
+                // $monto_adl_cuota = CreditosAdelantos::where('cuota_cred_id', $cuota->id)->sum('montos_inputs');
                 $new_monto = round($cuota->monto - $monto_adl_pr, 2);
                 $array_cuot[$llave] = array(
                     'id_cuota' => $cuota->id,
@@ -206,7 +208,7 @@ class CreditosAdelantosController extends Controller
         if ($boleta->forma_pago_id == 2 ){
             $cuotas = Cuotas_credito::where('boleta_m_id',$boleta->id)->get();
             foreach ($cuotas as $llave => $cuota) {
-                $monto_adl_cuota = CreditosAdelantos::where('cuota_cred_id', $cuota->id)->sum('montos_inputs');
+                // $monto_adl_cuota = CreditosAdelantos::where('cuota_cred_id', $cuota->id)->sum('montos_inputs');
                 $new_monto = round($cuota->monto - $monto_adl_pr, 2);
                 $array_cuot[$llave] = array(
                     'id_cuota' => $cuota->id,
@@ -233,7 +235,7 @@ class CreditosAdelantosController extends Controller
             );
         }
         $array_end = array(
-            'boleta_cod' => $boleta->codigo_fac,
+            'boleta_cod' => $boleta->codigo_boleta,
             'cliente_doc' => $boleta->cliente->numero_documento,
             'cliente_nombre' => $boleta->cliente->nombre,
             'boleta_moneda' => $boleta->moneda->nombre,
@@ -703,6 +705,135 @@ class CreditosAdelantosController extends Controller
             return redirect()->route('pagos.show_boletas_m', $boleta_schr->codigo_boleta);
         }
     }
+
+    public function store_nota_venta(Request $request){
+        // return $request;
+        $tipo_adelanto = $request->get('input_adelanto');
+        $id_n_venta = $request->get('id_nota_venta');
+        $n_venta_not = $request->get('numero_nota');
+        $igv = Igv::first();
+        $nota_serach  = NotaVenta::where('id', $id_n_venta)->first();
+        $exist_Adl = CreditosAdelantos::where('nota_ven_id',$nota_serach->id)->first();
+        $nota_serach->estado_pago = 1;
+        // obtener el precio total; sin importar si es dolar o sol
+        $total = NotaVentaRegistro::where('nota_venta_id', $nota_serach->id)->get();
+        $al_tot = 0;
+        foreach ($total as $tot) {
+            $al_tot += round($tot->cantidad * $tot->precio_nacional,2);
+        }
+        CreditosAdelantos::cambio_estado_nota_adl($nota_serach->id);
+
+        if (!isset($exist_Adl)) {
+            $adelanto = new CreditosAdelantos(); 
+            $adelanto->nota_ven_id = $nota_serach->id;
+            $adelanto->precio_total_pago = $al_tot;
+            $adelanto->save();
+        }else{
+            $adelanto = $exist_Adl;
+        }
+
+        $adl_regist = new CreditosAdelantosRegistros();
+        $adl_regist->creditos_adl_id = $adelanto->id;
+        // $adelanto_reg
+        switch ($tipo_adelanto) {
+            case '1': // CHEQUE
+                if ($request->hasFile('cheque_file_adl')) {
+                    $file = $request->file('cheque_file_adl');
+                    $name_file = time() . $file->getClientOriginalName();
+                    $destino = public_path('archivos/adelantos/');
+                    $file->move($destino, $name_file);
+                } else {
+                    $name_file = null;
+                }
+
+                
+                $adl_regist->tipo_pago = "cheque";
+                if ($request->get('cheque_diferido') == 'on') { //registro de cheque diferido
+                    $adl_regist->option_input = 1;
+                    //cambio de estado a 2 para pendiente -> nuevo formulario para saber si ya pasó
+                    //estado  0 = sin pagara |||  1 = pagado medio  ||| 2 pagado parcial
+                    $adl_regist->estado = 2;
+                }else{
+                    //option input para cheque es para saber si es diferido o no
+                    $adl_regist->option_input = 0;
+                }
+                $adl_regist->numero_input = $request->get('cheque_name_adl');
+                $adl_regist->fechas_input = $request->get('cheque_fecha_cobro_adl');
+                $adl_regist->bancos_input = $request->get('cheque_banco_emisor_adl');
+                $adl_regist->persona_input = $request->get('cheque_beneficiario_adl');
+                $adl_regist->montos_input = $request->get('cheque_monto');
+                $adl_regist->adicional_input = $request->get('cheque_n_cuenta');
+                $adl_regist->fecha_emision_input = $request->get('cheque_fecha_emision_adl');
+                $adl_regist->file_input = $name_file;
+                $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
+                $adl_regist->save();
+            
+
+            break;
+            case '2': //tarjeta
+
+                if ($request->hasFile('tarjeta_file_adl')) {
+                    $file = $request->file('tarjeta_file_adl');
+                    $name_file = time() . $file->getClientOriginalName();
+                    $destino = public_path('archivos/adelantos/');
+                    $file->move($destino, $name_file);
+                } else {
+                    $name_file = null;
+                }
+                // 
+                $adl_regist->tipo_pago = 'tarjeta';
+                $adl_regist->persona_input = $request->get('tarjeta_titular_adl');
+                $adl_regist->bancos_input = $request->get('tarjeta_banco_adl');
+                $adl_regist->fechas_input = $request->get('tarjeta_fecha_adl');
+                $adl_regist->montos_input = $request->get('tarjeta_mondo_adl');
+                $adl_regist->file_input = $name_file;
+                $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
+                $adl_regist->save();
+            break;
+            case '3': // efectivo
+
+                // 
+                $adl_regist->tipo_pago = 'efectivo';
+                $adl_regist->persona_input = $request->get('efectivo_persona_adl');
+                $adl_regist->fechas_input = $request->get('fecha_efectivo_adl');
+                $adl_regist->montos_input = $request->get('monto_adelanto_efectivo_adl');
+                $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
+                $adl_regist->save();
+
+            break;
+            case '4': //transferencia
+                # code
+                if ($request->hasFile('transferencia_comprobante_adl')) {
+                    $file = $request->file('transferencia_comprobante_adl'); 
+                    $name_file = time() . $file->getClientOriginalName();
+                    $destino = public_path('archivos/adelantos/');
+                    $file->move($destino, $name_file);
+                } else {
+                    $name_file = null;
+                }
+
+                // $adl_regist->creaditos_adl_id = $adelanto->id;
+                $adl_regist->tipo_pago = 'transferencia';
+                $adl_regist->persona_input = $request->get('transferencia_titular_adl');
+                $adl_regist->fechas_input = $request->get('transferencia_fecha_adl');
+                $adl_regist->adicional_input = $request->get('transferencia_n_cuenta');
+                $adl_regist->numero_input = $request->get('transferencia_operacion_adl');
+                $adl_regist->bancos_input = $request->get('transferencia_banco_adl');
+                $adl_regist->montos_input = $request->get('transferencia_monto');
+                $adl_regist->file_input = $name_file;
+                // numero de cuenta
+                $adl_regist->notas_adicionales = $request->get('notas_adicionales_adl');
+                $adl_regist->save();
+
+            break; 
+        }
+        $adelanto->ultima_fecha = $adl_regist->fechas_input;
+        $adelanto->precio_adelanto = $adelanto->precio_adelanto +$adl_regist->montos_input;
+        $adelanto->save();
+
+        return redirect()->route('pagos.show_nota_venta', $nota_serach->cod_nota_venta);
+    }
+
     public function store(Request $request)
     {
         //
@@ -789,7 +920,14 @@ class CreditosAdelantosController extends Controller
                 $moneda = $doc->moneda;
                 $comprobante_num = $doc->codigo_boleta;
             break;
+            case $adl_header->nota_ven_id != null:
+                $doc = NotaVenta::where('id', $adl_header->nota_ven_id)->first();
+                $cli_id = $doc->cliente_id;
+                $moneda = $doc->moneda;
+                $comprobante_num = $doc->cod_nota_venta;
+            break;
         }
+        // return $doc;
         if(isset($adelanto_reg->adicional_input)){
             $banco_reg = BancoRegistro::where('id', $adelanto_reg->adicional_input)->first();
             $adelanto_reg->adicional_input = $banco_reg->tipo_cuenta.' - '.$banco_reg->nombre_cuenta;
