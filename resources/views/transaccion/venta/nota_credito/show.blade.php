@@ -288,6 +288,7 @@
                                                     {{$notas_credito_registro->servicio->nombre}} 
                                                 @endif --}}
                                                 {{$notas_credito_registro->descripcion}} 
+                                                {{$doc_reg[$e]->descripcion_item}}
                                                 {{-- {{$doc_reg[$e]->descripcion_item}} --}}
                                                 {{-- <br><strong>N/S:</strong>
                                                 {{$notas_credito_registro->numero_serie}} --}}
