@@ -117,10 +117,20 @@ class TipoCambioController extends Controller
         $moneda=Moneda::where('principal',1)->first();
         // https://www.deperu.com/api/rest/cotizaciondolar.json
         // https://www.youtube.com/watch?v=WTxYp9ECnPY
-        $data = file_get_contents("https://www.deperu.com/api/rest/cotizaciondolar.json");
+        $url = "https://www.deperu.com/api/rest/cotizaciondolar.json";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        curl_close($ch);
 
+        // $http_status_code = intval(substr($header[0], 9, 3));
+        // return $http_status_code;
+        // $data = file_get_contents("https://www.deperu.com/api/rest/cotizaciondolar.json");
+        
         //VALIDACION DOBLE EN CASO DE QUE EL PRIMER TIPO DE CAMBIO(MEJOR) SE CAIGA;
-        if ($data === false) {
+        if ($info['http_code'] !== 200) {
             $data = file_get_contents("https://www.sunat.gob.pe/a/txt/tipoCambio.txt");
             $info = explode('|',$data);
             // return $info[0]; 
@@ -139,6 +149,10 @@ class TipoCambioController extends Controller
             );
             
         }else{
+            $header_size = $info['header_size'];
+            $headers = substr($response, 0, $header_size);
+            $data = substr($response, $header_size);
+            
             $info = json_decode($data, true);
             if($moneda->tipo=="nacional"){
                 $num=$info['Cotizacion'][0]['Venta']-0.05;
