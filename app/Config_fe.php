@@ -263,7 +263,7 @@ class Config_fe extends Model
                 ->setTipoDoc('01') // Factura - Catalog. 01  // pagina 33 del pdf sunat 2.1
                 ->setSerie($serie) // numero de serie
                 ->setCorrelativo($correlativo) // y numero correlativo  // ejemplo en seccion 2.2 pagina 20 del pdf sunat 2.1 infomracion precisa pagina 30 pdf sunat 2.1
-                ->setFechaEmision($factura->updated_at)
+                ->setFechaEmision($factura->created_at)
                 ->setFormaPago(new FormaPagoCredito(round($total, 2))) // FormaPago: credito
                 ->setCuotas(
                     $cuotas_credito
