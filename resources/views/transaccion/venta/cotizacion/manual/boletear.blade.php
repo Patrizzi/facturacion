@@ -192,7 +192,7 @@
                         </div>
                         <div class="col-sm-4" align="center">
                             <button class="btn btn-primary " style="margin-top: 5px" type="button"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
-                            <button type="submit" hidden class="button_submit">Save BD</button>
+                            <button type="submit" hidden id="button_submit">Save BD</button>
                         </div>
                     </div>
                     <br>

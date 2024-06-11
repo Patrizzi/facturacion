@@ -1063,7 +1063,7 @@ class CotizacionManualController extends Controller
         $boleta->user_id =auth()->user()->id;
         $boleta->estado='0';
         $boleta->tipo_operacion_id= $cotizacion->tipo_operacion_id;
-        $boleta->tipo_documento_id = $cotizacion->tipo_documento_id;
+        $boleta->tipo_documento_id = 3;
         $boleta->save();
         // modificación para que se cierre el codigo en almacen
         $boleta_primera=Codigo_guia_almacen::where('id', $cotizacion->almacen_id)->first();
