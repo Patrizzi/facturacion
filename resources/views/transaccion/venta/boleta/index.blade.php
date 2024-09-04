@@ -75,6 +75,71 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
+                                <div class="center">
+	 
+                                    <div class="progress">
+                                    <p>Producto1</p>
+                                        <progress id="P1" max="100" value="91"></progress>
+                                        <span></span>
+                                    </div>
+                                    
+                                    <div class="progress">
+                                    <p>Producto2</p>
+                                        <progress id="P2" max="100" value="72"></progress>
+                                        <span></span>
+                                    </div>
+                                    
+                                    <div class="clear"></div>
+                                    <div class="progress">
+                                    <p>Producto3</p>
+                                        <progress id="P3" max="100" value="86"></progress>
+                                        <span></span>
+                                    </div>
+                                
+                                    <div class="progress">
+                                    <p>Producto4</p>
+                                        <progress id="P4" max="100" value="52"></progress>
+                                        <span></span>
+                                    </div>
+                                    <div class="clear"></div>
+                                        
+                                    <div class="progress">
+                                    <p>Producto5</p>
+                                        <progress id="P5" max="100" value="79"></progress>
+                                        <span></span>
+                                    </div>
+                                    
+                                    <div class="progress">
+                                    <p>Producto6</p>
+                                        <progress id="P6" max="100" value="36"></progress>
+                                        <span></span>
+                                    </div>
+                                        
+                                    <input type="button" id="boton" value="Reload" />
+                                </div>
+                            
+                            <script type="text/javascript"> 
+                            
+                                window.onload = function() { 
+                                    
+                                    animateprogress("#P1",91);
+                                    animateprogress("#P2",72);
+                                    animateprogress("#P3",86);
+                                    animateprogress("#P4",52);
+                                    animateprogress("#P5",79);
+                                    animateprogress("#P6",36);
+                                    
+                                } 	
+                                document.querySelector ("#boton").addEventListener ("click", function() { 
+                                    animateprogress("#P1",91);
+                                    animateprogress("#P2",72);
+                                    animateprogress("#P3",86);
+                                    animateprogress("#P4",52);
+                                    animateprogress("#P5",79);
+                                    animateprogress("#P6",36);
+                               
+                                });
+                            </script>
                                 <tr>
                                     <th>ID</th>
                                     <th>Código de Boleta</th>
