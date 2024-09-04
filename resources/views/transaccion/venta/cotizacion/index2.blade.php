@@ -24,7 +24,7 @@
                         <script>
                             console.log({{ $almacens->id }});
 
-                            function alm_adm_{{ $almacens->id }}() {
+                            function alm_adm_{{ $almacens->id }}(){
                                 document.getElementById('alm_adm_{{ $almacens->id }}').submit();
                             }
                         </script>
@@ -38,6 +38,60 @@
 @endif
 
 @section('content')
+    {{-- Contenedor de la Sección de Resumen --}}
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <b><h4 class="text-left">Resumen de Febrero 2024</h4></b>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <div style="border: 2px solid green; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
+                                    <img src="/path/to/your/icon1.png" alt="" style="width: 40px;">
+                                </div>
+                                <h4 style="font-weight: bold">Cotización</h4>
+                                <p>4 Documentos</p>
+                                <p style="color: green; font-weight: bold;">S/. 471.55</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <div style="border: 2px solid orange; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
+                                    <img src="/path/to/your/icon2.png" alt="" style="width: 40px;">
+                                </div>
+                                <h4 style="font-weight: bold">Cotización Manual</h4>
+                                <p>4 Documentos</p>
+                                <p style="color: orange; font-weight: bold;">S/. 351.00</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <div style="border: 2px solid red; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
+                                    <img src="/path/to/your/icon3.png" alt="" style="width: 40px;">
+                                </div>
+                                <h4 style="font-weight: bold">Nota de Venta</h4>
+                                <p>5 Documentos</p>
+                                <p style="color: red; font-weight: bold;">S/. ****.**</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <div style="border: 2px solid blue; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
+                                    <img src="/path/to/your/icon4.png" alt="" style="width: 40px;">
+                                </div>
+                                <h4 style="font-weight: bold">Clientes</h4>
+                                <p>25 Clientes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Ejemplo para modificar -->
+      
+    {{-- Formulario de Selección de Comprobantes y Fecha --}}
     <span hidden>
         <script>
             function Enviar_create() {
@@ -68,13 +122,39 @@
         </div>
     @endif
 
+    <!-- Navegacion y los botones -->
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    {{-- <div class="ibox-title">
-
-                    </div> --}}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content" style="background-color: #f3f3f3;">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab-cotizacion">
+                                <span style="color: green;">&#9632;</span> Cotización
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-cotizacion-manual">
+                                <span style="color: orange;">&#9632;</span> Cotización Manual
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-nota-venta">
+                                <span style="color: red;">&#9632;</span> Nota de Venta
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-clientes">
+                                <span style="color: blue;">&#9632;</span> Clientes
+                            </a>
+                        </li>
+                         <button class="btn btn-success dim" type="button">+</button>  
+                         <button class="btn btn-success dim" type="button">
+                         <i class="fa fa-upload"></i>
+                        </button>        
+                    </ul>
+                   
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-sm-6">
@@ -97,7 +177,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
-                                            Cotizacion:</strong></label>
+                                            Cotización:</strong></label>
                                     <select class="form-control col-lg-8" name="" id="select_tipo_coti">
                                         <option value="">Todos los comprobantes</option>
                                         <option value="factura">Factura</option>
@@ -107,110 +187,229 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTables-example-facturacion">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>N° Cotización</th>
-                                        <th>Ruc/DNI</th>
-                                        <th>Cliente</th>
-                                        <th>Fecha Emision</th>
-                                        <th style="display: none"></th>
-                                        <th>Importe T.</th>
-                                        <th>Ver</th>
-                                        <th>Estado</th>
-                                        <th>Estado Aprobado</th>
-                                        <th>Creado por</th>
-                                        <th style="display: none">Tipo de Cotizacion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        
+                        <!-- Contenido de las pestañas -->
+                        <div class="tab-content">
+                            
+                            <!-- Tabla de Nota de Venta -->
+                            <div id="tab-cotizacion" class="tab-pane active">
+                                <div class="ibox-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover dataTables-example-facturacion">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>N° Cotización</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emision</th>
+                                                    <th style="display: none"></th>
+                                                    <th>Importe T.</th>
+                                                    <th>Ver</th>
+                                                    <th>Estado</th>
+                                                    <th>Estado Aprobado</th>
+                                                    <th>Creado por</th>
+                                                    <th style="display: none">Tipo de Cotizacion</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($cotizacion as $cotizacions)
+                                                    <tr class="gradeX">
+                                                        <span hidden>{{ $subtotal = 0 }}</span>
+                                                        <td>{{ $cotizacions->id }}</td>
+                                                        <td>{{ $cotizacions->cod_cotizacion }}</td>
+                                                        <td>{{ $cotizacions->cliente->numero_documento }}</td>
+                                                        <td>{{ $cotizacions->cliente->nombre }}</td>
+                                                        <td>{{ Carbon\Carbon::parse($cotizacions->created_at)->format('d-m-Y') }}</td>
+                                                        <span hidden>
+                                                            {{ $subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }}
+                                                        </span>
+                                                        <span hidden>
+                                                            @if ($cotizacions->moneda_id == 2)
+                                                                {{-- Dolares --}}
+                                                                {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                                {{ $total_conv = $total * $cotizacions->cambio }}
+                                                            @else
+                                                                {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                                {{ $total_conv = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                            @endif
+                                                        </span>
+                                                        <td style="display: none">
+                                                            {{ $total_conv }}
+                                                        </td>
+                                                        <td>{{ $cotizacions->moneda->simbolo }}
+                                                            {{ number_format(round($total, 2), 2) }}
+                                                        </td>
+                                                        <td>
+                                                            <center><a href="{{ route('cotizacion.show', $cotizacions->id) }}"><button
+                                                                        type="button" class="btn btn-primary"><i
+                                                                            class="fa fa-eye"></i></button></a></center>
+                                                        </td>
+                                                        <td>
+                                                            @if ($cotizacions->estado == '0')
+                                                                <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
+                                                            @else
+                                                                <button type="button"
+                                                                    class="btn btn-w-m btn-default">Procesado</button>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($cotizacions->estado_aprovar == '0')
+                                                                <form action="{{ route('cotizacion.aprobar', $cotizacions->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('put')
+                                                                    <button type="submit" class="btn btn-w-m btn-info">Aprobar</button>
+                                                                </form>
+                                                            @else
+                                                                <button type="button" class="btn btn-w-m btn-default">Aprobado por <br>
+                                                                    @if ($cotizacions->aprobado->personal->nombres == auth()->user()->personal->nombres)
+                                                                        usted
+                                                                    @else
+                                                                        {{ $cotizacions->aprobado->personal->nombres }}
+                                                                    @endif
+                                                                </button>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($cotizacions->user_personal->personal->nombres == auth()->user()->personal->nombres)
+                                                                Creado por usted
+                                                            @else
+                                                                Creado por {{ $cotizacions->user_personal->personal->nombres }}
+                                                            @endif
+                                                        </td>
+                                                        <td style="display: none">
+                                                            {{ $cotizacions->tipo }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="5" class="text-right">Total General</th>
+                                                    <th colspan="4"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Tabla de Cotizacion Manual -->
+                            <div id="tab-cotizacion-manual" class="tab-pane fade">
+                                <div class="ibox-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>N° Cotizacion</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emision</th>
+                                                    <th>Forma</th>
+                                                    <th>Importe T.</th>
+                                                    <th>Ver</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>******</td>
+                                                    <td>70871200</td>
+                                                    <td>Daniel Roman</td>
+                                                    <td>07-10-2024</td>
+                                                    <td>Contado</td>
+                                                    <td>S/. 200.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-success">Completado</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Tabla de Nota de Venta -->
+                            <div id="tab-nota-venta" class="tab-pane fade">
+                                <div class="ibox-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>N° Nota de Venta</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emision</th>
+                                                    <th>Importe T.</th>
+                                                    <th>Forma</th>
+                                                    <th>Ver</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>****</td>
+                                                    <td>08123245</td>
+                                                    <td>Julio Flores</td>
+                                                    <td>02-01-2024</td>
+                                                    <td>Contado</td>
+                                                    <td>S/. 200.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-success">Completado</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
 
-                                    @foreach ($cotizacion as $cotizacions)
-                                        <tr class="gradeX">
-                                            <span hidden>{{ $subtotal = 0 }}</span>
-                                            <td>{{ $cotizacions->id }}</td>
-                                            <td>{{ $cotizacions->cod_cotizacion }}</td>
-                                            <td>{{ $cotizacions->cliente->numero_documento }}</td>
-                                            <td>{{ $cotizacions->cliente->nombre }}</td>
-                                            <td>{{ Carbon\Carbon::parse($cotizacions->created_at)->format('d-m-Y') }}</td>
-                                            <span hidden>
-                                                {{ $subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }}
-                                            </span>
-                                            <span hidden>
-                                                @if ($cotizacions->moneda_id == 2)
-                                                    {{-- Dolares --}}
-                                                    {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
-                                                    {{ $total_conv = $total * $cotizacions->cambio }}
-                                                @else
-                                                    {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
-                                                    {{ $total_conv = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
-                                                @endif
-                                            </span>
-                                            <td style="display: none">
-                                                {{ $total_conv }}
-                                            </td>
-                                            <td>{{ $cotizacions->moneda->simbolo }}
-                                                {{ number_format(round($total, 2), 2) }}
-                                            </td>
-                                            <td>
-                                                <center><a href="{{ route('cotizacion.show', $cotizacions->id) }}"><button
-                                                            type="button" class="btn btn-primary"><i
-                                                                class="fa fa-eye"></i></button></a></center>
-                                            </td>
-                                            <td>
-                                                @if ($cotizacions->estado == '0')
-                                                    <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
-                                                @else
-                                                    <button type="button"
-                                                        class="btn btn-w-m btn-default">Procesado</button>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($cotizacions->estado_aprovar == '0')
-                                                    <form action="{{ route('cotizacion.aprobar', $cotizacions->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('put')
-                                                        <button type="submit" class="btn btn-w-m btn-info">Aprobar</button>
-                                                    </form>
-                                                @else
-                                                    <button type="button" class="btn btn-w-m btn-default">Aprobado por <br>
-                                                        @if ($cotizacions->aprobado->personal->nombres == auth()->user()->personal->nombres)
-                                                            usted
-                                                        @else
-                                                            {{ $cotizacions->aprobado->personal->nombres }}
-                                                        @endif
-                                                    </button>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($cotizacions->user_personal->personal->nombres == auth()->user()->personal->nombres)
-                                                    Creado por usted
-                                                @else
-                                                    Creado por {{ $cotizacions->user_personal->personal->nombres }}
-                                                @endif
-                                            </td>
-                                            <td style="display: none">
-                                                {{ $cotizacions->tipo }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="5" class="text-right">Total General</th>
-                                        <th colspan="4"></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                            <!-- Tabla de Clientes -->
+                            <div id="tab-clientes" class="tab-pane fade">
+                                <div class="ibox-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Cliente</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Fecha </th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody> 
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Marlo Samaniego Calderon</td>
+                                                    <td>72531212</td>
+                                                    <td>02-01-2024</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div> 
+                </div> 
             </div>
         </div>
     </div>
+</div>
+
     <style>
         .dropdown-menu {
             left: 70px;
