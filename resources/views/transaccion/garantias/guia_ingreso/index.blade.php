@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Guias Ingreso')
+@section('title', 'Guias Ingreso') 
 @section('breadcrumb', 'Guia de ingreso')
 @section('breadcrumb2', 'Garantia')
 @section('data-toggle', 'modal')
@@ -56,6 +56,17 @@
     </div>
     @endif
 
+    <div><ul class="nav nav-underline">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">Guia de ingreso<span class=" badge badge-pill badge-success">1</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Guia de egreso <span class=" badge badge-pill badge-warning">2</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Informe Técnico <span class=" badge badge-pill badge-warning">3 </span></a>
+  </li>
+</ul></div>
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -63,6 +74,7 @@
                     <div class="ibox ">
                         <div class="ibox-content">
                             <div class="table-responsive">
+                            
                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="table_productos" >
                                     <thead>
                                         <tr>
