@@ -3198,4 +3198,7 @@ if($validacion==1){
 
         return view('transaccion.venta.cotizacion.free_print', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','i','end','igv_p','banco_count','end2'));
     }
+    public function index3(){
+        return view('transaccion.venta.cotizacion.index3');
+    }
 }
