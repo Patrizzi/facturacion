@@ -447,5 +447,9 @@ class GarantiaGuiaIngresoController extends Controller
         $printer->pulse();
         $printer->close();
       }
-
+      public function index2(){
+     
+      return view('transaccion.garantias.index');
+  
+      }
     }
