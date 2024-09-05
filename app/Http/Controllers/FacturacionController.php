@@ -643,7 +643,7 @@ class FacturacionController extends Controller
             $fact_detra->save();
         }
         // return $tipo_ex[0];
-       
+
 
         //contador de valores de cantidad
         $cantidad = $request->input('cantidad');
@@ -944,7 +944,7 @@ class FacturacionController extends Controller
             if ($facturacion->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();
             }else{
-                $cuotas = "not";   
+                $cuotas = "not";
             }
         }else{
             $detraccion = "not";
@@ -970,7 +970,7 @@ class FacturacionController extends Controller
             if ($facturacion->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();
             }else{
-                $cuotas = "not";   
+                $cuotas = "not";
             }
         }else{
             $detraccion = "not";
@@ -1076,7 +1076,7 @@ class FacturacionController extends Controller
         if ($factura->guia_remision == "0") {
             $factura_reg = Facturacion_registro::where('facturacion_id', $factura->id)->get();
             // return
-            //DESCUENTO DE STOCK 
+            //DESCUENTO DE STOCK
             foreach ($factura_reg as $fact_reg) {
                 // return $fact_reg;
                 if ($fact_reg->producto_id  != null) {
@@ -1105,5 +1105,8 @@ class FacturacionController extends Controller
             $guias_cod = "vacio";
             return $guias_cod;
         }
+    }
+    public function index3(){
+        return view("transaccion.venta.facturacion.index3");
     }
 }
