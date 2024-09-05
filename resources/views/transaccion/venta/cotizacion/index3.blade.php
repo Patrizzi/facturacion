@@ -2,11 +2,67 @@
 
 @section('title', 'Cotización')
 @section('content')
-<div class="container mb-4" style="margin: 40px 0 0 0;">
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h4>Resumen de Febrero 2024</h4>
+                    </div>
+                    <div class="ibox-content">
+                        {{-- Acá iria el tema de los circulos --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li>
+                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1">
+                                        {{-- link del tab 1 --}}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" data-toggle="tab" href="#tab-2">
+                                        {{-- link del tab 2 --}}
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                    <div class="panel-body">
+                                        {{-- CONTENIDO DENTRO DEL TAB  --}}
+                                    </div>
+                                </div>
+                                <div role="tabpanel" id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        {{-- CONTENIDO DENTRO DEL TAB  2 --}}
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content animated fadeInRight" >
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="bg-white p-4 rounded shadow-sm">
-                    <b><h4 class="text-left">Resumen de Febrero 2024</h4></b>
+                    <b>
+                        <h4 class="text-left">Resumen de Febrero 2024</h4>
+                    </b>
                     <div class="row text-center">
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
@@ -52,340 +108,365 @@
             </div>
         </div>
     </div>
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-content" style="background-color: #f3f3f3;">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tab-cotizacion">
-                                <span style="color: green;">4&#9632;</span> Cotización
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-cotizacion-manual">
-                                <span style="color: orange;">4&#9632;</span> Cotización Manual
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-nota-venta">
-                                <span style="color: red;">6&#9632;</span> Nota de Venta
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-clientes">
-                                <span style="color: blue;">25&#9632;</span> Clientes
-                            </a>
-                        </li>
-                         <button class="btn btn-success dim" type="button" style="text-align:left;"><i class="fa fa-plus-square"></i></button>  
-                         <button class="btn btn-success dim" type="button"><i class="fa fa-upload"></i></button>        
-                    </ul>
-                   
-                    <div class="ibox-content">
-                        <!-- Contenido de las pestañas -->
-                        <div class="tab-content">
-                            
-                            <!-- Tabla de cotizacion -->
-                            <div id="tab-cotizacion" class="tab-pane active">
-                                <div class="ibox-content">
-                                <div class="row">
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="daterange"
-                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group row">
-                                    <label class="col-lg-6 col-form-label" for=""><strong>Tipo de
-                                            Cotización:</strong></label>
-                                    <select class="form-control col-lg-6" name="" id="select_tipo_coti">
-                                        <option value="">Comprobantes</option>
-                                        <option value="factura">Factura</option>
-                                        <option value="boleta">Boleta</option>
-                                        <option value="nota_venta">Nota de Venta</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label" for=""><strong>Buscar:</strong></label>
-                                    <input type="search" class="form-control col-lg-6" >
-                                </div>
-                            </div>
-                        </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover ">
-                                        <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>N° Cotizacion</th>
-                                                    <th>Ruc/DNI</th>
-                                                    <th>Cliente</th>
-                                                    <th>Fecha Emision</th>
-                                                    <th>Forma</th>
-                                                    <th>Importe T.</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>******</td>
-                                                    <td>031465121</td>
-                                                    <td>Marco Estrada</td>
-                                                    <td>07-10-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 200.00</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            
-                                            <tbody>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>******</td>
-                                                    <td>031465121</td>
-                                                    <td>Marlo Calderon</td>
-                                                    <td>08-02-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 320.00</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th colspan="6" class="text-right">Total General</th>
-                                                    <th colspan="4">S/. ****</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Tabla de Cotizacion Manual -->
-                            <div id="tab-cotizacion-manual" class="tab-pane fade">
-                            <div class="ibox-content">
-                            <div class="row">
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="daterange"
-                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group row">
-                                    <label class="col-lg-6 col-form-label" for=""><strong>Tipo de
-                                            Cotización:</strong></label>
-                                    <select class="form-control col-lg-6" name="" id="select_tipo_coti">
-                                        <option value="">Comprobantes</option>
-                                        <option value="factura">Factura</option>
-                                        <option value="boleta">Boleta</option>
-                                        <option value="nota_venta">Nota de Venta</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label" for=""><strong>Buscar:</strong></label>
-                                    <input type="search" class="form-control col-lg-6" >
-                                </div>
-                            </div>
-                        </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>N° Cotizacion</th>
-                                                    <th>Ruc/DNI</th>
-                                                    <th>Cliente</th>
-                                                    <th>Fecha Emision</th>
-                                                    <th>Forma</th>
-                                                    <th>Importe T.</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>******</td>
-                                                    <td>70871200</td>
-                                                    <td>Daniel Roman</td>
-                                                    <td>07-10-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 200.00</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                    
-                                                        <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th colspan="6" class="text-right">Total General</th>
-                                                    <th colspan="4">S/. ****</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li>
+                                <a class="nav-link active" data-toggle="tab" href="#tab-cotizacion">
+                                    <span style="color: green;">4&#9632;</span> Cotización
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-cotizacion-manual">
+                                    <span style="color: orange;">4&#9632;</span> Cotización Manual
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-nota-venta">
+                                    <span style="color: red;">6&#9632;</span> Nota de Venta
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-clientes">
+                                    <span style="color: blue;">25&#9632;</span> Clientes
+                                </a>
+                            </li>
+                            <button class="btn btn-success dim" type="button" style="text-align:left;"><i
+                                    class="fa fa-plus-square"></i></button>
+                            <button class="btn btn-success dim" type="button"><i class="fa fa-upload"></i></button>
+                        </ul>
 
-                            <!-- Tabla de Nota de Venta -->
-                            <div id="tab-nota-venta" class="tab-pane fade">
-                                <div class="ibox-content">
-                                <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="daterange"
-                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                           
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for=""><strong>Buscar:</strong></label>
-                                    <input type="search" class="form-control col-lg-6" >
-                                </div>
-                            </div>
-                        </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>N° Nota de Venta</th>
-                                                    <th>Ruc/DNI</th>
-                                                    <th>Cliente</th>
-                                                    <th>Fecha Emision</th>
-                                                    <th>Forma</th>
-                                                    <th>Importe T.</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>****</td>
-                                                    <td>08123245</td>
-                                                    <td>Julio Flores</td>
-                                                    <td>02-01-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 200.00</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                    
-                                                        <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="">
+                            <!-- Contenido de las pestañas -->
+                            <div class="tab-content">
 
-                            <!-- Tabla de Clientes -->
-                            <div id="tab-clientes" class="tab-pane fade">
-                                <div class="ibox-content">
-                                <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label" for=""><strong>Buscar:</strong></label>
-                                    <input type="search" class="form-control col-lg-6" >
+                                <!-- Tabla de cotizacion -->
+                                <div id="tab-cotizacion" class="tab-pane active">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            onclick="revert_select()">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-6 col-form-label" for=""><strong>Tipo de
+                                                            Cotización:</strong></label>
+                                                    <select class="form-control col-lg-6" name=""
+                                                        id="select_tipo_coti">
+                                                        <option value="">Comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label"
+                                                        for=""><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>N° Cotizacion</th>
+                                                        <th>Ruc/DNI</th>
+                                                        <th>Cliente</th>
+                                                        <th>Fecha Emision</th>
+                                                        <th>Forma</th>
+                                                        <th>Importe T.</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>******</td>
+                                                        <td>031465121</td>
+                                                        <td>Marco Estrada</td>
+                                                        <td>07-10-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 200.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-info"><i
+                                                                    class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>******</td>
+                                                        <td>031465121</td>
+                                                        <td>Marlo Calderon</td>
+                                                        <td>08-02-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 320.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-clock-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th colspan="6" class="text-right">Total General</th>
+                                                        <th colspan="4">S/. ****</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Codigo</th>
-                                                    <th>Ruc/DNI</th>
-                                                    <th>Cliente</th>
-                                                    <th>Correo</th>
-                                                    <th>Celular</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody> 
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>*******</td>
-                                                    <td>72531212</td>
-                                                    <td>Marlo Samaniego Calderon</td>
-                                                    <td>sincorreo@gmail.com</td>
-                                                    <td>920123456</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tbody> 
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>*******</td>
-                                                    <td>77893000</td>
-                                                    <td>Carlos Antoñez Gomez</td>
-                                                    <td>sincorreo@gmail.com</td>
-                                                    <td>970841600</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                <!-- Tabla de Cotizacion Manual -->
+                                <div id="tab-cotizacion-manual" class="tab-pane fade">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            onclick="revert_select()">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-6 col-form-label" for=""><strong>Tipo de
+                                                            Cotización:</strong></label>
+                                                    <select class="form-control col-lg-6" name=""
+                                                        id="select_tipo_coti">
+                                                        <option value="">Comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label"
+                                                        for=""><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>N° Cotizacion</th>
+                                                        <th>Ruc/DNI</th>
+                                                        <th>Cliente</th>
+                                                        <th>Fecha Emision</th>
+                                                        <th>Forma</th>
+                                                        <th>Importe T.</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>******</td>
+                                                        <td>70871200</td>
+                                                        <td>Daniel Roman</td>
+                                                        <td>07-10-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 200.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-clock-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th colspan="6" class="text-right">Total General</th>
+                                                        <th colspan="4">S/. ****</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tabla de Nota de Venta -->
+                                <div id="tab-nota-venta" class="tab-pane fade">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            onclick="revert_select()">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label"
+                                                        for=""><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>N° Nota de Venta</th>
+                                                        <th>Ruc/DNI</th>
+                                                        <th>Cliente</th>
+                                                        <th>Fecha Emision</th>
+                                                        <th>Forma</th>
+                                                        <th>Importe T.</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>****</td>
+                                                        <td>08123245</td>
+                                                        <td>Julio Flores</td>
+                                                        <td>02-01-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 200.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-trash-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tabla de Clientes -->
+                                <div id="tab-clientes" class="tab-pane fade">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label"
+                                                        for=""><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Codigo</th>
+                                                        <th>Ruc/DNI</th>
+                                                        <th>Cliente</th>
+                                                        <th>Correo</th>
+                                                        <th>Celular</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>*******</td>
+                                                        <td>72531212</td>
+                                                        <td>Marlo Samaniego Calderon</td>
+                                                        <td>sincorreo@gmail.com</td>
+                                                        <td>920123456</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-info"><i
+                                                                    class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>*******</td>
+                                                        <td>77893000</td>
+                                                        <td>Carlos Antoñez Gomez</td>
+                                                        <td>sincorreo@gmail.com</td>
+                                                        <td>970841600</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-info"><i
+                                                                    class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div> 
-                    </div> 
-                </div> 
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <style>
         .dropdown-menu {
@@ -527,6 +608,7 @@
         function limpiar_select() {
             table.column(4).search("").draw();
         }
+
         function revert_select() {
             table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
