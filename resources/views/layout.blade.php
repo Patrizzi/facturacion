@@ -490,7 +490,7 @@
         </div>
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
-                <h2>@yield('title', 'Inicio')</h2>
+                <h2>@yield('title', 'Inicio')</h2> <!-- modificaodoaow">
                         <!-- <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                         <a>@yield('breadcrumb', '')</a>

@@ -2,68 +2,16 @@
 
 @section('title', 'Cotización')
 @section('content')
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-title">
-                        <h4>Resumen de Febrero 2024</h4>
-                    </div>
-                    <div class="ibox-content">
-                        {{-- Acá iria el tema de los circulos --}}
-                    </div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h4>Resumen de Febrero 2024</h4>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li>
-                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1">
-                                        {{-- link del tab 1 --}}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" data-toggle="tab" href="#tab-2">
-                                        {{-- link del tab 2 --}}
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                    <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB  --}}
-                                    </div>
-                                </div>
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
-                                    <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB  2 --}}
-                                    </div>
-                                </div>
-                            </div>    
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="wrapper wrapper-content animated fadeInRight" >
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="bg-white p-4 rounded shadow-sm">
-                    <b>
-                        <h4 class="text-left">Resumen de Febrero 2024</h4>
-                    </b>
-                    <div class="row text-center">
+                <div class="ibox-content">
+                    <div class="row">
+                        <!-- Primer Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                                 <div style="border: 2px solid green; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
@@ -71,9 +19,10 @@
                                 </div>
                                 <h4 style="font-weight: bold">Cotización</h4>
                                 <p>4 Documentos</p>
-                                <p style="color: green; font-weight: bold;">S/. 471.55</p>
+                                <p style="color: green; font-weight: bold;">S/. 771.55</p>
                             </div>
                         </div>
+                        <!-- Segundo Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                                 <div style="border: 2px solid orange; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
@@ -81,26 +30,28 @@
                                 </div>
                                 <h4 style="font-weight: bold">Cotización Manual</h4>
                                 <p>4 Documentos</p>
-                                <p style="color: orange; font-weight: bold;">S/. 351.00</p>
+                                <p style="color: orange; font-weight: bold;">S/. 658.00</p>
                             </div>
                         </div>
+                        <!-- Tercer Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                                 <div style="border: 2px solid red; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
                                     <img src="/path/to/your/icon3.png" alt="" style="width: 40px;">
                                 </div>
                                 <h4 style="font-weight: bold">Nota de Venta</h4>
-                                <p>5 Documentos</p>
-                                <p style="color: red; font-weight: bold;">S/. ****.**</p>
+                                <p>3 Documentos</p>
+                                <p style="color: red; font-weight: bold;">S/. 320.00</p>
                             </div>
                         </div>
+                        <!-- Cuarto Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                                 <div style="border: 2px solid blue; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
                                     <img src="/path/to/your/icon4.png" alt="" style="width: 40px;">
                                 </div>
                                 <h4 style="font-weight: bold">Clientes</h4>
-                                <p>25 Clientes</p>
+                                <p>5 Clientes</p>
                             </div>
                         </div>
                     </div>
@@ -108,160 +59,160 @@
             </div>
         </div>
     </div>
+</div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
-                <div class="">
-                    <div class="tabs-container">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li>
-                                <a class="nav-link active" data-toggle="tab" href="#tab-cotizacion">
-                                    <span style="color: green;">4&#9632;</span> Cotización
+                            <li class="nav-item">
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1">
+                                    <span class="badge badge-success" style="background-color :green;">4</span> Cotización 
                                 </a>
                             </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-cotizacion-manual">
-                                    <span style="color: orange;">4&#9632;</span> Cotización Manual
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab-2">
+                                    <span class="badge badge-success" style="background-color: orange;">4</span> Cotización Manual
                                 </a>
                             </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-nota-venta">
-                                    <span style="color: red;">6&#9632;</span> Nota de Venta
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab-3">
+                                    <span class="badge badge-success" style="background-color: red;">3</span> Nota de Venta
                                 </a>
                             </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-clientes">
-                                    <span style="color: blue;">25&#9632;</span> Clientes
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab-4">
+                                    <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
                                 </a>
                             </li>
-                            <button class="btn btn-success dim" type="button" style="text-align:left;"><i
-                                    class="fa fa-plus-square"></i></button>
-                            <button class="btn btn-success dim" type="button"><i class="fa fa-upload"></i></button>
-                        </ul>
-
-                        <div class="">
-                            <!-- Contenido de las pestañas -->
-                            <div class="tab-content">
-
-                                <!-- Tabla de cotizacion -->
-                                <div id="tab-cotizacion" class="tab-pane active">
-                                    <div class="ibox-content">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <div class="input-group">
-                                                    <input class="form-control" type="text" name="daterange"
-                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            onclick="revert_select()">
-                                                            <i class="fa fa-history"></i>
-                                                        </button>
-                                                    </span>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group row">
-                                                    <label class="col-lg-6 col-form-label" for=""><strong>Tipo de
-                                                            Cotización:</strong></label>
-                                                    <select class="form-control col-lg-6" name=""
-                                                        id="select_tipo_coti">
-                                                        <option value="">Comprobantes</option>
-                                                        <option value="factura">Factura</option>
-                                                        <option value="boleta">Boleta</option>
-                                                        <option value="nota_venta">Nota de Venta</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group row">
-                                                    <label class="col-lg-3 col-form-label"
-                                                        for=""><strong>Buscar:</strong></label>
-                                                    <input type="search" class="form-control col-lg-6">
-                                                </div>
+                            <div class="ml-auto d-flex">
+                                <button class="btn btn-success mr-4" type="button">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                <button class="btn btn-success" type="button">
+                                    <i class="fa fa-upload"></i>
+                                </button>
+                            </div>
+                            </ul>
+                        <div class="tab-content">
+                         <!-- COTIZACION-->   
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange"
+                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                        <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                        <i class="fa fa-eraser"></i>
+                                                    </button>
+                                                </span>
                                             </div>
                                         </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover ">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>N° Cotizacion</th>
-                                                        <th>Ruc/DNI</th>
-                                                        <th>Cliente</th>
-                                                        <th>Fecha Emision</th>
-                                                        <th>Forma</th>
-                                                        <th>Importe T.</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>******</td>
-                                                        <td>031465121</td>
-                                                        <td>Marco Estrada</td>
-                                                        <td>07-10-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 200.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-                                                            <button type="button" class="btn btn-info"><i
-                                                                    class="fa fa-check-circle"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-
-                                                <tbody>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>******</td>
-                                                        <td>031465121</td>
-                                                        <td>Marlo Calderon</td>
-                                                        <td>08-02-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 320.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-                                                            <button type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-clock-o"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th colspan="6" class="text-right">Total General</th>
-                                                        <th colspan="4">S/. ****</th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label class="col-lg-6 col-form-label"><strong>Tipo de Cotización:</strong></label>
+                                                <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                    <option value="">Comprobantes</option>
+                                                    <option value="factura">Factura</option>
+                                                    <option value="boleta">Boleta</option>
+                                                    <option value="nota_venta">Nota de Venta</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
+                                                <input type="search" class="form-control col-lg-6">
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr><th></th>
+                                                    <th>ID</th>
+                                                    <th>N° Cotizacion</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emision</th>
+                                                    <th>Forma</th>
+                                                    <th>Importe T.</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                    <div class="icheckbox_square-green checked" style="position: relative;">
+                                                        <input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
+                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                    </div>
+                                                    </td>
+                                                    <td>1</td>
+                                                    <td>******</td>
+                                                    <td>031465121</td>
+                                                    <td>Marco Estrada</td>
+                                                    <td>07-10-2024</td>
+                                                    <td>Contado</td>
+                                                    <td>S/. 200.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr><td>
+                                                    <div class="icheckbox_square-green" style="position: relative;">
+                                                        <input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
+                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                    </div></td>
+                                                    <td>2</td>
+                                                    <td>******</td>
+                                                    <td>031465121</td>
+                                                    <td>Marlo Calderon</td>
+                                                    <td>08-02-2024</td>
+                                                    <td>Contado</td>
+                                                    <td>S/. 320.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                        <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="6" class="text-right">Total General</th>
+                                                    <th colspan="6">S/. ****</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </div>
-                                <!-- Tabla de Cotizacion Manual -->
-                                <div id="tab-cotizacion-manual" class="tab-pane fade">
-                                    <div class="ibox-content">
+                            </div>
+                                 <!-- COTIZACION MANUAL--> 
+                                <div role="tabpanel" id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        {{-- CONTENIDO DENTRO DEL TAB  2 --}}
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                                     <span class="input-group-append">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            onclick="revert_select()">
+                                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
                                                             <i class="fa fa-history"></i>
                                                         </button>
                                                     </span>
                                                     <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
+                                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
                                                             <i class="fa fa-eraser"></i>
                                                         </button>
                                                     </span>
@@ -269,11 +220,8 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
-                                                    <label class="col-lg-6 col-form-label" for=""><strong>Tipo de
-                                                            Cotización:</strong></label>
-                                                    <select class="form-control col-lg-6" name=""
-                                                        id="select_tipo_coti">
-                                                        <option value="">Comprobantes</option>
+                                                    <select class="form-control col-lg-12" id="select_tipo_coti">
+                                                        <option value="">Todos los Comprobantes</option>
                                                         <option value="factura">Factura</option>
                                                         <option value="boleta">Boleta</option>
                                                         <option value="nota_venta">Nota de Venta</option>
@@ -282,16 +230,15 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
-                                                    <label class="col-lg-3 col-form-label"
-                                                        for=""><strong>Buscar:</strong></label>
-                                                    <input type="search" class="form-control col-lg-6">
+                                                    <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-8">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
+                                            <table class="table table-bordered">
+                                            <thead>
+                                                    <tr><th></th>
                                                         <th>ID</th>
                                                         <th>N° Cotizacion</th>
                                                         <th>Ruc/DNI</th>
@@ -302,8 +249,14 @@
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody>                              
                                                     <tr>
+                                                        <td>
+                                                            <div class="icheckbox_square-green checked" style="position:relative;">
+                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
+                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                            </div>
+                                                        </td>
                                                         <td>1</td>
                                                         <td>******</td>
                                                         <td>70871200</td>
@@ -323,18 +276,17 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th colspan="6" class="text-right">Total General</th>
-                                                        <th colspan="4">S/. ****</th>
+                                                        <th colspan="6">S/. ****</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Tabla de Nota de Venta -->
-                                <div id="tab-nota-venta" class="tab-pane fade">
-                                    <div class="ibox-content">
-                                        <div class="row">
+                                 <!-- NOTA DE VENTA--> 
+                                <div role="tabpanel" id="tab-3" class="tab-pane">
+                                    <div class="panel-body">
+                                    <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -363,9 +315,9 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover">
+                                            <table class="table table-bordered">
                                                 <thead>
-                                                    <tr>
+                                                    <tr><th></th>
                                                         <th>ID</th>
                                                         <th>N° Nota de Venta</th>
                                                         <th>Ruc/DNI</th>
@@ -377,7 +329,12 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
+                                                    <tr><td>
+                                                            <div class="icheckbox_square-green checked" style="position:relative;">
+                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
+                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                            </div>
+                                                        </td>
                                                         <td>1</td>
                                                         <td>****</td>
                                                         <td>08123245</td>
@@ -398,11 +355,10 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Tabla de Clientes -->
-                                <div id="tab-clientes" class="tab-pane fade">
-                                    <div class="ibox-content">
-                                        <div class="row">
+                                 <!-- CLIENTES--> 
+                                <div role="tabpanel" id="tab-4" class="tab-pane">
+                                    <div class="panel-body">
+                                    <div class="row">
                                             <div class="col-sm-12">
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label"
@@ -412,7 +368,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover">
+                                            <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
@@ -461,12 +417,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        
 
     <style>
         .dropdown-menu {
@@ -501,6 +456,19 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    
+    <!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+    <script>
+    $(document).ready(function(){
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        
+    </script>
 
     <!-- Page-Level Scripts -->
     <script>
@@ -612,5 +580,7 @@
         function revert_select() {
             table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
+
+    
     </script>
 @endsection
