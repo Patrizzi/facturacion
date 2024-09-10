@@ -14,44 +14,44 @@
                         <!-- Primer Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <div style="border: 2px solid green; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
-                                    <img src="/path/to/your/icon1.png" alt="" style="width: 40px;">
+                                <div style="border: 2px solid green; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
+                                    <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                                 </div>
-                                <h4 style="font-weight: bold">Cotización</h4>
-                                <p>4 Documentos</p>
+                                <h4 style="font-weight: bold; margin-top: 15px;">Cotización</h4>
+                                <p style="margin: 5px 0;">4 Documentos</p>
                                 <p style="color: green; font-weight: bold;">S/. 771.55</p>
                             </div>
                         </div>
                         <!-- Segundo Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <div style="border: 2px solid orange; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
-                                    <img src="/path/to/your/icon2.png" alt="" style="width: 40px;">
+                                <div style="border: 2px solid orange; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
+                                    <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                                 </div>
-                                <h4 style="font-weight: bold">Cotización Manual</h4>
-                                <p>4 Documentos</p>
+                                <h4 style="font-weight: bold; margin-top: 15px;">Cotización Manual</h4>
+                                <p style="margin: 5px 0;">4 Documentos</p>
                                 <p style="color: orange; font-weight: bold;">S/. 658.00</p>
                             </div>
                         </div>
                         <!-- Tercer Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <div style="border: 2px solid red; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
-                                    <img src="/path/to/your/icon3.png" alt="" style="width: 40px;">
+                                <div style="border: 2px solid red; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
+                                    <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
                                 </div>
-                                <h4 style="font-weight: bold">Nota de Venta</h4>
-                                <p>3 Documentos</p>
+                                <h4 style="font-weight: bold; margin-top: 15px;">Nota de Venta</h4>
+                                <p style="margin: 5px 0;">3 Documentos</p>
                                 <p style="color: red; font-weight: bold;">S/. 320.00</p>
                             </div>
                         </div>
                         <!-- Cuarto Círculo -->
                         <div class="col-md-3">
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <div style="border: 2px solid blue; border-radius: 50%; padding: 20px; display: flex; justify-content: center; align-items: center;">
-                                    <img src="/path/to/your/icon4.png" alt="" style="width: 40px;">
+                                <div style="border: 2px solid blue; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
+                                    <i class="fa fa-user-o" style="font-size: 50px; color: black;"></i>
                                 </div>
-                                <h4 style="font-weight: bold">Clientes</h4>
-                                <p>5 Clientes</p>
+                                <h4 style="font-weight: bold; margin-top: 15px;">Clientes</h4>
+                                <p style="margin: 5px 0;">5 Clientes</p>
                             </div>
                         </div>
                     </div>
@@ -66,35 +66,35 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1">
-                                    <span class="badge badge-success" style="background-color :green;">4</span> Cotización 
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab-2">
-                                    <span class="badge badge-success" style="background-color: orange;">4</span> Cotización Manual
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab-3">
-                                    <span class="badge badge-success" style="background-color: red;">3</span> Nota de Venta
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab-4">
-                                    <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
-                                </a>
-                            </li>
-                            <div class="ml-auto d-flex">
-                                <button class="btn btn-success mr-4" type="button">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                                <button class="btn btn-success" type="button">
-                                    <i class="fa fa-upload"></i>
-                                </button>
-                            </div>
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <li class="nav-item">
+                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1">
+                                        <span class="badge badge-success" style="background-color :green;">4</span> Cotización 
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-2">
+                                        <span class="badge badge-success" style="background-color: orange;">4</span> Cotización Manual
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-3">
+                                        <span class="badge badge-success" style="background-color: red;">3</span> Nota de Venta
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-4">
+                                        <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
+                                    </a>
+                                </li>
+                                <div class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <button class="btn btn-success mr-2" type="button">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button class="btn btn-success" type="button">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
+                                </div>
                             </ul>
                         <div class="tab-content">
                          <!-- COTIZACION-->   
