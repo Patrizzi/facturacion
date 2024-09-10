@@ -128,13 +128,13 @@
                     </li>
                     {{-- MENU DESPELEGABLE --}}
                     @can('inicio')
-                    <li><a href="{{route('inicio')}}"><img src="{{ asset('/archivos/imagenes/layout/inicio.svg')}}" class="iconos"> <span class="nav-label">Inicio</span></a></li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
                     @endcan
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
                     {{-- {{$inventario_inicial->estado}} --}}
                     @can('transacciones')
                     <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/comercializacion.svg')}}" class="iconos"> <span class="nav-label">Comercialización</span></a>
+                        <a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i> <span class="nav-label text-white">Comercialización</span></a>
                         <ul class="nav nav-second-level collapse">
                             @if(empty($inventario_inicial))
                                 {{-- @if($conteo_almacen==1) --}}
@@ -170,7 +170,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png')}}" class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
+                        <a href="#"><i class="fa fa-wrench fa-lg text-white"></i> <span class="nav-label text-white">Servicio Técnico</span></a>
                         <ul class="nav nav-second-level collapse">
                          @can('transacciones-garantias-guias_ingreso.index')
                          <li><a href="{{route('garantia_guia_ingreso.index')}}"><span>Guía Ingreso</span></a></li>
@@ -186,7 +186,7 @@
                  </li>
                  @if(empty($inventario_inicial))
                  <li>
-                    <a href="{{route('kardex-entrada.create')}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
+                    <a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario Inicial</span></a>
                     @elseif($inventario_inicial->estado==1)
                     <li>
                         <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
@@ -229,7 +229,7 @@
                 @endif
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/payment.png')}}" class="iconos">  <span class="nav-label">Créditos</span></a>
+                    <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i> <span class="nav-label text-white">Créditos</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li>
                             {{-- <a href="#">Pagos</a>
@@ -249,7 +249,7 @@
 
                 @can('planilla')
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/planilla.svg')}}" class="iconos"> <span class="nav-label">Planilla</span></a>
+                    <a href="#"><i class="fa fa-table fa-lg text-white"></i><span class="nav-label text-white">Planilla</span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('planilla-datos_generales.index')
                         <li><a href="{{route('personal.index')}}"><span>Personal</span></a></li>
@@ -264,7 +264,7 @@
                 @endcan
                 @can('consultas')
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/consultas.svg')}}" class="iconos"><span class="nav-label">Consultas</span></a>
+                    <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('consultas-garantias')
                         <li>
@@ -290,7 +290,7 @@
                 </li>
                 @endcan
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
+                    <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
@@ -300,7 +300,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
+                    <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
                         <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
@@ -309,7 +309,7 @@
                     </ul>
                 </li>
                 <li><a href="{{route('eventos.user_indes')}}">
-                        <img src="{{ asset('/archivos/imagenes/layout/calendario.png')}}" class="iconos"> <span class="nav-label">Calendario&nbsp;&nbsp;&nbsp;</span>
+                        <i class="fa fa-calendar fa-lg text-white"></i> <span class="nav-label text-white">Calendario&nbsp;&nbsp;&nbsp;</span>
                         @if ($count_eventos > 0)
                             <span class="label label-warning">{{$count_eventos}}</span>    
                         @endif
@@ -318,7 +318,7 @@
                 </li>
                 @can('auxiliares')
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/auxiliar.svg')}}" class="iconos"><span class="nav-label">Auxiliares</span></a>
+                    <a href="#"><i class="fa fa-life-ring fa-lg text-white"></i><span class="nav-label text-white">Auxiliares</span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('auxiliares-clientes.index')
                         <li><a href="{{route('cliente.index')}}"><span>Clientes</span></a></li>
@@ -332,14 +332,14 @@
 
                 @can('maestro')
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg')}}" class="iconos"><span class="nav-label">Productos y Servicios</span></a>
+                    <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
                         <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/configuracion.svg')}}" class="iconos"><span class="nav-label">Configuración </span></a>
+                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
                         <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
@@ -352,7 +352,7 @@
                 <li>
                   <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
-                  document.getElementById('logout-form').submit();"><img src="{{ asset('/archivos/imagenes/layout/logout.png')}}" class="iconos"><span class="nav-label">
+                  document.getElementById('logout-form').submit();"><i class="fa fa-power-off fa-lg text-white"></i><span class="nav-label text-white">
                     Cerrar Sección
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
