@@ -85,6 +85,70 @@ class FacturacionController extends Controller
         return view('transaccion.venta.facturacion.index', compact('facturacion', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv', 'nota_credito', 'nota_debito'));
     }
 
+    public function exportExcel(){
+        //Datos Requeridos:
+        //Fecha, Factura, Serie, N°, RUC, N° RUC, Cliente, Sub Total, IGV, Total
+        $response = [];
+        //Valor del igv
+        $valorIGV = Igv::first()->igv_total;
+        //Facturacion Registro
+        $facturacionesRegistros = Facturacion_registro::with('factura_ids')->take(20)->get();
+
+        foreach($facturacionesRegistros as $facturacion){
+            $factura_base = $facturacion->factura_ids;
+            //Fecha
+            $fecha = $factura_base->fecha_emision;
+            //Factura
+            $tipo_documento = $factura_base->tipo_documento;
+            if($tipo_documento == null){
+                $factura = 'No hay';
+            } else{
+                $factura = $tipo_documento->informacion;
+            }
+            //N° Serie
+            $numero_serie = $factura_base->codigo_fac;
+            //RUC y Cliente
+            $cliente = $factura_base->cliente;
+            $documento_identificacion = $cliente->documento_identificacion;
+            $numero_documento = $cliente->numero_documento;
+
+            //Sub Total (op_gravada + inafecta + exonerada + gratuita)
+            $op_gravada = $factura_base->op_gravada;
+            $op_inafecta = $factura_base->op_inafecta;
+            $op_exonerada = $factura_base->op_exonerada;
+            $op_gratuita = $factura_base->op_gratuita;
+
+            $subTotal = $op_gravada + $op_inafecta + $op_exonerada + $op_gratuita;
+
+            //IGV
+            //obtener valor de igv de la tabla igv, y dividir entre la op_gravada
+            $IGV = number_format(round($op_gravada/$valorIGV, 2), 2);
+
+            //Total
+            $total = $subTotal + $IGV;
+            
+
+            $registro = [
+                "FECHA" => $fecha,
+                "FACTURA" => $factura,
+                "NUMERO SERIE" => $numero_serie,
+                "RUC" => $documento_identificacion,
+                "N° RUC" => $numero_documento, 
+                "CLIENTE" => $cliente->nombre,
+                "SUB TOTAL" => number_format(round($subTotal, 2), 2),
+                "IGV" => $IGV,
+                "TOTAL" => number_format(round($total, 2), 2)
+            ];
+            $response[] = $registro;
+        }
+
+        //Obtener Fecha (fecha_emision / facturacion)
+        // $fecha_emision = $facturacion->pluck('fecha_emision');
+        return $response;
+
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

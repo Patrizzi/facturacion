@@ -11,12 +11,15 @@
 // 	return $post->cotizacion();
 // });
 
+use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\ParameterCallController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
 	[ 'middleware' => ['auth','api','cambio_diario']],
 	function(){
+
+		
 
 		// Route::view('/' , 'home')->name('inicio');
 		Route::get('/' , 'ViewController@home')->name('inicio');
@@ -221,6 +224,8 @@ Route::group(
 		Route::put('/facturacion/store/{id_moneda}','FacturacionController@store')->name('facturacion.store');
 		Route::post('/facturacion/anular','FacturacionController@anulacion')->name('facturacion.anulacion');
 		Route::post('/facturacion/ajax_remision', 'FacturacionController@ajax_remision')->name('facturacion.ajx_remision');
+		//DESCARGA DE FACTURA EN EXCEL
+		Route::get('/export_excel/facturacion', [FacturacionController::class, 'exportExcel']);
 		// Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 
 

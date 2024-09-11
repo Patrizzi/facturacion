@@ -39,6 +39,9 @@ class Facturacion extends Model
     public function tipo_operacion(){
         return $this->belongsTo(Tipo_operacion_f::class,'tipo_operacion_id');
     }
+    public function tipo_documento(){
+        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
+    }
 
     public static function revision_cuotas($id){
 
