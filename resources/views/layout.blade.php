@@ -135,7 +135,7 @@
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Ventas</span></a></li>
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Compras</span></a></li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-shopping-cart fa-lg text-white"></i><span class="nav-label text-white">Compras</span></a></li>
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Comprobantes</span></a></li>
 
