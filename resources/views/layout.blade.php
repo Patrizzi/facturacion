@@ -48,12 +48,7 @@
         font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
         text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);
     }
-
-    .nav-header {
-        background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");
-      }
-
-      .btn-primary {
+    .btn-primary {
         color: #fff;
         background-color: #1a5eb3;
         border-color: #1a3bb3;
@@ -118,7 +113,7 @@
                         <div class="dropdown profile-element" style="left: 10% ">
                             <a href="{{route('usuario.index')}}">
                                 <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
-                                <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
+                                <span class="block m-t-xs font-bold spans">Nombre del Usuario:</span>
                                 <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
                             </a>
                         </div>
