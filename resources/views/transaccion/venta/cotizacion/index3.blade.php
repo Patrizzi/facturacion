@@ -118,29 +118,28 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
-                                            <div class="form-group row">
-                                                <label class="col-lg-6 col-form-label"><strong>Tipo de Cotización:</strong></label>
-                                                <select class="form-control col-lg-6" id="select_tipo_coti">
-                                                    <option value="">Comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
-                                                </select>
+                                                <div class="form-group row">
+                                                    <select class="form-control col-lg-12" id="select_tipo_coti">
+                                                        <option value="">Todos los Comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
-                                                <input type="search" class="form-control col-lg-6">
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-8">
+                                                </div>
                                             </div>
-                                        </div>
                                     </div>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr><th></th>
                                                     <th>ID</th>
-                                                    <th>N° Cotizacion</th>
+                                                    <th>Código</th>
                                                     <th>Ruc/DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emision</th>
@@ -152,10 +151,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                    <div class="icheckbox_square-green checked" style="position: relative;">
-                                                        <input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
-                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                    </div>
+                                                    <input type="checkbox"  checked class="i-checks" name="input[]">
                                                     </td>
                                                     <td>1</td>
                                                     <td>COTV 001-00000003</td>
@@ -225,12 +221,28 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="6" class="text-right">Total General</th>
-                                                    <th colspan="6">S/. ****</th>
+                                                    <th colspan="7" class="text-right">Total General</th>
+                                                    <th colspan="7">S/. ****</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
                                     </div>
+                                    <!--PAGINACION DE COTIZACION -->
+                                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                                </li>
+                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">3</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0" class="page-link">4</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
+                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
+                                        </div> 
                                 </div>
                             </div>
                                  <!-- COTIZACION MANUAL--> 
@@ -276,7 +288,7 @@
                                             <thead>
                                                     <tr><th></th>
                                                         <th>ID</th>
-                                                        <th>N° Cotizacion</th>
+                                                        <th>Código</th>
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
                                                         <th>Fecha Emision</th>
@@ -294,7 +306,7 @@
                                                             </div>
                                                         </td>
                                                         <td>1</td>
-                                                        <td>******</td>
+                                                        <td>CMF 001-00000001</td>
                                                         <td>70871200</td>
                                                         <td>Daniel Roman</td>
                                                         <td>07-10-2024</td>
@@ -308,15 +320,97 @@
                                                                     class="fa fa-clock-o"></i></button>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="icheckbox_square-green checked" style="position:relative;">
+                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
+                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                            </div>
+                                                        </td>
+                                                        <td>2</td>
+                                                        <td>CMF 001-00000002</td>
+                                                        <td>20612050300</td>
+                                                        <td>COBRANZA INTELIGENTE S.A.C.</td>
+                                                        <td>17-09-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 195.01</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-warning"><i
+                                                                    class="fa fa-clock-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="icheckbox_square-green" style="position:relative;">
+                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
+                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                            </div>
+                                                        </td>
+                                                        <td>3</td>
+                                                        <td>CMF 001-00000003</td>
+                                                        <td>20604690685</td>
+                                                        <td>LUOXO S.A.C.</td>
+                                                        <td>02-04-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 305.11</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-info">
+                                                                <i class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="icheckbox_square-green" style="position:relative;">
+                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
+                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                            </div>
+                                                        </td>
+                                                        <td>4</td>
+                                                        <td>CMF 001-00000004</td>
+                                                        <td>20550971861</td>
+                                                        <td>DYM SOLUCIONES E.I.R.L.</td>
+                                                        <td>03-04-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 155.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-info">
+                                                                <i class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <th colspan="6" class="text-right">Total General</th>
-                                                        <th colspan="6">S/. ****</th>
+                                                        <th colspan="7" class="text-right">Total General</th>
+                                                        <th colspan="7">S/. ****</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
                                         </div>
+                                         <!--PAGINACION DE COTIZACION MANUAL-->
+                                         <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                                </li>
+                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">3</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0" class="page-link">4</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
+                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
+                                        </div> 
                                     </div>
                                 </div>
                                  <!-- NOTA DE VENTA--> 
@@ -387,9 +481,25 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table>     
                                         </div>
-                                    </div>
+                                        <!--PAGINACION NOTA DE VENTA-->
+                                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                                </li>
+                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">3</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0" class="page-link">4</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
+                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
+                                        </div> 
+                                    </div>    
                                 </div>
                                  <!-- CLIENTES--> 
                                 <div role="tabpanel" id="tab-4" class="tab-pane">
@@ -448,8 +558,21 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
+                                                
                                             </table>
                                         </div>
+                                        <!--PAGINACION DE CLIENTES-->
+                                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
+                                                </li>
+                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                                                </li>
+                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">3</a>
+                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">Siguiente</a>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
@@ -496,14 +619,13 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
     <script src="{{ asset('js/icheck.min.js') }}"></script>
-    <script>
-    $(document).ready(function(){
-                $('.i-checks').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
-                });
+ <script>
+        $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
             });
-        
+        });
     </script>
 
     <!-- Page-Level Scripts -->
