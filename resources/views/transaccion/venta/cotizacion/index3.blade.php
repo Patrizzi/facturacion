@@ -158,7 +158,7 @@
                                                     </div>
                                                     </td>
                                                     <td>1</td>
-                                                    <td>******</td>
+                                                    <td>COTV 001-00000003</td>
                                                     <td>031465121</td>
                                                     <td>Marco Estrada</td>
                                                     <td>07-10-2024</td>
@@ -175,12 +175,48 @@
                                                         <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
                                                     </div></td>
                                                     <td>2</td>
-                                                    <td>******</td>
-                                                    <td>031465121</td>
+                                                    <td>COTV 001-00000002</td>
+                                                    <td>031492021</td>
                                                     <td>Marlo Calderon</td>
                                                     <td>08-02-2024</td>
                                                     <td>Contado</td>
                                                     <td>S/. 320.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                        <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                    <div class="icheckbox_square-green" style="position: relative;">
+                                                        <input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
+                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                    </div>
+                                                    </td>
+                                                    <td>3</td>
+                                                    <td>COTV 001-00000001</td>
+                                                    <td>14865121</td>
+                                                    <td>Fabricio Yupanqui</td>
+                                                    <td>03-08-2024</td>
+                                                    <td>Contado</td>
+                                                    <td>S/. 190.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr><td>
+                                                    <div class="icheckbox_square-green" style="position: relative;">
+                                                        <input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
+                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                    </div></td>
+                                                    <td>4</td>
+                                                    <td>COTV 001-00000004</td>
+                                                    <td>12982021</td>
+                                                    <td>EM PLAST PERU E.I.R.L</td>
+                                                    <td>12-09-2024</td>
+                                                    <td>Contado</td>
+                                                    <td>S/. 480.55</td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
                                                         <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
