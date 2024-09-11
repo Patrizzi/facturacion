@@ -132,9 +132,29 @@
                     @endcan
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
                     {{-- {{$inventario_inicial->estado}} --}}
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Ventas</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Compras</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Comprobantes</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Garantias</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Creditos y Cobranzas</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Sire - Sunat</span></a></li>
+                  
+                    
+
+
+
                     @can('transacciones')
                     <li>
-                        <a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i> <span class="nav-label text-white">Comercialización</span></a>
+
+                      {{-- <a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i> <span class="nav-label text-white">Comercialización</span></a> --}}
                         <ul class="nav nav-second-level collapse">
                             @if(empty($inventario_inicial))
                                 {{-- @if($conteo_almacen==1) --}}
@@ -170,7 +190,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-wrench fa-lg text-white"></i> <span class="nav-label text-white">Servicio Técnico</span></a>
+                        {{--<a href="#"><i class="fa fa-wrench fa-lg text-white"></i> <span class="nav-label text-white">Servicio Técnico</span></a>--}}
                         <ul class="nav nav-second-level collapse">
                          @can('transacciones-garantias-guias_ingreso.index')
                          <li><a href="{{route('garantia_guia_ingreso.index')}}"><span>Guía Ingreso</span></a></li>
@@ -184,12 +204,12 @@
 
                      </ul>
                  </li>
-                 @if(empty($inventario_inicial))
+                 @if(empty($inventario))
                  <li>
-                    <a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario Inicial</span></a>
+                    <a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a>
                     @elseif($inventario_inicial->estado==1)
                     <li>
-                        <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario Inicial</span></a>
+                        <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
                         @else
 
 
@@ -229,7 +249,7 @@
                 @endif
                 @endcan
                 <li>
-                    <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i> <span class="nav-label text-white">Créditos</span></a>
+                {{--    <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i> <span class="nav-label text-white">Créditos</span></a>--}}
                     <ul class="nav nav-second-level collapse">
                         <li>
                             {{-- <a href="#">Pagos</a>
@@ -318,7 +338,7 @@
                 </li>
                 @can('auxiliares')
                 <li>
-                    <a href="#"><i class="fa fa-life-ring fa-lg text-white"></i><span class="nav-label text-white">Auxiliares</span></a>
+                {{--   <a href="#"><i class="fa fa-life-ring fa-lg text-white"></i><span class="nav-label text-white">Auxiliares</span></a> --}}
                     <ul class="nav nav-second-level collapse">
                         @can('auxiliares-clientes.index')
                         <li><a href="{{route('cliente.index')}}"><span>Clientes</span></a></li>
