@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2.5|^8.0",
         "barryvdh/laravel-dompdf": "^2.0",
+        "box/spout": "^3.3",
         "doctrine/dbal": "2.*",
         "dompdf/dompdf": "^2.0",
         "fabpot/goutte": "^4.0",

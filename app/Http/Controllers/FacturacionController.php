@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Box\Spout\Common\Type;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
@@ -88,7 +92,7 @@ class FacturacionController extends Controller
     public function exportExcel(){
         //Datos Requeridos:
         //Fecha, Factura, Serie, N°, RUC, N° RUC, Cliente, Sub Total, IGV, Total
-        $response = [];
+        $data = [];
         //Valor del igv
         $valorIGV = Igv::first()->igv_total;
         //Facturacion Registro
@@ -98,6 +102,9 @@ class FacturacionController extends Controller
             $factura_base = $facturacion->factura_ids;
             //Fecha
             $fecha = $factura_base->fecha_emision;
+            $fechaParseada = Carbon::parse($fecha);
+            $fechaFormateada = $fechaParseada->format('d/m/Y');
+
             //Factura
             $tipo_documento = $factura_base->tipo_documento;
             if($tipo_documento == null){
@@ -129,7 +136,7 @@ class FacturacionController extends Controller
             
 
             $registro = [
-                "FECHA" => $fecha,
+                "FECHA" => $fechaFormateada,
                 "FACTURA" => $factura,
                 "NUMERO SERIE" => $numero_serie,
                 "RUC" => $documento_identificacion,
@@ -139,13 +146,30 @@ class FacturacionController extends Controller
                 "IGV" => $IGV,
                 "TOTAL" => number_format(round($total, 2), 2)
             ];
-            $response[] = $registro;
+            $data[] = $registro;
         }
 
-        //Obtener Fecha (fecha_emision / facturacion)
-        // $fecha_emision = $facturacion->pluck('fecha_emision');
-        return $response;
 
+        // Configurar el archivo para descarga.
+        $response = new StreamedResponse(function() use ($data) {
+            $writer = WriterEntityFactory::createXlsxWriter();
+            $writer->openToBrowser('facturacion.xlsx'); // El nombre del archivo descargado
+
+            // Agregar encabezados
+            $headerRow = WriterEntityFactory::createRowFromArray(['FECHA','FACTURA', 'NUMERO SERIE', 'RUC', 'N° RUC', 'CLIENTE', 'SUB TOTAL', 'IGV', 'TOTAL']);
+            $writer->addRow($headerRow);
+
+            // Agregar datos
+            foreach ($data as $item) {
+                $dataRow = WriterEntityFactory::createRowFromArray([$item['FECHA'], $item['FACTURA'], $item['NUMERO SERIE'], $item['RUC'], $item['N° RUC'], $item['CLIENTE'], 'S/'.$item['SUB TOTAL'], 'S/'.$item['IGV'], 'S/'.$item['TOTAL']]);
+                $writer->addRow($dataRow);
+            }
+
+            $writer->close();
+        });
+
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        return $response;
 
     }
 
