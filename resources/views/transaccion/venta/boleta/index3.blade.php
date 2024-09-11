@@ -1,3 +1,4 @@
+avance de hoy:
 @extends('layout')
 @section('title', 'Boleta')
 
@@ -73,13 +74,22 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tab-2">FACTURA</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-3">NOTA DE PEDIDO</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-4">NOTA DE DEBITO</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-5">GUIA DE REMISION</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active">
-                            <button class="btn btn-primary" onclick="showForm('boleta')">Agregar Producto</button>
+                            <button class="btn btn-primary" onclick="showForm('boleta')">Agregar</button>
                             <div id="form-boleta" class="product-form" style="display: none;">
                                 <form id="form-boleta-data">
-                                    <!-- Campos del formulario -->
+                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
                                     <div class="form-group">
                                         <label for="id-boleta">ID</label>
                                         <input type="number" class="form-control" id="id-boleta" name="id">
@@ -122,17 +132,15 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- Aquí irán los datos de la boleta -->
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
+                        <!-- ----------------------------------------------------------------------------------------------- -->
                         <div role="tabpanel" id="tab-2" class="tab-pane">
-                            <button class="btn btn-primary" onclick="showForm('factura')">Agregar Producto</button>
+                            <button class="btn btn-primary" onclick="showForm('factura')">Agregar</button>
                             <div id="form-factura" class="product-form" style="display: none;">
                                 <form id="form-factura-data">
-                                    <!-- Campos del formulario -->
+                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
                                     <div class="form-group">
                                         <label for="id-factura">ID</label>
                                         <input type="number" class="form-control" id="id-factura" name="id">
@@ -175,9 +183,108 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- Aquí irán los datos de la factura -->
-                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- ----------------------------------------------------------------------------------------------- -->
+                        <div role="tabpanel" id="tab-3" class="tab-pane">
+                            <button class="btn btn-primary" onclick="showForm('nota_de_pedido')">Agregar</button>
+                            <div id="form-nota_de_pedido" class="product-form" style="display: none;">
+                                <form id="form-nota_de_pedido-data">
+                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
+                                    <div class="form-group">
+                                        <label for="id-nota_de_pedido">ID</label>
+                                        <input type="number" class="form-control" id="id-nota_de_pedido" name="id">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="codigo-nota_de_pedido">Código de Boleta</label>
+                                        <input type="text" class="form-control" id="codigo-nota_de_pedido" name="codigo">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-nota_de_pedido">Cliente</label>
+                                        <input type="text" class="form-control" id="cliente-nota_de_pedido" name="cliente">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ruc-nota_de_pedido">Ruc/DNI</label>
+                                        <input type="text" class="form-control" id="ruc-nota_de_pedido" name="ruc">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha-nota_de_pedido">Fecha de Emisión</label>
+                                        <input type="date" class="form-control" id="fecha-nota_de_pedido" name="fecha">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="importe-nota_de_pedido">Importe</label>
+                                        <input type="number" class="form-control" id="importe-nota_de_pedido" name="importe" step="0.01">
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                </form>
+                            </div>
+                            <div class="panel-body">
+                                <table id="table-nota_de_pedido" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Código de Boleta</th>
+                                            <th>Cliente</th>
+                                            <th>Ruc/DNI</th>
+                                            <th>Fecha de Emisión</th>
+                                            <th>Importe T.</th>
+                                            <th style="text-align:center;color: #0073c1">
+                                                <img src="{{asset('sunat.png')}}" width="25px">SUNAT
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- ----------------------------------------------------------------------------------------------- -->
+                        <div role="tabpanel" id="tab-4" class="tab-pane">
+                            <button class="btn btn-primary" onclick="showForm('nota_de_debito')">Agregar</button>
+                            <div id="form-nota_de_debito" class="product-form" style="display: none;">
+                                <form id="form-nota_de_debito-data">
+                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
+                                    <div class="form-group">
+                                        <label for="id-nota_de_debito">ID</label>
+                                        <input type="number" class="form-control" id="id-nota_de_debito" name="id">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="codigo-nota_de_debito">Código de Boleta</label>
+                                        <input type="text" class="form-control" id="codigo-nota_de_debito" name="codigo">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-nota_de_debito">Cliente</label>
+                                        <input type="text" class="form-control" id="cliente-nota_de_debito" name="cliente">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ruc-nota_de_debito">Ruc/DNI</label>
+                                        <input type="text" class="form-control" id="ruc-nota_de_debito" name="ruc">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fecha-nota_de_debito">Fecha de Emisión</label>
+                                        <input type="date" class="form-control" id="fecha-nota_de_debito" name="fecha">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="importe-nota_de_debito">Importe</label>
+                                        <input type="number" class="form-control" id="importe-nota_de_debito" name="importe" step="0.01">
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                </form>
+                            </div>
+                            <div class="panel-body">
+                                <table id="table-nota_de_debito" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Código de Boleta</th>
+                                            <th>Cliente</th>
+                                            <th>Ruc/DNI</th>
+                                            <th>Fecha de Emisión</th>
+                                            <th>Importe T.</th>
+                                            <th style="text-align:center;color: #0073c1">
+                                                <img src="{{asset('sunat.png')}}" width="25px">SUNAT
+                                            </th>
+                                        </tr>
+                                    </thead>
                                 </table>
                             </div>
                         </div>
@@ -192,6 +299,7 @@
     function showForm(type) {
         document.getElementById('form-boleta').style.display = 'none';
         document.getElementById('form-factura').style.display = 'none';
+        document.getElementById('form-nota_de_pedido').style.display = 'none';
         document.getElementById('form-' + type).style.display = 'block';
     }
 
@@ -211,13 +319,13 @@
         newRow.insertCell(2).textContent = cliente;
         newRow.insertCell(3).textContent = ruc;
         newRow.insertCell(4).textContent = fecha;
-        newRow.insertCell(5).textContent = importe;
+        newRow.insertCell(5).textContent = "S/" + importe;
         newRow.insertCell(6).textContent = ''; // SUNAT
 
         document.getElementById('form-boleta-data').reset();
         document.getElementById('form-boleta').style.display = 'none';
     });
-
+    // -----------------------------------------------------------------------------------------------
     document.getElementById('form-factura-data').addEventListener('submit', function(event) {
         event.preventDefault();
         const id = document.getElementById('id-factura').value;
@@ -239,6 +347,52 @@
 
         document.getElementById('form-factura-data').reset();
         document.getElementById('form-factura').style.display = 'none';
+    });
+    // -----------------------------------------------------------------------------------------------
+    document.getElementById('form-nota_de_pedido-data').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const id = document.getElementById('id-nota_de_pedido').value;
+        const codigo = document.getElementById('codigo-nota_de_pedido').value;
+        const cliente = document.getElementById('cliente-nota_de_pedido').value;
+        const ruc = document.getElementById('ruc-nota_de_pedido').value;
+        const fecha = document.getElementById('fecha-nota_de_pedido').value;
+        const importe = document.getElementById('importe-nota_de_pedido').value;
+
+        const table = document.getElementById('table-nota_de_pedido').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+        newRow.insertCell(0).textContent = id;
+        newRow.insertCell(1).textContent = codigo;
+        newRow.insertCell(2).textContent = cliente;
+        newRow.insertCell(3).textContent = ruc;
+        newRow.insertCell(4).textContent = fecha;
+        newRow.insertCell(5).textContent = importe;
+        newRow.insertCell(6).textContent = ''; // SUNAT
+
+        document.getElementById('form-nota_de_pedido-data').reset();
+        document.getElementById('form-nota_de_pedido').style.display = 'none';
+    });
+    // -----------------------------------------------------------------------------------------------
+    document.getElementById('form-nota_de_debito-data').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const id = document.getElementById('id-nota_de_debito').value;
+        const codigo = document.getElementById('codigo-nota_de_debito').value;
+        const cliente = document.getElementById('cliente-nota_de_debito').value;
+        const ruc = document.getElementById('ruc-nota_de_debito').value;
+        const fecha = document.getElementById('fecha-nota_de_debito').value;
+        const importe = document.getElementById('importe-nota_de_debito').value;
+
+        const table = document.getElementById('table-nota_de_debito').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+        newRow.insertCell(0).textContent = id;
+        newRow.insertCell(1).textContent = codigo;
+        newRow.insertCell(2).textContent = cliente;
+        newRow.insertCell(3).textContent = ruc;
+        newRow.insertCell(4).textContent = fecha;
+        newRow.insertCell(5).textContent = importe;
+        newRow.insertCell(6).textContent = ''; // SUNAT
+
+        document.getElementById('form-nota_de_debito-data').reset();
+        document.getElementById('form-nota_de_debito').style.display = 'none';
     });
 </script>
 @endsection
