@@ -137,15 +137,57 @@
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-shopping-cart fa-lg text-white"></i><span class="nav-label text-white">Compras</span></a></li>
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Comprobantes</span></a></li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fas fa-file fa-lg text-white"></i><span class="nav-label text-white">Comprobantes</span></a></li>
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Garantias</span></a></li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-check fa-lg text-white"></i><span class="nav-label text-white">Garantias</span></a></li>
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a></li>
+                    @if(empty($inventario))
+                 <li>
+                    <a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a>
+                    @elseif($inventario_inicial->estado==1)
+                    <li>
+                        <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
+                        @else
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Creditos y Cobranzas</span></a></li>
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Sire - Sunat</span></a></li>
+                        @can('inventario')
+                        <li>
+                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @can('inventario-productos_kardex')
+                                <li>
+                                    <a href="#"><span>Kardex-Producto</span></a>
+                                    <ul class="nav nav-third-level">
+                                        @can('inventario-productos_kardex-entrada_producto.index')
+                                        <li><a href="{{route('kardex-entrada.index')}}"><span>Entrada Producto</span></a></li>
+                                        @endcan
+                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}"><span>Distribución Producto</span></a></li>
+                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}"><span>Traslado de Almacén </span></a></li>
+                                        @can('inventario-productos_kardex-salida_producto.index')
+                                        <li><a href="{{route('kardex-salida.index')}}"><span>Salida Producto</span></a></li>
+                                        @endcan
+
+                                    </ul>
+                                </li>
+                                @endcan
+                                @endif
+
+                                {{-- <li><a href="{{route('pagados.index')}}">Pagados</a></li> --}}
+                        {{-- @can('inventario-productos-inventario_inicial.index')
+                        <li><a href="{{route('inventario-inicial.index')}}">Inventario Inicial</a></li>
+                        @endcan --}}
+                        @can('inventario-toma_de_inventario.index')
+                        <li><a href="{{route('periodo-consulta.index')}}"><span>Consultas de inventario</span></a></li><!-- Periodo Consulta -->
+                        @endcan
+                        <li><a href="{{route('cierre-periodo.index')}}"><span>Cierre Periodo</span></a></li>
+                        <li><a href="{{route('movimiento-consulta.index')}}"><span>Movimiento Consulta</span></a></li>
+                    </ul>
+                </li>
+                @endif
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span class="nav-label text-white">Creditos y Cobranzas</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-server fa-lg text-white"></i><span class="nav-label text-white">Sire - Sunat</span></a></li>
                   
                     
 
@@ -154,7 +196,7 @@
                     @can('transacciones')
                     <li>
 
-                      {{-- <a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i> <span class="nav-label text-white">Comercialización</span></a> --}}
+                     {{-- <a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i> <span class="nav-label text-white">Comercialización</span></a>--}}
                         <ul class="nav nav-second-level collapse">
                             @if(empty($inventario_inicial))
                                 {{-- @if($conteo_almacen==1) --}}
@@ -204,49 +246,6 @@
 
                      </ul>
                  </li>
-                 @if(empty($inventario))
-                 <li>
-                    <a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a>
-                    @elseif($inventario_inicial->estado==1)
-                    <li>
-                        <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
-                        @else
-
-
-                        @can('inventario')
-                        <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
-                            <ul class="nav nav-second-level collapse">
-                                @can('inventario-productos_kardex')
-                                <li>
-                                    <a href="#"><span>Kardex-Producto</span></a>
-                                    <ul class="nav nav-third-level">
-                                        @can('inventario-productos_kardex-entrada_producto.index')
-                                        <li><a href="{{route('kardex-entrada.index')}}"><span>Entrada Producto</span></a></li>
-                                        @endcan
-                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}"><span>Distribución Producto</span></a></li>
-                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}"><span>Traslado de Almacén </span></a></li>
-                                        @can('inventario-productos_kardex-salida_producto.index')
-                                        <li><a href="{{route('kardex-salida.index')}}"><span>Salida Producto</span></a></li>
-                                        @endcan
-
-                                    </ul>
-                                </li>
-                                @endcan
-                                @endif
-
-                                {{-- <li><a href="{{route('pagados.index')}}">Pagados</a></li> --}}
-                        {{-- @can('inventario-productos-inventario_inicial.index')
-                        <li><a href="{{route('inventario-inicial.index')}}">Inventario Inicial</a></li>
-                        @endcan --}}
-                        @can('inventario-toma_de_inventario.index')
-                        <li><a href="{{route('periodo-consulta.index')}}"><span>Consultas de inventario</span></a></li><!-- Periodo Consulta -->
-                        @endcan
-                        <li><a href="{{route('cierre-periodo.index')}}"><span>Cierre Periodo</span></a></li>
-                        <li><a href="{{route('movimiento-consulta.index')}}"><span>Movimiento Consulta</span></a></li>
-                    </ul>
-                </li>
-                @endif
                 @endcan
                 <li>
                 {{--    <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i> <span class="nav-label text-white">Créditos</span></a>--}}
