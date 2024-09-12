@@ -56,336 +56,324 @@
 
 
 {{--Base para agregar el tab para el los contenidos--}}
-
 <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li>
-                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632;</span> GUIA DE INGRESO
-                                        {{-- link del tab 1 --}}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: orange;">&#9632;</span> GUIA DE EGRESO
-                                        {{-- link del tab 2 --}}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: red;">&#9632;</span> GUIA DE INFORME TECNICO
-                                        {{-- link del tab 2 --}}
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" id="tab-1" class="tab-pane  active show">
-                                    <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB --}}
-                                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group">
-                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                    <input class="form-control" type="text" name="daterange"
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li>
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> BOLETA MANUAL
+                                    {{-- link del tab 1 --}}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: orange;">&#9632;</span> FACTURA MANUAL
+                                    {{-- link del tab 2 --}}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: red;">&#9632;</span> INFORME TECNICO
+                                    {{-- link del tab 2 --}}
+                                </a>
+                            </li>
+                            <li class="ml-auto">
+                                <button class="btn btn-primary btn-sm" type="button"><i class="fa fa-plus"></i>
+                                </button>
+                            </li>
+                            <li>
+                                <div class="btn-group mx-3">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">PDF</a></li>
+                                        <li><a class="dropdown-item" href="#">WORD</a></li>
+                                        <li><a class="dropdown-item" href="#">CSV</a></li>
+                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                                    </ul>
                                 </div>
+                            </li>
+                        </ul>
+
+
+
+                        <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
+                        <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                            <div class="input-group col-md-4 mx-5">
+                                <input class="form-control col-md-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
+                                </span>
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
+                                </span>
                             </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="search"><strong>BUSCAR:</strong></label>
-                                <input class="form-control col-lg-8" type="text" id="search" placeholder="Buscar comprobantes">
-                                    </select>
+                            <div class="row g-3 col-md-5">
+                                <div class="col-auto">
+                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
                                 </div>
-                            </div>
-                        </div>
-      
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">CODIGO</th>
-      <th scope="col">RUC/DNI</th>
-      <th scope="col">CLIENTE</th>
-      <th scope="col">MARCA</th>
-      <th scope="col">FECHA</th>
-      <th scope="col">MOTIVO</th>
-      <th scope="col">ACCIONES</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>LNV-0000011111</td>
-      <td>EP-000001</td>
-      <td>Flavia</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td <i class="bi bi-hurricane"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">2</th>
-      <td>Gaby</td>
-      <td>T12345678</td>
-      <td>@fat</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td <i class="bi bi-check" style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">3</th>
-      <td>Gaby</td>
-      <td>12345678</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td <i class="bi bi-check"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">4</th>
-      <td>Gaby</td>
-      <td>12345678</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td <i class="bi bi-eye-fill"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-  </tbody>
-</table>
-
-<div class="btn-group" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-primary">Anterior</button>
-  <button type="button" class="btn btn-outline-primary">1</button>
-  <button type="button" class="btn btn-outline-primary">2</button>
-  <button type="button" class="btn btn-outline-primary">Siguiente</button>
-</div>
-</div>
-</div>
-
-<div role="tabpanel" id="tab-2" class="tab-pane">
-                                    <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB 2 --}}
-                                        
-                                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group">
-                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                    <input class="form-control" type="text" name="daterange"
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="search"><strong>BUSCAR:</strong></label>
-                                <input class="form-control col-lg-8" type="text" id="search" placeholder="Buscar comprobantes">
-                                    </select>
+                                <div class="col-md-7">
+                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
                                 </div>
                             </div>
                         </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">CODIGO</th>
-      <th scope="col">RUC/DNI</th>
-      <th scope="col">CLIENTE</th>
-      <th scope="col">MARCA</th>
-      <th scope="col">FECHA</th>
-      <th scope="col">MOTIVO</th>
-      <th scope="col">ACCIONES</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>LNV-00000222222</td>
-      <td>EP-000001</td>
-      <td>Flavia</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td <i class="bi bi-hurricane"style="font-size: 1.5rem;"></i></td>
-    </tr>
+                        <!-- Tablas y su contenido -->
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body">
+                                    <!-- CONTENIDO DENTRO DEL TAB  -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th >ID</th>
+                                                <th >Orden Servicio</th>
+                                                <th >Marca</th>
+                                                <th>Fecha</th>
+                                                <th>Motivo</th>
+                                                <th >Asuntos</th>
+                                                <th >Cliente</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td>1</td>
+                                            <td>FA00-00000001</td>
+                                            <td>203837834</td>
+                                            <td>Fact1</td>
+                                            <td>Jul 14, 2013</td>
+                                            <td>Contado</td>
+                                            <td>S/ 1,800.00</td>
+                                            <td>
+                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td>2</td>
+                                            <td>FA00-00000002</td>
+                                            <td>23908223</td>
+                                            <td>Dexter</td>
+                                            <td>Jul 16, 2013</td>
+                                            <td>Contado</td>
+                                            <td>s/ 2,456.50</td>
+                                            <td>    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td>3</td>
+                                            <td>FA00-00000003</td>
+                                            <td>23908223</td>
+                                            <td>Dexter</td>
+                                            <td>Jul 18, 2013</td>
+                                            <td>Contado</td>
+                                            <td>s/ 2,456.50</td>
+                                            <td>
+                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td>4</td>
+                                            <td>FA00-00000004</td>
+                                            <td>23908223</td>
+                                            <td>Dexter</td>
+                                            <td>Jul 22, 2013</td>
+                                            <td>Contado</td>
+                                            <td>s/ 2,456.50</td>
+                                            <td>
+                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-    <tr>
-      <th scope="row">2</th>
-      <td>Gaby</td>
-      <td>T12345678</td>
-      <td>@fat</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td <i class="bi bi-check" style="font-size: 1.5rem;"></i></td>
-    </tr>
 
-    <tr>
-      <th scope="row">3</th>
-      <td>Gaby</td>
-      <td>12345678</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td <i class="bi bi-check"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">4</th>
-      <td>Gaby</td>
-      <td>12345678</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td <i class="bi bi-eye-fill"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-  </tbody>
-</table>
-
-<div class="btn-group" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-primary">Anterior</button>
-  <button type="button" class="btn btn-outline-primary">1</button>
-  <button type="button" class="btn btn-outline-primary">2</button>
-  <button type="button" class="btn btn-outline-primary">Siguiente</button>
-</div>
-</div>
-</div>
-
-
-
-<div role="tabpanel" id="tab-3" class="tab-pane">
-                                    <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB 2 --}}
-                                        
-                                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group">
-                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                    <input class="form-control" type="text" name="daterange"
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
+                                </div>
+                            </div>
+                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th >ID</th>
+                                                <th >Orden Servicio</th>
+                                                <th >Marca</th>
+                                                <th>Fecha</th>
+                                                <th>Motivo</th>
+                                                <th >Asuntos</th>
+                                                <th >Cliente</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>1</td>
+                                                <td>FM00-00000001</td>
+                                                <td>203837834</td>
+                                                <td>Fact2</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>Contado</td>
+                                                <td>S/ 1,800.00</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>2</td>
+                                                <td>FM00-00000002</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 16, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>3</td>
+                                                <td>FM00-00000003</td>
+                                                <td>23908223</td>
+                                                <td>Jacinto</td>
+                                                <td>Jul 18, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>4</td>
+                                                <td>FM00-00000004</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 22, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="search"><strong>BUSCAR:</strong></label>
-                                <input class="form-control col-lg-8" type="text" id="search" placeholder="Buscar comprobantes">
-                                    </select>
+                            <div role="tabpanel" id="tab-3" class="tab-pane">
+                                <div class="panel-body">
+                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                        <tr>
+                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th >ID</th>
+                                                <th >Orden Servicio</th>
+                                                <th >Marca</th>
+                                                <th>Fecha</th>
+                                                <th>Motivo</th>
+                                                <th >Asuntos</th>
+                                                <th >Cliente</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>1</td>
+                                                <td>FM00-00000001</td>
+                                                <td>203837834</td>
+                                                <td>Fact2</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>Contado</td>
+                                                <td>S/ 1,800.00</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>2</td>
+                                                <td>FM00-00000002</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 16, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>3</td>
+                                                <td>FM00-00000003</td>
+                                                <td>23908223</td>
+                                                <td>Jacinto</td>
+                                                <td>Jul 18, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td>4</td>
+                                                <td>FM00-00000004</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 22, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
+
+                            
+                        <!-- Botones de navegación en la tabla -->
+                        <div class="btn-group mt-4">
+    <a href="?page=1" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Anterior</a>
+    <a href="?page=1" class="btn btn-white">1</a>
+    <a href="?page=2" class="btn btn-white">2</a>
+    <a href="?page=3" class="btn btn-primary">Siguiente <i class="fa fa-chevron-right"></i></a>
+</div>
+
+
                         </div>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">CODIGO</th>
-      <th scope="col">RUC/DNI</th>
-      <th scope="col">CLIENTE</th>
-      <th scope="col">MARCA</th>
-      <th scope="col">FECHA</th>
-      <th scope="col">MOTIVO</th>
-      <th scope="col">ACCIONES</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>LNV-00000333</td>
-      <td>EP-000001</td>
-      <td>Flavia</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td <i class="bi bi-hurricane"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">2</th>
-      <td>Gaby</td>
-      <td>T12345678</td>
-      <td>@fat</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td <i class="bi bi-check" style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">3</th>
-      <td>Gaby</td>
-      <td>12345678</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td <i class="bi bi-check"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-    <tr>
-      <th scope="row">4</th>
-      <td>Gaby</td>
-      <td>12345678</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td <i class="bi bi-eye-fill"style="font-size: 1.5rem;"></i></td>
-    </tr>
-
-  </tbody>
-</table>
-
-<div class="btn-group" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-primary">Anterior</button>
-  <button type="button" class="btn btn-outline-primary">1</button>
-  <button type="button" class="btn btn-outline-primary">2</button>
-  <button type="button" class="btn btn-outline-primary">Siguiente</button>
-</div>
-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -398,9 +386,139 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+<script src="{{ asset('js/icheck.min.js') }}"></script>
+<script>
+$(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+</script>
+
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function() {
+        table = $('.dataTables-example-facturacion').DataTable({
+            pageLength: 10,
+            order: [
+                [0, "desc"]
+            ],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            footerCallback: function(tr, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column(5)
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total filtered rows on the selected column (code part added)
+                var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                    intVal(b), 0);
+
+                // Update footer
+                $(api.column(5).footer()).html(
+                    'S/ ' + Math.round(sumCol4Filtered * 100) / 100
+                );
+            },
+            buttons: []
+        });
+
+        revert_select();
+
+        $(document).on('change', '#select_tipo_coti', function(event) {
+            var nombre = $("#select_tipo_coti option:selected").val();
+            // console.log(nombre);
+            table.column(11).search(nombre).draw();
+        });
+        $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            },
+            function(start, end, label) {
+                var dates = [];
+                var currentDate = new Date(start);
+                while (currentDate <= end) {
+                    var day = ('0' + currentDate.getDate()).slice(-2);
+                    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                    var year = currentDate.getFullYear();
+
+                    var formattedDate = day + '-' + month + '-' + year;
+                    dates.push(formattedDate);
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                var dateRangeString = dates.join('|');
+                console.log(dateRangeString);
+                table.column(4).search(dateRangeString, true, false).draw();
+            }
+        );
+    });
+
+    function limpiar_select() {
+        table.column(4).search("").draw();
+    }
+
+    function revert_select() {
+        table.column(4).search({{ date('m-Y') }}).draw();
+    }
+
+
+</script>
 
 
     @endsection
@@ -409,12 +527,7 @@
 
 
 
-{{--Base para agregar la pestaña para los contenidos
-<div>
-<a class="nav-link" data-toggle="pestaña" href="#tab-3"><span style="color: red;">&#9632;</span> <i class="bi bi-plus-square p-2" style="font-size: 2rem;"></i>
-</div>
---}}
-{{-- enlace del tab 3 --}}
+
 
 
 
