@@ -113,7 +113,7 @@
                         <div class="dropdown profile-element" style="left: 10% ">
                             <a href="{{route('usuario.index')}}">
                                 <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
-                                <span class="block m-t-xs font-bold spans">Nombre del Usuario:</span>
+                                <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
                                 <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
                             </a>
                         </div>
