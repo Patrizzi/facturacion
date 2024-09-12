@@ -127,22 +127,24 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <!--<div class="col-sm-4">
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
                                                     <input type="search" class="form-control col-lg-8">
                                                 </div>
-                                            </div>
+                                            </div>--> 
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered">
+                                        <table class="table table-striped table-bordered table-hover dataTables-example">
                                             <thead>
-                                                <tr><th></th>
+                                                <tr><th>
+                                                    <input type="checkbox" class="i-checks" name="input[]">
+                                                    </th>
                                                     <th>ID</th>
                                                     <th>Código</th>
                                                     <th>Ruc/DNI</th>
                                                     <th>Cliente</th>
-                                                    <th>Fecha Emision</th>
+                                                    <th>Fecha Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
                                                     <th>Acciones</th>
@@ -165,11 +167,9 @@
                                                         <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
                                                     </td>
                                                 </tr>
-                                                <tr><td>
-                                                    <div class="icheckbox_square-green" style="position: relative;">
-                                                        <input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
-                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                    </div></td>
+                                                <tr>
+                                                    <td>
+                                                    <input type="checkbox" class="i-checks" name="input[]"></td>
                                                     <td>2</td>
                                                     <td>COTV 001-00000002</td>
                                                     <td>031492021</td>
@@ -184,10 +184,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                    <div class="icheckbox_square-green" style="position: relative;">
-                                                        <input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
-                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                    </div>
+                                                    <input type="checkbox" class="i-checks" name="input[]">
                                                     </td>
                                                     <td>3</td>
                                                     <td>COTV 001-00000001</td>
@@ -201,11 +198,9 @@
                                                         <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
                                                     </td>
                                                 </tr>
-                                                <tr><td>
-                                                    <div class="icheckbox_square-green" style="position: relative;">
-                                                        <input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;">
-                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                    </div></td>
+                                                <tr>
+                                                    <td>
+                                                    <input type="checkbox" class="i-checks" name="input[]"></td>
                                                     <td>4</td>
                                                     <td>COTV 001-00000004</td>
                                                     <td>12982021</td>
@@ -218,6 +213,44 @@
                                                         <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                        <td>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                        </td>
+                                                        <td>5</td>
+                                                        <td>COTPF 001-00000001</td>
+                                                        <td>20101088881</td>
+                                                        <td>DROGUERIA REYES S.A.C.</td>
+                                                        <td>18-06-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 179.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-info">
+                                                                <i class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                </tr>
+                                                    <tr>
+                                                        <td>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                        </td>
+                                                        <td>6</td>
+                                                        <td>COTB 001-00000006</td>
+                                                        <td>20474595081</td>
+                                                        <td> CORADIC S.A.C.	</td>
+                                                        <td>08-05-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 319.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-info">
+                                                                <i class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -227,7 +260,7 @@
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <!--PAGINACION DE COTIZACION -->
+                                    <!--PAGINACION DE COTIZACION 
                                     <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
                                             <ul class="pagination">
                                                 <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
@@ -242,9 +275,52 @@
                                                 </li>
                                                 <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
                                                 <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
-                                        </div> 
+                                        </div>--> 
                                 </div>
                             </div>
+                            <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $('.dataTables-example').DataTable({
+                pageLength: 10,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+    </script> 
                                  <!-- COTIZACION MANUAL--> 
                                 <div role="tabpanel" id="tab-2" class="tab-pane">
                                     <div class="panel-body">
@@ -283,15 +359,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="table-responsive">
+                                        <div class="table-responsive" id="tab-2">
                                             <table class="table table-bordered">
                                             <thead>
-                                                    <tr><th></th>
+                                                    <tr><th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
                                                         <th>Código</th>
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
-                                                        <th>Fecha Emision</th>
+                                                        <th>Fecha Emisión</th>
                                                         <th>Forma</th>
                                                         <th>Importe T.</th>
                                                         <th>Acciones</th>
@@ -300,15 +376,12 @@
                                                 <tbody>                              
                                                     <tr>
                                                         <td>
-                                                            <div class="icheckbox_square-green checked" style="position:relative;">
-                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
-                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                            </div>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
                                                         <td>1</td>
                                                         <td>CMF 001-00000001</td>
                                                         <td>70871200</td>
-                                                        <td>Daniel Roman</td>
+                                                        <td>Daniel Roman Castillo</td>
                                                         <td>07-10-2024</td>
                                                         <td>Contado</td>
                                                         <td>S/. 200.00</td>
@@ -322,10 +395,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <div class="icheckbox_square-green checked" style="position:relative;">
-                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
-                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                            </div>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
                                                         <td>2</td>
                                                         <td>CMF 001-00000002</td>
@@ -344,10 +414,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <div class="icheckbox_square-green" style="position:relative;">
-                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
-                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                            </div>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
                                                         <td>3</td>
                                                         <td>CMF 001-00000003</td>
@@ -366,10 +433,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <div class="icheckbox_square-green" style="position:relative;">
-                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
-                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                            </div>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
                                                         <td>4</td>
                                                         <td>CMF 001-00000004</td>
@@ -384,7 +448,26 @@
 
                                                             <button type="button" class="btn btn-info">
                                                                 <i class="fa fa-check-circle"></i></button>
+                                                        </td>     
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
+                                                        <td>5</td>
+                                                        <td>CMF 001-00000005</td>
+                                                        <td>20550977861</td>
+                                                        <td>TEXTILES TBM S.A.C.</td>
+                                                        <td>03-04-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 285.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-info">
+                                                                <i class="fa fa-check-circle"></i></button>
+                                                        </td>     
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
@@ -395,6 +478,7 @@
                                                 </tfoot>
                                             </table>
                                         </div>
+                                        
                                          <!--PAGINACION DE COTIZACION MANUAL-->
                                          <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
                                             <ul class="pagination">
@@ -410,6 +494,7 @@
                                                 </li>
                                                 <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
                                                 <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
+                                            </ul>
                                         </div> 
                                     </div>
                                 </div>
@@ -447,12 +532,12 @@
                                         <div class="table-responsive">
                                             <table class="table table-bordered">
                                                 <thead>
-                                                    <tr><th></th>
+                                                    <tr><th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
-                                                        <th>N° Nota de Venta</th>
+                                                        <th>Código</th>
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
-                                                        <th>Fecha Emision</th>
+                                                        <th>Fecha Emisión</th>
                                                         <th>Forma</th>
                                                         <th>Importe T.</th>
                                                         <th>Acciones</th>
@@ -460,18 +545,51 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr><td>
-                                                            <div class="icheckbox_square-green checked" style="position:relative;">
-                                                                <input type="checkbox" checked class="i-checks" name="input[]" style="position:absolute; opacity:0;">
-                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                            </div>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
                                                         <td>1</td>
-                                                        <td>****</td>
+                                                        <td>NV001-00000291</td>
                                                         <td>08123245</td>
                                                         <td>Julio Flores</td>
                                                         <td>02-01-2024</td>
                                                         <td>Contado</td>
                                                         <td>S/. 200.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-trash-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr><td>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                        </td>
+                                                        <td>2</td>
+                                                        <td>NV001-00000292</td>
+                                                        <td>76652408</td>
+                                                        <td>Raul Pancorbo Salazar</td>
+                                                        <td>12-02-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 240.00</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+
+                                                            <button type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-trash-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr><td>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                        </td>
+                                                        <td>3</td>
+                                                        <td>NV001-00000293</td>
+                                                        <td>79841402</td>
+                                                        <td>Cindy Rosa Rosales Torres</td>
+                                                        <td>11-03-2024</td>
+                                                        <td>Contado</td>
+                                                        <td>S/. 180.00</td>
                                                         <td>
                                                             <button type="button" class="btn btn-primary"><i
                                                                     class="fa fa-eye"></i></button>
@@ -518,7 +636,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Codigo</th>
+                                                        <th>Código</th>
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
                                                         <th>Correo</th>
@@ -550,6 +668,20 @@
                                                         <td>Carlos Antoñez Gomez</td>
                                                         <td>sincorreo@gmail.com</td>
                                                         <td>970841600</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button>
+                                                            <button type="button" class="btn btn-info"><i
+                                                                    class="fa fa-check-circle"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>*******</td>
+                                                        <td>20546717683</td>
+                                                        <td>XIOS PROYECTOS & SERVICIOS E.I.R.L.</td>
+                                                        <td>sincorreo@gmail.com</td>
+                                                        <td>90781623</td>
                                                         <td>
                                                             <button type="button" class="btn btn-primary"><i
                                                                     class="fa fa-eye"></i></button>
@@ -627,6 +759,36 @@
             });
         });
     </script>
+<!--Organizar
+<script>
+        $(document).ready(function(){
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+    </script> -->  
+
 
     <!-- Page-Level Scripts -->
     <script>
