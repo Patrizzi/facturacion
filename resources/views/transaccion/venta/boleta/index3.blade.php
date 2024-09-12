@@ -1,12 +1,7 @@
-avance de hoy:
 @extends('layout')
 @section('title', 'Boleta')
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 @section('content')
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -22,7 +17,7 @@ avance de hoy:
                             </svg>
                             <h4 style="font-weight: bold">BOLETA</h4>
                             <p>4 documentos</p>
-                            <p style="color: #34d313; font-weight: bold">S/ 120</p>
+                            <p style="color: #34d313; font-weight: bold">S/ ***.**</p>
                         </div>
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16" style="color: #c45a20">
@@ -30,7 +25,7 @@ avance de hoy:
                             </svg>
                             <h4 style="font-weight: bold">FACTURA</h4>
                             <p>4 documentos</p>
-                            <p style="color: #c45a20; font-weight: bold">S/ 120</p>
+                            <p style="color: #c45a20; font-weight: bold">S/ ***.**</p>
                         </div>
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16" style="color: #e22b35">
@@ -38,7 +33,7 @@ avance de hoy:
                             </svg>
                             <h4 style="font-weight: bold">NOTA DE PEDIDO</h4>
                             <p>5 documentos</p>
-                            <p style="color: #e22b35; font-weight: bold">S/ 120</p>
+                            <p style="color: #e22b35; font-weight: bold">S/ ***.**</p>
                         </div>
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16" style="color: #2dade0">
@@ -46,7 +41,7 @@ avance de hoy:
                             </svg>
                             <h4 style="font-weight: bold">NOTA DE DÉBITO</h4>
                             <p>5 documentos</p>
-                            <p style="color: #2dade0; font-weight: bold">S/ 120</p>
+                            <p style="color: #2dade0; font-weight: bold">S/ ***.**</p>
                         </div>
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16" style="color: #c515ea">
@@ -54,7 +49,7 @@ avance de hoy:
                             </svg>
                             <h4 style="font-weight: bold">GUIA DE REMISIÓN</h4>
                             <p>5 documentos</p>
-                            <p style="color: #c515ea; font-weight: bold">S/ 120</p>
+                            <p style="color: #c515ea; font-weight: bold">S/ ***.**</p>
                         </div>
                     </div>
                 </div>
@@ -69,222 +64,263 @@ avance de hoy:
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tab-1">BOLETA</a>
+                            <a class="nav-link active" data-toggle="tab" href="#tab-1"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #34d313; padding: 5px 10px;">1</span>BOLETA</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-2">FACTURA</a>
+                            <a class="nav-link" data-toggle="tab" href="#tab-2"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #c45a20; padding: 5px 10px;">1</span>FACTURA</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-3">NOTA DE PEDIDO</a>
+                            <a class="nav-link" data-toggle="tab" href="#tab-3"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #e22b35; padding: 5px 10px;">1</span>NOTA DE CREDITO</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-4">NOTA DE DEBITO</a>
+                            <a class="nav-link" data-toggle="tab" href="#tab-4"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #2dade0; padding: 5px 10px;">1</span>NOTA DE DEBITO</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-5">GUIA DE REMISION</a>
+                            <a class="nav-link" data-toggle="tab" href="#tab-5"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #c515ea; padding: 5px 10px;">1</span>GUIA DE REMISION</a>
+                        </li>
+                        <li class="ml-auto">
+                            <div>
+                                <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; align-items: flex-end; margin-right: 8px">+</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a href="#" class="button " style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 20px; text-decoration: none; cursor: pointer; align-items: flex-end;"><i class="fas fa-download download-icon"></i></a>
+                            </div>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="tab-1" class="tab-pane active">
-                            <button class="btn btn-primary" onclick="showForm('boleta')">Agregar</button>
-                            <div id="form-boleta" class="product-form" style="display: none;">
-                                <form id="form-boleta-data">
-                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
-                                    <div class="form-group">
-                                        <label for="id-boleta">ID</label>
-                                        <input type="number" class="form-control" id="id-boleta" name="id">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="codigo-boleta">Código de Boleta</label>
-                                        <input type="text" class="form-control" id="codigo-boleta" name="codigo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cliente-boleta">Cliente</label>
-                                        <input type="text" class="form-control" id="cliente-boleta" name="cliente">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ruc-boleta">Ruc/DNI</label>
-                                        <input type="text" class="form-control" id="ruc-boleta" name="ruc">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fecha-boleta">Fecha de Emisión</label>
-                                        <input type="date" class="form-control" id="fecha-boleta" name="fecha">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="importe-boleta">Importe</label>
-                                        <input type="number" class="form-control" id="importe-boleta" name="importe" step="0.01">
-                                    </div>
-                                    <button type="submit" class="btn btn-success">Agregar</button>
-                                </form>
-                            </div>
                             <div class="panel-body">
-                                <table id="table-boleta" class="table table-striped table-bordered table-hover">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Código de Boleta</th>
-                                            <th>Cliente</th>
-                                            <th>Ruc/DNI</th>
-                                            <th>Fecha de Emisión</th>
-                                            <th>Importe T.</th>
-                                            <th style="text-align:center;color: #0073c1">
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>ID</td>
+                                            <td>CODIGO</td>
+                                            <td>RUC/DNI</td>
+                                            <td>CLIENTE</td>
+                                            <td>FECHA</td>
+                                            <td>CONDICION</td>
+                                            <td>IMPORTE TOTAL</td>
+                                            <td style="text-align:center;color: #0073c1">
                                                 <img src="{{asset('sunat.png')}}" width="25px">SUNAT
-                                            </th>
+                                            </td>
+                                            <td>ACCIONES</td>
                                         </tr>
                                     </thead>
+                                    <tbody> 
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>01</td>
+                                            <td>123</td>
+                                            <td>72846344</td>
+                                            <td>Fabricio</td>
+                                            <td>12/10/2024</td>
+                                            <td>Cansado</td>
+                                            <td> S/ 1200</td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-eye eye-icon" style="cursor: pointer; font-size: 24px; color: #007bff;"></i>
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                                <i class="fas fa-check-square check-square-icon" style="cursor: pointer; font-size: 24px; color: #28a745;"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                        <!-- ----------------------------------------------------------------------------------------------- -->
                         <div role="tabpanel" id="tab-2" class="tab-pane">
-                            <button class="btn btn-primary" onclick="showForm('factura')">Agregar</button>
-                            <div id="form-factura" class="product-form" style="display: none;">
-                                <form id="form-factura-data">
-                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
-                                    <div class="form-group">
-                                        <label for="id-factura">ID</label>
-                                        <input type="number" class="form-control" id="id-factura" name="id">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="codigo-factura">Código de Boleta</label>
-                                        <input type="text" class="form-control" id="codigo-factura" name="codigo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cliente-factura">Cliente</label>
-                                        <input type="text" class="form-control" id="cliente-factura" name="cliente">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ruc-factura">Ruc/DNI</label>
-                                        <input type="text" class="form-control" id="ruc-factura" name="ruc">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fecha-factura">Fecha de Emisión</label>
-                                        <input type="date" class="form-control" id="fecha-factura" name="fecha">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="importe-factura">Importe</label>
-                                        <input type="number" class="form-control" id="importe-factura" name="importe" step="0.01">
-                                    </div>
-                                    <button type="submit" class="btn btn-success">Agregar</button>
-                                </form>
-                            </div>
                             <div class="panel-body">
-                                <table id="table-factura" class="table table-striped table-bordered table-hover">
+                                <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Código de Boleta</th>
-                                            <th>Cliente</th>
-                                            <th>Ruc/DNI</th>
-                                            <th>Fecha de Emisión</th>
-                                            <th>Importe T.</th>
-                                            <th style="text-align:center;color: #0073c1">
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>ID</td>
+                                            <td>CODIGO</td>
+                                            <td>RUC/DNI</td>
+                                            <td>CLIENTE</td>
+                                            <td>FECHA</td>
+                                            <td>CONDICION</td>
+                                            <td>IMPORTE TOTAL</td>
+                                            <td style="text-align:center;color: #0073c1">
                                                 <img src="{{asset('sunat.png')}}" width="25px">SUNAT
-                                            </th>
+                                            </td>
+                                            <td>ACCIONES</td>
                                         </tr>
                                     </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>01</td>
+                                            <td>123</td>
+                                            <td>72846344</td>
+                                            <td>Fabricio</td>
+                                            <td>12/10/2024</td>
+                                            <td>Cansado</td>
+                                            <td> S/ 1200</td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-eye eye-icon" style="cursor: pointer; font-size: 24px; color: #007bff;"></i>
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                        <!-- ----------------------------------------------------------------------------------------------- -->
                         <div role="tabpanel" id="tab-3" class="tab-pane">
-                            <button class="btn btn-primary" onclick="showForm('nota_de_pedido')">Agregar</button>
-                            <div id="form-nota_de_pedido" class="product-form" style="display: none;">
-                                <form id="form-nota_de_pedido-data">
-                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
-                                    <div class="form-group">
-                                        <label for="id-nota_de_pedido">ID</label>
-                                        <input type="number" class="form-control" id="id-nota_de_pedido" name="id">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="codigo-nota_de_pedido">Código de Boleta</label>
-                                        <input type="text" class="form-control" id="codigo-nota_de_pedido" name="codigo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cliente-nota_de_pedido">Cliente</label>
-                                        <input type="text" class="form-control" id="cliente-nota_de_pedido" name="cliente">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ruc-nota_de_pedido">Ruc/DNI</label>
-                                        <input type="text" class="form-control" id="ruc-nota_de_pedido" name="ruc">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fecha-nota_de_pedido">Fecha de Emisión</label>
-                                        <input type="date" class="form-control" id="fecha-nota_de_pedido" name="fecha">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="importe-nota_de_pedido">Importe</label>
-                                        <input type="number" class="form-control" id="importe-nota_de_pedido" name="importe" step="0.01">
-                                    </div>
-                                    <button type="submit" class="btn btn-success">Agregar</button>
-                                </form>
-                            </div>
                             <div class="panel-body">
-                                <table id="table-nota_de_pedido" class="table table-striped table-bordered table-hover">
+                                <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Código de Boleta</th>
-                                            <th>Cliente</th>
-                                            <th>Ruc/DNI</th>
-                                            <th>Fecha de Emisión</th>
-                                            <th>Importe T.</th>
-                                            <th style="text-align:center;color: #0073c1">
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>ID</td>
+                                            <td>CODIGO</td>
+                                            <td>RUC/DNI</td>
+                                            <td>CLIENTE</td>
+                                            <td>FECHA</td>
+                                            <td>CONDICION</td>
+                                            <td>IMPORTE TOTAL</td>
+                                            <td style="text-align:center;color: #0073c1">
                                                 <img src="{{asset('sunat.png')}}" width="25px">SUNAT
-                                            </th>
+                                            </td>
+                                            <td>ACCIONES</td>
                                         </tr>
                                     </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>01</td>
+                                            <td>123</td>
+                                            <td>85635244</td>
+                                            <td>GABY</td>
+                                            <td>05/06/2024</td>
+                                            <td>Trabajando</td>
+                                            <td> S/ 500</td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-eye eye-icon" style="cursor: pointer; font-size: 24px; color: #007bff;"></i>
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                                <i class="fas fa-file-alt document-icon" style="color: #007bff; font-size: 24px;"></i>
+                                                <i class="fas fa-trash-alt trash-icon" style="font-size: 24px; color: #ff0000; cursor: pointer;"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                        <!-- ----------------------------------------------------------------------------------------------- -->
                         <div role="tabpanel" id="tab-4" class="tab-pane">
-                            <button class="btn btn-primary" onclick="showForm('nota_de_debito')">Agregar</button>
-                            <div id="form-nota_de_debito" class="product-form" style="display: none;">
-                                <form id="form-nota_de_debito-data">
-                                    <!-- Formulario para agregar un nuevo producto gaaaaaaaaaaaaaaaaaa -->
-                                    <div class="form-group">
-                                        <label for="id-nota_de_debito">ID</label>
-                                        <input type="number" class="form-control" id="id-nota_de_debito" name="id">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="codigo-nota_de_debito">Código de Boleta</label>
-                                        <input type="text" class="form-control" id="codigo-nota_de_debito" name="codigo">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cliente-nota_de_debito">Cliente</label>
-                                        <input type="text" class="form-control" id="cliente-nota_de_debito" name="cliente">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ruc-nota_de_debito">Ruc/DNI</label>
-                                        <input type="text" class="form-control" id="ruc-nota_de_debito" name="ruc">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="fecha-nota_de_debito">Fecha de Emisión</label>
-                                        <input type="date" class="form-control" id="fecha-nota_de_debito" name="fecha">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="importe-nota_de_debito">Importe</label>
-                                        <input type="number" class="form-control" id="importe-nota_de_debito" name="importe" step="0.01">
-                                    </div>
-                                    <button type="submit" class="btn btn-success">Agregar</button>
-                                </form>
-                            </div>
                             <div class="panel-body">
-                                <table id="table-nota_de_debito" class="table table-striped table-bordered table-hover">
+                                <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Código de Boleta</th>
-                                            <th>Cliente</th>
-                                            <th>Ruc/DNI</th>
-                                            <th>Fecha de Emisión</th>
-                                            <th>Importe T.</th>
-                                            <th style="text-align:center;color: #0073c1">
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>ID</td>
+                                            <td>CODIGO</td>
+                                            <td>RUC/DNI</td>
+                                            <td>CLIENTE</td>
+                                            <td>FECHA</td>
+                                            <td>CONDICION</td>
+                                            <td>IMPORTE TOTAL</td>
+                                            <td style="text-align:center;color: #0073c1">
                                                 <img src="{{asset('sunat.png')}}" width="25px">SUNAT
-                                            </th>
+                                            </td>
+                                            <td>ACCIONES</td>
                                         </tr>
                                     </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>01</td>
+                                            <td>123</td>
+                                            <td>96538455</td>
+                                            <td>Fablia</td>
+                                            <td>03/06/2024</td>
+                                            <td>Trabajando</td>
+                                            <td> S/ 400</td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-eye eye-icon" style="cursor: pointer; font-size: 24px; color: #007bff;"></i>
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                                <i class="fas fa-file-alt document-icon" style="color: #007bff; font-size: 24px;"></i>
+                                                <i class="fas fa-trash-alt trash-icon" style="font-size: 24px; color: #ff0000; cursor: pointer;"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div role="tabpanel" id="tab-5" class="tab-pane">
+                            <div class="panel-body">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: #fff; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>ID</td>
+                                            <td>CODIGO</td>
+                                            <td>RUC/DNI</td>
+                                            <td>CLIENTE</td>
+                                            <td>FECHA</td>
+                                            <td>CONDICION</td>
+                                            <td>IMPORTE TOTAL</td>
+                                            <td style="text-align:center;color: #0073c1">
+                                                <img src="{{asset('sunat.png')}}" width="25px">SUNAT
+                                            </td>
+                                            <td>ACCIONES</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check check-square-box" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 16px; color: green; background-color: #fff; border: 2px solid #000; border-radius: 4px; cursor: pointer;"></i>
+                                            </td>
+                                            <td>01</td>
+                                            <td>123</td>
+                                            <td>63256988</td>
+                                            <td>Marlo</td>
+                                            <td>12/10/2024</td>
+                                            <td>Trabajando</td>
+                                            <td> S/ 1000</td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <i class="fas fa-user profile-icon" style="font-size: 24px; color: black; cursor: pointer;"></i>
+                                                <i class="fas fa-truck truck-icon" style="font-size: 24px; color: black; cursor: pointer;"></i>
+                                                <i class="fas fa-eye eye-icon" style="cursor: pointer; font-size: 24px; color: #007bff;"></i>
+                                                <i class="fas fa-check check-icon" style="cursor: pointer; font-size: 24px; color: #fff; background-color: green; border-radius: 50%;"></i>
+                                                <i class="fas fa-check-square check-square-icon" style="cursor: pointer; font-size: 24px; color: #28a745;"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -294,105 +330,168 @@ avance de hoy:
         </div>
     </div>
 </div>
-
-<script>
-    function showForm(type) {
-        document.getElementById('form-boleta').style.display = 'none';
-        document.getElementById('form-factura').style.display = 'none';
-        document.getElementById('form-nota_de_pedido').style.display = 'none';
-        document.getElementById('form-' + type).style.display = 'block';
+<style>
+    .dropdown-menu {
+        left: 70px;
+        padding: 20px 0;
     }
 
-    document.getElementById('form-boleta-data').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const id = document.getElementById('id-boleta').value;
-        const codigo = document.getElementById('codigo-boleta').value;
-        const cliente = document.getElementById('cliente-boleta').value;
-        const ruc = document.getElementById('ruc-boleta').value;
-        const fecha = document.getElementById('fecha-boleta').value;
-        const importe = document.getElementById('importe-boleta').value;
+    #DataTables_Table_0_wrapper {
+        padding-right: 0px;
+    }
 
-        const table = document.getElementById('table-boleta').getElementsByTagName('tbody')[0];
-        const newRow = table.insertRow();
-        newRow.insertCell(0).textContent = id;
-        newRow.insertCell(1).textContent = codigo;
-        newRow.insertCell(2).textContent = cliente;
-        newRow.insertCell(3).textContent = ruc;
-        newRow.insertCell(4).textContent = fecha;
-        newRow.insertCell(5).textContent = "S/" + importe;
-        newRow.insertCell(6).textContent = ''; // SUNAT
+    .table {
+        width: 100% !important;
+    }
 
-        document.getElementById('form-boleta-data').reset();
-        document.getElementById('form-boleta').style.display = 'none';
-    });
-    // -----------------------------------------------------------------------------------------------
-    document.getElementById('form-factura-data').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const id = document.getElementById('id-factura').value;
-        const codigo = document.getElementById('codigo-factura').value;
-        const cliente = document.getElementById('cliente-factura').value;
-        const ruc = document.getElementById('ruc-factura').value;
-        const fecha = document.getElementById('fecha-factura').value;
-        const importe = document.getElementById('importe-factura').value;
+    .ibox-content>.row {
+        margin: auto;
+    }
+</style>
+<!-- Mainly scripts -->
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-        const table = document.getElementById('table-factura').getElementsByTagName('tbody')[0];
-        const newRow = table.insertRow();
-        newRow.insertCell(0).textContent = id;
-        newRow.insertCell(1).textContent = codigo;
-        newRow.insertCell(2).textContent = cliente;
-        newRow.insertCell(3).textContent = ruc;
-        newRow.insertCell(4).textContent = fecha;
-        newRow.insertCell(5).textContent = importe;
-        newRow.insertCell(6).textContent = ''; // SUNAT
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
-        document.getElementById('form-factura-data').reset();
-        document.getElementById('form-factura').style.display = 'none';
-    });
-    // -----------------------------------------------------------------------------------------------
-    document.getElementById('form-nota_de_pedido-data').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const id = document.getElementById('id-nota_de_pedido').value;
-        const codigo = document.getElementById('codigo-nota_de_pedido').value;
-        const cliente = document.getElementById('cliente-nota_de_pedido').value;
-        const ruc = document.getElementById('ruc-nota_de_pedido').value;
-        const fecha = document.getElementById('fecha-nota_de_pedido').value;
-        const importe = document.getElementById('importe-nota_de_pedido').value;
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-        const table = document.getElementById('table-nota_de_pedido').getElementsByTagName('tbody')[0];
-        const newRow = table.insertRow();
-        newRow.insertCell(0).textContent = id;
-        newRow.insertCell(1).textContent = codigo;
-        newRow.insertCell(2).textContent = cliente;
-        newRow.insertCell(3).textContent = ruc;
-        newRow.insertCell(4).textContent = fecha;
-        newRow.insertCell(5).textContent = importe;
-        newRow.insertCell(6).textContent = ''; // SUNAT
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+<script src="{{ asset('js/icheck.min.js') }}"></script>
+<script>
+$(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
 
-        document.getElementById('form-nota_de_pedido-data').reset();
-        document.getElementById('form-nota_de_pedido').style.display = 'none';
-    });
-    // -----------------------------------------------------------------------------------------------
-    document.getElementById('form-nota_de_debito-data').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const id = document.getElementById('id-nota_de_debito').value;
-        const codigo = document.getElementById('codigo-nota_de_debito').value;
-        const cliente = document.getElementById('cliente-nota_de_debito').value;
-        const ruc = document.getElementById('ruc-nota_de_debito').value;
-        const fecha = document.getElementById('fecha-nota_de_debito').value;
-        const importe = document.getElementById('importe-nota_de_debito').value;
-
-        const table = document.getElementById('table-nota_de_debito').getElementsByTagName('tbody')[0];
-        const newRow = table.insertRow();
-        newRow.insertCell(0).textContent = id;
-        newRow.insertCell(1).textContent = codigo;
-        newRow.insertCell(2).textContent = cliente;
-        newRow.insertCell(3).textContent = ruc;
-        newRow.insertCell(4).textContent = fecha;
-        newRow.insertCell(5).textContent = importe;
-        newRow.insertCell(6).textContent = ''; // SUNAT
-
-        document.getElementById('form-nota_de_debito-data').reset();
-        document.getElementById('form-nota_de_debito').style.display = 'none';
-    });
 </script>
+
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function() {
+        table = $('.dataTables-example-facturacion').DataTable({
+            pageLength: 10,
+            order: [
+                [0, "desc"]
+            ],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            footerCallback: function(tr, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column(5)
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total filtered rows on the selected column (code part added)
+                var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                    intVal(b), 0);
+
+                // Update footer
+                $(api.column(5).footer()).html(
+                    'S/ ' + Math.round(sumCol4Filtered * 100) / 100
+                );
+            },
+            buttons: []
+        });
+
+        revert_select();
+
+        $(document).on('change', '#select_tipo_coti', function(event) {
+            var nombre = $("#select_tipo_coti option:selected").val();
+            // console.log(nombre);
+            table.column(11).search(nombre).draw();
+        });
+        $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            },
+            function(start, end, label) {
+                var dates = [];
+                var currentDate = new Date(start);
+                while (currentDate <= end) {
+                    var day = ('0' + currentDate.getDate()).slice(-2);
+                    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                    var year = currentDate.getFullYear();
+
+                    var formattedDate = day + '-' + month + '-' + year;
+                    dates.push(formattedDate);
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                var dateRangeString = dates.join('|');
+                console.log(dateRangeString);
+                table.column(4).search(dateRangeString, true, false).draw();
+            }
+        );
+    });
+
+    function limpiar_select() {
+        table.column(4).search("").draw();
+    }
+
+    function revert_select() {
+        table.column(4).search({{ date('m-Y') }}).draw();
+    }
+
+
+</script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 @endsection
