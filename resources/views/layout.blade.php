@@ -128,7 +128,7 @@
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
                     {{-- {{$inventario_inicial->estado}} --}}
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Ventas</span></a></li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-tags fa-lg text-white"></i><span class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-shopping-cart fa-lg text-white"></i><span class="nav-label text-white">Compras</span></a></li>
 
@@ -352,6 +352,9 @@
                         <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
                     </ul>
                 </li>
+
+                <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadisticas y KPIs</span></a></li>
+
                 <li>
                     <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span></a>
                     <ul class="nav nav-second-level collapse">
