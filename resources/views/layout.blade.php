@@ -504,6 +504,124 @@
                 </ul>
                 
             </nav>
+            <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                
+                        {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
+                        <div class="form-group">
+                        <input type="text" placeholder="Buscar..." class="form-control" name="top-search" id="top-search">
+                        </div>
+                    </form> --}}
+                    
+                </div>
+                <div class="nav-bar navbar-center">
+                    <div class=" minimalize-style-3 " style="vertical-align: middle;width: 21em">
+                        <div class="col-lg-12" style="padding: 5px">
+                            <div class="row">
+                                @if (isset($tipo_cambio->fecha))
+                                    <div class="col-sm-4">
+                                        <div style="color: black" class="text-center">
+                                            <span><strong>Compra :</strong><br>{{$tipo_cambio->compra}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div style="color: black" class="text-center">
+                                            <span><strong>Venta :</strong><br>{{$tipo_cambio->venta}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div style="color: black" class="text-center">
+                                            <span><strong>Paralelo :</strong><br>{{$tipo_cambio->paralelo}}</span>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <ul class="nav navbar-top-links navbar-right" >
+                    <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
+                        {{-- SI NO HAY NADA PARA ENVIAR --}}
+                        <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
+                            <i class="fa fa-bell " style="font-size: 18px; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
+                            {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
+                        </a>
+                        {{-- SI HAY PARA ENVIAR --}}
+                        {{-- <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell"></i> <span class="label label-primary">Cantidad de Facturas</span>
+                        </a> --}}
+                        <ul class="dropdown-menu dropdown-alerts" style="padding: 1px">
+                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                            <li>
+                                <a href="{{route('facturacion_electronica.index')}}" class="dropdown-item">
+                                    <div>
+                                        Tiene @if($fact_view_count > 0) <strong>{{$fact_view_count}} Facturas</strong>  @endif @if($fact_m_view_count > 0 && $fact_view_count > 0) y @endif  @if($fact_m_view_count > 0) <strong>{{$fact_m_view_count}} Facturas Manuales</strong> @endif pendientes de enviar a SUNAT
+                                    </div>
+                                </a>    
+                            </li>
+                            @endif
+                            @if ($bol_view_count > 0 || $bol_m_view_count > 0)
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                        <div>
+                                            Tiene @if($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
+                                        </div>
+                                    </a>
+                                </li>    
+                            @endif
+                            @if ($guia_view_count > 0 || $guia_m_view_count > 0)
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <a href="{{route('facturacion_electronica.index_guia_remision')}}" class="dropdown-item">
+                                        <div>
+                                            Tiene @if($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
+                                        </div>
+                                    </a>
+                                </li>    
+                            @endif
+                            @if ($n_credito_view_count > 0)
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <a href="{{route('facturacion_electronica.index_nota_credito')}}" class="dropdown-item">
+                                        <div>
+                                            Tiene @if($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
+                                        </div>
+                                    </a>
+                                </li>    
+                            @endif
+                            @if ($n_debito_view_count > 0 )
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <a href="{{route('facturacion_electronica.index_nota_debito')}}" class="dropdown-item">
+                                        <div>
+                                            Tiene @if($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
+                                        </div>
+                                    </a>
+                                </li>    
+                            @endif
+                            @if($fact_view_count == 0 && $fact_m_view_count == 0 && $bol_view_count == 0 && $bol_m_view_count == 0 && $n_credito_view_count == 0 && $n_credito_view_count == 0)
+                                <li>
+                                    <a href="#">
+                                        <div>
+                                            Sin envios Pendientes a SUNAT
+                                        </div>
+                                    </a>    
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                    
+                    <li style="width: 20px">
+                        <span></span>
+                    </li>
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
+                    </li>
+                </ul>
+                
+            </nav>
         </div>
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
