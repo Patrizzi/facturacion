@@ -127,12 +127,12 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <!--<div class="col-sm-4">
+                                            <!----><div class="col-sm-4">
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
                                                     <input type="search" class="form-control col-lg-8">
                                                 </div>
-                                            </div>--> 
+                                            </div> 
                                     </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-hover dataTables-example">
@@ -153,7 +153,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                    <input type="checkbox"  checked class="i-checks" name="input[]">
+                                                    <input type="checkbox" class="i-checks" name="input[]">
                                                     </td>
                                                     <td>1</td>
                                                     <td>COTV 001-00000003</td>
@@ -260,67 +260,9 @@
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <!--PAGINACION DE COTIZACION 
-                                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
-                                                </li>
-                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">3</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0" class="page-link">4</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
-                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
-                                        </div>--> 
                                 </div>
                             </div>
-                            <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <!-- Custom and plugin javascript -->
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     
-    <script>
-        $(document).ready(function(){
-            $('.dataTables-example').DataTable({
-                pageLength: 10,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
-            });
-
-        });
-
-    </script> 
                                  <!-- COTIZACION MANUAL--> 
                                 <div role="tabpanel" id="tab-2" class="tab-pane">
                                     <div class="panel-body">
@@ -360,9 +302,9 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive" id="tab-2">
-                                            <table class="table table-bordered">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example">
                                             <thead>
-                                                    <tr><th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
+                                                    <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
                                                         <th>Código</th>
                                                         <th>Ruc/DNI</th>
@@ -478,24 +420,6 @@
                                                 </tfoot>
                                             </table>
                                         </div>
-                                        
-                                         <!--PAGINACION DE COTIZACION MANUAL-->
-                                         <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
-                                                </li>
-                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">3</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0" class="page-link">4</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
-                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
-                                            </ul>
-                                        </div> 
                                     </div>
                                 </div>
                                  <!-- NOTA DE VENTA--> 
@@ -530,7 +454,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example">
                                                 <thead>
                                                     <tr><th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
@@ -601,22 +525,6 @@
                                                 </tbody>
                                             </table>     
                                         </div>
-                                        <!--PAGINACION NOTA DE VENTA-->
-                                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
-                                                </li>
-                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">3</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0" class="page-link">4</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">5</a>
-                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="8" tabindex="0" class="page-link">Siguiente</a>
-                                        </div> 
                                     </div>    
                                 </div>
                                  <!-- CLIENTES--> 
@@ -632,7 +540,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
@@ -659,8 +567,6 @@
                                                                     class="fa fa-check-circle"></i></button>
                                                         </td>
                                                     </tr>
-                                                </tbody>
-                                                <tbody>
                                                     <tr>
                                                         <td>2</td>
                                                         <td>*******</td>
@@ -690,22 +596,8 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
-                                                
                                             </table>
                                         </div>
-                                        <!--PAGINACION DE CLIENTES-->
-                                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
-                                                </li>
-                                                <li class="paginate_button page-item active"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-                                                </li>
-                                                <li class="paginate_button page-item "><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0" class="page-link">3</a>
-                                                <li class="paginate_button page-item next" id="DataTables_Table_0_next"><a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">Siguiente</a>
-                                        </div> 
-                                    </div>
                                 </div>
                             </div>
                         </div>    
@@ -731,6 +623,22 @@
         .ibox-content>.row {
             margin: auto;
         }
+        /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
     </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -751,44 +659,74 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
     <script src="{{ asset('js/icheck.min.js') }}"></script>
- <script>
-        $(document).ready(function(){
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-        });
-    </script>
-<!--Organizar
-<script>
-        $(document).ready(function(){
-            $('.dataTables-example').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
 
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
-            });
-
+    <!-- Seleccionar todos los check -->
+    <script>
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
         });
 
-    </script> -->  
+        // Controlar el checkbox del thead 
+        $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event){
+            var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+            if (event.type === 'ifChecked') {
+                // Selecciona 
+                table.find('tbody input[type="checkbox"]').iCheck('check');
+            } else {
+                // Deselecciona 
+                table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+            }
+        });
 
+        // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+        $('tbody input[type="checkbox"]').on('ifChanged', function(event){
+            var table = $(this).closest('table'); // Limita el control a la tabla visible
+            if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find('tbody input[type="checkbox"]').length) {
+                table.find('thead input[type="checkbox"]').iCheck('check');
+            } else {
+                table.find('thead input[type="checkbox"]').iCheck('uncheck');
+            }
+        });
+
+        // Detectar cuando se cambia de tab y restaurar el estado de los checkboxes SOLO de la tabla visible
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // Restablecer el estado de los checkboxes SOLO de la tabla activa
+            var activeTab = $(e.target).attr('href'); // ID del tab activo
+            $(activeTab).find('.i-checks').iCheck('update');
+        });
+    });
+</script>
+
+
+    <!--Organizar--> 
+    <script>
+            $(document).ready(function(){
+                $('.dataTables-example').DataTable({
+                    pageLength: 25,
+                    responsive: true,
+                    dom: '<"html5buttons"B>lTfgitp',
+                    buttons: [
+                        {extend: 'csv'},
+                        {extend: 'excel', title: 'ExampleFile'},
+                        {extend: 'pdf', title: 'ExampleFile'},
+
+                        {extend: 'print',
+                        customize: function (win){
+                                $(win.document.body).addClass('white-bg');
+                                $(win.document.body).css('font-size', '10px');
+
+                                $(win.document.body).find('table')
+                                        .addClass('compact')
+                                        .css('font-size', 'inherit');
+                        }
+                        }
+                    ]
+                });
+            });
+
+        </script>  
 
     <!-- Page-Level Scripts -->
     <script>
