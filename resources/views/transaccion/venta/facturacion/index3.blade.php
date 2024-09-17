@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Cotización')
+@section('title', 'Cotización')<!-- Facturación -->
 @section('content')
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox ">
@@ -13,10 +13,8 @@
                 <div class="ibox-content align-content-center">
                     <div class="row d-flex justify-content-between px-4 text-center">
                         <div class="col-auto">
-                            <div class="border border-danger rounded-circle">
-                                <br>
-                                <h1 class="text-primary"><i class="fa fa-file-text-o"></i></h1>
-                                <br>
+                            <div class="border border-danger rounded-circle d-flex justify-content-center align-items-center">
+                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
                             </div><br>
                             <h4>Boleta Manual</h4>
                             <p>4 documentos</p>
@@ -24,10 +22,8 @@
                         </div>
 
                         <div class="col-auto">
-                            <div class="border border-warning rounded-circle">
-                                <br>
-                                <h1 class="text-primary"><i class="fa fa-file-text-o"></i></h1>
-                                <br>
+                            <div class="border border-warning rounded-circle d-flex justify-content-center align-items-center">
+                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
                             </div><br>
                             <h4>Factura Manual</h4>
                             <p>4 documentos</p>
@@ -35,30 +31,24 @@
                         </div>
 
                         <div class="col-auto">
-                            <div class="border border-primary rounded-circle">
-                                <br>
-                                <h1 class="text-primary"><i class="fa fa-file-text-o"></i></h1>
-                                <br>
+                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-center">
+                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
                             </div><br>
                             <h4>Nota de crédito</h4>
                             <p>4 documentos</p>
                             <p class="text-primary"><b>S/***.**</b></p>
                         </div>
                         <div class="col-auto">
-                            <div class="border border-success rounded-circle">
-                                <br>
-                                <h1 class="text-primary"><i class="fa fa-file-text-o"></i></h1>
-                                <br>
+                            <div class="border border-success rounded-circle d-flex justify-content-center align-items-center">
+                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
                             </div><br>
                             <h4>Nota de débito</h4>
                             <p>4 documentos</p>
                             <p class="text-success"><b>S/***.**</b></p>
                         </div>
                         <div class="col-auto">
-                            <div class="border border-dark rounded-circle">
-                                <br>
-                                <h1 class="text-primary"><i class="fa fa-file-text-o"></i></h1>
-                                <br>
+                            <div class="border border-dark rounded-circle d-flex justify-content-center align-items-center">
+                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
                             </div>
                             <h4>Guía de remisión <br> manual</h4>
                             <p>4 documentos</p>
@@ -74,7 +64,7 @@
 
 <!--Base para agregar el tab para el los contenidos-->
 
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight pt-0">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -125,7 +115,7 @@
                         </ul>
 
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
-                        <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                        <div class="d-flex justify-content-md-start row pt-4 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
                             <div class="input-group col-md-4 mx-5">
                                 <input class="form-control col-md-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
                                 <span class="input-group-append">
@@ -148,6 +138,7 @@
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
+
                             <div role="tabpanel" id="tab-1" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB - Boleta manual -->
@@ -601,14 +592,14 @@
 
                         </div>
 
-                        <!-- Botones de navegación en la tabla -->
+                        <!-- Botones de navegación por los documentos de la tabla -->
                         <div class="btn-group mt-4">
-                            <button type="button" class="btn btn-white"><!--<i class="fa fa-chevron-left"></i>-->Anterior</button>
+                            <button type="button" class="btn btn-white">Anterior</button>
                             <button class="btn btn-white">1</button>
                             <button class="btn btn-white active">2</button>
                             <button class="btn btn-white">3</button>
                             <button class="btn btn-white">4</button>
-                            <button type="button" class="btn btn-white"><!--<i class="fa fa-chevron-right"></i>-->Siguiente</button>
+                            <button type="button" class="btn btn-white">Siguiente</button>
                         </div>
                     </div>
                 </div>
