@@ -366,7 +366,7 @@
                         @endcan
                     </ul>
                 </li>
-                <li>
+                {{--<li>
                   <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"><i class="fa fa-power-off fa-lg text-white"></i><span class="nav-label text-white">
@@ -375,7 +375,7 @@
                         @csrf
                     </form>
                 </a>
-            </li>
+            </li>--}}
 
             @endcan
 
@@ -632,8 +632,15 @@
                         <span></span>
                     </li>
                     <li style="margin-right: 60px">
-                        <i class="fa fa-power-off fa-lg fa-3x text-info"></i> 
-                        
+
+                        <a href="{{ route('logout') }}"
+                  onclick="event.preventDefault();
+                  document.getElementById('logout-form').submit();"><span class="nav-label text-white">
+                    <i class="fa fa-power-off fa-lg fa-3x text-info"></i> 
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </a>
                     </li>
                 </ul>
                 
