@@ -88,11 +88,17 @@
                                     </a>
                                 </li>
                                 <div class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-success mr-2" type="button">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-plus"></i> 
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item" href="#" id="oficina-arequipa">Oficina Arequipa</a></li>
+                                            <li><a class="dropdown-item" href="#" id="galeria-centro-lima">Galería Centro Lima</a></li>
+                                        </ul>
+                                    </div>
                                     <button class="btn btn-success" type="button">
-                                        <i class="fa fa-upload"></i>
+                                        <i class="fa fa-upload"></i> 
                                     </button>
                                 </div>
                             </ul>
@@ -456,7 +462,7 @@
                                         <div class="table-responsive">
                                             <table class="table table-striped table-bordered table-hover dataTables-example">
                                                 <thead>
-                                                    <tr><th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
+                                                    <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
                                                         <th>Código</th>
                                                         <th>Ruc/DNI</th>
@@ -604,7 +610,7 @@
                     </div>
                 </div>
             </div>
-        
+        </div> 
 
     <style>
         .dropdown-menu {
