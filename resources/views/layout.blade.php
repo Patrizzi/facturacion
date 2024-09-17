@@ -114,7 +114,7 @@
                             <a href="{{route('usuario.index')}}">
                                 <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
                                 <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
-                                <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
+                                
                             </a>
                         </div>
                         <div class="logo-element">
@@ -422,6 +422,7 @@
                         </div>
                     </div>  
                 </div>
+                
                 <ul class="nav navbar-top-links navbar-right" >
                     <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
@@ -495,6 +496,8 @@
                         </ul>
                     </li>
                     
+                    
+                    
                     <li style="width: 20px">
                         <span></span>
                     </li>
@@ -506,7 +509,7 @@
             </nav>
             <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                
                 
                         {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
                         <div class="form-group">
@@ -540,11 +543,16 @@
                         </div>
                     </div>  
                 </div>
+                <div class="d-flex align-items-center text-white" style="margin:10px 100px; border-radius: 10px 100px; background-color: #2641f8">
+                    <i class="fa fa-bell" style="margin: 0 30px" ></i>
+                    <span>3 de 20</span> 
+                    <a style="margin: 0 20px">Enviar a Sunat</a>
+                </div>
                 <ul class="nav navbar-top-links navbar-right" >
-                    <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
+                    <li class="dropdown" style="margin: 0px 70px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 18px; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
+                            <i class="fa fa-bell " style="font-size: 25px; color: blue; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
                             {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
                         </a>
                         {{-- SI HAY PARA ENVIAR --}}
@@ -612,12 +620,20 @@
                             @endif
                         </ul>
                     </li>
+                    <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="margin: 0px 60px">
+                        <a href="{{ route('usuario.index') }}" class="justify-content-center text-center"> 
+                            <i class="fa fa-user fa-lg fa-2x"></i>
+                            <span class="block m-t-xs text-black font-bold">@yield('area', auth()->user()->name)</span>
+                        </a>
+                    </div>
+                    
                     
                     <li style="width: 20px">
                         <span></span>
                     </li>
-                    <li>
-                        <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
+                    <li style="margin-right: 60px">
+                        <i class="fa fa-power-off fa-lg fa-3x text-info"></i> 
+                        
                     </li>
                 </ul>
                 
