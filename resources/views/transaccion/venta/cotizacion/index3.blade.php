@@ -256,7 +256,7 @@
                                                             <button type="button" class="btn btn-info">
                                                                 <i class="fa fa-check-circle"></i></button>
                                                         </td>
-                                                    </tr>
+                                                    </tr>                                                    
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -529,6 +529,12 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th colspan="7" class="text-right">Total General</th>
+                                                        <th colspan="7">S/. ****</th>
+                                                    </tr>
+                                                </tfoot>
                                             </table>     
                                         </div>
                                     </div>    
@@ -550,7 +556,6 @@
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Código</th>
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
                                                         <th>Correo</th>
@@ -561,7 +566,6 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>1</td>
-                                                        <td>*******</td>
                                                         <td>72531212</td>
                                                         <td>Marlo Samaniego Calderon</td>
                                                         <td>sincorreo@gmail.com</td>
@@ -575,7 +579,6 @@
                                                     </tr>
                                                     <tr>
                                                         <td>2</td>
-                                                        <td>*******</td>
                                                         <td>77893000</td>
                                                         <td>Carlos Antoñez Gomez</td>
                                                         <td>sincorreo@gmail.com</td>
@@ -589,7 +592,6 @@
                                                     </tr>
                                                     <tr>
                                                         <td>3</td>
-                                                        <td>*******</td>
                                                         <td>20546717683</td>
                                                         <td>XIOS PROYECTOS & SERVICIOS E.I.R.L.</td>
                                                         <td>sincorreo@gmail.com</td>
@@ -696,15 +698,14 @@
             }
         });
 
-        // Detectar cuando se cambia de tab y restaurar el estado de los checkboxes SOLO de la tabla visible
+        // Detectar cuando se cambia de tab 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            // Restablecer el estado de los checkboxes SOLO de la tabla activa
+            // Restablecer el estado de los checkboxes 
             var activeTab = $(e.target).attr('href'); // ID del tab activo
             $(activeTab).find('.i-checks').iCheck('update');
         });
     });
 </script>
-
 
     <!--Organizar--> 
     <script>
