@@ -98,13 +98,19 @@
                             </li>
 
                             <li class="ml-auto">
-                                <button class="btn btn-primary btn-sm" type="button"><i class="fa fa-plus"></i>
-                                </button>
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <p class="pl-3"><b>Almacenes:</b></p>
+                                        <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
+                                        <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
+                                    </ul>
+                                </div>
                             </li>
                             <li>
                                 <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary mx-3"><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm mx-3"><i class="fa fa-cloud-download"></i></button>
+                                    <ul class="dropdown-menu p-1">
                                         <li><a class="dropdown-item" href="#">PDF</a></li>
                                         <li><a class="dropdown-item" href="#">Excel</a></li>
                                         <li><a class="dropdown-item" href="#">Word</a></li>
@@ -140,12 +146,12 @@
                         <div class="tab-content">
 
                             <div role="tabpanel" id="tab-1" class="tab-pane">
-                                <div class="panel-body">
+                                <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB - Boleta manual -->
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
                                                 <th >ID</th>
                                                 <th >Còdigo</th>
                                                 <th >RUC/DNI</th>
@@ -158,85 +164,84 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
-                                            <td>1</td>
-                                            <td>BA00-00000001</td>
-                                            <td>203837834</td>
-                                            <td>Fact1</td>
-                                            <td>Jul 14, 2013</td>
-                                            <td>Contado</td>
-                                            <td>S/ 1,800.00</td>
-                                            <td>
-                                                <a href="#"><i class="fa fa-check-circle"></i></a>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
-                                            <td>2</td>
-                                            <td>BA00-00000002</td>
-                                            <td>23908223</td>
-                                            <td>Dexter</td>
-                                            <td>Jul 16, 2013</td>
-                                            <td>Contado</td>
-                                            <td>s/ 2,456.50</td>
-                                            <td><a href="#"><i class="fa fa-check-circle"></i></a></td>
-                                            <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
-                                            <td>3</td>
-                                            <td>BA00-00000003</td>
-                                            <td>23908223</td>
-                                            <td>Dexter</td>
-                                            <td>Jul 18, 2013</td>
-                                            <td>Contado</td>
-                                            <td>s/ 2,456.50</td>
-                                            <td>
-                                                <a href="#"><i class="fa fa-check-circle"></i></a>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
-                                            <td>4</td>
-                                            <td>BA00-00000004</td>
-                                            <td>23908223</td>
-                                            <td>Dexter</td>
-                                            <td>Jul 22, 2013</td>
-                                            <td>Contado</td>
-                                            <td>s/ 2,456.50</td>
-                                            <td>
-                                                <a href="#"><i class="fa fa-check-circle"></i></a>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>1</td>
+                                                <td>BA00-00000001</td>
+                                                <td>203837834</td>
+                                                <td>Fact1</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>Contado</td>
+                                                <td>S/ 1,800.00</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>2</td>
+                                                <td>BA00-00000002</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 16, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td><a href="#"><i class="fa fa-check-circle"></i></a></td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>3</td>
+                                                <td>BA00-00000003</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 18, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>4</td>
+                                                <td>BA00-00000004</td>
+                                                <td>23908223</td>
+                                                <td>Dexter</td>
+                                                <td>Jul 22, 2013</td>
+                                                <td>Contado</td>
+                                                <td>s/ 2,456.50</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
 
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-2" class="tab-pane active show">
-                                <div class="panel-body">
+                                <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 - Factura manual -->
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
                                                 <th >ID</th>
                                                 <th >Còdigo</th>
                                                 <th >RUC/DNI</th>
@@ -250,7 +255,7 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                             <td>1</td>
                                             <td>FA00-00000001</td>
                                             <td>203837834</td>
@@ -267,7 +272,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                             <td>2</td>
                                             <td>FA00-00000002</td>
                                             <td>23908223</td>
@@ -282,7 +287,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                             <td>3</td>
                                             <td>FA00-00000003</td>
                                             <td>23908223</td>
@@ -299,7 +304,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                             <td>4</td>
                                             <td>FA00-00000004</td>
                                             <td>23908223</td>
@@ -321,12 +326,12 @@
                             </div>
 
                             <div role="tabpanel" id="tab-3" class="tab-pane">
-                                <div class="panel-body">
+                                <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 - Nota de Crédito-->
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
                                                 <th >ID</th>
                                                 <th >Código</th>
                                                 <th>N° Documento</th>
@@ -340,7 +345,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>1</td>
                                                 <td>FF01-00000001</td>
                                                 <td>F001-00000001</td>
@@ -357,7 +362,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>2</td>
                                                 <td>FF01-00000001</td>
                                                 <td>F001-00000001</td>
@@ -374,7 +379,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>3</td>
                                                 <td>FF01-00000001</td>
                                                 <td>F001-00000001</td>
@@ -391,7 +396,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>4</td>
                                                 <td>FF01-00000001</td>
                                                 <td>F001-00000001</td>
@@ -413,12 +418,12 @@
                             </div>
 
                             <div role="tabpanel" id="tab-4" class="tab-pane">
-                                <div class="panel-body">
+                                <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  4 - Nota de débito-->
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
                                                 <th >ID</th>
                                                 <th >Código</th>
                                                 <th>N° Documento</th>
@@ -432,7 +437,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>1</td>
                                                 <td>FF01-000000032</td>
                                                 <td>FA00-000000351</td>
@@ -449,7 +454,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>2</td>
                                                 <td>FF01-000000032</td>
                                                 <td>FA00-000000351</td>
@@ -466,7 +471,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>3</td>
                                                 <td>FF01-000000032</td>
                                                 <td>FA00-000000351</td>
@@ -483,7 +488,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>4</td>
                                                 <td>FF01-000000032</td>
                                                 <td>FA00-000000351</td>
@@ -505,12 +510,12 @@
                             </div>
 
                             <div role="tabpanel" id="tab-5" class="tab-pane">
-                                <div class="panel-body">
+                                <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  5 - Guìa de remisiòn manual-->
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
                                                 <th>ID</th>
                                                 <th>Código</th>
                                                 <th>RUC/DNI</th>
@@ -522,7 +527,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>1</td>
                                                 <td>TA00-000000001</td>
                                                 <td>203837834</td>
@@ -538,7 +543,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>2</td>
                                                 <td>TA00-000000001</td>
                                                 <td>203837834</td>
@@ -554,7 +559,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>3</td>
                                                 <td>TA00-000000001</td>
                                                 <td>203837834</td>
@@ -570,7 +575,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                 <td>4</td>
                                                 <td>TA00-000000001</td>
                                                 <td>203837834</td>
@@ -593,14 +598,37 @@
                         </div>
 
                         <!-- Botones de navegación por los documentos de la tabla -->
+                         <!--
                         <div class="btn-group mt-4">
                             <button type="button" class="btn btn-white">Anterior</button>
                             <button class="btn btn-white">1</button>
-                            <button class="btn btn-white active">2</button>
+                            <button class="btn btn-primary active">2</button>
                             <button class="btn btn-white">3</button>
                             <button class="btn btn-white">4</button>
                             <button type="button" class="btn btn-white">Siguiente</button>
+                        </div>-->
+
+                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
+                            <label class="btn btn-sm btn-white ">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
+                            </label>
+                            <label class="btn btn-sm btn-white active">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
+                            </label>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -767,4 +795,6 @@
 
 
 </script>
+
+
 @endsection
