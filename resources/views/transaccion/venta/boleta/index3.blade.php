@@ -93,7 +93,14 @@
                         <div role="tabpanel" id="tab-1" class="tab-pane active">
                             <div class="panel-body">
                                 <table class="table table-striped table-bordered table-hover">
-                                    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-right: 5px;" />
+                                        <i class="fas fa-sync-alt" style="background-color: gray; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 5px;"></i>
+                                        <i class="fas fa-eraser" style="background-color: blue; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 900px;"></i>
+                                        <h5 type="text" name="daterange" style="font-weight: bold; font-size: 20px;">BUSCAR:</h5>
+                                        <input type="text" name="daterange" value="                  " style="margin-right: 2px;">
+                                    </div>
+                                    <br>
                                     <thead>
                                         <tr>
                                             <td>
@@ -135,11 +142,28 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <br>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                    <button class="btn btn-white">1</button>
+                                    <button class="btn btn-white  active">2</button>
+                                    <button class="btn btn-white">3</button>
+                                    <button class="btn btn-white">4</button>
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" id="tab-2" class="tab-pane">
                             <div class="panel-body">
                                 <table class="table table-striped table-bordered table-hover">
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-right: 5px;" />
+                                        <i class="fas fa-sync-alt" style="background-color: gray; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 5px;"></i>
+                                        <i class="fas fa-eraser" style="background-color: blue; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 900px;"></i>
+                                        <h5 type="text" name="daterange" style="font-weight: bold; font-size: 20px;">BUSCAR:</h5>
+                                        <input type="text" name="daterange" value="                  " style="margin-right: 2px;">
+                                    </div>
+                                    <br>
                                     <thead>
                                         <tr>
                                             <td>
@@ -185,6 +209,14 @@
                         <div role="tabpanel" id="tab-3" class="tab-pane">
                             <div class="panel-body">
                                 <table class="table table-striped table-bordered table-hover">
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-right: 5px;" />
+                                        <i class="fas fa-sync-alt" style="background-color: gray; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 5px;"></i>
+                                        <i class="fas fa-eraser" style="background-color: blue; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 900px;"></i>
+                                        <h5 type="text" name="daterange" style="font-weight: bold; font-size: 20px;">BUSCAR:</h5>
+                                        <input type="text" name="daterange" value="                  " style="margin-right: 2px;">
+                                    </div>
+                                    <br>
                                     <thead>
                                         <tr>
                                             <td>
@@ -232,6 +264,14 @@
                         <div role="tabpanel" id="tab-4" class="tab-pane">
                             <div class="panel-body">
                                 <table class="table table-striped table-bordered table-hover">
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-right: 5px;" />
+                                        <i class="fas fa-sync-alt" style="background-color: gray; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 5px;"></i>
+                                        <i class="fas fa-eraser" style="background-color: blue; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 900px;"></i>
+                                        <h5 type="text" name="daterange" style="font-weight: bold; font-size: 20px;">BUSCAR:</h5>
+                                        <input type="text" name="daterange" value="                  " style="margin-right: 2px;">
+                                    </div>
+                                    <br>
                                     <thead>
                                         <tr>
                                             <td>
@@ -279,6 +319,14 @@
                         <div role="tabpanel" id="tab-5" class="tab-pane">
                             <div class="panel-body">
                                 <table class="table table-striped table-bordered table-hover">
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-right: 5px;" />
+                                        <i class="fas fa-sync-alt" style="background-color: gray; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 5px;"></i>
+                                        <i class="fas fa-eraser" style="background-color: blue; color: white; border: none; border-radius: 5px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; margin-right: 900px;"></i>
+                                        <h5 type="text" name="daterange" style="font-weight: bold; font-size: 20px;">BUSCAR:</h5>
+                                        <input type="text" name="daterange" value="                  " style="margin-right: 2px;">
+                                    </div>
+                                    <br>
                                     <thead>
                                         <tr>
                                             <td>
