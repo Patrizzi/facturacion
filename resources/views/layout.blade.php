@@ -103,6 +103,32 @@
         font-weight: bold;
         text-align: center;
     }
+    body.mini-navbar .navbar-static-side {
+    width: 70px;
+    transition: width 0.3s ease;
+    }
+
+    body.mini-navbar #page-wrapper {
+        width: calc(100% - 70px);
+        transition: width 0.3s ease;
+    }
+
+    /* Cuando el mouse pasa por encima del menú, este se expande */
+    body.mini-navbar .navbar-static-side:hover {
+        width: 220px; /* Ancho expandido */
+        transition: width 0.3s ease;
+    }
+
+    body.mini-navbar .navbar-static-side:hover ~ #page-wrapper {
+        width: calc(100% - 220px);
+        transition: width 0.3s ease;
+    }
+
+    /* Ajuste del contenido cuando el menú está reducido */
+    body.mini-navbar .logo-element {
+        display: block;
+    }
+
 </style>
 <body class="">
     <div id="wrapper">
@@ -114,7 +140,7 @@
                             <a href="{{route('usuario.index')}}">
                                 <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
                                 <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
-                                <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
+                                
                             </a>
                         </div>
                         <div class="logo-element">
@@ -386,9 +412,9 @@
 {{-- Menu Superior --}}
 <div id="page-wrapper" class="gray-bg">
     <div class="row border-bottom">
-        <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+        <nav class="navbar navbar-static-top bg-white " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                
                 
                         {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
                         <div class="form-group">
@@ -507,7 +533,7 @@
                 </ul>
                 
             </nav>
-            <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+            <nav class="navbar navbar-static-top bg-white " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 
                 
@@ -635,7 +661,7 @@
 
                         <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
-                  document.getElementById('logout-form').submit();"><span class="nav-label text-white">
+                  document.getElementById('logout-form').submit();"><span class="text-white">
                     <i class="fa fa-power-off fa-lg fa-3x text-info"></i> 
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
@@ -715,5 +741,22 @@
             setTimeout(function() {
                 $('#btn_popover').popover('hide');
             }, 10000);
+            $(document).ready(function() {
+            // Forzar a que el menú comience en el estado reducido
+            $('body').addClass('mini-navbar');
+
+            // Deshabilitar el evento del botón si no quieres que se use más
+            $('.navbar-minimalize').off('click');
+
+            // Manejar la expansión del menú con el hover
+            $('.navbar-static-side').hover(
+                function() {
+                    $('body').removeClass('mini-navbar'); // Expande el menú cuando el mouse pasa por encima
+                }, 
+                function() {
+                    $('body').addClass('mini-navbar'); // Reduce el menú cuando el mouse sale
+                }
+            );
+        });
         </script>
 </html>
