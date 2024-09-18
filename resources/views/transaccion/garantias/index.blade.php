@@ -3,57 +3,62 @@
 @section('breadcrumb', 'Guia de ingreso')
 @section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 {{-- Base para Agregar recuadro blanco donde deberia ir el contenido general de lo nuevo que se agrega--}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
- <div class="row">
-  <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-title">
-                        {{-- Acá iria el titulo --}}
-                        RESUMEN DE SEPTIEMBRE DEL 2024
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+            <div class="ibox-title" style="display: flex; align-items: center;">
+    <span>RESUMEN DE SEPTIEMBRE DEL 2024</span>
+</div>
+            
+            <div class="ibox-content">
+                {{-- Acá iria el tema del contenido --}}
+                <div class="card-group">
+                    <div class="card p-3" style="border: none;">
+                        <div class="d-flex justify-content-center align-items-center card-img-top">
+                            <div class="bg-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; font-size: 3rem;">
+                                <i class="bi bi-cloud-arrow-down-fill text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" style="font-size: 18px">Guia de Ingreso</h5>
+                            <p class="card-text" style="font-size: 14px">5 Documentos</p>
+                            <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                        </div>
                     </div>
-                    <div class="ibox-content">
-                        {{-- Acá iria el tema del contenido --}}
-                        <div class="card-group">
-    <div class="card p-3">
-      <div class="d-flex justify-content-center align-items-center card-img-top">
-        <div class="bg-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; font-size: 2rem;">
-          <i class="bi bi-cloud-arrow-down-fill text-white"></i>
+                    <div class="card p-3" style="border: none;">
+                        <div class="d-flex justify-content-center align-items-center card-img-top">
+                            <div class="bg-success rounded-circle d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; font-size: 3rem;">
+                                <i class="bi bi-cloud-check-fill text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" style="font-size: 18px">Guia de Egreso</h5>
+                            <p class="card-text" style="font-size: 14px">3 Documentos</p>
+                            <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                    <div class="card p-3" style="border: none;">
+                        <div class="d-flex justify-content-center align-items-center card-img-top">
+                            <div class="bg-warning rounded-circle d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; font-size: 3rem;">
+                                <i class="bi bi-clipboard2-data-fill text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" style="font-size: 18px">Guia de Informe Tecnico</h5>
+                            <p class="card-text" style="font-size: 14px">8 Documentos</p>
+                            <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-body text-center">
-        <h5 class="card-title">Guia de Ingreso</h5>
-        <p class="card-text">5 Documentos</p>
-        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-      </div>
     </div>
-    <div class="card p-3">
-      <div class="d-flex justify-content-center align-items-center card-img-top">
-        <div class="bg-success rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; font-size: 2rem;">
-          <i class="bi bi-cloud-check-fill text-white"></i>
-        </div>
-      </div>
-      <div class="card-body text-center">
-        <h5 class="card-title">Guia de Egreso</h5>
-        <p class="card-text">3 Documentos</p>
-        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-      </div>
-    </div>
-    <div class="card p-3">
-      <div class="d-flex justify-content-center align-items-center card-img-top">
-        <div class="bg-warning rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; font-size: 2rem;">
-          <i class="bi bi-clipboard2-data-fill text-white"></i>
-        </div>
-      </div>
-      <div class="card-body text-center">
-        <h5 class="card-title">Guia de Informe Tecnico</h5>
-        <p class="card-text">8 Documentos</p>
-        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-      </div>
-    </div>
-  </div>
-
+</div>
+</div>
 
 {{--Base para agregar el tab para el los contenidos--}}
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -78,10 +83,19 @@
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
-                            <li class="ml-auto">
-                                <button class="btn btn-primary btn-sm" type="button"><i class="fa fa-plus"></i>
-                                </button>
+
+
+                                <li class="ml-auto">
+                                <div class="btn-group mx-2">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
+                                    <ul class=" dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
+                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
+                                    </ul>
+                                </div>
                             </li>
+
+
                             <li>
                                 <div class="btn-group mx-3">
                                     <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
@@ -94,8 +108,6 @@
                                 </div>
                             </li>
                         </ul>
-
-
 
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
@@ -149,49 +161,50 @@
                                             <td>Contado</td>
                                             <td>S/ 1,800.00</td>
                                             <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <i class="bi bi-eye-fill"></i>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                             <td>2</td>
-                                            <td>FA00-00000002</td>
+                                            <td>FA00-00000001</td>
                                             <td>23908223</td>
                                             <td>Dexter</td>
                                             <td>Jul 16, 2013</td>
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
-                                            <td>    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
+                                            <td>  
                                                 <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                             <td>3</td>
-                                            <td>FA00-00000003</td>
+                                            <td>FA00-00000001</td>
                                             <td>23908223</td>
                                             <td>Dexter</td>
                                             <td>Jul 18, 2013</td>
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
                                             <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <i class="bi bi-eye-fill"></i>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                             <td>4</td>
-                                            <td>FA00-00000004</td>
+                                            <td>FA00-00000001</td>
                                             <td>23908223</td>
                                             <td>Dexter</td>
                                             <td>Jul 22, 2013</td>
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
                                             <td>
-                                                <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <i class="bi bi-eye-fill"></i>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -221,15 +234,15 @@
                                             <tr>
                                                 <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                                 <td>1</td>
-                                                <td>FM00-00000001</td>
+                                                <td>FM00-00000002</td>
                                                 <td>203837834</td>
                                                 <td>Fact2</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>Contado</td>
                                                 <td>S/ 1,800.00</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -242,36 +255,36 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                                 <td>3</td>
-                                                <td>FM00-00000003</td>
+                                                <td>FM00-00000002</td>
                                                 <td>23908223</td>
                                                 <td>Jacinto</td>
                                                 <td>Jul 18, 2013</td>
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                            <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                                 <td>4</td>
-                                                <td>FM00-00000004</td>
+                                                <td>FM00-00000002</td>
                                                 <td>23908223</td>
                                                 <td>Dexter</td>
                                                 <td>Jul 22, 2013</td>
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -300,29 +313,29 @@
                                             <tr>
                                                 <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                                 <td>1</td>
-                                                <td>FM00-00000001</td>
+                                                <td>FM00-00000003</td>
                                                 <td>203837834</td>
                                                 <td>Fact2</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>Contado</td>
                                                 <td>S/ 1,800.00</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                                 <td>2</td>
-                                                <td>FM00-00000002</td>
+                                                <td>FM00-00000003</td>
                                                 <td>23908223</td>
                                                 <td>Dexter</td>
                                                 <td>Jul 16, 2013</td>
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -335,37 +348,28 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                                 <td>4</td>
-                                                <td>FM00-00000004</td>
+                                                <td>FM00-00000003</td>
                                                 <td>23908223</td>
                                                 <td>Dexter</td>
                                                 <td>Jul 22, 2013</td>
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                <i class="bi bi-eye-fill"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
-                            
-                        <!-- Botones de navegación en la tabla -->
-                        <div class="btn-group mt-4">
-    <a href="?page=1" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Anterior</a>
-    <a href="?page=1" class="btn btn-white">1</a>
-    <a href="?page=2" class="btn btn-white">2</a>
-    <a href="?page=3" class="btn btn-primary">Siguiente <i class="fa fa-chevron-right"></i></a>
-</div>
 
 
                         </div>
