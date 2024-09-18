@@ -79,8 +79,23 @@
                             <a class="nav-link" data-toggle="tab" href="#tab-5"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #c515ea; padding: 5px 10px;">1</span>GUIA DE REMISION</a>
                         </li>
                         <li class="ml-auto">
-                            <div>
-                                <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; align-items: flex-end; margin-right: 8px">+</a>
+                            <div style="position: relative; display: inline-block;">
+                                <a href="#" class="button" 
+                                   style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; 
+                                          background-color: #007bff; color: white; border: none; border-radius: 8px; 
+                                          padding: 1px 20px; text-decoration: none; cursor: pointer; 
+                                          margin-right: 8px" 
+                                   onclick="toggleOptions(event)">+</a>
+                                <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; 
+                                     transform: translateX(-50%); background-color: white; 
+                                     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; 
+                                     z-index: 1; margin-top: 8px; white-space: nowrap;">
+                                    <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
+                                    <a href="#" style="display: block; padding: 10px 16px; color: black; 
+                                       border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
+                                    <a href="#" style="display: block; padding: 8px 16px; color: black; 
+                                       border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
+                                </div>
                             </div>
                         </li>
                         <li>
@@ -204,6 +219,15 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <br>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                    <button class="btn btn-white">1</button>
+                                    <button class="btn btn-white  active">2</button>
+                                    <button class="btn btn-white">3</button>
+                                    <button class="btn btn-white">4</button>
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" id="tab-3" class="tab-pane">
@@ -259,6 +283,15 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <br>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                    <button class="btn btn-white">1</button>
+                                    <button class="btn btn-white  active">2</button>
+                                    <button class="btn btn-white">3</button>
+                                    <button class="btn btn-white">4</button>
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" id="tab-4" class="tab-pane">
@@ -314,6 +347,15 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <br>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                    <button class="btn btn-white">1</button>
+                                    <button class="btn btn-white  active">2</button>
+                                    <button class="btn btn-white">3</button>
+                                    <button class="btn btn-white">4</button>
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" id="tab-5" class="tab-pane">
@@ -370,6 +412,15 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <br>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                    <button class="btn btn-white">1</button>
+                                    <button class="btn btn-white  active">2</button>
+                                    <button class="btn btn-white">3</button>
+                                    <button class="btn btn-white">4</button>
+                                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                </div>
                             </div>
                         </div>
                     </div>    
@@ -542,4 +593,13 @@ $(document).ready(function(){
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap JavaScript -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script>//para el despliegue de las opciones de agregar
+    function toggleOptions(event) {
+        event.preventDefault();
+        const options = document.getElementById('options');
+        options.style.display = options.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
 @endsection
