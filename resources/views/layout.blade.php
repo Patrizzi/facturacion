@@ -105,7 +105,7 @@
     }
     body.mini-navbar .navbar-static-side {
     width: 70px;
-    transition: width 0.3s ease;
+    transition: width 0.5s ease;
     }
 
     body.mini-navbar #page-wrapper {
@@ -116,12 +116,12 @@
     /* Cuando el mouse pasa por encima del menú, este se expande */
     body.mini-navbar .navbar-static-side:hover {
         width: 220px; /* Ancho expandido */
-        transition: width 0.3s ease;
+        transition: width 0.5s ease;
     }
 
     body.mini-navbar .navbar-static-side:hover ~ #page-wrapper {
         width: calc(100% - 220px);
-        transition: width 0.3s ease;
+        transition: width 0.0s ease;
     }
 
     /* Ajuste del contenido cuando el menú está reducido */
@@ -569,16 +569,16 @@
                         </div>
                     </div>  
                 </div>
-                <div class="d-flex align-items-center text-white" style="margin:10px 100px; border-radius: 10px 100px; background-color: #2641f8">
-                    <i class="fa fa-bell" style="margin: 0 30px" ></i>
+                <div class="d-flex align-items-center text-white" style="margin:10px 100px; border-radius: 10px; background-color: #2641f8">
+                    <i class="fa fa-bell fa-2x" style="margin: 0 30px" ></i>
                     <span>3 de 20</span> 
                     <a style="margin: 0 20px">Enviar a Sunat</a>
                 </div>
                 <ul class="nav navbar-top-links navbar-right" >
-                    <li class="dropdown" style="margin: 0px 70px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
+                    <li class="dropdown" style="margin: 0px 20px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 25px; color: blue; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
+                            <i class="fa fa-comments-o fa-3x" style=" color: blue; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
                             {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
                         </a>
                         {{-- SI HAY PARA ENVIAR --}}
@@ -646,9 +646,9 @@
                             @endif
                         </ul>
                     </li>
-                    <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="margin: 0px 60px">
+                    <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="margin: 0px 80px;">
                         <a href="{{ route('usuario.index') }}" class="justify-content-center text-center"> 
-                            <i class="fa fa-user fa-lg fa-2x"></i>
+                            <i class="fa fa-user fa-lg fa-2x" style="color: #2641f8" ></i>
                             <span class="block m-t-xs text-black font-bold">@yield('area', auth()->user()->name)</span>
                         </a>
                     </div>
@@ -662,7 +662,7 @@
                         <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"><span class="text-white">
-                    <i class="fa fa-power-off fa-lg fa-3x text-info"></i> 
+                    <i class="fa fa-sign-out fa-lg fa-3x" style="color: #2641f8" ></i> 
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
