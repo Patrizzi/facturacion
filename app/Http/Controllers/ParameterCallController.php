@@ -442,4 +442,22 @@ class ParameterCallController extends Controller
         $tipo_operacion = TipoDetraccion::where('id',$request->get('id_tipo_detra'))->first();
         return $tipo_operacion;
     }
+
+    public static function verifyPermissionAccess($permisos = []){
+        $access = false;
+        $user = auth()->user();
+        $permisosUsuario = $user->getAllPermissions()->pluck("name");
+        // $permisos = ["inicio", "adminpermision", "transacciones-ventas"];
+
+        foreach($permisos as $permiso){
+            if(in_array($permiso, $permisosUsuario->toArray())){
+                $access = true;
+                break;
+            }
+        }
+
+        return $access;
+
+    }
+
 }

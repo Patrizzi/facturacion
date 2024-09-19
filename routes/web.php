@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\RolController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -523,6 +524,9 @@ Route::group(
 		Route::resource('/usuario','UsuarioController');
 		Route::get('/usuarios','UsuarioController@index_usuarios')->name('usuarios.index');
 		Route::resource('/venta','VentaController');
+
+		//Roles y Permisos
+		Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
 
 		Route::get('/cantidad_precio/servicio','CantidadPrecioController@index_servicio')->name('cantidad_precio.index_servicio');
 		Route::resource('/cantidad_precio','CantidadPrecioController');

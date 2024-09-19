@@ -1873,6 +1873,10 @@ class PagadosController extends Controller
 
     public function view_nota_venta()
     {
+        $access = ParameterCallController::verifyPermissionAccess(["admin-access"]);
+        if(!$access){
+            return redirect()->route('inicio');
+        }
         $nota_venta = NotaVenta::orderBy('id')->get();
         // NO VA CUOTAS
         $fecha_hoy =  Carbon::now()->format('Y-m-d');
