@@ -569,18 +569,11 @@
                         </div>
                     </div>  
                 </div>
-<<<<<<< HEAD
                 <div class="d-flex align-items-center text-white" style="margin:19px 100px; border-radius: 10px; background-color: #2641f8">
                     <i class="fa fa-bell fa-2x" style="margin: 0 30px" ></i>
                     <span >3 de 20</span> 
                     <span style="margin-left: 19px; font-size: 25px">|</span> 
                     <a style="margin: 0 20px" class="font-bold">Enviar a Sunat</a>
-=======
-                <div class="d-flex align-items-center text-white" style="margin:20px 100px; border-radius: 10px; background-color: #2641f8">
-                    <i class="fa fa-bell fa-2x" style="margin: 0 30px" ></i>
-                    <span>3 de 20</span> 
-                    <a class=" font-bold " style="margin: 0 20px">Enviar a Sunat</a>
->>>>>>> 341b4106568075d9443efca97b464cb8c6875670
                 </div>
                 <ul class="nav navbar-top-links navbar-right" >
                     <li class="dropdown" style="margin: 0px 20px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
@@ -657,7 +650,7 @@
                     <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="margin: 0px 80px;">
                         <a href="{{ route('usuario.index') }}" class="d-flex align-items-center justify-content-center text-center">
                         <span style="margin: 35px" class="block m-t-xs text-black font-bold">@yield('area', auth()->user()->name)</span>  
-                        <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 70px;height: 70px; border: 2px solid black;" />                     
+                        <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 70px;height: 70px; border: 3px solid black;" />                     
                         </a>
                     </div>
                     
