@@ -103,6 +103,32 @@
         font-weight: bold;
         text-align: center;
     }
+    body.mini-navbar .navbar-static-side {
+    width: 70px;
+    transition: width 0.3s ease;
+    }
+
+    body.mini-navbar #page-wrapper {
+        width: calc(100% - 70px);
+        transition: width 0.3s ease;
+    }
+
+    /* Cuando el mouse pasa por encima del menú, este se expande */
+    body.mini-navbar .navbar-static-side:hover {
+        width: 220px; /* Ancho expandido */
+        transition: width 0.3s ease;
+    }
+
+    body.mini-navbar .navbar-static-side:hover ~ #page-wrapper {
+        width: calc(100% - 220px);
+        transition: width 0.3s ease;
+    }
+
+    /* Ajuste del contenido cuando el menú está reducido */
+    body.mini-navbar .logo-element {
+        display: block;
+    }
+
 </style>
 <body class="">
     <div id="wrapper">
@@ -113,8 +139,8 @@
                         <div class="dropdown profile-element" style="left: 10% ">
                             <a href="{{route('usuario.index')}}">
                                 <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
-                                <span class="block m-t-xs font-bold spans">Nombre del Usuario:</span>
-                                <span class="block m-t-xs  spans ">@yield('area',auth()->user()->name) </span>
+                                <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
+                                
                             </a>
                         </div>
                         <div class="logo-element">
@@ -366,7 +392,7 @@
                         @endcan
                     </ul>
                 </li>
-                <li>
+                {{--<li>
                   <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"><i class="fa fa-power-off fa-lg text-white"></i><span class="nav-label text-white">
@@ -375,7 +401,7 @@
                         @csrf
                     </form>
                 </a>
-            </li>
+            </li>--}}
 
             @endcan
 
@@ -386,9 +412,9 @@
 {{-- Menu Superior --}}
 <div id="page-wrapper" class="gray-bg">
     <div class="row border-bottom">
-        <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+        <nav class="navbar navbar-static-top bg-white " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                
                 
                         {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
                         <div class="form-group">
@@ -422,6 +448,7 @@
                         </div>
                     </div>  
                 </div>
+                
                 <ul class="nav navbar-top-links navbar-right" >
                     <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
@@ -494,6 +521,8 @@
                             @endif
                         </ul>
                     </li>
+                    
+                    
                     
                     <li style="width: 20px">
                         <span></span>
@@ -504,9 +533,9 @@
                 </ul>
                 
             </nav>
-            <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+            <nav class="navbar navbar-static-top bg-white " role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                
                 
                         {{-- <form role="search" class="navbar-form-custom" action="search_results.html">
                         <div class="form-group">
@@ -540,11 +569,16 @@
                         </div>
                     </div>  
                 </div>
+                <div class="d-flex align-items-center text-white" style="margin:10px 100px; border-radius: 10px 100px; background-color: #2641f8">
+                    <i class="fa fa-bell" style="margin: 0 30px" ></i>
+                    <span>3 de 20</span> 
+                    <a style="margin: 0 20px">Enviar a Sunat</a>
+                </div>
                 <ul class="nav navbar-top-links navbar-right" >
-                    <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
+                    <li class="dropdown" style="margin: 0px 70px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 18px; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
+                            <i class="fa fa-bell " style="font-size: 25px; color: blue; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i> 
                             {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
                         </a>
                         {{-- SI HAY PARA ENVIAR --}}
@@ -612,12 +646,27 @@
                             @endif
                         </ul>
                     </li>
+                    <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="margin: 0px 60px">
+                        <a href="{{ route('usuario.index') }}" class="justify-content-center text-center"> 
+                            <i class="fa fa-user fa-lg fa-2x"></i>
+                            <span class="block m-t-xs text-black font-bold">@yield('area', auth()->user()->name)</span>
+                        </a>
+                    </div>
+                    
                     
                     <li style="width: 20px">
                         <span></span>
                     </li>
-                    <li>
-                        <span class="m-r-sm text-muted welcome-message" ><img src="{{asset('img/logos/'.$empresa->foto)}}" height="50px"></span>
+                    <li style="margin-right: 60px">
+
+                        <a href="{{ route('logout') }}"
+                  onclick="event.preventDefault();
+                  document.getElementById('logout-form').submit();"><span class="text-white">
+                    <i class="fa fa-power-off fa-lg fa-3x text-info"></i> 
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </a>
                     </li>
                 </ul>
                 
@@ -692,5 +741,22 @@
             setTimeout(function() {
                 $('#btn_popover').popover('hide');
             }, 10000);
+            $(document).ready(function() {
+            // Forzar a que el menú comience en el estado reducido
+            $('body').addClass('mini-navbar');
+
+            // Deshabilitar el evento del botón si no quieres que se use más
+            $('.navbar-minimalize').off('click');
+
+            // Manejar la expansión del menú con el hover
+            $('.navbar-static-side').hover(
+                function() {
+                    $('body').removeClass('mini-navbar'); // Expande el menú cuando el mouse pasa por encima
+                }, 
+                function() {
+                    $('body').addClass('mini-navbar'); // Reduce el menú cuando el mouse sale
+                }
+            );
+        });
         </script>
 </html>
