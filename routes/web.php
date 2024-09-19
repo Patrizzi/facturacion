@@ -486,6 +486,8 @@ Route::group(
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');
 
+		Route::get('/personal2/creacion2','PersonalController@creacion2');
+
 		Route::get('/personal-laboral/{id}','PersonalDatosLaboralesController@idpersonal')->name('create.laboral');
 		Route::resource('/personal-datos-laborales','PersonalDatosLaboralesController');
 		Route::post('/productos_ajax','ProductosController@index_ajax')->name('productos.index_ajax');
