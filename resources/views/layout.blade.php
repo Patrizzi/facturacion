@@ -672,6 +672,126 @@
                 </ul>
                 
             </nav>
+            <nav class="navbar navbar-static-top bg-white" role="navigation" style="margin-bottom: 0">
+                <div class="container-fluid">
+                    <div class="navbar-center">
+                        <div class=" minimalize-style-3 " style="vertical-align: middle;width: 21em">
+                            <div class="col-lg-12" style="padding: 5px">
+                                <div class="row">
+                                    @if (isset($tipo_cambio->fecha))
+                                        <div class="col-sm-4">
+                                            <div style="color: black" class="text-center">
+                                                <span><strong>Compra :</strong><br>{{$tipo_cambio->compra}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div style="color: black" class="text-center">
+                                                <span><strong>Venta :</strong><br>{{$tipo_cambio->venta}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div style="color: black" class="text-center">
+                                                <span><strong>Paralelo :</strong><br>{{$tipo_cambio->paralelo}}</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="d-flex align-items-center text-white justify-content-center" style="border-radius: 10px; background-color: #2641f8; padding: 10px;">
+                        <i class="fa fa-bell fa-2x mx-3"></i>
+                        <span>3 de 20</span>
+                        <span class="mx-3" style="font-size: 25px;">|</span>
+                        <a class="font-bold" style="margin: 0 20px;">Enviar a Sunat</a>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="dropdown" id="btn_popover" style="margin: 0px 20px;">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-comments-o fa-3x mr-5" style="color: blue; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts" style="padding: 1px;">
+                                @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                <li>
+                                    <a href="{{route('facturacion_electronica.index')}}" class="dropdown-item">
+                                        <div>
+                                            Tiene @if($fact_view_count > 0) <strong>{{$fact_view_count}} Facturas</strong>  @endif @if($fact_m_view_count > 0 && $fact_view_count > 0) y @endif  @if($fact_m_view_count > 0) <strong>{{$fact_m_view_count}} Facturas Manuales</strong> @endif pendientes de enviar a SUNAT
+                                        </div>
+                                    </a>    
+                                </li>
+                                @endif
+                                @if ($bol_view_count > 0 || $bol_m_view_count > 0)
+                                    <li class="dropdown-divider"></li>
+                                    <li>
+                                        <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                            <div>
+                                                Tiene @if($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
+                                            </div>
+                                        </a>
+                                    </li>    
+                                @endif
+                                @if ($guia_view_count > 0 || $guia_m_view_count > 0)
+                                    <li class="dropdown-divider"></li>
+                                    <li>
+                                        <a href="{{route('facturacion_electronica.index_guia_remision')}}" class="dropdown-item">
+                                            <div>
+                                                Tiene @if($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
+                                            </div>
+                                        </a>
+                                    </li>    
+                                @endif
+                                @if ($n_credito_view_count > 0)
+                                    <li class="dropdown-divider"></li>
+                                    <li>
+                                        <a href="{{route('facturacion_electronica.index_nota_credito')}}" class="dropdown-item">
+                                            <div>
+                                                Tiene @if($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
+                                            </div>
+                                        </a>
+                                    </li>    
+                                @endif
+                                @if ($n_debito_view_count > 0 )
+                                    <li class="dropdown-divider"></li>
+                                    <li>
+                                        <a href="{{route('facturacion_electronica.index_nota_debito')}}" class="dropdown-item">
+                                            <div>
+                                                Tiene @if($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
+                                            </div>
+                                        </a>
+                                    </li>    
+                                @endif
+                                @if($fact_view_count == 0 && $fact_m_view_count == 0 && $bol_view_count == 0 && $bol_m_view_count == 0 && $n_credito_view_count == 0 && $n_credito_view_count == 0)
+                                    <li>
+                                        <a href="#">
+                                            <div>
+                                                Sin envios Pendientes a SUNAT
+                                            </div>
+                                        </a>    
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                        <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="padding: 0;">
+                            <a href="{{ route('usuario.index') }}" class="d-flex align-items-center text-center">
+                                <span class="block m-t-xs text-black font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
+                                <img alt="image" class="rounded-circle mr-5" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 70px; height: 70px; border: 3px solid black;" />
+                            </a>
+                        </div>
+                        <li style="margin-right: 40px;">
+                            <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <span class="text-white">
+                                    <i class="fa fa-sign-out fa-lg fa-3x" style="color: #2641f8;"></i>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
         </div>
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
