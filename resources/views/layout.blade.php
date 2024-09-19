@@ -650,7 +650,7 @@
                     <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="margin: 0px 80px;">
                         <a href="{{ route('usuario.index') }}" class="d-flex align-items-center justify-content-center text-center">
                         <span style="margin: 35px" class="block m-t-xs text-black font-bold">@yield('area', auth()->user()->name)</span>  
-                        <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 70px;height: 70px; border: 2px solid black;" />                     
+                        <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 70px;height: 70px; border: 3px solid black;" />                     
                         </a>
                     </div>
                     
