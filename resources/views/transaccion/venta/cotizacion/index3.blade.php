@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('title', 'Cotización')
+
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -109,31 +110,35 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="input-group">
-                                                <input class="form-control" type="text" name="daterange"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                        <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
-                                                    </button>
-                                                </span>
+                                                <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-4">
+                                            <div class="col-sm-4">
                                                 <div class="form-group row">
-                                                    <select class="form-control col-lg-12" id="select_tipo_coti">
-                                                        <option value="">Todos los Comprobantes</option>
+                                                    <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
+                                                            Cotizacion:</strong></label>
+                                                    <select class="form-control col-lg-8" name="" id="select_tipo_coti">
+                                                        <option value="">Todos los comprobantes</option>
                                                         <option value="factura">Factura</option>
                                                         <option value="boleta">Boleta</option>
                                                         <option value="nota_venta">Nota de Venta</option>
                                                     </select>
                                                 </div>
                                             </div>
-                                            <!----><div class="col-sm-4">
+                                            <!---->
+                                            <div class="col-sm-4">
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
                                                     <input type="search" class="form-control col-lg-8">
@@ -141,7 +146,7 @@
                                             </div> 
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-example">
+                                        <table class="table table-striped table-bordered table-hover dataTables-example-facturacion">
                                             <thead>
                                                 <tr><th>
                                                     <input type="checkbox" class="i-checks" name="input[]">
@@ -152,116 +157,64 @@
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
+                                                    <th style="display: none"></th>
                                                     <th>Importe T.</th>
                                                     <th>Acciones</th>
+                                                    <th style="display: none">Tipo de Cotizacion</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            @foreach ($cotizacion as $cotizacions)
                                                 <tr>
                                                     <td>
                                                     <input type="checkbox" class="i-checks" name="input[]">
                                                     </td>
-                                                    <td>1</td>
-                                                    <td>COTV 001-00000003</td>
-                                                    <td>031465121</td>
-                                                    <td>Marco Estrada</td>
-                                                    <td>07-10-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 200.00</td>
+                                                    <td>{{ $cotizacions->id }}</td>
+                                                    <td>{{ $cotizacions->cod_cotizacion }}</td>
+                                                    <td>{{ $cotizacions->cliente->numero_documento }}</td>
+                                                    <td>{{ $cotizacions->cliente->nombre }}</td>
+                                                    <td>{{ Carbon\Carbon::parse($cotizacions->created_at)->format('d-m-Y') }}</td>
+                                                    <td>{{ $cotizacions->forma_pago->nombre }}</td>
+                                                    <span hidden>
+                                                        {{ $subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }}
+                                                    </span>
+                                                    <span hidden>
+                                                        @if ($cotizacions->moneda_id == 2)
+                                                            {{-- Dolares --}}
+                                                            {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                            {{ $total_conv = $total * $cotizacions->cambio }}
+                                                        @else
+                                                            {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                            {{ $total_conv = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
+                                                        @endif
+                                                        
+                                                    </span> 
+                                                    <td style="display:none">{{ $total_conv }}</td>
+                                                    <td>{{ $cotizacions->moneda->simbolo }}
+                                                        {{ number_format(round($total, 2), 2) }}
+                                                    </td>
                                                     <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                    <a href="{{ route('cotizacion.show', $cotizacions->id) }}"><button
+                                                            type="button" class="btn btn-primary"><i
+                                                                class="fa fa-eye"></i></button></a>
+                                                        
+                                                        @if ($cotizacions->estado == '0')
                                                         <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                    <input type="checkbox" class="i-checks" name="input[]"></td>
-                                                    <td>2</td>
-                                                    <td>COTV 001-00000002</td>
-                                                    <td>031492021</td>
-                                                    <td>Marlo Calderon</td>
-                                                    <td>08-02-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 320.00</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                        @else
                                                         <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
+                                                        @endif
+                                                        
+                                                    </td>
+                                                    <td style="display: none">
+                                                        {{ $cotizacions->tipo }}
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                    <input type="checkbox" class="i-checks" name="input[]">
-                                                    </td>
-                                                    <td>3</td>
-                                                    <td>COTV 001-00000001</td>
-                                                    <td>14865121</td>
-                                                    <td>Fabricio Yupanqui</td>
-                                                    <td>03-08-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 190.00</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                    <input type="checkbox" class="i-checks" name="input[]"></td>
-                                                    <td>4</td>
-                                                    <td>COTV 001-00000004</td>
-                                                    <td>12982021</td>
-                                                    <td>EM PLAST PERU E.I.R.L</td>
-                                                    <td>12-09-2024</td>
-                                                    <td>Contado</td>
-                                                    <td>S/. 480.55</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                        <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>5</td>
-                                                        <td>COTPF 001-00000001</td>
-                                                        <td>20101088881</td>
-                                                        <td>DROGUERIA REYES S.A.C.</td>
-                                                        <td>18-06-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 179.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-info">
-                                                                <i class="fa fa-check-circle"></i></button>
-                                                        </td>
-                                                </tr>
-                                                    <tr>
-                                                        <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>6</td>
-                                                        <td>COTB 001-00000006</td>
-                                                        <td>20474595081</td>
-                                                        <td> CORADIC S.A.C.	</td>
-                                                        <td>08-05-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 319.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-info">
-                                                                <i class="fa fa-check-circle"></i></button>
-                                                        </td>
-                                                    </tr>                                                    
+                                            @endforeach                                                    
                                             </tbody>
                                             <tfoot>
                                                 <tr>
                                                     <th colspan="7" class="text-right">Total General</th>
-                                                    <th colspan="7">S/. ****</th>
+                                                    <th colspan="2" ></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -669,7 +622,7 @@
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
     <!-- Seleccionar todos los check -->
-    <script>
+<script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
@@ -708,35 +661,7 @@
 </script>
 
     <!--Organizar--> 
-    <script>
-            $(document).ready(function(){
-                $('.dataTables-example').DataTable({
-                    pageLength: 25,
-                    responsive: true,
-                    dom: '<"html5buttons"B>lTfgitp',
-                    buttons: [
-                        {extend: 'csv'},
-                        {extend: 'excel', title: 'ExampleFile'},
-                        {extend: 'pdf', title: 'ExampleFile'},
-
-                        {extend: 'print',
-                        customize: function (win){
-                                $(win.document.body).addClass('white-bg');
-                                $(win.document.body).css('font-size', '10px');
-
-                                $(win.document.body).find('table')
-                                        .addClass('compact')
-                                        .css('font-size', 'inherit');
-                        }
-                        }
-                    ]
-                });
-            });
-
-        </script>  
-
-    <!-- Page-Level Scripts -->
-    <script>
+<script>
         $(document).ready(function() {
             table = $('.dataTables-example-facturacion').DataTable({
                 pageLength: 10,
@@ -759,7 +684,7 @@
 
                     // Total over all pages
                     total = api
-                        .column(5)
+                        .column(4)
                         .data()
                         .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
@@ -841,11 +766,9 @@
         function limpiar_select() {
             table.column(4).search("").draw();
         }
-
         function revert_select() {
             table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
+</script>
 
-    
-    </script>
 @endsection
