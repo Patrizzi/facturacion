@@ -569,10 +569,11 @@
                         </div>
                     </div>  
                 </div>
-                <div class="d-flex align-items-center text-white" style="margin:10px 100px; border-radius: 10px; background-color: #2641f8">
+                <div class="d-flex align-items-center text-white" style="margin:19px 100px; border-radius: 10px; background-color: #2641f8">
                     <i class="fa fa-bell fa-2x" style="margin: 0 30px" ></i>
-                    <span>3 de 20</span> 
-                    <a style="margin: 0 20px">Enviar a Sunat</a>
+                    <span >3 de 20</span> 
+                    <span style="margin-left: 19px; font-size: 25px">|</span> 
+                    <a style="margin: 0 20px" class="font-bold">Enviar a Sunat</a>
                 </div>
                 <ul class="nav navbar-top-links navbar-right" >
                     <li class="dropdown" style="margin: 0px 20px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
