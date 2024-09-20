@@ -3199,6 +3199,8 @@ if($validacion==1){
 
         return view('transaccion.venta.cotizacion.free_print', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','i','end','igv_p','banco_count','end2'));
     }
+
+
     public function index3(){
         $nota_venta=NotaVenta::all();
         $totales = [];
@@ -3218,4 +3220,5 @@ if($validacion==1){
         $igv = Igv::first();
         return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv', 'nota_venta','totales'));
     }
+    
 }
