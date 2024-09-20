@@ -12,6 +12,7 @@ use App\Cotizacion;
 use App\Cotizacion_Servicios;
 use App\Cotizacion_boleta_registro;
 use App\Cotizacion_factura_registro;
+use App\CotizacionManual;
 use App\Cuotas_credito;
 use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
@@ -3199,9 +3200,22 @@ if($validacion==1){
         return view('transaccion.venta.cotizacion.free_print', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','i','end','igv_p','banco_count','end2'));
     }
     public function index3(){
+        $nota_venta=NotaVenta::all();
+        $totales = [];
+        foreach($nota_venta as $index =>  $nota_ventas){    
+            $total = 0;
+            $suma = 0;
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+            foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $suma += $total;
+            $totales[$index] = $suma;
+        }
         $cotizacion= Cotizacion::get();
+        $cotizacion_m= CotizacionManual::get();
+        $nota_venta=NotaVenta::get();
         $igv = Igv::first();
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','igv'));
-    
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv', 'nota_venta','totales'));
     }
 }

@@ -127,9 +127,7 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
-                                                            Cotizacion:</strong></label>
-                                                    <select class="form-control col-lg-8" name="" id="select_tipo_coti">
+                                                    <select class="form-control col-lg-12" name="" id="select_tipo_coti">
                                                         <option value="">Todos los comprobantes</option>
                                                         <option value="factura">Factura</option>
                                                         <option value="boleta">Boleta</option>
@@ -223,7 +221,7 @@
                             </div>
     
                                  <!-- COTIZACION MANUAL--> 
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
+                                 <div role="tabpanel" id="tab-2" class="tab-pane">
                                     <div class="panel-body">
                                         {{-- CONTENIDO DENTRO DEL TAB  2 --}}
                                         <div class="row">
@@ -261,7 +259,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive" id="tab-2">
-                                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example-facturacion">
                                             <thead>
                                                     <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
@@ -269,112 +267,63 @@
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
                                                         <th>Fecha Emisión</th>
+                                                        <th style="display: none"></th>
                                                         <th>Forma</th>
                                                         <th>Importe T.</th>
                                                         <th>Acciones</th>
+                                                        <th style="display: none">Tipo de Cotizacion</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>                              
+                                                <tbody>
+                                                @foreach($cotizacion_m as $cotizaciones_m)                         
                                                     <tr>
                                                         <td>
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
-                                                        <td>1</td>
-                                                        <td>CMF 001-00000001</td>
-                                                        <td>70871200</td>
-                                                        <td>Daniel Roman Castillo</td>
-                                                        <td>07-10-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 200.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-clock-o"></i></button>
+                                                        <td>{{ $cotizaciones_m->id }}</td>
+                                                        <td>{{ $cotizaciones_m->cod_cotizacion }}</td>
+                                                        <td>{{ $cotizaciones_m->cliente->numero_documento }}</td>
+                                                        <td>{{ $cotizaciones_m->cliente->nombre }}</td>
+                                                        <td>{{ Carbon\Carbon::parse($cotizaciones_m->fecha_emision)->format('d-m-Y') }}</td>
+                                                        <td>{{ $cotizaciones_m->forma_pago->nombre }}</td>
+                                                        <span hidden>
+                                                            {{ $subtotal = $cotizaciones_m->op_gravada + $cotizaciones_m->op_inafecta + $cotizaciones_m->op_exonerada }}
+                                                        </span>
+                                                        <span hidden>
+                                                            @if ($cotizaciones_m->moneda_id == 2)
+                                                                {{-- Dolares --}}
+                                                                {{ $total = round($subtotal + ($cotizaciones_m->op_gravada * $igv->renta) / 100, 2) }}
+                                                                {{ $total_conv = $total * $cotizaciones_m->cambio }}
+                                                            @else
+                                                                {{ $total = round($subtotal + ($cotizaciones_m->op_gravada * $igv->renta) / 100, 2) }}
+                                                                {{ $total_conv = round($subtotal + ($cotizaciones_m->op_gravada * $igv->renta) / 100, 2) }}
+                                                            @endif
+                                                        </span>
+                                                        <td style="display: none"> {{ $total_conv }}</td>
+                                                        <td>{{ $cotizaciones_m->moneda->simbolo }}
+                                                            {{ number_format(round($subtotal + ($cotizaciones_m->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                         </td>
+                                                        <td>
+                                                             <a href="{{ route('cotizacion_manual.show', $cotizaciones_m->id) }}"><button
+                                                                type="button" class="btn btn-primary"><i
+                                                                    class="fa fa-eye"></i></button></a>
+                                                            
+                                                            @if ($cotizaciones_m->estado == '0')
+                                                            <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+                                                            @else
+                                                            <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
+                                                            @endif
+                                                        </td>
+                                                        <td style="display: none">
+                                                            {{ $cotizaciones_m->tipo }}
+                                                        </td>       
                                                     </tr>
-                                                    <tr>
-                                                        <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>2</td>
-                                                        <td>CMF 001-00000002</td>
-                                                        <td>20612050300</td>
-                                                        <td>COBRANZA INTELIGENTE S.A.C.</td>
-                                                        <td>17-09-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 195.01</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-warning"><i
-                                                                    class="fa fa-clock-o"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>3</td>
-                                                        <td>CMF 001-00000003</td>
-                                                        <td>20604690685</td>
-                                                        <td>LUOXO S.A.C.</td>
-                                                        <td>02-04-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 305.11</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-info">
-                                                                <i class="fa fa-check-circle"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>4</td>
-                                                        <td>CMF 001-00000004</td>
-                                                        <td>20550971861</td>
-                                                        <td>DYM SOLUCIONES E.I.R.L.</td>
-                                                        <td>03-04-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 155.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-info">
-                                                                <i class="fa fa-check-circle"></i></button>
-                                                        </td>     
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>5</td>
-                                                        <td>CMF 001-00000005</td>
-                                                        <td>20550977861</td>
-                                                        <td>TEXTILES TBM S.A.C.</td>
-                                                        <td>03-04-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 285.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-info">
-                                                                <i class="fa fa-check-circle"></i></button>
-                                                        </td>     
-                                                    </tr>
+                                                    @endforeach
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <th colspan="7" class="text-right">Total General</th>
-                                                        <th colspan="7">S/. ****</th>
+                                                        <th colspan="2" ></th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -413,7 +362,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example-facturacion">
                                                 <thead>
                                                     <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
@@ -421,73 +370,81 @@
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
                                                         <th>Fecha Emisión</th>
+                                                        <th style="display: none"></th>
                                                         <th>Forma</th>
                                                         <th>Importe T.</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @foreach($nota_venta as $index => $nota_ventas)
                                                     <tr><td>
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                         </td>
-                                                        <td>1</td>
-                                                        <td>NV001-00000291</td>
-                                                        <td>08123245</td>
-                                                        <td>Julio Flores</td>
-                                                        <td>02-01-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 200.00</td>
+                                                        <td>{{$nota_ventas->id}}</td>
+                                                        <td>{{$nota_ventas->cod_nota_venta}}</td>
+                                                        <td>{{$nota_ventas->cliente->numero_documento}}</td>
+                                                        <td>{{$nota_ventas->cliente->nombre}}</td>
+                                                        {{-- <td>{{$nota_ventas->almacen->nombre}}</td> --}}
+                                                        <td>{{$nota_ventas->fecha_emision}}</td>
+                                                        <td>@if($nota_ventas->forma_pago == 1) Contado @else Credito @endif</td>   
+                                                        <span hidden>
+                                                        {{ $subtotal = $nota_ventas->op_gravada + $nota_ventas->op_inafecta + $nota_ventas->op_exonerada }}
+                                                    </span>
+                                                    <span hidden>
+                                                        @if ($nota_ventas->moneda_id == 2)
+                                                            {{-- Dolares --}}
+                                                            {{ $total = round($subtotal + ($nota_ventas->op_gravada * $igv->renta) / 100, 2) }}
+                                                            {{ $total_conv = $total * $nota_ventas->cambio }}
+                                                        @else
+                                                            {{ $total = round($subtotal + ($nota_ventas->op_gravada * $igv->renta) / 100, 2) }}
+                                                            {{ $total_conv = round($subtotal + ($nota_ventas->op_gravada * $igv->renta) / 100, 2) }}
+                                                        @endif
+                                                    </span> 
+                                                    <td style="display:none">{{ $total_conv }}</td>
+                                                    <td>{{$nota_ventas->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-danger"><i
-                                                                    class="fa fa-trash-o"></i></button>
+                                                        <a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a>
+                                                        @if($nota_ventas->estado == 0)
+                                                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$nota_ventas->id}}"><i class="fa fa-trash" ></i>
+                                                            </button>
+                                                        @else
+                                                            <button class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ya está Anulada"><i class="fa fa-trash" ></i>
+                                                        </button>
+                                                        @endif
+                                                        <div class="modal fade" id="exampleModal{{$nota_ventas->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <form action="{{route('nota_venta.anulacion',$nota_ventas->id)}}" method="post" >
+                                                                        @csrf
+                                                                        <div class="modal-header">
+                                                                        {{-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> --}}
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                        </div>
+                                                                        <div class="modal-body">        
+                                                                            <strong>¿Esta seguro de anula la Nota de Venta N~ {{$nota_ventas->cod_nota_venta}}?</strong>
+                                                                            <strong>Observacion:</strong><br>
+                                                                            <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control">{{$nota_ventas->observacion}}</textarea>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                         </div>
                                                         </td>
-                                                    </tr>
-                                                    <tr><td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>2</td>
-                                                        <td>NV001-00000292</td>
-                                                        <td>76652408</td>
-                                                        <td>Raul Pancorbo Salazar</td>
-                                                        <td>12-02-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 240.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-danger"><i
-                                                                    class="fa fa-trash-o"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr><td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>3</td>
-                                                        <td>NV001-00000293</td>
-                                                        <td>79841402</td>
-                                                        <td>Cindy Rosa Rosales Torres</td>
-                                                        <td>11-03-2024</td>
-                                                        <td>Contado</td>
-                                                        <td>S/. 180.00</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button type="button" class="btn btn-danger"><i
-                                                                    class="fa fa-trash-o"></i></button>
-                                                        </td>
-                                                    </tr>
+                                                    </tr> 
+                                                    @endforeach                                      
                                                 </tbody>
                                                 <tfoot>
-                                                    <tr>
-                                                        <th colspan="7" class="text-right">Total General</th>
-                                                        <th colspan="7">S/. ****</th>
-                                                    </tr>
-                                                </tfoot>
+                                                <tr>
+                                                    <th colspan="7" class="text-right">Total General</th>
+                                                    <th colspan="2" ></th>
+                                                </tr>
+                                            </tfoot>
                                             </table>     
                                         </div>
                                     </div>    
@@ -684,18 +641,18 @@
 
                     // Total over all pages
                     total = api
-                        .column(4)
+                        .column(7)
                         .data()
                         .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
 
                     // Total filtered rows on the selected column (code part added)
-                    var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                    var sumCol4Filtered = display.map(el => data[el][7]).reduce((a, b) => intVal(a) +
                         intVal(b), 0);
 
                     // Update footer
-                    $(api.column(5).footer()).html(
+                    $(api.column(7).footer()).html(
                         'S/ ' + Math.round(sumCol4Filtered * 100) / 100
                     );
                 },
@@ -707,7 +664,7 @@
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
                 // console.log(nombre);
-                table.column(11).search(nombre).draw();
+                table.column(10).search(nombre).draw();
             });
             $('input[name="daterange"]').daterangepicker({
                     "locale": {
