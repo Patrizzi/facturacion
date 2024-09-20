@@ -12,6 +12,7 @@
 // });
 
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -20,6 +21,39 @@ Route::group(
 
 		// Route::view('/' , 'home')->name('inicio');
 		Route::get('/' , 'ViewController@home')->name('inicio');
+
+		// RUTAS PROYECTOS
+		// project_managers
+		Route::get('/project_managers', function () {})->name('project_managers.index');
+		Route::get('/project_managers/create', function(){})->name('project_managers.create');
+		Route::post('/project_managers', function () {})->name('project_managers.store');
+		Route::get('/project_managers/{project_manager}', function ($project_manager) {})->name('project_managers.show');
+		Route::get('/project_managers/{project_manager}/edit', function ($project_manager) {})->name('project_managers.edit');
+		Route::put('/project_managers/{project_manager}/update', function ($project_manager) {})->name('project_managers.update');
+		Route::delete('/project_managers/{project_manager}', function ($project_manager) {})->name('project_managers.destroy');
+			// gantt
+        Route::get('/project_managers/gantt', function () {})->name('project_managers.gantt');
+        Route::get('/project_managers/{project_manager}/gantt', function ($project_manager) {})->name('project_managers.gantt');
+			// report
+		Route::get('/project_managers/{project_manager}/report', function ($project_manager) {})->name('project_managers.report');
+			// cards
+		Route::get('/project_managers/{project_manager}/cards', function ($project_manager) {})->name('project_managers.cards');
+		Route::get('/project_managers/{project_manager}/cards/create', function ($project_manager) {})->name('project_managers.cards.create');
+		Route::post('/project_managers/{project_manager}/cards', function ($project_manager) {})->name('project_managers.cards.store');
+		Route::get('/project_managers/{project_manager}/cards/{card}/edit', function ($project_manager, $card) {})->name('project_managers.cards.edit');
+		Route::put('/project_managers/{project_manager}/cards/{card}', function ($project_manager, $card) {})->name('project_managers.cards.update');
+		Route::delete('/project_managers/{project_manager}/cards/{card}', function ($project_manager, $card) {})->name('project_managers.cards.destroy');
+			// tasks
+		Route::get('/project_managers/{project_manager}/cards/{card}/task/create', function ($project_manager, $card) {})->name('project_manager.card.task.create');
+		Route::post('/project_managers/{project_manager}/cards/{card}/task/', function ($project_manager, $card) {})->name('project_manager.card.task.store');
+		Route::get('/project_managers/{project_manager}/cards/{card}/task{task}/edit', function ($project_manager, $card, $task) {})->name('project_manager.card.task.edit');
+		Route::put('/project_managers/{project_manager}/cards/{card}/task/{task}', function ($project_manager, $card, $task) {})->name('project_manager.card.task.update');
+		Route::delete('/project_managers/{project_manager}/cards/{card}/task/{task}', function ($project_manager, $card, $task) {})->name('project_manager.card.task.destroy');
+			// comments
+		Route::get('/project_managers/{project_manager}/cards/{card}/task/{task}/comment/create', function ($project_manager, $card, $task) {})->name('project_manager.card.task.comment.create');
+		Route::post('/project_managers/{project_manager}/cards/{card}/task/{task}/comment/', function ($project_manager, $card, $task) {})->name('project_manager.card.task.comment.store');
+
+		// END
 
 		Route::post('configuracion_guias_ingresos', 'ConfiguracionGuiaIngresosController@store')->name('envio_confi_ingresos');
 
