@@ -1,0 +1,59 @@
+/* app/assets/stylesheets/custom.scss */
+.gantt-table {
+    padding-top: 0;
+    margin: 0px;
+}
+
+.flex-gap {
+    display: flex;
+    gap: 30px;
+}
+
+.left-table-container {
+    width: calc(55%);
+}
+
+.right-table {
+    width: calc(45%);
+    overflow-y: hidden;
+}
+.gantt-table-week-row {
+    height: 22.3px;
+}
+.gantt-row {
+    height: 22px;
+}
+.progress{
+    margin: 0px;
+}
+.gantt-week-text {
+    text-align: center;
+    font-size: 12px;
+    color: #909295;
+}
+.gantt-table-search, .gantt-table-weeks {
+    height: 35px;
+    margin: 0px;
+}
+.name-options {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Estilo para la barra de desplazamiento */
+.project-table::-webkit-scrollbar {
+    height: 5px;
+}
+
+.project-table::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.project-table::-webkit-scrollbar-thumb {
+    background: #909295;
+    border-radius: 10px;
+}
+
+.project-table::-webkit-scrollbar-thumb:hover {
+    background: #373A40;
+}
