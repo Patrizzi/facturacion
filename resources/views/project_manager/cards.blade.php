@@ -16,7 +16,7 @@
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h3 style="margin-left: 10px;">Listado de Tarjetas - 1</h3>
+                        <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
                         <div class="ibox-tools">
                             <a class="close-link">
                                 <i class="fa fa-times"></i>
@@ -25,88 +25,84 @@
                     </div>
                     <div class="ibox-content">
                         <div class="carousel-container">
+                            @foreach ($project_manager->activities as $activity)
 
-                            @for ($a = 0; $a < 15; $a++)
-
-                            <div class="p-card" id="p-card-{{$a}}" style="background-color: #94f261">
-                                <div class="p-card-title"> Titulo de actividad a-{{$a}}</div>
+                            <div class="p-card" id="p-card-{{$activity->id}}" style="background-color: {{$activity->color}}">
+                                <div class="p-card-title">{{$activity->nombre}}</div>
                                 <div class="p-card-content">
                                     <div class="p-card-header">
-                                        <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" class="worker-image" alt="worker image">
+                                        <img src="{{ isset($activity->responsable->avatar) ? asset('/profile/images/') . '/' . $activity->responsable->avatar : 'https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png' }}" class="worker-image" alt="worker image">
                                         <div class="worker-info">
-                                            <div class="worker-name">Usuario de actividad a-{{$a}}</div>
-                                            <div class="worker-time">{{$a}}d</div>
+                                            <div class="worker-name">{{$activity->responsable->name}}</div>
+                                            <div class="worker-time">{{$activity->createdTime()}}</div>
                                         </div>
                                         <div class="p-card-action-icons">
                                             <a href="#" class="fa fa-plus"></a>
                                             <a href="#" class="fa fa-trash" , method: :delete, data: { confirm: 'Estás seguro?' }></a>
                                             <a href="#" class="fa fa-edit"></a>
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="p-card-text">
-                                        Descripción de actividad p-{{$a}}
+                                        {{$activity->contenido}}
                                     </div>
-                                    <img src="https://t4.ftcdn.net/jpg/07/11/03/89/360_F_711038915_Nl8j4lQaXBS2NFKGar9LatVMn3U1pXqc.jpg" class="p-card-image" alt="p-card image">
+                                    @if ($activity->foto) <img src="{{ $activity->foto }}" class="p-card-image" alt="p-card image"> @endif
                                     <div class="p-card-footer">
                                         <div class="progress-container">
-                                            <div class="progress-bar-date">{{$a}}/20/2024</div>
+                                            <div class="progress-bar-date">{{$activity->fecha_inicio->format('d/m/Y')}}</div>
                                             <div class="progress-bar-container">
                                                 <div class="progress-bar-border">
                                                     <!-- Barra de progreso -->
-                                                    <div class="progress-bar" style="background-color: #94f261;  width: {{$a}}%;">
-                                                    </div>
+                                                    <div class="progress-bar" style="background-color: #94f261;  width: {{progressDate($activity->fecha_inicio, $activity->fecha_cierre)}}%;"></div>
                                                 </div>
                                             </div>
-                                            <div class="progress-bar-text">{{$a}}%</div>
+                                            <div class="progress-bar-text">{{progressDate($activity->fecha_inicio, $activity->fecha_cierre)}}%</div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Contenedor para los Tasks> -->
-                                <div class="tasks-container" id="tasks-container-{{$a}}">
-
-                                    @for ($t = 0; $t < 8; $t++)
-
-                                    <div class="task" id="task-{{$a}}-{{$t}}">
+                                @if ($activity->tasks->isNotEmpty())
+                                <div class="tasks-container" id="tasks-container-{{$activity->id}}">
+                                    @foreach ($activity->tasks as $task)
+                                    <div class="task" id="task-{{$task->id}}">
                                         <div class="task-worker-header">
-                                            <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" class="task-worker-image">
+                                            <img src="{{ isset($activity->responsable->avatar) ? asset('/profile/images/') . '/' . $activity->responsable->avatar : 'https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png' }}" class="worker-image" alt="worker image">
                                             <div class="task-worker-info">
-                                                <span class="worker-name">Usuario de tarea a{{$a}}-t{{$t}}</span>
+                                                <span class="worker-name">{{$task->user->name}}</span>
                                             </div>
                                         </div>
                                         <div class="task-text">
-                                            Descripción Tarea a{{$a}}-t{{$t}}
+                                            {{$task->contenido}}
                                         </div>
                                         <div class="task-footer">
                                             <div class="progress-container">
-                                                <div class="progress-bar-date">{{$t}}/10/2024</div>
+                                                <div class="progress-bar-date">{{$task->fecha_inicio->format('d/m/Y')}}</div>
                                                 <div class="progress-bar-container">
                                                     <div class="progress-bar-border">
                                                         <!-- Barra de progreso -->
-                                                        <div class="progress-bar" style="background-color: #94f261; width: {{$t}}%;"></div>
+                                                        <div class="progress-bar" style="background-color: #94f261;  width: {{progressDate($task->fecha_inicio, $task->fecha_cierre)}}%;"></div>
                                                     </div>
                                                 </div>
-                                                <div class="progress-bar-text">{{$t}}%</div>
+                                                <div class="progress-bar-text">{{progressDate($task->fecha_inicio, $task->fecha_cierre)}}%</div>
+
                                                 <div class="task-action-icons">
                                                     <i class="fa fa-pencil-square-o task-buttons"></i>
                                                     <a href="#" class="fa fa-trash task-buttons" data: { confirm: 'Estás seguro?' }></a>
-                                                    <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('chat-box-{{$a}}-{{$t}}')"></i>
+                                                    <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('chat-box-{{$task->id}}')"></i>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="chat-box" id="chat-box-{{$a}}-{{$t}}">
-                                            <div class="chat-history" id="chat-history-{{$a}}-{{$t}}">
-
-                                                @for ($c = 0; $c < 20; $c++)
-
-                                                <div class="chat-message @if ($c % 2 == 0) right @else left @endif" id="comment-{{$a}}-{{$t}}-{{$c}}">
-                                                    <img src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png" class="chat-worker-image" alt="chat worker image">
-                                                    <div class="chat-message-text">Texto Comentario a{{$a}}-t{{$t}}-c{{$c}}</div>
-                                                    <img src="https://t4.ftcdn.net/jpg/07/11/03/89/360_F_711038915_Nl8j4lQaXBS2NFKGar9LatVMn3U1pXqc.jpg" class="chat-attached-image">
+                                        <div class="chat-box" id="chat-box-{{$task->id}}">
+                                            @if ($task->comments->isNotEmpty())
+                                                <div class="chat-history" id="chat-history-{{$task->id}}">
+                                                    @foreach ($task->comments as $comment)
+                                                    <div class="chat-message @if ($comment->user_id == auth()->id()) right @else left @endif" id="comment-{{$comment->id}}">
+                                                        <img src="{{ isset($activity->responsable->avatar) ? asset('/profile/images/') . '/' . $activity->responsable->avatar : 'https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png' }}" class="chat-worker-image" alt="chat worker image">
+                                                        <div class="chat-message-text">{{$comment->contenido}}</div>
+                                                        @if ($comment->foto) <img src="{{ $comment->foto }}" class="chat-attached-image" alt="chat-attached-image"> @endif
+                                                    </div>
+                                                    @endforeach
                                                 </div>
-                                                
-                                                @endfor
-
-                                            </div>
+                                            @endif
                                             <form action="" class="chat-input">
                                                 <label for="file-input-1" class="file-input-label"><i class="fa fa-image"></i></label>
                                                 <input id="file-input-1" type="file" class="file-input" name="attachments[image]">
@@ -115,14 +111,11 @@
                                             </form>
                                         </div>
                                     </div>
-
-                                    @endfor
-                                    
+                                    @endforeach
                                 </div>
+                                @endif
                             </div>
-
-                            @endfor
-
+                            @endforeach
                         </div>
                     </div>
                 </div>
