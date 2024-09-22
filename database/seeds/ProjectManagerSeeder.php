@@ -22,6 +22,8 @@ class ProjectManagerSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+        
+        $maxProjectServices = DB::table('project_services')->max('id');
 
         for ($i = 0; $i < 100; $i++) {
             DB::table('project_managers')->insert([
@@ -31,10 +33,56 @@ class ProjectManagerSeeder extends Seeder
                 'administrador_id' => 1,
                 'responsable_id' => 1,
                 'cliente_id' => 1,
-                'project_service_id' => $faker->numberBetween(1, 49),
+                'project_service_id' => $faker->numberBetween(1, $maxProjectServices),
                 'fecha_inicio' => $faker->dateTimeBetween('-1 year', 'now'),
                 'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
                 'prioridad' => $faker->numberBetween(1, 5),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $maxProjectManagers = DB::table('project_managers')->max('id');
+
+        for ($i = 0; $i < 200; $i++) {
+            DB::table('activities')->insert([
+                'proyecto_id' => $faker->numberBetween(1, $maxProjectManagers),
+                'responsable_id' => 1,
+                'nombre' => $faker->word,
+                'contenido' => $faker->paragraph(2),
+                'fecha_inicio' => $faker->dateTimeBetween('-1 year', 'now'),
+                'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
+                'estado' => $faker->numberBetween(1, 5),
+                'color' => $faker->hexColor(),
+                'foto' => 'https://picsum.photos/400/200',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $maxActividades = DB::table('activities')->max('id');
+        
+        for ($i = 0; $i < 300; $i++) {
+            DB::table('tasks')->insert([
+                'actividad_id' => $faker->numberBetween(1, $maxActividades),
+                'user_id' => 1,
+                'contenido' => $faker->paragraph(2),
+                'fecha_inicio' => $faker->dateTimeBetween('-1 year', 'now'),
+                'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
+                'estado' => $faker->numberBetween(1, 5),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+        
+        $maxTasks = DB::table('tasks')->max('id');
+
+        for ($i = 0; $i < 500; $i++) {
+            DB::table('comments')->insert([
+                'tarea_id' => $faker->numberBetween(1, $maxTasks),
+                'user_id' => 1,
+                'contenido' => $faker->paragraph(2),
+                'foto' => 'https://picsum.photos/400/200',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
