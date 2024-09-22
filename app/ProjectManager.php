@@ -26,6 +26,8 @@ class ProjectManager extends Model
         'prioridad'
     ];
     
+    protected $dates = ['fecha_inicio', 'fecha_cierre'];
+    
     public function administrador(){
         return $this->belongsTo(User::class, 'administrador_id');
     }
@@ -40,5 +42,20 @@ class ProjectManager extends Model
 
     public function project_service(){
         return $this->belongsTo(ProjectService::class, 'project_service_id');
+    }
+    
+    public function activities(){
+        return $this->hasMany(Activity::class, 'proyecto_id');
+    }
+    
+    public function getPriority()
+    {
+        $priorities = [
+            1 => "Alta",
+            2 => "Media",
+            3 => "Baja",
+        ];
+
+        return $priorities[$this->prioridad] ?? "No definido";
     }
 }
