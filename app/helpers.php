@@ -508,3 +508,23 @@ function calculateDays($date1, $date2){
     $total_days = Carbon::parse($date2)->diffInDays(Carbon::parse($date1)) + 1;
     return $total_days;
 }
+
+function createdTime($a)
+{
+    $timeElapsed = now()->diffInSeconds($a->created_at);
+    
+    switch (true) {
+        case $timeElapsed < 60:
+            return "{$timeElapsed}s";
+        case $timeElapsed < 3600:
+            return floor($timeElapsed / 60) . "min";
+        case $timeElapsed < 86400:
+            return floor($timeElapsed / 3600) . "h";
+        case $timeElapsed < 2592000:
+            return floor($timeElapsed / 86400) . "d";
+        case $timeElapsed < 31536000:
+            return floor($timeElapsed / 2592000) . "m";
+        default:
+            return floor($timeElapsed / 31536000) . "a";
+    }
+}

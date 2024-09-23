@@ -48,24 +48,4 @@ class Activity extends Model
     
         return $statuses[$this->estado] ?? "No definido";
     }
-
-    public function createdTime()
-    {
-        $timeElapsed = now()->diffInSeconds($this->created_at);
-        
-        switch (true) {
-            case $timeElapsed < 60:
-                return "{$timeElapsed}s";
-            case $timeElapsed < 3600:
-                return floor($timeElapsed / 60) . "min";
-            case $timeElapsed < 86400:
-                return floor($timeElapsed / 3600) . "h";
-            case $timeElapsed < 2592000:
-                return floor($timeElapsed / 86400) . "d";
-            case $timeElapsed < 31536000:
-                return floor($timeElapsed / 2592000) . "m";
-            default:
-                return floor($timeElapsed / 31536000) . "a";
-        }
-    }
 }
