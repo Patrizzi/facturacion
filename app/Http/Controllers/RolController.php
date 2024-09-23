@@ -11,7 +11,52 @@ use Illuminate\Http\Request;
 
 class RolController extends Controller
 {
-    public function gestionarRol($rol_id){
+    public function gestionarRol($rol_id)
+{
+    $rol = Role::findOrFail($rol_id);
+    $permisosRol = $rol->permissions()->orderBy('name', 'asc')->get();
+
+    $permisosAgrupados = [];
+    foreach ($permisosRol as $permiso) {
+        $esSubPermiso = false;
+
+        foreach ($permisosAgrupados as $key => &$permisoBase) {
+            // Verificar si el nombre del permiso comienza con el nombre del permiso base
+            if (strpos($permiso->name, $permisoBase['permiso']->name) === 0 && $permiso->name !== $permisoBase['permiso']->name) {
+                // Agregar el subpermiso
+                $permisoBase['sub_permisos'][] = $permiso;
+                $permisoBase['hasSubPermisos'] = true;
+                $esSubPermiso = true;
+                break; // Salir del bucle una vez encontrado el padre
+            }
+        }
+
+        // Si no es subpermiso, es un permiso base
+        if (!$esSubPermiso) {
+            $permisosAgrupados[$permiso->name] = [
+                'permiso' => $permiso,
+                'sub_permisos' => [],
+                'hasSubPermisos' => false
+            ];
+        }
+    }
+
+    $rol->permisos = $permisosAgrupados;
+    $permisos = Permission::orderBy('name', 'asc')->get();
+
+    // return [
+    //     "rol" => $rol,
+    //     "permisos" => $permisos,
+    // ];
+
+    return view('configuracion_general.rol.gestionarRol', [
+        "rol" => $rol,
+        "permisos" => $permisos,
+    ]);
+}
+
+
+    public function gestionarRolOld($rol_id){
         $rol = Role::findOrFail($rol_id);
         $rol->permisos = $rol->permissions()->orderBy('name', 'asc')->get();
         //Si el nombre del permiso extiende un permiso "padre" entonces entra en su coleccion

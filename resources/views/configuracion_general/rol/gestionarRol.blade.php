@@ -28,7 +28,6 @@
     @endif
     <div class="row">
         <div class="col-lg-12">
-
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="table-responsive">
@@ -37,19 +36,49 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
-                                    <th>Administrar Rol</th>
+                                    <th>Tipo</th>
+                                    <th>Quitar Permiso</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach($roles as $rol)
-                                <tr class="gradeX">
-                                    <td>{{$rol->id}}</td>
-                                    <td>{{$rol->name}}</td>
-                                    <td><a href="{{route('roles.gestRol', $rol->id)}}"
-                                            class="text-decoration-none btn btn-success">Administrar <i
-                                                class="fa fa-edit"></i></a></td>
+                                @php
+                                    $count = 1;
+                                @endphp
+                                @foreach($rol->permisos as $permiso)
+                                <tr class="gradeX" data-permiso-id="{{ $permiso['permiso']['id'] }}">
+                                    <td class="d-flex justify-content-between">
+                                        {{ $count }}
+                                        @if($permiso['hasSubPermisos'])
+                                        <button class="btn btn-sm bg-transparent toggle-subpermisos"
+                                            data-permiso-id="{{ $permiso['permiso']['id'] }}">
+                                            <i style="font-size: 10px" class="fa fa-arrow-right"></i>
+                                        </button>
+                                        @endif
+                                    </td>
+                                    <td>{{ $permiso['permiso']['name'] }}</td>
+                                    <td>{{ $permiso['permiso']['name'] }}</td>
+                                    <td><button class="text-decoration-none btn btn-danger">Remover <i
+                                                class="fa fa-trash"></i></button></td>
                                 </tr>
-                                @endforeach --}}
+                                @php
+                                    $count++
+                                @endphp
+                                @if($permiso['hasSubPermisos'])
+                                @foreach($permiso['sub_permisos'] as $subPermiso)
+                                <tr class="gradeX subpermiso-{{ $permiso['permiso']['id'] }}" style="display: none;">
+                                    <td>{{ $count }}</td>
+                                    <td>{{ $subPermiso['name'] }}</td>
+                                    <td>{{ $permiso['permiso']['name'] }}</td>
+                                    <td><button class="text-decoration-none btn btn-danger">Remover <i
+                                                class="fa fa-trash"></i></button></td>
+                                </tr>
+                                @php
+                                    $count++
+                                @endphp
+                                @endforeach
+                                @endif
+
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -58,7 +87,6 @@
         </div>
 
     </div>
-</div>
 </div>
 
 <style>
@@ -157,14 +185,14 @@
         });
 
     
-    $(document).ready(function(){
-        $('.dataTables-example').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-    });
-    });
+    // $(document).ready(function(){
+    //     $('.dataTables-example').DataTable({
+    //         pageLength: 25,
+    //         responsive: true,
+    //         dom: '<"html5buttons"B>lTfgitp',
+    //         buttons: []
+    // });
+    // });
     
     // $(document).ready(function(){
     //     $('.rolTable-example').DataTable({
@@ -176,4 +204,30 @@
     // });
 
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButtons = document.querySelectorAll('.toggle-subpermisos');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const permisoId = this.getAttribute('data-permiso-id');
+                const subPermisos = document.querySelectorAll('.subpermiso-' + permisoId);
+
+                subPermisos.forEach(subPermiso => {
+                    // Alternar la visibilidad de los subpermisos
+                    if (subPermiso.style.display === 'none') {
+                        subPermiso.style.display = 'table-row';
+                        this.innerHTML = '<i style="font-size: 10px" class="fa fa-arrow-down"></i>';
+                    } else {
+                        subPermiso.style.display = 'none';
+                        this.innerHTML = '<i style="font-size: 10px" class="fa fa-arrow-right"></i>';
+                    }
+                });
+            });
+        });
+    });
+
+</script>
+
 @endsection
