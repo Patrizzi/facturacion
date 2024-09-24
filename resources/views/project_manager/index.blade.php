@@ -1,5 +1,5 @@
 @extends('layout')
-@section('href_accion', route('project_managers.index'))
+@section('title', 'Proyectos')
 @section('content')
 
     <!-- CSS del proyecto -->
@@ -9,11 +9,11 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
-                <div class="ibox" style="margin-bottom: 0px;">
-                    <div class="ibox-content" style="padding: 15px 20px;">
-                        <div class="button-container" style="display: flex; justify-content: center; gap: 10px;">
-                            <x-btn-link url="{{ route('project_managers.index') }}" text="Proyectos" />
-                            <x-btn-link url="{{ route('project_managers.index') }}" text="Carta Gantt" />
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="button-container">
+                            <x-btn-link url="{{ route('project_managers.index') }}" text="Proyectos"  active="true" />
+                            <x-btn-link url="{{ route('project_managers.gantt.show') }}" text="Carta Gantt" />
                         </div>
                     </div>
                 </div>
