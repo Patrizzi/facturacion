@@ -3218,7 +3218,8 @@ if($validacion==1){
         $cotizacion_m= CotizacionManual::get();
         $nota_venta=NotaVenta::get();
         $igv = Igv::first();
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv', 'nota_venta','totales'));
+         $clientes=Cliente::all();
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv', 'nota_venta','totales','clientes'));
     }
     
 }

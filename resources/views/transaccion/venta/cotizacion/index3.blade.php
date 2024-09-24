@@ -370,8 +370,8 @@
                                                         <th>Ruc/DNI</th>
                                                         <th>Cliente</th>
                                                         <th>Fecha Emisión</th>
-                                                        <th style="display: none"></th>
                                                         <th>Forma</th>
+                                                        <th style="display: none"></th>
                                                         <th>Importe T.</th>
                                                         <th>Acciones</th>
                                                     </tr>
@@ -388,6 +388,7 @@
                                                         {{-- <td>{{$nota_ventas->almacen->nombre}}</td> --}}
                                                         <td>{{$nota_ventas->fecha_emision}}</td>
                                                         <td>@if($nota_ventas->forma_pago == 1) Contado @else Credito @endif</td>   
+                                                        <td style="display:none">{{ $total_conv }}</td>
                                                         <span hidden>
                                                         {{ $subtotal = $nota_ventas->op_gravada + $nota_ventas->op_inafecta + $nota_ventas->op_exonerada }}
                                                     </span>
@@ -400,8 +401,7 @@
                                                             {{ $total = round($subtotal + ($nota_ventas->op_gravada * $igv->renta) / 100, 2) }}
                                                             {{ $total_conv = round($subtotal + ($nota_ventas->op_gravada * $igv->renta) / 100, 2) }}
                                                         @endif
-                                                    </span> 
-                                                    <td style="display:none">{{ $total_conv }}</td>
+                                                    </span>  
                                                     <td>{{$nota_ventas->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}</td>
                                                         <td>
                                                         <a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a>
@@ -453,16 +453,16 @@
                                 <div role="tabpanel" id="tab-4" class="tab-pane">
                                     <div class="panel-body">
                                     <div class="row">
-                                            <div class="col-sm-12">
+                                            <div class="col-sm-10">
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label"
                                                         for=""><strong>Buscar:</strong></label>
-                                                    <input type="search" class="form-control col-lg-6">
+                                                    <input type="search" class="form-control col-lg-4">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example" id="table_cliente">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
@@ -473,47 +473,27 @@
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                {{--   <tbody>
+                                                    @foreach($clientes as $cliente)
                                                     <tr>
-                                                        <td>1</td>
-                                                        <td>72531212</td>
-                                                        <td>Marlo Samaniego Calderon</td>
-                                                        <td>sincorreo@gmail.com</td>
-                                                        <td>920123456</td>
+                                                        <td>{{$cliente->id}}</td>
+                                                        <td>{{$cliente->numero_documento}}</td>
+                                                        <td>{{$cliente->nombre}}</td>
+                                                        <td>{{$cliente->email}}</td>
+                                                        <td>{{$cliente->celular}}</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-                                                            <button type="button" class="btn btn-info"><i
-                                                                    class="fa fa-check-circle"></i></button>
+                                                            <a href="{{ route('cliente.show', $cliente->id) }}" target="_blank">
+                                                                <button type="button" class="btn btn-primary">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            </a>
+                                                            <button type="button" class="btn btn-info">
+                                                                <i class="fa fa-check-circle"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>77893000</td>
-                                                        <td>Carlos Antoñez Gomez</td>
-                                                        <td>sincorreo@gmail.com</td>
-                                                        <td>970841600</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-                                                            <button type="button" class="btn btn-info"><i
-                                                                    class="fa fa-check-circle"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>20546717683</td>
-                                                        <td>XIOS PROYECTOS & SERVICIOS E.I.R.L.</td>
-                                                        <td>sincorreo@gmail.com</td>
-                                                        <td>90781623</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary"><i
-                                                                    class="fa fa-eye"></i></button>
-                                                            <button type="button" class="btn btn-info"><i
-                                                                    class="fa fa-check-circle"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
+                                                    @endforeach
+                                                    </tbody> --}}
                                             </table>
                                         </div>
                                 </div>
@@ -728,4 +708,33 @@
         }
 </script>
 
+<!--Clientes--> 
+<script>
+$(document).ready(function(){
+    $('#table_cliente').DataTable({
+        "serverSide":true,
+        "ajax":"{{url('api/clientes')}}",
+        "columns":[
+            {data : 'id'},
+            {data : 'nombre'},
+            {data : 'numero_documento'},
+            {data : 'email'},
+            {data : 'celular'},
+            {
+                name: '',
+                data: null,
+                sortable: false,
+                searchable: false,
+                render: function (data) {
+                    var actions = '';
+                    actions += '<a href="{{ route('cliente.show',':id') }}" target="_blank"><button type="button" class="btn btn-primary mr-2"><i class="fa fa-eye"></i></button></a>';
+                    actions += '<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>';
+                    return actions.replace(/:id/g, data.id);
+                }
+            }   
+        ]
+    });
+});
+
+</script>
 @endsection
