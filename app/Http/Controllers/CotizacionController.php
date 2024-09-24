@@ -3218,8 +3218,13 @@ if($validacion==1){
         $cotizacion_m= CotizacionManual::get();
         $nota_venta=NotaVenta::get();
         $igv = Igv::first();
-         $clientes=Cliente::all();
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv', 'nota_venta','totales','clientes'));
+        $clientes=Cliente::all();
+        $mes_año = Carbon::now()->format('d-m-Y');
+        // Formado d-m-Y
+        $cotizacion_mes = Cotizacion::count_mes($mes_año);
+        // return $cotizacion_mes;
+
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv','clientes','nota_venta','totales','cotizacion_mes'));
     }
     
 }

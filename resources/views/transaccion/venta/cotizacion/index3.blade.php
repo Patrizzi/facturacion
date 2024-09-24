@@ -8,7 +8,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-title">
-                    <h4>Resumen de Febrero 2024</h4>
+                    <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
@@ -19,8 +19,8 @@
                                     <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                                 </div>
                                 <h4 style="font-weight: bold; margin-top: 15px;">Cotización</h4>
-                                <p style="margin: 5px 0;">4 Documentos</p>
-                                <p style="color: green; font-weight: bold;">S/. 771.55</p>
+                                <p style="margin: 5px 0;">{{$cotizacion_mes['cantidad']}} Documentos</p>
+                                <p style="color: green; font-weight: bold;">S/. {{$cotizacion_mes['total']}}</p>
                             </div>
                         </div>
                         <!-- Segundo Círculo -->
