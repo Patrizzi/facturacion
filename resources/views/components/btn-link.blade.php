@@ -1,9 +1,19 @@
+@props(['url', 'text', 'active' => false])
+
 <div>
-    <button class="btn-project" type="submit" onclick="window.location.href='{{ $url }}'">
+    <button class="btn-project {{ $active ? 'btn-active' : '' }}" type="submit" onclick="window.location.href='{{ $url }}'">
         {{ $text }}
     </button>
 </div>
 <style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex: 1;
+        margin-bottom: 8px;
+        padding: 5px;
+    }
     .btn-project {
         color: black; /* Texto negro */
         background-color: transparent; /* Sin fondo */
@@ -18,5 +28,9 @@
         background-color: #1a5eb3; /* Fondo azul al pasar el mouse */
         color: white; /* Texto blanco al pasar el mouse */
         transform: scale(1.1); /* Aumenta el tamaño del botón un 10% */
+    }
+    .btn-active {
+        background-color: #1a5eb3; /* Color de fondo activo */
+        color: white; /* Texto blanco para el botón activo */
     }
 </style>
