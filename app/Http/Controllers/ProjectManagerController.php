@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class ProjectManagerController extends Controller
 {
     public function index(){
-        return "desde el controlador del index";
+        return view('project_manager.index');
 
     }
     public function create(){
