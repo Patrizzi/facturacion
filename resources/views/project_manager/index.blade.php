@@ -13,7 +13,7 @@
                     <div class="ibox-content" style="padding: 15px 20px;">
                         <div class="button-container" style="display: flex; justify-content: center; gap: 10px;">
                             <x-btn-link url="{{ route('project_managers.index') }}" text="Proyectos" />
-                            <x-btn-link url="{{ route('project_managers.index') }}" text="Carta de Gantt" />
+                            <x-btn-link url="{{ route('project_managers.index') }}" text="Carta Gantt" />
                         </div>
                     </div>
                 </div>
