@@ -143,11 +143,16 @@
                     <li class="nav-header">
                         <div class="dropdown profile-element" style="left: 10% ">
                             <a href="{{route('usuario.index')}}">
-                                <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 150px;height: 150px" />
+                                <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 50px;height: 50px" />
+                                                          
+                            </a>
+                             
+                            <a href="{{route('usuario.index')}}">
                                 <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
                                 
                             </a>
                         </div>
+                        <hr class="bg-white"> 
                         <div class="logo-element">
 
                         </div>
