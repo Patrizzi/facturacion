@@ -1,6 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Cotizacion;
+use App\CotizacionManual;
+use App\Igv;
+use App\NotaVenta;
+use App\NotaVentaRegistro;
 use App\Ventas_registro;
 use Illuminate\Http\Request;
 
@@ -79,6 +84,38 @@ class Ventas_registroController extends Controller
     public function destroy($id)
     {
     }
-  
+
+
+    public function cotizacion_tab()
+    {
+        $igv = Igv::first();
+        $cotizacion= Cotizacion::get();
+        return view('transaccion.venta._shared.cotizacion', compact('cotizacion','igv'));
+    }
+
+    public function cotizacion_manual_tab()
+    {
+        $cotizacion_m= CotizacionManual::get();
+        $igv = Igv::first();
+        return view('transaccion.venta._shared.cotizacion_manual', compact('cotizacion_m','igv'));
+    }
+
+    public function nota_venta_tab()
+    {
+        $nota_venta=NotaVenta::all();
+        $totales = [];
+        foreach($nota_venta as $index =>  $nota_ventas){    
+            $total = 0;
+            $suma = 0;
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+            foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $suma += $total;
+            $totales[$index] = $suma;
+        }
+        $igv = Igv::first();
+        return view('transaccion.venta._shared.nota_venta',compact('nota_venta','totales','igv'));
+    }
 
 }

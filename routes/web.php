@@ -48,6 +48,14 @@ Route::group(
 
 		Route::resource('/registros','Ventas_registroController');
 
+		// COTIZACIONES
+		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
+		// Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('cotizacion_registers');
+
+
+		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
+		Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
+
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
 		Route::resource('/cliente_sucursal','ClienteSucursalController')->except('[store]');

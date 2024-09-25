@@ -3202,29 +3202,29 @@ if($validacion==1){
 
 
     public function index3(){
-        $nota_venta=NotaVenta::all();
-        $totales = [];
-        foreach($nota_venta as $index =>  $nota_ventas){    
-            $total = 0;
-            $suma = 0;
-            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
-            foreach($nota_venta_reg as $nota_venta_regs){
-                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
-            }
-            $suma += $total;
-            $totales[$index] = $suma;
-        }
-        $cotizacion= Cotizacion::get();
-        $cotizacion_m= CotizacionManual::get();
-        $nota_venta=NotaVenta::get();
-        $igv = Igv::first();
-        $clientes=Cliente::all();
+        // $nota_venta=NotaVenta::all();
+        // $totales = [];
+        // foreach($nota_venta as $index =>  $nota_ventas){    
+        //     $total = 0;
+        //     $suma = 0;
+        //     $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+        //     foreach($nota_venta_reg as $nota_venta_regs){
+        //         $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+        //     }
+        //     $suma += $total;
+        //     $totales[$index] = $suma;
+        // }
+        // $cotizacion= Cotizacion::get();
+        // $cotizacion_m= CotizacionManual::get();
+        // $nota_venta=NotaVenta::get();
+        // $igv = Igv::first();
+        // $clientes=Cliente::all();
         $mes_año = Carbon::now()->format('d-m-Y');
-        // Formado d-m-Y
+        // // Formado d-m-Y
         $cotizacion_mes = Cotizacion::count_mes($mes_año);
-        // return $cotizacion_mes;
+        // // return $cotizacion_mes;
 
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion','cotizacion_m','igv','clientes','nota_venta','totales','cotizacion_mes'));
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes'));
     }
     
 }
