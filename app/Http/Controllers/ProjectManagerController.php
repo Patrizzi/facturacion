@@ -2,39 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\ProjectManager;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller
 {
-    public function index(){
-        return "desde el controlador del index";
-
-    }
-    public function create(){
-        return "desde el controlador del create";
-    }
-    public function store(){
-        return "desde el controlador del store";
-    }
-    public function show($id){
-        return "desde el controlador el numero ".$id;
+    public function index()
+    {
+        $tabla = ProjectManager::orderBy('id', 'asc')->get();
+        return view('project_manager.index', compact('tabla'));
     }
 
-    public function update(request $request, $id){
-        return "desde el controlador del index";
+    public function create()
+    {
+        return view('project_manager.create');
     }
 
-    public function destroy($id){
-        return "desde el destroy el numero ".$id;
+    public function store(Request $request)
+    {
+        ProjectManager::create($request->all());
+        return redirect()->route('project_manager.index')->with('success', 'Creado exitosamente');
     }
-    public function cards(){
-        return "desde el controlador del cards";
+    public function show($id)
+    {
+        $data = ProjectManager::findOrFail($id);
+        return view('project_manager.show', compact('data'));
+    }
 
+    public function edit($id)
+    {
+        $data = ProjectManager::findOrFail($id);
+        return view('project_manager.edit', compact('data'));
     }
-    public function gantt(){
-        
+
+    public function update(Request $request, $id)
+    {
+        $data = ProjectManager::findOrFail($id);
+        $data->update($request->all());
+        return redirect()->route('project_manager.index')->with('success', 'Actualizado exitosamente');
     }
-    public function report(){
-        
+
+    public function destroy($id) {
+        $tabla = ProjectManager::findOrFail($id);
+        $tabla->delete();
+        return redirect()->route('project_managers.index');
+    }
+
+    public function cards()
+    {
+        return view('project_manager.cards');
+    }
+
+    public function gantt()
+    {
+        $data = ProjectManager::all();
+        return view('project_manager.gantt', compact('data'));
+    }
+
+    public function report()
+    {
+        $data = ProjectManager::all();
+        return view('project_manager.report', compact('data'));
     }
 }
