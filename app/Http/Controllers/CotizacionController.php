@@ -3202,7 +3202,7 @@ if($validacion==1){
 
 
     public function index3(){
-        // $nota_venta=NotaVenta::all();
+        // $nota_venta=NotaVenta::all where date();
         // $totales = [];
         // foreach($nota_venta as $index =>  $nota_ventas){    
         //     $total = 0;
@@ -3212,7 +3212,7 @@ if($validacion==1){
         //         $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
         //     }
         //     $suma += $total;
-        //     $totales[$index] = $suma;
+        //     $totales + suma [$index] = $suma;
         // }
         // $cotizacion= Cotizacion::get();
         // $cotizacion_m= CotizacionManual::get();
@@ -3222,9 +3222,11 @@ if($validacion==1){
         $mes_año = Carbon::now()->format('d-m-Y');
         // // Formado d-m-Y
         $cotizacion_mes = Cotizacion::count_mes($mes_año);
-        // // return $cotizacion_mes;
+        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
+        $nota_venta_mes = NotaVenta::count_mes($mes_año);
+        return $nota_venta_mes;
 
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes'));
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes','cotizacionM_mes','nota_venta_mes'));
     }
     
 }

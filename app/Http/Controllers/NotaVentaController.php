@@ -393,3 +393,35 @@ class NotaVentaController extends Controller
         return view('transaccion.venta.nota_venta.ticket',compact('nota_venta','nota_registro','empresa','igv','moneda'));
     }
 }
+    
+            /*foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+             }
+
+            // condicional soles
+            if($moneda->id == "1"){ //Si es soles retorno soles
+                if($notaV->moneda->id == "1"){ //soles
+                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;    
+                    $totales +=  $subtotal + ($notaV->op_gravada * ($igv->igv_total/100));
+                }else{  //dolares
+                    $subtotal_sin = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;    
+                    $subtotal = $subtotal_sin * $notaV->cambio;
+                    $subtotal_dol = $notaV->op_gravada * $notaV->cambio;
+                    $totales +=  $subtotal + ($subtotal_dol * ($igv->igv_total/100));
+                }
+                // $total = "1";
+                // return $total;
+            }else{ // Si no retorno Dolares
+
+                if($notaV->moneda->id == "1"){ //dolares
+                    $subtotal_sin = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
+                    $subtotal = $subtotal_sin / $notaV->cambio;
+                    $subtotal_dol = $notaV->op_gravada / $notaV->cambio;
+                    $totales +=  $subtotal + ($notaV->op_gravada / ($igv->igv_total/100));
+                }else{  //soels
+                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;    
+                    $totales +=  $subtotal + ($notaV->op_gravada * ($igv->igv_total/100));
+                }
+                // $total = "2";
+            }
+        }*/
