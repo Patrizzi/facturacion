@@ -258,6 +258,7 @@ class CreatePermissionsOnLogin
             
         ];
 
+        //agregar todos los permisos al administrador
 
         foreach ($permisos as $permiso) {
             $existingPermission = Permission::where("name", $permiso)->first();

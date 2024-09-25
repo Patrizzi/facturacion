@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Rol')
+@section('title', 'Rol '.$rol->name)
 {{-- @section('href_accion', route('usuario.lista'))
 @section('value_accion', 'actualizar') --}}
 @section('button2', 'Atras')
@@ -29,6 +29,53 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
+                <div class="ibox-heading d-flex justify-content-between align-items-center px-2">
+                    <div>
+                        <h2 class="font-bold">Permisos del Rol <span
+                                class="text-success">({{$rol->permisosCount}})</span></h2>
+                    </div>
+                    <div>
+                        <div style="gap: 10px" class="d-flex justify-content-around align-items-center">
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#AgregarPermisosModal">Agregar</button>
+                            <form id="remove-permissions-form" action="{{ route('roles.removerPermisos', $rol->id) }}"
+                                method="POST">
+                                @csrf
+                                @method('put')
+                                <input type="hidden" name="permisos_id" id="permisos_remover_id">
+                                <button type="submit" class="btn btn-danger" id="remove-permissions-button"
+                                    disabled>Remover Permisos</button>
+                            </form>
+                        </div>
+                        <div class="modal fade" id="AgregarPermisosModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content p-3">
+                                    <h2>Agregar Permisos</h2>
+                                    <form method="POST" role="form"
+                                        action="{{route('roles.asignarPermisos', $rol->id)}}">
+                                        @csrf
+                                        @method('put')
+                                        <div style="gap: 10px" class="d-flex flex-column justify-content-center p-2">
+                                            <div>
+                                                <select class="form-control multiple_permisos_select" multiple required
+                                                    name="permisos_id[]" id="">
+                                                    @foreach($permisos as $key => $permiso)
+                                                    <option value="{{$permiso->id}}">{{$permiso->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="submit"
+                                                    class="btn btn-outline-primary w-75 font-bold">Guardar <i
+                                                        class="fa fa-save"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover dataTables-example">
@@ -42,7 +89,7 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $count = 1;
+                                $count = 1;
                                 @endphp
                                 @foreach($rol->permisos as $permiso)
                                 <tr class="gradeX" data-permiso-id="{{ $permiso['permiso']['id'] }}">
@@ -57,11 +104,22 @@
                                     </td>
                                     <td>{{ $permiso['permiso']['name'] }}</td>
                                     <td>{{ $permiso['permiso']['name'] }}</td>
-                                    <td><button class="text-decoration-none btn btn-danger">Remover <i
-                                                class="fa fa-trash"></i></button></td>
+                                    <td style="cursor: pointer" onclick="toggleCheckBox({{$permiso['permiso']['id']}})"
+                                        class="d-flex justify-content-around w-100">
+                                        <form method="POST" action="{{route('roles.removerPermiso', ["rol_id"=> $rol->id, "permiso_id" => $permiso['permiso']['id']])}}">
+                                            @csrf
+                                            @method('put')
+                                            <button type="submit"
+                                                class="text-decoration-none btn btn-outline-danger">Remover <i
+                                                    class="fa fa-trash"></i></button>
+                                        </form>
+                                        <input onchange="handleCheckboxChange()" class="checkboxesDelete"
+                                            id="checkboxDelete{{ $permiso['permiso']['id'] }}" type="checkbox"
+                                            value="{{ $permiso['permiso']['id'] }}">
+                                    </td>
                                 </tr>
                                 @php
-                                    $count++
+                                $count++
                                 @endphp
                                 @if($permiso['hasSubPermisos'])
                                 @foreach($permiso['sub_permisos'] as $subPermiso)
@@ -69,11 +127,22 @@
                                     <td>{{ $count }}</td>
                                     <td>{{ $subPermiso['name'] }}</td>
                                     <td>{{ $permiso['permiso']['name'] }}</td>
-                                    <td><button class="text-decoration-none btn btn-danger">Remover <i
-                                                class="fa fa-trash"></i></button></td>
+                                    <td style="cursor: pointer" onclick="toggleCheckBox({{$subPermiso['id']}})"
+                                        class="d-flex justify-content-around w-100">
+                                        <form method="POST" action="{{route('roles.removerPermiso', ["rol_id"=> $rol->id, "permiso_id" => $subPermiso['id']])}}">
+                                            @csrf
+                                            @method('put')
+                                            <button type="submit"
+                                                class="text-decoration-none btn btn-outline-danger">Remover <i
+                                                    class="fa fa-trash"></i></button>
+                                        </form>
+                                        <input onchange="handleCheckboxChange()" class="checkboxesDelete" id="checkboxDelete{{$subPermiso['id']}}"
+                                            type="checkbox" value="{{ $subPermiso['id'] }}">
+
+                                    </td>
                                 </tr>
                                 @php
-                                    $count++
+                                $count++
                                 @endphp
                                 @endforeach
                                 @endif
@@ -229,5 +298,43 @@
     });
 
 </script>
+
+<script>
+    $(document).ready(function() {
+            $('.multiple_permisos_select').select2();
+        });
+        
+</script>
+
+<script>
+    const handleCheckboxChange = () => {
+        const checkboxes = document.querySelectorAll('.checkboxesDelete');
+        const removeButton = document.getElementById('remove-permissions-button');
+        const permisosInput = document.getElementById('permisos_remover_id');
+
+        const selectedIds = Array.from(checkboxes).filter(checkbox => checkbox.checked).map(i => i.value);
+                
+        console.log(selectedIds)
+        
+        if (selectedIds.length > 0) {
+            removeButton.disabled = false;
+            permisosInput.value = JSON.stringify(selectedIds);
+            // permisosInput.value = selectedIds.join(',');
+        } else {
+            removeButton.disabled = true;
+            permisosInput.value = '';
+        }
+    }
+
+    const toggleCheckBox = (id) => {
+        let checkbox = document.getElementById(`checkboxDelete${id}`);
+        if(checkbox){
+            console.log(checkbox);
+            checkbox.checked = !checkbox.checked;
+            handleCheckboxChange();
+        }
+    }
+</script>
+
 
 @endsection

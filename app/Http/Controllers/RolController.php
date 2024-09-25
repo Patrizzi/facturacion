@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Permiso;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -12,117 +14,150 @@ use Illuminate\Http\Request;
 class RolController extends Controller
 {
     public function gestionarRol($rol_id)
-{
-    $rol = Role::findOrFail($rol_id);
-    $permisosRol = $rol->permissions()->orderBy('name', 'asc')->get();
+    {
 
-    $permisosAgrupados = [];
-    foreach ($permisosRol as $permiso) {
-        $esSubPermiso = false;
+        $access = ParameterCallController::verifyPermissionAccess(['admin-access']);
 
-        foreach ($permisosAgrupados as $key => &$permisoBase) {
-            // Verificar si el nombre del permiso comienza con el nombre del permiso base
-            if (strpos($permiso->name, $permisoBase['permiso']->name) === 0 && $permiso->name !== $permisoBase['permiso']->name) {
-                // Agregar el subpermiso
-                $permisoBase['sub_permisos'][] = $permiso;
-                $permisoBase['hasSubPermisos'] = true;
-                $esSubPermiso = true;
-                break; // Salir del bucle una vez encontrado el padre
+        if(!$access){
+            return redirect()->route('inicio')->with('error', 'No tiene permisos para ejecutar esa acción.');
+        }
+
+        $rol = Role::findOrFail($rol_id);
+        $permisosRol = $rol->permissions()->orderBy('name', 'asc')->get();
+
+        $permisosAgrupados = [];
+        foreach ($permisosRol as $permiso) {
+            $esSubPermiso = false;
+
+            foreach ($permisosAgrupados as $key => &$permisoBase) {
+                // Verificar si el nombre del permiso comienza con el nombre del permiso base
+                if (strpos($permiso->name, $permisoBase['permiso']->name) === 0 && $permiso->name !== $permisoBase['permiso']->name) {
+                    // Agregar el subpermiso
+                    $permisoBase['sub_permisos'][] = $permiso;
+                    $permisoBase['hasSubPermisos'] = true;
+                    $esSubPermiso = true;
+                    break; // Salir del bucle una vez encontrado el padre
+                }
+            }
+
+            // Si no es subpermiso, es un permiso base
+            if (!$esSubPermiso) {
+                $permisosAgrupados[$permiso->name] = [
+                    'permiso' => $permiso,
+                    'sub_permisos' => [],
+                    'hasSubPermisos' => false
+                ];
             }
         }
 
-        // Si no es subpermiso, es un permiso base
-        if (!$esSubPermiso) {
-            $permisosAgrupados[$permiso->name] = [
-                'permiso' => $permiso,
-                'sub_permisos' => [],
-                'hasSubPermisos' => false
-            ];
+        $rol->permisos = $permisosAgrupados;
+        $rol->permisosCount = count($permisosRol);
+        $permisos = Permission::whereNotIn('id', $permisosRol->pluck('id'))->orderBy('name', 'asc')->get();
+
+        // return ["rol" => $rol, "permisos" => $permisos,];
+
+        return view('configuracion_general.rol.gestionarRol', [
+            "rol" => $rol,
+            "permisos" => $permisos,
+        ]);
+    }
+
+
+    public function asignarPermisos(Request $request, $rol_id)
+    {
+        DB::beginTransaction();
+        try {
+            //Buscar rol
+            $rol = Role::findOrFail($rol_id);
+
+            if ($rol) {
+                $permisosRol = $rol->permissions;
+                $permisosRolId = $permisosRol->pluck('id')->toArray();
+                $permisos_id = $request->permisos_id;
+                //recorrer los permisos dados
+                foreach ($permisos_id as $permiso_id) {
+                    //buscar el permiso
+                    $permiso = Permission::findOrFail($permiso_id);
+                    if ($permiso) {
+                        // verificar si el rol ya tiene este permiso o no
+                        if (!in_array($permiso_id, $permisosRolId)) {
+                            //Si no lo tiene se le agrega
+                            $rol->givePermissionTo($permiso);
+                        }
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()->route('roles.gestRol', $rol_id)->with('success', 'Permiso(s) asignados correctamente');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('roles.gestRol', $rol_id)->with('error', 'Ocurrió un error');
         }
     }
 
-    $rol->permisos = $permisosAgrupados;
-    $permisos = Permission::orderBy('name', 'asc')->get();
+    public function removerPermiso($rol_id, $permiso_id)
+    {
+        DB::beginTransaction();
+        try {
+            //Buscar rol
+            $rol = Role::findOrFail($rol_id);
 
-    // return [
-    //     "rol" => $rol,
-    //     "permisos" => $permisos,
-    // ];
-
-    return view('configuracion_general.rol.gestionarRol', [
-        "rol" => $rol,
-        "permisos" => $permisos,
-    ]);
-}
-
-
-    public function gestionarRolOld($rol_id){
-        $rol = Role::findOrFail($rol_id);
-        $rol->permisos = $rol->permissions()->orderBy('name', 'asc')->get();
-        //Si el nombre del permiso extiende un permiso "padre" entonces entra en su coleccion
-        /*
-            {
-                rol{
-                    permisos: [
-                            {
-                            "id": 122,
-                            "name": "auxiliares",
-                            "guard_name": "web",
-                            "created_at": "2021-11-16T17:42:35.000000Z",
-                            "updated_at": "2021-11-16T17:42:35.000000Z",
-                            "pivot": {
-                            "role_id": 1,
-                            "permission_id": 122
-                            },
-                            "sub_permisos":[
-                                {
-                                "id": 124,
-                                "name": "auxiliares-clientes.create",
-                                "guard_name": "web",
-                                "created_at": "2021-11-16T17:42:35.000000Z",
-                                "updated_at": "2021-11-16T17:42:35.000000Z",
-                                "pivot": {
-                                "role_id": 1,
-                                "permission_id": 124
-                                }
-                                },
-                                {
-                                "id": 129,
-                                "name": "auxiliares-clientes.destroy",
-                                "guard_name": "web",
-                                "created_at": "2021-11-16T17:42:35.000000Z",
-                                "updated_at": "2021-11-16T17:42:35.000000Z",
-                                "pivot": {
-                                "role_id": 1,
-                                "permission_id": 129
-                                }
-                                },
-                                {
-                                "id": 127,
-                                "name": "auxiliares-clientes.edit",
-                                "guard_name": "web",
-                                "created_at": "2021-11-16T17:42:35.000000Z",
-                                "updated_at": "2021-11-16T17:42:35.000000Z",
-                                "pivot": {
-                                "role_id": 1,
-                                "permission_id": 127
-                                }
-                                },
-                            ],
-                            "hasSubPermisos": true,
-                            },
-                        ]
+            if ($rol) {
+                $permisosRol = $rol->permissions;
+                $permisosRolId = $permisosRol->pluck('id')->toArray();
+                //buscar el permiso
+                $permiso = Permission::findOrFail($permiso_id);
+                if ($permiso) {
+                    // verificar si el rol lo tiene
+                    if (in_array($permiso_id, $permisosRolId)) {
+                        //Si lo tiene se remueve
+                        $rol->revokePermissionTo($permiso);
                     }
-                    
+                }
             }
-        */
-        $permisos = Permission::orderBy('name', 'asc')->get();
-        return $rol;
-        return view('configuracion_general.rol.gestionarRol', [
-            "rol" => $rol, 
-            "permisos" => $permisos,
-        ]);
+            DB::commit();
+            return redirect()->route('roles.gestRol', $rol_id)->with('success', 'Permiso removido correctamente');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('roles.gestRol', $rol_id)->with('error', 'Ocurrió un error');
+        }
+    }
 
+    public function removerPermisos(Request $request, $rol_id)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try {
+            //Buscar rol
+            $rol = Role::findOrFail($rol_id);
+
+            if ($rol) {
+                $permisosRol = $rol->permissions;
+                $permisosRolId = $permisosRol->pluck('id')->toArray();
+                // $permisos_id = explode(',', $request->permisos_id[0]);
+                $permisos_id = json_decode($request->permisos_id, true);
+
+                //recorrer los permisos dados
+                foreach ($permisos_id as $permiso_id) {
+                    // return $permisos_id;
+                    //buscar el permiso
+                    $permiso = Permission::findOrFail($permiso_id);
+                    if ($permiso) {
+                        // verificar si el rol lo tiene
+                        if (in_array($permiso_id, $permisosRolId)) {
+                        //Si lo tiene se remueve
+                        $rol->revokePermissionTo($permiso);
+                        }
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()->route('roles.gestRol', $rol_id)->with('success', 'Permiso(s) removidos correctamente');
+        } catch (Exception $e) {
+            DB::rollBack();
+            // return $e;
+            return redirect()->route('roles.gestRol', $rol_id)->with('error', 'Ocurrió un error');
+        }
     }
 
 }
