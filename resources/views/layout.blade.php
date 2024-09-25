@@ -294,7 +294,12 @@
 
                 @can('planilla')
                 <li>
-                    <a href="#"><i class="fa fa-table fa-lg text-white"></i><span class="nav-label text-white">Planilla</span></a>
+                <a href="#"><i class="fa fa-table fa-lg text-white"></i>
+                <span class="nav-label text-white">Planilla</span>
+                <i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i>
+                </a>
+
+                    
                     <ul class="nav nav-second-level collapse">
                         @can('planilla-datos_generales.index')
                         <li><a href="{{route('personal.index')}}"><span>Personal</span></a></li>
@@ -309,7 +314,7 @@
                 @endcan
                 @can('consultas')
                 <li>
-                    <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span></a>
+                    <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('consultas-garantias')
                         <li>
@@ -335,7 +340,7 @@
                 </li>
                 @endcan
                 <li>
-                    <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span></a>
+                    <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
@@ -345,7 +350,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo </span></a>
+                    <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
                         <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
@@ -377,17 +382,19 @@
 
                 @can('maestro')
                 <li>
-                    <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span></a>
+                    <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 1px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
                         <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
                     </ul>
                 </li>
 
-                <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadisticas y KPIs</span></a></li>
+                <li><a href="{{ route('inicio') }}"><i class="fa fa-th-large fa-lg text-white"></i><span class="nav-label text-white">Proyectos PMB</span></a></li>
+
+                <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
 
                 <li>
-                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span></a>
+                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
                         <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
