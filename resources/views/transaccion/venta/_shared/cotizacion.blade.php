@@ -55,168 +55,67 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cotizacion as $cotizacions)
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="i-checks" name="input[]">
-                        </td>
-                        <td>{{ $cotizacions->id }}</td>
-                        <td>{{ $cotizacions->cod_cotizacion }}</td>
-                        <td>{{ $cotizacions->cliente->numero_documento }}</td>
-                        <td>{{ $cotizacions->cliente->nombre }}</td>
-                        <td>{{ Carbon\Carbon::parse($cotizacions->created_at)->format('d-m-Y') }}</td>
-                        <td>{{ $cotizacions->forma_pago->nombre }}</td>
-                        <span hidden>
-                            {{ $subtotal = $cotizacions->op_gravada + $cotizacions->op_inafecta + $cotizacions->op_exonerada }}
-                        </span>
-                        <span hidden>
-                            @if ($cotizacions->moneda_id == 2)
-                                {{-- Dolares --}}
-                                {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
-                                {{ $total_conv = $total * $cotizacions->cambio }}
-                            @else
-                                {{ $total = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
-                                {{ $total_conv = round($subtotal + ($cotizacions->op_gravada * $igv->renta) / 100, 2) }}
-                            @endif
-
-                        </span>
-                        <td style="display:none">{{ $total_conv }}</td>
-                        <td>{{ $cotizacions->moneda->simbolo }}
-                            {{ number_format(round($total, 2), 2) }}
-                        </td>
-                        <td>
-                            <a href="{{ route('cotizacion.show', $cotizacions->id) }}"><button type="button"
-                                    class="btn btn-primary"><i class="fa fa-eye"></i></button></a>
-
-                            @if ($cotizacions->estado == '0')
-                                <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-                            @else
-                                <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
-                            @endif
-
-                        </td>
-                        <td style="display: none">
-                            {{ $cotizacions->tipo }}
-                        </td>
-                    </tr>
-                @endforeach
+              
             </tbody>
-            <tfoot>
+            {{-- <tfoot>
                 <tr>
                     <th colspan="7" class="text-right">Total General</th>
                     <th colspan="2"></th>
                 </tr>
-            </tfoot>
+            </tfoot> --}}
         </table>
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        table = $('.dataTables-example-cotizacion').DataTable({
-            pageLength: 10,
-            order: [
-                [0, "desc"]
+    $(document).ready(function () {
+        var table = $('.dataTables-example-cotizacion').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('cotizacion_registers') }}",
+                data: function (d) {
+                    d.daterange = $('input[name="daterange"]').val();
+                    d.tipo_coti = $('#select_tipo_coti').val();
+                    d.search = $('#global_search').val();
+                }
+            },
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'cod_cotizacion', name: 'cod_cotizacion' },
+                { data: 'cliente.numero_documento', name: 'cliente.numero_documento' },
+                { data: 'cliente.nombre', name: 'cliente.nombre' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'forma_pago.nombre', name: 'forma_pago.nombre' },
+                { data: 'total', name: 'total', orderable: false, searchable: false },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            footerCallback: function(tr, data, start, end, display) {
-                var api = this.api(),
-                    data;
-
-                // Remove the formatting to get integer data for summation
-                var intVal = function(i) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '') * 1 :
-                        typeof i === 'number' ?
-                        i : 0;
-                };
-
-                // Total over all pages
-                total = api
-                    .column(7)
-                    .data()
-                    .reduce(function(a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                // Total filtered rows on the selected column (code part added)
-                var sumCol4Filtered = display.map(el => data[el][7]).reduce((a, b) => intVal(a) +
-                    intVal(b), 0);
-
-                // Update footer
-                $(api.column(7).footer()).html(
-                    'S/ ' + Math.round(sumCol4Filtered * 100) / 100
-                );
-            },
-            buttons: []
+            pageLength: 10,
+            order: [[0, 'desc']]
         });
 
-        revert_select();
-
-        $(document).on('change', '#select_tipo_coti', function(event) {
-            var nombre = $("#select_tipo_coti option:selected").val();
-            // console.log(nombre);
-            table.column(10).search(nombre).draw();
+        // Cuando cambia el rango de fechas
+        $('input[name="daterange"]').on('change', function () {
+            table.ajax.reload();
         });
-        $('input[name="daterange"]').daterangepicker({
-                "locale": {
-                    "separator": " | ",
-                    "applyLabel": "Guardar",
-                    "cancelLabel": "Cancelar",
-                    "fromLabel": "Desde",
-                    "toLabel": "Hasta",
-                    "customRangeLabel": "Custom",
-                    "daysOfWeek": [
-                        "Do",
-                        "Lu",
-                        "Ma",
-                        "Mi",
-                        "Ju",
-                        "Vi",
-                        "Sa"
-                    ],
-                    "monthNames": [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre"
-                    ],
-                    "firstDay": 1
-                }
-            },
-            function(start, end, label) {
-                var dates = [];
-                var currentDate = new Date(start);
-                while (currentDate <= end) {
-                    var day = ('0' + currentDate.getDate()).slice(-2);
-                    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                    var year = currentDate.getFullYear();
 
-                    var formattedDate = day + '-' + month + '-' + year;
-                    dates.push(formattedDate);
+        // Cuando se selecciona un tipo de cotización
+        $('#select_tipo_coti').on('change', function () {
+            table.ajax.reload();
+        });
 
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-                var dateRangeString = dates.join('|');
-                console.log(dateRangeString);
-                table.column(4).search(dateRangeString, true, false).draw();
-            }
-        );
+        // Buscar globalmente
+        $('#global_search').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+        function limpiar_select() {
+            $('input[name="daterange"]').val('');
+            table.ajax.reload();
+        }
+
+        function revert_select() {
+            $('input[name="daterange"]').val('{{ date('m/01/Y') }} - {{ date('m/t/Y') }}');
+            table.ajax.reload();
+        }
     });
-
-    function limpiar_select() {
-        table.column(4).search("").draw();
-    }
-
-    function revert_select() {
-        table.column(4).search(`{{ date('m-Y') }}`).draw();
-    }
 </script>
