@@ -41,7 +41,7 @@
   </form>
 </div>
   <br>
-  <p class="fw-bold bg-primary" style="font-size: 40px; color: white; padding: 10px; text-align: center;">DATOS GENERALES</p>
+  <p class="" style="font-size: 40px; color: white; padding: 10px; text-align: center; background-color: #007bff">DATOS GENERALES</p>
   <div class="parent" style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 20px;">
       <div class="div1" style="grid-column-start: 1; grid-row-start: 1; background-color: white; font-size: 20px; font-weight: bold; padding: 10px;">DOCUMENTO
         <select style="margin-top: 5px; width: 100%;">
@@ -102,7 +102,7 @@
 
   </div>
   <br>
-  <p class="fw-bold bg-primary" style="font-size: 40px; color: white; padding: 10px; text-align: center; align-items: center;">DATOS LABORALES</p>
+  <p class="" style="font-size: 40px; color: white; padding: 10px; text-align: center; align-items: center; background-color: #007bff">DATOS LABORALES</p>
   <div class="parent" style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 20px;">
       <div class="div1" style="grid-column-start: 1; grid-row-start: 1; background-color: white; font-size: 20px; font-weight: bold; text-align:center; padding: 10px;">AREA
         <select style="margin-top: 5px; width: 100%;">
@@ -195,7 +195,7 @@
       </div>
   </div>
   <br>
-  <p class="fw-bold bg-primary" style="font-size: 40px; color: white; padding: 10px; text-align: center; align-items: center;">GUARDAR DATOS</p>
+  <p class="" style="font-size: 40px; color: white; padding: 10px; text-align: center; align-items: center; background-color: #007bff">GUARDAR DATOS</p>
   <br>
 
   
