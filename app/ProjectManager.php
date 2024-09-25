@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Cliente;
 use App\ProjectService;
+use Carbon\Carbon;
 
 class ProjectManager extends Model
 {
@@ -57,5 +58,35 @@ class ProjectManager extends Model
         ];
 
         return $priorities[$this->prioridad] ?? "No definido";
+    }
+
+    public function calculateDifferenceDays(): int
+    {
+        return $this->fecha_inicio->diffInDays($this->fecha_cierre);
+    }
+
+    public function calculateDifferenceWeeks(): int
+    {
+        return $this->fecha_inicio->diffInWeeks($this->fecha_cierre);
+    }
+
+    public function calculateDaysToDateStart(Carbon $date): int
+    {
+        return $date->diffInDays($this->fecha_inicio);
+    }
+
+    public function calculateWeeksToDateStart(Carbon $date): int
+    {
+        return $date->diffInWeeks($this->fecha_inicio);
+    }
+
+    public function calculateDaysToDateClosing(Carbon $date): int
+    {
+        return $date>diffInDays($this->fecha_cierre);
+    }
+
+    public function calculateWeeksToDateClosing(Carbon $date): int
+    {
+        return $date->diffInWeeks($this->fecha_cierre);
     }
 }
