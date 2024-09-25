@@ -6,7 +6,115 @@
 
  @section('content')
 
- <div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content d-flex justify-content-center">
+                    <div class="row d-flex justify-content-between p-4">
+                        <!-- Elementos de la fila -->
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{ route('almacen.index') }}">
+                                    <img class="rounded" src="{{asset('img/logos/almacen.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">ALMACÉN</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('apariencia.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/apariencia.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">APARIENCIA</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success text-center dim tam" type="button">
+                                <a href="{{route('categoria.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/categoria.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('familia.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/familia.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">FAMILIAS</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('garantia.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/garantia.png')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">GARANTÍA</p>
+                                </a>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('marca.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/marca.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">MARCAS</p>
+                                </a>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('motivo.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/motivo.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">MOTIVO</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6  d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('tipo_cambio.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/tipo-cambio.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('unidad-medida.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/unidad_medida.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">U. DE MEDIDA</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('usuarios.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/usuarios.svg')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">USUARIOS</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim text-center tam" type="button">
+                                <a href="{{route('validez.index')}}">
+                                    <img class="rounded" src="{{asset('img/logos/validez.png')}}" width="40px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
+                                </a>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <!-- ELEMENTO FANTASMA - RELLENO -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -62,7 +170,7 @@
                                     <td><a class="btn btn-primary" href="{{route('tipo_cambio.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
                                 <tr class="gradeX">
-                                    <td><img src="{{asset('img/logos/unidad_medida.svg')}}" width="20px"></td>
+                                    <td><img src="{{asset('img/logos/unidad_medida.svg')}}" width="20px" alt=""></td>
                                     <td>Unidades de Medidas</td>
                                     <td><a class="btn btn-primary" href="{{route('unidad-medida.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
@@ -89,7 +197,15 @@
         </div>
     </div>
 </div>
+-->
 
+<style>
+    /*Para el tamaño de los botones*/
+    .tam{
+        min-width: 120px;
+        min-height: 120px;
+    }
+</style>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
