@@ -2,9 +2,7 @@
 @section('title', 'Proyectos')
 @section('content')
 
-
     <!-- CSS Activities -->
-    <link rel="stylesheet" href="{{ asset('css/project_managers/activities.css') }}">
     <link rel="stylesheet" href="{{ asset('css/project_managers/project_managers.css') }}">
 
     <!-- Contenido -->
@@ -27,7 +25,7 @@
                     <div class="ibox-content">
                         <div class="carousel-container">
                             @foreach ($project_manager->activities as $activity)
-                                <x-project_managers.activity.card :card="$activity"/>
+                                <x-ProjectManager.Activity.Card :card="$activity"/>
                             @endforeach
                         </div>
                     </div>

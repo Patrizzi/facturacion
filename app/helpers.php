@@ -528,3 +528,20 @@ function createdTime($a)
             return floor($timeElapsed / 31536000) . "a";
     }
 }
+
+function getImageUrl($imagen, $option)
+{
+    return Str::startsWith($imagen, 'http') 
+        ? $imagen 
+        : asset(getImagePath($option) . $imagen);
+}
+
+function getImagePath($option)
+{
+    $paths = [
+        1 => "/profile/images/",
+        2 => "/archivos/imagenes/project_managers/",
+    ];
+
+    return $paths[$option] ?? null;
+}

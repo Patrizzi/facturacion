@@ -65,3 +65,42 @@
 .project-table::-webkit-scrollbar-thumb:hover {
     background: #373A40;
 }
+
+/* Estilos para el truncado de texto */
+.truncate-text {
+    display: block;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0px;
+}
+.ver-mas, .ver-menos {
+    color: black;
+    opacity: 0.6;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.carousel-container {
+    display: flex;
+    overflow-x: auto;
+    align-items: start;
+    gap: 12px;
+    border-radius: 8px;
+    padding: 0px;
+}
+.carousel-container::-webkit-scrollbar {
+height: 5px;
+}
+.carousel-container::-webkit-scrollbar-thumb {
+background: #888;
+border-radius: 10px;
+}
+.carousel-container::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+.carousel-container::-webkit-scrollbar-track {
+background: #f0f0f0;
+border-radius: 10px;
+}
