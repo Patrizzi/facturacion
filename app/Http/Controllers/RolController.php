@@ -13,6 +13,54 @@ use Illuminate\Http\Request;
 
 class RolController extends Controller
 {
+
+    public function crearRol(Request $request){
+        DB::beginTransaction();
+        try{
+            if(!isset($request->nombre)) return redirect()->route('usuarios.index')->with('error', 'El nombre es un campo obligatorio.');
+            
+            $nombre = $request->nombre;
+
+            if(strlen($nombre) == 0) return redirect()->route('usuarios.index')->with('error', 'El nombre no puede estar vacío.');
+
+            $nombreRoles = Role::get()->pluck('name')->toArray();
+
+            if(in_array($nombre, $nombreRoles)) return redirect()->route('usuarios.index')->with('error', 'Ya existe un rol con ese nombre.');
+
+            Role::create(['name' => $nombre, 'guard_name' => 'web']);
+            DB::commit();
+            return redirect()->route('usuarios.index')->with('success', 'Rol creado exitosamente.');
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->route('usuarios.index')->with('error', 'Ocurrió un error');
+        }
+    }
+
+    public function editarRol(Request $request, $rol_id){
+        DB::beginTransaction();
+        try{
+            $rol = Role::findOrFail($rol_id);
+            if($rol){
+                if(!isset($request->nombre)) return redirect()->route('usuarios.index')->with('error', 'El nombre es un campo obligatorio.');
+                
+                $nombre = $request->nombre;
+    
+                if(strlen($nombre) == 0) return redirect()->route('usuarios.index')->with('error', 'El nombre no puede estar vacío.');
+    
+                $nombreRoles = Role::where('id', '!=',$rol_id)->get()->pluck('name')->toArray();
+    
+                if(in_array($nombre, $nombreRoles)) return redirect()->route('usuarios.index')->with('error', 'Ya existe un rol con ese nombre.');
+    
+                $rol->update(["name" => $nombre]);
+            }
+            DB::commit();
+            return redirect()->route('usuarios.index')->with('success', 'Rol editado exitosamente.');
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->route('usuarios.index')->with('error', 'Ocurrió un error');
+        }
+    }
+
     public function gestionarRol($rol_id)
     {
 
@@ -159,5 +207,6 @@ class RolController extends Controller
             return redirect()->route('roles.gestRol', $rol_id)->with('error', 'Ocurrió un error');
         }
     }
+    
 
 }

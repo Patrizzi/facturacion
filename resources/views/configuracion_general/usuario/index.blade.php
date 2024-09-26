@@ -235,6 +235,36 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="ibox ">
+                                        <div class="ibox-header d-flex justify-content-between px-3 align-items-center">
+                                            <div>
+                                                <h2>ROLES</h2>
+                                            </div>
+                                            <div>
+                                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal_rol">Agregar</button>
+                                                <div class="modal fade" id="modal_rol">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h2>Crear nuevo rol</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="POST" action="{{route('roles.crearRol')}}">
+                                                                    @csrf
+                                                                    <div class="my-3">
+                                                                        <label>Nombre:</label>
+                                                                        <input oninput="handleInputRolChange(event)" type="text" class="form-control" placeholder="Ingrese el nombre del rol" name="nombre" required autocomplete="off" />
+                                                                        <span id="spanRolError" class="text-danger" hidden></span>
+                                                                    </div>
+                                                                    <div class="my-3 d-flex justify-content-center align-items-center">
+                                                                        <button id="BtnAgregarRol" disabled class="btn btn-outline-primary" type="submit">Agregar <i class="fa fa-save"></i></button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="ibox-content">
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
@@ -242,7 +272,9 @@
                                                         <tr>
                                                             <th>ID</th>
                                                             <th>Nombre</th>
-                                                            <th>Administrar Rol</th>
+                                                            <th>guard_name</th>
+                                                            <th>Editar</th>
+                                                            <th>Gestionar Permisos</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -250,8 +282,33 @@
                                                         <tr class="gradeX">
                                                             <td>{{$rol->id}}</td>
                                                             <td>{{$rol->name}}</td>
-                                                            <td><a class="text-decoration-none btn btn-success" href="{{route('roles.gestRol', $rol->id)}}">Administrar <i class="fa fa-edit"></i></a></td>
+                                                            <td>{{$rol->guard_name}}</td>
+                                                            <td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-edit-rol-{{$rol->id}}">Editar <i class="fa fa-edit"></i></button></td>
+                                                            <td><a class="text-decoration-none btn btn-success" href="{{route('roles.gestRol', $rol->id)}}">Permisos <i class="fa fa-tasks"></i></a></td>
                                                         </tr>
+                                                        <div class="modal fade" id="modal-edit-rol-{{$rol->id}}">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h2>Editar Rol {{$rol->name}}</h2>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form method="POST" action="{{route('roles.editarRol', $rol->id)}}">
+                                                                            @csrf
+                                                                            @method('put')
+                                                                            <div class="my-3">
+                                                                                <label>Nombre:</label>
+                                                                                <input oninput="handleInputRolChange(event, true,{{$rol->id}})" value="{{$rol->name}}" type="text" class="form-control" placeholder="Ingrese el nombre del rol" name="nombre" required autocomplete="off" />
+                                                                                <span id="spanEditRolError{{$rol->id}}" class="text-danger" hidden></span>
+                                                                            </div>
+                                                                            <div class="my-3 d-flex justify-content-center align-items-center">
+                                                                                <button id="BtnEditRol{{$rol->id}}" disabled class="btn btn-outline-primary" type="submit">Agregar <i class="fa fa-save"></i></button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         @endforeach
                                                     </tbody>
                                                 </table>
@@ -358,6 +415,34 @@
     });
     });
     
+    //roles existentes
+    const roles = @json($roles);
+
+    const handleInputRolChange = (e, edit = false, id = null) => {
+        let inputValue = e.target.value.trim().toLowerCase();
+        const spanId = edit ? `spanEditRolError${id}` : `spanRolError`;
+        const btnId = edit ? `BtnEditRol${id}` : `BtnAgregarRol`;
+        let spanError = document.getElementById(spanId);
+        let btnAgregar = document.getElementById(btnId);
+
+        let error = false;
+        let mensajeError = '';
+
+        if(inputValue == '') {
+            error = true;
+            mensajeError = 'El nombre no puede estar vacío.';
+        } else{
+            const rolesNames = roles.map(role => role.name.toLowerCase() );
+            if (rolesNames.includes(inputValue)) {
+                error = true;
+                mensajeError = 'Ya existe un rol con ese nombre.';
+            }
+        }
+        spanError.textContent = mensajeError
+        spanError.hidden = !error;
+        btnAgregar.disabled = error;
+    }
+
     // $(document).ready(function(){
     //     $('.rolTable-example').DataTable({
     //         pageLength: 25,

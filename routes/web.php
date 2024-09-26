@@ -526,6 +526,8 @@ Route::group(
 		Route::resource('/venta','VentaController');
 
 		//Roles y Permisos
+		Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
+		Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
 		Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
 		Route::put('/gestRol/asignarPermisos/{rol_id}', [RolController::class, 'asignarPermisos'])->name('roles.asignarPermisos');
 		Route::put('/gestRol/removerPermiso/{rol_id}/{permiso_id}', [RolController::class, 'removerPermiso'])->name('roles.removerPermiso');

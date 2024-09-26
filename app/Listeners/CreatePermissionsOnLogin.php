@@ -5,6 +5,7 @@ use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class CreatePermissionsOnLogin
 {
@@ -255,16 +256,22 @@ class CreatePermissionsOnLogin
             //permisos generales para administrador y colaborador
             'admin-access',
             'colaborador-access',
-            
         ];
 
         //agregar todos los permisos al administrador
+        $admin = Role::find(1);
 
         foreach ($permisos as $permiso) {
             $existingPermission = Permission::where("name", $permiso)->first();
             if (!$existingPermission) {
-                Permission::create(['name' => $permiso]);
+                $newPermisson = Permission::create(['name' => $permiso]);
+                $admin->givePermissionTo($newPermisson);
+            } else{
+                if (!$admin->hasPermissionTo($existingPermission)) {
+                    $admin->givePermissionTo($existingPermission);
+                }
             }
+
         }
 
     }
