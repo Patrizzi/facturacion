@@ -105,18 +105,18 @@
     }
     body.mini-navbar .navbar-static-side {
     width: 70px;
-    transition: width 0.5s ease;
+    transition: width 0.7s ease;
     }
 
     body.mini-navbar #page-wrapper {
         width: calc(100% - 70px);
-        transition: width 0.3s ease;
+        transition: width 0.0s ease;
     }
 
     /* Cuando el mouse pasa por encima del menú, este se expande */
     body.mini-navbar .navbar-static-side:hover {
         width: 220px; /* Ancho expandido */
-        transition: width 0.5s ease;
+        transition: width 0.7s ease;
     }
 
     body.mini-navbar .navbar-static-side:hover ~ #page-wrapper {
@@ -300,9 +300,9 @@
                 @can('planilla')
                 <li>
                 <a href="#"><i class="fa fa-table fa-lg text-white"></i>
-                <span class="nav-label text-white">Planilla</span>
-                <i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i>
-                </a>
+                <span class="nav-label text-white">Planilla</span> 
+                <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 110px"></i>
+                </a> 
 
                     
                     <ul class="nav nav-second-level collapse">
@@ -319,7 +319,7 @@
                 @endcan
                 @can('consultas')
                 <li>
-                    <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
+                    <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 100px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('consultas-garantias')
                         <li>
@@ -345,7 +345,7 @@
                 </li>
                 @endcan
                 <li>
-                    <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
+                    <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 65px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
@@ -355,7 +355,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
+                    <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 115px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
                         <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
@@ -387,7 +387,7 @@
 
                 @can('maestro')
                 <li>
-                    <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 1px;"></i></a>
+                    <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 30px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
                         <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
@@ -399,7 +399,7 @@
                 <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
 
                 <li>
-                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white" style="margin-left: 10px;"></i></a>
+                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 75px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
                         <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
