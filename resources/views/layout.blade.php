@@ -141,22 +141,23 @@
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
-                        <div class="dropdown profile-element" style="left: 10% ">
+                        <div class="dropdown profile-element" style="left: 03%">
                             <a href="{{route('usuario.index')}}">
-                                <img alt="image" class="rounded-circle" src=" {{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 50px;height: 50px" />
-                                                          
-                            </a>
-                             
-                            <a href="{{route('usuario.index')}}">
-                                <span class="block m-t-xs font-bold spans">@yield('nombre',auth()->user()->nombre)</span>
+                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 50px; height: 50px; margin-right: 15px;" />
+                            <span class="nav-label text-white" style="font-size: 16px; font-weight: bold; margin-top: 80px;">LEONOSOFT</span>
+                                                           
+                            </a> 
+                        </div>
+                        
+                    </li>
+                    <li style="background-color: #143593;">
+                    <hr class="bg-white" style="width: 100%; ">
+                            <a class="nav-label" href="{{route('usuario.index')}}">
+                                <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 03" >@yield('nombre',auth()->user()->nombre)</span>
                                 
                             </a>
-                        </div>
-                        <hr class="bg-white"> 
-                        <div class="logo-element">
-
-                        </div>
-                    </li>
+                            <hr class="bg-white" style="width: 100%;"></li>
+                            
                     {{-- MENU DESPELEGABLE --}}
                     @can('inicio')
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
