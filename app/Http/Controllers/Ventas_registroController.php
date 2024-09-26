@@ -106,20 +106,48 @@ class Ventas_registroController extends Controller
         $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
 
-        
+
         $cotizacion = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->get();
+
         return view('transaccion.venta._shared.cotizacion', compact('cotizacion', 'igv'));
     }
     public function cotizacion_registers(Request $request)
     {
+        // Obtén el valor del IGV para cálculos
+        $igv = Igv::first()->renta;
         $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-        // Filtramos las cotizaciones por el rango de fechas
-        $cotizacion = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->get();
+        $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(10);
 
+        // Formatear los datos con los cálculos necesarios
+        $cotizaciones->getCollection()->transform(function ($cotizacion) use ($igv) {
+            // Cálculo del subtotal
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+
+            // Cálculo del total según el tipo de moneda
+            if ($cotizacion->moneda_id == 2) { // Si la moneda es dólares
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total * $cotizacion->cambio; // Conversión a la moneda local
+            } else {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total; // Total en moneda local
+            }
+            $cotizacion->emision = Carbon::parse( $cotizacion->created_at)->format('d-m-Y');
+            // Añade el valor del total al objeto cotizacion
+            $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
+
+            $estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
+            $cotizacion->estado_proceso = $estado_proceso;
+            // Retorna converido la variable para el getcollection
+            return $cotizacion;
+        });
+        // return $cotizaciones;
+        // Retorna el JSON compatible con DataTables
         return response()->json([
-            'data' => $cotizacion
+            'data' => $cotizaciones->items(),  // Los datos de las cotizaciones paginados
+            'recordsTotal' => $cotizaciones->total(),  // Total de registros
+            'recordsFiltered' => $cotizaciones->total(),  // Total filtrado (puede ser igual al total si no hay filtros)
         ]);
     }
 

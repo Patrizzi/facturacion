@@ -45,7 +45,8 @@ class Cotizacion extends Model
     {
         return $this->belongsTo(User::class, 'aprobado_por');
     }
-    public static function count_mes($fecha){
+    public static function count_mes($fecha)
+    {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
         // $fecha = "02-09-2023";
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
@@ -57,39 +58,60 @@ class Cotizacion extends Model
         // PRECIOS DE COTIZACIONES X MES 
         foreach ($cotizaciones as $coti) {
             // condicional soles
-            if($moneda->id == "1"){ //Si es soles retorno soles
-                if($coti->moneda->id == "1"){ //soles
-                    $subtotal = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;    
-                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total/100));
-                }else{  //dolares
-                    $subtotal_sin = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;    
+            if ($moneda->id == "1") { //Si es soles retorno soles
+                if ($coti->moneda->id == "1") { //soles
+                    $subtotal = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
+                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
+                } else {  //dolares
+                    $subtotal_sin = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
                     $subtotal = $subtotal_sin * $coti->cambio;
                     $subtotal_dol = $coti->op_gravada * $coti->cambio;
-                    $total =  $subtotal + ($subtotal_dol * ($igv->igv_total/100));
+                    $total =  $subtotal + ($subtotal_dol * ($igv->igv_total / 100));
                 }
-                // $total = "1";
-                // return $total;
-            }else{ // Si no retorno Dolares
+            } else { // Si no retorno Dolares
 
-                if($coti->moneda->id == "1"){ //dolares
+                if ($coti->moneda->id == "1") { //dolares
                     $subtotal_sin = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
                     $subtotal = $subtotal_sin / $coti->cambio;
                     $subtotal_dol = $coti->op_gravada / $coti->cambio;
-                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total/100));
-                }else{  //soels
-                    $subtotal = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;    
-                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total/100));
+                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
+                } else {  //soels
+                    $subtotal = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
+                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
                 }
-                // $total = "2";
             }
         }
-        
+
         $mes = array(
             "cantidad" => $cotizaciones->count(),
             "total" => $total
-            // "total_dolares" => $total_dolares
         );
 
         return $mes;
+    }
+    public static function estado_proceso($id)
+    {
+        $cotizacion = Cotizacion::find($id);
+        //Estado
+        if ($cotizacion->estado == 0) {
+            $estado_actual = "Sin Proceso";
+        } else {
+            // Separar factura boleta y nota venta
+            switch ($cotizacion->tipo) {
+                case 'factura':
+                    $estado_actual = "Facturado";
+                    break;
+                case 'boleta':
+                    $estado_actual = "Boleteado";
+                    break;
+                case 'nota_venta':
+                    $estado_actual = "Nota de Venta Registrada";
+                    break;
+                default:
+                    $estado_actual = "Sin Proceso";
+                    break;
+            }
+        }
+        return $estado_actual;
     }
 }

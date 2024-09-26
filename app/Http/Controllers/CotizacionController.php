@@ -3224,7 +3224,7 @@ if($validacion==1){
         $cotizacion_mes = Cotizacion::count_mes($mes_año);
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
-        return $nota_venta_mes;
+        // return $nota_venta_mes;
 
         return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes','cotizacionM_mes','nota_venta_mes'));
     }

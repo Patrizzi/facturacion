@@ -187,133 +187,135 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <style>
-                .dropdown-menu {
-                    left: 70px;
-                    padding: 20px 0;
-                }
+    <style>
+        .dropdown-menu {
+            left: 70px;
+            padding: 20px 0;
+        }
 
-                #DataTables_Table_0_wrapper {
-                    padding-right: 0px;
-                }
+        #DataTables_Table_0_wrapper {
+            padding-right: 0px;
+        }
 
-                .table {
-                    width: 100% !important;
-                }
+        .table {
+            width: 100% !important;
+        }
 
-                .ibox-content>.row {
-                    margin: auto;
-                }
+        .ibox-content>.row {
+            margin: auto;
+        }
 
-                /* OCULTANDO LO DE ORGANIZAR*/
-                /* Ver (números) */
-                div.dataTables_length {
-                    display: none;
-                }
+        /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
 
-                /* El Buscar */
-                div.dataTables_filter {
-                    display: none;
-                }
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
 
-                /* CSV, Excel, PDF, Print */
-                div.dt-buttons {
-                    display: none;
-                }
-            </style>
-            <!-- Mainly scripts -->
-            <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-            <script src="{{ asset('js/popper.min.js') }}"></script>
-            <script src="{{ asset('js/bootstrap.js') }}"></script>
-            <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-            <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+    </style>
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-            <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-            <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
-            <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
-            <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-            <!-- Custom and plugin javascript -->
-            <script src="{{ asset('js/inspinia.js') }}"></script>
-            <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-            <!-- check -->
-            <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-            <script src="{{ asset('js/icheck.min.js') }}"></script>
+    <!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
 
-            {{-- SCRIPTS PARA TABS --}}
-            <script>
-                $(document).ready(function() {
-                    $('#tab-1').load('{{ route('ventas.cotizacion') }}');
-                    // Función para cargar contenido en una pestaña cuando se hace clic en ella
-                    function loadTabContent(tab, url) {
-                        if (!$(tab).data('loaded')) {  // Solo cargar si aún no ha sido cargado
-                            $.get(url, function(data) {
-                                $(tab).html(data);
-                                $(tab).data('loaded', true); // Marcar pestaña como cargada
-                            });
-                        }
-                    }
-
-                    // Cargar contenido de la pestaña 2 al hacer clic
-                    $('#tab-2-tab').on('click', function() {
-                        loadTabContent('#tab-2', '{{ route('ventas.cotizacion_manual') }}');
+    {{-- SCRIPTS PARA TABS --}}
+    <script>
+        $(document).ready(function() {
+            $('#tab-1').load('{{ route('ventas.cotizacion') }}');
+            // Función para cargar contenido en una pestaña cuando se hace clic en ella
+            function loadTabContent(tab, url) {
+                if (!$(tab).data('loaded')) { // Solo cargar si aún no ha sido cargado
+                    $.get(url, function(data) {
+                        $(tab).html(data);
+                        $(tab).data('loaded', true); // Marcar pestaña como cargada
                     });
+                }
+            }
 
-                    // Cargar contenido de la pestaña 3 al hacer clic
-                    $('#tab-3-tab').on('click', function() {
-                        loadTabContent('#tab-3', '{{ route('ventas.nota_venta') }}');
-                    });
-                    // $('#tab-1').load('{{ route('ventas.cotizacion') }}');
+            // Cargar contenido de la pestaña 2 al hacer clic
+            $('#tab-2-tab').on('click', function() {
+                loadTabContent('#tab-2', '{{ route('ventas.cotizacion_manual') }}');
+            });
 
-                    // $('#tab-2').load('{{ route('ventas.cotizacion_manual') }}');
+            // Cargar contenido de la pestaña 3 al hacer clic
+            $('#tab-3-tab').on('click', function() {
+                loadTabContent('#tab-3', '{{ route('ventas.nota_venta') }}');
+            });
+            // $('#tab-1').load('{{ route('ventas.cotizacion') }}');
 
-                    // $('#tab-3').load('{{ route('ventas.nota_venta') }}');
-                });
-            </script>
-            <!-- Seleccionar todos los check -->
-            <script>
-                $(document).ready(function() {
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
-                    });
+            // $('#tab-2').load('{{ route('ventas.cotizacion_manual') }}');
 
-                    // Controlar el checkbox del thead 
-                    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                        var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                        if (event.type === 'ifChecked') {
-                            // Selecciona 
-                            table.find('tbody input[type="checkbox"]').iCheck('check');
-                        } else {
-                            // Deselecciona 
-                            table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                        }
-                    });
+            // $('#tab-3').load('{{ route('ventas.nota_venta') }}');
+        });
+    </script>
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
 
-                    // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-                    $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                        var table = $(this).closest('table'); // Limita el control a la tabla visible
-                        if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                                'tbody input[type="checkbox"]').length) {
-                            table.find('thead input[type="checkbox"]').iCheck('check');
-                        } else {
-                            table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                        }
-                    });
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
 
-                    // Detectar cuando se cambia de tab 
-                    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                        // Restablecer el estado de los checkboxes 
-                        var activeTab = $(e.target).attr('href'); // ID del tab activo
-                        $(activeTab).find('.i-checks').iCheck('update');
-                    });
-                });
-            </script>
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
 
-            <!--Organizar-->
-            {{-- <script>
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
+
+    <!--Organizar-->
+    {{-- <script>
                 $(document).ready(function() {
                     table = $('.dataTables-example-facturacion').DataTable({
                         pageLength: 10,
@@ -424,43 +426,43 @@
                 }
             </script> --}}
 
-            <!--Clientes-->
-            <script>
-                $(document).ready(function() {
-                    $('#table_cliente').DataTable({
-                        "serverSide": true,
-                        "ajax": "{{ url('api/clientes') }}",
-                        "columns": [{
-                                data: 'id'
-                            },
-                            {
-                                data: 'nombre'
-                            },
-                            {
-                                data: 'numero_documento'
-                            },
-                            {
-                                data: 'email'
-                            },
-                            {
-                                data: 'celular'
-                            },
-                            {
-                                name: '',
-                                data: null,
-                                sortable: false,
-                                searchable: false,
-                                render: function(data) {
-                                    var actions = '';
-                                    actions +=
-                                        '<a href="{{ route('cliente.show', ':id') }}" target="_blank"><button type="button" class="btn btn-primary mr-2"><i class="fa fa-eye"></i></button></a>';
-                                    actions +=
-                                        '<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>';
-                                    return actions.replace(/:id/g, data.id);
-                                }
-                            }
-                        ]
-                    });
-                });
-            </script>
-        @endsection
+    <!--Clientes-->
+    <script>
+        $(document).ready(function() {
+            $('#table_cliente').DataTable({
+                "serverSide": true,
+                "ajax": "{{ url('api/clientes') }}",
+                "columns": [{
+                        data: 'id'
+                    },
+                    {
+                        data: 'nombre'
+                    },
+                    {
+                        data: 'numero_documento'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'celular'
+                    },
+                    {
+                        name: '',
+                        data: null,
+                        sortable: false,
+                        searchable: false,
+                        render: function(data) {
+                            var actions = '';
+                            actions +=
+                                '<a href="{{ route('cliente.show', ':id') }}" target="_blank"><button type="button" class="btn btn-primary mr-2"><i class="fa fa-eye"></i></button></a>';
+                            actions +=
+                                '<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>';
+                            return actions.replace(/:id/g, data.id);
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+@endsection

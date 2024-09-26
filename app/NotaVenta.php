@@ -56,7 +56,7 @@ class NotaVenta extends Model
                         $total = $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;   
                     }
                 }
-                return $total;
+                // return $total;
             }
             $suma += $total; // Mueve la suma aquí para acumular los totales
         }
@@ -66,6 +66,6 @@ class NotaVenta extends Model
             "total" => $suma
         );
     
-        return $total;
+        return $mes;
     }
 }
