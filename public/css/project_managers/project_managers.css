@@ -5,6 +5,7 @@
 
 .ibox-content {
     padding: 15px 20px 15px 20px;
+    margin-bottom: 10px;
 }
 
 .gantt-table {
@@ -71,7 +72,6 @@
     display: block;
     white-space: normal;
     word-wrap: break-word;
-    overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 0px;
 }
@@ -86,12 +86,13 @@
     display: flex;
     overflow-x: auto;
     align-items: start;
-    gap: 12px;
+    gap: 13px;
     border-radius: 8px;
-    padding: 0px;
+    padding: 8px 8px 18px 8px;
 }
 .carousel-container::-webkit-scrollbar {
-height: 5px;
+    height: 5px;
+    width: 5px;
 }
 .carousel-container::-webkit-scrollbar-thumb {
 background: #888;

@@ -540,7 +540,7 @@ function getImagePath($option)
 {
     $paths = [
         1 => "/profile/images/",
-        2 => "/archivos/imagenes/project_managers/",
+        2 => "/archivos/imagenes/project_manager/",
     ];
 
     return $paths[$option] ?? null;

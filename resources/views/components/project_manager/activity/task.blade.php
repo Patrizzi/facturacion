@@ -1,31 +1,28 @@
-<div class="task" id="task-{{$task->id}}"> 
-    <div class="task-worker-header">
-        <img src="{{ getImageUrl($task->user->avatar, 1) }}" class="task-worker-image" alt="worker image">
-        <div class="task-worker-info">
+<div class="task" id="task-{{$task->id}}">
+    <div class="task-content">
+        <div class="task-text">
+            <img src="{{ getImageUrl($task->user->avatar, 1) }}" class="task-worker-image" alt="worker image">
             <div class="task-worker-name">{{ $worker_name }}</div>
-            <div class="task-worker-time">{{ createdTime($task) }}</div>
+            <p class="truncate-text" truncate="70">
+                {{$task->contenido}}
+            </p>
         </div>
-    </div>
-    <div class="task-text">
-        <p class="truncate-text" truncate="100">
-            {{$task->contenido}}
-        </p>
-    </div>
-    <div class="task-footer">
-        <div class="progress-container">
-            <div class="progress-bar-date">{{ $fecha_inicio }}</div>
-            <div class="progress-bar-container">
-                <div class="progress-bar-border">
-                    <div class="progress-bar" style="background-color: #94f261; width: {{ $barra_progreso }}%;"></div>
+        <div class="task-footer">
+            <div class="progress-container">
+                <div class="progress-bar-date">{{ $fecha_inicio }}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-border">
+                        <div class="progress-bar" style="background-color: #94f261; width: {{ $barra_progreso }}%;"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="progress-bar-text">{{ $barra_progreso }}%</div>
-            <div class="task-action-icons">
-                @if($task->user_id == auth()->id())
-                    <a class="fa fa-pencil-square-o task-buttons"></a>
-                    <a href="#" class="fa fa-trash task-buttons"></a>
-                @endif
-                <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('chat-box-{{$task->id}}')"></i>
+                <div class="progress-bar-text">{{ $barra_progreso }}%</div>
+                <div class="task-action-icons">
+                    @if($task->user_id == auth()->id())
+                        <a class="fa fa-pencil-square-o task-buttons"></a>
+                        <a href="#" class="fa fa-trash task-buttons"></a>
+                    @endif
+                    <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('chat-box-{{$task->id}}')"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -57,31 +54,36 @@
     .task {
         background-color: #ffffff;
         border-radius: 5px;
-        padding: 10px 8px 8px 10px;
-        margin-top: 8px;
+        padding: 10px 10px 8px 10px;
+        margin: 8px 3px 0px 3px;
         color: #333;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
-    .task-worker-header {
+    .task-content {
+        font-weight: bold;
+    }
+    .task-header {
         display: flex;
         align-items: center;
         margin-bottom: 5px;
     }
     .task-worker-image {
-        width: 24px;
-        height: 24px;
+        width: 25px;
+        height: 25px;
         border-radius: 50%;
-        margin-right: 5px;
+        float: right;
+        margin-left: 8px;
     }
     .task-worker-info {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        font-size: 12px;
         flex-grow: 1;
         max-width: calc(60%);
+        line-height: 1.2;
     }
     .task-worker-name {
+        font-size: 11px;
         font-weight: bold;
         margin: 0;
         white-space: nowrap;
@@ -90,10 +92,12 @@
     }
     .task-worker-time {
         color: gray;
-        font-size: 10px;
+        font-size: 7.5px;
     }
     .task-text {
-        font-size: 11px;
+        font-weight: 500;
+        font-size: 9.5px;
+        text-align: justify
     }
     .task-footer {
         margin-top: 3px;
@@ -129,7 +133,13 @@
         margin-top: 3px;
         margin-bottom: 5px;
         font-size: 12px;
-        scrollbar-width: none;
+        border-radius: 10px;
+    }
+    .task-chat-history::-webkit-scrollbar {
+        width: 2px;
+    }
+    .task-chat-history::-webkit-scrollbar-thumb {
+        background: #888;
         border-radius: 10px;
     }
     .task-chat-input {

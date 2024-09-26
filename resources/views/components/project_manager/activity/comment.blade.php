@@ -1,17 +1,11 @@
 <div class="comment-chat-message {{ $message_side }}" id="comment-{{$comment->id}}">
-    <div class="comment-header">
-        <img src="{{ getImageUrl($comment->user->avatar, 1) }}" class="comment-user-image" alt="User image">
-        <div class="comment-user-info">
-            <div class="comment-user-name">{{ $user_name }}</div>
-            <div class="comment-user-time">{{ createdTime($comment) }}</div>
-        </div>
-    </div>
     <div class="message-text">
+        <img src="{{ getImageUrl($comment->user->avatar, 1) }}" class="comment-user-image {{ $message_side }}" alt="User image">
         <p class="truncate-text" truncate="90">
             {{$comment->contenido}}
         </p>
         @if ($comment->foto)
-            <img src="{{ getImageUrl($comment->foto,2) }}" class="comment-image" alt="Comment image">
+            <img src="{{ getImageUrl($comment->foto, 2) }}" class="comment-image" alt="Comment image">
         @endif
     </div>
 </div>
@@ -33,21 +27,33 @@
         align-items: center;
         margin-bottom: 5px;
     }
+    .comment-chat-message.right .comment-header {
+        align-items: flex-end;
+    }
+    .comment-chat-message.right .comment-user-info {
+        align-items: flex-end;
+    }
     .comment-user-image {
-        width: 21px;
-        height: 21px;
+        width: 23px;
+        height: 23px;
         border-radius: 50%;
-        margin: 1px 5px 0px 0px;
+        float: left;
+        margin: 2px 4.5px 0px 0px;
+    }
+    .comment-chat-message.right .comment-user-image {
+        float: right;
+        margin: 2px 0px 0px 4.5px;
     }
     .comment-user-info {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        font-size: 10px;
         flex-grow: 1;
         max-width: calc(88%);
+        line-height: 1.1;
     }
     .comment-user-name {
+        font-size: 9px;
         font-weight: bold;
         margin: 0;
         white-space: nowrap;
@@ -56,13 +62,12 @@
     }
     .comment-user-time {
         color: gray;
-        font-size: 8.5px;
+        font-size: 8px;
     }
     .comment-chat-message .message-text {
-        margin-top: 4px;
-        margin-bottom: 3px;
-        margin-left: 3px;
-        font-size: 10.3px;
+        margin: 4px 3px 3px 3px;
+        font-size: 9px;
+        text-align: justify
     }
     .comment-image {
         width: 100%;
@@ -71,6 +76,4 @@
         border-radius: 5px;
         margin-top: 5px;
     }
-</style>
-    
 </style>

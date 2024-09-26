@@ -12,8 +12,8 @@
                 <div class="ibox ibox-activities">
                     <div class="ibox-title">
                         <div class="button-container">
-                            <x-btn-link url="{{ route('project_managers.index') }}" text="Proyectos" />
-                            <x-btn-link url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
+                            <x-btn-link url="{{ route('project_manager.index') }}" text="Proyectos" />
+                            <x-btn-link url="{{ route('project_manager.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
                         </div>
                         <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
                         <div class="ibox-tools">

@@ -48,10 +48,10 @@
 <style>
 .p-card {
     flex: 0 0 auto;
-    width: 300px;
+    width: 280px;
     border-radius: 8px;
-    padding: 11px;
-    margin-bottom: 10px;
+    padding: 10px;
+    padding-bottom: 6px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: black;
 }
@@ -65,17 +65,9 @@
     background-color: #ffffff;
     border-radius: 5px;
     padding: 10px 0px 8px 0px;
+    font-weight: bold;
     color: #333;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.p-card-text {
-    margin: 5px 10px 5px 10px;
-    font-size: 12px;
-}
-.p-card-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
 }
 .p-card-header {
     display: flex;
@@ -84,12 +76,21 @@
     margin: 0px 10px 0px 10px;
     position: relative;
 }
+.p-card-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+.p-card-text {
+    margin: 5px 10px 5px 10px;
+    font-size: 10.5px;
+}
 .p-card-footer {
     margin: 0px 10px 0px 10px;
 }
 .p-card-worker-image {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     margin-right: 5px;
     margin-left: 0px;
@@ -98,20 +99,23 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: 12px;
     flex-grow: 1;
     max-width: calc(60%);
+    line-height: 1.2;
 }
 .p-card-worker-name {
+    font-size: 11px;
     font-weight: bold;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .p-card-worker-time {
     color: gray;
-    font-size: 10px;
+    font-size: 7.5px;
+    margin-top: 0px;
 }
 .p-card-action-icons {
     display: flex;
@@ -123,15 +127,13 @@
     font-size: 14px;
 }
 .progress-container {
-    font-size: 1px;
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 1px;
-    font-size: 15px;
 }
 .progress-bar-date {
-    font-size: 10px;
+    font-size: 8.5px;
     margin-left: 0px;
     margin-right: 0px;
     color: gray;
@@ -152,16 +154,23 @@
     border-radius: 5px;
 }
 .progress-bar-text {
-    font-size: 10px;
+    font-size: 8px;
     margin-left: 0px;
     margin-right: 0px;
     color: gray;
 }
 .p-card-tasks-container {
-    max-height: 230px;
+    max-height: 188px;
     overflow-y: auto;
-    scrollbar-width: none;
     border-radius: 8px;
     margin-top: 8px;
+    padding: 0px 0px 8px 0px;
+}
+.p-card-tasks-container::-webkit-scrollbar {
+    width: 3px;
+}
+.p-card-tasks-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
 }
 </style>
