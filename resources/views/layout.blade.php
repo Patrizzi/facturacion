@@ -151,12 +151,13 @@
                         
                     </li>
                     <li style="background-color: #143593;">
-                    <hr class="bg-white" style="width: 100%; ">
+                    <hr class="bg-white" style="width: 100%; margin-bottom:">
                             <a class="nav-label" href="{{route('usuario.index')}}">
-                                <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 03" >@yield('nombre',auth()->user()->nombre)</span>
+                                <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 10px" >@yield('nombre',auth()->user()->nombre)</span>
                                 
                             </a>
                             <hr class="bg-white" style="width: 100%;"></li>
+                            
                             
                     {{-- MENU DESPELEGABLE --}}
                     @can('inicio')
