@@ -1,4 +1,78 @@
 <?php
+use Carbon\Carbon;
+
+function progressDate($start_date, $end_date){
+    $start_date = Carbon::parse($start_date);
+    $end_date = Carbon::parse($end_date);
+    $current_date = Carbon::today();
+
+    $total_time = $end_date->diffInSeconds($start_date);
+    $lapsed_time = $current_date->diffInSeconds($start_date);
+
+    if ($total_time <= 0 || $end_date < $start_date || $end_date < $current_date) {
+        return 100;
+    }
+
+    if ($start_date > $current_date) {
+        return 0;
+    }
+
+    $percent = round(($lapsed_time / $total_time) * 100);
+    return $percent;
+}
+
+function calculateWeeks($date1, $date2){
+    if (is_null($date1) || is_null($date2)) {
+        return 0;
+    }
+
+    $total_days = Carbon::parse($date2)->diffInDays(Carbon::parse($date1));
+    $total_weeks = ceil($total_days / 7) + 1;
+    return $total_weeks;
+}
+
+function calculateDays($date1, $date2){
+    $total_days = Carbon::parse($date2)->diffInDays(Carbon::parse($date1)) + 1;
+    return $total_days;
+}
+
+function createdTime($a)
+{
+    $timeElapsed = now()->diffInSeconds($a->created_at);
+    
+    switch (true) {
+        case $timeElapsed < 60:
+            return "{$timeElapsed}s";
+        case $timeElapsed < 3600:
+            return floor($timeElapsed / 60) . "min";
+        case $timeElapsed < 86400:
+            return floor($timeElapsed / 3600) . "h";
+        case $timeElapsed < 2592000:
+            return floor($timeElapsed / 86400) . "d";
+        case $timeElapsed < 31536000:
+            return floor($timeElapsed / 2592000) . "m";
+        default:
+            return floor($timeElapsed / 31536000) . "a";
+    }
+}
+
+function getImageUrl($imagen, $option)
+{
+    return Str::startsWith($imagen, 'http') 
+        ? $imagen 
+        : asset(getImagePath($option) . $imagen);
+}
+
+function getImagePath($option)
+{
+    $paths = [
+        1 => "/profile/images/",
+        2 => "/archivos/imagenes/project_manager/",
+    ];
+
+    return $paths[$option] ?? null;
+}
+
 if (!function_exists('push_asset_once')) {
     /**
      * Evita que los estilos, scripts u otros tipos de archivos se agreguen más de una vez, basándose en la extensión de archivo.
