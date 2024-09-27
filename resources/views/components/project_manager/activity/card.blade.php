@@ -160,11 +160,13 @@
     color: gray;
 }
 .p-card-tasks-container {
-    max-height: 188px;
+    max-height: 98px;
     overflow-y: auto;
     border-radius: 8px;
     margin-top: 8px;
     padding: 0px 0px 8px 0px;
+    transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    scroll-snap-type: y mandatory;
 }
 .p-card-tasks-container::-webkit-scrollbar {
     width: 3px;

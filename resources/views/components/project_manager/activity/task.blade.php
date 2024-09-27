@@ -21,7 +21,7 @@
                         <a class="fa fa-pencil-square-o task-buttons"></a>
                         <a href="#" class="fa fa-trash task-buttons"></a>
                     @endif
-                    <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('chat-box-{{$task->id}}')"></i>
+                    <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('{{$task->actividad->id}}', '{{$task->id}}')"></i>
                 </div>
             </div>
         </div>
@@ -55,9 +55,10 @@
         background-color: #ffffff;
         border-radius: 5px;
         padding: 10px 10px 8px 10px;
-        margin: 8px 3px 0px 3px;
+        margin: 5px 3px 0px 3px;
         color: #333;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        scroll-snap-align: center;
     }
     .task-content {
         font-weight: bold;
@@ -128,7 +129,7 @@
         transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
     }
     .task-chat-history {
-        max-height: 120px;
+        max-height: 180px;
         overflow-y: auto;
         margin-top: 3px;
         margin-bottom: 5px;

@@ -12,8 +12,8 @@
                 <div class="ibox ibox-activities">
                     <div class="ibox-title">
                         <div class="button-container">
-                            <x-btn-link url="{{ route('project_manager.index') }}" text="Proyectos" />
-                            <x-btn-link url="{{ route('project_manager.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
+                            <x-btn-link url="{{ route('project_managers.index') }}" text="Proyectos" />
+                            <x-btn-link url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
                         </div>
                         <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
                         <div class="ibox-tools">
@@ -34,20 +34,32 @@
         </div>
     </div>
     <script>
-        function toggleChat(chatId) {
-            const chatBox = document.getElementById(chatId);
-            
-            if (!chatBox.classList.contains('active')) {
-                chatBox.style.margin = '5px 0px 5px 0px';
-                chatBox.style.padding = '6px';
-                chatBox.classList.add('active');
-                chatBox.style.maxHeight = chatBox.scrollHeight + 12 + 'px';
-            } else {
+        function toggleChat(activityId, taskId) {
+            const chatBox = document.getElementById('chat-box-' + taskId);
+            const tasksContainer = document.getElementById("tasks-container-" + activityId);
+
+            if (chatBox.classList.contains('active')) {
                 chatBox.style.maxHeight = '0';
                 chatBox.classList.remove('active');
                 chatBox.style.padding = '0';
                 chatBox.style.margin = '0';
+                tasksContainer.style.maxHeight = "98px";
+                return;
             }
+
+            const activeChatsInActivity = tasksContainer.querySelectorAll('.task-chat-box.active');
+            activeChatsInActivity.forEach(activeChat => {
+                activeChat.style.maxHeight = '0';
+                activeChat.classList.remove('active');
+                activeChat.style.padding = '0';
+                activeChat.style.margin = '0';
+            });
+
+            tasksContainer.style.maxHeight = "330px";
+            chatBox.style.margin = '5px 0px 5px 0px';
+            chatBox.style.padding = '6px';
+            chatBox.classList.add('active');
+            chatBox.style.maxHeight = chatBox.scrollHeight + 12 + 'px';
         }
 
         // Funciones auxiliares
