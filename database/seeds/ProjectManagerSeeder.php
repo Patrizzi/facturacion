@@ -13,97 +13,10 @@ class ProjectManagerSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
-
-        for ($i = 0; $i < 20; $i++) {
-            DB::table('users')->insert([
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'personal_id' => '1',
-                'password' => bcrypt('123456'),
-                'estado' => 1,
-                'confi_id' => $faker->numberBetween(1, 3),
-                'email_creado' => 0,
-                'almacen_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        $maxUsers = DB::table('users')->max('id');
-
-        for ($i = 0; $i < 10; $i++) {
-            DB::table('project_services')->insert([
-                'nombre' => $faker->word,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        $maxProjectServices = DB::table('project_services')->max('id');
-
-        for ($i = 0; $i < 5; $i++) {
-            DB::table('project_managers')->insert([
-                'ruc' => $faker->numerify('#########'),
-                'nombre' => $faker->company,
-                'centro_costo' => $faker->word,
-                'administrador_id' => $faker->numberBetween(1, $maxUsers),
-                'responsable_id' => $faker->numberBetween(1, $maxUsers),
-                'cliente_id' => 1,
-                'project_service_id' => $faker->numberBetween(1, $maxProjectServices),
-                'fecha_inicio' => $faker->dateTimeBetween('-1 year', 'now'),
-                'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
-                'prioridad' => $faker->numberBetween(1, 5),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        $maxProjectManagers = DB::table('project_managers')->max('id');
-
-        for ($i = 0; $i < 35; $i++) {
-            DB::table('activities')->insert([
-                'proyecto_id' => $faker->numberBetween(1, $maxProjectManagers),
-                'responsable_id' => $faker->numberBetween(1, $maxUsers),
-                'nombre' => $faker->word,
-                'contenido' => $faker->paragraph(2),
-                'fecha_inicio' => $faker->dateTimeBetween('-1 year', 'now'),
-                'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
-                'estado' => $faker->numberBetween(1, 5),
-                'color' => $faker->hexColor(),
-                // 'foto' => 'https://picsum.photos/400/200',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        $maxActividades = DB::table('activities')->max('id');
-
-        for ($i = 0; $i < 250; $i++) {
-            DB::table('tasks')->insert([
-                'actividad_id' => $faker->numberBetween(1, $maxActividades),
-                'user_id' => $faker->numberBetween(1, $maxUsers),
-                'contenido' => $faker->paragraph(2),
-                'fecha_inicio' => $faker->dateTimeBetween('-1 year', 'now'),
-                'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
-                'estado' => $faker->numberBetween(1, 5),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        $maxTasks = DB::table('tasks')->max('id');
-
-        for ($i = 0; $i < 2500; $i++) {
-            DB::table('comments')->insert([
-                'tarea_id' => $faker->numberBetween(1, $maxTasks),
-                'user_id' => $faker->numberBetween(1, $maxUsers),
-                'contenido' => $faker->paragraph(2),
-                // 'foto' => 'https://picsum.photos/400/200',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
+        factory(App\ProjectService::class)->create();
+        factory(App\ProjectManager::class)->create();
+        factory(App\Activity::class, 12)->create();
+        factory(App\Task::class, 120)->create();
+        factory(App\Comment::class, 420)->create();
     }
 }
