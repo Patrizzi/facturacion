@@ -162,6 +162,7 @@
                             
                             
                     {{-- MENU DESPELEGABLE --}}
+
                     @can('inicio')
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
                     @endcan
@@ -413,6 +414,26 @@
                         @endcan
                     </ul>
                 </li>
+                </li>
+                    <li style="background-color: #143593; ;">
+                    <hr class="bg-white" style="width: 100%; margin-top: 0rem" >
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <a class="nav-label" style="display: flex; align-items: center; margin-left: 5px;"  href="{{route('usuario.index')}}" >
+                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
+                            <div class="nav-label" style="margin-left: 10px;">
+                              <span class="block m-t-xs font-bold spans " style="font-size: 16px;" >@yield('nombre',auth()->user()->nombre)</span>
+                              <span class="block m-t-xs text-white font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
+                              
+                            </div>
+                            <div class="nav-label" style="margin-left: auto;">
+                            <i class="fa fa-ellipsis-v" style="color: white; font-size: 19px; margin-left: 30px;"></i>
+                            </div>
+                        </a>
+                        
+                    </div>
+                        
+                           
+                    </li>
                 {{--<li>
                   <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
