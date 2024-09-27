@@ -851,7 +851,7 @@ h5 {
   font-weight: 600;
 }
 .nav > li > a {
-  color: #a7b1c2;
+  color: #ffffff;
   font-weight: 600;
   padding: 14px 20px 14px 25px;
   display: block;
@@ -1019,11 +1019,11 @@ h5 {
   transition: all 0.4s;
 }
 ul.nav-second-level {
-  background: #293846;
+  background: #143593;
 }
 .nav > li.active {
-  border-left: 4px solid #19aa8d;
-  background: #293846;
+  border-left: 4px solid #FFFFFF;
+  background: #143593;
 }
 .nav.nav-second-level > li.active {
   border: none;
@@ -1032,10 +1032,10 @@ ul.nav-second-level {
   height: auto !important;
 }
 .nav-header a {
-  color: #DFE4ED;
+  color: #ffffff;
 }
 .nav-header .text-muted {
-  color: #8095a8 !important;
+  color: #ffffff !important;
 }
 .minimalize-styl-2 {
   padding: 4px 12px;

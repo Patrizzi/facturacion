@@ -140,23 +140,25 @@
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu">
-                    <li class="nav-header">
+                    <li class="nav-header" style="padding:30px 0px 10px 20px">
                         <div class="dropdown profile-element" style="left: 03%">
                             <a href="{{route('usuario.index')}}">
-                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 50px; height: 50px; margin-right: 15px;" />
-                            <span class="nav-label text-white" style="font-size: 16px; font-weight: bold; margin-top: 80px;">LEONOSOFT</span>
+                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; margin-right: 15px;" />
+                            <span class="nav-label text-white" style="font-size: 18px; font-weight: bold; margin-top: 80px;">LEONOSOFT</span>
                                                            
                             </a> 
                         </div>
                         
                     </li>
                     <li style="background-color: #143593;">
-                    <hr class="bg-white" style="width: 100%; margin-bottom:">
+                    <hr class="bg-white" style="width: 100%;">
+                        <div class="dropdown profile-element" style="left: 25px">
                             <a class="nav-label" href="{{route('usuario.index')}}">
-                                <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 10px" >@yield('nombre',auth()->user()->nombre)</span>
+                                <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 4px" >@yield('nombre',auth()->user()->nombre)</span>
                                 
                             </a>
-                            <hr class="bg-white" style="width: 100%;"></li>
+                        </div>    
+                            <hr class="bg-white" style="width: 100%; margin-bottom: 0rem;"></li>
                             
                             
                     {{-- MENU DESPELEGABLE --}}
