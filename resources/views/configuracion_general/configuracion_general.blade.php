@@ -14,91 +14,91 @@
                     <div class="row d-flex justify-content-between p-4">
                         <!-- Elementos de la fila -->
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button" >
                                 <a href="{{ route('almacen.index') }}">
-                                    <img class="rounded" src="{{asset('img/logos/almacen.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/almacen.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">ALMACÉN</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('apariencia.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/apariencia.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/apariencia.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">APARIENCIA</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success text-center dim tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('categoria.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/categoria.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/categoria.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('familia.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/familia.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/familia.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">FAMILIAS</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('garantia.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/garantia.png')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/garantia.png')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">GARANTÍA</p>
                                 </a>
                             </button>
                         </div>
 
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('marca.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/marca.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/marca.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">MARCAS</p>
                                 </a>
                             </button>
                         </div>
 
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('motivo.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/motivo.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/motivo.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">MOTIVO</p>
                                 </a>
                             </button>
                         </div>
-                        <div class="col-lg-3 col-md-6  d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                        <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('tipo_cambio.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/tipo-cambio.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/tipo-cambio.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('unidad-medida.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/unidad_medida.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/unidad_medida.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">U. DE MEDIDA</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('usuarios.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/usuarios.svg')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/usuarios.svg')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">USUARIOS</p>
                                 </a>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                            <button class="btn btn-success dim text-center tam" type="button">
+                            <button class="btn btn-success dim tam pt-4" type="button">
                                 <a href="{{route('validez.index')}}">
-                                    <img class="rounded" src="{{asset('img/logos/validez.png')}}" width="40px" alt="">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/validez.png')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
                                 </a>
                             </button>
@@ -202,8 +202,8 @@
 <style>
     /*Para el tamaño de los botones*/
     .tam{
-        min-width: 120px;
-        min-height: 120px;
+        min-width: 150px;
+        min-height: 150px;
     }
 </style>
 
