@@ -4,6 +4,9 @@ use App\Activity;
 use Faker\Generator as Faker;
 
 $factory->define(Activity::class, function (Faker $faker) {
+    $width = $faker->numberBetween(640, 1280);
+    $height = intval($width / 16 * 9);
+
     return [
         'proyecto_id' => App\ProjectManager::inRandomOrder()->first()->id,
         'responsable_id' => App\User::inRandomOrder()->first()->id,
@@ -13,6 +16,7 @@ $factory->define(Activity::class, function (Faker $faker) {
         'fecha_cierre' => $faker->dateTimeBetween('now', '+1 year'),
         'estado' => $faker->numberBetween(1, 5),
         'color' => $faker->hexColor,
+        'foto' => 'https://picsum.photos/' . $width . '/' . $height . '.webp',
         'created_at' => now(),
         'updated_at' => now(),
     ];
