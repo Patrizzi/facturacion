@@ -1,16 +1,8 @@
-<div class="comment-chat-message {{ $message_side }}" id="comment-{{$comment->id}}">
-    <div class="message-text">
-        <img src="{{ getImageUrl($comment->user->avatar, 1) }}" class="comment-user-image {{ $message_side }}" alt="User image">
-        <p class="truncate-text" truncate="90">
-            {{$comment->contenido}}
-        </p>
-        @if ($comment->foto)
-            <img src="{{ getImageUrl($comment->foto, 2) }}" class="comment-image" alt="Comment image">
-        @endif
-    </div>
-</div>
+@push('project-manager-styles') 
+@once
 <style>
     .comment-chat-message {
+        min-height: 40px;
         margin-bottom: 10px;
         padding: 5px;
         border-radius: 10px;
@@ -38,11 +30,11 @@
         height: 23px;
         border-radius: 50%;
         float: left;
-        margin: 2px 4.5px 0px 0px;
+        margin: 0px 4.5px 0px 0px;
     }
     .comment-chat-message.right .comment-user-image {
         float: right;
-        margin: 2px 0px 0px 4.5px;
+        margin: 0px 0px 0px 4.5px;
     }
     .comment-user-info {
         display: flex;
@@ -67,7 +59,6 @@
     .comment-chat-message .message-text {
         margin: 4px 3px 3px 3px;
         font-size: 9px;
-        text-align: justify
     }
     .comment-image {
         width: 100%;
@@ -77,3 +68,16 @@
         margin-top: 5px;
     }
 </style>
+@endonce
+@endpush
+<div class="comment-chat-message {{ $message_side }}" id="comment-{{$comment->id}}">
+    <div class="message-text">
+        <img src="{{ $user_foto }}" class="comment-user-image {{ $message_side }}" alt="User image">
+        <p class="truncate-text" truncate="90">
+            {{$comment->contenido}}
+        </p>
+        @if ($comment->foto)
+            <img src="{{ getImageUrl($comment->foto, 2) }}" class="comment-image" alt="Comment image">
+        @endif
+    </div>
+</div>

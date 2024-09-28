@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('project_manager.layout')
 @section('title', 'Proyectos')
-@section('content')
+@section('secondary-content')
 
     <!-- CSS Activities -->
     <link rel="stylesheet" href="{{ asset('css/project_managers/project_managers.css') }}">
@@ -37,13 +37,14 @@
         function toggleChat(activityId, taskId) {
             const chatBox = document.getElementById('chat-box-' + taskId);
             const tasksContainer = document.getElementById("tasks-container-" + activityId);
+            const taskElement = document.getElementById('task-' + taskId);
 
             if (chatBox.classList.contains('active')) {
                 chatBox.style.maxHeight = '0';
                 chatBox.classList.remove('active');
                 chatBox.style.padding = '0';
                 chatBox.style.margin = '0';
-                tasksContainer.style.maxHeight = "98px";
+                tasksContainer.style.maxHeight = "270px";
                 return;
             }
 
@@ -59,7 +60,9 @@
             chatBox.style.margin = '5px 0px 5px 0px';
             chatBox.style.padding = '6px';
             chatBox.classList.add('active');
-            chatBox.style.maxHeight = chatBox.scrollHeight + 12 + 'px';
+            chatBox.style.maxHeight = chatBox.scrollHeight + 24 + 'px';
+
+            taskElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // Funciones auxiliares
@@ -96,21 +99,22 @@
             });
 
             // Función para truncar texto
-            const truncarTextos = document.querySelectorAll('.truncate-text');
-
-            truncarTextos.forEach(parrafo => {
+            document.querySelectorAll('.truncate-text').forEach(parrafo => {
                 const longitud = parseInt(parrafo.getAttribute('truncate'));
-                const textoCompleto = parrafo.innerHTML.trim();
+                const textoCompleto = parrafo.textContent.trim();
 
                 if (textoCompleto.length > longitud) {
-                    const textoTruncado = textoCompleto.substring(0, longitud) + '<span class="ver-mas"> ...más</span>';
-                    parrafo.innerHTML = textoTruncado;
+                    const textoTruncado = textoCompleto.slice(0, longitud) + '... ';
+                    const botonVerMas = `<span class="ver-mas">más</span>`;
+                    const botonVerMenos = `<span class="ver-menos">menos</span>`;
+                    
+                    parrafo.innerHTML = textoTruncado + botonVerMas;
 
-                    parrafo.addEventListener('click', function(event) {
-                        if (event.target.classList.contains('ver-mas')) {
-                            parrafo.innerHTML = textoCompleto + '<span class="ver-menos"> ...menos</span>';
-                        } else if (event.target.classList.contains('ver-menos')) {
-                            parrafo.innerHTML = textoTruncado;
+                    parrafo.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('ver-mas')) {
+                            parrafo.innerHTML = textoCompleto + ' ' + botonVerMenos;
+                        } else if (e.target.classList.contains('ver-menos')) {
+                            parrafo.innerHTML = textoTruncado + botonVerMas;
                         }
                     });
                 }
