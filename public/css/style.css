@@ -1068,7 +1068,7 @@ ul.nav-second-level {
   display: none;
 }
 .navbar.navbar-static-top {
-  padding: 0;
+  padding: 10;
   width: 100%;
   align-items: inherit;
 }
