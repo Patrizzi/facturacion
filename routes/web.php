@@ -35,7 +35,26 @@ Route::group(
 		});
 
 		Route::resource('project_managers', 'ProjectManagerController');
-		
+
+		// Rutas anidadas para Cards, Tasks, y Comments
+		Route::resource('project_managers.cards', 'ActivityController')
+			->only('store', 'create', 'update', 'destroy')
+			->scoped([
+				'project_manager' => 'id'
+			]);
+
+		Route::resource('project_managers.cards.tasks', 'TaskController')
+			->only('store', 'create', 'update', 'destroy')
+			->scoped([
+				'card' => 'id'
+			]);
+
+		Route::resource('project_managers.cards.tasks.comments', 'CommentController')
+			->only('store', 'create')
+			->scoped([
+				'task' => 'id'
+			]);
+
 		Route::get('/project_managers/{project_manager}/cards/create', function ($project_manager) {
 		})->name('project_managers.cards.create');
 		Route::post('/project_managers/{project_manager}/cards', function ($project_manager) {
