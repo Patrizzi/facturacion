@@ -161,7 +161,7 @@
                         <a class="fa fa-pencil-square-o task-buttons"></a>
                         <a href="#" class="fa fa-trash task-buttons"></a>
                     @endif
-                    <i class="fa fa-comment task-buttons" onclick="toggleChat('{{$task->actividad->id}}', '{{$task->id}}')"></i>
+                    <i class="fa fa-comment task-buttons" onclick="toggleChat('{{$task->activity->id}}', '{{$task->id}}')"></i>
                 </div>
             </div>
         </div>
@@ -175,7 +175,7 @@
             </div>
         @endif
         <div class="task-chat-input">
-            <form action="{{ route('project_managers.card.task.comment.store', [$task->actividad->projectManager , $task->actividad, $task]) }}" enctype="multipart/form-data" method="post" class="chat-input-form">
+            <form action="{{ route('project_managers.card.task.comment.store', [$task->activity->project_manager , $task->activity, $task]) }}" enctype="multipart/form-data" method="post" class="chat-input-form">
                 @csrf
                 <label for="file-input-{{ $task->id }}" class="file-input-label">
                     <i class="fa fa-image"></i>
