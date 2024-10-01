@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class CardController extends Controller
+class ActivityController extends Controller
 {
     public function Create(){
         return "desde el controller del create";
