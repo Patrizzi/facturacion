@@ -131,6 +131,78 @@
     li::marker {
     content: none;
     }
+    .custom-container {
+        display: flex;
+        align-items: center;
+        border-radius: 12px; 
+        overflow: hidden;
+        width: 300px; 
+        height: 50px;
+        border: 3px solid #2641f8; 
+    }
+
+    .left-side {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #2641f8; 
+        color: white; 
+        width: 50%; 
+        height: 100%;
+    }
+
+    .right-side {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        color: #2641f8;
+        width: 50%; 
+        height: 100%; 
+    }
+
+    .link {
+        color: #2641f8; 
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .link:hover {
+        text-decoration: underline; 
+    }
+    .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #2641f8; 
+            border-radius: 30px; 
+            padding: 5px 20px;
+            background-color: white;
+            color: #2641f8; 
+            width: fit-content;
+            cursor: pointer;
+            text-decoration: none; 
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #2641f8; 
+            color: white; 
+        }
+
+        .logout-btn i {
+            margin-right: 10px; 
+            background-color: #2641f8; 
+            padding: 10px;
+            border-radius: 50%; 
+            color: white; 
+        }
+
+        .logout-btn:hover i {
+            background-color: white; 
+            color: #2641f8; 
+        }
+    
 
     
 
@@ -602,15 +674,21 @@
                             </div>
                         </div>  
                     </div>
-                    <div class="hide-on" >
-                        <div class="d-flex align-items-center text-white justify-content-center" style="border-radius: 10px; background-color: #2641f8; padding: 5px;">
-                            <i class="fa fa-bell fa-2x mx-3"></i>
-                            <span>3 de 20</span>
-                            <span class="ml-4" style="font-size: 25px;">|</span>
-                            <a class="hola" style="margin: 0 20px;">Enviar a Sunat</a>
+                
+                    <body>
+
+                        <div class="custom-container">
+                        <div class="left-side">
+                        <i class="fa fa-bell fa-2x mx-3"></i>
+                        <span>3 de 20</span>
                         </div>
-                    </div>
-                    <ul class="nav navbar-top-links navbar-right">
+                        <div class="right-side">
+                        <a class="link">Enviar a Sunat</a>
+                        </div>
+                        </div>
+
+                    </body>
+                    {{--<ul class="nav navbar-top-links navbar-right">
                         <div class="hide-on1">
                             <li class="dropdown" id="btn_popover">
                                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -687,17 +765,18 @@
                             </div>
                         </div>    
                         
-                    </ul>
+                    </ul>--}}
+
                     <div>
                         <li class=" mr-5" >
-                                <a href="{{ route('logout') }}"
+                                <a href="{{ route('logout') }}" class="logout-btn"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="text-white">
-                                        <i class="fa fa-sign-out fa-lg fa-3x" style="color: #2641f8;"></i>
+                                    
+                                <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             @csrf
                                         </form>
-                                    </span>
+                                    
                                 </a>
                         </li>
                     </div>
