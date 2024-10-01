@@ -151,18 +151,19 @@
                         
                     </li>
                     <li style="background-color: #143593;">
-                    <hr class="bg-white" style="width: 100%;">
-                        <div class="dropdown profile-element" style="left: 25px">
-                            <a class="nav-label" href="{{route('usuario.index')}}">
-                                <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 4px" >@yield('nombre',auth()->user()->nombre)</span>
-                                
-                            </a>
-                        </div>    
-                            <hr class="bg-white" style="width: 100%; margin-bottom: 0rem;"></li>
+                        <hr class="bg-white" style="width: 100%;">
+                            <div class="dropdown profile-element" style="left: 25px">
+                                <a class="nav-label" href="{{route('usuario.index')}}">
+                                    <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 4px" >@yield('nombre',auth()->user()->nombre)</span>
+                                    
+                                </a>
+                            </div>    
+                        <hr class="bg-white" style="width: 100%; margin-bottom: 0rem;">
+                    </li>
                             
                             
                     {{-- MENU DESPELEGABLE --}}
-
+                
                     @can('inicio')
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
                     @endcan
@@ -178,58 +179,14 @@
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-check fa-lg text-white"></i><span class="nav-label text-white">Garantias</span></a></li>
 
                     @if(empty($inventario))
-                 <li>
-                    <a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a>
-                    @elseif($inventario_inicial->estado==1)
-                    <li>
-                        <a href="{{route('kardex-entrada.show',$inventario_inicial->id)}}"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
-                        @else
-
-
-                        @can('inventario')
-                        <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg')}}" class="iconos">  <span class="nav-label">Inventario</span></a>
-                            <ul class="nav nav-second-level collapse">
-                                @can('inventario-productos_kardex')
-                                <li>
-                                    <a href="#"><span>Kardex-Producto</span></a>
-                                    <ul class="nav nav-third-level">
-                                        @can('inventario-productos_kardex-entrada_producto.index')
-                                        <li><a href="{{route('kardex-entrada.index')}}"><span>Entrada Producto</span></a></li>
-                                        @endcan
-                                        <li><a href="{{route('kardex-entrada-Distribucion.index')}}"><span>Distribución Producto</span></a></li>
-                                        <li><a href="{{route('kardex-entrada-Traslado-almacen.index')}}"><span>Traslado de Almacén </span></a></li>
-                                        @can('inventario-productos_kardex-salida_producto.index')
-                                        <li><a href="{{route('kardex-salida.index')}}"><span>Salida Producto</span></a></li>
-                                        @endcan
-
-                                    </ul>
-                                </li>
-                                @endcan
-                                @endif
-
-                                {{-- <li><a href="{{route('pagados.index')}}">Pagados</a></li> --}}
-                        {{-- @can('inventario-productos-inventario_inicial.index')
-                        <li><a href="{{route('inventario-inicial.index')}}">Inventario Inicial</a></li>
-                        @endcan --}}
-                        @can('inventario-toma_de_inventario.index')
-                        <li><a href="{{route('periodo-consulta.index')}}"><span>Consultas de inventario</span></a></li><!-- Periodo Consulta -->
-                        @endcan
-                        <li><a href="{{route('cierre-periodo.index')}}"><span>Cierre Periodo</span></a></li>
-                        <li><a href="{{route('movimiento-consulta.index')}}"><span>Movimiento Consulta</span></a></li>
-                    </ul>
-                </li>
-                @endif
+                    <li><a href="{{route('kardex-entrada.create')}}"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label text-white">Inventario</span></a></li>
+                    
+                    
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span class="nav-label text-white">Creditos y Cobranzas</span></a></li>
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-server fa-lg text-white"></i><span class="nav-label text-white">Sire - Sunat</span></a></li>
-                  
-                    
-
-
-
-                    @can('transacciones')
+                
                     <li>
 
                      {{-- <a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i> <span class="nav-label text-white">Comercialización</span></a>--}}
@@ -280,130 +237,130 @@
                          <li><a href="{{route('garantia_informe_tecnico.index')}}"><span>Informe Técnico</span></a></li>
                          @endcan
 
-                     </ul>
-                 </li>
-                @endcan
-                <li>
-                {{--    <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i> <span class="nav-label text-white">Créditos</span></a>--}}
-                    <ul class="nav nav-second-level collapse">
-                        <li>
-                            {{-- <a href="#">Pagos</a>
-                            <ul class="nav nav-third-level"> --}}
-                                <li><a href="{{route('pagos.view_facturas')}}">Facturas</a></li>
-                                <li><a href="{{route('pagos.view_facturas_m')}}">Facturas M.</a></li>
-                                <li><a href="{{route('pagos.view_boletas')}}">Boletas</a></li>
-                                <li><a href="{{route('pagos.view_boletas_m')}}">Boletas M.</a></li>
-                                <li><a href="{{route('pagos.view_nota_venta')}}">Nota de Venta</a></li>
-                                {{-- <li><a href="">Cobrar</a></li> --}}
-                            {{-- </ul> --}}
-                        </li>
-                        {{-- <li><a href="#">Registro de Cuotas</a></li>
-                        <li><a href="#">Recibos</a></li> --}}
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                    @endcan
+                    <li>
+                    {{--    <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i> <span class="nav-label text-white">Créditos</span></a>--}}
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                {{-- <a href="#">Pagos</a>
+                                <ul class="nav nav-third-level"> --}}
+                                    <li><a href="{{route('pagos.view_facturas')}}">Facturas</a></li>
+                                    <li><a href="{{route('pagos.view_facturas_m')}}">Facturas M.</a></li>
+                                    <li><a href="{{route('pagos.view_boletas')}}">Boletas</a></li>
+                                    <li><a href="{{route('pagos.view_boletas_m')}}">Boletas M.</a></li>
+                                    <li><a href="{{route('pagos.view_nota_venta')}}">Nota de Venta</a></li>
+                                    {{-- <li><a href="">Cobrar</a></li> --}}
+                                {{-- </ul> --}}
+                            </li>
+                            {{-- <li><a href="#">Registro de Cuotas</a></li>
+                            <li><a href="#">Recibos</a></li> --}}
+                        </ul>
+                    </li>
 
-                @can('planilla')
-                <li>
-                <a href="#"><i class="fa fa-table fa-lg text-white"></i>
-                <span class="nav-label text-white">Planilla</span> 
-                <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 110px"></i>
-                </a> 
+                    @can('planilla')
+                    <li>
+                    <a href="#"><i class="fa fa-table fa-lg text-white"></i>
+                    <span class="nav-label text-white">Planilla</span> 
+                    <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 110px"></i>
+                    </a> 
 
-                    
-                    <ul class="nav nav-second-level collapse">
-                        @can('planilla-datos_generales.index')
-                        <li><a href="{{route('personal.index')}}"><span>Personal</span></a></li>
-                        @endcan
-                        @can('planilla-vendedores.index')
-                        <li><a href="{{route('vendedores.index')}}"><span>Vendedores</span></a></li>
-                        @endcan
-                        <li><a href="{{route('vehiculo.index')}}"><span>Vehículos</span></a></li>
-
-                    </ul>
-                </li>
-                @endcan
-                @can('consultas')
-                <li>
-                    <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 100px;"></i></a>
-                    <ul class="nav nav-second-level collapse">
-                        @can('consultas-garantias')
-                        <li>
-                            <a href="#"><span>Garantias</span></a>
-                            <ul class="nav nav-third-level">
-                                @can('consultas-garantias-guia_ingreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}"><span>Guía Ingreso</span></a></li>
-                                @endcan
-                                @can('consultas-garantias-guia_egreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_egreso')}}"><span>Guía Egreso</span></a></li>
-                                @endcan
-                                @can('consultas-garantias-informe_tecnico.index')
-                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}"><span>Informe Técnico</span></a></li>
-                                @endcan
-                            </ul>
-                        </li>
-                        @endcan
-                        {{-- @can('consulta.cantidad_precio.index') --}}
-                        <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
-                        <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li>
-                        {{-- @endcan --}}
-                    </ul>
-                </li>
-                @endcan
-                <li>
-                    <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 65px;"></i></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 115px;"></i></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
-                        <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
-                        <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
-
-                    </ul>
-                </li>
-                <li><a href="{{route('eventos.user_indes')}}">
-                        <i class="fa fa-calendar fa-lg text-white"></i> <span class="nav-label text-white">Calendario&nbsp;&nbsp;&nbsp;</span>
-                        @if ($count_eventos > 0)
-                            <span class="label label-warning">{{$count_eventos}}</span>    
-                        @endif
                         
-                    </a>
-                </li>
-                @can('auxiliares')
-                <li>
-                {{--   <a href="#"><i class="fa fa-life-ring fa-lg text-white"></i><span class="nav-label text-white">Auxiliares</span></a> --}}
-                    <ul class="nav nav-second-level collapse">
-                        @can('auxiliares-clientes.index')
-                        <li><a href="{{route('cliente.index')}}"><span>Clientes</span></a></li>
-                        @endcan
-                        @can('auxiliares-provedores.index')
-                        <li><a href="{{route('provedor.index')}}"><span>Proveedores</span></a></li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcan
+                        <ul class="nav nav-second-level collapse">
+                            @can('planilla-datos_generales.index')
+                            <li><a href="{{route('personal.index')}}"><span>Personal</span></a></li>
+                            @endcan
+                            @can('planilla-vendedores.index')
+                            <li><a href="{{route('vendedores.index')}}"><span>Vendedores</span></a></li>
+                            @endcan
+                            <li><a href="{{route('vehiculo.index')}}"><span>Vehículos</span></a></li>
 
-                @can('maestro')
-                <li>
-                    <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 30px;"></i></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
-                        <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                    @endcan
+                    @can('consultas')
+                    <li>
+                        <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 100px;"></i></a>
+                        <ul class="nav nav-second-level collapse">
+                            @can('consultas-garantias')
+                            <li>
+                                <a href="#"><span>Garantias</span></a>
+                                <ul class="nav nav-third-level">
+                                    @can('consultas-garantias-guia_ingreso.index')
+                                    <li><a href="{{route('consultas.garantias.guias_ingreso')}}"><span>Guía Ingreso</span></a></li>
+                                    @endcan
+                                    @can('consultas-garantias-guia_egreso.index')
+                                    <li><a href="{{route('consultas.garantias.guias_egreso')}}"><span>Guía Egreso</span></a></li>
+                                    @endcan
+                                    @can('consultas-garantias-informe_tecnico.index')
+                                    <li><a href="{{route('consultas.garantias.informe_tecnico')}}"><span>Informe Técnico</span></a></li>
+                                    @endcan
+                                </ul>
+                            </li>
+                            @endcan
+                            {{-- @can('consulta.cantidad_precio.index') --}}
+                            <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
+                            <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li>
+                            {{-- @endcan --}}
+                        </ul>
+                    </li>
+                    @endcan
+                    <li>
+                        <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 65px;"></i></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
+                            <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
+                            <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
+                            <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
+                            <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 115px;"></i></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
+                            <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
+                            <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
 
-                <li><a href="{{ route('inicio') }}"><i class="fa fa-th-large fa-lg text-white"></i><span class="nav-label text-white">Proyectos PMB</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{route('eventos.user_indes')}}">
+                            <i class="fa fa-calendar fa-lg text-white"></i> <span class="nav-label text-white">Calendario&nbsp;&nbsp;&nbsp;</span>
+                            @if ($count_eventos > 0)
+                                <span class="label label-warning">{{$count_eventos}}</span>    
+                            @endif
+                            
+                        </a>
+                    </li>
+                    @can('auxiliares')
+                    <li>
+                    {{--   <a href="#"><i class="fa fa-life-ring fa-lg text-white"></i><span class="nav-label text-white">Auxiliares</span></a> --}}
+                        <ul class="nav nav-second-level collapse">
+                            @can('auxiliares-clientes.index')
+                            <li><a href="{{route('cliente.index')}}"><span>Clientes</span></a></li>
+                            @endcan
+                            @can('auxiliares-provedores.index')
+                            <li><a href="{{route('provedor.index')}}"><span>Proveedores</span></a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                    @endcan
 
-                <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
+                    @can('maestro')
+                    <li>
+                        <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 30px;"></i></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
+                            <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
+                        </ul>
+                    </li>
 
-                <li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-th-large fa-lg text-white"></i><span class="nav-label text-white">Proyectos PMB</span></a></li>
+
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
+
+                    <li>
                     <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 75px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
@@ -413,42 +370,41 @@
                         <li><a href="{{route('empresa.index')}}"><span>Mi Empresa</span></a></li>
                         @endcan
                     </ul>
-                </li>
-                </li>
+                    </li>
+                    </li>
                     <li style="background-color: #143593; ;">
-                    <hr class="bg-white" style="width: 100%; margin-top: 0rem" >
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <a class="nav-label" style="display: flex; align-items: center; margin-left: 5px;"  href="{{route('usuario.index')}}" >
-                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
-                            <div class="nav-label" style="margin-left: 10px;">
-                              <span class="block m-t-xs font-bold spans " style="font-size: 14px;" >@yield('nombre',auth()->user()->nombre)</span>
-                              <span class="block m-t-xs text-white font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
-                              
+                        <hr class="bg-white" style="width: 100%; margin-top: 0rem" >
+                            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                                <a class="nav-label" style="display: flex; align-items: center; margin-left: 5px;"  href="{{route('usuario.index')}}" >
+                                    <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
+                                    <div class="nav-label" style="margin-left: 10px;">
+                                        <span class="block m-t-xs font-bold spans " style="font-size: 14px;" >Julio Flores Vicuña</span>
+                                        <span class="block m-t-xs text-white font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
+                                        
+                                    </div>
+                                    <div class="nav-label" style="margin-left: auto;">
+                                        <i class="fa fa-ellipsis-v" style="color: white; font-size: 19px; margin-left: 15px;"></i>
+                                    </div>
+                                </a>     
                             </div>
-                            <div class="nav-label" style="margin-left: auto;">
-                            <i class="fa fa-ellipsis-v" style="color: white; font-size: 19px; margin-left: 15px;"></i>
-                            </div>
-                        </a>
-                        
-                    </div>
                         
                            
                     </li>
-                {{--<li>
-                  <a href="{{ route('logout') }}"
-                  onclick="event.preventDefault();
-                  document.getElementById('logout-form').submit();"><i class="fa fa-power-off fa-lg text-white"></i><span class="nav-label text-white">
-                    Cerrar Sección
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </a>
-            </li>--}}
+                        {{--<li>
+                        <a href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();"><i class="fa fa-power-off fa-lg text-white"></i><span class="nav-label text-white">
+                            Cerrar Sección
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </a>
+                    </li>--}}
 
-            @endcan
+                    @endcan
 
-            {{-- MENU DESPELEGABLE --}}
-        </ul>
+                    {{-- MENU DESPELEGABLE --}}
+                </ul>
     </div>
 </nav>
 {{-- Menu Superior --}}
