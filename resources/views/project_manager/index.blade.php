@@ -12,8 +12,8 @@
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="button-container">
-                            <x-btn-link url="{{ route('project_managers.index') }}" text="Proyectos"  active="true" />
-                            <x-btn-link url="{{ route('project_managers.gantt.show') }}" text="Carta Gantt" />
+                            <x-ProjectManager.BtnLink url="{{ route('project_managers.index') }}" text="Proyectos"  active="true" />
+                            <x-ProjectManager.BtnLink url="{{ route('project_managers.gantt.index') }}" text="Carta Gantt" />
                         </div>
                     </div>
                 </div>

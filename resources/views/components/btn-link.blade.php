@@ -1,7 +1,5 @@
-@props(['url', 'text', 'active' => false])
-
 <div>
-    <button class="btn-project {{ $active ? 'btn-active' : '' }}" type="submit" onclick="window.location.href='{{ $url }}'">
+    <button class="btn-project {{ $isButtonActive() }}" type="submit" onclick="window.location.href='{{ $url }}'">
         {{ $text }}
     </button>
 </div>
