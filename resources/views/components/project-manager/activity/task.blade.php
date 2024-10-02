@@ -49,7 +49,7 @@
         min-height: 15px;
         font-weight: 500;
         font-size: 9.5px;
-        text-align: justify
+        /* text-align: justify */
     }
     .task-footer {
         margin-top: 3px;
