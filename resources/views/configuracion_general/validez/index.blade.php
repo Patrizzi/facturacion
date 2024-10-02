@@ -17,6 +17,20 @@
     </a>
 </div>
 @endif
+
+
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
 <!-- Modal Create  -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -97,11 +111,9 @@
                                                                                 <input type="checkbox" class="js-switch_{{$validezz->id}}" name="estado"  @if($validezz->estado==0) checked="" @endif />
                                                                            </div>
                                                                            @endif
-
                                                                        </div>
                                                                    </div>
                                                                </div>
-
                                                            </fieldset>
                                                            <button class="ladda-button btn btn-primary" type="submit">Guardar</button>
                                                        </form>
@@ -116,6 +128,87 @@
                            @endforeach
                        </tbody>
                    </table>
+
+
+
+                   <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
+                   <div class="parent" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 80px; align-items: center; text-align: center;">
+                       <div class="div1" style="grid-column-start: 1; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold; width: 60%; height: 180px; padding: 15px;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 1</p>
+                           <p>1 DIA</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div2" style="grid-column-start: 2; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 60%; height: 180px; padding: 15px;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 2</p>
+                           <p>7 DIAS</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div3" style="grid-column-start: 3; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 60%; height: 180px; padding: 15px;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 3</p>
+                           <p>15 DIAS</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div4" style="grid-column-start: 1; grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 60%; height: 180px; padding: 15px;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 4</p>
+                           <p>6 MESES</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div5" style="grid-column-start: 2; grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 60%; height: 180px; padding: 15px;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 5</p>
+                           <p>1 AÑO</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div6" style="grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold; width: 60%; height: 180px; padding: 15px;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 6</p>
+                           <p>3 AÑOS</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                   </div>
+                   <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
+
+
                </div>
            </div>
        </div>
@@ -167,3 +260,7 @@
 </script>
 @endforeach
 @endsection
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
