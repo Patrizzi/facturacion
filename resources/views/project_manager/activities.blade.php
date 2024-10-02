@@ -69,37 +69,40 @@
             taskElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // Funciones auxiliares
+        // Funciones auxiliares para el manejo de colores
         function invertColor(hex, bw) {
             hex = hex.replace(/^#/, '');
             if (hex.length === 3) hex = hex.split('').map(h => h + h).join('');
             if (hex.length !== 6) throw new Error('Hex invalido.');
             let [r, g, b] = [0, 2, 4].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
-            if (bw) return (r * 0.299 + g * 0.587 + b * 0.114) > 186 ? '#000000' : '#FFFFFF';
-            return '#' + [r, g, b].map(c => padZero((255 - c).toString(16))).join('');
+            return bw ? (r * 0.299 + g * 0.587 + b * 0.114) > 186 ? '#000000' : '#FFFFFF'
+                    : '#' + [r, g, b].map(c => padZero((255 - c).toString(16))).join('');
         }
 
-        function padZero(str, len) {
-            len = len || 2;
-            var zeros = new Array(len).join('0');
-            return (zeros + str).slice(-len);
+        function padZero(str, len = 2) {
+            return ('0'.repeat(len) + str).slice(-len);
         }
 
         function rgbToHex(rgb) {
             const result = rgb.match(/\d+/g).map(Number);
             return "#" + ((1 << 24) + (result[0] << 16) + (result[1] << 8) + result[2]).toString(16).slice(1).toUpperCase();
         }
-        /**/
+
+        const coloresGuardados = {};
+        const calculateTextColor = (bgColor) => {
+            if (!coloresGuardados[bgColor]) {
+                const hexColor = rgbToHex(bgColor);
+                coloresGuardados[bgColor] = invertColor(hexColor, true);
+            }
+            return coloresGuardados[bgColor];
+        };
 
         document.addEventListener('DOMContentLoaded', function() {
-
-            // Función para invertir el color titulo de la tarjeta respecto al color de la tarjeta
+            // Función para invertir el color del título de la tarjeta
             const cards = document.querySelectorAll('.p-card');
             cards.forEach(card => {
                 const bgColor = window.getComputedStyle(card).backgroundColor;
-                const hexColor = rgbToHex(bgColor);
-                const textColor = invertColor(hexColor, true);
-                card.querySelector('.p-card-title').style.color = textColor;
+                card.querySelector('.p-card-title').style.color = calculateTextColor(bgColor);
             });
 
             // Función para truncar texto

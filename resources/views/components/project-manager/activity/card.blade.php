@@ -6,7 +6,6 @@
             width: 280px;
             border-radius: 8px;
             padding: 10px;
-            padding-bottom: 6px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             color: black;
         }
