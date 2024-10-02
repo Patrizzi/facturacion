@@ -115,12 +115,12 @@
 
     /* Cuando el mouse pasa por encima del menú, este se expande */
     body.mini-navbar .navbar-static-side:hover {
-        width: 220px; /* Ancho expandido */
+        width: 150px; /* Ancho expandido */
         transition: width 0.7s ease;
     }
 
     body.mini-navbar .navbar-static-side:hover ~ #page-wrapper {
-        width: calc(100% - 220px);
+        width: calc(100% - 150px);
         transition: width 0.0s ease;
     }
 
@@ -128,6 +128,13 @@
     body.mini-navbar .logo-element {
         display: block;
     }
+  
+
+
+
+
+
+
     li::marker {
     content: none;
     }
@@ -142,7 +149,7 @@
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu">
-                    <li class="nav-header" style="padding:30px 0px 10px 20px">
+                    <li class="nav-header" style="padding:30px 0px 20px 20px">
                         <div class="dropdown profile-element" style="left: 03%">
                             <a href="{{route('usuario.index')}}">
                             <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; margin-right: 15px;" />
@@ -152,8 +159,7 @@
                         </div>
                         
                     </li>
-                    <li style="background-color: #143593;">
-                        <hr class="bg-white" style="width: 100%;">
+                    <li style="background-color: #15338a">
                             <div class="dropdown profile-element" style="left: 25px">
                                 <a class="nav-label" href="{{route('usuario.index')}}">
                                     <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 4px" >@yield('nombre',auth()->user()->nombre)</span>
@@ -375,7 +381,7 @@
                     </li>
                     </li>
                     <li style="background-color: #143593; ;">
-                        <hr class="bg-white" style="width: 100%; margin-top: 0rem" >
+                        
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <a class="nav-label" style="display: flex; align-items: center; margin-left: 5px;"  href="{{route('usuario.index')}}" >
                                     <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
@@ -747,30 +753,39 @@
         <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
         <script>
-            $(document).ready(function (){
-                // Bind normal buttons
-                Ladda.bind( '.ladda-button',{ timeout: 8000 });
-                $('#btn_popover').click();
-            });
-            setTimeout(function() {
+        $(document).ready(function () {
+            Ladda.bind('.ladda-button', { timeout: 8000 });
+            $('#btn_popover').click();
+
+            setTimeout(function () {
                 $('#btn_popover').popover('hide');
             }, 10000);
-            $(document).ready(function() {
-            // Forzar a que el menú comience en el estado reducido
-            $('body').addClass('mini-navbar');
 
-            // Deshabilitar el evento del botón si no quieres que se use más
-            $('.navbar-minimalize').off('click');
+            function applyMenuBehavior() {
+                if (window.matchMedia("(min-width: 768px)").matches) {
+                    $('body').addClass('mini-navbar');
+                    $('.navbar-minimalize').off('click');
 
-            // Manejar la expansión del menú con el hover
-            $('.navbar-static-side').hover(
-                function() {
-                    $('body').removeClass('mini-navbar'); // Expande el menú cuando el mouse pasa por encima
-                }, 
-                function() {
-                    $('body').addClass('mini-navbar'); // Reduce el menú cuando el mouse sale
+                    $('.navbar-static-side').hover(
+                        function () {
+                            $('body').removeClass('mini-navbar');
+                        },
+                        function () {
+                            $('body').addClass('mini-navbar');
+                        }
+                    );
+                } else {
+                    $('body').addClass('mini-navbar');
+                    $('.navbar-static-side').off('mouseenter mouseleave click');
                 }
-            );
+            }
+
+            applyMenuBehavior();
+
+            $(window).resize(function () {
+                applyMenuBehavior();
+            });
         });
         </script>
+
 </html>
