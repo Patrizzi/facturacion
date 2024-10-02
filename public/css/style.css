@@ -9471,6 +9471,111 @@ body.md-skin {
   position: fixed;
   display: none;
 }
+.custom-container {
+  display: flex;
+  align-items: center;
+  border-radius: 12px; 
+  overflow: hidden;
+  width: 300px; 
+  height: 50px;
+  border: 3px solid #2641f8; 
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2641f8; 
+  color: white; 
+  width: 50%; 
+  height: 100%;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: #2641f8;
+  width: 50%; 
+  height: 100%; 
+}
+
+.link {
+  color: #2641f8; 
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline; 
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  border: 3px solid #2641f8; /* Borde azul */
+  border-radius: 30px; /* Bordes redondeados */
+  padding: 2px 8px; /* Espaciado interno */
+  background-color: white;
+  color: #2641f8; /* Color del texto azul */
+  width: fit-content;
+  cursor: pointer;
+  text-decoration: none; /* Sin subrayado */
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background-color: #2641f8; /* Fondo azul al pasar el ratón */
+  color: white; /* Texto blanco al pasar el ratón */
+}
+
+.logout-btn i {
+  margin-right: 10px; /* Espacio entre el icono y el texto */
+  margin-left: -5px; /* Icono más cerca del borde izquierdo */
+  background-color: #2641f8; /* Fondo azul del icono */
+  padding: 10px;
+  border-radius: 50%; /* Icono redondeado */
+  color: white; /* Icono blanco */
+}
+
+.logout-btn:hover i {
+  background-color: white; /* Fondo del icono blanco al pasar el ratón */
+  color: #2641f8; /* Icono azul al pasar el ratón */
+}
+
+.message-btn {
+  display: flex;
+  align-items: center;
+  border: 3px solid #2641f8; /* Borde azul */
+  border-radius: 30px; /* Bordes redondeados */
+  padding: 2px 8px; /* Espaciado interno */
+  background-color: white;
+  color: #2641f8; /* Color del texto azul */
+  width: fit-content;
+  cursor: pointer;
+  text-decoration: none; /* Sin subrayado */
+  font-weight: bold;
+}
+
+.message-btn:hover {
+  background-color: #2641f8; /* Fondo azul al pasar el ratón */
+  color: white; /* Texto blanco al pasar el ratón */
+}
+
+.message-btn i {
+  margin-right: 10px; /* Espacio entre el icono y el texto */
+  margin-left: -5px; /* Icono más cerca del borde izquierdo */
+  background-color: #2641f8; /* Fondo azul del icono */
+  padding: 10px;
+  border-radius: 50%; /* Icono redondeado */
+  color: white; /* Icono blanco */
+}
+
+.message-btn:hover i {
+  background-color: white; /* Fondo del icono blanco al pasar el ratón */
+  color: #2641f8; /* Icono azul al pasar el ratón */
+}
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;
@@ -9598,21 +9703,18 @@ body.md-skin {
     margin: 0;
   }
 }
-
-@media (max-width: 1081px) {
-  .hide-on {
-      display: none;
-  }
-
-}
-@media (max-width: 820px) {
-  .hide-on1 {
-      display: none;
+@media (max-width: 1150px) {
+  .custom-container {
+      display: none; /* Ocultar el contenedor*/
   }
 }
-@media (max-width: 700px) {
-  .hide-on2 {
-      display: none;
+@media (max-width: 860px) {
+  .message-btn {
+      display: none; /* Ocultar el botón*/
   }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> 29ee7458ad5c816db1669b8f41599365917d249e
