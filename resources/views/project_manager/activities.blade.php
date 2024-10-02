@@ -23,10 +23,14 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="carousel-container">
-                            @foreach ($project_manager->activities as $activity)
+                        <div class="card-container">
+                            @foreach ($activities as $activity)
                                 <x-ProjectManager.Activity.Card :card="$activity"/>
                             @endforeach
+                        </div>
+                        <!-- Paginación -->
+                        <div class="pagination-wrapper">
+                            {{ $activities->links() }}
                         </div>
                     </div>
                 </div>
