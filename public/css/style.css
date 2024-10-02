@@ -998,7 +998,7 @@ h5 {
 
 .nav-header {
   padding: 33px 21px;
-  background-color: #143593;
+  background-color: #15338a;
   background-size: 100% 100%;
 
 }
@@ -1294,7 +1294,7 @@ body.canvas-menu .logo-element {
 }
 body.mini-navbar .nav-header {
   padding: 0;
-  background-color: #1538A0;
+  background-color: #15338a;
 }
 body.canvas-menu .nav-header {
   padding: 33px 25px;
@@ -9615,3 +9615,4 @@ body.md-skin {
       display: none;
   }
 }
+
