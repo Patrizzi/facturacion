@@ -1,0 +1,99 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.form-group{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    border-bottom: 1px solid rgb(224, 224, 224);
+
+}
+.form-cell{
+    padding: 10px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(224, 224, 224);
+}
+.form-cell label{
+    color: rgb(109, 109, 109);
+}
+.form-cell input{
+    border-radius: 3px;
+    color: rgb(99, 99, 99);
+    background-color: #ffffff;
+    border: 1px solid rgb(236, 236, 236);
+}
+.form-cell input,.form-cell label{
+    width: 100%;
+    height: 25px;
+}
+.form-cell input:focus{
+    outline:1px solid rgb(135, 209, 198);
+    
+}
+.form-cell input::placeholder{
+    color: rgb(184, 183, 183);
+}
+@media (max-width: 500px) {
+    .form-group {
+      grid-template-columns: 1fr;
+    }
+}
+.btnVolver{
+    text-align:end;
+}
+.btnVolver a{
+    margin: 0px 30px 0px 0px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    text-decoration:none;
+    color: rgb(240, 240, 240);
+    background-color: rgb(75, 75, 187);
+}
+.btnVolver a:hover {
+    background-color: rgb(61, 61, 185);
+}
+.btnCancelar{
+    display:inline-flex;
+}
+.btnCancelar a{
+    font-size: 16px;
+    padding: 9px 10px;
+    color: #ffffff;
+    border-radius: 3px;
+    text-decoration: none;
+    background-color: rgb(250, 93, 93);
+}
+.btnCancelar a:hover{
+    background-color: rgb(248, 80, 80);
+}
+.btnEnvioForm{
+    display: inline-block;
+}
+.btnEnvioForm button{
+    font-size: 15px;
+    margin: 10px 10px 10px 10px;
+    padding: 9px 15px;
+    color: #ffffff;
+    background-color: rgb(91, 84, 202);
+    border-radius: 3px;
+    border: 1px;
+
+}
+.btnEnvioForm button:hover{
+    background-color: rgb(85, 73, 252);
+}
+.btnEnvioForm button:active{
+    background-color: rgb(49, 161, 83);
+}
+.formEnvio,.formShow{
+    padding: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+}
+.formShow{
+    margin: 15px 30px;
+}
+.formShow input{
+    pointer-events: none;
+    background-color: #eceff0;
+}
