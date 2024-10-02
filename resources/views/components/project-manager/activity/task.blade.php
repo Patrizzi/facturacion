@@ -175,7 +175,7 @@
             </div>
         @endif
         <div class="task-chat-input">
-            <form action="{{ route('project_managers.card.task.comment.store', [$task->activity->project_manager , $task->activity, $task]) }}" enctype="multipart/form-data" method="post" class="chat-input-form">
+            <form action="{{ route('project_managers.cards.tasks.comments.store', [$task->activity->project_manager, $task->activity, $task]) }}" enctype="multipart/form-data" method="post" class="chat-input-form">
                 @csrf
                 <label for="file-input-{{ $task->id }}" class="file-input-label">
                     <i class="fa fa-image"></i>
