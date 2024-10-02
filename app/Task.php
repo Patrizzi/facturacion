@@ -21,7 +21,7 @@ class Task extends Model
     
     protected $dates = ['fecha_inicio', 'fecha_cierre'];
 
-    public function actividad(){
+    public function activity(){
         return $this->belongsTo(Activity::class, 'actividad_id');
     }
 

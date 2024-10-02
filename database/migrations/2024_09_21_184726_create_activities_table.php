@@ -16,7 +16,7 @@ class CreateActivitiesTable extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('proyecto_id')->constrained('project_managers')->onDelete('cascade');
-            $table->foreignId('responsable_id')->constrained('users');
+            $table->foreignId('responsable_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('nombre');
             $table->text('contenido');
             $table->date('fecha_inicio');

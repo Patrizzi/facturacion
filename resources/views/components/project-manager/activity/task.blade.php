@@ -1,63 +1,14 @@
-<div class="task" id="task-{{$task->id}}">
-    <div class="task-content">
-        <div class="task-text">
-            <img src="{{ getImageUrl($task->user->avatar, 1) }}" class="task-worker-image" alt="worker image">
-            <div class="task-worker-name">{{ $worker_name }}</div>
-            <p class="truncate-text" truncate="70">
-                {{$task->contenido}}
-            </p>
-        </div>
-        <div class="task-footer">
-            <div class="progress-container">
-                <div class="progress-bar-date">{{ $fecha_inicio }}</div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-border">
-                        <div class="progress-bar" style="background-color: #94f261; width: {{ $barra_progreso }}%;"></div>
-                    </div>
-                </div>
-                <div class="progress-bar-text">{{ $barra_progreso }}%</div>
-                <div class="task-action-icons">
-                    @if($task->user_id == auth()->id())
-                        <a class="fa fa-pencil-square-o task-buttons"></a>
-                        <a href="#" class="fa fa-trash task-buttons"></a>
-                    @endif
-                    <i class="fa fa-comment" style="cursor: pointer;" onclick="toggleChat('chat-box-{{$task->id}}')"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="task-chat-box" id="chat-box-{{$task->id}}">
-        @if ($task->comments->isNotEmpty())
-            <div class="task-chat-history" id="chat-history-{{$task->id}}">
-                @foreach ($task->comments as $comment)
-                    <x-ProjectManager.Activity.Comment :comment="$comment"/>
-                @endforeach
-            </div>
-        @endif
-        <div class="task-chat-input">
-            <form action="{{ route('project_manager.card.task.comment.store', [$task->actividad->projectManager , $task->actividad, $task]) }}" enctype="multipart/form-data" method="post" class="chat-input-form">
-                @csrf
-                <label for="file-input-{{ $task->id }}" class="file-input-label">
-                    <i class="fa fa-image"></i>
-                </label>
-                <input type="file" id="file-input-{{ $task->id }}" class="file-input" name="foto" />
-                <input type="text" name="contenido" placeholder="Escribe un mensaje..." class="form-control input-text">
-                <button type="submit">
-                    <i class="fa fa-paper-plane"></i>
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-
+@push('project-manager-styles')
+@once
 <style>
     .task {
         background-color: #ffffff;
         border-radius: 5px;
         padding: 10px 10px 8px 10px;
-        margin: 8px 3px 0px 3px;
+        margin: 5px 3px 0px 3px;
         color: #333;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        scroll-snap-align: center;
     }
     .task-content {
         font-weight: bold;
@@ -95,6 +46,7 @@
         font-size: 7.5px;
     }
     .task-text {
+        min-height: 15px;
         font-weight: 500;
         font-size: 9.5px;
         text-align: justify
@@ -119,7 +71,7 @@
         display: block;
         background-color: #f1f1f1;
         border-radius: 15px;
-        max-height: 0;
+        max-height: 0px;
         padding: 0px;
         margin: 0px;
         width: calc(100% - 5px);
@@ -128,7 +80,7 @@
         transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
     }
     .task-chat-history {
-        max-height: 120px;
+        max-height: 180px;
         overflow-y: auto;
         margin-top: 3px;
         margin-bottom: 5px;
@@ -149,6 +101,7 @@
     }
     .task-chat-input .chat-input-form {
         display: flex;
+        margin: 0px;
     }
     .task-chat-input input {
         flex-grow: 1;
@@ -183,3 +136,56 @@
         flex-grow: 1;
     }
 </style>
+@endonce
+@endpush
+<div class="task" id="task-{{$task->id}}">
+    <div class="task-content">
+        <img src="{{ $user_foto }}" class="task-worker-image" alt="worker image">
+        <div class="task-worker-name">{{ $user_name }}</div>
+        <div class="task-text">
+            <p class="truncate-text" truncate="70">
+                {{ $task->contenido ?: 'Sin contenido' }}
+            </p>
+        </div>
+        <div class="task-footer">
+            <div class="progress-container">
+                <div class="progress-bar-date">{{ $fecha_inicio }}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-border">
+                        <div class="progress-bar" style="background-color: #94f261; width: {{ $barra_progreso }}%;"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-text">{{ $barra_progreso }}%</div>
+                <div class="task-action-icons">
+                    @if($task->user_id == auth()->id())
+                        <a class="fa fa-pencil-square-o task-buttons"></a>
+                        <a href="#" class="fa fa-trash task-buttons"></a>
+                    @endif
+                    <i class="fa fa-comment task-buttons" onclick="toggleChat('{{$task->activity->id}}', '{{$task->id}}')"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="task-chat-box" id="chat-box-{{$task->id}}">
+        @if ($task->comments->isNotEmpty())
+            <div class="task-chat-history" id="chat-history-{{$task->id}}">
+                @foreach ($task->comments as $comment)
+                    <x-ProjectManager.Activity.Comment :comment="$comment"/>
+                @endforeach
+            </div>
+        @endif
+        <div class="task-chat-input">
+            <form action="{{ route('project_managers.cards.tasks.comments.store', [$task->activity->project_manager, $task->activity, $task]) }}" enctype="multipart/form-data" method="post" class="chat-input-form">
+                @csrf
+                <label for="file-input-{{ $task->id }}" class="file-input-label">
+                    <i class="fa fa-image"></i>
+                </label>
+                <input type="file" id="file-input-{{ $task->id }}" class="file-input" name="foto" />
+                <input type="text" name="contenido" placeholder="Escribe un mensaje..." class="form-control input-text">
+                <button type="submit">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

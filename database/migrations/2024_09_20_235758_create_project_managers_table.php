@@ -18,10 +18,10 @@ class CreateProjectManagersTable extends Migration
             $table->string('ruc');
             $table->string('nombre');
             $table->string('centro_costo');
-            $table->foreignId('administrador_id')->constrained('users');
-            $table->foreignId('responsable_id')->constrained('users');
+            $table->foreignId('administrador_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('responsable_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('cliente_id');
-            $table->foreignId('project_service_id');
+            $table->foreignId('project_service_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('fecha_inicio');
             $table->timestamp('fecha_cierre');
             $table->integer('prioridad')->default(1);

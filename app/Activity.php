@@ -24,7 +24,7 @@ class Activity extends Model
 
     protected $dates = ['fecha_inicio', 'fecha_cierre'];
 
-    public function projectManager(){
+    public function project_manager(){
         return $this->belongsTo(ProjectManager::class, 'proyecto_id');
     }
 

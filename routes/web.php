@@ -35,34 +35,25 @@ Route::group(
 		});
 
 		Route::resource('project_managers', 'ProjectManagerController');
-		
-		Route::get('/project_managers/{project_manager}/cards/create', function ($project_manager) {
-		})->name('project_managers.cards.create');
-		Route::post('/project_managers/{project_manager}/cards', function ($project_manager) {
-		})->name('project_managers.cards.store');
-		Route::get('/project_managers/{project_manager}/cards/{card}/edit', function ($project_manager, $card) {
-		})->name('project_managers.cards.edit');
-		Route::put('/project_managers/{project_manager}/cards/{card}', function ($project_manager, $card) {
-		})->name('project_managers.cards.update');
-		Route::delete('/project_managers/{project_manager}/cards/{card}', function ($project_manager, $card) {
-		})->name('project_managers.cards.destroy');
-		// tasks
-		Route::get('/project_managers/{project_manager}/cards/{card}/task/create', function ($project_manager, $card) {
-		})->name('project_manager.card.task.create');
-		Route::post('/project_managers/{project_manager}/cards/{card}/task/', function ($project_manager, $card) {
-		})->name('project_manager.card.task.store');
-		Route::get('/project_managers/{project_manager}/cards/{card}/task{task}/edit', function ($project_manager, $card, $task) {
-		})->name('project_manager.card.task.edit');
-		Route::put('/project_managers/{project_manager}/cards/{card}/task/{task}', function ($project_manager, $card, $task) {
-		})->name('project_manager.card.task.update');
-		Route::delete('/project_managers/{project_manager}/cards/{card}/task/{task}', function ($project_manager, $card, $task) {
-		})->name('project_manager.card.task.destroy');
-		// comments
-		Route::get('/project_managers/{project_manager}/cards/{card}/task/{task}/comment/create', function ($project_manager, $card, $task) {
-		})->name('project_manager.card.task.comment.create');
-		Route::post('/project_managers/{project_manager}/cards/{card}/task/{task}/comment/', function ($project_manager, $card, $task) {
-		})->name('project_manager.card.task.comment.store');
 
+		// Rutas anidadas para Cards, Tasks, y Comments
+		Route::resource('project_managers.cards', 'ActivityController')
+			->only('store', 'create', 'update', 'destroy')
+			->scoped([
+				'project_manager' => 'id'
+			]);
+
+		Route::resource('project_managers.cards.tasks', 'TaskController')
+			->only('store', 'create', 'update', 'destroy')
+			->scoped([
+				'card' => 'id'
+			]);
+
+		Route::resource('project_managers.cards.tasks.comments', 'CommentController')
+			->only('store', 'create')
+			->scoped([
+				'task' => 'id'
+			]);
 		// END
 
 		Route::post('configuracion_guias_ingresos', 'ConfiguracionGuiaIngresosController@store')->name('envio_confi_ingresos');
