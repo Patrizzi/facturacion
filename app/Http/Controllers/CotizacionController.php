@@ -94,13 +94,13 @@ class CotizacionController extends Controller
         $existe_id=Kardex_entrada::where('estado',2)->first();
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
-        $cotizacion=Cotizacion::all();
+        $cotizacion=Cotizacion::where('tipo', 'factura')->paginate(10);
         $user_login =auth()->user();
         $conteo_almacen=Almacen::where('estado',0)->count();
         $almacen=Almacen::where('estado',0)->get();
         $almacen_primero=Almacen::where('estado',0)->first();
         $igv = Igv::first();
-        
+        // return $cotizacion;
         return view('transaccion.venta.cotizacion.index2',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero','igv'));
     }
     /**

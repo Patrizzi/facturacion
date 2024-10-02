@@ -22,7 +22,7 @@
                                     </div>
                                     <h4 style="font-weight: bold; margin-top: 15px;">Cotización</h4>
                                     <p style="margin: 5px 0;">{{ $cotizacion_mes['cantidad'] }} Documentos</p>
-                                    <p style="color: green; font-weight: bold;">S/. {{ $cotizacion_mes['total'] }}</p>
+                                    <p style="color: green; font-weight: bold;">S/. {{ number_format(round($cotizacion_mes['total'],2),2) }}</p>
                                 </div>
                             </div>
                             <!-- Segundo Círculo -->

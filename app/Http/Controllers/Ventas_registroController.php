@@ -113,13 +113,18 @@ class Ventas_registroController extends Controller
     }
     public function cotizacion_registers(Request $request)
     {
-        // Obtén el valor del IGV para cálculos
-        $igv = Igv::first()->renta;
+        // return $request;
         $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-
-        $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(10);
-
+        $tipo = $request->tipo_coti;
+        // Datos 
+        $igv = Igv::first()->renta;
+        
+        if($tipo == null){
+            $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(10);
+        }else{
+            $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->where('tipo', $tipo)->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(10);
+        }
         // Formatear los datos con los cálculos necesarios
         $cotizaciones->getCollection()->transform(function ($cotizacion) use ($igv) {
             // Cálculo del subtotal
@@ -142,13 +147,12 @@ class Ventas_registroController extends Controller
             // Retorna converido la variable para el getcollection
             return $cotizacion;
         });
-        // return $cotizaciones;
-        // Retorna el JSON compatible con DataTables
-        return response()->json([
-            'data' => $cotizaciones->items(),  // Los datos de las cotizaciones paginados
-            'recordsTotal' => $cotizaciones->total(),  // Total de registros
-            'recordsFiltered' => $cotizaciones->total(),  // Total filtrado (puede ser igual al total si no hay filtros)
-        ]);
+        return $cotizaciones;
+        // return response()->json([
+        //     'data' => $cotizaciones,  // Los datos de las cotizaciones paginados
+        //     'recordsTotal' => $cotizaciones->total(),  // Total de registros
+        //     'recordsFiltered' => $cotizaciones->total(),  // Total filtrado (puede ser igual al total si no hay filtros)
+        // ]);
     }
 
     public function cotizacion_manual_tab()

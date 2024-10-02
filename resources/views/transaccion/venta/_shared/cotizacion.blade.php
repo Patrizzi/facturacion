@@ -4,17 +4,17 @@
             <div class="input-group">
                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                 <input class="form-control" type="text" name="daterange"
-                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" />
                 <span class="input-group-append">
-                    <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                    <button type="button" class="btn btn-secondary" id="revert_select">
                         <i class="fa fa-history"></i>
                     </button>
                 </span>
-                <span class="input-group-append">
+                {{-- <span class="input-group-append">
                     <button type="button" class="btn btn-primary" onclick="limpiar_select()">
                         <i class="fa fa-eraser"></i>
                     </button>
-                </span>
+                </span> --}}
             </div>
         </div>
         <div class="col-sm-4">
@@ -27,13 +27,15 @@
                 </select>
             </div>
         </div>
-        <!---->
         <div class="col-sm-4">
             <div class="form-group row">
                 <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
                 <input type="search" class="form-control col-lg-8">
             </div>
         </div>
+        {{-- <div class="col-sm-1">
+            <button class="btn btn-primary">Buscar</button>
+        </div> --}}
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-bordered dataTables-example-cotizacion">
@@ -74,6 +76,7 @@
                     <th style="display: none">Tipo de Cotizacion</th>
                 </tr>
             </tfoot> --}}
+
         </table>
     </div>
 </div>
@@ -126,7 +129,7 @@
                 {
                     data: 'total_conv',
                     name: 'total_conv',
-                    visible: false 
+                    visible: false
                 },
                 {
                     data: 'total',
@@ -139,7 +142,7 @@
                     searchable: false,
                     render: function(data, type, row) {
                         var url = '/cotizacion/' + row.id;
-                        if(row.estado_proceso == "Sin Proceso"){
+                        if (row.estado_proceso == "Sin Proceso") {
                             return `
                                 <a href="${url}">
                                     <button type="button" class="btn btn-primary">
@@ -148,7 +151,7 @@
                                 </a>
                                 <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>
                             `;
-                        }else{
+                        } else {
                             return `
                                 <a href="${url}">
                                     <button type="button" class="btn btn-primary">
@@ -166,12 +169,44 @@
                     visible: false
                 },
             ],
-            pageLength: 10,
             order: [
-                [1, 'asc']
+                [1, 'desc']
             ]
         });
-
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
         // Cuando cambia el rango de fechas
         $('input[name="daterange"]').on('change', function() {
             table.ajax.reload();
@@ -187,23 +222,16 @@
             table.search(this.value).draw();
         });
 
-        function limpiar_select() {
-            $('input[name="daterange"]').val('');
-            table.ajax.reload();
-        }
-
-        function revert_select() {
-            $('input[name="daterange"]').val('{{ date('m/01/Y') }} - {{ date('m/t/Y') }}');
-            table.ajax.reload();
-        }
+        $('#revert_select').on('click', function() {
+            $('input[name="daterange"]').val('{{ date('01/m/Y') }} - {{ date('t/m/Y') }}');
+            table.search(this.value).draw();
+        });
     });
-    $(document).ready(function(){
+
+    $(document).ready(function() {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
     });
-
-
-
 </script>
