@@ -48,9 +48,16 @@ class ProjectManagerController extends Controller
         return redirect()->route('project_managers.index');
     }
 
-    public function cards()
-    {
-        return view('project_manager.cards');
+    public function cards($id) {
+        $project_manager = ProjectManager::select('id', 'nombre')->findOrFail($id);
+        
+        $activities = $project_manager->activities()->with([
+            'responsable',
+            'tasks.user',
+            'tasks.comments.user'
+        ])->paginate(5);
+
+        return view('project_manager.activities', compact('project_manager', 'activities'));
     }
 
     public function gantt()
