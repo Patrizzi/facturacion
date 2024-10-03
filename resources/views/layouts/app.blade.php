@@ -34,7 +34,7 @@
 <body>
     <div id="wrapper">
         <x-side-menu />
-        <div id="page-wrapper">
+        <div id="page-wrapper" class="gray-bg">
             <x-nav-bar />
             @yield('content')
             <x-footer />
