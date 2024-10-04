@@ -12,8 +12,10 @@
         <span class="nav-label">{!! $menuItem->text !!}</span> 
 
         @if ($menuItem->notifications > 0)
-            &nbsp;&nbsp;&nbsp;
-            <span class="label label-warning">{{ $menuItem->notifications }}</span>
+            &nbsp;
+            <span class="label label-warning">
+                {{ $menuItem->notifications > 99 ? '+99' : $menuItem->notifications }}
+            </span>
         @endif
 
         @if ($menuItem->url == route('logout'))
