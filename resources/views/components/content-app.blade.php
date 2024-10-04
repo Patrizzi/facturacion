@@ -22,7 +22,7 @@
             @endforeach
         </div>
     </div>
-    <div class="wrapper wrapper-content">
-        {{ $slot }}
-    </div>
+</div>
+<div class="wrapper wrapper-content">
+    {{ $slot }}
 </div>
