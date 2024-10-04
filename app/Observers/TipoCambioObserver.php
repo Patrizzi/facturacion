@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Cliente;
 use App\TipoCambio;
-use App\servicios;
+use App\Servicios;
 use App\Moneda;
 use App\Nota_Credito;
 use App\Tipo_operacion_f;

@@ -82,7 +82,7 @@ class ProjectManager extends Model
 
     public function calculateDaysToDateClosing(Carbon $date): int
     {
-        return $date>diffInDays($this->fecha_cierre);
+        return $date->diffInDays($this->fecha_cierre);
     }
 
     public function calculateWeeksToDateClosing(Carbon $date): int

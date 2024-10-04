@@ -24,7 +24,7 @@ use App\Nota_Debito;
 use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\config_acc_guia;
-use App\Detracciones;
+use App\detracciones;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
