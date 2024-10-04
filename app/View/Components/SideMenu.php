@@ -194,7 +194,7 @@ class SideMenu extends Component
                 asset('/archivos/imagenes/layout/calendario.png'),
                 [],
                 [],
-                $count_eventos = EventosUsers::whereDate('start',Carbon::parse()->now())->where('user_id',auth()->user()->id)->count()
+                EventosUsers::whereDate('start',Carbon::parse()->now())->where('user_id',auth()->user()->id)->count()
             ),
 
             new MenuItemData(
@@ -231,12 +231,14 @@ class SideMenu extends Component
             ),
 
             new MenuItemData(
-                'Cerrar Session',
-                route('logout'),
-                asset('/archivos/imagenes/layout/logout.png'),
-                [],
-                ['maestro']
-            )
+                'Gestion de Proyectos',
+                route('project_managers.index'),
+                asset('/archivos/imagenes/project_manager/icon/pm-icon.png'),
+                [
+                    new MenuItemData('Lista de proyectos', route('project_managers.index')),
+                    new MenuItemData('Tabla Gantt', route('project_managers.gantt.index')),
+                ]
+            ),
         ];
     }
 

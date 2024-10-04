@@ -1,9 +1,6 @@
 @if ($menuItem->hasAccess())
 <li>
-    <a href="{{ $menuItem->url }}"
-        @if ($menuItem->url == route('logout'))
-            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-        @endif>
+    <a href="{{ $menuItem->url }}">
         
         @if ($menuItem->icon)
             <img src="{{ $menuItem->icon }}" class="iconos">
@@ -16,12 +13,6 @@
             <span class="label label-warning">
                 {{ $menuItem->notifications > 99 ? '+99' : $menuItem->notifications }}
             </span>
-        @endif
-
-        @if ($menuItem->url == route('logout'))
-            <form id="logout-form" action="{{ $menuItem->url }}" method="POST" style="display: none;">
-                @csrf
-            </form>
         @endif
     </a>
 

@@ -5,6 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Titulo')</title>
+    <style type="text/css">
+
+        :root {
+            --font-family: {{ auth()->user()->config->letra != 'none' ?? 'inherit' }};
+            --font-size: {{ auth()->user()->config->tamano_letra != '' ? auth()->user()->config->tamano_letra : 'inherit' }};
+            --font-size-span-select2: @if (empty(auth()->user()->config->tamano_letra) || auth()->user()->config->tamano_letra == 'smaller' ) font-size: small @else font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) @endif;
+            --nombre-color: {{ auth()->user()->config->color_nombre }};
+            --tamano-letra-perfil: {{ auth()->user()->config->tamano_letra_perfil }};
+            --color-sombra-nombre: {{ auth()->user()->config->color_sombra_nombre }};
+            --fondo-perfil: url("{{ asset('/css/patterns/') }}/{{ auth()->user()->config->fondo_perfil }}");
+            --borde-foto: {{ auth()->user()->config->borde_foto }};
+            --color-borde-foto: {{ auth()->user()->config->color_borde_foto }};
+        }
+    </style>
     {!! push_asset_once([
         asset('css/plugins/ladda/ladda-themeless.min.css'),
         asset('css/bootstrap.min.css'),
@@ -20,15 +34,10 @@
         asset('css/plugins/daterangepicker/daterangepicker-bs3.css'),
         asset('main.css'),
         asset('css/plugins/toastr/toastr.min.css'),
+        asset('css/layout/app.css'),
     ]) !!}
     @stack('css')
-    <style>
-        .iconos {
-            width: 20px;
-            border-radius: 0px;
-            margin-right: 10px
-        }
-    </style>
+    
 </head>
 
 <body>
