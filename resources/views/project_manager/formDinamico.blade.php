@@ -1,23 +1,44 @@
-<link rel="stylesheet" href="{{ asset('/css/project_managers/formDinamico.css') }}">
-
 <div class="form-group">
-    <x-form-dinamico name="nombre" label="Nombre:" type="text" placeholder="Ingrese el Nombre" value="{{old('nombre',$data->nombre ?? '')}}"/>
-
-    <x-form-dinamico name="centro_costo" label="Centro de Costo:" type="text" placeholder="Ingrese el Centro de Costo" value="{{old('centro_costo',$data->centro_costo ?? '')}}"/>
-    
-    <x-form-dinamico name="ruc" label="Ruc:" type="text" placeholder="Ingrese el Ruc" value="{{old('ruc',$data->ruc ?? '')}}"/>
-    
-    <x-form-dinamico name="administrador_id" label="Administrador:" type="number" placeholder="Ingrese al Administrador" value="{{old('administrador_id',$data->administrador_id ?? '')}}"/>
-    
-    <x-form-dinamico name="responsable_id" label="Responsable:" type="number" placeholder="Ingrese al Responsable" value="{{old('responsable_id',$data->responsable_id ?? '')}}"/>
-    
-    <x-form-dinamico name="project_service_id" label="Servicio:" type="number" placeholder="Ingrese el Servicio" value="{{old('project_service_id',$data->project_service_id ?? '')}}"/>
-    
-    <x-form-dinamico name="cliente_id" label="Cliente:" type="number" placeholder="Ingrese al Cliente" value="{{old('cliente_id',$data->cliente_id ?? '')}}"/>
-    
-    <x-form-dinamico name="fecha_inicio" label="Fecha de Inicio:" type="datetime-local" placeholder="Ingrese la Fecha de Inicio" value="{{old('fecha_inicio',$data->fecha_inicio ?? '')}}"/>
-    
-    <x-form-dinamico name="fecha_cierre" label="Fecha de Cierre:" type="datetime-local" placeholder="Ingrese la Fecha de Cierre" value="{{old('fecha_cierre',$data->fecha_cierre ?? '')}}"/>
-    
-    <x-form-dinamico name="prioridad" label="Prioridad:" type="number" placeholder="Ingrese la Prioridad" value="{{old('prioridad',$data->prioridad ?? '')}}"/>
+    <div class="form-cell"> 
+        <label for="name">Nombre:</label>
+        <input type="text" placeholder="Ingrese el Nombre" name="nombre" value="{{old('nombre',$data->nombre ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="centro_costo">Centro de Costo:</label>
+        <input type="text" placeholder="Ingrese el Centro de Costo" name="centro_costo" value="{{old('centro_costo',$data->centro_costo ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="ruc">Ruc:</label>
+        <input type="text" placeholder="Ingrese el Ruc" name="ruc" value="{{old('ruc',$data->ruc ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="administrador_id">Administrador:</label>
+        <input type="number" placeholder="Ingrese al Administrador" name="administrador_id" value="{{old('administrador_id',$data->administrador_id ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="responsable_id">Responsable:</label>
+        <input type="number" placeholder="Ingrese al Responsable" name="responsable_id" value="{{old('responsable_id',$data->responsable_id ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="project_service_id">Servicio:</label>
+        <input type="number" placeholder="Ingrese el Servicio" name="project_service_id" value="{{old('project_service_id',$data->project_service_id ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="cliente_id">Cliente:</label>
+        <input type="number" placeholder="Ingrese el Cliente" name="cliente_id" value="{{old('cliente_id',$data->cliente_id ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="fecha_inicio">Fecha de Inicio:</label>
+        <input type="datetime-local" placeholder="Ingrese la Fecha de Inicio" name="fecha_inicio" value="{{old('fecha_inicio',$data->fecha_inicio ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="fecha_cierre">Fecha de Cierre:</label>
+        <input type="datetime-local" placeholder="Ingrese la Fecha de Cierre" name="fecha_cierre" value="{{old('fecha_cierre',$data->fecha_cierre ?? '')}}" required>
+    </div>
+    <div class="form-cell"> 
+        <label for="prioridad">Prioridad:</label>
+        <input type="prioridad" placeholder="Ingrese la Prioridad" name="prioridad" value="{{old('prioridad',$data->prioridad ?? '')}}" required>
+    </div>
 </div>
+
+
