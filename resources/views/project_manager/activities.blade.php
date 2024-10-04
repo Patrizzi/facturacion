@@ -5,11 +5,24 @@
     @endonce
 @endpush
 @section('content')
-<x-content-app title="Titulo">
+<x-content-app title="Tarjetas del Proyecto" :buttons="
+    // Esto deberia ir en el controlador
+    $buttons = [
+        [
+            'text' => 'Proyectos',
+            'attributes' => ['href' => route('project_managers.index')],
+            'visible' => true,
+        ],
+        [
+            'text' => 'Tarjetas',
+            'attributes' => ['href' => route('project_managers.cards', $project_manager->id)],
+            'visible' => true,
+        ],
+    ]">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ibox-activities">
-                <div class="ibox-title">
+                {{-- <div class="ibox-title">
                     <div class="button-container">
                         <x-ProjectManager.BtnLink url="{{ route('project_managers.index') }}" text="Proyectos" />
                         <x-ProjectManager.BtnLink url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
@@ -20,7 +33,7 @@
                             <i class="fa fa-times"></i>
                         </a>
                     </div>
-                </div>
+                </div> --}}
                 <div class="ibox-content">
                     <div class="card-container">
                         @foreach ($activities as $activity)
