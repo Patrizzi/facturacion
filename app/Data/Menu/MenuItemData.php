@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Data\Menu;
-use \Illuminate\Support\Facades\Gate;
 
 class MenuItemData {
     public string $text;
@@ -43,14 +42,16 @@ class MenuItemData {
             throw new \InvalidArgumentException('Invalid subMenu item');
         }, $subMenus);
 
-        // Asignamos 'all' si no hay permisos definidos
-        $this->permissions = empty($permissions) ? ['all'] : $permissions;
+        $this->permissions = $permissions;
         $this->notifications = $notifications;
     }
 
     public function hasAccess(): bool
     {
-        // Si permissions es 'all' o está vacío, permite acceso
-        return in_array('all', $this->permissions) || Gate::any($this->permissions);
+        if (empty($this->permissions)) {
+            return true;
+        }
+
+        return auth()->user()->hasAnyPermission($this->permissions);
     }
 }
