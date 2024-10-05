@@ -11,7 +11,7 @@
                     <span class="nav-label">
                         <form id="logout-form" action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <input type="submit" value="Cerrar Sesión" style="font-weight: 600;color: #a7b1c2; border: none; background: transparent">
+                            <input type="submit" value="Cerrar Sección" style="font-weight: 600;color: #a7b1c2; border: none; background: transparent">
                         </form>
                     </span>
                 </a>

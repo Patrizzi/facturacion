@@ -21,7 +21,7 @@ class SideMenu extends Component
 
         $this->menuItems = [
             new MenuItemData(
-                'inicio',
+                'Inicio',
                 route('inicio'),
                 asset('/archivos/imagenes/layout/inicio.svg'),
                 [],

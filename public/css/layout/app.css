@@ -4,28 +4,18 @@
     margin-right: 10px
 }
 
-body {
-    font-family: var(--font-family) ;
-    font-size: var(--font-size) ;
-}
-
-.form-control, table, span {
-    font-family: var(--font-family) ;
-    font-size: var(--font-size) ;
-}
-
-span.select2-selection__placeholder {
-    font-size: var(--font-size-span-select2);
+.dropdown.profile-element {
+    left: 10%;
 }
 
 .spans {
-    color: var(--nombre-color) !important;
-    font-size: var(--tamano-letra-perfil);
-    text-shadow: 2px 2px 2px var(--color-sombra-nombre);
+    color: var(--config-color-nombre);
+    font-size: var(--config-font-size-perfil);
+    text-shadow: 2px 2px 2px var(--config-color-sombra-nombre);
 }
 
 .nav-header {
-    background-image: var(--fondo-perfil);
+    background-image: var(--config-fondo-perfil);
 }
 
 .btn-primary {
@@ -53,9 +43,10 @@ span.select2-selection__placeholder {
     text-align: left;
 }
 
-.rounded-circle {
+.rounded-circle{
     width: 120px;
-    border: var(--borde-foto) solid var(--color-borde-foto);
+    height: auto;
+    border: var(--config-border-foto) solid var(--config-color-border-foto);
 }
 
 .posta_a {
