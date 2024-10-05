@@ -24,6 +24,9 @@
                         @endforeach
                     </table>
                 </div>
+                <div class="pagination-wrapper">
+                    {{ $collection->links() }}
+                </div>
             </div>
         </div>
     </div>

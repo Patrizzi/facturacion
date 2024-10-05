@@ -2,23 +2,23 @@
 
 namespace App\View\Components;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class TableData extends Component {
+class DataTable extends Component {
     public string $table_id = "";
     public array $headers;
     public array $lambdas;
     /**
      * Create a new component instance.
      *
-     * @param Collection $collection
+     * @param LengthAwarePaginator $collection
      * @param array<string, Closure> $headersAndMethods
      * @param bool $hasEnum
      * @return void
      */
     public function __construct(
-        public Collection $collection,
+        public LengthAwarePaginator $collection,
         public array $headersAndMethods = [], 
         public bool $hasEnum = false
     ) {
@@ -36,6 +36,6 @@ class TableData extends Component {
      * @return \Illuminate\View\View|string
      */
     public function render() {
-        return view('components.table-data');
+        return view('components.data-table');
     }
 }
