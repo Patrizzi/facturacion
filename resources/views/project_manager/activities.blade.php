@@ -5,50 +5,39 @@
     @endonce
 @endpush
 @section('content')
-<x-content-app title="Tarjetas del Proyecto" :buttons="
-    // Esto deberia ir en el controlador
-    $buttons = [
-        [
-            'text' => 'Proyectos',
-            'attributes' => ['href' => route('project_managers.index')],
-            'visible' => true,
-        ],
-        [
-            'text' => 'Tarjetas',
-            'attributes' => ['href' => route('project_managers.cards', $project_manager->id)],
-            'visible' => true,
-        ],
-    ]">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ibox-activities">
-                {{-- <div class="ibox-title">
-                    <div class="button-container">
-                        <x-ProjectManager.BtnLink url="{{ route('project_managers.index') }}" text="Proyectos" />
-                        <x-ProjectManager.BtnLink url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
-                    </div>
-                    <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
-                    <div class="ibox-tools">
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div> --}}
-                <div class="ibox-content">
-                    <div class="card-container">
-                        @foreach ($activities as $activity)
-                            <x-ProjectManager.Activity.Card :card="$activity"/>
-                        @endforeach
-                    </div>
-                    <!-- Paginación -->
-                    <div class="pagination-wrapper">
-                        {{ $activities->links() }}
+    <x-content-app title="Tarjetas del Proyecto">
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ibox-activities">
+                        <div class="ibox-title">
+                            <div class="button-container">
+                                <x-ProjectManager.BtnLink url="{{ route('project_managers.index') }}" text="Proyectos" />
+                                <x-ProjectManager.BtnLink url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
+                            </div>
+                            <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
+                            <div class="ibox-tools">
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="card-container">
+                                @foreach ($activities as $activity)
+                                    <x-ProjectManager.Activity.Card :card="$activity"/>
+                                @endforeach
+                            </div>
+                            <!-- Paginación -->
+                            <div class="pagination-wrapper">
+                                {{ $activities->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</x-content-app>
+    </x-content-app>
 @endsection
 @push('js')
     @once
