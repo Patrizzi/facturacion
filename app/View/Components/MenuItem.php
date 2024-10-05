@@ -12,7 +12,8 @@ class MenuItem extends Component {
      * @return void
      */
     public function __construct(
-        public MenuItemData $menuItem
+        public MenuItemData $menuItem,
+        public int $level = 1
     ) {
         //
     }
@@ -24,5 +25,21 @@ class MenuItem extends Component {
      */
     public function render() {
         return view('components.menu-item');
+    }
+
+    public function getNextLevelMenu(): string {
+        return match ($this->level) {
+            1 => 'second',
+            2 => 'third',
+            default => '',
+        };
+    }
+
+    public function hasNotifications(): bool {
+        return $this->menuItem->notifications > 0;
+    }
+
+    public function notificationCount(): string {
+        return $this->menuItem->notifications > 99 ? '+99' : $this->menuItem->notifications;
     }
 }
