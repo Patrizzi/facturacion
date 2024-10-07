@@ -84,7 +84,7 @@ class Cotizacion extends Model
 
         $mes = array(
             "cantidad" => $cotizaciones->count(),
-            "total" => $total
+            "total" => number_format(round($total,2),2)
         );
 
         return $mes;

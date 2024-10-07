@@ -114,6 +114,8 @@ class Ventas_registroController extends Controller
     public function cotizacion_registers(Request $request)
     {
         // return $request;
+        // UNA VISTA POR CADA TAB AL REVEZ
+        
         $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
         $tipo = $request->tipo_coti;

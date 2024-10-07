@@ -12,57 +12,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            <!-- Primer Círculo -->
-                            <div class="col-md-3">
-                                <div
-                                    style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                    <div
-                                        style="border: 2px solid green; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
-                                        <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
-                                    </div>
-                                    <h4 style="font-weight: bold; margin-top: 15px;">Cotización</h4>
-                                    <p style="margin: 5px 0;">{{ $cotizacion_mes['cantidad'] }} Documentos</p>
-                                    <p style="color: green; font-weight: bold;">S/. {{ number_format(round($cotizacion_mes['total'],2),2) }}</p>
-                                </div>
-                            </div>
-                            <!-- Segundo Círculo -->
-                            <div class="col-md-3">
-                                <div
-                                    style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                    <div
-                                        style="border: 2px solid orange; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
-                                        <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
-                                    </div>
-                                    <h4 style="font-weight: bold; margin-top: 15px;">Cotización Manual</h4>
-                                    <p style="margin: 5px 0;">{{ $cotizacionM_mes['cantidad'] }} Documentos</p>
-                                    <p style="color: orange; font-weight: bold;">S/. {{ $cotizacionM_mes['total'] }}</p>
-                                </div>
-                            </div>
-                            <!-- Tercer Círculo -->
-                            <div class="col-md-3">
-                                <div
-                                    style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                    <div
-                                        style="border: 2px solid red; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
-                                        <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
-                                    </div>
-                                    <h4 style="font-weight: bold; margin-top: 15px;">Nota de Venta</h4>
-                                    <p style="margin: 5px 0;">{{ $nota_venta_mes['cantidad'] }} Documentos</p>
-                                    <p style="color: red; font-weight: bold;">S/. {{ $nota_venta_mes['total'] }}</p>
-                                </div>
-                            </div>
-                            <!-- Cuarto Círculo -->
-                            <div class="col-md-3">
-                                <div
-                                    style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                    <div
-                                        style="border: 2px solid blue; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
-                                        <i class="fa fa-user-o" style="font-size: 50px; color: black;"></i>
-                                    </div>
-                                    <h4 style="font-weight: bold; margin-top: 15px;">Clientes</h4>
-                                    <p style="margin: 5px 0;">5 Clientes</p>
-                                </div>
-                            </div>
+                            @include('transaccion\venta\_shared\statistics')
                         </div>
                     </div>
                 </div>
@@ -75,48 +25,7 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                <li class="nav-item">
-                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1" id="tab-1-tab">
-                                        <span class="badge badge-success" style="background-color :green;">4</span>
-                                        Cotización
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-2" id="tab-2-tab">
-                                        <span class="badge badge-success" style="background-color: orange;">4</span>
-                                        Cotización Manual
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-3" id="tab-3-tab">
-                                        <span class="badge badge-success" style="background-color: red;">3</span> Nota de
-                                        Venta
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-4">
-                                        <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
-                                    </a>
-                                </li>
-                                <div class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <div class="dropdown">
-                                        <button class="btn btn-success dropdown-toggle" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item" href="#" id="oficina-arequipa">Oficina
-                                                    Arequipa</a></li>
-                                            <li><a class="dropdown-item" href="#" id="galeria-centro-lima">Galería
-                                                    Centro Lima</a></li>
-                                        </ul>
-                                    </div>
-                                    <button class="btn btn-success" type="button">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                </div>
-                            </ul>
+                            @include('transaccion\venta\_shared\tabs')
                             <div class="tab-content">
                                 <!-- COTIZACION-->
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
@@ -259,19 +168,26 @@
             }
 
             // Cargar contenido de la pestaña 2 al hacer clic
-            $('#tab-2-tab').on('click', function() {
-                loadTabContent('#tab-2', '{{ route('ventas.cotizacion_manual') }}');
-            });
+            // $('#tab-2-tab').on('click', function() {
+            //     loadTabContent('#tab-2', '{{ route('ventas.cotizacion_manual') }}');
+            // });
 
             // Cargar contenido de la pestaña 3 al hacer clic
-            $('#tab-3-tab').on('click', function() {
-                loadTabContent('#tab-3', '{{ route('ventas.nota_venta') }}');
-            });
+            // $('#tab-3-tab').on('click', function() {
+            //     loadTabContent('#tab-3', '{{ route('ventas.nota_venta') }}');
+            // });
             // $('#tab-1').load('{{ route('ventas.cotizacion') }}');
 
             // $('#tab-2').load('{{ route('ventas.cotizacion_manual') }}');
 
             // $('#tab-3').load('{{ route('ventas.nota_venta') }}');
+
+            // VALIDADOR PARA EL COTIZACION
+
+
+            
+
+
         });
     </script>
     <!-- Seleccionar todos los check -->
@@ -313,7 +229,13 @@
             });
         });
     </script>
-
+    <script>
+        $(document).ready(function() {
+            table = $('.dataTables-example-facturacion').DataTable({
+                
+            });
+        });
+    </script>
     <!--Organizar-->
     {{-- <script>
                 $(document).ready(function() {

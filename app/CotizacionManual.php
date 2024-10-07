@@ -35,7 +35,7 @@ class CotizacionManual extends Model
     }
     public static function count_mes($fecha){
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
-         $fecha = "24-03-2022";
+        //  $fecha = "24-03-2022";
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
         $cotizacionesM  = CotizacionManual::whereDate('created_at', '=', $fecha_conv)->get();
         $moneda = Moneda::where('principal', '1')->first();
@@ -74,7 +74,7 @@ class CotizacionManual extends Model
         
         $mes = array(
             "cantidad" => $cotizacionesM->count(),
-            "total" => $total
+            "total" => number_format(round($total,2),2)
             // "total_dolares" => $total_dolares
         );
 
