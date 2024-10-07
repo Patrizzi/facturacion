@@ -22,21 +22,6 @@ function progressDate($start_date, $end_date){
     return $percent;
 }
 
-function calculateWeeks($date1, $date2){
-    if (is_null($date1) || is_null($date2)) {
-        return 0;
-    }
-
-    $total_days = Carbon::parse($date2)->diffInDays(Carbon::parse($date1));
-    $total_weeks = ceil($total_days / 7) + 1;
-    return $total_weeks;
-}
-
-function calculateDays($date1, $date2){
-    $total_days = Carbon::parse($date2)->diffInDays(Carbon::parse($date1)) + 1;
-    return $total_days;
-}
-
 function createdTime($a)
 {
     $timeElapsed = now()->diffInSeconds($a->created_at);
