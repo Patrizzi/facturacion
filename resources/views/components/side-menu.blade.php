@@ -3,7 +3,7 @@
         <ul class="nav metismenu" id="side-menu">
             <x-user-profile />
             @foreach ($menuItems as $item)
-                <x-menu-item :menuItem="$item" />
+                <x-menu-item :menu="$item" />
             @endforeach
             @can('maestro')
             <li>

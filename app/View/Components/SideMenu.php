@@ -4,241 +4,198 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 use Illuminate\Support\Carbon;
-use \Illuminate\Support\Facades\Gate;
-use App\Data\Menu\MenuItemData;
 use App\EventosUsers;
 use App\Kardex_entrada;
-use App\Almacen;
+use App\Builders\MenuItemBuilder;
 
-class SideMenu extends Component
-{
+class SideMenu extends Component {
     public array $menuItems;
 
-    public function __construct()
-    {
-        $inventario_inicial = Kardex_entrada::first();
-        $conteo_almacen = Almacen::count();
+    private function menu() {
+        return new MenuItemBuilder();
+    }
+
+    public function __construct() {
+        $inventarioInicial = Kardex_entrada::first();
+        $inventarioText = "Inventario";
+        $inventarioRoute = [];
+        $inventarioSubmenus = [];
+        $inventarioKardexSubmenus = [
+            $this->menu()->text('Entrada Producto')->route('kardex-entrada.index')
+                ->permissions('inventario-productos_kardex-entrada_producto.index')
+                ->build(),
+            $this->menu()->text('Distribución Producto')->route('kardex-entrada-Distribucion.index')
+                ->build(),
+            $this->menu()->text('Traslado de Almacén')->route('kardex-entrada-Traslado-almacen.index')
+                ->build(),
+            $this->menu()->text('Salida Producto')->route('kardex-salida.index')
+                ->permissions('inventario-productos_kardex-entrada_producto.index')
+                ->build(),
+        ];
+        $inventarioComercilizacionSubmenus = [
+            $this->menu()->text('Cotizaciones')->route('cotizacion.index')->build(),
+            $this->menu()->text('Cotizaciones M.')->route('cotizacion_manual.index')->build(),
+            $this->menu()->text('Facturación')->route('facturacion.index')->build(),
+            $this->menu()->text('Facturación M.')->route('facturacion_manual.index')->build(),
+            $this->menu()->text('Boleta')->route('boleta.index')->build(),
+            $this->menu()->text('Boleta M.')->route('boleta_manual.index')->build(),
+            $this->menu()->text('Nota Venta')->route('nota_venta.index')->build(),
+            $this->menu()->text('Nota Crédito')->route('nota-credito.index')->build(),
+        ];
+
+        if (!empty($inventarioInicial) && $inventarioInicial->estado == 1) {
+            $inventarioRoute = ['kardex-entrada.show', $inventarioInicial->id];
+        } else {
+            $inventarioText .= ' Inicial';
+            $inventarioRoute = ['kardex-entrada.create'];
+
+            $inventarioComercilizacionSubmenus = array_merge($inventarioComercilizacionSubmenus, [
+                $this->menu()->text('Guía Remisión')->route('guia_remision.index')->build(),
+                $this->menu()->text('Guía Remisión M.')->route('guia_remision_manual.index')->build(),
+                $this->menu()->text('Nota Débito')->route('nota-debito.index')->build(),
+            ]);
+
+            $inventarioSubmenus = [
+                $this->menu()->text('Kardex-Producto')->permissions('inventario-productos_kardex')
+                    ->submenus($inventarioKardexSubmenus)
+                    ->build(),
+                $this->menu()->text('Consultas de inventario')->route('periodo-consulta.index')
+                    ->permissions('inventario-toma_de_inventario.index')
+                    ->build(),
+                $this->menu()->text('Cierre Periodo')->route('cierre-periodo.index')
+                    ->build(),
+                $this->menu()->text('Movimiento Consulta')->route('movimiento-consulta.index')
+                    ->build(),
+            ];
+        }
 
         $this->menuItems = [
-            new MenuItemData(
-                'Inicio',
-                route('inicio'),
-                asset('/archivos/imagenes/layout/inicio.svg'),
-                [],
-                ['inicio']
-            ),
-            new MenuItemData(
-                'Comercialización',
-                '#',
-                asset('/archivos/imagenes/layout/comercializacion.svg'),
-                array_merge(
-                    [
-                        new MenuItemData('Cotizaciones', route('cotizacion.index')),
-                        new MenuItemData('Cotizaciones M.', route('cotizacion_manual.index')),
-                        new MenuItemData('Facturación', route('facturacion.index')),
-                        new MenuItemData('Facturación M.', route('facturacion_manual.index')),
-                        new MenuItemData('Boleta', route('boleta.index')),
-                        new MenuItemData('Boleta M.', route('boleta_manual.index')),
-                        new MenuItemData('Nota Venta', route('nota_venta.index')),
-                        new MenuItemData('Nota Crédito', route('nota-credito.index')),
-                    ],
-                    !empty($inventario_inicial) ? [
-                        new MenuItemData('Guía Remisión', route('guia_remision.index')),
-                        new MenuItemData('Guía Remisión M.', route('guia_remision_manual.index')),
-                        new MenuItemData('Nota Débito', route('nota-debito.index')),
-                    ] : []
-                ),
-                ['transacciones']
-            ),
-            
-            new MenuItemData(
-                'Servicio Técnico',
-                '#',
-                asset('/archivos/imagenes/layout/servicio_tecnico.png'),
-                [
-                    new MenuItemData('Guía Ingreso', route('garantia_guia_ingreso.index'), null, [], ['transacciones-garantias-guias_ingreso.index']),
-                    new MenuItemData('Guía Egreso', route('garantia_guia_egreso.index'), null, [], ['transacciones-garantias-guias_egreso.index']),
-                    new MenuItemData('Informe Técnico', route('garantia_informe_tecnico.index'), null, [], ['transacciones-garantias-informe_tecnico.index']),
-                ],
-                ['transacciones']
-            ),
-
-            new MenuItemData(
-                'Inventario'.(empty($inventario_inicial) || $inventario_inicial->estado == 1 ? ' Inicial' : ''),
-                !empty($inventario_inicial) ? (
-                    $inventario_inicial->estado == 1 
-                    ? route('kardex-entrada.show', $inventario_inicial->id) 
-                    : route('kardex-entrada.create')
-                ) : route('kardex-entrada.create'),
-                asset('/archivos/imagenes/layout/inventario.svg'),
-                !empty($inventario_inicial) && $inventario_inicial->estado != 1 ? [
-                    new MenuItemData(
-                        'Kardex-Producto',
-                        '#',
-                        null,
-                        [
-                            new MenuItemData(
-                                'Entrada Producto',
-                                route('kardex-entrada.index'),
-                                null,
-                                [],
-                                ['inventario-productos_kardex-entrada_producto.index']
-                            ),
-                            new MenuItemData(
-                                'Distribución Producto',
-                                route('kardex-entrada-Distribucion.index'),
-                                null
-                            ),
-                            new MenuItemData(
-                                'Traslado de Almacén',
-                                route('kardex-entrada-Traslado-almacen.index'),
-                                null
-                            ),
-                            new MenuItemData(
-                                'Salida Producto',
-                                route('kardex-salida.index'),
-                                null,
-                                [],
-                                ['inventario-productos_kardex-salida_producto.index']
-                            ),
-                        ],
-                        ['inventario-productos_kardex']
-                    ),
-                    new MenuItemData(
-                        'Consultas de inventario',
-                        route('periodo-consulta.index'),
-                        null,
-                        [],
-                        ['inventario-toma_de_inventario.index']
-                    ),
-                    new MenuItemData('Cierre Periodo', route('cierre-periodo.index')),
-                    new MenuItemData('Movimiento Consulta', route('movimiento-consulta.index')),
-                ] : [],
-                ['transacciones', 'inventario']
-            ),
-
-            new MenuItemData(
-                'Créditos',
-                '#',
-                asset('/archivos/imagenes/layout/payment.png'),
-                [
-                    new MenuItemData('Facturas', route('pagos.view_facturas')),
-                    new MenuItemData('Facturas M.', route('pagos.view_boletas')),
-                    new MenuItemData('Boletas', route('pagos.view_boletas')),
-                    new MenuItemData('Boletas M.', route('pagos.view_boletas_m')),
-                    new MenuItemData('Nota de Venta', route('pagos.view_nota_venta')),
-                ]
-            ),
-
-            new MenuItemData(
-                'Planilla',
-                '#',
-                asset('/archivos/imagenes/layout/planilla.svg'),
-                [
-                    new MenuItemData('Personal', route('personal.index'), null, [], ['planilla-datos_generales.index']),
-                    new MenuItemData('Vendedores', route('vendedores.index'), null, [], ['planilla-vendedores.index']),
-                    new MenuItemData('Vehículos', route('vehiculo.index')),
-                ],
-                ['planilla']
-            ),
-
-            new MenuItemData(
-                'Consultas',
-                '#',
-                asset('/archivos/imagenes/layout/consultas.svg'),
-                [
-                    new MenuItemData(
-                        'Garantias',
-                        '#',
-                        '',
-                        [
-                            new MenuItemData('Guia Ingreso', route('consultas.garantias.guias_ingreso'), null, [], ['consultas-garantias-guia_ingreso.index']),
-                            new MenuItemData('Guia Egreso', route('consultas.garantias.guias_egreso'), null, [], ['consultas-garantias-guia_egreso.index']),
-                            new MenuItemData('Informe Técnico', route('consultas.garantias.informe_tecnico'), null, [], ['consultas-garantias-informe_tecnico.index']),
-                        ],
-                        ['consultas-garantias']
-                    ),
-                    new MenuItemData('Productos', route('cantidad_precio.index')),
-                    new MenuItemData('Servicios', route('cantidad_precio.index_servicio')),
-                ],
-                ['consultas']
-            ),
-
-            new MenuItemData(
-                'Registros Sunat',
-                '#',
-                asset('/archivos/imagenes/layout/logo_sunat.png'),
-                [
-                    new MenuItemData('Facturas', route('facturacion_electronica.index')),
-                    new MenuItemData('Boletas', route('facturacion_electronica.index_boleta')),
-                    new MenuItemData('Guía Remisión', route('facturacion_electronica.index_guia_remision')),
-                    new MenuItemData('Nota de créditos', route('facturacion_electronica.index_nota_credito')),
-                    new MenuItemData('Nota de débitos', route('facturacion_electronica.index_nota_debito')),
-                ]
-            ),
-
-            new MenuItemData(
-                'Correo',
-                '#',
-                asset('/archivos/imagenes/layout/correo.svg'),
-                [
-                    new MenuItemData('Bandeja de Entrada', route('email.index')),
-                    new MenuItemData('Configuración', route('configuracion_email.index')),
-                    new MenuItemData('Papelera', route('email.trash'))
-                ]
-            ),
-
-            new MenuItemData(
-                'Calendario',
-                route('eventos.user_indes'),
-                asset('/archivos/imagenes/layout/calendario.png'),
-                [],
-                [],
-                EventosUsers::whereDate('start',Carbon::parse()->now())->where('user_id',auth()->user()->id)->count()
-            ),
-
-            new MenuItemData(
-                'Auxiliares',
-                '#',
-                asset('/archivos/imagenes/layout/auxiliar.svg'),
-                [
-                    new MenuItemData('Clientes', route('cliente.index'), null, [], ['auxiliares-clientes.index']),
-                    new MenuItemData('Proveedores', route('provedor.index'), null, [], ['auxiliares-provedores.index']),
-                ],
-                ['auxiliares']
-            ),
-
-            new MenuItemData(
-                'Productos y Servicios',
-                '#',
-                asset('/archivos/imagenes/layout/productos.svg'),
-                [
-                    new MenuItemData('Productos', route('productos.index')),
-                    new MenuItemData('Servicios', route('servicios.index')),
-                ],
-                ['maestro']
-            ),
-
-            new MenuItemData(
-                'Configuración',
-                '#',
-                asset('/archivos/imagenes/layout/configuracion.svg'),
-                [
-                    new MenuItemData('Configuración del Sistema', route('Configuracion'), null, [], ['maestro-catalogo-clasificacion']),
-                    new MenuItemData('Mi Empresa', route('empresa.index'), null, [], ['maestro-configuracion_general.mi_empresa.index']),
-                ],
-                ['maestro']
-            ),
-
-            new MenuItemData(
-                'Gestion de Proyectos',
-                route('project_managers.index'),
-                asset('/archivos/imagenes/project_manager/icon/pm-icon.png'),
-                [
-                    new MenuItemData('Lista de proyectos', route('project_managers.index')),
-                    new MenuItemData('Tabla Gantt', route('project_managers.gantt.index')),
-                ]
-            ),
+            $this->menu()
+                ->text('Inicio')
+                ->route('inicio')
+                ->permissions('inicio')
+                ->icon('/archivos/imagenes/layout/inicio.svg')
+                ->build(),
+            $this->menu()
+                ->text('Comercialización')
+                ->permissions('transacciones')
+                ->icon('/archivos/imagenes/layout/comercializacion.svg')
+                ->submenus($inventarioComercilizacionSubmenus)
+                ->build(),
+            $this->menu()
+                ->text('Servicio Técnico')
+                ->icon('/archivos/imagenes/layout/servicio_tecnico.png')
+                ->permissions('transacciones')
+                ->submenus([
+                    $this->menu()->text('Guía Ingreso')->route('garantia_guia_ingreso.index')->permissions('transacciones-garantias-guias_ingreso.index')->build(),
+                    $this->menu()->text('Guía Egreso')->route('garantia_guia_egreso.index')->permissions('transacciones-garantias-guias_egreso.index')->build(),
+                    $this->menu()->text('Informe Técnico')->route('garantia_informe_tecnico.index')->permissions('transacciones-garantias-informe_tecnico.index')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text($inventarioText)
+                ->route(...$inventarioRoute)
+                ->icon('/archivos/imagenes/layout/inventario.svg')
+                ->permissions(['transacciones', 'inventario'])
+                ->submenus($inventarioSubmenus)
+                ->build(),
+            $this->menu()
+                ->text('Créditos')
+                ->icon('/archivos/imagenes/layout/payment.png')
+                ->submenus([
+                    $this->menu()->text('Facturas')->route('pagos.view_facturas')->build(),
+                    $this->menu()->text('Facturas M.')->route('pagos.view_facturas_m')->build(),
+                    $this->menu()->text('Boletas')->route('pagos.view_boletas')->build(),
+                    $this->menu()->text('Boletas M.')->route('pagos.view_boletas_m')->build(),
+                    $this->menu()->text('Nota de Venta')->route('pagos.view_nota_venta')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Planilla')
+                ->icon('/archivos/imagenes/layout/planilla.svg')
+                ->permissions('planilla')
+                ->submenus([
+                    $this->menu()->text('Personal')->route('personal.index')->permissions('planilla-datos_generales.index')->build(),
+                    $this->menu()->text('Vendedores')->route('vendedores.index')->permissions('planilla-vendedores.index')->build(),
+                    $this->menu()->text('Vehículos')->route('vehiculo.index')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Consultas')
+                ->icon('/archivos/imagenes/layout/consultas.svg')
+                ->permissions('consultas')
+                ->submenus([
+                    $this->menu()->text('Garantias')->permissions('consultas-garantias')->submenus([
+                        $this->menu()->text('Guia Ingreso')->route('consultas.garantias.guias_ingreso')->permissions('consultas-garantias-guia_ingreso.index')->build(),
+                        $this->menu()->text('Guia Egreso')->route('consultas.garantias.guias_egreso')->permissions('consultas-garantias-guia_egreso.index')->build(),
+                        $this->menu()->text('Informe Técnico')->route('consultas.garantias.informe_tecnico')->permissions('consultas-garantias-informe_tecnico.index')->build(),
+                    ])->build(),
+                    $this->menu()->text('Productos')->route('cantidad_precio.index')->build(),
+                    $this->menu()->text('Servicios')->route('cantidad_precio.index_servicio')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Registros Sunat')
+                ->icon('/archivos/imagenes/layout/logo_sunat.png')
+                ->submenus([
+                    $this->menu()->text('Facturas')->route('facturacion_electronica.index')->build(),
+                    $this->menu()->text('Boletas')->route('facturacion_electronica.index_boleta')->build(),
+                    $this->menu()->text('Guía Remisión')->route('facturacion_electronica.index_guia_remision')->build(),
+                    $this->menu()->text('Nota de créditos')->route('facturacion_electronica.index_nota_credito')->build(),
+                    $this->menu()->text('Nota de débitos')->route('facturacion_electronica.index_nota_debito')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Correo')
+                ->icon('/archivos/imagenes/layout/correo.svg')
+                ->submenus([
+                    $this->menu()->text('Bandeja de Entrada')->route('email.index')->build(),
+                    $this->menu()->text('Configuración')->route('configuracion_email.index')->build(),
+                    $this->menu()->text('Papelera')->route('email.trash')->build()
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Calendario')
+                ->route('eventos.user_indes')
+                ->icon('/archivos/imagenes/layout/calendario.png')
+                ->count(EventosUsers::whereDate('start', Carbon::parse()->now())->where('user_id', auth()->user()->id)->count())
+                ->build(),
+            $this->menu()
+                ->text('Auxiliares')
+                ->icon('/archivos/imagenes/layout/auxiliar.svg')
+                ->permissions('auxiliares')
+                ->submenus([
+                    $this->menu()->text('Clientes')->route('cliente.index')->permissions('auxiliares-clientes.index')->build(),
+                    $this->menu()->text('Proveedores')->route('provedor.index')->permissions('auxiliares-provedores.index')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Productos y Servicios')
+                ->icon('/archivos/imagenes/layout/productos.svg')
+                ->permissions('maestro')
+                ->submenus([
+                    $this->menu()->text('Productos')->route('productos.index')->build(),
+                    $this->menu()->text('Servicios')->route('servicios.index')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Configuración')
+                ->icon('/archivos/imagenes/layout/configuracion.svg')
+                ->permissions('maestro')
+                ->submenus([
+                    $this->menu()->text('Configuración del Sistema')->route('Configuracion')->permissions('maestro-catalogo-clasificacion')->build(),
+                    $this->menu()->text('Mi Empresa')->route('empresa.index')->permissions('maestro-configuracion_general.mi_empresa.index')->build(),
+                ])
+                ->build(),
+            $this->menu()
+                ->text('Gestion de Proyectos')
+                ->route('project_managers.index')
+                ->icon('/archivos/imagenes/project_manager/icon/pm-icon.png')
+                ->submenus([
+                    $this->menu()->text('Lista de proyectos')->route('project_managers.index')->build(),
+                    $this->menu()->text('Tabla Gantt')->route('project_managers.gantt.index')->build(),
+                ])
+                ->build(),
         ];
     }
 
@@ -247,8 +204,7 @@ class SideMenu extends Component
      *
      * @return \Illuminate\View\View|string
      */
-    public function render()
-    {
+    public function render() {
         return view('components.side-menu');
     }
 }

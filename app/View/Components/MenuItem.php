@@ -3,19 +3,26 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
-use App\Data\Menu\MenuItemData;
+use App\Data\MenuItemData;
 
 class MenuItem extends Component {
+    static $MIN_LEVEL = 1;
+    static $MAX_LEVEL = 3;
+    public string $text;
+    public string $url;
+    public ?string $icon;
+    public array $submenus;
+
     /**
-     * Create a new component instance.
-     *
-     * @return void
+     * Component for SideMenu
+     * @param \App\Data\MenuItemData $menu
+     * @param int $level
      */
-    public function __construct(
-        public MenuItemData $menuItem,
-        public int $level = 1
-    ) {
-        //
+    public function __construct(public MenuItemData $menu, public int $nextLevel = 2) {
+        $this->text = $menu->getText();
+        $this->url = $menu->getRoute();
+        $this->icon = $menu->getIcon();
+        $this->submenus = $menu->getSubmenus();
     }
 
     /**
@@ -27,19 +34,14 @@ class MenuItem extends Component {
         return view('components.menu-item');
     }
 
-    public function getNextLevelMenu(): string {
-        return match ($this->level) {
-            1 => 'second',
-            2 => 'third',
-            default => '',
-        };
-    }
+    public function getClass(): ?string {
+        $classes = [
+            2 => 'nav nav-second-level collapse',
+            3 => 'nav nav-third-level collapse',
+        ];
 
-    public function hasNotifications(): bool {
-        return $this->menuItem->notifications > 0;
-    }
-
-    public function notificationCount(): string {
-        return $this->menuItem->notifications > 99 ? '+99' : $this->menuItem->notifications;
+        return $classes[$this->nextLevel]
+            ? 'class="' . $classes[$this->nextLevel] . '"'
+            : null;
     }
 }
