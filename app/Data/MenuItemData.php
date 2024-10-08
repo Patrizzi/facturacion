@@ -7,7 +7,7 @@ use App\Abstracts\MenuItemAbstract;
 class MenuItemData extends MenuItemAbstract {
 
     protected string $text;
-    protected string $route;
+    protected string|array $route;
     protected ?string $icon;
     protected array $submenus;
     protected array $permissions;
@@ -25,9 +25,7 @@ class MenuItemData extends MenuItemAbstract {
     public function __construct(private array $data) {
         $data = array_merge($this->attributes, $data);
         $this->text = $data['text'];
-        $this->route = is_array($data['route'])
-            ? route(...$data['route'])
-            : ($data['route'] !== "#" ? route($data['route']) : "#");
+        $this->route = $this->routeFormat($data['route']);
         $this->icon = !empty($data['icon']) ? asset($data['icon']) : '';
         $this->permissions = array_filter((array) $data['permissions']);
         $this->count = $data['count'];
@@ -43,6 +41,12 @@ class MenuItemData extends MenuItemAbstract {
 
             throw new \InvalidArgumentException('Invalid subMenu[] item');
         }, $data['submenus'] ?? []);
+    }
+
+    private function routeFormat(string|array $data) {
+        return is_array($data)
+            ? route(...$data)
+            : ($data !== "#" ? route($data) : "#");
     }
 
     public function hasAlerts(): bool {
