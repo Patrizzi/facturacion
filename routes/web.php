@@ -50,7 +50,7 @@ Route::group(
 
 		// COTIZACIONES
 		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
-		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('cotizacion_registers');
+		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
 
 
 		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
@@ -585,7 +585,7 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/cotizacion3', 'CotizacionController@index3')->name('cotizacion3');
+Route::get('/cotizacion3', 'CotizacionController@index3')->name('cotizacion.index3');
 
 
 

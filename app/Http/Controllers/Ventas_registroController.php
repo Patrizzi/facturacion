@@ -87,44 +87,15 @@ class Ventas_registroController extends Controller
     public function cotizacion_tab(Request $request)
     {
         $igv = Igv::first();
-
-        // Verificamos si es una solicitud Ajax
-        // if ($request->ajax()) {
-        //     // Obtenemos el rango de fechas seleccionado
-        //     $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        //     $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-
-        //     // Filtramos las cotizaciones por el rango de fechas
-        //     $cotizacion = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->get();
-
-        //     return response()->json([
-        //         'data' => $cotizacion
-        //     ]);
-        // }
-
-        // Si no es una solicitud Ajax, cargamos las cotizaciones del mes actual
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->endOfMonth();
-
-
-        $cotizacion = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->get();
-
-        return view('transaccion.venta._shared.cotizacion', compact('cotizacion', 'igv'));
-    }
-    public function cotizacion_registers(Request $request)
-    {
-        // return $request;
-        // UNA VISTA POR CADA TAB AL REVEZ
-        
         $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
         $tipo = $request->tipo_coti;
         // Datos 
         $igv = Igv::first()->renta;
-        
-        if($tipo == null){
+
+        if ($tipo == null) {
             $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(10);
-        }else{
+        } else {
             $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->where('tipo', $tipo)->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(10);
         }
         // Formatear los datos con los cálculos necesarios
@@ -140,7 +111,7 @@ class Ventas_registroController extends Controller
                 $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
                 $cotizacion->total_conv = $total; // Total en moneda local
             }
-            $cotizacion->emision = Carbon::parse( $cotizacion->created_at)->format('d-m-Y');
+            $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
             // Añade el valor del total al objeto cotizacion
             $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
 
@@ -149,12 +120,92 @@ class Ventas_registroController extends Controller
             // Retorna converido la variable para el getcollection
             return $cotizacion;
         });
-        return $cotizaciones;
-        // return response()->json([
-        //     'data' => $cotizaciones,  // Los datos de las cotizaciones paginados
-        //     'recordsTotal' => $cotizaciones->total(),  // Total de registros
-        //     'recordsFiltered' => $cotizaciones->total(),  // Total filtrado (puede ser igual al total si no hay filtros)
-        // ]);
+
+
+        return view('transaccion.venta._shared.cotizacion', compact('cotizaciones', 'igv'));
+    }
+    public function cotizacion_registers(Request $request)
+    {
+        // DATA REQUEST
+        $search = $request->query('search', array('value' => '', 'regex' => false));
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        // FILTRADO
+        $filter = $search['value'];
+        $sortColumns = [
+            0 => 'id', // Ajusta los campos según tus columnas
+            1 => 'cotizaciones.created_at',
+            2 => 'cotizaciones.total_conv',
+        ];
+
+        
+        $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        $tipo = $request->tipo_coti;
+
+        $query = Cotizacion::with(['cliente', 'moneda', 'forma_pago'])
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if (!empty($filter)) {
+            $query->whereHas('cliente', function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo', $tipo);
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $cotizaciones = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $cotizaciones->transform(function ($cotizacion) use ($igv) {
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+
+            if ($cotizacion->moneda_id == 2) {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total * $cotizacion->cambio;
+            } else {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total;
+            }
+
+            $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
+            $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
+            $cotizacion->estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
+            return $cotizacion;
+        });
+
+        foreach ($cotizaciones as $cotizacion) {
+            $json['data'][] = [
+                $cotizacion->id,
+                $cotizacion->id,
+                $cotizacion->cod_cotizacion,
+                $cotizacion->cliente->nombre,
+                $cotizacion->cliente->numero_documento,
+                $cotizacion->forma_pago->nombre,
+                $cotizacion->fecha_emision,
+                $cotizacion->total,
+                $cotizacion->id
+            ];
+        }
+
+        return response()->json($json);
     }
 
     public function cotizacion_manual_tab()

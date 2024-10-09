@@ -3201,7 +3201,8 @@ if($validacion==1){
     }
 
 
-    public function index3(){
+    public function index3(Request $request){
+        // return $request;
         // $nota_venta=NotaVenta::all where date();
         // $totales = [];
         // foreach($nota_venta as $index =>  $nota_ventas){    
@@ -3224,8 +3225,12 @@ if($validacion==1){
         $cotizacion_mes = Cotizacion::count_mes($mes_año);
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
-        // return $nota_venta_mes;
-
+        
+        // $cotizaciones = Cotizacion::search_params($request);
+       
+        // Formatear los datos con los cálculos necesarios
+        
+        // return $cotizaciones;
         return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes','cotizacionM_mes','nota_venta_mes'));
     }
     

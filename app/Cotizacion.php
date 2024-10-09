@@ -114,4 +114,52 @@ class Cotizacion extends Model
         }
         return $estado_actual;
     }
+    public static function search_params($request){
+
+        // return $request;
+        // Datos 
+
+        
+        if(!isset($request->daterange)){
+            $startDate =  Carbon::now()->format('Y-m-01');
+            $endDate =  Carbon::now()->format('Y-m-t');
+
+        }else{
+            $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        }
+
+        // Busqueda por tipos
+        $tipo = $request->tipo_coti;
+        if($tipo == null){
+            $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(25);
+        }else{
+            $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->where('tipo', $tipo)->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(25);
+        }
+        $igv = Igv::first()->renta;
+        $cotizaciones->getCollection()->transform(function ($cotizacion) use ($igv) {
+            // Cálculo del subtotal
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+
+            // Cálculo del total según el tipo de moneda
+            if ($cotizacion->moneda_id == 2) { // Si la moneda es dólares
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total * $cotizacion->cambio; // Conversión a la moneda local
+            } else {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total; // Total en moneda local
+            }
+            $cotizacion->emision = Carbon::parse( $cotizacion->created_at)->format('d-m-Y');
+            // Añade el valor del total al objeto cotizacion
+            $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
+
+            $estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
+            $cotizacion->estado_proceso = $estado_proceso;
+            // Retorna converido la variable para el getcollection
+            return $cotizacion;
+        });
+
+        return $cotizaciones;
+
+    }
 }

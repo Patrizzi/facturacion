@@ -29,7 +29,90 @@
                             <div class="tab-content">
                                 <!-- COTIZACION-->
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                    <br>
+                                    <form action="{{ route('cotizacion.index3') }}" method="get">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="input-group">
+                                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        id="data_range_filter"
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                    {{-- <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span> --}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <select class="form-control col-lg-12" name=""
+                                                        id="select_tipo_coti">
+                                                        <option value="" selected>Todos los comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
+                                                    <input type="search" class="form-control col-lg-8">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button type="submit">Guardar</button>
+                                            </div>
 
+                                        </div>
+                                    </form>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered dataTables-example-cotizacion">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>Código</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emisión</th>
+                                                    <th>Forma</th>
+                                                    <th>Importe T.</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{-- @foreach ($cotizaciones as $cotizacion)
+                                                    <tr>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                        <td>{{ $cotizacion->id }}</td>
+                                                    </tr>
+                                                @endforeach --}}
+                                            </tbody>
+                                            <tfoot>
+                                                {{-- {!! $cotizaciones->render() !!} --}}
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </div>
 
                                 <!-- COTIZACION MANUAL-->
@@ -53,8 +136,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table
-                                                class="table table-striped table-bordered table-hover dataTables-example"
+                                            <table class="table table-striped table-bordered table-hover dataTables-example"
                                                 id="table_cliente">
                                                 <thead>
                                                     <tr>
@@ -156,39 +238,80 @@
     {{-- SCRIPTS PARA TABS --}}
     <script>
         $(document).ready(function() {
-            $('#tab-1').load('{{ route('ventas.cotizacion') }}');
-            // Función para cargar contenido en una pestaña cuando se hace clic en ella
-            function loadTabContent(tab, url) {
-                if (!$(tab).data('loaded')) { // Solo cargar si aún no ha sido cargado
-                    $.get(url, function(data) {
-                        $(tab).html(data);
-                        $(tab).data('loaded', true); // Marcar pestaña como cargada
-                    });
+            var coti_table = $('.dataTables-example-cotizacion').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('ventas.cotizacion_registers') }}",
+                    method: "get",
+                    data: function(d) {
+                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
+                        d.daterange = $('#data_range_filter')
+                    .val(); // Supongamos que tienes un campo input con rango de fechas
+                        d.tipo_coti = $('#select_tipo_coti')
+                    .val(); // Supongamos que tienes un select para el tipo de cotización
+                    }
+                },
+                "columnDefs": [{
+                    'targets': [0], // Aplica a la primera columna (index 0)
+                    'orderable': false, // Deshabilitar ordenación en esta columna
+                    'render': function(data, type, full, meta) {
+                        // Renderizar el checkbox en la primera columna
+                        return '<input type="checkbox" name="select_row" value="' + full[0] +
+                            '">';
+                    }
+                },
+                {
+                    'targets': [8], // Configuración para otra columna (como la de acciones)
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return ` <button class="btn btn-primary">Si</button>`;
+                    }
+                }],
+            });
+            $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
                 }
+            },
+            function(){
+                coti_table.ajax.reload();
             }
-
-            // Cargar contenido de la pestaña 2 al hacer clic
-            // $('#tab-2-tab').on('click', function() {
-            //     loadTabContent('#tab-2', '{{ route('ventas.cotizacion_manual') }}');
+        );
+            // Cuando cambia el rango de fechas
+            // $('input[name="daterange"]').on('change', function() {
+            //     coti_table.ajax.reload();
             // });
-
-            // Cargar contenido de la pestaña 3 al hacer clic
-            // $('#tab-3-tab').on('click', function() {
-            //     loadTabContent('#tab-3', '{{ route('ventas.nota_venta') }}');
-            // });
-            // $('#tab-1').load('{{ route('ventas.cotizacion') }}');
-
-            // $('#tab-2').load('{{ route('ventas.cotizacion_manual') }}');
-
-            // $('#tab-3').load('{{ route('ventas.nota_venta') }}');
-
-            // VALIDADOR PARA EL COTIZACION
-
-
-            
-
-
         });
+        
     </script>
     <!-- Seleccionar todos los check -->
     <script>
@@ -232,7 +355,7 @@
     <script>
         $(document).ready(function() {
             table = $('.dataTables-example-facturacion').DataTable({
-                
+
             });
         });
     </script>

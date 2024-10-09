@@ -546,8 +546,7 @@
 <script>
     var elem{{$almacen->id}} = document.querySelector('.js-switch{{$almacen->id}}');
     var switchery = new Switchery(elem{{$almacen->id}}, { color: '#4cc0f7' });
-</script>
-@endforeach
+</script>@endforeach
 
 <!-- Page-Level Scripts -->
 <script>
