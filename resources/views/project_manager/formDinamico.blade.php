@@ -1,44 +1,61 @@
-<div class="form-group">
-    <div class="form-cell"> 
-        <label for="name">Nombre:</label>
-        <input type="text" placeholder="Ingrese el Nombre" name="nombre" value="{{old('nombre',$data->nombre ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="centro_costo">Centro de Costo:</label>
-        <input type="text" placeholder="Ingrese el Centro de Costo" name="centro_costo" value="{{old('centro_costo',$data->centro_costo ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="ruc">Ruc:</label>
-        <input type="text" placeholder="Ingrese el Ruc" name="ruc" value="{{old('ruc',$data->ruc ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="administrador_id">Administrador:</label>
-        <input type="number" placeholder="Ingrese al Administrador" name="administrador_id" value="{{old('administrador_id',$data->administrador_id ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="responsable_id">Responsable:</label>
-        <input type="number" placeholder="Ingrese al Responsable" name="responsable_id" value="{{old('responsable_id',$data->responsable_id ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="project_service_id">Servicio:</label>
-        <input type="number" placeholder="Ingrese el Servicio" name="project_service_id" value="{{old('project_service_id',$data->project_service_id ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="cliente_id">Cliente:</label>
-        <input type="number" placeholder="Ingrese el Cliente" name="cliente_id" value="{{old('cliente_id',$data->cliente_id ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="fecha_inicio">Fecha de Inicio:</label>
-        <input type="datetime-local" placeholder="Ingrese la Fecha de Inicio" name="fecha_inicio" value="{{old('fecha_inicio',$data->fecha_inicio ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="fecha_cierre">Fecha de Cierre:</label>
-        <input type="datetime-local" placeholder="Ingrese la Fecha de Cierre" name="fecha_cierre" value="{{old('fecha_cierre',$data->fecha_cierre ?? '')}}" required>
-    </div>
-    <div class="form-cell"> 
-        <label for="prioridad">Prioridad:</label>
-        <input type="prioridad" placeholder="Ingrese la Prioridad" name="prioridad" value="{{old('prioridad',$data->prioridad ?? '')}}" required>
+
+<div class="col-md-6">
+    <div class="form-group d-flex align-items-center"> 
+        {{html()->label('Nombre')->class('label-custom me-2')}}
+        {{html()->text('name')->placeholder('Ingrese el Nombre')->class('form-control')->value(old('nombre',$data->nombre ?? ''))->required()}}
     </div>
 </div>
-
-
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Centro de Costo')->class('fs-5')}}
+        {{html()->text('centro_costo')->placeholder('Ingrese el Centro de Costo')->class('form-control')->value(old('centro_costo',$data->centro_costo ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Ruc')->class('col-form-label')}}
+        {{html()->text('ruc')->placeholder('Ingrese el ruc')->class('form-control')->value(old('ruc',$data->ruc ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Administrador')->class('col-form-label')}}
+        {{html()->number('administrador_id')->placeholder('Ingrese al Administrador')->class('form-control')->value(old('administrador_id',$data->administrador_id ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Responsable')->class('col-form-label')}}
+        {{html()->number('responsable_id')->placeholder('Ingrese al Responsable')->class('form-control')->value(old('responsable_id',$data->responsable_id ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Servicio')->class('col-form-label')}}
+        {{html()->number('project_service_id')->placeholder('Ingrese el Servicio')->class('form-control')->value(old('project_service_id',$data->project_service_id ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Cliente')->class('col-form-label')}}
+        {{html()->number('cliente_id')->placeholder('Ingrese al Cliente')->class('form-control')->value(old('cliente_id',$data->cliente_id ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Fecha de Inicio')->class('col-form-label')}}
+        {{html()->datetime('fecha_inicio')->placeholder('Ingrese la Fecha de Inicio')->class('form-control')->value(old('fecha_inicio',$data->fecha_inicio ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Fecha de Cierre')->class('col-form-label')}}
+        {{html()->datetime('fecha_cierre')->placeholder('Ingrese la Fecha de Cierre')->class('form-control')->value(old('fecha_cierre',$data->fecha_cierre ?? ''))->required()}}
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group d-flex"> 
+        {{html()->label('Prioridad')->class('col-form-label')}}
+        {{html()->number('prioridad')->placeholder('Ingrese la Prioridad')->class('form-control')->value(old('prioridad',$data->prioridad ?? ''))->required()}}
+    </div>
+</div>
