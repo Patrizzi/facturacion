@@ -32,7 +32,7 @@ class SideMenu extends Component {
                 ->permissions('inventario-productos_kardex-entrada_producto.index')
                 ->build(),
         ];
-        $inventarioComercilizacionSubmenus = [
+        $inventarioComercializacionSubmenus = [
             $this->menu()->text('Cotizaciones')->route('cotizacion.index')->build(),
             $this->menu()->text('Cotizaciones M.')->route('cotizacion_manual.index')->build(),
             $this->menu()->text('Facturación')->route('facturacion.index')->build(),
@@ -43,30 +43,37 @@ class SideMenu extends Component {
             $this->menu()->text('Nota Crédito')->route('nota-credito.index')->build(),
         ];
 
-        if (!empty($inventarioInicial) && $inventarioInicial->estado == 1) {
-            $inventarioRoute = ['kardex-entrada.show', $inventarioInicial->id];
-        } else {
-            $inventarioText .= ' Inicial';
-            $inventarioRoute = ['kardex-entrada.create'];
+        if (!empty($inventarioInicial)) {
 
-            $inventarioComercilizacionSubmenus = array_merge($inventarioComercilizacionSubmenus, [
+            $inventarioComercializacionSubmenus = array_merge($inventarioComercializacionSubmenus, [
                 $this->menu()->text('Guía Remisión')->route('guia_remision.index')->build(),
                 $this->menu()->text('Guía Remisión M.')->route('guia_remision_manual.index')->build(),
                 $this->menu()->text('Nota Débito')->route('nota-debito.index')->build(),
             ]);
 
-            $inventarioSubmenus = [
-                $this->menu()->text('Kardex-Producto')->permissions('inventario-productos_kardex')
-                    ->submenus($inventarioKardexSubmenus)
-                    ->build(),
-                $this->menu()->text('Consultas de inventario')->route('periodo-consulta.index')
-                    ->permissions('inventario-toma_de_inventario.index')
-                    ->build(),
-                $this->menu()->text('Cierre Periodo')->route('cierre-periodo.index')
-                    ->build(),
-                $this->menu()->text('Movimiento Consulta')->route('movimiento-consulta.index')
-                    ->build(),
-            ];
+            if ($inventarioInicial->estado == 1) {
+                $inventarioText = 'Inventario Inicial';
+                $inventarioRoute = ['kardex-entrada.show', $inventarioInicial->id];
+            } else {
+                $inventarioText = 'Inventario';
+                $inventarioRoute = ['#'];
+
+                $inventarioSubmenus = [
+                    $this->menu()->text('Kardex-Producto')->permissions('inventario-productos_kardex')
+                        ->submenus($inventarioKardexSubmenus)
+                        ->build(),
+                    $this->menu()->text('Consultas de inventario')->route('periodo-consulta.index')
+                        ->permissions('inventario-toma_de_inventario.index')
+                        ->build(),
+                    $this->menu()->text('Cierre Periodo')->route('cierre-periodo.index')
+                        ->build(),
+                    $this->menu()->text('Movimiento Consulta')->route('movimiento-consulta.index')
+                        ->build(),
+                ];
+            }
+        } else {
+            $inventarioText = 'Inventario Inicial';
+            $inventarioRoute = ['kardex-entrada.create'];
         }
 
         $this->menuItems = [
@@ -80,7 +87,7 @@ class SideMenu extends Component {
                 ->text('Comercialización')
                 ->permissions('transacciones')
                 ->icon('/archivos/imagenes/layout/comercializacion.svg')
-                ->submenus($inventarioComercilizacionSubmenus)
+                ->submenus($inventarioComercializacionSubmenus)
                 ->build(),
             $this->menu()
                 ->text('Servicio Técnico')

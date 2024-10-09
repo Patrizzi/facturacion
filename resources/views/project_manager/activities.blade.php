@@ -25,7 +25,7 @@
                         <div class="ibox-content">
                             <div class="card-container">
                                 @foreach ($activities as $activity)
-                                    <x-ProjectManager.Activity.Card :card="$activity"/>
+                                    <x-project-manager.activity.card :card="$activity"/>
                                 @endforeach
                             </div>
                             <!-- Paginación -->
