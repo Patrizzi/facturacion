@@ -20,8 +20,20 @@ class ProjectManagerController extends Controller
 
     public function store(Request $request)
     {
+        $numbers=['required','integer','min:1'];
+        $request->validate([
+            'nombre','centro_costo',
+            'ruc'=>'required',
+            'administrador_id' => $numbers,
+            'responsable_id' => $numbers,
+            'project_service_id' => $numbers,
+            'cliente_id' => $numbers,
+            'fecha_inicio'=>'required',
+            'fecha_final'=>'required',
+            'prioridad' => $numbers
+        ]);
         ProjectManager::create($request->all());
-        return redirect()->route('project_manager.index')->with('success', 'Creado exitosamente');
+        return redirect()->route('project_managers.index')->with('success', 'Creado exitosamente');
     }
     public function show($id)
     {
@@ -37,9 +49,21 @@ class ProjectManagerController extends Controller
 
     public function update(Request $request, $id)
     {
+        $numbers=['required','integer','min:1'];
+        $request->validate([
+            'nombre','centro_costo','ruc'=>'required',
+            'ruc'=>'required',
+            'administrador_id' => $numbers,
+            'responsable_id' => $numbers,
+            'project_service_id' => $numbers,
+            'cliente_id' => $numbers,
+            'fecha_inicio'=>'required',
+            'fecha_final'=>'required',
+            'prioridad' => $numbers
+        ]);
         $data = ProjectManager::findOrFail($id);
         $data->update($request->all());
-        return redirect()->route('project_manager.index')->with('success', 'Actualizado exitosamente');
+        return redirect()->route('project_managers.index')->with('success', 'Actualizado exitosamente');
     }
 
     public function destroy($id) {
