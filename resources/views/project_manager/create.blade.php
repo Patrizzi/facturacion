@@ -5,21 +5,29 @@
     @endonce
 @endpush 
 @section('content')
-<div class="formEnvio">
-    {{ html()->modelForm('POST','/project_managers.store')->open() }}
-        <div class="container-fluid">
-            <div class="row ">
-                @include('project_manager.formDinamico')
-                <div class="w-50 p-1">
-                    {{html()->button('Crear')->class('btn btn-primary float-right m-t-n-xs ')}}
-                </div>
-                <div class="w-65 p-1">
-                    {{html()->a('cancelar')->text('Cancelar')->class('btn btn-lightfloat-right m-t-n-xs border border-primary')}}
-                </div>
-            </div>
+    @if ($errors->any())
+        <h3 class="alert alert-danger">{{ $errors->first() }}</h3>
+    @endif
+    <div class="formEnvio">
+        <div class="inbox-title">
+            <h3>Crear Nuevo Proyecto</h3>
         </div>
-    {{html()->closeModelForm()}}
-</div>
+        <div class="inbox-content">
+            {{ html()->form('POST',route('project_managers.store'))->open() }}
+                <div class="container-fluid">
+                    <div class="row ">
+                        @include('project_manager.formDinamico')
+                        <div class="w-50 p-1">
+                            {{html()->button('Crear')->class('btn btn-primary float-right m-t-n-xs ')}}
+                        </div>
+                        <div class="w-65 p-1">
+                            {{html()->a('cancelar')->text('Cancelar')->href('project_manager/index')->class('btn m-t-n-xs border border-primary')}}
+                        </div>
+                    </div>
+                </div>
+            {{ html()->form()->close() }}
+        </div>
+    </div>
 @endsection
 @push('js')
 @once

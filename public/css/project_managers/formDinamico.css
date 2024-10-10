@@ -1,3 +1,7 @@
+.inbox-title{
+    color: rgb(54, 54, 54);
+    padding-left: 20px;
+}
 .formEnvio input{
     margin-left: 10px;
 }
@@ -14,16 +18,15 @@
     background-color: #ffffff;
 }
 .formEnvio label,.formShow label{
-    color: rgb(77, 76, 76);
+    color: rgb(66, 66, 66);
     text-align: end;
+    font-size: 15px;
     width: 140px;
 }
-@media(max-width: 500px){
+@media(max-width: 400px){
     .formShow,.formEnvio{
         padding-bottom: 50px;
     }
-}
-@media (max-width: 400px){
     .formShow input,.formEnvio input{
         width: 40%;
     }
