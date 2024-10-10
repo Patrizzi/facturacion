@@ -59,6 +59,25 @@ function getImagePath($option)
     return $paths[$option] ?? null;
 }
 
+function randomPastelColor(): string {
+
+    // Generar valores altos de RGB (valores cercanos a 255) para que sean pasteles
+    $r = rand(180, 255);
+    $g = rand(180, 255);
+    $b = rand(180, 255);
+
+    // Convertir los valores RGB a hexadecimal
+    return sprintf("#%02X%02X%02X", $r, $g, $b);
+}
+
+function generateColors(int $n = 1, callable $functionColor): array {
+    $colors = [];
+    for ($i = 0; $i < $n; $i++) {
+        $colors[] = $functionColor();
+    }
+    return $colors;
+}
+
 if (!function_exists('push_asset_once')) {
     /**
      * Evita que los estilos, scripts u otros tipos de archivos se agreguen más de una vez, basándose en la extensión de archivo.
