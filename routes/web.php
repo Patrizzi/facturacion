@@ -586,7 +586,7 @@ Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name(
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/cotizacion3', 'CotizacionController@index3')->name('cotizacion.index3');
-
+Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
 
 
 

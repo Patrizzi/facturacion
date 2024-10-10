@@ -938,5 +938,9 @@ class CreditosAdelantosController extends Controller
         // return view('cobranzas.comprobante_adelanto_pdf',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num','adl_header','doc'));
         $pdf = PDF::loadView('cobranzas.comprobante_adelanto_pdf',compact('empresa','adelanto_reg','cliente','moneda', 'comprobante_num','adl_header','doc'));
         return $pdf->download('comprobante.pdf');
+         
+    }
+    public function creditos(Request $request){
+        return view('cobranzas.creditos');
     }
 }
