@@ -171,16 +171,16 @@
                 <ul class="nav metismenu" id="side-menu" style="height:85vh; overflow-y: auto;">
                     <div style="position: fixed; z-index: 9999;">
                         <li class="nav-header nav-label" style="padding:30px 0px 20px 45px">
-                            <div class="dropdown profile-element" style="">
+                            <div class="dropdown profile-element" style="transform: translateX(-25px);">
                                 <a href="{{route('usuario.index')}}">
                                 <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; margin-right: 25px;" />
-                                <span class="nav-label text-white" style="font-size: 18px; font-weight: bold; margin-top: 80px;">LEONOSOFT</span>
+                                <span class="nav-label" style="color: #2641f8; font-size: 18px; font-weight: bold;">LEONO</span><span style="color: gray; font-size: 18px; font-weight: bold;">SOFT</span>
                                                             
                                 </a> 
                             </div>
-                            <div class="dropdown profile-element" style="">
+                            <div class="dropdown profile-element" style="transform: translateX(-18px);">
                                     <a class="nav-label" href="{{route('usuario.index')}}">
-                                        <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-top: 20px;">@yield('nombre',auth()->user()->nombre)</span>
+                                        <span class="block m-t-xs font-bold" style="color:black; font-size: 15px; margin-top: 20px;">@yield('nombre',auth()->user()->nombre)</span>
                                         
                                     </a>
                             </div>
