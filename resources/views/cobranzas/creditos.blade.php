@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cotización')
+@section('title', 'Créditos')
 
 @section('content')
 
@@ -8,78 +8,95 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Resumen de Agosto 2024</h5> <!-- Título general -->
-                </div>
                 <div class="ibox-content">
                     <!-- Contenedor de pestañas -->
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <!-- Pestaña 1: Pagados -->
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1">
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1G">
                                     Pagados
                                 </a>
                             </li>
                             <!-- Pestaña 2: Sin Pagar -->
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-2">
+                                <a class="nav-link" data-toggle="tab" href="#tab-2G">
                                     Sin Pagar
                                 </a>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Contenido de la pestaña Pagados -->
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body">
-                                    <!-- Contenido del Tab 1: Tabla de ventas pagadas -->
+                            <div role="tabpanel" id="tab-1G" class="tab-pane active show">
+                            <div class="panel-body">
                                     <div class="row">
-                                        <!-- Resumen de categorías -->
                                         <div class="col-lg-12">
-                                            <div class="row text-center">
-                                                <!-- Boleta -->
-                                                <div class="col">
-                                                    <div class="circle">
-                                                        <span>Boleta</span>
-                                                        <h4>Monto Pagado</h4>
-                                                        <p>S/ ___.__</p>
-                                                    </div>
+                                            <div class="ibox">
+                                                <div class="ibox-title" style="border: 2px solid #ddd; padding: 10px; background-color: #f8f9fa; border-radius: 5px 5px 0 0;">
+                                                    <h4>Resumen de agos de Septiembre 2024</h4>
                                                 </div>
-                                                <!-- Boleta Manual -->
-                                                <div class="col">
-                                                    <div class="circle">
-                                                        <span>Boleta Manual</span>
-                                                        <h4>Monto Pagado</h4>
-                                                        <p>S/ ___.__</p>
-                                                    </div>
-                                                </div>
-                                                <!-- Factura -->
-                                                <div class="col">
-                                                    <div class="circle">
-                                                        <span>Factura</span>
-                                                        <h4>Monto Pagado</h4>
-                                                        <p>S/ ___.__</p>
-                                                    </div>
-                                                </div>
-                                                <!-- Factura Manual -->
-                                                <div class="col">
-                                                    <div class="circle">
-                                                        <span>Factura Manual</span>
-                                                        <h4>Monto Pagado</h4>
-                                                        <p>S/ ___.__</p>
-                                                    </div>
-                                                </div>
-                                                <!-- Nota de Venta -->
-                                                <div class="col">
-                                                    <div class="circle">
-                                                        <span>Nota de Venta</span>
-                                                        <h4>Monto Pagado</h4>
-                                                        <p>S/ ___.__</p>
+                                                <div class="ibox-content" style="border: 2px solid #ddd; border-radius: 0 0 5px 5px;">
+                                                    <div class="row" style="display: flex; justify-content: space-between;">
+                                                        <!-- Primer Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid green; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: green; font-size: 25px;"><i class="fa fa-file-text"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Boleta</h4>
+                                                                <p style="margin: 0;">Monto Pagado</p>
+                                                                <p style="color: green; font-weight: bold;">S/. ***.**</p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Segundo Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid orange; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: orange; font-size: 25px;"><i class="fa fa-file-text-o"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Boleta Manual</h4>
+                                                                <p style="margin: 0;">Monto Pagado</p>
+                                                                <p style="color: orange; font-weight: bold;">S/. ***.**</p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Tercer Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid red; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: red; font-size: 25px;"><i class="fa fa-file"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Factura</h4>
+                                                                <p style="margin: 0;">Monto Pagado</p>
+                                                                <p style="color: red; font-weight: bold;">S/. ***.**</p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Cuarto Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid blue; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: blue; font-size: 25px;"><i class="fa fa-file-o"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Factura Manual</h4>
+                                                                <p style="margin: 0;">Monto Pagado</p>
+                                                                <p style="color: blue; font-weight: bold;">S/. ***.**</p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Quinto Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid purple; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: purple; font-size: 25px;"><i class="fa fa-file-text"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Nota de Venta</h4>
+                                                                <p style="margin: 0;">Monto Pagado</p>
+                                                                <p style="color: purple; font-weight: bold;">S/. ***.**</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                            
                                         <!-- Filtros de búsqueda -->
                                         <div class="col-lg-12">
                                             <form>
@@ -140,113 +157,112 @@
                                 </div>
                             </div>
 
-                            <!-- Contenido de la pestaña Sin Pagar -->
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                            <!-- Contenido de Sin Pagar -->
+                            <div role="tabpanel" id="tab-2G" class="tab-pane">
                                 <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="ibox">
-                                            <div class="ibox-title">
-                                                <h4>Resumen de Agosto 2024</h4>
-                                            </div>
-                                            <div class="ibox-content">
-                                                <div class="row" style="display: flex; justify-content: space-between;">
-                                                    <!-- Primer Círculo -->
-                                                    <div class="col-md-2">
-                                                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                                            <div style="border: 3px solid #8DCA35; border-radius: 50%; padding: 20px;">
-                                                                <span style="color: #8DCA35; font-size: 25px;"><i class="fa fa-file-text"></i></span>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="ibox">
+                                                <div class="ibox-title" style="border: 2px solid #ddd; padding: 10px; background-color: #f8f9fa; border-radius: 5px 5px 0 0;">
+                                                    <h4>Resumen de pagos de Septiembre 2024</h4>
+                                                </div>
+                                                <div class="ibox-content" style="border: 2px solid #ddd; border-radius: 0 0 5px 5px;">
+                                                    <div class="row" style="display: flex; justify-content: space-between;">
+                                                        <!-- Primer Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid green; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: green; font-size: 25px;"><i class="fa fa-file-text"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Boleta</h4>
+                                                                <p style="margin: 0;">Monto Sin Pagar</p>
+                                                                <p style="color: green; font-weight: bold;">S/. ***.**</p>
                                                             </div>
-                                                            <h4 style="font-weight: bold; margin-top: 10px;">Boleta</h4>
-                                                            <p style="margin: 0;">Monto Sin Pagar</p>
-                                                            <p style="color: #8DCA35; font-weight: bold;">S/. ***.**</p>
                                                         </div>
-                                                    </div>
-                                                    <!-- Segundo Círculo -->
-                                                    <div class="col-md-2">
-                                                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                                            <div style="border: 3px solid #D4A017; border-radius: 50%; padding: 20px;">
-                                                                <span style="color: #D4A017; font-size: 25px;"><i class="fa fa-file-text-o"></i></span>
+                                                        <!-- Segundo Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid orange; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: orange; font-size: 25px;"><i class="fa fa-file-text-o"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Boleta Manual</h4>
+                                                                <p style="margin: 0;">Monto Sin Pagar</p>
+                                                                <p style="color: orange; font-weight: bold;">S/. ***.**</p>
                                                             </div>
-                                                            <h4 style="font-weight: bold; margin-top: 10px;">Boleta Manual</h4>
-                                                            <p style="margin: 0;">Monto Sin Pagar</p>
-                                                            <p style="color: #D4A017; font-weight: bold;">S/. ***.**</p>
                                                         </div>
-                                                    </div>
-                                                    <!-- Tercer Círculo -->
-                                                    <div class="col-md-2">
-                                                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                                            <div style="border: 3px solid #E74C3C; border-radius: 50%; padding: 20px;">
-                                                                <span style="color: #E74C3C; font-size: 25px;"><i class="fa fa-file"></i></span>
+                                                        <!-- Tercer Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid red; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: red; font-size: 25px;"><i class="fa fa-file"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Factura</h4>
+                                                                <p style="margin: 0;">Monto Sin Pagar</p>
+                                                                <p style="color: red; font-weight: bold;">S/. ***.**</p>
                                                             </div>
-                                                            <h4 style="font-weight: bold; margin-top: 10px;">Factura</h4>
-                                                            <p style="margin: 0;">Monto Sin Pagar</p>
-                                                            <p style="color: #E74C3C; font-weight: bold;">S/. ***.**</p>
                                                         </div>
-                                                    </div>
-                                                    <!-- Cuarto Círculo -->
-                                                    <div class="col-md-2">
-                                                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                                            <div style="border: 3px solid #3498DB; border-radius: 50%; padding: 20px;">
-                                                                <span style="color: #3498DB; font-size: 25px;"><i class="fa fa-file-o"></i></span>
+                                                        <!-- Cuarto Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid blue; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: blue; font-size: 25px;"><i class="fa fa-file-o"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Factura Manual</h4>
+                                                                <p style="margin: 0;">Monto Sin Pagar</p>
+                                                                <p style="color: blue; font-weight: bold;">S/. ***.**</p>
                                                             </div>
-                                                            <h4 style="font-weight: bold; margin-top: 10px;">Factura Manual</h4>
-                                                            <p style="margin: 0;">Monto Sin Pagar</p>
-                                                            <p style="color: #3498DB; font-weight: bold;">S/. ***.**</p>
                                                         </div>
-                                                    </div>
-                                                    <!-- Quinto Círculo -->
-                                                    <div class="col-md-2">
-                                                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                                            <div style="border: 3px solid #9B59B6; border-radius: 50%; padding: 20px;">
-                                                                <span style="color: #9B59B6; font-size: 25px;"><i class="fa fa-file-text"></i></span>
+                                                        <!-- Quinto Círculo -->
+                                                        <div class="col-md-2">
+                                                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                                                <div style="border: 3px solid purple; border-radius: 50%; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span style="color: purple; font-size: 25px;"><i class="fa fa-file-text"></i></span>
+                                                                </div>
+                                                                <h4 style="font-weight: bold; margin-top: 10px;">Nota de Venta</h4>
+                                                                <p style="margin: 0;">Monto Sin Pagar</p>
+                                                                <p style="color: purple; font-weight: bold;">S/. ***.**</p>
                                                             </div>
-                                                            <h4 style="font-weight: bold; margin-top: 10px;">Nota de Venta</h4>
-                                                            <p style="margin: 0;">Monto Sin Pagar</p>
-                                                            <p style="color: #9B59B6; font-weight: bold;">S/. ***.**</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-        <div class="row">
-    <div class="col-lg-12">
-        <div class="ibox">
-            <div class="ibox-content">
-                <div class="tabs-container">
-                    <!-- Pestañas (Nav Tabs) -->
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active show" data-toggle="tab" href="#tab-1">
-                                <span class="badge badge-success" style="background-color: green;">4</span> Boleta 
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-2">
-                                <span class="badge badge-success" style="background-color: orange;">4</span> Boleta Manual
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-3">
-                                <span class="badge badge-success" style="background-color: red;">3</span> Factura
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-4">
-                                <span class="badge badge-success" style="background-color: red;">3</span> Factura Manual
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-5">
-                                <span class="badge badge-success" style="background-color: blue;">5</span> Nota de Venta
-                            </a>
-                        </li>
-                    </ul>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="ibox">
+                                                <div class="ibox-content">
+                                                    <div class="tabs-container">
+                                                        <!-- Pestañas (Nav Tabs) -->
+                                                        <ul class="nav nav-tabs" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active show" data-toggle="tab" href="#tab-1-Sin">
+                                                                    <span class="badge badge-success" style="background-color: green;">4</span> Boleta 
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" data-toggle="tab" href="#tab-2-Sin">
+                                                                    <span class="badge badge-success" style="background-color: orange;">4</span> Boleta Manual
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" data-toggle="tab" href="#tab-3-Sin">
+                                                                    <span class="badge badge-success" style="background-color: red;">3</span> Factura
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" data-toggle="tab" href="#tab-4-Sin">
+                                                                    <span class="badge badge-success" style="background-color: blue;">3</span> Factura Manual
+                                                                </a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" data-toggle="tab" href="#tab-5-Sin">
+                                                                    <span class="badge badge-success" style="background-color: purple;">5</span> Nota de Venta
+                                                                </a>
+                                                            </li>
+                                                        </ul>
                         <div class="tab-content">
                          <!-- COTIZACION-->   
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-1-Sin" class="tab-pane active show">
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -277,19 +293,26 @@
                                         <div class="col-sm-4">
                                             <div class="form-group row">
                                                 <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
-                                                <input type="search" class="form-control col-lg-6">
+                                                <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group row">
-                                                <label class="col-lg-6 col-form-label"><strong>Pagar:</strong></label>
-                                                <input type="search" class="form-control col-lg-6">
+                                                <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                    <option value="">Seleccionar</option>
+                                                    <option value="factura">Contado</option>
+                                                    <option value="factura">Credito</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group row">
                                                 <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
-                                                <input type="search" class="form-control col-lg-6">
+                                                <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                    <option value="">Seleccionar</option>
+                                                    <option value="factura">Pagado</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
@@ -309,7 +332,7 @@
                                                     <th>Fecha</th>
                                                     <th>Forma</th>
                                                     <th>Monto y Cuotas</th>
-                                                    <th>Importe</th>
+                                                    <th>Pago o Adelantado</th>
                                                     <th>Ultima Fecha</th>
                                                     <th>Acciones</th>
                                                 </tr>
@@ -332,24 +355,25 @@
                                                     <td>07-10-2024</td>
                                                     <td>
                                                         <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+                                                        <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                       <!--<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>--> 
+                                                       <div class="btn-group">
+                                                            <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                            <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                            <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                            </ul>
+                                                        </div>
                                                     </td>
                                                 </tr>         
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th colspan="6" class="text-right">Total General</th>
-                                                    <th colspan="6">S/. ****</th>
-                                                </tr>
-                                            </tfoot>
+                                            </tbody>          
                                         </table>
                                     </div>
                                 </div>
                             </div>
                                  <!-- COTIZACION MANUAL--> 
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
+                                <div role="tabpanel" id="tab-2-Sin" class="tab-pane">
                                     <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB  2 --}}
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="input-group">
@@ -433,7 +457,7 @@
                                     </div>
                                 </div>
                                  <!-- NOTA DE VENTA--> 
-                                <div role="tabpanel" id="tab-3" class="tab-pane">
+                                <div role="tabpanel" id="tab-3-Sin" class="tab-pane">
                                     <div class="panel-body">
                                     <div class="row">
                                             <div class="col-sm-6">
