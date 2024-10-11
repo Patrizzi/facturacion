@@ -998,7 +998,7 @@ h5 {
 
 .nav-header {
   padding: 33px 21px;
-  background-color: #15338a;
+  background-color: #ffffff;
   background-size: 100% 100%;
 
 }
@@ -1197,6 +1197,7 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
   -o-transition: all 0.4s;
   transition: all 0.4s;
 }
+
 .navbar-fixed-top {
   background: #fff;
   transition-duration: 0.4s;
@@ -9712,14 +9713,4 @@ body.md-skin {
   .message-btn {
       display: none; /* Ocultar el botón*/
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
 }
-
-=======
-}
->>>>>>> 29ee7458ad5c816db1669b8f41599365917d249e
-=======
-}
-
->>>>>>> e08f6e3dfa92fc33f2c2798e325639639d3209a6
