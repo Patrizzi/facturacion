@@ -113,22 +113,12 @@
         transition: width 0.0s ease;
     }
 
-    /* Cuando el mouse pasa por encima del menú, este se expande */
-    body.mini-navbar .navbar-static-side:hover {
-        width: 150px; /* Ancho expandido */
-        transition: width 0.7s ease;
-    }
 
-    body.mini-navbar .navbar-static-side:hover ~ #page-wrapper {
-        width: calc(100% - 150px);
-        transition: width 0.0s ease;
-    }
 
     /* Ajuste del contenido cuando el menú está reducido */
     body.mini-navbar .logo-element {
         display: block;
     }
-<<<<<<< HEAD
         /* Estilos generales del scroll */
     #side-menu {
         height: 90vh;
@@ -169,12 +159,10 @@
     }
 
 
-=======
->>>>>>> e08f6e3dfa92fc33f2c2798e325639639d3209a6
     li::marker {
     content: none;
     }
-
+    
 </style>
 <body class="">
     <div id="wrapper">
@@ -207,7 +195,7 @@
                     {{-- MENU DESPELEGABLE --}}
                 
                     @can('inicio')
-                    <li style=" margin-top: 153px;"><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
+                    <li  style=" margin-top: 153px;"><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
                     @endcan
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
                     {{-- {{$inventario_inicial->estado}} --}}
@@ -305,7 +293,7 @@
                     <li>
                     <a href="#"><i class="fa fa-table fa-lg text-white"></i>
                     <span class="nav-label text-white">Planilla</span> 
-                    <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 90px"></i>
+                    <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 100px"></i>
                     </a> 
 
                         
@@ -323,7 +311,7 @@
                     @endcan
                     @can('consultas')
                     <li>
-                        <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 80px;"></i></a>
+                        <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 90px;"></i></a>
                         <ul class="nav nav-second-level collapse">
                             @can('consultas-garantias')
                             <li>
@@ -349,7 +337,7 @@
                     </li>
                     @endcan
                     <li>
-                        <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 45px;"></i></a>
+                        <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 55px;"></i></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
                             <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
@@ -376,7 +364,7 @@
 
                     @can('maestro')
                     <li>
-                        <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 10px;"></i></a>
+                        <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 20px;"></i></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
                             <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
@@ -388,7 +376,7 @@
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
 
                     <li>
-                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 55px;"></i></a>
+                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 65px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
                         <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
@@ -432,21 +420,48 @@
 
                     {{-- MENU DESPELEGABLE --}}
                 </ul>
-                <div style="position: fixed; bottom: 0px; background-color:#143593;   ">
+                <div style="position: fixed; bottom: 0px; background-color:#143593;">
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                                <a class="nav-label" style="display: flex; align-items: center; margin-left: 20px;"  href="{{route('usuario.index')}}" >
-                                    <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
-                                    <div class="nav-label" style="margin-left: 30px;">
-                                        <span class="block m-t-xs font-bold spans " style="font-size: 14px;" >Julio Flores Vicuña</span>
-                                        <span class="block m-t-xs text-white font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
-                                        
-                                    </div>
-                                    <div class="nav-label" style="margin-left: auto;">
-                                        <i class="fa fa-ellipsis-v" style="color: white; font-size: 19px; margin-left: 15px;"></i>
-                                    </div>
-                                </a>     
-                        </div>
+                        <a class="nav-label" style="display: flex; align-items: center; margin-left: 10px;" {{--href="{{route('usuario.index')}}"--}}>
+                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
+                            <div class="nav-label" style="margin-left: 20px;">
+                                <span class="block m-t-xs font-bold spans" style="font-size: 14px;">Julio Flores Vicuña</span>
+                                <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
+                            </div>
+                            <div class="nav-label" style="margin-left: 10px; position: relative;">
+                                <i class="fa fa-ellipsis-v" id="menuIcon" style="color: white; font-size: 19px; margin-right: 15px; cursor: pointer;"></i>
+                                
+                                <!-- Menú desplegable -->
+                                <div id="dropdownMenu" style="display: none; position: absolute; bottom: 50px; right: 0; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 5px; padding: 10px; width: 150px;">
+                                    <a href="{{route('usuario.index')}}" class="dropdown-item" style="display: block; color: black; padding: 8px; text-decoration: none;"> <i class="fa fa-user-circle-o fa-lg"></i> Mi perfil</a>
+                                    <a href="{{route('Configuracion')}}" class="dropdown-item" style="display: block; color: black; padding: 8px; text-decoration: none;"> <i class="fa fa-cog fa-lg"></i> Configuración</a>
+                                    <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="display: block; color: black; padding: 8px; text-decoration: none;">
+                                           <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            @csrf
+                                            </form> 
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
+                <style>
+                /* Estilos para los enlaces dentro del menú desplegable */
+                .dropdown-item {
+                    display: block;
+                    color: black;
+                    padding: 8px;
+                    text-decoration: none;
+                    transition: background-color 0.3s, color 0.3s;
+                }
+                
+                /* Efecto hover */
+                .dropdown-item:hover {
+                    background-color: #f0f0f0; /* Color de fondo al pasar el mouse */
+                    color: #143593; /* Cambia el color del texto */
+                }
+            </style>
     </div>
 </nav>
 {{-- Menu Superior --}}
@@ -721,7 +736,7 @@
 
 
 
-                    <div>
+                    {{--<div>
                         <li class=" mr-5" >
                                 <a href="{{ route('logout') }}" class="logout-btn"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -733,7 +748,7 @@
                                     
                                 </a>
                         </li>
-                    </div>
+                    </div>--}}
                 </div>
             </nav>
 
@@ -831,6 +846,21 @@
             $(window).resize(function () {
                 applyMenuBehavior();
             });
+        });
+        // Mostrar/ocultar menú desplegable
+        document.getElementById("menuIcon").addEventListener("click", function(event) {
+            event.stopPropagation(); // Evita que el evento se propague al hacer clic en otros lugares
+            const menu = document.getElementById("dropdownMenu");
+            menu.style.display = menu.style.display === "none" ? "block" : "none";
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        document.addEventListener("click", function(event) {
+            const menu = document.getElementById("dropdownMenu");
+            const menuIcon = document.getElementById("menuIcon");
+            if (menu.style.display === "block" && !menu.contains(event.target) && event.target !== menuIcon) {
+                menu.style.display = "none";
+            }
         });
         </script>
 
