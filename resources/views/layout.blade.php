@@ -168,7 +168,7 @@
     <div id="wrapper">
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
-                <ul class="nav metismenu" id="side-menu" style="height: 90vh; overflow-y: auto;">
+                <ul class="nav metismenu" id="side-menu" style="height:85vh; overflow-y: auto;">
                     <div style="position: fixed; z-index: 9999;">
                         <li class="nav-header nav-label" style="padding:30px 0px 20px 45px">
                             <div class="dropdown profile-element" style="">
@@ -375,17 +375,7 @@
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
 
-                    <li>
-                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 65px;"></i></a>
-                    <ul class="nav nav-second-level collapse">
-                        @can('maestro-catalogo-clasificacion')
-                        <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
-                        @endcan
-                        @can('maestro-configuracion_general.mi_empresa.index')
-                        <li><a href="{{route('empresa.index')}}"><span>Mi Empresa</span></a></li>
-                        @endcan
-                    </ul>
-                    </li>
+                    
                     </li>
                     <li style="background-color: #143593; ;">
                         
