@@ -128,20 +128,9 @@
     body.mini-navbar .logo-element {
         display: block;
     }
-  
-
-
-
-
-
-
     li::marker {
     content: none;
     }
-    
-        
-    
-
 
 </style>
 <body class="">
