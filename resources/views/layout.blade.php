@@ -128,11 +128,44 @@
     body.mini-navbar .logo-element {
         display: block;
     }
-  
+        /* Estilos generales del scroll */
+    #side-menu {
+        height: 90vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #1e3a8a #f0f4ff;
+    }
 
+    #side-menu::-webkit-scrollbar {
+        width: 8px;
+    }
 
+    #side-menu::-webkit-scrollbar-thumb {
+        background-color: #1e3a8a;
+        border-radius: 10px;
+        border: 2px solid #143593;
+    }
 
+    #side-menu::-webkit-scrollbar-thumb:hover {
+        background-color: #375fc4;
+    }
 
+    #side-menu::-webkit-scrollbar-track {
+        background-color: #f0f4ff;
+        border-radius: 10px;
+    }
+
+    /* Cuando el layout está en mini-navbar */
+    body.mini-navbar #side-menu {
+        overflow: hidden; /* Oculta el scroll */
+        scrollbar-width: none; /* Para Firefox */
+    }
+
+    /* Para WebKit (Chrome, Safari) */
+    body.mini-navbar #side-menu::-webkit-scrollbar {
+        display: none; /* Oculta el scrollbar en mini-navbar */
+    }
 
 
     li::marker {
@@ -148,32 +181,34 @@
     <div id="wrapper">
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
-                <ul class="nav metismenu" id="side-menu">
-                    <li class="nav-header" style="padding:30px 0px 20px 20px">
-                        <div class="dropdown profile-element" style="left: 03%">
-                            <a href="{{route('usuario.index')}}">
-                            <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; margin-right: 15px;" />
-                            <span class="nav-label text-white" style="font-size: 18px; font-weight: bold; margin-top: 80px;">LEONOSOFT</span>
-                                                           
-                            </a> 
-                        </div>
+                <ul class="nav metismenu" id="side-menu" style="height: 90vh; overflow-y: auto;">
+                    <div style="position: fixed; z-index: 9999;">
+                        <li class="nav-header nav-label" style="padding:30px 0px 20px 45px">
+                            <div class="dropdown profile-element" style="">
+                                <a href="{{route('usuario.index')}}">
+                                <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/')}}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; margin-right: 25px;" />
+                                <span class="nav-label text-white" style="font-size: 18px; font-weight: bold; margin-top: 80px;">LEONOSOFT</span>
+                                                            
+                                </a> 
+                            </div>
+                            <div class="dropdown profile-element" style="">
+                                    <a class="nav-label" href="{{route('usuario.index')}}">
+                                        <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-top: 20px;">@yield('nombre',auth()->user()->nombre)</span>
+                                        
+                                    </a>
+                            </div>
+                             
+                            
+                        </li>
                         
-                    </li>
-                    <li style="background-color: #15338a">
-                            <div class="dropdown profile-element" style="left: 25px">
-                                <a class="nav-label" href="{{route('usuario.index')}}">
-                                    <span class="block m-t-xs font-bold spans " style="font-size: 15px; margin-left: 4px" >@yield('nombre',auth()->user()->nombre)</span>
-                                    
-                                </a>
-                            </div>    
-                        <hr class="bg-white" style="width: 100%; margin-bottom: 0rem;">
-                    </li>
+                    </div>
+                    
                             
                             
                     {{-- MENU DESPELEGABLE --}}
                 
                     @can('inicio')
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
+                    <li style=" margin-top: 153px;"><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span class="nav-label text-white">Inicio</span></a></li>
                     @endcan
                     {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
                     {{-- {{$inventario_inicial->estado}} --}}
@@ -271,7 +306,7 @@
                     <li>
                     <a href="#"><i class="fa fa-table fa-lg text-white"></i>
                     <span class="nav-label text-white">Planilla</span> 
-                    <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 110px"></i>
+                    <i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 90px"></i>
                     </a> 
 
                         
@@ -289,7 +324,7 @@
                     @endcan
                     @can('consultas')
                     <li>
-                        <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 100px;"></i></a>
+                        <a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span class="nav-label text-white">Consultas</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 80px;"></i></a>
                         <ul class="nav nav-second-level collapse">
                             @can('consultas-garantias')
                             <li>
@@ -315,7 +350,7 @@
                     </li>
                     @endcan
                     <li>
-                        <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 65px;"></i></a>
+                        <a href="#"><i class="fa fa-registered fa-lg text-white"></i><span class="nav-label text-white">Registros Sunat</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 45px;"></i></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
                             <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
@@ -324,23 +359,8 @@
                             <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="#"><i class="fa fa-envelope fa-lg text-white"></i> <span class="nav-label text-white">Correo</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 115px;"></i></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
-                            <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
-                            <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
-
-                        </ul>
-                    </li>
-                    <li><a href="{{route('eventos.user_indes')}}">
-                            <i class="fa fa-calendar fa-lg text-white"></i> <span class="nav-label text-white">Calendario&nbsp;&nbsp;&nbsp;</span>
-                            @if ($count_eventos > 0)
-                                <span class="label label-warning">{{$count_eventos}}</span>    
-                            @endif
-                            
-                        </a>
-                    </li>
+                    
+                    
                     @can('auxiliares')
                     <li>
                     {{--   <a href="#"><i class="fa fa-life-ring fa-lg text-white"></i><span class="nav-label text-white">Auxiliares</span></a> --}}
@@ -357,7 +377,7 @@
 
                     @can('maestro')
                     <li>
-                        <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 30px;"></i></a>
+                        <a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span class="nav-label text-white">Productos y Servicios</span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 10px;"></i></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="{{route('productos.index')}}"><span>Productos</span></a></li>
                             <li><a href="{{route('servicios.index')}}"><span>Servicios</span></a></li>
@@ -369,7 +389,7 @@
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
 
                     <li>
-                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 75px;"></i></a>
+                    <a href="#"><i class="fa fa-cog fa-lg text-white"></i><span class="nav-label text-white">Configuración </span><i class="fa fa-angle-down fa-lg text-white nav-label" style="margin-left: 55px;"></i></a>
                     <ul class="nav nav-second-level collapse">
                         @can('maestro-catalogo-clasificacion')
                         <li><a href="{{route('Configuracion')}}"><span>Configuración del Sistema</span></a></li>
@@ -382,7 +402,7 @@
                     </li>
                     <li style="background-color: #143593; ;">
                         
-                            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            {{--<div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <a class="nav-label" style="display: flex; align-items: center; margin-left: 5px;"  href="{{route('usuario.index')}}" >
                                     <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
                                     <div class="nav-label" style="margin-left: 10px;">
@@ -394,7 +414,7 @@
                                         <i class="fa fa-ellipsis-v" style="color: white; font-size: 19px; margin-left: 15px;"></i>
                                     </div>
                                 </a>     
-                            </div>
+                            </div>--]]
                         
                            
                     </li>
@@ -413,6 +433,21 @@
 
                     {{-- MENU DESPELEGABLE --}}
                 </ul>
+                <div style="position: fixed; bottom: 0px; background-color:#143593;   ">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                                <a class="nav-label" style="display: flex; align-items: center; margin-left: 20px;"  href="{{route('usuario.index')}}" >
+                                    <img alt="image" class="rounded-circle" src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 60px; height: 60px; border: 3px solid black;" />
+                                    <div class="nav-label" style="margin-left: 30px;">
+                                        <span class="block m-t-xs font-bold spans " style="font-size: 14px;" >Julio Flores Vicuña</span>
+                                        <span class="block m-t-xs text-white font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
+                                        
+                                    </div>
+                                    <div class="nav-label" style="margin-left: auto;">
+                                        <i class="fa fa-ellipsis-v" style="color: white; font-size: 19px; margin-left: 15px;"></i>
+                                    </div>
+                                </a>     
+                        </div>
+                </div>
     </div>
 </nav>
 {{-- Menu Superior --}}
@@ -659,19 +694,31 @@
                         
                     </ul>--}}
 
+                    
+                    <body>
+
+                        <div class="custom-container">
+                        <div class="left-side">
+                        <i class="fa fa-exclamation-circle fa-2x mx-3"></i>
+                        <span>3 de 20</span>
+                        </div>
+                        <div class="right-side">
+                        <a class="link">Mensajes</a>
+                        </div>
+                        </div>
+
+                    </body>
+                    
                     <div>
-                        <li class="mr-5" >
-                                <a href="{{ route('inicio') }}" class="message-btn">
-                                    
-                                <i class="fa fa-exclamation-circle fa-lg"></i> Mensajes
-                                        <form id="logout-form" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    
-                                </a>
+                        <li class=" mr-5" >            
+                                <i class="fa fa-calendar fa-lg fa-2x " style="color: #2641f8"></i>                          
                         </li>
                     </div>
-
+                    <div>
+                        <li class=" mr-5" >            
+                                <i class="fa fa-envelope fa-lg fa-2x " style="color: #2641f8"></i>                          
+                        </li>
+                    </div>
 
 
 
