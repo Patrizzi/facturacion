@@ -373,7 +373,7 @@
 
                     <li><a href="{{ route('inicio') }}"><i class="fa fa-th-large fa-lg text-white"></i><span class="nav-label text-white">Proyectos PMB</span></a></li>
 
-                    <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPI</span></a></li>
+                    <li><a href="{{ route('inicio') }}"><i class="fa fa-database fa-lg text-white"></i><span class="nav-label text-white">Estadistica KPIS</span></a></li>
 
                     
                     </li>
