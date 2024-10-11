@@ -128,6 +128,7 @@
     body.mini-navbar .logo-element {
         display: block;
     }
+<<<<<<< HEAD
         /* Estilos generales del scroll */
     #side-menu {
         height: 90vh;
@@ -168,13 +169,11 @@
     }
 
 
+=======
+>>>>>>> e08f6e3dfa92fc33f2c2798e325639639d3209a6
     li::marker {
     content: none;
     }
-    
-        
-    
-
 
 </style>
 <body class="">
