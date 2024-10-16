@@ -208,25 +208,369 @@
                                                         <!--Boleta Manual -->
                                                         <div role="tabpanel" id="tab-2-Pag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Importe Total</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>1</td>
+                                                                                <td>BA00-00000001</td>
+                                                                                <td>GABRIELA MAGDALENA CRUZ ENCARNACION</td>
+                                                                                <td>07-09-2024</td>
+                                                                                <td>Contado</td>
+                                                                                <td>S/. 185.00</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
+                                                                                <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
+                                                                            </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <!--Factura -->
                                                         <div role="tabpanel" id="tab-3-Pag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Importe Total</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>1</td>
+                                                                                <td>F001-00000001</td>
+                                                                                <td>DROGUERIA REYES S.A.C.</td>
+                                                                                <td>15-09-2024</td>
+                                                                                <td>Contado</td>
+                                                                                <td>S/. 89.00</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
+                                                                                <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
+                                                                            </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <!-- Factura Manual -->
                                                         <div role="tabpanel" id="tab-4-Pag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Importe Total</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>1</td>
+                                                                                <td>FA00-00000001</td>
+                                                                                <td>MACHEN PERU S.A.C.</td>
+                                                                                <td>03-10-2024</td>
+                                                                                <td>Credito</td>
+                                                                                <td>S/. 75.00</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
+                                                                                <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
+                                                                            </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                         <!-- Nota de Venta -->
                                                         <div role="tabpanel" id="tab-5-Pag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                               
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Importe Total</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>1</td>
+                                                                                <td>NV 001-00000246</td>
+                                                                                <td>JUAN CARLOS AMPUERO</td>
+                                                                                <td>20-08-2024</td>
+                                                                                <td>Credito</td>
+                                                                                <td>S/. 99.00</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
+                                                                                <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
+                                                                            </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -412,8 +756,8 @@
                                                                             <tr>
                                                                                 <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                                 <td>1</td>
-                                                                                <td>B001-00000001</td>
-                                                                                <td>Marco Estrada</td>
+                                                                                <td>B001-00000004</td>
+                                                                                <td>Marco Estrada Doritos</td>
                                                                                 <td>07-10-2024</td>
                                                                                 <td>Contado</td>
                                                                                 <td>S/. 74.34 | 1</td>
@@ -440,27 +784,423 @@
                                                         <!--Boleta Manual -->
                                                         <div role="tabpanel" id="tab-2-SinPag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Monto y Cuotas</th>
+                                                                                <th>Pago o Adelantado</th>
+                                                                                <th>Ultima Fecha</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                                                <td>1</td>
+                                                                                <td>BA00-00000004</td>
+                                                                                <td>Ana Mondragon Guerrero</td>
+                                                                                <td>02-10-2024</td>
+                                                                                <td>Contado</td>
+                                                                                <td>S/. 85.00 | 1</td>
+                                                                                <td>S/. 0.00</td>
+                                                                                <td>12-10-2024</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </td>
+                                                                                </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <!--Factura -->
                                                         <div role="tabpanel" id="tab-3-SinPag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Monto y Cuotas</th>
+                                                                                <th>Pago o Adelantado</th>
+                                                                                <th>Ultima Fecha</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                                                <td>1</td>
+                                                                                <td>F001-00000010</td>
+                                                                                <td>CORPORACION HERMANOS ORE S.A.C.</td>
+                                                                                <td>13-10-2024</td>
+                                                                                <td>Credito</td>
+                                                                                <td>S/. 115.00 | 3</td>
+                                                                                <td>S/. 0.00</td>
+                                                                                <td>14-10-2024</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </td>
+                                                                                </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <!--Factura Manual -->
                                                         <div role="tabpanel" id="tab-4-SinPag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Monto y Cuotas</th>
+                                                                                <th>Pago o Adelantado</th>
+                                                                                <th>Ultima Fecha</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                                                <td>1</td>
+                                                                                <td>FA00-00000011</td>
+                                                                                <td>NETKA S.A.C.</td>
+                                                                                <td>15-04-2024</td>
+                                                                                <td>Credito</td>
+                                                                                <td>S/. 95.00 | 1</td>
+                                                                                <td>S/. 20.00</td>
+                                                                                <td>16-04-2024</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </td>
+                                                                                </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <!--Nota de Venta -->
                                                         <div role="tabpanel" id="tab-5-SinPag" class="tab-pane fade">
                                                             <div class="panel-body">
-                                                                
+                                                                <div class="row col-lg-12">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="input-group">
+                                                                            <input class="form-control" type="text" name="daterange"
+                                                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                    <i class="fa fa-history"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                            <span class="input-group-append">
+                                                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                                                    <i class="fa fa-eraser"></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Cliente:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Factura</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pagar por Lote:</strong></label>
+                                                                            <button type="submit" class="form-control col-lg-6 btn btn-primary">Pagar todo</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Pago:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Contado</option>
+                                                                                <option value="factura">Credito</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Estado:</strong></label>
+                                                                            <select class="form-control col-lg-6" id="select_tipo_coti">
+                                                                                <option value="">Seleccionar</option>
+                                                                                <option value="factura">Pagado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-6 col-form-label"><strong>Buscar:</strong></label>
+                                                                            <input type="search" class="form-control col-lg-6">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                                                        <thead>
+                                                                            <tr><th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                                                <th>ID</th>
+                                                                                <th>Código</th>
+                                                                                <th>Cliente</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Forma</th>
+                                                                                <th>Monto y Cuotas</th>
+                                                                                <th>Pago o Adelantado</th>
+                                                                                <th>Ultima Fecha</th>
+                                                                                <th>Acciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                                                <td>1</td>
+                                                                                <td>NV 001-00000011</td>
+                                                                                <td>CORBETTO ANDRADE ESTHER OFELIA</td>
+                                                                                <td>20-05-2024</td>
+                                                                                <td>Contado</td>
+                                                                                <td>S/. 105.00 | 1</td>
+                                                                                <td>S/. 0.00</td>
+                                                                                <td>22-05-2024</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </td>
+                                                                                </td>
+                                                                            </tr>         
+                                                                        </tbody>          
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -513,4 +1253,44 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
  @endsection

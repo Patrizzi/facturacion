@@ -943,4 +943,7 @@ class CreditosAdelantosController extends Controller
     public function creditos(Request $request){
         return view('cobranzas.creditos');
     }
+    public function creditos_show($id){
+        return view('cobranzas.creditos_show');
+    }
 }

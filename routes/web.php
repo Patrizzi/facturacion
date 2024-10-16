@@ -587,6 +587,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/cotizacion3', 'CotizacionController@index3')->name('cotizacion.index3');
 Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
+Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
 
 
 
