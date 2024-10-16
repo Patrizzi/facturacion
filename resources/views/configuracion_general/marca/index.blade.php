@@ -250,6 +250,213 @@
     .col-sm-10{padding-bottom: 5px;padding-top: 5px;}
     .form-control{border-radius: 5px}
 </style>
+
+
+
+
+
+
+
+
+
+
+{{--Base para agregar el tab para el los contenidos--}}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+
+
+
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li>
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> CATEGORIA
+                                    {{-- link del tab 1 --}}
+                                </a>
+                            </li>
+                            <li class="ml-auto">
+                                <div class="btn-group mx-2">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                    <!-- Botón para abrir el modal -->
+                                    <div class="btn-group mx-0"> <!-- Cambia mx-2 a mx-0 -->
+                                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-bs-toggle="modal" data-bs-target="#myModal">Agregar</button>                                    </div>
+                                </div>
+                            </li></ul>
+                        <!-- Tablas y su contenido -->
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body">
+                                    <!-- CONTENIDO DENTRO DEL TAB  -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th >ID</th>
+                                                <th >Nombre</th>
+                                                <th >Abreviatura</th>
+                                                <th>Descripción</th>
+                                                <th>Foto</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Lenovo</td>
+                                            <td>LN</td>
+                                            <td>Sin información</td>
+                                            <td>Img</td>
+                                            <td>
+                                            <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-eye" style="color:white;"></i>
+                                            </a>
+                                            <a href="#"style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-check" style="color:white;"></i>
+                                            </a>
+                                            <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-edit" style="color:white;"></i>
+                                            </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Indico</td>
+                                            <td>ID</td>
+                                            <td>Sin descripción</td>
+                                            <td>Img</td>
+                                            <td>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                                data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-eye" style="color:white;"></i>
+                                                </a>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-check" style="color:white;"></i>
+                                            </a>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-edit" style="color:white;"></i>
+                                            </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Samsung</td>
+                                            <td>SM</td>
+                                            <td>Sin descripción</td>
+                                            <td>Img</td>
+                                            <td>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                                data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-eye" style="color:white;"></i>
+                                                </a>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-check" style="color:white;"></i>
+                                            </a>
+                                            <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-edit" style="color:white;"></i>
+                                            </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Essenza</td>
+                                            <td>EZA</td>
+                                            <td>Sin descripción</td>
+                                            <td>Img</td>
+                                            <td>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                                data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-eye" style="color:white;"></i>
+                                                </a>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-check" style="color:white;"></i>
+                                            </a>
+                                            <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-edit" style="color:white;"></i>
+                                            </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>HP Inc.</td>
+                                            <td>HP</td>
+                                            <td>Sin descripción</td>
+                                            <td>Img</td>
+                                            <td>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                                data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-eye" style="color:white;"></i>
+                                                </a>
+                                                <a href="#"style="display:inline-block; padding:10px; background-color:red; border-radius:66px; margin-right:2px;"
+                                            data-bs-toggle="button" data-bs-target="#modaluno"> <i class="fa fa-arrows-alt" style="color:white;"></i>
+                                            </a>
+                                            <a href="#"style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                                            data-bs-toggle="modal" data-bs-target="#modaluno"> <i class="fa fa-edit" style="color:white;"></i>
+                                            </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
