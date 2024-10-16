@@ -161,8 +161,12 @@
                                             <td>Contado</td>
                                             <td>S/ 1,800.00</td>
                                             <td>
-                                            <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            <i class="bi bi-eye-fill"></i>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                    <i class="fa fa-check" style="color:white;"></i>
+                                                </a>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -175,8 +179,11 @@
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
                                             <td>  
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                    <i class="fa fa-check" style="color:white;"></i>
+                                                </a>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
                                             </td>
                                         </tr>
                                         <tr>
@@ -189,8 +196,11 @@
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
                                             <td>
-                                            <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            <i class="bi bi-eye-fill"></i>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                    <i class="fa fa-check" style="color:white;"></i>
+                                                </a>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
                                             </td>
                                         </tr>
                                         <tr>
@@ -203,8 +213,11 @@
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
                                             <td>
-                                            <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            <i class="bi bi-eye-fill"></i>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                    <i class="fa fa-check" style="color:white;"></i>
+                                                </a>
+                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -241,8 +254,11 @@
                                                 <td>Contado</td>
                                                 <td>S/ 1,800.00</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -255,8 +271,11 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -269,8 +288,11 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                            <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -283,8 +305,11 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -320,8 +345,11 @@
                                                 <td>Contado</td>
                                                 <td>S/ 1,800.00</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -334,8 +362,11 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -348,8 +379,11 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -362,8 +396,11 @@
                                                 <td>Contado</td>
                                                 <td>s/ 2,456.50</td>
                                                 <td>
-                                                <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                <i class="bi bi-eye-fill"></i>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                    </a>
+                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
+                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </td>
                                             </tr>
                                         </tbody>

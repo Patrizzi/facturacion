@@ -43,6 +43,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- / Modal Create  -->
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -120,7 +122,10 @@
 </div>
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 32d3930ce1960c7b7f2c36e57c274c8c6274f7f5
 <tbody>
     {{--Base para agregar el tab para el los contenidos--}}
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -147,7 +152,7 @@
                                     <div class="btn-group mx-0"> <!-- Cambia mx-2 a mx-0 -->
                                         <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-bs-toggle="modal" data-bs-target="#myModal">Agregar</button>                                    </div>
                                 </div>
-                            </li></ul>
+                            </li>
         <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -187,6 +192,7 @@
             <table class="table table-striped text-md-center">
                 <thead>
                     <tr>
+                        <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
                         <th >ID</th>
                         <th >Código</th>
                         <th >Descripción</th>
@@ -195,6 +201,7 @@
                 </thead>
                 <tbody>
                 <tr>
+                    <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                     <td>1</td>
                     <td>0001</td>
                     <td>PRODUCTOS</td>
@@ -202,13 +209,10 @@
                         <!-- Botón para abrir el modal -->
                         <a href="#"
                            style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
-                           data-bs-toggle=""
-                           data-bs-target=""> <!-- Cambiado a modaluno -->
+                           data-bs-toggle="modal"
+                           data-bs-target="#modaluno"> <!-- Cambiado a modaluno -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
-                        <a href="#"style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px;"
-                                            data-bs-toggle="" data-bs-target=""> <i class="fa fa-check" style="color:white;"></i>
-                                            </a>
                     </td>
 
                     <!-- Modal -->
@@ -245,19 +249,17 @@
             </td>
         </tr>
     <tr>
+                    <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                     <td>2</td>
                     <td>0002</td>
                     <td>GARANTIAS</td>
                     <td>
                         <a href="#"
                            style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
-                           data-bs-toggle=""
-                           data-bs-target=""> <!-- Cambiado a modaldos -->
+                           data-bs-toggle="modal"
+                           data-bs-target="#modaldos"> <!-- Cambiado a modaldos -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
-                        <a href="#"style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px;"
-                                            data-bs-toggle="" data-bs-target=""> <i class="fa fa-check" style="color:white;"></i>
-                                            </a>
                     </td>
 
                     <!-- Modal -->
@@ -291,6 +293,7 @@
                         </div>
                     </div>
                 </tr>
+                    <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                     <td>3</td>
                     <td>0001</td>
                     <td>SERVICIOS</td>
@@ -353,10 +356,6 @@
         </div>
     </div>
 </tbody>
-
-
-
-
 
 
 
