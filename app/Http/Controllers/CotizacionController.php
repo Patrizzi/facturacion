@@ -3209,7 +3209,9 @@ if($validacion==1){
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
         
         $almacen = Almacen::get();
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes'));
+
+        $count_all_ventas = Ventas_registro::count_day_ventas();
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
     }
     
 }
