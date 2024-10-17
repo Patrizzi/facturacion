@@ -49,13 +49,17 @@ class ProjectManager extends Model {
     }
 
     public function getPriority() {
-        $priorities = [
+        $priorities = self::getPriorities();
+
+        return $this->prioridad ? ($priorities[$this->prioridad] ?? "No definido") : "No definido";
+    }
+
+    public static function getPriorities() {
+        return [
             1 => "Alta",
             2 => "Media",
             3 => "Baja",
         ];
-
-        return $priorities[$this->prioridad] ?? "No definido";
     }
 
     public function percentage(): int {
