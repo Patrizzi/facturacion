@@ -70,7 +70,7 @@ function randomPastelColor(): string {
     return sprintf("#%02X%02X%02X", $r, $g, $b);
 }
 
-function generateColors(int $n = 1, callable $functionColor): array {
+function generateColors(callable $functionColor, int $n = 1): array {
     $colors = [];
     for ($i = 0; $i < $n; $i++) {
         $colors[] = $functionColor();

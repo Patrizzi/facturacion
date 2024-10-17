@@ -19,7 +19,7 @@ class PieChart extends Component {
         return [
             'labels' => ['App', 'Software', 'Laptop'],
             'values' => [300, 50, 100],
-            'colors' => generateColors(3, 'randomPastelColor'),
+            'colors' => generateColors('randomPastelColor',3),
         ];
     }
 
