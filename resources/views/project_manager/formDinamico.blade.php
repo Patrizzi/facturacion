@@ -1,8 +1,8 @@
 
 <div class="col-md-6">
     <div class="form-group d-flex align-items-center"> 
-        {{html()->label('Nombre')->class('label-custom me-2')}}
-        {{html()->text('nombre')->placeholder('Ingrese el Nombre')->class('form-control')->value(old('nombre',$data->nombre ?? ''))}}
+        {{ html()->label('Nombre')->class('label-custom me-2') }}
+        {{ html()->text('nombre')->placeholder('Ingrese el Nombre')->class('form-control')->value(old('nombre',$data->nombre ?? ''))}}
     </div>
 </div>
 <div class="col-md-6">
@@ -19,8 +19,14 @@
 </div>
 <div class="col-md-6">
     <div class="form-group d-flex"> 
+        {{$options = [];
+            foreach ($actividades as $actividad) {
+                $options[$actividad->id] = $actividad->nombre;
+            }
+        }}
+        
         {{html()->label('Administrador')->class('col-form-label')}}
-        {{html()->number('administrador_id')->placeholder('Ingrese al Administrador')->class('form-control')->value(old('administrador_id',$data->administrador_id ?? ''))}}
+        {{html()->select('administrador_id',$options)->placeholder('Ingrese al Administrador')->class('form-control')->value(old('administrador_id',$data->administrador_id ?? ''))}}
     </div>
 </div>
 <div class="col-md-6">
@@ -35,6 +41,7 @@
         {{html()->number('project_service_id')->placeholder('Ingrese el Servicio')->class('form-control')->value(old('project_service_id',$data->project_service_id ?? ''))}}
     </div>
 </div>
+
 <div class="col-md-6">
     <div class="form-group d-flex"> 
         {{html()->label('Cliente')->class('col-form-label')}}

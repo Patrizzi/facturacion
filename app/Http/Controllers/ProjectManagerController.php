@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ProjectManager;
+use App\Activity;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller
@@ -13,9 +14,18 @@ class ProjectManagerController extends Controller
         return view('project_manager.index', compact('tabla'));
     }
 
+    public function getModelos(){
+        return [
+            'actividades'   => Activity::select('id', 'nombre')->get(),
+            // 'prioridades'   => Priority::all(),
+            // 'responsables' => Responsable::all(),
+        ];
+    }
+
     public function create()
     {
-        return view('project_manager.create');
+        $dataMolel=$this->getModelos();
+        return view('project_manager.create',compact('dataMolel'));
     }
 
     public function store(Request $request)
@@ -29,7 +39,7 @@ class ProjectManagerController extends Controller
             'project_service_id' => $numbers,
             'cliente_id' => $numbers,
             'fecha_inicio'=>'required',
-            'fecha_final'=>'required',
+            'fecha_cierre'=>'required',
             'prioridad' => $numbers
         ]);
         ProjectManager::create($request->all());
@@ -43,8 +53,9 @@ class ProjectManagerController extends Controller
 
     public function edit($id)
     {
+        $dataMolel=$this->getModelos();
         $data = ProjectManager::findOrFail($id);
-        return view('project_manager.edit', compact('data'));
+        return view('project_manager.edit', compact('data')+$dataMolel);
     }
 
     public function update(Request $request, $id)
@@ -58,7 +69,7 @@ class ProjectManagerController extends Controller
             'project_service_id' => $numbers,
             'cliente_id' => $numbers,
             'fecha_inicio'=>'required',
-            'fecha_final'=>'required',
+            'fecha_cierre'=>'required',
             'prioridad' => $numbers
         ]);
         $data = ProjectManager::findOrFail($id);
