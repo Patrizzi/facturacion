@@ -25,55 +25,86 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            @include('transaccion\venta\_shared\tabs')
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                @include('transaccion\venta\_shared\tabs')
+                                {{-- Almacen --}}
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    {{-- ALMACEN --}}
+                                    @if (auth()->user()->id == 1){{-- Condicional por tipo de user  --}}
+                                        <span class="dropdown" >
+                                            <button class="btn btn-success dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                @foreach ($almacen as $almacens)
+                                                    <li>
+                                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
+                                                            method="post">
+                                                            @csrf
+                                                            <input type="text" value="{{ $almacens->id }}"
+                                                                hidden="hidden" name="almacen">
+                                                            <button class="btn btn-w-m btn-link"
+                                                                type="submit">{{ $almacens->nombre }}</button>
+                                                        </form>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </span>
+                                    @else
+                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data" method="post" class="tooltip-demo">
+                                            @csrf
+                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
+                                                name="almacen">
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <button class="btn btn-success" type="button">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
+                                </ul>
+
+                            </ul>
                             <div class="tab-content">
                                 <!-- COTIZACION-->
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                    <br>
-                                    <form action="{{ route('cotizacion.index3') }}" method="get">
-                                        @csrf
+                                    <br> {{-- FILTRADO DE DATOS --}}
+                                    <div class="search-responsive">
                                         <div class="row">
-                                            <div class="col-sm-4">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" />
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
                                                         </button>
                                                     </span>
-                                                    {{-- <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span> --}}
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group row">
-                                                    <select class="form-control col-lg-12" name=""
-                                                        id="select_tipo_coti">
-                                                        <option value="" selected>Todos los comprobantes</option>
-                                                        <option value="factura">Factura</option>
-                                                        <option value="boleta">Boleta</option>
-                                                        <option value="nota_venta">Nota de Venta</option>
-                                                    </select>
-                                                </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_tipo_coti">
+                                                    <option value="" selected>Todos los comprobantes</option>
+                                                    <option value="factura">Factura</option>
+                                                    <option value="boleta">Boleta</option>
+                                                    <option value="nota_venta">Nota de Venta</option>
+                                                </select>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group row">
-                                                    <label class="col-lg-3 col-form-label"><strong>Buscar:</strong></label>
-                                                    <input type="search" class="form-control col-lg-8">
-                                                </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
                                             </div>
-                                            <div class="col-sm-1">
-                                                <button type="submit">Guardar</button>
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-block btn-primary"
+                                                    id="filter_buttons">Buscar</button>
                                             </div>
-
                                         </div>
-                                    </form>
+                                    </div>
+                                    <br>{{--  Tabla de   --}}
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered dataTables-example-cotizacion">
                                             <thead>
@@ -88,37 +119,30 @@
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
-                                                    <th>Acciones</th>
+                                                    <th style="width: 0.5vmax !important">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- @foreach ($cotizaciones as $cotizacion)
-                                                    <tr>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                        <td>{{ $cotizacion->id }}</td>
-                                                    </tr>
-                                                @endforeach --}}
+                                                
                                             </tbody>
                                             <tfoot>
-                                                {{-- {!! $cotizaciones->render() !!} --}}
+                                                <tr>
+                                                    <th colspan="7"></th>
+                                                    <th class="total-columna">Total: 0</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8"></th>
+                                                    <th class="total-total">Total G: 0</th>
+                                                </tr>
                                             </tfoot>
                                         </table>
                                     </div>
                                 </div>
 
                                 <!-- COTIZACION MANUAL-->
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
+                                {{-- <div role="tabpanel" id="tab-2" class="tab-pane">
 
-                                </div>
+                                </div> --}}
                                 <!-- NOTA DE VENTA-->
                                 <div role="tabpanel" id="tab-3" class="tab-pane">
 
@@ -136,7 +160,8 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover dataTables-example"
+                                            <table
+                                                class="table table-striped table-bordered table-hover dataTables-example"
                                                 id="table_cliente">
                                                 <thead>
                                                     <tr>
@@ -182,13 +207,17 @@
     </div>
 
     <style>
+        select.form-control:not([size]):not([multiple]) {
+            height: 100%;
+        }
+
         .dropdown-menu {
             left: 70px;
             padding: 20px 0;
         }
 
         #DataTables_Table_0_wrapper {
-            padding-right: 0px;
+            /* padding-right: 0px; */
         }
 
         .table {
@@ -197,6 +226,26 @@
 
         .ibox-content>.row {
             margin: auto;
+        }
+
+        .nav-tabs-right {
+            margin-left: auto;
+            /* Esto empuja el tab hacia la derecha */
+        }
+
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px;
+            border-left: 1px;
+            border-bottom: 1px;
+        }
+
+        .btn-link {
+            width: 100%;
         }
 
         /* OCULTANDO LO DE ORGANIZAR*/
@@ -213,6 +262,13 @@
         /* CSV, Excel, PDF, Print */
         div.dt-buttons {
             display: none;
+        }
+
+        /* PANTALLA TABLET */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .row>.col-md-6 {
+                margin-bottom: 12px;
+            }
         }
     </style>
     <!-- Mainly scripts -->
@@ -235,23 +291,38 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
-    {{-- SCRIPTS PARA TABS --}}
+    {{-- SCRIPTS PARA DATATABLE --}}
     <script>
         $(document).ready(function() {
-            var coti_table = $('.dataTables-example-cotizacion').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('ventas.cotizacion_registers') }}",
-                    method: "get",
-                    data: function(d) {
-                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                        d.daterange = $('#data_range_filter')
-                    .val(); // Supongamos que tienes un campo input con rango de fechas
-                        d.tipo_coti = $('#select_tipo_coti')
-                    .val(); // Supongamos que tienes un select para el tipo de cotización
-                    }
+            // "ACTIVA EL TAB DE COTIZACION"
+            $('#tab-1-tab').addClass('active');
+        });
+        var coti_table = $('.dataTables-example-cotizacion').DataTable({
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('ventas.cotizacion_registers') }}",
+                method: "get",
+                data: function(d) {
+                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
+                    d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
+                    d.tipo_coti = $('#select_tipo_coti').val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.value = $('#search_all_column').val(); 
                 },
-                "columnDefs": [{
+                dataSrc: function(json) {
+                    // Suponiendo que el valor adicional viene con el nombre 'total'
+                    var total_columna = json.total_columna;
+                    var total_table = json.total_table;
+
+                    // Actualiza el pie de la tabla (tfoot) con el valor que viene del servidor
+                    $('.dataTables-example-cotizacion tfoot th.total-columna').html('Total: ' + total_columna);
+                    $('.dataTables-example-cotizacion tfoot th.total-total').html('Total  G.: ' + total_table);
+
+                    // Retorna los datos de la tabla para que Datatables los procese
+                    return json.data;
+                }
+            },
+            "columnDefs": [{
+                    'width': '1vmax',
                     'targets': [0], // Aplica a la primera columna (index 0)
                     'orderable': false, // Deshabilitar ordenación en esta columna
                     'render': function(data, type, full, meta) {
@@ -261,57 +332,64 @@
                     }
                 },
                 {
+                    'width': '30%',
+                    'targets': [4]
+                },
+                {
                     'targets': [8], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return ` <button class="btn btn-primary">Si</button>`;
+                        // Generar la URL de forma dinámica usando la función route con un placeholder
+                        var url = '{{ route('cotizacion.show', ':id') }}';
+                        url = url.replace(':id', full[
+                            0]); // Reemplazar el placeholder con el valor dinámico
+
+                        if (full[9] == '1') {
+                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
+                        } else {
+                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                        }
                     }
-                }],
-            });
-            $('input[name="daterange"]').daterangepicker({
-                "locale": {
-                    "separator": " | ",
-                    "applyLabel": "Guardar",
-                    "cancelLabel": "Cancelar",
-                    "fromLabel": "Desde",
-                    "toLabel": "Hasta",
-                    "customRangeLabel": "Custom",
-                    "daysOfWeek": [
-                        "Do",
-                        "Lu",
-                        "Ma",
-                        "Mi",
-                        "Ju",
-                        "Vi",
-                        "Sa"
-                    ],
-                    "monthNames": [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre"
-                    ],
-                    "firstDay": 1
                 }
-            },
-            function(){
-                coti_table.ajax.reload();
-            }
-        );
-            // Cuando cambia el rango de fechas
-            // $('input[name="daterange"]').on('change', function() {
-            //     coti_table.ajax.reload();
-            // });
+            ],
         });
-        
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+        $(`#filter_buttons`).on('click', function() {
+            coti_table.ajax.reload();
+        });
     </script>
     <!-- Seleccionar todos los check -->
     <script>
@@ -352,125 +430,10 @@
             });
         });
     </script>
+    {{-- Script para el llamada a los otros tabs --}}
     <script>
-        $(document).ready(function() {
-            table = $('.dataTables-example-facturacion').DataTable({
 
-            });
-        });
     </script>
-    <!--Organizar-->
-    {{-- <script>
-                $(document).ready(function() {
-                    table = $('.dataTables-example-facturacion').DataTable({
-                        pageLength: 10,
-                        order: [
-                            [0, "desc"]
-                        ],
-                        responsive: true,
-                        dom: '<"html5buttons"B>lTfgitp',
-                        footerCallback: function(tr, data, start, end, display) {
-                            var api = this.api(),
-                                data;
-
-                            // Remove the formatting to get integer data for summation
-                            var intVal = function(i) {
-                                return typeof i === 'string' ?
-                                    i.replace(/[\$,]/g, '') * 1 :
-                                    typeof i === 'number' ?
-                                    i : 0;
-                            };
-
-                            // Total over all pages
-                            total = api
-                                .column(7)
-                                .data()
-                                .reduce(function(a, b) {
-                                    return intVal(a) + intVal(b);
-                                }, 0);
-
-                            // Total filtered rows on the selected column (code part added)
-                            var sumCol4Filtered = display.map(el => data[el][7]).reduce((a, b) => intVal(a) +
-                                intVal(b), 0);
-
-                            // Update footer
-                            $(api.column(7).footer()).html(
-                                'S/ ' + Math.round(sumCol4Filtered * 100) / 100
-                            );
-                        },
-                        buttons: []
-                    });
-
-                    revert_select();
-
-                    $(document).on('change', '#select_tipo_coti', function(event) {
-                        var nombre = $("#select_tipo_coti option:selected").val();
-                        // console.log(nombre);
-                        table.column(10).search(nombre).draw();
-                    });
-                    $('input[name="daterange"]').daterangepicker({
-                            "locale": {
-                                "separator": " | ",
-                                "applyLabel": "Guardar",
-                                "cancelLabel": "Cancelar",
-                                "fromLabel": "Desde",
-                                "toLabel": "Hasta",
-                                "customRangeLabel": "Custom",
-                                "daysOfWeek": [
-                                    "Do",
-                                    "Lu",
-                                    "Ma",
-                                    "Mi",
-                                    "Ju",
-                                    "Vi",
-                                    "Sa"
-                                ],
-                                "monthNames": [
-                                    "Enero",
-                                    "Febrero",
-                                    "Marzo",
-                                    "Abril",
-                                    "Mayo",
-                                    "Junio",
-                                    "Julio",
-                                    "Agosto",
-                                    "Septiembre",
-                                    "Octubre",
-                                    "Noviembre",
-                                    "Diciembre"
-                                ],
-                                "firstDay": 1
-                            }
-                        },
-                        function(start, end, label) {
-                            var dates = [];
-                            var currentDate = new Date(start);
-                            while (currentDate <= end) {
-                                var day = ('0' + currentDate.getDate()).slice(-2);
-                                var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                                var year = currentDate.getFullYear();
-
-                                var formattedDate = day + '-' + month + '-' + year;
-                                dates.push(formattedDate);
-
-                                currentDate.setDate(currentDate.getDate() + 1);
-                            }
-                            var dateRangeString = dates.join('|');
-                            console.log(dateRangeString);
-                            table.column(4).search(dateRangeString, true, false).draw();
-                        }
-                    );
-                });
-
-                function limpiar_select() {
-                    table.column(4).search("").draw();
-                }
-
-                function revert_select() {
-                    table.column(4).search(`{{ date('m-Y') }}`).draw();
-                }
-            </script> --}}
-
     <!--Clientes-->
     <script>
         $(document).ready(function() {

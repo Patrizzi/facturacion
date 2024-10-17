@@ -84,7 +84,7 @@ class Cotizacion extends Model
 
         $mes = array(
             "cantidad" => $cotizaciones->count(),
-            "total" => number_format(round($total,2),2)
+            "total" => number_format(round($total, 2), 2)
         );
 
         return $mes;
@@ -114,26 +114,22 @@ class Cotizacion extends Model
         }
         return $estado_actual;
     }
-    public static function search_params($request){
-
-        // return $request;
+    public static function search_params($request)
+    {
         // Datos 
-
-        
-        if(!isset($request->daterange)){
+        if (!isset($request->daterange)) {
             $startDate =  Carbon::now()->format('Y-m-01');
             $endDate =  Carbon::now()->format('Y-m-t');
-
-        }else{
+        } else {
             $startDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('m/d/Y', explode(' - ', $request->daterange)[1])->endOfDay();
         }
 
         // Busqueda por tipos
         $tipo = $request->tipo_coti;
-        if($tipo == null){
+        if ($tipo == null) {
             $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(25);
-        }else{
+        } else {
             $cotizaciones = Cotizacion::whereBetween('created_at', [$startDate, $endDate])->where('tipo', $tipo)->with(['cliente', 'moneda', 'forma_pago'])->orderBy('created_at', 'desc')->paginate(25);
         }
         $igv = Igv::first()->renta;
@@ -149,7 +145,7 @@ class Cotizacion extends Model
                 $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
                 $cotizacion->total_conv = $total; // Total en moneda local
             }
-            $cotizacion->emision = Carbon::parse( $cotizacion->created_at)->format('d-m-Y');
+            $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
             // Añade el valor del total al objeto cotizacion
             $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
 
@@ -160,6 +156,58 @@ class Cotizacion extends Model
         });
 
         return $cotizaciones;
+    }
 
+    public static function total_sum_datatable($request, $startDate, $endDate)
+    {
+        // Data
+        $igv = Igv::first()->renta;
+        // FILTRADO
+        $filter = $request->get('value');
+        // Busqueda en DB
+        $query = Cotizacion::with(['cliente', 'moneda', 'forma_pago'])
+            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+
+        //  Filtro
+        if (!empty($filter)) {
+            // Agrupar las condiciones de búsqueda en una única cláusula where
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+        if ($request->get('tipo_coti') !== null) {
+            $query->where('tipo', $request->get('tipo_coti'));
+        }
+
+        $cotizaciones = $query->get();
+
+        $total_table = 0;
+        // Transformacion a moneda principal
+        $cotizaciones->transform(function ($cotizacion) use ($igv, &$total_table) {
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+
+            if ($cotizacion->moneda_id == 2) {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total * $cotizacion->cambio;
+            } else {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total;
+            }
+            // Sumar el total convertido a la suma acumulada
+            $total_table += $cotizacion->total_conv;
+            $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
+            $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
+            $cotizacion->estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
+            return $cotizacion;
+        });
+        return $total_table;
     }
 }

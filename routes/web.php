@@ -48,9 +48,10 @@ Route::group(
 
 		Route::resource('/registros','Ventas_registroController');
 
-		// COTIZACIONES
+		// COTIZACIONES - ajax para el llamado de datos
 		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
 		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
+		Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
 
 
 		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
@@ -585,7 +586,8 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/cotizacion3', 'CotizacionController@index3')->name('cotizacion.index3');
+Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
+Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
 Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
 Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
 

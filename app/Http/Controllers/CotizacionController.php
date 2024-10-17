@@ -3201,37 +3201,15 @@ if($validacion==1){
     }
 
 
-    public function index3(Request $request){
-        // return $request;
-        // $nota_venta=NotaVenta::all where date();
-        // $totales = [];
-        // foreach($nota_venta as $index =>  $nota_ventas){    
-        //     $total = 0;
-        //     $suma = 0;
-        //     $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
-        //     foreach($nota_venta_reg as $nota_venta_regs){
-        //         $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
-        //     }
-        //     $suma += $total;
-        //     $totales + suma [$index] = $suma;
-        // }
-        // $cotizacion= Cotizacion::get();
-        // $cotizacion_m= CotizacionManual::get();
-        // $nota_venta=NotaVenta::get();
-        // $igv = Igv::first();
-        // $clientes=Cliente::all();
+    public function index3(){
+
         $mes_año = Carbon::now()->format('d-m-Y');
-        // // Formado d-m-Y
         $cotizacion_mes = Cotizacion::count_mes($mes_año);
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
         
-        // $cotizaciones = Cotizacion::search_params($request);
-       
-        // Formatear los datos con los cálculos necesarios
-        
-        // return $cotizaciones;
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes','cotizacionM_mes','nota_venta_mes'));
+        $almacen = Almacen::get();
+        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes'));
     }
     
 }
