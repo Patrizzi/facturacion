@@ -12,7 +12,6 @@
                                         <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Cliente</a></li>
                                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Comprobante</a></li>
                                         <li><a class="nav-link" data-toggle="tab" href="#tab-3">Cuotas y Adelanto </a></li>
-                                        <li><a class="nav-link" data-toggle="tab" href="#tab-4">Adelantado</a></li>
                                     </ul>
                                     <div class="tab-content">
                                         <!--CLIENTE-->
@@ -152,7 +151,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="table-responsive">
+                                                            <div class="table-responsive">
                                                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                                                         <thead>
                                                                             <tr>
@@ -189,7 +188,29 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 </td>
-                                                                            </tr>         
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>></td>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td> 
+                                                                                <td>Cuota N° 2</td>
+                                                                                <td>S/. 100.00</td>
+                                                                                <td>S/. 0.00</td>
+                                                                                <td>17-04-2024</td>
+                                                                                <td>17-04-2024</td>
+                                                                                <td>PENDIENTE</td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </td>
+                                                                                </td>
+                                                                            </tr>                  
                                                                         </tbody>          
                                                                     </table>
                                                                 </div>
@@ -198,17 +219,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div role="tabpanel" id="tab-4" class="tab-pane">
-                                            <div class="panel-body">
-                                                <strong>Donec quam felis</strong>
-
-                                                <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
-                                                    and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
-
-                                                <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                                                    sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at the present moment; and yet.</p>
-                                            </div>
-                                        </div>
+                                       
                             </div>
                         </div>
                     </div>

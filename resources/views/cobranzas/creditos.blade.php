@@ -198,7 +198,7 @@
                                                                                 <td>
                                                                                 <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
                                                                                 <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
-                                                                            </td>
+                                                                                </td>
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -290,7 +290,7 @@
                                                                                 <td>
                                                                                 <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
                                                                                 <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
-                                                                            </td>
+                                                                                </td>
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -382,7 +382,7 @@
                                                                                 <td>
                                                                                 <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
                                                                                 <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
-                                                                            </td>
+                                                                                </td>
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -474,7 +474,7 @@
                                                                                 <td>
                                                                                 <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
                                                                                 <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
-                                                                            </td>
+                                                                                </td>
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -566,7 +566,7 @@
                                                                                 <td>
                                                                                 <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button> 
                                                                                 <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
-                                                                            </td>
+                                                                                </td>
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -774,7 +774,7 @@
                                                                                         </ul>
                                                                                     </div>
                                                                                 </td>
-                                                                                </td>
+                                                                                
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -879,7 +879,7 @@
                                                                                         </ul>
                                                                                     </div>
                                                                                 </td>
-                                                                                </td>
+                                                                                
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -984,7 +984,7 @@
                                                                                         </ul>
                                                                                     </div>
                                                                                 </td>
-                                                                                </td>
+                                                                                
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -1089,7 +1089,7 @@
                                                                                         </ul>
                                                                                     </div>
                                                                                 </td>
-                                                                                </td>
+                                                                                
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
@@ -1193,7 +1193,7 @@
                                                                                         </ul>
                                                                                     </div>
                                                                                 </td>
-                                                                                </td>
+                                                                                
                                                                             </tr>         
                                                                         </tbody>          
                                                                     </table>
