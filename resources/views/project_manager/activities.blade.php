@@ -111,24 +111,32 @@
     
                 // Función para truncar texto
                 document.querySelectorAll('.truncate-text').forEach(parrafo => {
-                    const longitud = parseInt(parrafo.getAttribute('truncate'));
-                    const textoCompleto = parrafo.textContent.trim();
-    
-                    if (textoCompleto.length > longitud) {
-                        const textoTruncado = textoCompleto.slice(0, longitud) + '... ';
-                        const botonVerMas = `<span class="ver-mas">más</span>`;
-                        const botonVerMenos = `<span class="ver-menos">menos</span>`;
-                        
-                        parrafo.innerHTML = textoTruncado + botonVerMas;
-    
-                        parrafo.addEventListener('click', (e) => {
-                            if (e.target.classList.contains('ver-mas')) {
-                                parrafo.innerHTML = textoCompleto + ' ' + botonVerMenos;
-                            } else if (e.target.classList.contains('ver-menos')) {
-                                parrafo.innerHTML = textoTruncado + botonVerMas;
-                            }
-                        });
+                    let atributoTruncate = parrafo.getAttribute('truncate');
+
+                    // Si el atributo truncate no está definido, se asigna 100 como valor por defecto
+                    if (atributoTruncate === null || isNaN(parseInt(atributoTruncate))) {
+                        atributoTruncate = 100;
                     }
+
+                    const longitudMax = parseInt(atributoTruncate);
+
+                    const textoCompleto = parrafo.textContent.trim();
+
+                    if (textoCompleto.length <= longitudMax) return;
+
+                    const textoTruncado = textoCompleto.slice(0, longitudMax) + '... ';
+                    const botonVerMas = `<span class="ver-mas">más</span>`;
+                    const botonVerMenos = `<span class="ver-menos">menos</span>`;
+
+                    parrafo.innerHTML = textoTruncado + botonVerMas;
+
+                    parrafo.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('ver-mas')) {
+                            parrafo.innerHTML = textoCompleto + ' ' + botonVerMenos;
+                        } else if (e.target.classList.contains('ver-menos')) {
+                            parrafo.innerHTML = textoTruncado + botonVerMas;
+                        }
+                    });
                 });
             });
         </script>
