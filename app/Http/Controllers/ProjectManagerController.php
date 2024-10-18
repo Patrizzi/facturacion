@@ -4,28 +4,59 @@ namespace App\Http\Controllers;
 
 use App\ProjectManager;
 use App\Activity;
+use App\ProjectService;
+use App\User;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller
 {
+    private $activities;
+    private $projectServices;
+    private $responsables;
+
+    public function __construct(Activity $activity,ProjectService $projectService,User $responsable)
+    {
+        $this->activities=$activity::pluck('nombre','id');
+        $this->projectServices=$projectService::pluck('nombre','id');
+        $this->responsables=$responsable::pluck('name','id');
+    }
+
+    public function getDataForm($id = null)
+    {
+        $dataActivitie=[];
+        $dataProjectService = [];
+        $dataResponsable=[];
+
+        foreach ($this->activities as $clave => $nombre){
+            $dataActivitie[$clave]=$nombre;
+        }
+        foreach ($this->projectServices as $clave =>$nombre){
+            $dataProjectService[$clave]=$nombre;
+        }
+        foreach ($this->responsables as $clave =>$nombre){
+            $dataResponsable[$clave]=$nombre;
+        }
+
+        $dataForm=[
+            'actividades'   => $dataActivitie,
+            'projectServices'   => $dataProjectService,
+            'responsables'  => $dataResponsable,
+        ];
+        
+        return ($id==null)
+            ? $dataForm
+            : $dataForm+['project_manager'=>ProjectManager::findOrFail($id)];
+    }
+
     public function index()
     {
         $tabla = ProjectManager::orderBy('id', 'asc')->get();
         return view('project_manager.index', compact('tabla'));
     }
 
-    public function getModelos(){
-        return [
-            'actividades'   => Activity::select('id', 'nombre')->get(),
-            // 'prioridades'   => Priority::all(),
-            // 'responsables' => Responsable::all(),
-        ];
-    }
-
     public function create()
     {
-        $dataMolel=$this->getModelos();
-        return view('project_manager.create',compact('dataMolel'));
+        return view('project_manager.create',$this->getDataForm());
     }
 
     public function store(Request $request)
@@ -47,15 +78,13 @@ class ProjectManagerController extends Controller
     }
     public function show($id)
     {
-        $data = ProjectManager::findOrFail($id);
-        return view('project_manager.show', compact('data'));
+        $project_manager = ProjectManager::findOrFail($id);
+        return view('project_manager.show', compact('project_manager'));
     }
 
     public function edit($id)
     {
-        $dataMolel=$this->getModelos();
-        $data = ProjectManager::findOrFail($id);
-        return view('project_manager.edit', compact('data')+$dataMolel);
+        return view('project_manager.edit', $this->getDataForm($id));
     }
 
     public function update(Request $request, $id)
