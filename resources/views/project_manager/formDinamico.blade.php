@@ -20,7 +20,7 @@
 <div class="col-md-6">
     <div class="form-group d-flex">
         {{html()->label('Administrador')->class('col-form-label')}}
-        {{html()->select('administrador_id',$actividades)->placeholder('Ingrese al Administrador')->class('form-control')->value(old('administrador_id',$project_manager->administrador_id ?? ''))}}
+        {{html()->select('administrador_id',$administradores)->placeholder('Ingrese al Administrador')->class('form-control')->value(old('administrador_id',$project_manager->administrador_id ?? ''))}}
     </div>
 </div>
 <div class="col-md-6">
@@ -39,7 +39,7 @@
 <div class="col-md-6">
     <div class="form-group d-flex"> 
         {{html()->label('Cliente')->class('col-form-label')}}
-        {{html()->number('cliente_id')->placeholder('Ingrese al Cliente')->class('form-control')->value(old('cliente_id',$project_manager->cliente_id ?? ''))}}
+        {{html()->select('cliente_id',$responsables)->placeholder('Ingrese al Cliente')->class('form-control')->value(old('cliente_id',$project_manager->cliente_id ?? ''))}}
     </div>
 </div>
 <div class="col-md-6">

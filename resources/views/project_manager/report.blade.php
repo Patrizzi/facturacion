@@ -5,10 +5,7 @@
 @section('content')
     <x-content-app title="Lista de Proyectos" :buttons="$buttons">
         <div class="wrapper wrapper-content">
-            <div class="ibox-title">
-                <h1>Vista Gantt</h1>
-                <x-project-manager.gantt-project-view :collection="$data" type="oneProject" />
-            </div>
+            
         </div>
-    </x-content-app>
+</x-content-app>
 @endsection
