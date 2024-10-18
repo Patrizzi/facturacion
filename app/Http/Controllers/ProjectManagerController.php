@@ -78,8 +78,7 @@ class ProjectManagerController extends Controller
     }
     public function show($id)
     {
-        $project_manager = ProjectManager::findOrFail($id);
-        return view('project_manager.show', compact('project_manager'));
+        return view('project_manager.show', $this->getDataForm($id));
     }
 
     public function edit($id)
