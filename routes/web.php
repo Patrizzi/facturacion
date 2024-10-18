@@ -38,13 +38,13 @@ Route::group(
 
 		// Rutas anidadas para Cards, Tasks, y Comments
 		Route::resource('project_managers.cards', 'ActivityController')
-			->only('store', 'create', 'update', 'destroy')
+			->only('store', 'create', 'edit', 'update', 'destroy')
 			->scoped([
 				'project_manager' => 'id'
 			]);
 
 		Route::resource('project_managers.cards.tasks', 'TaskController')
-			->only('store', 'create', 'update', 'destroy')
+			->only('store', 'create', 'edit', 'update', 'destroy')
 			->scoped([
 				'card' => 'id'
 			]);
