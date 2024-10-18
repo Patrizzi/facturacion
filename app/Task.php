@@ -35,14 +35,19 @@ class Task extends Model
 
     public function getStatus()
     {
-        $statuses = [
+        $statuses = self::getStatuses();
+    
+        return $this->estado ? $statuses[$this->estado] ?? "No definido" : "No definido";
+    }
+
+    public static function getStatuses()
+    {
+        return [
             1 => "En progreso",
             2 => "Reprogramando",
             3 => "Retraso",
             4 => "Cancelado",
             5 => "Terminado",
         ];
-    
-        return $statuses[$this->estado] ?? "No definido";
     }
 }

@@ -13,17 +13,13 @@ class CommentController extends Controller
         return "desde el controller del create";
     }
 
-    public function store(Request $request) {   
+    public function store(Request $request, $project_id, $activity_id, $task_id) {
         $request->validate([
             'contenido' => 'required|string',
         ]);
     
-        $task = Task::find($request->task);
-        
-        if (!$task) {
-            return redirect()->back()->withErrors(['error' => 'Tarea no encontrada']);
-        }
-    
+        $task = Task::findorFail($task_id);
+
         $comment = new Comment([
             'tarea_id' => $task->id,
             'user_id' => Auth::id(),
@@ -40,9 +36,11 @@ class CommentController extends Controller
         }
     
         $comment->foto = $name;
-        $comment->save();
-    
-        return redirect()->route('project_managers.cards', $task->activity->project_manager);
+        if($comment->save()) {
+            return redirect()->route('project_managers.cards', $project_id)->with('success', 'Comentario creado exitosamente');
+        } else {
+            return redirect()->route('project_managers.cards', $project_id)->with('error', 'Error al crear el comentario');
+        }
     }
 
     public function Update(){
