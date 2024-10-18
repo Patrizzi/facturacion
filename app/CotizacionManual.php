@@ -80,4 +80,81 @@ class CotizacionManual extends Model
 
         return $mes;
     }
+    public static function estado_proceso($id)
+    {
+        $cotizacion = CotizacionManual::find($id);
+        //Estado
+        if ($cotizacion->estado == 0) {
+            $estado_actual = "Sin Proceso";
+        } else {
+            // Separar factura boleta y nota venta
+            switch ($cotizacion->tipo) {
+                case 'factura':
+                    $estado_actual = "Facturado";
+                    break;
+                case 'boleta':
+                    $estado_actual = "Boleteado";
+                    break;
+                case 'nota_venta':
+                    $estado_actual = "Nota de Venta Registrada";
+                    break;
+                default:
+                    $estado_actual = "Sin Proceso";
+                    break;
+            }
+        }
+        return $estado_actual;
+    }
+    public static function total_sum_datatable($request, $startDate, $endDate)
+    {
+        // Data
+        $igv = Igv::first()->renta;
+        // FILTRADO
+        $filter = $request->get('value');
+        // Busqueda en DB
+        $query = CotizacionManual::with(['cliente', 'moneda', 'forma_pago'])
+            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+
+        //  Filtro
+        if (!empty($filter)) {
+            // Agrupar las condiciones de búsqueda en una única cláusula where
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+        if ($request->get('tipo_coti') !== null) {
+            $query->where('tipo', $request->get('tipo_coti'));
+        }
+
+        $cotizaciones = $query->get();
+
+        $total_table = 0;
+        // Transformacion a moneda principal
+        $cotizaciones->transform(function ($cotizacion) use ($igv, &$total_table) {
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+
+            if ($cotizacion->moneda_id == 2) {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total * $cotizacion->cambio;
+            } else {
+                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $cotizacion->total_conv = $total;
+            }
+            // Sumar el total convertido a la suma acumulada
+            $total_table += $cotizacion->total_conv;
+            $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
+            $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
+            $cotizacion->estado_proceso = CotizacionManual::estado_proceso($cotizacion->id);
+            return $cotizacion;
+        });
+        return $total_table;
+    }
 }

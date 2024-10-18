@@ -6,7 +6,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link"  href="{{route('cotizacion_manual.index2')}}" >
+        <a class="nav-link"  href="{{route('cotizacion_manual.index2')}}" data-toggle="tab" href="#tab-2" id="tab-2-tab">
             <span class="badge badge-success" style="background-color: orange;">4</span>
             Cotización Manual
         </a>
