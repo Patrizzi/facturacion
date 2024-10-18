@@ -3,44 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\ProjectManager;
-use App\Activity;
+use App\Cliente;
 use App\ProjectService;
 use App\User;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller
 {
-    private $activities;
-    private $projectServices;
     private $responsables;
+    private $projectServices;
+    private $administradores;
 
-    public function __construct(Activity $activity,ProjectService $projectService,User $responsable)
+    public function __construct(Cliente $responsable,ProjectService $projectService,User $administrador)
     {
-        $this->activities=$activity::pluck('nombre','id');
+        $this->responsables=$responsable::pluck('nombre','id');
         $this->projectServices=$projectService::pluck('nombre','id');
-        $this->responsables=$responsable::pluck('name','id');
+        $this->administradores=$administrador::pluck('name','id');
     }
 
     public function getDataForm($id = null)
     {
-        $dataActivitie=[];
-        $dataProjectService = [];
         $dataResponsable=[];
+        $dataProjectService = [];
+        $dataAdministrador=[];
 
-        foreach ($this->activities as $clave => $nombre){
-            $dataActivitie[$clave]=$nombre;
+        foreach ($this->responsables as $clave => $nombre){
+            $dataResponsable[$clave]=$nombre;
         }
         foreach ($this->projectServices as $clave =>$nombre){
             $dataProjectService[$clave]=$nombre;
         }
-        foreach ($this->responsables as $clave =>$nombre){
-            $dataResponsable[$clave]=$nombre;
+        foreach ($this->administradores as $clave =>$nombre){
+            $dataAdministrador[$clave]=$nombre;
         }
 
         $dataForm=[
-            'actividades'   => $dataActivitie,
+            'responsables'   => $dataResponsable,
             'projectServices'   => $dataProjectService,
-            'responsables'  => $dataResponsable,
+            'administradores'  => $dataAdministrador,
         ];
         
         return ($id==null)
@@ -50,8 +50,18 @@ class ProjectManagerController extends Controller
 
     public function index()
     {
-        $tabla = ProjectManager::orderBy('id', 'asc')->get();
-        return view('project_manager.index', compact('tabla'));
+        $data = ProjectManager::orderBy('id', 'asc')->paginate(10);
+        $buttons = [
+            [
+                "text" => "Proyectos",
+                "attributes" => ["href" => route("project_managers.index")]
+            ],
+            [
+                "text" => "Gantt",
+                "attributes" => ["href" => route("project_managers.gantt.index")]
+            ]
+        ];
+        return view('project_manager.index', compact('data', 'buttons'));
     }
 
     public function create()
@@ -114,19 +124,42 @@ class ProjectManagerController extends Controller
     public function cards($id) {
         $project_manager = ProjectManager::select('id', 'nombre')->findOrFail($id);
         
+        $buttons = [
+            [
+                'text' => 'Agregar Tarjeta',
+                'attributes' => ['href' => '#', 'data-toggle' => 'modal', 'data-target' => '#dynamicModal', 'data-url' => route('project_managers.cards.create', $project_manager->id)],
+                'visible' => true,
+            ],
+            [
+                'text' => 'Tarjetas',
+                'attributes' => ['href' => route('project_managers.cards', $project_manager->id)],
+                'visible' => true,
+            ],
+        ];
+
         $activities = $project_manager->activities()->with([
             'responsable',
             'tasks.user',
             'tasks.comments.user'
         ])->paginate(5);
 
-        return view('project_manager.activities', compact('project_manager', 'activities'));
+        return view('project_manager.activities', compact('project_manager', 'activities', 'buttons'));
     }
 
     public function gantt()
     {
-        $data = ProjectManager::all();
-        return view('project_manager.gantt', compact('data'));
+        $data = ProjectManager::orderBy('id', 'asc')->paginate(10);
+        $buttons = [
+            [
+                "text" => "Proyectos",
+                "attributes" => ["href" => route("project_managers.index")]
+            ],
+            [
+                "text" => "Gantt",
+                "attributes" => ["href" => route("project_managers.gantt.index")]
+            ]
+        ];
+        return view('project_manager.index-gantt', compact('data', 'buttons'));
     }
 
     public function report()
