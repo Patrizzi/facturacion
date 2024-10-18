@@ -11,7 +11,7 @@
 <div class="formShow">
     <div class="container-fluid">
         <div class="row ">
-            @include('project_manager.formDinamico',compact('data'),['esDisabled'=>True])
+            @include('project_manager.formDinamico',compact('project_manager'))
         </div>
     </div>
 </div>

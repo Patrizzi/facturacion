@@ -2,13 +2,13 @@
     color: rgb(54, 54, 54);
     padding-left: 20px;
 }
-.formEnvio input{
+.formEnvio input,.formEnvio select{
     margin-left: 10px;
 }
 .formShow{
     padding: 15px;
 }
-.formShow input{
+.formShow input,.formShow select{
     margin-left: 10px;
     pointer-events: none;
     background-color: #eceff0;

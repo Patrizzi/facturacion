@@ -9,6 +9,7 @@
         <h3 class="alert alert-danger">{{ $errors->first() }}</h3>
     @endif
     <div class="formEnvio">
+        
         <div class="inbox-title">
             <h3>Crear Nuevo Proyecto</h3>
         </div>

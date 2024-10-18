@@ -13,10 +13,10 @@
             <h3>Editar Proyecto</h3>
         </div>
         <div class="inbox-content">
-            {{ html()->modelForm($data,'PUT',route('project_managers.update', $data->id))->open() }}
+            {{ html()->modelForm($project_manager,'PUT',route('project_managers.update', $project_manager->id))->open() }}
                 <div class="container-fluid">
                     <div class="row ">
-                        @include('project_manager.formDinamico',compact('data'))
+                        @include('project_manager.formDinamico',compact('project_manager'))
                         <div class="w-50 p-1">
                             {{html()->button('Editar')->class('btn btn-primary float-right m-t-n-xs ')}}
                         </div>
