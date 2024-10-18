@@ -153,11 +153,11 @@
                                 <div role="tabpanel" id="tab-4" class="tab-pane">
                                 
                                 </div>
+                                
                             </div>       
                         </div>
                     </div>
-                </div>
-                              
+                </div>             
     </div>
 </div>
     <style>
@@ -294,7 +294,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         // Generar la URL de forma dinámica usando la función route con un placeholder
-                        var url = '{{ route('cotizacion.show', ':id') }}';
+                        var url = '{{ route('cotizacion_manual.show', ':id') }}';
                         url = url.replace(':id', full[
                             0]); // Reemplazar el placeholder con el valor dinámico
 
@@ -388,43 +388,5 @@
     <script>
 
     </script>
-    <!--Clientes-->
-    <script>
-        $(document).ready(function() {
-            $('#table_cliente').DataTable({
-                "serverSide": true,
-                "ajax": "{{ url('api/clientes') }}",
-                "columns": [{
-                        data: 'id'
-                    },
-                    {
-                        data: 'nombre'
-                    },
-                    {
-                        data: 'numero_documento'
-                    },
-                    {
-                        data: 'email'
-                    },
-                    {
-                        data: 'celular'
-                    },
-                    {
-                        name: '',
-                        data: null,
-                        sortable: false,
-                        searchable: false,
-                        render: function(data) {
-                            var actions = '';
-                            actions +=
-                                '<a href="{{ route('cliente.show', ':id') }}" target="_blank"><button type="button" class="btn btn-primary mr-2"><i class="fa fa-eye"></i></button></a>';
-                            actions +=
-                                '<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>';
-                            return actions.replace(/:id/g, data.id);
-                        }
-                    }
-                ]
-            });
-        });
-    </script>
+   
 @endsection

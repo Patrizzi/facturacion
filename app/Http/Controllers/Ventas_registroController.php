@@ -282,7 +282,7 @@ class Ventas_registroController extends Controller
             $json['data'][] = [
                 $cotizacion_manual->id,
                 $cotizacion_manual->id,
-                $cotizacion_manual->cotizacion_manual,
+                $cotizacion_manual->cod_cotizacion,
                 $cotizacion_manual->cliente->numero_documento,
                 $cotizacion_manual->cliente->nombre,
                 $cotizacion_manual->fecha_emision,
