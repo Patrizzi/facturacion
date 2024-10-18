@@ -11,6 +11,7 @@ class Task extends Component
     public $user_foto;
     public $fecha_inicio;
     public $barra_progreso;
+    public $url_buttons;
 
     public function __construct(public $task)
     {
@@ -24,6 +25,8 @@ class Task extends Component
         }
         $this->fecha_inicio = $task->fecha_inicio->format('d/m/Y');
         $this->barra_progreso = progressDate($task->fecha_inicio, $task->fecha_cierre);
+        $this->url_buttons['edit_task'] = route('project_managers.cards.tasks.edit', [$task->activity->project_manager, $task->activity, $task]);
+        $this->url_buttons['delete_task'] = route('project_managers.cards.tasks.destroy', [$task->activity->project_manager, $task->activity, $task]);
     }
 
     public function render()

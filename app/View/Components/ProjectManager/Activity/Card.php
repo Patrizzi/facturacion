@@ -13,6 +13,7 @@ class Card extends Component
     public $responsable_foto;
     public $fecha_inicio;
     public $barra_progreso;
+    public $url_buttons;
 
     public function __construct(public $card)
     {
@@ -29,6 +30,9 @@ class Card extends Component
 
         $this->fecha_inicio = $card->fecha_inicio->format('d/m/Y');
         $this->barra_progreso = progressDate($card->fecha_inicio, $card->fecha_cierre);
+        $this->url_buttons['create_task'] = route('project_managers.cards.tasks.create', [$card->project_manager, $card->id]);
+        $this->url_buttons['edit_card'] = route('project_managers.cards.edit', [$card->project_manager, $card->id]);
+        $this->url_buttons['delete_card'] = route('project_managers.cards.destroy', [$card->project_manager, $card->id]);
 
     }
 

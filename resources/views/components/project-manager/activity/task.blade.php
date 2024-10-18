@@ -6,7 +6,7 @@
 <div class="task" id="task-{{$task->id}}">
     <div class="task-content">
         <img src="{{ $user_foto }}" class="task-worker-image" alt="worker image">
-        <div class="task-worker-name">{{ $user_name }}</div>
+        <div class="task-worker-name simple-truncate">{{ $user_name }}</div>
         <div class="task-text">
             <p class="truncate-text" truncate="70">
                 {{ $task->contenido ?: 'Sin contenido' }}
@@ -23,8 +23,12 @@
                 <div class="progress-bar-text">{{ $barra_progreso }}%</div>
                 <div class="task-action-icons">
                     @if($task->user_id == auth()->id())
-                        <a class="fa fa-pencil-square-o task-buttons"></a>
-                        <a href="#" class="fa fa-trash task-buttons"></a>
+                        <a href="#" class="fa fa-pencil-square-o task-buttons" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['edit_task'] }}"></a>
+                        <a href="#" class="fa fa-trash task-buttons delete-item"></a>
+                        <form action="{{ $url_buttons['delete_task'] }}" method="POST" style="display: none;" class="delete-item-form">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                     @endif
                     <i class="fa fa-comment task-buttons" onclick="toggleChat('{{$task->activity->id}}', '{{$task->id}}')"></i>
                 </div>

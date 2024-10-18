@@ -4,20 +4,24 @@
     @endonce
 @endpush
 <div class="p-card" id="p-card-{{$card->id}}" style="background-color: {{$card->color}}">
-    <div class="p-card-title">{{ $titulo }}</div>
+    <div class="p-card-title simple-truncate">{{ $titulo }}</div>
     <div class="p-card-content">
         <div class="p-card-header">
             <img src="{{ $responsable_foto }}" class="p-card-worker-image" alt="worker image">
             <div class="p-card-worker-info">
-                <div class="p-card-worker-name">{{ $responsable }}</div>
+                <div class="p-card-worker-name simple-truncate">{{ $responsable }}</div>
                 <div class="p-card-worker-time">{{createdTime($card)}}</div>
             </div>
             <div class="p-card-action-icons">
-                <a href="#" class="fa fa-plus"></a>
-                @if($card->responsable_id == auth()->id())
-                    <a href="#" class="fa fa-trash" method="delete"></a>
-                    <a href="#" class="fa fa-edit"></a>
-                @endif
+                <a href="#" class="fa fa-plus" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['create_task'] }}"></a>
+                {{-- @if($card->responsable_id == auth()->id()) --}}
+                    <a href="#" class="fa fa-trash delete-item" style="cursor: pointer;"></a>
+                    <form action="{{ $url_buttons['delete_card'] }}" method="POST" style="display: none;" class="delete-item-form">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    <a href="#" class="fa fa-edit" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['edit_card'] }}"></a>
+                {{-- @endif --}}
             </div>
         </div>
         <div class="p-card-text">

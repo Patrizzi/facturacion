@@ -2,18 +2,26 @@
 @push('css')
     @once
         <link rel="stylesheet" href="{{ asset('css/project_managers/project_managers.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" >
     @endonce
 @endpush
 @section('content')
-    <x-content-app title="Tarjetas del Proyecto">
+    <x-content-app title="Tarjetas del Proyecto" :buttons="$buttons">
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-lg-12">
+                    <div class="modal fade" id="dynamicModal" tabindex="-1" role="dialog" aria-labelledby="dynamicModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <!-- Aqui se coloca el modal -->
+                            </div>
+                        </div>
+                    </div>
                     <div class="ibox ibox-activities">
                         <div class="ibox-title">
                             <div class="button-container">
-                                <x-ProjectManager.BtnLink url="{{ route('project_managers.index') }}" text="Proyectos" />
-                                <x-ProjectManager.BtnLink url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
+                                <x-project-manager.btnLink url="{{ route('project_managers.index') }}" text="Proyectos" />
+                                <x-project-manager.btnLink url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
                             </div>
                             <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
                             <div class="ibox-tools">
@@ -28,7 +36,6 @@
                                     <x-project-manager.activity.card :card="$activity"/>
                                 @endforeach
                             </div>
-                            <!-- Paginación -->
                             <div class="pagination-wrapper">
                                 {{ $activities->links() }}
                             </div>
@@ -41,7 +48,15 @@
 @endsection
 @push('js')
     @once
+        <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
         <script>
+            @if(session('success'))
+                toastr.success("{{ session('success') }}");
+            @endif
+        
+            @if(session('error'))
+                toastr.error("{{ session('error') }}");
+            @endif
             function toggleChat(activityId, taskId) {
                 const chatBox = document.getElementById('chat-box-' + taskId);
                 const tasksContainer = document.getElementById("tasks-container-" + activityId);
@@ -102,6 +117,39 @@
             };
     
             document.addEventListener('DOMContentLoaded', function() {
+                // Mostrar confirmación del delete
+                $('.delete-item').click(function (e) {
+                    const form = $(this).siblings('.delete-item-form'); 
+
+                    swal({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, borrar',
+                        cancelButtonText: 'Cancelar'},
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                form.submit();
+                            }
+                        }
+                    );
+                })
+
+                // Función para cargar el modal
+                $('#dynamicModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var url = button.data('url');
+                    var modal = $(this);
+                    modal.find('.modal-content').load(url);
+                });
+
+                $('#dynamicModal').on('hidden.bs.modal', function () {
+                    $(this).removeData('bs.modal');
+                });
+
                 // Función para invertir el color del título de la tarjeta
                 const cards = document.querySelectorAll('.p-card');
                 cards.forEach(card => {
