@@ -239,9 +239,9 @@
         }
 
         .tab-pane.active.show {
-            border-right: 1px;
-            border-left: 1px;
-            border-bottom: 1px;
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
         }
 
         .btn-link {
@@ -316,7 +316,7 @@
                     // Actualiza el pie de la tabla (tfoot) con el valor que viene del servidor
                     $('.dataTables-example-cotizacion tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-cotizacion tfoot th.total-total').html('Total  G.: ' + total_table);
-
+                    
                     // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
                 }
@@ -332,8 +332,33 @@
                     }
                 },
                 {
+                    'targets': [1],
+                    'orderable': false
+                },
+                {
+                    'targets': [2],
+                    'orderable': false
+                },
+                {
+                    'targets': [3],
+                    'orderable': false
+                },
+                {
                     'width': '30%',
-                    'targets': [4]
+                    'targets': [4],
+                    'orderable': false
+                },
+                {
+                    'targets': [5],
+                    'orderable': false
+                },
+                {
+                    'targets': [6],
+                    'orderable': false
+                },
+                {
+                    'targets': [7],
+                    'orderable': false
                 },
                 {
                     'targets': [8], // Configuración para otra columna (como la de acciones)
@@ -345,9 +370,21 @@
                             0]); // Reemplazar el placeholder con el valor dinámico
 
                         if (full[9] == '1') {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
+                            return `
+                                <div class="tooltip-demo">
+                                    <a href="${url}">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button> 
+                                    </a> 
+                                    <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado"><i class="fa fa-clock-o"></i></button>
+                                </div>`;
                         } else {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                            return `
+                                <div class="tooltip-demo">
+                                    <a href="${url}">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button> 
+                                    </a> 
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar"><i class="fa fa-check-circle"></i></button>
+                                </div>`;
                         }
                     }
                 }

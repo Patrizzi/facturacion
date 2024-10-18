@@ -84,10 +84,7 @@ class Ventas_registroController extends Controller
     public function destroy($id) {}
 
 
-    public function cotizacion_tab(Request $request)
-    {
-
-    }
+    public function cotizacion_tab(Request $request) {}
     //* DATA DE DATATABLES
     public function cotizacion_registers(Request $request)
     {
@@ -104,12 +101,13 @@ class Ventas_registroController extends Controller
         $filter = $request->get('value');
         $sortColumns = [
             0 => 'id',
-            1 => 'cotizaciones.id',
-            2 => 'cotizaciones.cod_cotizacion',
-            3 => 'cotizaciones.cliente.nombre',
-            4 => 'cotizaciones.cliente.numero_documento',
-            5 => 'cotizaciones.fecha_emision',
-            6 => 'cotizaciones.forma_pago',
+            1 => 'id',
+            2 => 'cod_cotizacion',
+            3 => 'cliente.nombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'forma_pago.nombre',
+            7 => 'total_conv',
         ];
 
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
@@ -121,7 +119,7 @@ class Ventas_registroController extends Controller
 
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
-            $query->where(function($q) use ($filter) {
+            $query->where(function ($q) use ($filter) {
                 $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
                 $q->orWhereHas('cliente', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
@@ -133,7 +131,7 @@ class Ventas_registroController extends Controller
                 });
             });
         }
-        
+
         if ($tipo !== null) {
             $query->where('tipo', $tipo);
         }
@@ -166,7 +164,7 @@ class Ventas_registroController extends Controller
             $cotizacion->estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
             return $cotizacion;
         });
-        
+
         $total_columna = 0;
         // Bucle de llamada para el llenado del datatable
         foreach ($cotizaciones as $cotizacion) {
@@ -186,8 +184,8 @@ class Ventas_registroController extends Controller
         }
         // Llamado para la suma total
         $total_table = Cotizacion::total_sum_datatable($request, $startDate, $endDate);
-        $json['total_columna'] = "S/. ".number_format($total_columna, 2);
-        $json['total_table'] = "S/. ".number_format($total_table, 2) ;
+        $json['total_columna'] = "S/. " . number_format($total_columna, 2);
+        $json['total_table'] = "S/. " . number_format($total_table, 2);
         return response()->json($json);
     }
 
@@ -198,7 +196,8 @@ class Ventas_registroController extends Controller
         return view('transaccion.venta._shared.cotizacion_manual', compact('cotizacion_m', 'igv'));
     }
 
-    public function cotizacion_manual_registers(Request $request){
+    public function cotizacion_manual_registers(Request $request)
+    {
         //* DATOS PARA PASAR CON AJAX
 
         // DATA REQUEST
@@ -229,7 +228,7 @@ class Ventas_registroController extends Controller
 
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
-            $query->where(function($q) use ($filter) {
+            $query->where(function ($q) use ($filter) {
                 $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
                 $q->orWhereHas('cliente', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
@@ -241,7 +240,7 @@ class Ventas_registroController extends Controller
                 });
             });
         }
-        
+
         if ($tipo !== null) {
             $query->where('tipo', $tipo);
         }
@@ -274,7 +273,7 @@ class Ventas_registroController extends Controller
             $cotizacion_manual->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
             return $cotizacion_manual;
         });
-        
+
         $total_columna = 0;
         // Bucle de llamada para el llenado del datatable
         foreach ($cotizaciones as $cotizacion_manual) {
@@ -294,8 +293,8 @@ class Ventas_registroController extends Controller
         }
         // Llamado para la suma total
         $total_table = CotizacionManual::total_sum_datatable($request, $startDate, $endDate);
-        $json['total_columna'] = "S/. ".number_format($total_columna, 2);
-        $json['total_table'] = "S/. ".number_format($total_table, 2) ;
+        $json['total_columna'] = "S/. " . number_format($total_columna, 2);
+        $json['total_table'] = "S/. " . number_format($total_table, 2);
         return response()->json($json);
     }
 
