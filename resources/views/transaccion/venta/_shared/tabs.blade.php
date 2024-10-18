@@ -1,7 +1,7 @@
 <div class="nav">
     <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#tab-1" id="tab-1-tab">
-            <span class="badge badge-success" style="background-color :green;">4</span>
+            <span class="badge badge-success" style="background-color :green;">{{$count_all_ventas['cotizacion_day_count']}}</span>
             Cotización
         </a>
     </li>
