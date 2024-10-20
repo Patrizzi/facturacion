@@ -1,8 +1,8 @@
-<table id="table-gantt" class="table-gantt">
+<table id="table-gantt">
     <thead>
         <tr>
             @for ($i = 0; $i < $totalWeeks; $i++)
-                <th colspan="7" style="text-align: center">Semana {{ $i + 1 }}</th>
+                <th colspan="7">Semana {{ $i + 1 }}</th>
             @endfor
         </tr>
         <tr>
@@ -15,7 +15,7 @@
     </thead>
     <tbody class="ibox-content">
         @foreach ($collection as $pm)
-            <tr id="gant-{{ $pm->id }}">
+            <tr id="row-gantt-{{ $pm->id }}">
                 <td colspan="{{ $pm->daysToStart($minDate) }}"> </td>
                 <td colspan="{{ $pm->diffDays() }}">
                     <div class="progress progress-mini">

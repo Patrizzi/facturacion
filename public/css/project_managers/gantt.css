@@ -1,0 +1,16 @@
+#table-gantt {
+    height: 100%;
+}
+
+#table-gantt>thead {
+    font-size: 8px;
+}
+
+#table-gantt>thead>tr>th {
+    padding: 4px;
+    text-align: center;
+}
+
+#table-gantt>tbody>tr {
+    border-bottom: 1px solid;
+}
