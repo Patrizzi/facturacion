@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
@@ -52,5 +53,25 @@ class Activity extends Model
             4 => "Cancelado",
             5 => "Terminado",
         ];
+    }
+
+    public function percentage(): int {
+        return 100;
+    }
+
+    public function diffDays(): int {
+        return $this->fecha_inicio->diffInDays($this->fecha_cierre);
+    }
+
+    public function diffWeeks(): int {
+        return $this->fecha_inicio->diffInWeeks($this->fecha_cierre);
+    }
+
+    public function daysToStart(Carbon $date): int {
+        return $this->fecha_inicio->diffInDays($date);
+    }
+
+    public function daysToEnd(Carbon $date): int {
+        return $this->fecha_cierre->diffInDays($date);
     }
 }
