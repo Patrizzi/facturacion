@@ -6,6 +6,7 @@ use App\ProjectManager;
 use App\Cliente;
 use App\ProjectService;
 use App\User;
+use App\Activity;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller {
@@ -151,6 +152,11 @@ class ProjectManagerController extends Controller {
                 'attributes' => ['href' => route('project_managers.cards', $project_manager->id)],
                 'visible' => true,
             ],
+            [
+                'text' => 'Reporte',
+                'attributes' => ['href' => route('project_managers.report', $project_manager->id)],
+                'visible' => true,
+            ]
         ];
 
         $activities = $project_manager->activities()->with([
@@ -177,8 +183,49 @@ class ProjectManagerController extends Controller {
         return view('project_manager.index-gantt', compact('data', 'buttons'));
     }
 
-    public function report() {
-        $data = ProjectManager::all();
-        return view('project_manager.report', compact('data'));
+    public function report($id)
+    {
+        // Buscar el proyecto
+        $project_manager = ProjectManager::findOrFail($id);
+
+        // Crear botones para la vista
+        $buttons = [
+            [
+                "text" => "Proyectos",
+                "attributes" => ["href" => route("project_managers.index")]
+            ],
+            [
+                "text" => "Gantt",
+                "attributes" => ["href" => route("project_managers.gantt.index")]
+            ],
+            [
+                "text" => "Tarjetas",
+                "attributes" => ["href" => route("project_managers.cards", $project_manager)]
+            ],
+            [
+                "text" => "Reporte",
+                "attributes" => ["href" => route("project_managers.report", $project_manager)]
+            ]
+        ];
+
+        $actividadesDoughnut = $project_manager->activities()->select('nombre', 'color')->get();
+        $actividadesDelProyecto = $project_manager->activities()->paginate(5);
+    
+        // Cargar datos para la vista
+        $dataReport = [
+            'estados' => Activity::getStatuses(),
+            'actividadesPorEstado' => [],
+            'actividadesDelProyecto' => $actividadesDelProyecto,
+            'actividadesDoughnut' => $actividadesDoughnut,
+        ];
+
+        // Contador de actividades por estado del proyecto
+        foreach ($dataReport['estados'] as $key => $estado) {
+            $dataReport['actividadesPorEstado'][$key] = Activity::where('estado', $key)
+            ->where('proyecto_id', $project_manager->id)
+            ->count();
+        }
+
+        return view('project_manager.report', compact('project_manager', 'buttons', 'dataReport'));
     }
 }
