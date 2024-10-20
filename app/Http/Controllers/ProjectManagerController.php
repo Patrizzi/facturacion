@@ -19,7 +19,7 @@ class ProjectManagerController extends Controller {
         $this->administradores = $administrador::pluck('name', 'id');
     }
 
-    public function getDataForm($id = null) {
+    private function getDataForm($id = null) {
         $dataResponsable = [];
         $dataProjectService = [];
         $dataAdministrador = [];
@@ -45,15 +45,21 @@ class ProjectManagerController extends Controller {
             : $dataForm + ['project_manager' => ProjectManager::findOrFail($id)];
     }
 
-    public function index() {
-        $data = ProjectManager::orderBy('id', 'asc')->paginate(10);
+    private function buttonsActions(string $button): array {
         $buttons = [
-            [
+            "newProject" => [
                 "text" => "Nuevo Proyecto",
                 "attributes" => ["href" => route("project_managers.create")]
             ]
         ];
-        return view('project_manager.index', compact('data', 'buttons'));
+
+        return $buttons[$button];
+    }
+
+    public function index() {
+        $data = ProjectManager::orderBy('id', 'asc')->paginate(10);
+        $button = [$this->buttonsActions("newProject")];
+        return view('project_manager.index', compact('data', 'button'));
     }
 
     public function create() {
