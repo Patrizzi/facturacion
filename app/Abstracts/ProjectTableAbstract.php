@@ -67,6 +67,23 @@ abstract class ProjectTableAbstract extends Component {
                     return $item->fecha_cierre->format('d-m-Y');
                 }
             ],
+            'manyActivities' => [
+                "Actividad" => function ($item) {
+                    return $item->nombre;
+                },
+                "F.I." => function ($item) {
+                    return $item->fecha_inicio;
+                },
+                "F.T." => function ($item) {
+                    return $item->fecha_cierre;
+                },
+                "Reponsable" => function($item) {
+                    return $item->responsable->name;
+                },
+                "Estado" => function ($item) {
+                    return $item->getStatus();
+                }
+            ]
         ];
     }
 
