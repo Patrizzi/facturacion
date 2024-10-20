@@ -1,13 +1,27 @@
 @extends('layouts.app')
-@push('css')
-    @once
-    <link rel="stylesheet" href="{{ asset('css/project_managers/project_managers.css') }}">  
-    @endonce
-@endpush
 @section('content')
-    <div class="wrapper wrapper-content">
-        <x-content-app title="Proyectos" :buttons="$buttons">
-            <x-project-manager.general-project-table :collection="$data" />
-        </x-content-app>
-    </div>
+    <x-content-app title="Lista de proyectos" :buttons="$buttons">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="tabs-container">
+
+                <ul class="nav nav-tabs" role="tablist">
+                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Proyectos</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Gantt</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <x-project-manager.general-project-table :collection="$data" />
+                        </div>
+                    </div>
+                    <div role="tabpanel" id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <x-project-manager.gantt-project-view :collection="$data" type="oneProject" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </x-content-app>
 @endsection
