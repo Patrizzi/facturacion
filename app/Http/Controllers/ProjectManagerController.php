@@ -45,11 +45,15 @@ class ProjectManagerController extends Controller {
             : $dataForm + ['project_manager' => ProjectManager::findOrFail($id)];
     }
 
-    private function buttonsActions(string $button): array {
+    private function buttonsActions(string $button, $id = null): array {
         $buttons = [
             "newProject" => [
                 "text" => "Nuevo Proyecto",
                 "attributes" => ["href" => route("project_managers.create")]
+            ],
+            "newActivity" => [
+                "text" => "Nueva Actividad",
+                "attributes" => ["href" => $id ? route("project_managers.cards.create", $id): ""]
             ]
         ];
 
@@ -83,6 +87,7 @@ class ProjectManagerController extends Controller {
         return redirect()->route('project_managers.index')->with('success', 'Creado exitosamente');
     }
     public function show($id) {
+        $buttons = [$this->buttonsActions("newActivity", $id)];
         $projectManager = ProjectManager::with(['activities' => function ($query) {
             $query->paginate(10);
         }])->find($id);
@@ -93,7 +98,7 @@ class ProjectManagerController extends Controller {
 
         // Separar las actividades paginadas
         $activities = $projectManager->activities()->paginate(10);
-        return view('project_manager.show', compact("activities"));
+        return view('project_manager.show', compact("activities", "buttons"));
     }
 
     public function edit($id) {
