@@ -127,3 +127,23 @@ if (!function_exists('push_asset_once')) {
         return $html;
     }
 }
+
+function percentage($a): int {
+    return 100;
+}
+
+function diffDays($a): int {
+    return $a->fecha_inicio->diffInDays($a->fecha_cierre);
+}
+
+function diffWeeks($a): int {
+    return $a->fecha_inicio->diffInWeeks($a->fecha_cierre);
+}
+
+function daysToStart($a, Carbon $date): int {
+    return $a->fecha_inicio->diffInDays($date);
+}
+
+function daysToEnd($a, Carbon $date): int {
+    return $a->fecha_cierre->diffInDays($date);
+}
