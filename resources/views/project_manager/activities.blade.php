@@ -57,6 +57,7 @@
             @if(session('error'))
                 toastr.error("{{ session('error') }}");
             @endif
+            
             function toggleChat(activityId, taskId) {
                 const chatBox = document.getElementById('chat-box-' + taskId);
                 const tasksContainer = document.getElementById("tasks-container-" + activityId);
@@ -117,7 +118,7 @@
             };
     
             document.addEventListener('DOMContentLoaded', function() {
-                // Mostrar confirmación del delete
+                // Mostrar SweetAlert al intentar eliminar una tarjeta o tarea.
                 $('.delete-item').click(function (e) {
                     const form = $(this).siblings('.delete-item-form'); 
 
@@ -139,16 +140,22 @@
                 })
 
                 // Función para cargar el modal
+                var lastUrl = "";
                 $('#dynamicModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var url = button.data('url');
                     var modal = $(this);
-                    modal.find('.modal-content').load(url);
-                });
 
-                $('#dynamicModal').on('hidden.bs.modal', function () {
-                    $(this).removeData('bs.modal');
+                    if (url !== lastUrl) {
+                        modal.find('.modal-content').load(url, function() {
+                            lastUrl = url;
+                        });
+                    }
                 });
+                
+                // $('#dynamicModal').on('hidden.bs.modal', function () {
+                //     $(this).removeData('bs.modal');
+                // });
 
                 // Función para invertir el color del título de la tarjeta
                 const cards = document.querySelectorAll('.p-card');

@@ -18,11 +18,11 @@
     </thead>
     <tbody class="ibox-content">
         @foreach ($collection as $pm)
-            <tr id="row-gantt-{{ $pm->id }}">
-                <td colspan="{{ $pm->daysToStart($minDate) }}"> </td>
-                <td colspan="{{ $pm->diffDays() }}">
+            <tr id="gant-{{ $pm->id }}">
+                <td colspan="{{ daysToStart($pm, $minDate) }}"> </td>
+                <td colspan="{{ diffDays($pm) }}">
                     <div class="progress progress-mini">
-                        <div class="progress-bar" style="width: {{ $pm->percentage() }}%;"></div>
+                        <div class="progress-bar" style="width: {{ percentage($pm) }}%;"></div>
                     </div>
                 </td>
                 <td colspan="999"> </td>
