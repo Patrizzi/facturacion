@@ -1,23 +1,22 @@
 @extends('layouts.app')
-@push('css')
-    @once
-    <link rel="stylesheet" href="{{ asset('/css/project_managers/formDinamico.css') }}">
-    @endonce
-@endpush 
 @section('content')
-<div class="btn-volver">
-    {{html()->a('volver')->text('Volver')->class('btn btn-outline-primary float-right m-t-n-xs')}}
-</div>
-<div class="formShow">
-    <div class="container-fluid">
-        <div class="row ">
-            @include('project_manager.formDinamico',compact('project_manager'))
+<x-content-app title="Lista de proyectos">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="tabs-container">
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a class="nav-link" href="{{ route("project_managers.index") }}">Proyectos</a></li>
+                <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Actividades</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+                        <x-project-manager.gantt-activities-view :collection="$activities" type="manyActivities" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</x-content-app>
 @endsection
-@push('js')
-@once
-    <script>
-    </script>
-@endonce

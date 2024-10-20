@@ -1,9 +1,5 @@
 @extends('layouts.app')
-@push('css')
-    {!! push_asset_once('css/project_managers/gantt.css') !!}
-@endpush
 @section('content')
-    {{-- {{ dd($button) }} --}}
     <x-content-app title="Lista de proyectos" :buttons="$button">
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="tabs-container">

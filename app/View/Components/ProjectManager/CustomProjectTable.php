@@ -15,8 +15,8 @@ class CustomProjectTable extends ProjectTableAbstract {
      * 
      * @return void
      */
-    public function __construct(?LengthAwarePaginator $collection = null, string|array $headersAndMethods) {
-        parent::__construct($collection ?? ProjectManager::paginate(10), $headersAndMethods);
+    public function __construct(?LengthAwarePaginator $collection = null, string $type) {
+        parent::__construct($collection ?? ProjectManager::paginate(10), $type);
     }
 
     /**

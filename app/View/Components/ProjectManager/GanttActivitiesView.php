@@ -5,8 +5,7 @@ namespace App\View\Components\ProjectManager;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;
 
-class GanttProjectView extends Component {
-
+class GanttActivitiesView extends Component {
     /**
      * Create a new component instance.
      *
@@ -19,7 +18,6 @@ class GanttProjectView extends Component {
         public string|array $type, // Definido como propiedad pública
         public ?LengthAwarePaginator $collection = null,
     ) {
-
     }
 
     /**
@@ -28,9 +26,8 @@ class GanttProjectView extends Component {
      * @return \Illuminate\View\View|string
      */
     public function render() {
-        return view('components.project-manager.gantt-project-view', [
-            'project_managers' => $this->collection,
-            'type' => $this->type,
+        return view('components.project-manager.gantt-activities-view', [
+            'activities' => $this->collection
         ]);
     }
 }
