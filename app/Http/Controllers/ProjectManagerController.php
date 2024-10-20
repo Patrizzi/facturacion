@@ -83,7 +83,17 @@ class ProjectManagerController extends Controller {
         return redirect()->route('project_managers.index')->with('success', 'Creado exitosamente');
     }
     public function show($id) {
-        return view('project_manager.show', $this->getDataForm($id));
+        $projectManager = ProjectManager::with(['activities' => function ($query) {
+            $query->paginate(10);
+        }])->find($id);
+
+        if (!$projectManager) {
+            return redirect()->back()->with('error', 'Project Manager not found');
+        }
+
+        // Separar las actividades paginadas
+        $activities = $projectManager->activities()->paginate(10);
+        return view('project_manager.show', compact("activities"));
     }
 
     public function edit($id) {
