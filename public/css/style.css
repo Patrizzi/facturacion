@@ -998,7 +998,7 @@ h5 {
 
 .nav-header {
   padding: 33px 21px;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   background-size: 100% 100%;
 
 }
@@ -1197,7 +1197,6 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
   -o-transition: all 0.4s;
   transition: all 0.4s;
 }
-
 .navbar-fixed-top {
   background: #fff;
   transition-duration: 0.4s;
@@ -9704,13 +9703,25 @@ body.md-skin {
     margin: 0;
   }
 }
-@media (max-width: 1150px) {
-  .custom-container {
-      display: none; /* Ocultar el contenedor*/
+@media (max-width: 1250px) {
+  .mensajes2{
+      display: none; 
+  }
+}
+@media (max-width: 1000px) {
+  .start-header{
+      display: none; 
+  }
+}
+@media (max-width: 700px) {
+  .calendar-none{
+      display: none; 
   }
 }
 @media (max-width: 860px) {
   .message-btn {
       display: none; /* Ocultar el botón*/
   }
+
 }
+
