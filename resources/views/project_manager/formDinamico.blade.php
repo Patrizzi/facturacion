@@ -45,7 +45,7 @@
 <div class="col-md-6">
     <div class="form-group d-flex"> 
         {{html()->label('Prioridad')->class('col-form-label')}}
-        {{html()->number('prioridad')->placeholder('Ingrese la Prioridad')->class('form-control')->value(old('prioridad',$project_manager->prioridad ?? ''))}}
+        {{html()->select('prioridad',$priorities)->placeholder('Ingrese la Prioridad')->class('form-control')->value(old('prioridad',$project_manager->prioridad ?? ''))}}
     </div>
 </div>
 <div class="col-md-6">
