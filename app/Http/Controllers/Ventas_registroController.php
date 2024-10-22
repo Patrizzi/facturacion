@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cotizacion;
 use App\CotizacionManual;
 use App\Igv;
+use App\Moneda;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use App\Ventas_registro;
@@ -97,6 +98,7 @@ class Ventas_registroController extends Controller
         $order = $request->query('order', array(0, 'asc'));
         // DATA DE DB
         $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
         // FILTRADO
         $filter = $request->get('value');
         $sortColumns = [
@@ -152,14 +154,12 @@ class Ventas_registroController extends Controller
         $cotizaciones->transform(function ($cotizacion) use ($igv) {
             $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
 
-            if ($cotizacion->moneda_id == 2) {
-                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
-                $cotizacion->total_conv = $total * $cotizacion->cambio;
-            } else {
-                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
-                $cotizacion->total_conv = $total;
-            }
-            $cotizacion->total = 'S/.' . number_format($cotizacion->total_conv, 2);
+            $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+
+            // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+            $cotizacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
+
+            $cotizacion->total = $cotizacion->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
             $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
             $cotizacion->estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
             return $cotizacion;
@@ -184,16 +184,16 @@ class Ventas_registroController extends Controller
         }
         // Llamado para la suma total
         $total_table = Cotizacion::total_sum_datatable($request, $startDate, $endDate);
-        $json['total_columna'] = "S/. " . number_format($total_columna, 2);
-        $json['total_table'] = "S/. " . number_format($total_table, 2);
+        $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
+        $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
         return response()->json($json);
     }
 
     public function cotizacion_manual_tab()
     {
-        $cotizacion_m = CotizacionManual::get();
-        $igv = Igv::first();
-        return view('transaccion.venta._shared.cotizacion_manual', compact('cotizacion_m', 'igv'));
+        // $cotizacion_m = CotizacionManual::get();
+        // $igv = Igv::first();
+        // return view('transaccion.venta._shared.cotizacion_manual', compact('cotizacion_m', 'igv'));
     }
 
     public function cotizacion_manual_registers(Request $request)
@@ -207,6 +207,7 @@ class Ventas_registroController extends Controller
         $order = $request->query('order', array(0, 'asc'));
         // DATA DE DB
         $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
         // FILTRADO
         $filter = $request->get('value');
         $sortColumns = [
@@ -261,14 +262,12 @@ class Ventas_registroController extends Controller
         $cotizaciones->transform(function ($cotizacion_manual) use ($igv) {
             $subtotal = $cotizacion_manual->op_gravada + $cotizacion_manual->op_inafecta + $cotizacion_manual->op_exonerada;
 
-            if ($cotizacion_manual->moneda_id == 2) {
-                $total = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
-                $cotizacion_manual->total_conv = $total * $cotizacion_manual->cambio;
-            } else {
-                $total = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
-                $cotizacion_manual->total_conv = $total;
-            }
-            $cotizacion_manual->total = 'S/.' . number_format($cotizacion_manual->total_conv, 2);
+            $total = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
+
+            // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+            $cotizacion_manual->total_conv = Ventas_registro::moneda_principal_convert($cotizacion_manual->moneda_id, $total);
+
+            $cotizacion_manual->total = $cotizacion_manual->moneda->simbolo . number_format($total, 2);
             $cotizacion_manual->emision = Carbon::parse($cotizacion_manual->created_at)->format('d-m-Y');
             $cotizacion_manual->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
             return $cotizacion_manual;
@@ -293,26 +292,138 @@ class Ventas_registroController extends Controller
         }
         // Llamado para la suma total
         $total_table = CotizacionManual::total_sum_datatable($request, $startDate, $endDate);
-        $json['total_columna'] = "S/. " . number_format($total_columna, 2);
-        $json['total_table'] = "S/. " . number_format($total_table, 2);
+        $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
+        $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
         return response()->json($json);
     }
 
     public function nota_venta_tab()
     {
-        $nota_venta = NotaVenta::all();
-        $totales = [];
-        foreach ($nota_venta as $index =>  $nota_ventas) {
+        // $nota_venta = NotaVenta::all();
+        // $totales = [];
+        // foreach ($nota_venta as $index =>  $nota_ventas) {
+        //     $total = 0;
+        //     $suma = 0;
+        //     $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+        //     foreach ($nota_venta_reg as $nota_venta_regs) {
+        //         $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+        //     }
+        //     $suma += $total;
+        //     $totales[$index] = $suma;
+        // }
+        // $igv = Igv::first();
+        // return view('transaccion.venta._shared.nota_venta', compact('nota_venta', 'totales', 'igv'));
+    }
+
+    public function nota_venta_registers(Request $request)
+    {
+
+        //* DATOS PARA PASAR CON AJAX
+
+        // DATA REQUEST
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'cotizaciones_manual.id',
+            2 => 'cotizaciones_manual.cod_cotizacion',
+            3 => 'cotizaciones_manual.cliente.nombre',
+            4 => 'cotizaciones_manual.cliente.numero_documento',
+            5 => 'cotizaciones_manual.fecha_emision',
+            6 => 'cotizaciones_manual.forma_pago',
+        ];
+
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        $tipo = $request->tipo_coti;
+
+        $query = NotaVenta::with(['cliente', 'moneda'])
+            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            // Agrupar las condiciones de búsqueda en una única cláusula where
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_nota_venta', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo', $tipo);
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $nota_venta = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $nota_venta->transform(function ($nota_venta) use ($igv) {
+            //Forma de Pago
+            if($nota_venta->forma_pago == 1){
+                $nota_venta->forma_pago = "Contado";
+            }else{
+                $nota_venta->forma_pago = "Credito";
+            }
+
+            // CALCULO PARA EL TOTAL
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id' , $nota_venta->id)->get();
             $total = 0;
             $suma = 0;
-            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
-            foreach ($nota_venta_reg as $nota_venta_regs) {
-                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            foreach ($nota_venta_reg as $index => $nota_reg) {
+                $total += $nota_reg->precio_nacional * $nota_reg->cantidad;
             }
             $suma += $total;
-            $totales[$index] = $suma;
+
+            // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+            $nota_venta->total_conv = Ventas_registro::moneda_principal_convert($nota_venta->moneda_id, $total);
+
+            $nota_venta->total = $nota_venta->moneda->simbolo . number_format($total, 2);
+            $nota_venta->emision = Carbon::parse($nota_venta->created_at)->format('d-m-Y');
+            
+            return $nota_venta;
+        });
+
+        $total_columna = 0;
+        // Bucle de llamada para el llenado del datatable
+        foreach ($nota_venta as $n_venta) {
+            $total_columna += $n_venta->total_conv;
+            $json['data'][] = [
+                $n_venta->id,
+                $n_venta->id,
+                $n_venta->cod_nota_venta,
+                $n_venta->cliente->numero_documento,
+                $n_venta->cliente->nombre,
+                $n_venta->fecha_emision,
+                $n_venta->forma_pago,
+                $n_venta->total,
+                $n_venta->id,
+                $n_venta->estado
+            ];
         }
-        $igv = Igv::first();
-        return view('transaccion.venta._shared.nota_venta', compact('nota_venta', 'totales', 'igv'));
+        // // Llamado para la suma total
+        $total_table = NotaVenta::total_sum_datatable($request, $startDate, $endDate);
+        $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
+        $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        return response()->json($json);
     }
 }

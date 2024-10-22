@@ -193,19 +193,11 @@ class Cotizacion extends Model
         // Transformacion a moneda principal
         $cotizaciones->transform(function ($cotizacion) use ($igv, &$total_table) {
             $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-
-            if ($cotizacion->moneda_id == 2) {
-                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
-                $cotizacion->total_conv = $total * $cotizacion->cambio;
-            } else {
-                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
-                $cotizacion->total_conv = $total;
-            }
+            $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+            // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+            $cotizacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
             // Sumar el total convertido a la suma acumulada
             $total_table += $cotizacion->total_conv;
-            $cotizacion->total = $cotizacion->moneda->simbolo . ' ' . number_format($cotizacion->total_conv, 2);
-            $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
-            $cotizacion->estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
             return $cotizacion;
         });
         return $total_table;

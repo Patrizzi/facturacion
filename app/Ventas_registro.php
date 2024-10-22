@@ -56,4 +56,22 @@ class Ventas_registro extends Model
 		return $count_mes;
 	}
 
+	public static function moneda_principal_convert($moneda_id, $total){
+		$principal = Moneda::where('principal', 1)->first();
+		$cambio = TipoCambio::orderBy('created_at', 'desc')->first();
+		if($principal->tipo == "nacional"){ //SOLES
+			if($moneda_id == 1){ //SOLES	
+				$total_conv = $total;
+			}else{ //DOLARES
+				$total_conv = $total * $cambio->paralelo;
+			}
+		}else{ //DOLAR
+			if($moneda_id == 2){ //DOLAR
+				$total_conv = $total;
+			}else{ //SOLES
+				$total_conv = $total / $cambio->paralelo;
+			}
+		}
+		return $total_conv;
+	}
 }

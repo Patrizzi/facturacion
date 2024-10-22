@@ -52,6 +52,7 @@ Route::group(
 		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
 		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
 		Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
+		Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
 
 
 		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
@@ -556,6 +557,17 @@ Route::group(
 		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
+
+
+		// NUEVAS RUTAS EN VENTAS (cotizacion, cotizacion_manua, nota_venta)
+		Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
+		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
+		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
+
+		Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
+		Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
+
+
 	});
 
 Auth::routes([
@@ -586,10 +598,6 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
-Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
-Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
-Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
 
 
 

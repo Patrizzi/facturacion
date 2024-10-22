@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Almacen;
 use App\Banco;
 use App\Cliente;
+use App\Cotizacion;
+use App\CotizacionManual;
 use App\Empresa;
 use App\Forma_pago;
 use App\Garantia;
@@ -17,6 +19,7 @@ use App\Servicios;
 use App\Igv;
 use App\kardex_entrada;
 use App\Stock_producto;
+use App\Ventas_registro;
 use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -391,6 +394,20 @@ class NotaVentaController extends Controller
         $moneda = Moneda::where('id',$nota_venta->moneda_id)->first();
         $igv=Igv::first();
         return view('transaccion.venta.nota_venta.ticket',compact('nota_venta','nota_registro','empresa','igv','moneda'));
+    }
+
+
+    //* NUEVA VISTA PARA /VENTAS - NOTA VENTA 
+    public function index2(){
+        $mes_año = Carbon::now()->format('d-m-Y');
+        $cotizacion_mes = Cotizacion::count_mes($mes_año);
+        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
+        $nota_venta_mes = NotaVenta::count_mes($mes_año);
+        
+        $almacen = Almacen::get();
+        $count_all_ventas = Ventas_registro::count_day_ventas();
+        
+        return view('transaccion.venta.nota_venta.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
     }
 }
     
