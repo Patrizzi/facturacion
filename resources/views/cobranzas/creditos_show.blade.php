@@ -68,53 +68,53 @@
                                                                 Datos Generales
                                                             </div>
                                                             <div class="panel-body">
-                                                                <div class="row">
+                                                                <div class="row mb-3">
                                                                     <div class="col-sm-6">
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Código:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">cod</p>
+                                                                                <p class="form-control">NV 001-00000015</p>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Moneda:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">moneda</p>
+                                                                                <p class="form-control">SOLES</p>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Forma:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">Contado</p>
+                                                                                <p class="form-control">Crédito</p>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Estado:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                    <button class="btn btn-danger btn-block" disabled><i class="fa fa-times"></i>&nbsp;&nbsp;Sin Pago</button>
+                                                                                    <button class="btn btn-danger btn-block" disabled><i class="fa fa-times"></i>&nbsp;&nbsp;Sin Pagar</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Fecha de Pago:</strong></label>
                                                                             <div class="col-sm-8">
                                                                                 <p class="form-control">10-10-2024</p>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Total:</strong></label>
                                                                             <div class="col-sm-8"> 
                                                                                 <p class="form-control">S/. 100.00</p>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Pagado:</strong></label>
                                                                             <div class="col-sm-8">
                                                                                 <p class="form-control">S/. 0.00</p>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group row">
+                                                                        <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Faltante:</strong></label>
                                                                             <div class="col-sm-8">
                                                                                 <p class="form-control">S/. 100.00</p>
@@ -125,9 +125,9 @@
                                                                 </div>
                                                                 <div class="col-sm-12">
                                                                         <div class="form-group row justify-content-center">
-                                                                            <a class="btn btn-secondary" href="" target="_blank">Descargar </a>
+                                                                            <a class="btn btn-primary mx-2" href="" target="_blank">Descargar </a>
                                                                         
-                                                                            <a class="btn btn-secondary" href="" target="_blank">Ver Factura</a>
+                                                                            <a class="btn btn-primary mx-2" href="" target="_blank">Ver Factura</a>
                                                                         </div>
                                                                 </div>
                                                             </div>
@@ -155,7 +155,7 @@
                                                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Ver</th>
+                                                                                <th data-toggle="true" >Ver</th>
                                                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                                                 <th>Cuota</th>
                                                                                 <th>Total</th>
