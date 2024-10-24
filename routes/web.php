@@ -566,6 +566,7 @@ Route::group(
 
 		Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
 		Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
+		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
 
 
 	});

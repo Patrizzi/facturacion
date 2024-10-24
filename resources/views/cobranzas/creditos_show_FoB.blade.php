@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Registros NV 001-00000001')
+@section('title', 'Registros FA00-00000767')
 @section('content')
     <div class="wrapper wrapper-content animated fadeIn">
             <div class="row">
@@ -73,7 +73,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Código:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">NV 001-00000015</p>
+                                                                                <p class="form-control">FA00-00000767</p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -85,13 +85,19 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Forma:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">Contado</p>
+                                                                                <p class="form-control">Crédito</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label class="col-sm-4 col-form-label"><strong>N° Cuotas:</strong></label>
+                                                                            <div class="col-sm-8">
+                                                                                <p class="form-control">3</p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Estado:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                    <button class="btn btn-danger btn-block" disabled><i class="fa fa-times"></i>&nbsp;&nbsp;Sin Pagar</button>
+                                                                                    <button class="btn btn-warning btn-block" disabled><i class="fa fa-warning"></i>&nbsp;&nbsp;Adelantado</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -99,25 +105,25 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Fecha de Pago:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">10-10-2024</p>
+                                                                                <p class="form-control">22-10-2024</p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Monto Total:</strong></label>
                                                                             <div class="col-sm-8"> 
-                                                                                <p class="form-control">S/. 100.00</p>
+                                                                                <p class="form-control">S/ 1,000.02</p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Monto Pagado:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">S/. 0.00</p>
+                                                                                <p class="form-control">S/.400.01</p>                                                                                </p>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label class="col-sm-4 col-form-label"><strong>Monto Faltante:</strong></label>
                                                                             <div class="col-sm-8">
-                                                                                <p class="form-control">S/. 100.00</p>
+                                                                                <p class="form-control">S/ 600.01</p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -136,7 +142,7 @@
                                                 </div>
                                         </div>
                                         <!--TABLAS-->
-                                        <div role="tabpanel" id="tab-3" class="tab-pane">
+                                        <div role="tabpanel" id="tab-3" class="tab-pane ">
                                             <div class="panel-body">
                                             <div class="col-lg-12">
                                                         <div class="panel panel-success">
@@ -159,7 +165,7 @@
                                                                     </div>
                                                                 </div>
                                                             <div class="table-responsive">
-                                                                <table class="footable2 table table-stripped toggle-arrow-tiny table-bordered table-hover dataTables-example">
+                                                                <table class="footable3 table table-stripped toggle-arrow-tiny table-bordered table-hover dataTables-example">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th data-toggle="true">Ver</th>    
@@ -180,14 +186,55 @@
                                                                                 <td>Ver más</td>     
                                                                                 <td><input type="checkbox" class="i-checks" name="input[]"></td> 
                                                                                 <td>Cuota N° 1</td>
-                                                                                <td>S/. 100.00</td>
-                                                                                <td>S/. 0.00</td>
-                                                                                <td>17-04-2024</td>
-                                                                                <td>17-04-2024</td>
-                                                                                <td>PENDIENTE</td>
+                                                                                <td>S/ 350.01</td>
+                                                                                <td>S/ 350.01</td>
+                                                                                <td>24-10-2024</td>
+                                                                                <td>25-10-2024</td>
+                                                                                <td><strong>24-10-2024</strong></td>
                                                                                 <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button></td>
                                                                                 <td>
                                                                                 <button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn" style="background-color: green"><i class="fa fa-check"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-info dropdown-toggle">Pago</button>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>Se pagó a tiempo</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>Ver más</td>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td> 
+                                                                                <td>Cuota N° 2</td>
+                                                                                <td>S/. 200.00</td>
+                                                                                <td>S/. 50.00</td>
+                                                                                <td>25-10-2024</td>
+                                                                                <td>26-10-2024</td>
+                                                                                <td><strong>PENDIENTE </strong></td>
+                                                                                <td><button type="button" class="btn" style="background-color: green"><i class="fa fa-check"></i></button></td>  
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-info"> <i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
+                                                                                <div class="btn-group">
+                                                                                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Pagar</a></li>
+                                                                                        <li><a class="dropdown-item" class="btn btn-primary" >Adelantar</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                <td>eewe</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>Ver más</td>
+                                                                                <td><input type="checkbox" class="i-checks" name="input[]"></td> 
+                                                                                <td>Cuota N° 3</td>
+                                                                                <td>S/. 400.01</td>
+                                                                                <td>S/. 0.00</td>
+                                                                                <td>26-10-2024</td>
+                                                                                <td>27-10-2024</td>
+                                                                                <td><strong>PENDIENTE</strong></td>
+                                                                                <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button></td>
+                                                                                <td>
+                                                                                <button type="button" class="btn btn-info"> <i class="fa fa-eye"></i></button>
                                                                                 <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button>  
                                                                                 <div class="btn-group">
                                                                                         <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Pago</button>
@@ -197,9 +244,21 @@
                                                                                         </ul>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>Falta pagar.</td>
-                                                                            </tr>
-                                                                            
+                                                                            </td>
+                                                                            <td>
+                                                                            <div>
+                                                                                <table>
+                                                                                    <thead>
+                                                                                        <th>id</th>
+                                                                                        <th>codigo</th>
+                                                                                        <th>Monto</th>
+                                                                                        <th>Fecha</th>
+                                                                                        <th>Detalle</th>
+                                                                                        <th>Comprobante</th>
+                                                                                    </thead>
+                                                                                </table>
+                                                                            </div></td>
+                                                                            </tr>                              
                                                                         </tbody>          
                                                                     </table>
                                                                 </div>
@@ -234,6 +293,11 @@
         .ibox-content>.row {
             margin: auto;
         }
+        .footable{
+            width: 100%;
+        }.footable-row-detail-name {
+            display: none;
+        }
 </style>
      <!-- Mainly scripts -->
      <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -262,10 +326,12 @@
     <script>
         $(document).ready(function() {
 
-            $('.footable2').footable();
-
+            $('.footable3').footable();
+  $('#tab-3').on('click', function() {
+            $('.footable3').footable();
         });
-
+        });
+      
     </script>
     
 @endsection

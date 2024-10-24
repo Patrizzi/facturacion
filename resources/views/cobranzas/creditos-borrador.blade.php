@@ -5,10 +5,10 @@
 @section('content')
                                                             <div class="row mb-3"> 
                                                                 <div class="col-sm-6">
-                                                                    <div class="form-group row mb-3"> <!-- Agregar margen inferior a cada fila -->
+                                                                    <div class="form-group row mb-3">
                                                                         <label class="col-sm-4 col-form-label"><strong>Código:</strong></label>
                                                                         <div class="col-sm-8">
-                                                                            <p class="form-control">NV 001-00000015</p> <!-- Agregar el código como en la imagen -->
+                                                                            <p class="form-control">NV 001-00000015</p> 
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row mb-3">
