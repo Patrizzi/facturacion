@@ -43,7 +43,7 @@
                       <input placeholder="PRO-0X33X345XX" data-toggle="tooltip" data-placement="top"  title="Código Alternativo:" type="text" class="form-control" name="codigo_original" autocomplete="off">
                     </div>
                     <div class="col-sm-3">
-                        <div data-toggle="tooltip" data-placement="top" title="Familia"> 
+                        <div data-toggle="tooltip" data-placement="top" title="Familia">
                           <select   class="familia_select2 form-control" name="familia_id" id="familia_id_sl" required="required" onchange="list_subfamilia()">
                             <option value=""></option>
                               @foreach($familias as $familia)
@@ -171,9 +171,9 @@
                       <div class="custom-file">
                         <input id="logo" type="file" class="custom-file-input" name="archivo_producto">
                         <label for="logo" class="custom-file-label">Seleccionar archivo...</label>
-                      </div> 
+                      </div>
                     </div>
-                    
+
                     <div class="col-sm-12" style="align-items: center;padding:  2% 22% 2% 22% ">
                       <button type="submit" class="ladda-button btn btn-success btn-block button_guardar" >Guardar</button>
                     </div>
@@ -223,10 +223,10 @@
     </div>
   </div>
 </div>
-<style>  
+<style>
   .form-control{
     border-radius: 5px;
-  } 
+  }
   input#archivoInput{
     position:absolute;
     top:0px;
@@ -274,18 +274,18 @@
   $('.custom-file-input').on('change', function() {
     let fileName = $(this).val().split('\\').pop();
     $(this).next('.custom-file-label').addClass("selected").html(fileName);
-  }); 
+  });
   $(document).ready(function(){
     $('.familia_select2').select2({
       placeholder: "Seleccionar",
-    
+
     });
     $('.subfamilia_select2').select2({
       placeholder: "Seleccionar",
     });
     $('.marca_select2').select2();
   });
-  
+
   function list_subfamilia(){
     var family = $('.familia_select2').val();
     $('.subfamilia_select2').val(null).trigger('change');
@@ -301,7 +301,7 @@
         data: function (params) {
             return {
                 _token: "{{ csrf_token() }}",
-                familia_id: family    
+                familia_id: family
             };
         },
         processResults: function (data) {
@@ -343,7 +343,7 @@
   function calcular_utilidad(){
     var precio_venta = document.getElementById("precio_venta").value;
     var precio_compra = document.getElementById("precio_compra").value;
-    
+
     if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
       // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
       var a1 =  parseFloat(precio_venta) * 100;
