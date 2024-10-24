@@ -300,10 +300,73 @@
                     <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
                                 class="nav-label text-white">Sire - Sunat</span></a></li>
 
-                    <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
-                                class="nav-label text-white">Sire - Sunat</span></a></li>
-                    <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
-                                class="nav-label text-white">Sire - Sunat</span></a></li>
+                    <li><a href="#"><i class="fa fa-table fa-lg text-white"></i><span
+                                class="nav-label text-white">Planilla</span></a>
+                                
+                                <ul class="nav nav-second-level collapse">
+                                @can('planilla-datos_generales.index')
+                                    <li><a href="{{ route('personal.index') }}"><span>Personal</span></a></li>
+                                @endcan
+                                @can('planilla-vendedores.index')
+                                    <li><a href="{{ route('vendedores.index') }}"><span>Vendedores</span></a></li>
+                                @endcan
+                                <li><a href="{{ route('vehiculo.index') }}"><span>Vehículos</span></a></li>
+
+                            </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span
+                                class="nav-label text-white">Consultas</span></a>
+                                <ul class="nav nav-second-level collapse">
+                                @can('consultas-garantias')
+                                    <li>
+                                        <a href="#"><span>Garantias</span></a>
+                                        <ul class="nav nav-third-level">
+                                            @can('consultas-garantias-guia_ingreso.index')
+                                                <li><a href="{{ route('consultas.garantias.guias_ingreso') }}"><span>Guía
+                                                            Ingreso</span></a></li>
+                                            @endcan
+                                            @can('consultas-garantias-guia_egreso.index')
+                                                <li><a href="{{ route('consultas.garantias.guias_egreso') }}"><span>Guía
+                                                            Egreso</span></a></li>
+                                            @endcan
+                                            @can('consultas-garantias-informe_tecnico.index')
+                                                <li><a href="{{ route('consultas.garantias.informe_tecnico') }}"><span>Informe
+                                                            Técnico</span></a></li>
+                                            @endcan
+                                        </ul>
+                                    </li>
+                                @endcan
+                                {{-- @can('consulta.cantidad_precio.index') --}}
+                                <li><a href="{{ route('cantidad_precio.index') }}"><span>Productos</span></a></li>
+                                <li><a href="{{ route('cantidad_precio.index_servicio') }}"><span>Servicios</span></a></li>
+                                {{-- @endcan --}}
+                            </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-registered fa-lg text-white"></i><span
+                                class="nav-label text-white">Registros Sunat</span></a>
+                                <ul class="nav nav-second-level collapse">
+                            <li><a href="{{ route('facturacion_electronica.index') }}"><span>Facturas</span></a></li>
+                            <li><a href="{{ route('facturacion_electronica.index_boleta') }}"><span>Boletas</span></a>
+                            </li>
+                            <li><a href="{{ route('facturacion_electronica.index_guia_remision') }}"><span>Guía
+                                        Remisión</span></a></li>
+                            <li><a href="{{ route('facturacion_electronica.index_nota_credito') }}"><span>Nota de
+                                        créditos</span></a></li>
+                            <li><a href="{{ route('facturacion_electronica.index_nota_debito') }}"><span>Nota de
+                                        débitos</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span
+                                class="nav-label text-white">Productos y Servicios</span></a>
+                                <ul class="nav nav-second-level collapse">
+                                <li><a href="{{ route('productos.index') }}"><span>Productos</span></a></li>
+                                <li><a href="{{ route('servicios.index') }}"><span>Servicios</span></a></li>
+                            </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-th-large fa-lg text-white"></i><span
+                                class="nav-label text-white">Proyectos PMB</span></a></li>
+                    <li><a href="#"><i class="fa fa-database fa-lg text-white"></i><span
+                                class="nav-label text-white">Estadistica KPIs</span></a></li>
 
                     {{--  FIN MENU DESPELEGABLE NUEVO --}}
 
