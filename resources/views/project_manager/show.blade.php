@@ -29,7 +29,7 @@
                 </div>
                 <div role="tabpanel" id="tab-2" class="tab-pane">
                     <div class="panel-body">
-                        <x-project-manager.card-activities-view />
+                        <x-project-manager.card-activities-view :collection="$activities" />
                     </div>
                 </div>
                 <div role="tabpanel" id="tab-3" class="tab-pane">
