@@ -139,7 +139,6 @@
         padding-left: 52px;
         font-weight: 600;
     }
-
     .posta_a:hover {
         color: white;
     }
@@ -232,43 +231,61 @@
 
     li::marker {
         content: none;
+    } 
+    .rounded-circle{
+        display: flex;
+        text-align: center;
+        align-items: center;
+        /* margin: auto; */
+    }
+    .head-nav-logo{
+        display: flex !important;
+        text-align: center !important;
+        align-items: center !important;
+    }
+    .nav > li:first-child > a:hover {
+        background-color: white !important;
+        padding: 20px;
+    }
+    
+    body.mini-navbar .navbar-default .nav > li:first-child > a {
+        padding: 20px 0px;
+        background-color: white;
+    }
+    body.mini-navbar .navbar-default .nav > li:first-child > a > img {
+        margin: auto;
     }
 </style>
 
+{{-- <body class="mini-navbar"> --}}
 <body class="">
     <div id="wrapper">
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
-                <ul class="nav metismenu" id="side-menu" style="height:85vh; overflow-y: auto;">
-                    <div style="position: fixed; z-index: 9999;">
-                        <li class="nav-header nav-label" style="padding:30px 0px 20px 45px">
-                            <div class="dropdown profile-element" style="transform: translateX(-25px);">
-                                <a href="{{ route('usuario.index') }}">
+                <ul class="nav metismenu" id="side-menu" style="height:85vh !important; overflow-y: auto;">
+                    {{-- <div style="position: fixed; z-index: 9999;"> --}}
+                        <li class="" style="background-color: white;">
+                            {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
+                                <a href="{{ route('usuario.index') }}" class="head-nav-logo">
                                     <img alt="image" class="rounded-circle"
                                         src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                                        style="width: 60px; height: 60px; margin-right: 25px;" />
+                                        style="width: 60px; height: 60px;" />
                                     <span class="nav-label"
                                         style="color: #2641f8; font-size: 18px; font-weight: bold;">LEONO</span><span
                                         style="color: gray; font-size: 18px; font-weight: bold;">SOFT</span>
-
                                 </a>
-                            </div>
-                            <div class="dropdown profile-element" style="transform: translateX(-18px);">
+                            {{-- </div> --}}
+                            {{-- <div class="dropdown profile-element" style="transform: translateX(-18px);">
                                 <a class="nav-label" href="{{ route('usuario.index') }}">
                                     <span class="block m-t-xs font-bold"
                                         style="color:black; font-size: 15px; margin-top: 20px;">@yield('nombre', auth()->user()->nombre)</span>
-
                                 </a>
-                            </div>
-
-
+                            </div> --}}
                         </li>
-
-                    </div>
-
+                    {{-- </div> --}}
                     {{-- INICIO --}}
                     @can('inicio')
-                        <li style=" margin-top: 153px;"><a href="{{ route('inicio') }}"><i
+                        <li style=""><a href="{{ route('inicio') }}"><i
                                     class="fa fa-home fa-lg text-white"></i><span
                                     class="nav-label text-white">Inicio</span></a></li>
                     @endcan
