@@ -29,26 +29,26 @@
                                                                                 <div class="form-group row">
                                                                                     <label class="col-sm-4 col-form-label"><strong>Nombre Completo:</strong></label>
                                                                                     <div class="col-sm-8">
-                                                                                        <p class="form-control">Marlo Samaniego Calderon</p>
+                                                                                        <p class="form-control">Paolo Guerrero Gonzales</p>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group row">
                                                                                     <label
                                                                                         class="col-sm-4 col-form-label"><strong>DNI:</strong></label>
                                                                                     <div class="col-sm-8">
-                                                                                        <p class="form-control">72808518</p>
+                                                                                        <p class="form-control">80561230</p>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group row">
                                                                                     <label class="col-sm-4 col-form-label"><strong>Telefono:</strong></label>
                                                                                     <div class="col-sm-8">
-                                                                                        <p class="form-control">987654321</p>
+                                                                                        <p class="form-control">912345678</p>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="form-group row">
                                                                                     <label class="col-sm-4 col-form-label"><strong>Correo:</strong></label>
                                                                                     <div class="col-sm-8">
-                                                                                        <p class="form-control">mnose@gmail.com</p>
+                                                                                        <p class="form-control">Pguerrero9@gmail.com</p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -246,18 +246,32 @@
                                                                                 </td>
                                                                             </td>
                                                                             <td>
-                                                                            <div>
-                                                                                <table>
-                                                                                    <thead>
-                                                                                        <th>id</th>
-                                                                                        <th>codigo</th>
-                                                                                        <th>Monto</th>
-                                                                                        <th>Fecha</th>
-                                                                                        <th>Detalle</th>
-                                                                                        <th>Comprobante</th>
-                                                                                    </thead>
-                                                                                </table>
-                                                                            </div></td>
+                                                                                <div  class="table-responsive text-center">
+                                                                                    <h3 class="mb-4">Detalle de Pagos</h3>
+                                                                                    <table class="table-striped table-bordered table-hover" >
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Id</th>
+                                                                                                <th>Codigo</th>
+                                                                                                <th>Monto</th>
+                                                                                                <th>Fecha</th>
+                                                                                                <th>Detalle</th>
+                                                                                                <th>Comprobante</th>
+                                                                                            </tr>
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>1</td>
+                                                                                                    <td>Hola</td>
+                                                                                                    <td>S/. 400.01</td>
+                                                                                                    <td>26-10-2024</td>
+                                                                                                    <td><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></td>
+                                                                                                    <td><button type="button" class="btn btn-primary"><i class="fa fa-file-text"></i></button></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </thead>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </td>
                                                                             </tr>                              
                                                                         </tbody>          
                                                                     </table>
@@ -267,7 +281,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                       
                             </div>
                         </div>
                     </div>
