@@ -198,10 +198,6 @@ class SideMenu extends Component {
                 ->text('Gestion de Proyectos')
                 ->route('project_managers.index')
                 ->icon('/archivos/imagenes/project_manager/icon/pm-icon.png')
-                ->submenus([
-                    $this->menu()->text('Lista de proyectos')->route('project_managers.index')->build(),
-                    $this->menu()->text('Tabla Gantt')->route('project_managers.gantt.index')->build(),
-                ])
                 ->build(),
         ];
     }
