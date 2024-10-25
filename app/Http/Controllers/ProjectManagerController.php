@@ -14,19 +14,12 @@ class ProjectManagerController extends Controller {
     private $administradores;
     private $priorities;
 
-<<<<<<< HEAD
-    public function __construct(Cliente $responsable, ProjectService $projectService, User $administrador) {
-        $this->responsables = $responsable::pluck('nombre', 'id');
-        $this->projectServices = $projectService::pluck('nombre', 'id');
-        $this->administradores = $administrador::pluck('name', 'id');
-=======
     public function __construct(Cliente $responsable,ProjectService $projectService,User $administrador,ProjectManager $priority)
     {
         $this->responsables=$responsable::pluck('nombre','id');
         $this->projectServices=$projectService::pluck('nombre','id');
         $this->administradores=$administrador::pluck('name','id');
         $this->priorities=$priority::getPriorities();
->>>>>>> b9107e1c (refactor: :sparkles: Changes to controller ProjectManagerController and view formDinamico)
     }
 
     private function getDataForm($id = null) {
@@ -44,18 +37,11 @@ class ProjectManagerController extends Controller {
             $dataAdministrador[$clave] = $nombre;
         }
 
-<<<<<<< HEAD
-        $dataForm = [
-            'responsables' => $dataResponsable,
-            'projectServices' => $dataProjectService,
-            'administradores' => $dataAdministrador,
-=======
         $dataForm=[
             'responsables'   => $dataResponsable,
             'projectServices'   => $dataProjectService,
             'administradores'  => $dataAdministrador,
             'priorities' => $this->priorities,
->>>>>>> b9107e1c (refactor: :sparkles: Changes to controller ProjectManagerController and view formDinamico)
         ];
 
         return ($id == null)
