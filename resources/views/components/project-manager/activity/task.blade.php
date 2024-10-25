@@ -3,13 +3,14 @@
         <link rel="stylesheet" href="{{ asset('css/project_managers/cards/task.css') }}">
     @endonce
 @endpush
-<div class="task" id="task-{{$task->id}}">
+<div class="task" id="task-{{$task->id}}" data-task-id="{{$task->id}}" onclick="loadTaskComments({{$task->id}}, '{{ $url_buttons['load_comments'] }}')">
+{{-- <div class="task" id="task-{{$task->id}}"> --}}
     <div class="task-content">
         <img src="{{ $user_foto }}" class="task-worker-image" alt="worker image">
         <div class="task-worker-name simple-truncate">{{ $user_name }}</div>
         <div class="task-text">
             <p class="truncate-text" truncate="70">
-                {{ $task->contenido ?: 'Sin contenido' }}
+                {{ $contenido }}
             </p>
         </div>
         <div class="task-footer">
@@ -21,7 +22,7 @@
                     </div>
                 </div>
                 <div class="progress-bar-text">{{ $barra_progreso }}%</div>
-                <div class="task-action-icons">
+                {{-- <div class="task-action-icons">
                     @if($task->user_id == auth()->id())
                         <a href="#" class="fa fa-pencil-square-o task-buttons" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['edit_task'] }}"></a>
                         <a href="#" class="fa fa-trash task-buttons delete-item"></a>
@@ -31,11 +32,11 @@
                         </form>
                     @endif
                     <i class="fa fa-comment task-buttons" onclick="toggleChat('{{$task->activity->id}}', '{{$task->id}}')"></i>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
-    <div class="task-chat-box" id="chat-box-{{$task->id}}">
+    {{-- <div class="task-chat-box" id="chat-box-{{$task->id}}">
         @if ($task->comments->isNotEmpty())
             <div class="task-chat-history" id="chat-history-{{$task->id}}">
                 @foreach ($task->comments as $comment)
@@ -56,5 +57,5 @@
                 </button>
             </form>
         </div>
-    </div>
+    </div> --}}
 </div>

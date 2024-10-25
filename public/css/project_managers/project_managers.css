@@ -21,22 +21,22 @@
 }
 
 .modal-body .color-picker-input {
-  width: 50px;
-  height: 20px;
-  padding: 0;
-  border-radius: 5px;
-  cursor: pointer;
-  align-self: center;
+    width: 50px;
+    height: 20px;
+    padding: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
 }
 
 .modal-body .color-picker-input::-webkit-color-swatch {
-  border-radius: 4px;
-  border: none;
+    border-radius: 4px;
+    border: none;
 }
 
 .modal-body .color-picker-input::-webkit-color-swatch-wrapper {
-  padding: 0;
-  border: none;
+    padding: 0;
+    border: none;
 }
 
 .modal-body input[type=file]::file-selector-button {
@@ -78,7 +78,7 @@
     gap: 13px;
     border-radius: 8px;
     padding: 8px 8px 18px 8px;
-    min-height: 600px;
+    /* min-height: 600px; */
 }
 /* Paginación */
 .pagination-wrapper {
@@ -90,13 +90,13 @@
     width: 5px;
 }
 .carousel-container::-webkit-scrollbar-thumb {
-background: #888;
-border-radius: 10px;
+    background: #888;
+    border-radius: 10px;
 }
 .carousel-container::-webkit-scrollbar-thumb:hover {
-background: #555;
+    background: #555;
 }
 .carousel-container::-webkit-scrollbar-track {
-background: #f0f0f0;
-border-radius: 10px;
+    background: #f0f0f0;
+    border-radius: 10px;
 }

@@ -51,9 +51,6 @@
 .task-footer {
     margin-top: 3px;
 }
-.task-buttons {
-    cursor: pointer;
-}
 .task-action-icons {
     display: flex;
     align-items: center;
@@ -63,6 +60,13 @@
     margin: 1px;
     justify-items: auto;
     font-size: 14px;
+}
+.task-buttons {
+    cursor: pointer;
+}
+.task-action-icons a:hover {
+    background-color: #1a5eb3;
+    color: #fff;
 }
 .task-chat-box {
     display: block;
@@ -94,7 +98,11 @@
 .task-chat-input {
     display: block;
     justify-content: space-between;
+    align-items: center;
     margin: 0px;
+}
+.task-chat-input .file-input-label {
+    align-self: flex-end;
 }
 .task-chat-input .chat-input-form {
     display: flex;
@@ -115,8 +123,9 @@
 }
 .task-chat-input button {
     border: none;
-    margin: 2px;
+    margin: 2px 2px 2px 2px;
     padding: 0px;
+    align-self: flex-end;
 }
 .task-chat-input label {
     cursor: pointer;

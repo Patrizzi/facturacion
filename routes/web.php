@@ -44,13 +44,13 @@ Route::group(
 			]);
 
 		Route::resource('project_managers.cards.tasks', 'TaskController')
-			->only('store', 'create', 'edit', 'update', 'destroy')
+			->only('index', 'store', 'create', 'edit', 'update', 'destroy')
 			->scoped([
 				'card' => 'id'
 			]);
 
 		Route::resource('project_managers.cards.tasks.comments', 'CommentController')
-			->only('store', 'create')
+			->only('index', 'store', 'create')
 			->scoped([
 				'task' => 'id'
 			]);

@@ -81,6 +81,15 @@
         asset('js/plugins/toastr/toastr.min.js'),
     ]) !!}
     @stack('js')
+    <script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+        
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
 </body>
 
 </html>

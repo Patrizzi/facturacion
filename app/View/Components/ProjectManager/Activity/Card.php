@@ -11,6 +11,7 @@ class Card extends Component
     public $card_foto;
     public $responsable;
     public $responsable_foto;
+    public $contenido;
     public $fecha_inicio;
     public $barra_progreso;
     public $url_buttons;
@@ -27,13 +28,13 @@ class Card extends Component
             $this->responsable = 'Sin responsable';
             $this->responsable_foto = getImageUrl('defecto_avatar.jpg', 1);
         }
-
+        $this->contenido = $card->contenido ?? 'Sin contenido';
         $this->fecha_inicio = $card->fecha_inicio->format('d/m/Y');
         $this->barra_progreso = progressDate($card->fecha_inicio, $card->fecha_cierre);
         $this->url_buttons['create_task'] = route('project_managers.cards.tasks.create', [$card->project_manager, $card->id]);
         $this->url_buttons['edit_card'] = route('project_managers.cards.edit', [$card->project_manager, $card->id]);
         $this->url_buttons['delete_card'] = route('project_managers.cards.destroy', [$card->project_manager, $card->id]);
-
+        $this->url_buttons['tasks_card'] = route('project_managers.cards.tasks.index', [$card->project_manager, $card->id]);
     }
 
     public function render()

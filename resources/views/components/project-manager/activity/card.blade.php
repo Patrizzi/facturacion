@@ -13,20 +13,20 @@
                 <div class="p-card-worker-time">{{createdTime($card)}}</div>
             </div>
             <div class="p-card-action-icons">
-                <a href="#" class="fa fa-plus" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['create_task'] }}"></a>
+                <a href="#" class="fa fa-plus" data-toggle="modal" data-target="#formModal" data-url="{{ $url_buttons['create_task'] }}"></a>
                 {{-- @if($card->responsable_id == auth()->id()) --}}
-                    <a href="#" class="fa fa-trash delete-item" style="cursor: pointer;"></a>
-                    <form action="{{ $url_buttons['delete_card'] }}" method="POST" style="display: none;" class="delete-item-form">
+                    <a href="#" class="fa fa-trash" onclick="deleteItem('{{ $card->id }}')"></a>
+                    <form action="{{ $url_buttons['delete_card'] }}" method="POST" style="display: none;" id="delete-item-form-{{ $card->id }}">
                         @csrf
                         @method('DELETE')
                     </form>
-                    <a href="#" class="fa fa-edit" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['edit_card'] }}"></a>
+                    <a href="#" class="fa fa-edit" data-toggle="modal" data-target="#formModal" data-url="{{ $url_buttons['edit_card'] }}"></a>
                 {{-- @endif --}}
             </div>
         </div>
         <div class="p-card-text">
             <p class="truncate-text" truncate="110">
-                {{$card->contenido ?: 'Sin contenido'}}
+                {{$contenido}}
             </p>
         </div>
         @if ($card->foto) 
@@ -43,12 +43,23 @@
                 <div class="progress-bar-text">{{ $barra_progreso }}%</div>
             </div>
         </div>
+        <div class="p-card-buttons">
+            <button>
+                <a href="#" class="fa fa-comment" data-toggle="modal" data-target="#chatModal" data-url="{{ $url_buttons['tasks_card'] }}"></a>
+            </button>
+            {{-- <button>
+                <a href="#" class="fa fa-comment" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['comments_card'] }}"></a>
+            </button>
+            <button>
+                <a href="#" class="fa fa-comment" data-toggle="modal" data-target="#dynamicModal" data-url="{{ $url_buttons['comments_card'] }}"></a>
+            </button> --}}
+        </div>
     </div>
-    @if ($card->tasks->isNotEmpty())
+    {{-- @if ($card->tasks->isNotEmpty())
     <div class="p-card-tasks-container" id="tasks-container-{{$card->id}}">
         @foreach ($card->tasks as $task)
             <x-project-manager.activity.task :task="$task"/>
         @endforeach
     </div>
-    @endif
+    @endif --}}
 </div>

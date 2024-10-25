@@ -67,7 +67,7 @@ class ActivityController extends Controller
 
         $activity->save();
 
-        return redirect()->route('project_managers.cards', $project_id);
+        return redirect()->route('project_managers.show', $project_id);
     }
 
     public function edit($project_id, $id) {
@@ -80,7 +80,8 @@ class ActivityController extends Controller
             'formMethod' => 'PUT',
             'formRoute' => $formRoute,
             'modalData' => $modalData,
-            'project_id' => $project_id
+            'project_id' => $project_id,
+            'activity' => $activity
         ]);
     }
 
@@ -116,16 +117,16 @@ class ActivityController extends Controller
             'foto' => $name
         ]);
         
-        return redirect()->route('project_managers.cards', $project_id)->with('success', 'Tarjeta actualizada exitosamente');
+        return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarjeta actualizada exitosamente');
     }
 
     public function destroy($project_id, $id){
         $activity = Activity::where('id', $id)->where('proyecto_id', $project_id)->firstOrFail();
 
         if ($activity->delete()){
-            return redirect()->route('project_managers.cards', $project_id)->with('success', 'Tarjeta eliminada correctamente');
+            return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarjeta eliminada correctamente');
         } else {
-            return redirect()->route('project_managers.cards', $project_id)->with('error', 'Error al eliminar la tarjeta');
+            return redirect()->route('project_managers.show', $project_id)->with('error', 'Error al eliminar la tarjeta');
         }
     }
 }

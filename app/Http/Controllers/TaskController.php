@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Task;
 use App\Activity;
+use App\View\Components\ProjectManager\Activity\CardChatView;
 
 class TaskController extends Controller
 {
@@ -16,6 +17,25 @@ class TaskController extends Controller
         ];
     }
 
+    public function index($project_id, $activity_id) {
+        $activity = Activity::where('id', $activity_id)
+                            ->where('proyecto_id', $project_id)
+                            ->select('id', 'nombre')
+                            ->firstOrFail();
+    
+        $tasks = $activity->tasks()->with([
+            'user',
+        ])->get();
+
+        $data = [
+            'project_id' => $project_id,
+            'activity' => $activity, 
+            'tasks' => $tasks,
+        ];
+    
+        return app(CardChatView::class, ['data' => $data])->render();
+    }
+    
     public function create($project_id, $activity_id) {
         $activity = Activity::where('id', $activity_id)
                             ->where('proyecto_id', $project_id)
@@ -29,8 +49,8 @@ class TaskController extends Controller
             'formMethod' => 'POST',
             'formRoute' => $formRoute,
             'modalData' => $modalData,
+            'project_id' => $project_id, 
             'activity' => $activity,
-            'project_id' => $project_id 
         ]);
     }
 
@@ -57,7 +77,7 @@ class TaskController extends Controller
 
         $task->save();
 
-        return redirect()->route('project_managers.cards', $project_id)->with('success', 'Tarea creada exitosamente');
+        return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarea creada exitosamente');
     }
 
     public function edit($project_id, $activity_id, $id) {
@@ -72,6 +92,8 @@ class TaskController extends Controller
             'formRoute' => $formRoute,
             'modalData' => $modalData,
             'project_id' => $project_id,
+            'activity_id' => $activity_id,
+            'task' => $task,
         ]);
     }
 
@@ -93,16 +115,16 @@ class TaskController extends Controller
             'estado' => $request->estado,
         ]);
         
-        return redirect()->route('project_managers.cards', $task->activity->project_manager)->with('success', 'Tarea actualizada exitosamente');
+        return redirect()->route('project_managers.show', $task->activity->project_manager)->with('success', 'Tarea actualizada exitosamente');
     }
 
     public function destroy($project_id, $activity_id, $id) {
         $task = Task::where('id', $id)->where('actividad_id', $activity_id)->firstOrFail();
 
         if($task->delete()){
-            return redirect()->route('project_managers.cards', $project_id)->with('success', 'Tarea eliminada correctamente');
+            return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarea eliminada correctamente');
         } else {
-            return redirect()->route('project_managers.cards', $project_id)->with('error', 'Error al eliminar la tarea');
+            return redirect()->route('project_managers.show', $project_id)->with('error', 'Error al eliminar la tarea');
         }
     }
 }

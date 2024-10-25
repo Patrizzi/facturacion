@@ -1,21 +1,19 @@
 <?php
 
-namespace App\View\Components\ProjectManager;
+namespace App\View\Components\ProjectManager\Activity;
 
 use Illuminate\View\Component;
 
-class CardActivitiesView extends Component
+class TaskChatView extends Component
 {
-    public $activities;
-
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($collection)
+    public function __construct(public $data)
     {
-        $this->activities = $collection;
+        $this->data = $data;
     }
 
     /**
@@ -25,6 +23,8 @@ class CardActivitiesView extends Component
      */
     public function render()
     {
-        return view('components.project-manager.card-activities-view');
+        return view('components.project-manager.activity.task-chat-view', [
+            'data' => $this->data
+        ]);
     }
 }

@@ -53,8 +53,10 @@ class ProjectManagerController extends Controller {
             ],
             "newActivity" => [
                 "text" => "Nueva Actividad",
-                "attributes" => ["href" => $id ? route("project_managers.cards.create", $id): ""]
-            ]
+                "attributes" => ["href" => $id ? route("project_managers.cards.create", $id): ""],
+                "attributes" => ["data-toggle" => "modal", "data-target" => "#formModal", 
+                    "data-url" => $id ? route("project_managers.cards.create", $id) : ""],
+            ],
         ];
 
         return $buttons[$button];
@@ -88,16 +90,14 @@ class ProjectManagerController extends Controller {
     }
     public function show($id) {
         $buttons = [$this->buttonsActions("newActivity", $id)];
-        $projectManager = ProjectManager::with(['activities' => function ($query) {
-            $query->paginate(10);
-        }])->find($id);
+        $projectManager = ProjectManager::with('activities')->findOrFail($id);
 
         if (!$projectManager) {
-            return redirect()->back()->with('error', 'Project Manager not found');
+            return redirect()->back()->with('error', 'No se encontró el proyecto');
         }
 
         // Separar las actividades paginadas
-        $activities = $projectManager->activities()->paginate(10);
+        $activities = $projectManager->activities()->paginate(5);
         return view('project_manager.show', compact("activities", "buttons"));
     }
 
