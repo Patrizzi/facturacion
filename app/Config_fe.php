@@ -520,9 +520,9 @@ class Config_fe extends Model
         } else {
             // Venta - crédito
             if ($facturacion_manual == 0) {
-                $cuotas = Cuotas_Credito::where('facturacion_id', $factura->id)->get();
-            } else {
                 $cuotas = Cuotas_Credito::where('facturacion_m_id', $factura->id)->get();
+            } else {
+                $cuotas = Cuotas_Credito::where('facturacion_id', $factura->id)->get();
             }
 
 
@@ -532,7 +532,7 @@ class Config_fe extends Model
                     ->setMonto($cuota->monto)
                     ->setFechaPago(new DateTime($cuota->fecha_pago));
             }
-            $detraccion = Detracciones::where('factura_id', $factura->id)->first();
+            // $detraccion = Detracciones::where('factura_id', $factura->id)->first();
             $bancos = BancoRegistro::where('estado_detraccion', 0)->first();
             $invoice = (new Invoice())
                 ->setUblVersion('2.1')
