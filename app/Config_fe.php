@@ -309,7 +309,7 @@ class Config_fe extends Model
         }
     }
 
-    public static function factura_detraccion($factura, $facturas_registros, $guia, $facturacion_manual = 0)
+    public static function factura_detraccion($factura, $facturas_registros, $guia, $facturacion_manual)
     {
 
         if ($facturacion_manual == 1) {
@@ -345,9 +345,9 @@ class Config_fe extends Model
             }
         }
         if ($facturacion_manual == 0) {
-            $detraccion = Detracciones::where('factura_m_id', $factura->id)->first();
-        }else{
             $detraccion = Detracciones::where('factura_id', $factura->id)->first();
+        }else{
+            $detraccion = Detracciones::where('factura_m_id', $factura->id)->first();
         }
         $empresa = Empresa::first();
         $igv = Igv::first();
@@ -520,9 +520,9 @@ class Config_fe extends Model
         } else {
             // Venta - crédito
             if ($facturacion_manual == 0) {
-                $cuotas = Cuotas_Credito::where('facturacion_m_id', $factura->id)->get();
-            } else {
                 $cuotas = Cuotas_Credito::where('facturacion_id', $factura->id)->get();
+            } else {
+                $cuotas = Cuotas_Credito::where('facturacion_m_id', $factura->id)->get();
             }
 
 
