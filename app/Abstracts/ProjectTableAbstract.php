@@ -43,7 +43,12 @@ abstract class ProjectTableAbstract extends Component {
             ],
             'manyProjects' => [
                 'Nombre' => function ($item) {
-                    return $item->nombre;
+                    // dd(route('project_managers.show',$item->id));
+                    $showLink=html()->a($item->nombre)->text($item->nombre)->href(route('project_managers.show',$item->id))->class('text-primary');
+                    $editLink=html()->a($item->nombre)->href(route('project_managers.edit',$item->id))->class('fa fa-edit text-primary');
+                    $deleteLink= html()->modelForm($item,'delete',route('project_managers.destroy',$item->id))->class('')
+                    ->children(html()->submit('')->class('fa fa-trash btn btn-light p-flex')); 
+                    return html()->label($showLink ." ". $editLink . ' '.$deleteLink);;
                 },
                 'Centro de Costo' => function ($item) {
                     return $item->centro_costo;
