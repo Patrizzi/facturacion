@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Task;
 use App\Activity;
-use App\View\Components\ProjectManager\Activity\CardChatView;
+use App\View\Components\ProjectManager\Activity\TasksChatView;
 
 class TaskController extends Controller
 {
+    // Funciones auxiliares
     public function getModalData() {
         return [
             'users' => User::select('id', 'name')->get(),
@@ -18,24 +19,21 @@ class TaskController extends Controller
     }
 
     public function index($project_id, $activity_id) {
-        $activity = Activity::where('id', $activity_id)
+        $activity = Activity::with('tasks.user')
+                            ->where('id', $activity_id)
                             ->where('proyecto_id', $project_id)
                             ->select('id', 'nombre')
                             ->firstOrFail();
-    
-        $tasks = $activity->tasks()->with([
-            'user',
-        ])->get();
 
         $data = [
             'project_id' => $project_id,
             'activity' => $activity, 
-            'tasks' => $tasks,
+            'tasks' => $activity->tasks,
         ];
     
-        return app(CardChatView::class, ['data' => $data])->render();
+        return app(TasksChatView::class, ['data' => $data])->render();
     }
-    
+
     public function create($project_id, $activity_id) {
         $activity = Activity::where('id', $activity_id)
                             ->where('proyecto_id', $project_id)
@@ -84,8 +82,8 @@ class TaskController extends Controller
         $task = Task::where('id', $id)->where('actividad_id', $activity_id)->firstOrFail();
         
         $modalData = $this->getModalData();
-
         $formRoute = route('project_managers.cards.tasks.update', [$task->activity->project_manager, $task->activity, $task]);
+
         return view('project_manager.modals.form-task', [
             'model' => $task,
             'formMethod' => 'PUT',
@@ -105,15 +103,8 @@ class TaskController extends Controller
             'estado' => 'required|integer',
         ]);
 
-        $task = Task::findorFail($request->task);
-        
-        $task->update([
-            'user_id' => $request->user_id,
-            'contenido' => $request->contenido,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_cierre' => $request->fecha_cierre,
-            'estado' => $request->estado,
-        ]);
+        $task = Task::findOrFail($request->task);
+        $task->update($request->only(['user_id', 'contenido', 'fecha_inicio', 'fecha_cierre', 'estado']));
         
         return redirect()->route('project_managers.show', $task->activity->project_manager)->with('success', 'Tarea actualizada exitosamente');
     }

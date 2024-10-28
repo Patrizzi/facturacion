@@ -4,7 +4,7 @@ namespace App\View\Components\ProjectManager\Activity;
 
 use Illuminate\View\Component;
 
-class TaskChatView extends Component
+class CommentsChatView extends Component
 {
     /**
      * Create a new component instance.
@@ -23,7 +23,7 @@ class TaskChatView extends Component
      */
     public function render()
     {
-        return view('components.project-manager.activity.task-chat-view', [
+        return view('components.project-manager.activity.comments-chat-view', [
             'data' => $this->data
         ]);
     }
