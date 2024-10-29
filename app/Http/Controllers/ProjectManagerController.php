@@ -130,7 +130,7 @@ class ProjectManagerController extends Controller {
     public function destroy($id) {
         $tabla = ProjectManager::findOrFail($id);
         $tabla->delete();
-        return redirect()->route('project_managers.index');
+        return redirect()->route('project_managers.index')->with('success', 'Proyecto eliminado exitosamente');
     }
 
     public function cards($id) {

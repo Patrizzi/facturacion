@@ -12,12 +12,20 @@
                 <div class="tab-content">
                     <div role="tabpanel" id="tab-1" class="tab-pane active">
                         <div class="panel-body">
-                            <x-project-manager.general-project-table :collection="$data" />
+                            @if ($data->isNotEmpty())
+                                <x-project-manager.general-project-table :collection="$data" />
+                            @else
+                                <h5>No hay proyectos para mostrar.</h5>
+                            @endif
                         </div>
                     </div>
                     <div role="tabpanel" id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                            <x-project-manager.gantt-project-view :collection="$data" type="oneProject" />
+                            @if ($data->isNotEmpty())
+                                <x-project-manager.gantt-project-view :collection="$data" type="oneProject" />
+                            @else
+                                <h5>No hay proyectos para mostrar.</h5>
+                            @endif
                         </div>
                     </div>
                 </div>

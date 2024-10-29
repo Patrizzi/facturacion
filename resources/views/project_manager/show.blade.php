@@ -7,7 +7,7 @@
                     <li><a class="nav-link " href="{{ route('project_managers.index') }}">Proyectos</a></li>
                     <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Actividades</a></li>
                     <li><a class="nav-link" data-toggle="tab"
-                            href="#tab-2">Cards</a></li>
+                            href="#tab-2">Tarjetas</a></li>
                     <li><a class="nav-link" data-toggle="tab"
                             href="#tab-3">Reporte</a></li>
                 </ul>
@@ -28,18 +28,28 @@
                 <div class="tab-content">
                     <div role="tabpanel" id="tab-1" class="tab-pane active">
                         <div class="panel-body">
-                            <x-project-manager.gantt-activities-view :collection="$activities" type="manyActivities" />
+                            @if ($activities->isNotEmpty())
+                                <x-project-manager.gantt-activities-view :collection="$activities" type="manyActivities" />
+                            @else
+                                <h5>No hay actividades en este proyecto.</h5>
+                            @endif
                         </div>
                     </div>
                     <div role="tabpanel" id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                            <x-project-manager.card-activities-view :collection="$activities" />
+                            @if ($activities->isNotEmpty())
+                                <x-project-manager.card-activities-view :collection="$activities" />
+                            @else
+                            <h5>No hay Tarjetas en este proyecto.</h5>
+                            @endif
                         </div>
                     </div>
                     <div role="tabpanel" id="tab-3" class="tab-pane">
                         <div class="panel-body">
-                            @if ($activities[0])
-                                <x-project-manager.report-activities-view :collection="$activities" />
+                            @if ($activities->isNotEmpty())
+                                <x-project-manager.report-activities-view :pagActivities="$activities" :allActivities="$allActivities" />
+                            @else
+                                <h5>No hay actividades para generar el reporte.</h5>
                             @endif
                         </div>
                     </div>
