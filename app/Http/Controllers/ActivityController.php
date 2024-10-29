@@ -67,7 +67,7 @@ class ActivityController extends Controller
 
         $activity->save();
 
-        return redirect()->route('project_managers.show', $project_id);
+        return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarjeta creada exitosamente');
     }
 
     public function edit($project_id, $id) {

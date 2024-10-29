@@ -1,6 +1,5 @@
 @push('css')
-    {!! push_asset_once(['css/plugins/slick/slick.css', 'css/plugins/slick/slick-theme.css',
-    'css/plugins/sweetalert/sweetalert.css', 'css/project_managers/project_managers.css',
+    {!! push_asset_once(['css/plugins/slick/slick.css', 'css/plugins/slick/slick-theme.css', 'css/plugins/sweetalert/sweetalert.css', 
     'css/project_managers/card_chat.css', 'css/project_managers/cards/task.css',
     ]) !!}
 @endpush

@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@push('css')
+    {!! push_asset_once(['css/project_managers/project_managers.css']) !!}
+@endpush
 @section('content')
     <x-content-app title="Lista de proyectos" :buttons="$buttons">
         <div class="wrapper wrapper-content animated fadeInRight">
@@ -66,7 +69,7 @@
                     toastr.error("{{ $error }}");
                 @endforeach
             @endif
-            
+
             var lastUrls = {};
             $('[data-toggle="modal"]').on('click', function(event) {
                 event.preventDefault();
