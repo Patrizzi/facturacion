@@ -34,7 +34,7 @@
                 </div>
                 <div role="tabpanel" id="tab-3" class="tab-pane">
                     <div class="panel-body">
-                        <x-project-manager.report-activities-view :collection="$activities" />
+                        <x-project-manager.report-activities-view :pagActivities="$activities" :allActivities="$allActivities" />
                     </div>
                 </div>
             </div>

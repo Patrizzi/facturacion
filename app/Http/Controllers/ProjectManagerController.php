@@ -101,9 +101,12 @@ class ProjectManagerController extends Controller {
 
         $buttons = [$this->buttonsActions("newActivity", $id)];
 
-        // Separar las actividades paginadas
+        // Obtener todas las actividades del proyecto
+        $allActivities = $projectManager->activities()->get();;
+
+        // Paginar las actividades en una variable separada
         $activities = $projectManager->activities()->paginate(5);
-        return view('project_manager.show', compact("activities", "buttons"));
+        return view('project_manager.show', compact("activities", "allActivities", "buttons"));
     }
 
     public function edit($id) {

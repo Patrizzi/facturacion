@@ -4,6 +4,7 @@ namespace App\View\Components\ProjectManager;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;
+use App\View\Components\PieChart;
 
 class PieChartActivity extends Component {
 
@@ -14,18 +15,20 @@ class PieChartActivity extends Component {
      *
      * @return void
      */
-    public function __construct(public LengthAwarePaginator $data) {
+    public function __construct(public $data) {
+        $collection = $data instanceof LengthAwarePaginator ? $data->getCollection() : $data;
+
         $this->activities = [
-            'labels' => $data->getCollection()->map(function ($collection) {
-                return $collection->nombre;
+            'labels' => $collection->map(function ($item) {
+                return $item->nombre;
             }),
-            'values' => $data->getCollection()->map(function ($collection) {
-                return $collection->percentage();
+            'values' => $collection->map(function ($item) {
+                return $item->percentage();
             }),
-            'colors' => $data->getCollection()->map(function ($collection) {
-                return $collection->color;
+            'colors' => $collection->map(function ($item) {
+                return $item->color;
             })
-        ];;
+        ];
     }
 
     /**
@@ -34,9 +37,9 @@ class PieChartActivity extends Component {
      * @return \Illuminate\View\View|string
      */
     public function render() {
-        return view('components.pie-chart', [
+        return app(PieChart::class, [
             'data' => $this->activities,
             'title' => "Actividades",
-        ]);
+        ])->render();
     }
 }
