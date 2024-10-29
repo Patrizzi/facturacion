@@ -5,6 +5,7 @@
 }
 
 .tasks-list {
+    height: 722px;
     max-height: 740px;
     min-width: 200px;  
     overflow-y: auto;

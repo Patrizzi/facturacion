@@ -21,17 +21,7 @@ class Task extends Model
     
     protected $dates = ['fecha_inicio', 'fecha_cierre'];
 
-    public function activity(){
-        return $this->belongsTo(Activity::class, 'actividad_id');
-    }
-
-    public function user(){
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function comments(){
-        return $this->hasMany(Comment::class, 'tarea_id');
-    }
+    // Funciones
 
     public function getStatus()
     {
@@ -49,5 +39,23 @@ class Task extends Model
             4 => "Cancelado",
             5 => "Terminado",
         ];
+    }
+
+    // Scopes
+
+    
+
+    // Relaciones
+
+    public function activity(){
+        return $this->belongsTo(Activity::class, 'actividad_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class, 'tarea_id');
     }
 }

@@ -6,26 +6,25 @@ use Illuminate\Http\Request;
 use App\Comment;
 use App\Task;
 use Auth;
-use App\View\Components\ProjectManager\Activity\TaskChatView;
+use App\View\Components\ProjectManager\Activity\CommentsChatView;
 
 class CommentController extends Controller
 {
     public function index($project_id, $activity_id, $task_id) {
-        $task = Task::where('id', $task_id)->where('actividad_id', $activity_id)->firstOrFail();
-        $comments = $task->comments()->get();
+        $task = Task::with('comments.user')->where('id', $task_id)->where('actividad_id', $activity_id)->firstOrFail();
 
         $data = [
             'project_id' => $project_id,
             'activity_id' => $activity_id,
             'task' => $task,
-            'comments' => $comments,
+            'comments' => $task->comments,
             'url_buttons' => [
                 'edit_task' => route('project_managers.cards.tasks.edit', [$project_id, $activity_id, $task]),
                 'delete_task' => route('project_managers.cards.tasks.destroy', [$project_id, $activity_id, $task]),
             ]
         ];
 
-        return app(TaskChatView::class, ['data' => $data])->render();
+        return app(CommentsChatView::class, ['data' => $data])->render();
     }
 
     public function Create(){

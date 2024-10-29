@@ -3,10 +3,6 @@
     'css/plugins/sweetalert/sweetalert.css', 'css/project_managers/project_managers.css',
     'css/project_managers/card_chat.css', 'css/project_managers/cards/task.css',
     ]) !!}
-    {{-- @once
-        <link rel="stylesheet" href="{{ asset('css/project_managers/project_managers.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" >
-    @endonce --}}
 @endpush
 <div class="row justify-content-md-center">
     <div class="col-lg-12">
@@ -26,6 +22,12 @@
     'js/plugins/sweetalert/sweetalert.min.js']) !!}
     @once
         <script>
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    toastr.error("{{ $error }}");
+                @endforeach
+            @endif
+
             document.addEventListener('input', function(event) {
                 if (event.target.classList.contains('auto-resizable')) {
                     event.target.style.height = '22px';

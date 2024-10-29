@@ -3,15 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use App\User;
 use App\Cliente;
 use App\ProjectService;
-use Carbon\Carbon;
 
 class ProjectManager extends Model {
     protected $table = 'project_managers';
 
     protected $guarded = [];
+
+    protected $attributes = [
+        // Valores por defecto al crear una instancia
+    ];
 
     protected $fillable = [
         'ruc',

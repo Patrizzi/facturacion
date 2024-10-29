@@ -93,16 +93,20 @@ class ProjectManagerController extends Controller {
         return redirect()->route('project_managers.index')->with('success', 'Creado exitosamente');
     }
     public function show($id) {
-        $buttons = [$this->buttonsActions("newActivity", $id)];
-        $projectManager = ProjectManager::with('activities')->findOrFail($id);
+        $projectManager = ProjectManager::with('activities')->find($id);
 
         if (!$projectManager) {
-            return redirect()->back()->with('error', 'No se encontró el proyecto');
+            return redirect()->route('project_managers.index')->with('error', 'No se encontró el proyecto');
         }
 
-        // Separar las actividades paginadas
+        $buttons = [$this->buttonsActions("newActivity", $id)];
+
+        // Obtener todas las actividades del proyecto
+        $allActivities = $projectManager->activities()->get();;
+
+        // Paginar las actividades en una variable separada
         $activities = $projectManager->activities()->paginate(5);
-        return view('project_manager.show', compact("activities", "buttons"));
+        return view('project_manager.show', compact("activities", "allActivities", "buttons"));
     }
 
     public function edit($id) {
