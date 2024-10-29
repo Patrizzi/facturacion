@@ -58,3 +58,60 @@
         </div>
     </x-content-app>
 @endsection
+@push('js')
+    @once
+        <script>
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    toastr.error("{{ $error }}");
+                @endforeach
+            @endif
+            
+            var lastUrls = {};
+            $('[data-toggle="modal"]').on('click', function(event) {
+                event.preventDefault();
+
+                var button = $(this);
+                var modalTarget = button.data('target');
+                var url = button.data('url');
+                var modal = $(modalTarget);
+
+                var currentModal = button.closest('.modal');
+
+                if (currentModal.length > 0) {
+                    currentModal.modal('hide');
+                }
+
+                if (url !== lastUrls[modalTarget]) {
+                    modal.find('.modal-dialog').load(url, function() {
+                        lastUrls[modalTarget] = url;
+                        modal.modal('show');
+                    });
+                } else {
+                    modal.modal('show');
+                }
+            });
+
+            // Mostrar confirmación del delete
+            function deleteItem(id) {
+                const form = document.getElementById(`delete-item-form-${id}`);
+
+                swal({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, borrar',
+                    cancelButtonText: 'Cancelar'},
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            form.submit();
+                        }
+                    }
+                );
+            }
+        </script>
+    @endonce
+@endpush
