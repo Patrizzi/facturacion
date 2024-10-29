@@ -296,7 +296,7 @@
                                         <div id="tab-2" class="tab-pane active">
                                             <div class="panel-body">
                                                 <div class="row m-3">
-                                                    <div class="col-1 switch me-3">
+                                                    <div class="col-1 switch mx-3">
                                                         <div class="onoffswitch">
                                                             <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example1">
                                                             <label class="onoffswitch-label" for="example1">
@@ -308,7 +308,7 @@
                                                     <label class="col-10 pt-0 px-4">Mostrar firma en Guía de Remisión</label>
                                                 </div>
                                                 <div class="row m-3">
-                                                    <div class="col-1 switch me-3">
+                                                    <div class="col-1 switch mx-3">
                                                         <div class="onoffswitch">
                                                             <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example2">
                                                             <label class="onoffswitch-label" for="example2">
@@ -320,7 +320,7 @@
                                                     <label class="col-10 pt-0 px-4">Mostrar firma en Cotización</label>
                                                 </div>
                                                 <div class="row m-3">
-                                                    <div class="col-1 switch me-3">
+                                                    <div class="col-1 switch mx-3">
                                                         <div class="onoffswitch">
                                                             <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example3">
                                                             <label class="onoffswitch-label" for="example3">

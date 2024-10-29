@@ -8,8 +8,287 @@
 @section('config',route('Configuracion'))
 
 @section('content')
+<div class="wrapper wrapper-content animated fadeInRight align-content-center">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="tabs-container">
 
-<!-- Modal Create  -->
+                        <ul class="nav nav-tabs active show" role="tablist">
+                            <li>
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"> Entradas
+
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-2"> Salidas
+
+                                </a>
+                            </li>
+                        </ul>
+
+
+                        <!-- Buscar, Botón agregar y Descargar -->
+                        <div class="py-2 d-flex align-items-center row-cols-12 pt-4 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
+                            <div class="col-md-7 d-flex justify-content-md-start row-cols-12 py-2">
+                                <div class="col-md-auto">
+                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 d-flex justify-content-end">
+                                <div class="col-md-2 d-flex justify-content-end align-content-center align-items-md-center ms-5">
+                                    <div class="btn-group">
+                                        <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+                                        <ul class="dropdown-menu p-2">
+                                            <p class="pl-3"><b>Almacenes:</b></p>
+                                            <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
+                                            <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm mx-3"><i class="fa fa-cloud-download"></i></button>
+                                    <ul class="dropdown-menu p-1">
+                                        <li><a class="dropdown-item" href="#">PDF</a></li>
+                                        <li><a class="dropdown-item" href="#">Excel</a></li>
+                                        <li><a class="dropdown-item" href="#">Word</a></li>
+                                        <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tablas y su contenido -->
+                        <div class="tab-content">
+
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body table-responsive">
+                                    <!-- CONTENIDO DENTRO DEL TAB - Boleta manual -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha de Modificación</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>1</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>2</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>3</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>4</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>5</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>6</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>7</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>8</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>9</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>10</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>11</td>
+                                                <td>BOL</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                                <div class="panel-body table-responsive">
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha de Modificación</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>1</td>
+                                                <td>Tab2</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>2</td>
+                                                <td>Tab2</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>3</td>
+                                                <td>Tab2</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>4</td>
+                                                <td>Tab2</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="" class="fs-5"><i class="fa fa-edit "></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
+                            <label class="btn btn-sm btn-white ">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
+                            </label>
+                            <label class="btn btn-sm btn-white active">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Modal Create
 <div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 3">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -23,7 +302,7 @@
                                 <div class="row">
                                     <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/motivo.svg')}}" width="100px"></div>
                                     <label class="col-sm-2 col-form-label">Tipo:</label>
-                                    <div class="col-sm-10" style="margin-bottom: 5px"> 
+                                    <div class="col-sm-10" style="margin-bottom: 5px">
                                         <select name="tipo" class="form-control " >
                                             <option value="Compras">Compras</option>
                                             <option value="Salidas">Salidas</option>
@@ -43,7 +322,7 @@
         </div>
     </div>
 </div>
-<!-- / Modal Create  -->
+<!-- / Modal Create
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -128,7 +407,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <!-- / Modal Create  -->
+                                    <!-- / Modal Create
                                     </td>
                                 </tr>
                                 @endforeach
@@ -172,7 +451,7 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                    <!-- Modal Create  -->
+                                                    <!-- Modal Create
                                                     <div class="modal fade" id="edit_{{$m_compras->id}}" role="dialog" aria-labelledby="edit_{{$m_compras->id}}" aria-hidden="true"  >
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
@@ -221,7 +500,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- / Modal Create  -->
+                                                    <!-- / Modal Create
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -259,7 +538,7 @@
                                                                 Editar
                                                             </button>
                                                         </td>
-                                                        <!-- Modal Create  -->
+                                                        <!-- Modal Create
                                                         <div class="modal fade" id="edit_{{$m_devol->id}}" role="dialog" aria-labelledby="edit_{{$m_devol->id}}" aria-hidden="true"  >
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -308,8 +587,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- / Modal Create  -->
-                                                    </tr>    
+                                                        <!-- / Modal Create
+                                                    </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -337,7 +616,7 @@
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 33px;
     }
-</style>
+</style>-->
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -355,6 +634,21 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<!-- iCheck -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+<script>
+    $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+</script>
+
+
+<link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
 
 <!-- Page-Level Scripts -->
 <script>
@@ -394,7 +688,7 @@
         var switch_sub{{$mc->id}} = new Switchery(elem_sub{{$mc->id}}, { color: 'skyblue' });
         swObjs{{$mc->id}}[elem_sub{{$mc->id}}.id] = switch_sub{{$mc->id}};
     });
- 
+
 
 </script>
 @endforeach
@@ -406,7 +700,7 @@
         var switch_sub{{$md->id}} = new Switchery(elem_sub{{$md->id}}, { color: 'skyblue' });
         swObjs{{$md->id}}[elem_sub{{$md->id}}.id] = switch_sub{{$md->id}};
     });
- 
+
 
 </script>
 @endforeach
@@ -425,7 +719,7 @@
 		placeholder: "Seleccionar",
     });
 
-    
+
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 @endsection
