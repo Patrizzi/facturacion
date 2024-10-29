@@ -121,11 +121,6 @@
 </div>
 </div>
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 32d3930ce1960c7b7f2c36e57c274c8c6274f7f5
 <tbody>
     {{--Base para agregar el tab para el los contenidos--}}
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -207,12 +202,15 @@
                     <td>PRODUCTOS</td>
                     <td>
                         <!-- Botón para abrir el modal -->
-                        <a href="#"
+                    <div><a href="#"
                            style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
                            data-bs-toggle="modal"
                            data-bs-target="#modaluno"> <!-- Cambiado a modaluno -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
+                        <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
+                            <i class="fa fa-check" style="color:white;"></i>
+                        </button></div>
                     </td>
 
                     <!-- Modal -->
@@ -254,12 +252,15 @@
                     <td>0002</td>
                     <td>GARANTIAS</td>
                     <td>
-                        <a href="#"
+                        <div><a href="#"
                            style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
                            data-bs-toggle="modal"
                            data-bs-target="#modaldos"> <!-- Cambiado a modaldos -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
+                        <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
+                            <i class="fa fa-check" style="color:white;"></i>
+                        </button></div>
                     </td>
 
                     <!-- Modal -->
@@ -298,16 +299,16 @@
                     <td>0001</td>
                     <td>SERVICIOS</td>
                     <td>
-                        <a href="#"
-                           style="display:inline-block; padding:10px; background-color: blue; border-radius:5px; margin-right:2px;"
-                           data-bs-toggle=""
-                           data-bs-target=""> <!-- Cambiado a modaltres -->
+                        <div><a href="#"
+                           style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modaldos"> <!-- Cambiado a modaldos -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
 
-                        <a href="#"style="display:inline-block; padding:10px; background-color:red; border-radius:66px; margin-right:2px;"
-                        data-bs-toggle="" data-bs-target=""> <i class="fa fa-arrows-alt" style="color:white;"></i>
-                        </a>
+                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
+                            <i class="fa fa-arrows-alt" style="color:white;"></i>
+                        </button></div>
                     </td>
 
                     <!-- Modal -->

@@ -527,6 +527,901 @@
     }
 </style>
 
+<tbody>
+    {{--Base para agregar el tab para el los contenidos--}}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li>
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> ALMACÉN
+                                    {{-- link del tab 1 --}}
+                                </a>
+                            </li>
+                            <li class="ml-auto mb-2"> <!-- Added mb-2 for small bottom margin -->
+                                <div class="btn-group mx-2">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                    <!-- Botón para abrir el modal -->
+                                    <div class="btn-group mx-0">
+                                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-bs-toggle="modal" data-bs-target="#myModal">Agregar</button>                                    
+                                    </div>
+                                </div>
+                            </li>
+<!-- Modal PRIMERO-->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Información General</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información de la Sunat</a>
+                    </li>
+                </ul>
+
+                <!-- Tab content -->
+                <div class="tab-content mt-3" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                    
+                
+                        <!-- Aquí se agrega el contenido del modal -->
+                        <div class="col-md-12 mb-3">
+                            <!-- Título con ícono -->
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABLFBMVEX///8AAACMuvr5qktXW3rp6eoxZaPBdiv/65aRwP//rk3j4+NZXX3t7e1undwrYJ4ePWOebDA9UW2Drupvb29kZGQOEhgmJibFxcY5PFCLXyrMgDHJey1TV3QMDRFUcJfklz+OVyDFxMxNUGs4SmMlLUy9gTnqoEffmEM3JhBZPRtCPSf/9JzbyoEuMEETExPn1YiuoGZ6SxulpaW7usIuLi7W1te0tLSKiopLS0sgICF4eHg7OztGXn5UVFenpq0YHjKcxPuvaydISEiUlJRefaiFse0tPFFwlcheXWF+VibMiz0hFwqweDVYdZ1lhrWWilgdJzUVHCYoU4YVK0WenaQeICxAQllLRSzDs3M1MR8lIhZfVzh+dEqdkVwcEwlqSCBgQh1YispCLRQGFCSvAAAKZklEQVR4nO2da2PixhWGESzeSFTO2oDNOlk73aQGs66xQ83N4HRrDNisr2k39Sbpetv//x8qaYQuM2ekQYyumfcTlkYwj87MeecicC4nJCQklC3VepVqpVeLuxphqdgbSEiDXinuyoSg2rnk1EXGAqmOtyVcg3Ex7mpxU6dC4CFVsxHI9imFT9d2O+7qrarSGYbUOm1hR846cVdyBXXPMZp+u6N2yKNdNe6aBlLJMgcrWjVVLRaLqtrBI5tG+6jhgdpuFw2+osFYJHpnvxt3lZeR2sbDV61ZeAvIWmUX66KpsQ/CHE7HHYwPMXbGeCDTYR99rNbn3SKJZ0IWiawzTL59VN0trweFzxXIXtrsw5U92tTweQbyItFZxxELPLsYMVOhg7Xk20fJ8uwrM7u0SxBKu9/qt6ETJcI+zhOUddSxngaNV8ViqS8B5mB2ObPyUOfUAlnFGKVxMsY6C3Oo5Mxa12oQQLF75aj7FZBgIfuoxB/I9tCqTceqKdAIibqDJqndBzyQw3acgXSPLzt4fT3anyFaW06MfXQvXPXog8ag55ChRNMQzkddfNQwjME+iJnDoAMQ6j6AR8StFuwpsdtHDb/Jp5C3a8G4wMo93E3uHrBjFxT7wEPfjyzrGObgko85WNqcyXJelssj/ATFPoj1nUjsg5g5DBmT4sNlWc4jyZPLI+wszT7wQIY9+1CJpsNqbJuz/ILPYMzPNrESSbAPYlmJuXXtlZ14i0DeYlNgamvHy1XCsQ8ia9AGmHiYp3d5ks9glGc/4IGk2AcxjeS+eEWYAzXLY/d7d7QO45mQ5b0trPK0N8ZcZ5erfRDLSrRbjZvI0d3Eiw/1yLspdtUFYD2gfXAaB6hj3LNZzWGkm4O/YraP4OZw6xs+ByRpH+fdEjiC52sf3MyBgZHZPohhfHD7IFammWeukDkwQJaZ7QP/wED20cXDRxs+4uGb3jH1PpCRtI8BY047XTLrlPA5WqvCZg5bo3JgPjOQo0c8QHAgz/B19SXso3aFXQtP44pt/EZO/c2BgTG4fZwzBTK4OWyymQMDo7wenn0Aew5g+Lp4mB8uOYTPAZm/xKeR0O7AsvZBmkOVcU6ztDmwMJL2AQaS3T6iNgcGyPItPmhdwT5Ic+hC70XubE559T6QUZ7hWWcAdhtf+2hj2WXAuD70OAopfA5I0j7gypH2YW/UqdjM7yJKc2BgnBD2AW5qafaBg5j9UXUHkHWddrPMPbtQGfPE7KN1xmIfLYTo7IE0c8AniA+XkeEtIJntw5kphjqgY22wCmYXDjMHPoyM9qE6Z3LjnL2lCW5IA+awFZY5MECy24fVpzSbWMDCQz/SHGIIn4MxT9gHpWMtmmY3Z3bNcULMgQESsg8gPCZiJYce/GzhJbTwxWQO/gLsQzc4nAA11G2zG1Zc5/WGjNvnKN7m6RZgHwPcPlSzdQKESTAHf8nrr/DG2nfZh0WItVI9fKQ5hDj0DKz1tbWf/4nVdNvhB1YrdWUat5cYerxNQHaBtP712tra
+                                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" width="100px" style="margin-right: 10px;">
+                                <label for="descripcion1" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">
+                                    Almacén
+                                </label>
+                            </div>
+                
+                            <!-- Formulario de Almacén -->
+                            <form>
+                                <div class="row mb-3">
+                                    <!-- Nombre -->
+                                    <div class="col-md-6">
+                                        <label for="nombreAlmacen" class="form-label">Nombre:</label>
+                                        <input type="text" class="form-control" id="nombreAlmacen" value="Oficina Arequipa">
+                                    </div>
+                                    <!-- Responsable -->
+                                    <div class="col-md-6">
+                                        <label for="responsable" class="form-label">Responsable:</label>
+                                        <select class="form-select" id="responsable">
+                                            <option selected>Administrador Web</option>
+                                            <option value="1">Otro Responsable</option>
+                                            <option value="2">Carlos Daniel Roman Berru</option>
+                                            <option value="3">Christopher Javier Huaman Guevara</option>
+                                            <option value="4">Luis Fernando Miranda Valdez</option>
+                                            <option value="5">Daniela Greys Yanavilca Matta</option>
+                                            <option value="6">Julio Flores Vicuña</option>
+                                            <option value="7">Karla Alexandra Paola Flores Ramos</option>
+                                            <option value="8">Wilber Leydin Sánchez Rojas</option>
+                                            <option value="9">Areliz Madeleine Tiburcio Galarza</option>
+                                            <option value="10">Sebastian Flores Garcia</option>
+                                            <option value="11">Jack Carlos Huaman Asencio</option>
+                                            <option value="12">Fiorela Mariel Calderón Miranda</option>
+                                            <option value="13">Lucero Margarita Changra Mendoza</option>
+                                            <option value="14">Brisila Bedregal</option>
+                                            <option value="14">Alessandra Nicolle Barrantes Cruzado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Dirección -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label">Dirección:</label>
+                                        <input type="text" class="form-control" id="direccion" value="Calle emilio Fernandez 16C">
+                                    </div>
+                                    <!-- Abreviatura -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label">Abreviatura:</label>
+                                        <input type="text" class="form-control" id="abreviatura" value="ALM1">
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Código Sunat -->
+                                    <div class="col-md-6">
+                                        <label for="codigoSunat" class="form-label">Código Sunat:</label>
+                                        <input type="text" class="form-control" id="codigoSunat" value="1">
+                                    </div>
+                                    <!-- Cod. Ubigeo -->
+                                    <div class="col-md-6">
+                                        <label for="codigoUbigeo" class="form-label">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank" style="text-decoration: none;">
+                                                <i class="fa fa-podcast" aria-hidden="true"></i>
+                                            </a>
+                                            Cod. Ubigeo:
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="codigoUbigeo" value="150101">
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Descripción -->
+                                    <div class="col-md-6">
+                                        <label for="descripcion" class="form-label">Descripción:</label>
+                                        <textarea class="form-control" id="descripcion" rows="2"></textarea>
+                                    </div>
+                                    <!-- Nota -->
+                                    <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
+                                        <div class="alert alert-primary mb-0 mt-3" role="alert"> <!-- Added margin-top for spacing -->
+                                            Nota: Los campos siguientes es el número de registro que se continuará en el sistema.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <!-- Activo/Desactivo -->
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <label for="activo" class="form-label me-2" style="font-size: 20px;">
+                                            Activo/desactivo:
+                                        </label>
+                                        <div class="form-check form-switch" style="transform: scale(1.5); margin-left: 20px;"> <!-- Added margin-left for spacing -->
+                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5);"> <!-- Scale the checkbox -->
+                                        </div>
+                                        </div>
+                                    </div>
+                                
+                
+                                <!-- Botón Guardar en el modal -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        <!-- Fin del contenido modal -->
+    </div>
+</div>
+                
+<div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+    <!-- Sección de codificación de documentos -->
+    <div class="col-md-12 mb-3">
+        <!-- Centrado de la imagen y el texto de descripción -->
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUkvtg9L1oBVOoWUMqrwmLVo4Fc4QF5xoNsg&s" width="100px" style="margin-right: 10px;">
+            <label for="descripcion2" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">Sunat:</label>
+        </div>
+
+    </div>
+
+    <!-- Formulario de codificación dentro de la ventana 2 -->
+    <div class="col-md-12">
+        <form>
+            <div class="row mb-3">
+                <!-- Cod. Facturación -->
+                <div class="col-md-4">
+                    <label for="codFacturacion" class="form-label">Cod.Facturación:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+
+                    </div>
+                </div>
+                <!-- Cod. Boleta -->
+                <div class="col-md-4">
+                    <label for="codBoleta" class="form-label">Cod.Boleta:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="B00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Guía R -->
+                <div class="col-md-4">
+                    <label for="codGuia" class="form-label">Cod.Guía R:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Nota Crédito Factura -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoFactura" class="form-label">Cod. Nota Crédito Factura:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="FF0" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Nota Crédito Boleta -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoBoleta" class="form-label">Cod. Nota Crédito Boleta:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="BB0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Nota Débito -->
+                <div class="col-md-4">
+                    <label for="codNotaDebito" class="form-label">Cod. Nota Débito:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Factura Manual -->
+                <div class="col-md-4">
+                    <label for="codFacturaManual" class="form-label">Cod. Factura manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="FA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Boleta Manual -->
+                <div class="col-md-4">
+                    <label for="codBoletaManual" class="form-label">Cod. Boleta manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="BA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Guía Remisión Manual -->
+                <div class="col-md-4">
+                    <label for="codGuiaManual" class="form-label">Cod. Guía Remisión manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="TA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+</li>
+</ul>
+<!-- FIN Modal PRIMERO-->
+
+<!-- Bootstrap CSS y JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+                            
+
+<!-- Tablas y su contenido -->
+<div class="tab-content">
+    <div role="tabpanel" id="tab-1" class="tab-pane active show">
+        <div class="panel-body">
+            <!-- CONTENIDO DENTRO DEL TAB  -->
+            <table class="table table-striped text-md-center">
+                <thead>
+                    <tr>
+                        <th><div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" checked="" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></th>
+                        <th >ID</th>
+                        <th >Nombre</th>
+                        <th >Abreviatura</th>
+                        <th>Descrippción</th>
+                        <th>Responsable</th>
+                        <th >Dirección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                    <td>1</td>
+                    <td>Oficina Arequipa</td>
+                    <td>ALM1</td>
+                    <td>Descripción</td>
+                    <td>Administrador Web</td>
+                    <td>Calle emilio Fernandez 160</td>
+                    <td>
+                        <!-- Botón para abrir el modal -->
+                    <div class="btn-group mx-0">
+                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white; padding: 10px; margin-right: 5px;" data-bs-toggle="modal" data-bs-target="#myModal">
+                            <i class="fa fa-edit" style="color:white;"></i>
+                        </button> 
+                        <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
+                            <i class="fa fa-check" style="color:white;"></i>
+                        </button>
+                        <button style="display:inline-block; padding:10px; background-color:#28a745; border-radius:5px; border:none; cursor:pointer;">
+                            <i class="fa fa-eye" style="color:white;"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Modal DOS -->
+                    <div class="modal fade" id="editaralmacen" tabindex="-1" aria-labelledby="editaralmacenLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editaralmacenLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Información General</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información de la Sunat</a>
+                                        </li>
+                                    </ul>
+
+                <!-- Tab content -->
+                <div class="tab-content mt-3" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                    
+                
+                        <!-- Aquí se agrega el contenido del modal -->
+                        <div class="col-md-12 mb-3">
+                            <!-- Título con ícono -->
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABLFBMVEX///8AAACMuvr5qktXW3rp6eoxZaPBdiv/65aRwP//rk3j4+NZXX3t7e1undwrYJ4ePWOebDA9UW2Drupvb29kZGQOEhgmJibFxcY5PFCLXyrMgDHJey1TV3QMDRFUcJfklz+OVyDFxMxNUGs4SmMlLUy9gTnqoEffmEM3JhBZPRtCPSf/9JzbyoEuMEETExPn1YiuoGZ6SxulpaW7usIuLi7W1te0tLSKiopLS0sgICF4eHg7OztGXn5UVFenpq0YHjKcxPuvaydISEiUlJRefaiFse0tPFFwlcheXWF+VibMiz0hFwqweDVYdZ1lhrWWilgdJzUVHCYoU4YVK0WenaQeICxAQllLRSzDs3M1MR8lIhZfVzh+dEqdkVwcEwlqSCBgQh1YispCLRQGFCSvAAAKZklEQVR4nO2da2PixhWGESzeSFTO2oDNOlk73aQGs66xQ83N4HRrDNisr2k39Sbpetv//x8qaYQuM2ekQYyumfcTlkYwj87MeecicC4nJCQklC3VepVqpVeLuxphqdgbSEiDXinuyoSg2rnk1EXGAqmOtyVcg3Ex7mpxU6dC4CFVsxHI9imFT9d2O+7qrarSGYbUOm1hR846cVdyBXXPMZp+u6N2yKNdNe6aBlLJMgcrWjVVLRaLqtrBI5tG+6jhgdpuFw2+osFYJHpnvxt3lZeR2sbDV61ZeAvIWmUX66KpsQ/CHE7HHYwPMXbGeCDTYR99rNbn3SKJZ0IWiawzTL59VN0trweFzxXIXtrsw5U92tTweQbyItFZxxELPLsYMVOhg7Xk20fJ8uwrM7u0SxBKu9/qt6ETJcI+zhOUddSxngaNV8ViqS8B5mB2ObPyUOfUAlnFGKVxMsY6C3Oo5Mxa12oQQLF75aj7FZBgIfuoxB/I9tCqTceqKdAIibqDJqndBzyQw3acgXSPLzt4fT3anyFaW06MfXQvXPXog8ag55ChRNMQzkddfNQwjME+iJnDoAMQ6j6AR8StFuwpsdtHDb/Jp5C3a8G4wMo93E3uHrBjFxT7wEPfjyzrGObgko85WNqcyXJelssj/ATFPoj1nUjsg5g5DBmT4sNlWc4jyZPLI+wszT7wQIY9+1CJpsNqbJuz/ILPYMzPNrESSbAPYlmJuXXtlZ14i0DeYlNgamvHy1XCsQ8ia9AGmHiYp3d5ks9glGc/4IGk2AcxjeS+eEWYAzXLY/d7d7QO45mQ5b0trPK0N8ZcZ5erfRDLSrRbjZvI0d3Eiw/1yLspdtUFYD2gfXAaB6hj3LNZzWGkm4O/YraP4OZw6xs+ByRpH+fdEjiC52sf3MyBgZHZPohhfHD7IFammWeukDkwQJaZ7QP/wED20cXDRxs+4uGb3jH1PpCRtI8BY047XTLrlPA5WqvCZg5bo3JgPjOQo0c8QHAgz/B19SXso3aFXQtP44pt/EZO/c2BgTG4fZwzBTK4OWyymQMDo7wenn0Aew5g+Lp4mB8uOYTPAZm/xKeR0O7AsvZBmkOVcU6ztDmwMJL2AQaS3T6iNgcGyPItPmhdwT5Ic+hC70XubE559T6QUZ7hWWcAdhtf+2hj2WXAuD70OAopfA5I0j7gypH2YW/UqdjM7yJKc2BgnBD2AW5qafaBg5j9UXUHkHWddrPMPbtQGfPE7KN1xmIfLYTo7IE0c8AniA+XkeEtIJntw5kphjqgY22wCmYXDjMHPoyM9qE6Z3LjnL2lCW5IA+awFZY5MECy24fVpzSbWMDCQz/SHGIIn4MxT9gHpWMtmmY3Z3bNcULMgQESsg8gPCZiJYce/GzhJbTwxWQO/gLsQzc4nAA11G2zG1Zc5/WGjNvnKN7m6RZgHwPcPlSzdQKESTAHf8nrr/DG2nfZh0WItVI9fKQ5hDj0DKz1tbWf/4nVdNvhB1YrdWUat5cYerxNQHaBtP712tra
+                                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" width="100px" style="margin-right: 10px;">
+                                <label for="descripcion1" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">
+                                    Almacén
+                                </label>
+                            </div>
+                
+                            <!-- Formulario de Almacén -->
+                            <form>
+                                <div class="row mb-3">
+                                    <!-- Nombre -->
+                                    <div class="col-md-6">
+                                        <label for="nombreAlmacen" class="form-label">Nombre:</label>
+                                        <input type="text" class="form-control" id="nombreAlmacen" value="Oficina Arequipa">
+                                    </div>
+                                    <!-- Responsable -->
+                                    <div class="col-md-6">
+                                        <label for="responsable" class="form-label">Responsable:</label>
+                                        <select class="form-select" id="responsable">
+                                            <option selected>Administrador Web</option>
+                                            <option value="1">Otro Responsable</option>
+                                            <option value="2">Carlos Daniel Roman Berru</option>
+                                            <option value="3">Christopher Javier Huaman Guevara</option>
+                                            <option value="4">Luis Fernando Miranda Valdez</option>
+                                            <option value="5">Daniela Greys Yanavilca Matta</option>
+                                            <option value="6">Julio Flores Vicuña</option>
+                                            <option value="7">Karla Alexandra Paola Flores Ramos</option>
+                                            <option value="8">Wilber Leydin Sánchez Rojas</option>
+                                            <option value="9">Areliz Madeleine Tiburcio Galarza</option>
+                                            <option value="10">Sebastian Flores Garcia</option>
+                                            <option value="11">Jack Carlos Huaman Asencio</option>
+                                            <option value="12">Fiorela Mariel Calderón Miranda</option>
+                                            <option value="13">Lucero Margarita Changra Mendoza</option>
+                                            <option value="14">Brisila Bedregal</option>
+                                            <option value="14">Alessandra Nicolle Barrantes Cruzado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Dirección -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label">Dirección:</label>
+                                        <input type="text" class="form-control" id="direccion" value="Calle emilio Fernandez 16C">
+                                    </div>
+                                    <!-- Abreviatura -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label">Abreviatura:</label>
+                                        <input type="text" class="form-control" id="abreviatura" value="ALM1">
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Código Sunat -->
+                                    <div class="col-md-6">
+                                        <label for="codigoSunat" class="form-label">Código Sunat:</label>
+                                        <input type="text" class="form-control" id="codigoSunat" value="1">
+                                    </div>
+                                    <!-- Cod. Ubigeo -->
+                                    <div class="col-md-6">
+                                        <label for="codigoUbigeo" class="form-label">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank" style="text-decoration: none;">
+                                                <i class="fa fa-podcast" aria-hidden="true"></i>
+                                            </a>
+                                            Cod. Ubigeo:
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="codigoUbigeo" value="150101">
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Descripción -->
+                                    <div class="col-md-6">
+                                        <label for="descripcion" class="form-label">Descripción:</label>
+                                        <textarea class="form-control" id="descripcion" rows="2"></textarea>
+                                    </div>
+                                    <!-- Nota -->
+                                    <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
+                                        <div class="alert alert-primary mb-0 mt-3" role="alert"> <!-- Added margin-top for spacing -->
+                                            Nota: Los campos siguientes es el número de registro que se continuará en el sistema.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <!-- Activo/Desactivo -->
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <label for="activo" class="form-label me-2" style="font-size: 20px;">
+                                            Activo/desactivo:
+                                        </label>
+                                        <div class="form-check form-switch" style="transform: scale(1.5); margin-left: 20px;"> <!-- Added margin-left for spacing -->
+                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5);"> <!-- Scale the checkbox -->
+                                        </div>
+                                        </div>
+                                    </div>
+                                
+                
+                                <!-- Botón Guardar en el modal -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        <!-- Fin del contenido modal -->
+    </div>
+</div>
+                
+<div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+    <!-- Sección de codificación de documentos -->
+    <div class="col-md-12 mb-3">
+        <!-- Centrado de la imagen y el texto de descripción -->
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUkvtg9L1oBVOoWUMqrwmLVo4Fc4QF5xoNsg&s" width="100px" style="margin-right: 10px;">
+            <label for="descripcion2" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">Sunat:</label>
+        </div>
+
+    </div>
+
+    <!-- Formulario de codificación dentro de la ventana 2 -->
+    <div class="col-md-12">
+        <form>
+            <div class="row mb-3">
+                <!-- Cod. Facturación -->
+                <div class="col-md-4">
+                    <label for="codFacturacion" class="form-label">Cod.Facturación:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+
+                    </div>
+                </div>
+                <!-- Cod. Boleta -->
+                <div class="col-md-4">
+                    <label for="codBoleta" class="form-label">Cod.Boleta:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="B00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Guía R -->
+                <div class="col-md-4">
+                    <label for="codGuia" class="form-label">Cod.Guía R:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Nota Crédito Factura -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoFactura" class="form-label">Cod. Nota Crédito Factura:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="FF0" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Nota Crédito Boleta -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoBoleta" class="form-label">Cod. Nota Crédito Boleta:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="BB0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Nota Débito -->
+                <div class="col-md-4">
+                    <label for="codNotaDebito" class="form-label">Cod. Nota Débito:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Factura Manual -->
+                <div class="col-md-4">
+                    <label for="codFacturaManual" class="form-label">Cod. Factura manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="FA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Boleta Manual -->
+                <div class="col-md-4">
+                    <label for="codBoletaManual" class="form-label">Cod. Boleta manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="BA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Guía Remisión Manual -->
+                <div class="col-md-4">
+                    <label for="codGuiaManual" class="form-label">Cod. Guía Remisión manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="TA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+</li>
+</ul>
+</td></tr>
+</div>
+</div>
+</div>
+
+                    
+                    <td><div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" name="input[]" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
+                    <td>2</td>
+                    <td>Galeria Centro Lima</td>
+                    <td>ALM2</td>
+                    <td>Hardware</td>
+                    <td>Administrador Web</td>
+                    <td>Av. Bolivia 148 int. 2218 Cercado de Lima</td>
+                    <td>
+                        <!-- Botón para abrir el modal -->
+                    <div class="btn-group mx-0">
+                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white; padding: 10px; margin-right: 5px;" data-bs-toggle="modal" data-bs-target="#myModal">
+                            <i class="fa fa-edit" style="color:white;"></i>
+                        </button> 
+                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer; margin-right: 5px;">
+                            <i class="fa fa-arrows-alt" style="color:white;"></i>
+                        </button>
+                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:5px; margin-right:2px; border:none;">
+                            <i class="fa fa-eye-slash" style="color:white;"></i>
+                        </button>
+                    </div>
+                    <!-- Modal DOS -->
+                    <div class="modal fade" id="editaralmacen" tabindex="-1" aria-labelledby="editaralmacenLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editaralmacenLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Información General</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información de la Sunat</a>
+                                        </li>
+                                    </ul>
+
+                <!-- Tab content -->
+                <div class="tab-content mt-3" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                    
+                
+                        <!-- Aquí se agrega el contenido del modal -->
+                        <div class="col-md-12 mb-3">
+                            <!-- Título con ícono -->
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABLFBMVEX///8AAACMuvr5qktXW3rp6eoxZaPBdiv/65aRwP//rk3j4+NZXX3t7e1undwrYJ4ePWOebDA9UW2Drupvb29kZGQOEhgmJibFxcY5PFCLXyrMgDHJey1TV3QMDRFUcJfklz+OVyDFxMxNUGs4SmMlLUy9gTnqoEffmEM3JhBZPRtCPSf/9JzbyoEuMEETExPn1YiuoGZ6SxulpaW7usIuLi7W1te0tLSKiopLS0sgICF4eHg7OztGXn5UVFenpq0YHjKcxPuvaydISEiUlJRefaiFse0tPFFwlcheXWF+VibMiz0hFwqweDVYdZ1lhrWWilgdJzUVHCYoU4YVK0WenaQeICxAQllLRSzDs3M1MR8lIhZfVzh+dEqdkVwcEwlqSCBgQh1YispCLRQGFCSvAAAKZklEQVR4nO2da2PixhWGESzeSFTO2oDNOlk73aQGs66xQ83N4HRrDNisr2k39Sbpetv//x8qaYQuM2ekQYyumfcTlkYwj87MeecicC4nJCQklC3VepVqpVeLuxphqdgbSEiDXinuyoSg2rnk1EXGAqmOtyVcg3Ex7mpxU6dC4CFVsxHI9imFT9d2O+7qrarSGYbUOm1hR846cVdyBXXPMZp+u6N2yKNdNe6aBlLJMgcrWjVVLRaLqtrBI5tG+6jhgdpuFw2+osFYJHpnvxt3lZeR2sbDV61ZeAvIWmUX66KpsQ/CHE7HHYwPMXbGeCDTYR99rNbn3SKJZ0IWiawzTL59VN0trweFzxXIXtrsw5U92tTweQbyItFZxxELPLsYMVOhg7Xk20fJ8uwrM7u0SxBKu9/qt6ETJcI+zhOUddSxngaNV8ViqS8B5mB2ObPyUOfUAlnFGKVxMsY6C3Oo5Mxa12oQQLF75aj7FZBgIfuoxB/I9tCqTceqKdAIibqDJqndBzyQw3acgXSPLzt4fT3anyFaW06MfXQvXPXog8ag55ChRNMQzkddfNQwjME+iJnDoAMQ6j6AR8StFuwpsdtHDb/Jp5C3a8G4wMo93E3uHrBjFxT7wEPfjyzrGObgko85WNqcyXJelssj/ATFPoj1nUjsg5g5DBmT4sNlWc4jyZPLI+wszT7wQIY9+1CJpsNqbJuz/ILPYMzPNrESSbAPYlmJuXXtlZ14i0DeYlNgamvHy1XCsQ8ia9AGmHiYp3d5ks9glGc/4IGk2AcxjeS+eEWYAzXLY/d7d7QO45mQ5b0trPK0N8ZcZ5erfRDLSrRbjZvI0d3Eiw/1yLspdtUFYD2gfXAaB6hj3LNZzWGkm4O/YraP4OZw6xs+ByRpH+fdEjiC52sf3MyBgZHZPohhfHD7IFammWeukDkwQJaZ7QP/wED20cXDRxs+4uGb3jH1PpCRtI8BY047XTLrlPA5WqvCZg5bo3JgPjOQo0c8QHAgz/B19SXso3aFXQtP44pt/EZO/c2BgTG4fZwzBTK4OWyymQMDo7wenn0Aew5g+Lp4mB8uOYTPAZm/xKeR0O7AsvZBmkOVcU6ztDmwMJL2AQaS3T6iNgcGyPItPmhdwT5Ic+hC70XubE559T6QUZ7hWWcAdhtf+2hj2WXAuD70OAopfA5I0j7gypH2YW/UqdjM7yJKc2BgnBD2AW5qafaBg5j9UXUHkHWddrPMPbtQGfPE7KN1xmIfLYTo7IE0c8AniA+XkeEtIJntw5kphjqgY22wCmYXDjMHPoyM9qE6Z3LjnL2lCW5IA+awFZY5MECy24fVpzSbWMDCQz/SHGIIn4MxT9gHpWMtmmY3Z3bNcULMgQESsg8gPCZiJYce/GzhJbTwxWQO/gLsQzc4nAA11G2zG1Zc5/WGjNvnKN7m6RZgHwPcPlSzdQKESTAHf8nrr/DG2nfZh0WItVI9fKQ5hDj0DKz1tbWf/4nVdNvhB1YrdWUat5cYerxNQHaBtP712tra
+                                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" width="100px" style="margin-right: 10px;">
+                                <label for="descripcion1" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">
+                                    Almacén
+                                </label>
+                            </div>
+                
+                            <!-- Formulario de Almacén -->
+                            <form>
+                                <div class="row mb-3">
+                                    <!-- Nombre -->
+                                    <div class="col-md-6">
+                                        <label for="nombreAlmacen" class="form-label">Nombre:</label>
+                                        <input type="text" class="form-control" id="nombreAlmacen" value="Oficina Arequipa">
+                                    </div>
+                                    <!-- Responsable -->
+                                    <div class="col-md-6">
+                                        <label for="responsable" class="form-label">Responsable:</label>
+                                        <select class="form-select" id="responsable">
+                                            <option selected>Administrador Web</option>
+                                            <option value="1">Otro Responsable</option>
+                                            <option value="2">Carlos Daniel Roman Berru</option>
+                                            <option value="3">Christopher Javier Huaman Guevara</option>
+                                            <option value="4">Luis Fernando Miranda Valdez</option>
+                                            <option value="5">Daniela Greys Yanavilca Matta</option>
+                                            <option value="6">Julio Flores Vicuña</option>
+                                            <option value="7">Karla Alexandra Paola Flores Ramos</option>
+                                            <option value="8">Wilber Leydin Sánchez Rojas</option>
+                                            <option value="9">Areliz Madeleine Tiburcio Galarza</option>
+                                            <option value="10">Sebastian Flores Garcia</option>
+                                            <option value="11">Jack Carlos Huaman Asencio</option>
+                                            <option value="12">Fiorela Mariel Calderón Miranda</option>
+                                            <option value="13">Lucero Margarita Changra Mendoza</option>
+                                            <option value="14">Brisila Bedregal</option>
+                                            <option value="14">Alessandra Nicolle Barrantes Cruzado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Dirección -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label">Dirección:</label>
+                                        <input type="text" class="form-control" id="direccion" value="Calle emilio Fernandez 16C">
+                                    </div>
+                                    <!-- Abreviatura -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label">Abreviatura:</label>
+                                        <input type="text" class="form-control" id="abreviatura" value="ALM1">
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Código Sunat -->
+                                    <div class="col-md-6">
+                                        <label for="codigoSunat" class="form-label">Código Sunat:</label>
+                                        <input type="text" class="form-control" id="codigoSunat" value="1">
+                                    </div>
+                                    <!-- Cod. Ubigeo -->
+                                    <div class="col-md-6">
+                                        <label for="codigoUbigeo" class="form-label">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank" style="text-decoration: none;">
+                                                <i class="fa fa-podcast" aria-hidden="true"></i>
+                                            </a>
+                                            Cod. Ubigeo:
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="codigoUbigeo" value="150101">
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="row mb-3">
+                                    <!-- Descripción -->
+                                    <div class="col-md-6">
+                                        <label for="descripcion" class="form-label">Descripción:</label>
+                                        <textarea class="form-control" id="descripcion" rows="2"></textarea>
+                                    </div>
+                                    <!-- Nota -->
+                                    <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
+                                        <div class="alert alert-primary mb-0 mt-3" role="alert"> <!-- Added margin-top for spacing -->
+                                            Nota: Los campos siguientes es el número de registro que se continuará en el sistema.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <!-- Activo/Desactivo -->
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <label for="activo" class="form-label me-2" style="font-size: 20px;">
+                                            Activo/desactivo:
+                                        </label>
+                                        <div class="form-check form-switch" style="transform: scale(1.5); margin-left: 20px;"> <!-- Added margin-left for spacing -->
+                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5);"> <!-- Scale the checkbox -->
+                                        </div>
+                                        </div>
+                                    </div>
+                                
+                
+                                <!-- Botón Guardar en el modal -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        <!-- Fin del contenido modal -->
+    </div>
+</div>
+                
+<div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+    <!-- Sección de codificación de documentos -->
+    <div class="col-md-12 mb-3">
+        <!-- Centrado de la imagen y el texto de descripción -->
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUkvtg9L1oBVOoWUMqrwmLVo4Fc4QF5xoNsg&s" width="100px" style="margin-right: 10px;">
+            <label for="descripcion2" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">Sunat:</label>
+        </div>
+
+    </div>
+
+    <!-- Formulario de codificación dentro de la ventana 2 -->
+    <div class="col-md-12">
+        <form>
+            <div class="row mb-3">
+                <!-- Cod. Facturación -->
+                <div class="col-md-4">
+                    <label for="codFacturacion" class="form-label">Cod.Facturación:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+
+                    </div>
+                </div>
+                <!-- Cod. Boleta -->
+                <div class="col-md-4">
+                    <label for="codBoleta" class="form-label">Cod.Boleta:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="B00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Guía R -->
+                <div class="col-md-4">
+                    <label for="codGuia" class="form-label">Cod.Guía R:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Nota Crédito Factura -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoFactura" class="form-label">Cod. Nota Crédito Factura:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="FF0" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Nota Crédito Boleta -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoBoleta" class="form-label">Cod. Nota Crédito Boleta:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="BB0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Nota Débito -->
+                <div class="col-md-4">
+                    <label for="codNotaDebito" class="form-label">Cod. Nota Débito:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="F00" readonly>
+                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Factura Manual -->
+                <div class="col-md-4">
+                    <label for="codFacturaManual" class="form-label">Cod. Factura manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="FA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Boleta Manual -->
+                <div class="col-md-4">
+                    <label for="codBoletaManual" class="form-label">Cod. Boleta manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="BA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+                <!-- Cod. Guía Remisión Manual -->
+                <div class="col-md-4">
+                    <label for="codGuiaManual" class="form-label">Cod. Guía Remisión manual:</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control input-blanco" value="TA0" readonly>
+                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" class="form-control input-blanco" value="-000" readonly>
+                        <input type="text" class="form-control input-gris" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+</li>
+</ul>
+<!-- FIN Modal DOS-->    
+            </td>
+        </tr>
+        </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</tbody>
+<!-- FIN FLAVIA-->   
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
