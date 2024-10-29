@@ -60,22 +60,17 @@ class TaskController extends Controller
             'estado' => 'required|integer',
         ]);
 
-        $activity = Activity::where('id', $activity_id)
-                            ->where('proyecto_id', $project_id)
-                            ->firstOrFail();
+        try {
+            $activity = Activity::where('id', $activity_id)
+                                ->where('proyecto_id', $project_id)
+                                ->firstOrFail();
 
-        $task = new Task([
-            'actividad_id' => $activity_id,
-            'user_id' => $request->user_id,
-            'contenido' => $request->contenido,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_cierre' => $request->fecha_cierre,
-            'estado' => $request->estado,
-        ]);
+            $task = $activity->tasks()->create($request->only(['user_id', 'contenido', 'fecha_inicio', 'fecha_cierre', 'estado']));
 
-        $task->save();
-
-        return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarea creada exitosamente');
+            return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarea creada exitosamente');
+        } catch (\Exception $e) {
+            return redirect()->route('project_managers.index')->with('error', 'Error al crear la tarea');
+        }
     }
 
     public function edit($project_id, $activity_id, $id) {
