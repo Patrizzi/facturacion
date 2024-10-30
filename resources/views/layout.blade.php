@@ -212,6 +212,7 @@
 
     #side-menu::-webkit-scrollbar-thumb:hover {
         background-color: #375fc4;
+        width: 260px;
     }
 
     #side-menu::-webkit-scrollbar-track {
@@ -254,11 +255,14 @@
     .nav > li:first-child > .head-nav-logo:hover {
         background-color: white !important;
         padding: 20px 25px !important;
+        width: 260px !important;
     }
-
     body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo {
         padding: 20px 0px !important;
         background-color: white;
+    }
+    body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo:hover {
+        width: 260px !important;
     }
 
     body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo > img {
@@ -276,6 +280,12 @@
     .nav-footer-user > .nav-label:hover {
         /* margin-left: 10px; */
     }
+    .nav.metismenu > li:hover{
+        width: 260px !important;
+    }
+    li > a:hover{
+        width: 260px !important;
+    }
 </style>
 
 {{-- <body class="mini-navbar"> --}}
@@ -285,9 +295,9 @@
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu"
-                    style="height:90vh !important; overflow-y: auto; position: fixed; display: block; top: 0px;max-width: 60px;width: 100%;">
+                    style="height:90vh !important; overflow-y: auto; position: fixed; display: block; top: 0px">
                     {{-- <div style="position: fixed; z-index: 9999;"> --}}
-                    <li class="" style="background-color: white;">
+                    <li class="" style="background-color: white;width: 70px;">
                         {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
                         <a href="{{ route('usuario.index') }}" class="head-nav-logo" style=" padding: 20px 0px;">
                             <img alt="image" class="rounded-circle"
