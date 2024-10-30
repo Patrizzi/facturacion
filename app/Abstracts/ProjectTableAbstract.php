@@ -43,12 +43,12 @@ abstract class ProjectTableAbstract extends Component {
             ],
             'manyProjects' => [
                 'Nombre' => function ($item) {
-                    // dd(route('project_managers.show',$item->id));
-                    $showLink=html()->a($item->nombre)->text($item->nombre)->href(route('project_managers.show',$item->id))->class('text-primary');
+                    $showLink=html()->a($item->nombre)->text($item->nombre)->href(route('project_managers.show',$item->id))->class('text-primary p-1');
                     $editLink=html()->a($item->nombre)->href(route('project_managers.edit',$item->id))->class('fa fa-edit text-primary');
-                    $deleteLink= html()->modelForm($item,'delete',route('project_managers.destroy',$item->id))->class('')
-                    ->children(html()->submit('')->class('fa fa-trash btn btn-light p-flex')); 
-                    return html()->label($showLink ." ". $editLink . ' '.$deleteLink);;
+                    $deletebutton= html()->modelForm($item,'DELETE',route('project_managers.destroy',$item->id))->class('d-inline')
+                    ->children(html()->submit('')->class('fa fa-trash btn-link border-0 p-0 m-1'))->children(html()->closeModelForm());
+                    $desvincular=html()->button()->class('p-0 border-0');
+                    return html()->label($showLink ." ". $editLink .$desvincular.$deletebutton);
                 },
                 'Centro de Costo' => function ($item) {
                     return $item->centro_costo;
