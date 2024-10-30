@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-5">
                                 <div class="ibox ">
                                     <div class="ibox-title">
                                         <h5>Ventas Totales y Beneficios por mes
@@ -92,6 +92,16 @@
                                         <div>
                                             <canvas id="lineChart" height="110"></canvas>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="ibox ">
+                                    <div class="ibox-title">
+                                        <h5>Venta por Productos </h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div id="ct-chart4" class="ct-perfect-fourth"></div>
                                     </div>
                                 </div>
                             </div>
@@ -148,6 +158,17 @@
 
         </div>
     </div>
+    <style>
+        .tabs-container .panel-body{
+            background-color: #f3f3f4;
+        },
+        #ct-chart4 {
+            width: 100%; /* Ajusta el ancho según necesites */
+            height: 400px; /* Ajusta el alto según necesites */
+        }
+    </style>
+
+    <link href="{{ asset('css/plugins/chartist/chartist.min.css') }}" rel="stylesheet">
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -160,9 +181,14 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    <!-- Chartist -->
+    <script src="{{ asset('js/plugins/chartist/chartist.min.js') }}"></script>
+
     <!-- ChartJS-->
     <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
-    {{-- <script src="{{ asset('js/demo/chartjs-demo.js') }}"></script> --}}
+    <script src="{{ asset('js/demo/chartjs-demo.js') }}"></script> 
+
+    
 
     <script>
          var doughnutOptions = {
@@ -211,6 +237,41 @@
 
         var ctx = document.getElementById("lineChart").getContext("2d");
         new Chart(ctx, {type: 'line', data: lineData, options:lineOptions});
+        
+
+        $(document).ready(function(){
+
+        // Stocked horizontal bar
+
+        new Chartist.Bar('#ct-chart4', {
+            labels: ['Producto 1', 'Producto 2', 'Producto 3', 'Producto 4', 'Producto 5', 'Producto 6'],
+            series: [
+                [5, 4, 3, 7, 5, 10, 3],
+                [3, 2, 9, 5, 4, 6, 4]
+            ]
+        }, {
+            seriesBarDistance: 10,
+            reverseData: true,
+            horizontalBars: true,
+            axisY: {
+                offset: 70
+            },
+            axisX: {
+                labelInterpolationFnc: function(value, index) {
+                    // Mostrar solo 5 etiquetas en el eje X, en intervalos uniformes
+                    const numLabels = 3;
+                    const totalLabels = 10; // Número total de valores del eje X
+                    if (index % Math.ceil(totalLabels / numLabels) === 0) {
+                        return Math.round(value); // Mostrar el valor redondeado
+                    } else {
+                        return null; // Ocultar otras etiquetas
+                    }
+                }
+            }
+        });    
+        });
+        
     </script>
+    
 
 @endsection
