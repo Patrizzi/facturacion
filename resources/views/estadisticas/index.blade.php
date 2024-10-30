@@ -31,6 +31,44 @@
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
                     <div class="panel-body">
                         <div class="row">
+                            <div class="col-lg-3">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+                                        <h5>Ventas Totales</h5>
+                                        <h1 class="no-margins">S/ 120,200</h1>
+                                        <div class="stat-percent font-bold text-navy">25% <i class="fa fa-bolt"></i></div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+                                        <h5>Margen de Utilidad</h5>
+                                        <h1 class="no-margins">S/ 15,000</h1>
+                                        <div class="stat-percent font-bold text-navy">20% <i class="fa fa-level-up"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+                                        <h5>Inversion Total</h5>
+                                        <h1 class="no-margins">S/ 105,000</h1>
+                                        <div class="stat-percent font-bold text-navy">12% <i class="fa fa-bolt"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+                                        <h5>Producto mas vendido</h5>
+                                        <h1 class="no-margins">Producto 3</h1>
+                                        <div class="stat-percent font-bold text-navy">35% <i class="fa fa-bolt"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
