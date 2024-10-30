@@ -186,7 +186,7 @@
 
     <!-- ChartJS-->
     <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
-    <script src="{{ asset('js/demo/chartjs-demo.js') }}"></script> 
+    
 
     
 
@@ -259,7 +259,7 @@
             axisX: {
                 labelInterpolationFnc: function(value, index) {
                     // Mostrar solo 5 etiquetas en el eje X, en intervalos uniformes
-                    const numLabels = 3;
+                    const numLabels = 5;
                     const totalLabels = 10; // Número total de valores del eje X
                     if (index % Math.ceil(totalLabels / numLabels) === 0) {
                         return Math.round(value); // Mostrar el valor redondeado
