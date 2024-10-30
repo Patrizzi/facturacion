@@ -87,6 +87,154 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- Sección de Proveedor -->
+                    <div>
+                        <!-- Título centrado -->
+                        <div>
+                            <h1 style="text-align: center; margin-bottom: 20px; font-weight: bold;">PROVEEDOR</h1>
+                        </div>
+                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <!-- Botones Agregar y Actualizar -->
+                            <div>
+                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                <button class="btn btn-primary">Actualizar</button>
+                                <button style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;" id="btn-agregar" onclick="toggleForm()">
+                                    AGREGAR
+                                </button>
+                            </div>
+                            <br>
+                            <!-- Boton Para Descargar -->
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected style="font-weight: bold; color: white; background-color: #007bff;">F. Descarga</option>
+                                    <option value="1">Copy</option>
+                                    <option value="2">CSV</option>
+                                    <option value="3">Excel</option>
+                                    <option value="4">PDF</option>
+                                    <option value="5">Print</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div style="flex-grow: 1;">
+                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                            </div>
+                        </div>
+                        <!-- ----------------------------------------------------------------------------------- -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox ">
+                                    <div class="ibox-content">
+                                        <br>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th style="background-color: #007bff;color: white;">ID </th>
+                                                    <th style="background-color: #007bff;color: white;">RUC </th>
+                                                    <th style="background-color: #007bff;color: white;">EMPRESA</th>
+                                                    <th style="background-color: #007bff;color: white;">DIRECCION</th>
+                                                    <th style="background-color: #007bff;color: white;">TELEFONO</th>
+                                                    <th style="background-color: #007bff;color: white;">CORREO</th>
+                                                    <th style="background-color: #007bff;color: white;">EDITAR</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>20215632845</td>
+                                                    <td>GASOLINA SAC</td>
+                                                    <td>SMP</td>
+                                                    <td>958624785</td>
+                                                    <td>gasolinasac@gmail.com</td>
+                                                    <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>20359644128</td>
+                                                    <td>INVERSIONES OMAR</span></td>
+                                                    <td>BREÑA</td>
+                                                    <td>526348519</td>
+                                                    <td>inversionesomar@gmail.com</td>
+                                                    <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>20156874256</td>
+                                                    <td>MYTHAJAT</td>
+                                                    <td>P. PIEDRA</td>
+                                                    <td>526841975</td>
+                                                    <td>mythajat@gmail.com</td>
+                                                    <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td>20356327847</td>
+                                                    <td>IMPORTACIONES ZM</td>
+                                                    <td>AREQUIPA</td>
+                                                    <td>526874935</td>
+                                                    <td>importacioneszm@gmail.com</td>
+                                                    <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                        <button class="btn btn-white">1</button>
+                                        <button class="btn btn-white  active">2</button>
+                                        <button class="btn btn-white">3</button>
+                                        <button class="btn btn-white">4</button>
+                                        <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Formulario oculto -->
+                        <div id="form-proveedor" class="form-proveedor" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+                            <h2>AGREGAR PROVEEDOR</h2>
+
+                            <label for="ruc" style="display: block;">Introducir RUC (inestable):</label>
+                            <input type="text" id="ruc" placeholder="Buscar RUC" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px;">
+
+                            <div style="background-color: blue; color: white; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                                <strong>1. Datos Personales</strong>
+                            </div>
+
+                            <div class="form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <label for="nombre" style="display: block;">Nombre:</label>
+                                    <input type="text" id="nombre" placeholder="Ingrese nombre" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+
+                                    <label for="direccion" style="display: block;">Dirección:</label>
+                                    <input type="text" id="direccion" placeholder="Ingrese dirección" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+
+                                    <label for="celular" style="display: block;">Celular:</label>
+                                    <input type="text" id="celular" placeholder="Ingrese celular" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                </div>
+
+                                <div style="display: flex; flex-direction: column;">
+                                    <label for="documento" style="display: block;">Documentos:</label>
+                                    <input type="text" id="documento" placeholder="Ingrese documentos" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+
+                                    <label for="correo" style="display: block;">Correo:</label>
+                                    <input type="email" id="correo" placeholder="Ingrese correo" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+
+                                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                        <button id="btn-previus" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1; margin-right: 5px;">PREVIUS</button>
+                                        <button id="btn-finish" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1;">FINISH</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -224,6 +372,12 @@
 
         });
 
+    </script>
+    <script>
+        function toggleForm() {
+        const form = document.getElementById('form-proveedor');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
     </script>
 
     @endsection
