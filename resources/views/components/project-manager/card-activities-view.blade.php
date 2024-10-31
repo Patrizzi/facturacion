@@ -36,6 +36,13 @@
                 }
             });
 
+            // Funciones para el manejo de los comentarios de las tareas
+            $(document).on('click', '.task', function() {
+                const taskId = $(this).data('task-id');
+                const url = $(this).data('url');
+                loadTaskComments(taskId, url);
+            });
+
             let lastTaskId = null;
             function loadTaskComments(taskId, url) {
                 const commentHistory = $('.task-comment-history');
@@ -54,12 +61,9 @@
 
                     commentHistory.fadeOut(300, function() {
                         tasksList.css('width', '180px');
-                        commentHistory.empty();
-
                         commentHistory.load(url.replace(':taskId', taskId), function(response, status, xhr) {
                             if (status == "error") {
                                 console.error('Error al cargar los comentarios.');
-                                console.error("Error al obtener comentarios: " + xhr.status + " " + xhr.statusText);
                             } else {
                                 commentHistory.fadeIn(300);
                             }
@@ -68,6 +72,10 @@
                     lastTaskId = taskId;
                 }
             }
+
+            $('#chatModal').on('show.bs.modal', function () {
+                lastTaskId = null;
+            });
     
             // Funciones auxiliares para el manejo de colores
             function invertColor(hex, bw) {
@@ -134,46 +142,6 @@
                         }
                     });
                 });
-
-                // let $carousel = $('.cards').slick({
-                //     infinite: true,
-                //     slidesToShow: 4,
-                //     slidesToScroll: 1,
-                //     arrows: true,
-                //     dots: true,
-                //     responsive: [{
-                //             breakpoint: 1024,
-                //             settings: {
-                //                 slidesToShow: 3,
-                //                 slidesToScroll: 1,
-                //                 infinite: true,
-                //                 dots: true
-                //             }
-                //         },
-                //         {
-                //             breakpoint: 800,
-                //             settings: {
-                //                 slidesToShow: 2,
-                //                 slidesToScroll: 1
-                //             }
-                //         },
-                //         {
-                //             breakpoint: 480,
-                //             settings: {
-                //                 slidesToShow: 1,
-                //                 slidesToScroll: 1
-                //             }
-                //         }
-                //     ]
-                // });
-
-                // // Detectar cuando se muestra el tab correspondiente y recalcular slick
-                // $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                //     let target = $(e.target).attr("href"); // El tab objetivo
-                //     if (target === '#tab-2') { // El ID del tab donde está el carrusel
-                //         $carousel.slick('setPosition');
-                //     }
-                // });
             });
         </script>
     @endonce

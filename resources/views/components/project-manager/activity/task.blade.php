@@ -3,8 +3,7 @@
         <link rel="stylesheet" href="{{ asset('css/project_managers/cards/task.css') }}">
     @endonce
 @endpush
-<div class="task" id="task-{{$task->id}}" data-task-id="{{$task->id}}" onclick="loadTaskComments({{$task->id}}, '{{ $url_buttons['load_comments'] }}')">
-{{-- <div class="task" id="task-{{$task->id}}"> --}}
+<div class="task" id="task-{{$task->id}}" data-task-id="{{$task->id}}" data-url="{{ $url_buttons['load_comments'] }}">
     <div class="task-content">
         <img src="{{ $user_foto }}" class="task-worker-image" alt="worker image">
         <div class="task-worker-name simple-truncate">{{ $user_name }}</div>

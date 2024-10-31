@@ -48,7 +48,7 @@
     align-items: center;
     height: 10px;
     width: 100%;
-    margin: 0px 5px 8px 0px;
+    margin: 8px 0px 8px 0px;
 }
 
 .task-chat-header h5, .task-chat-comments h5 {
@@ -58,6 +58,9 @@
 .task-chat-action-icons {
     display: flex;
     margin-right: 10px;
+    gap: 5px;
+    font-size: 12px;
+    line-height: 1.15;
 }
 
 /*  */

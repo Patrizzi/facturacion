@@ -7,23 +7,20 @@
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="tabs-container">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li><a class="nav-link " href="{{ route('project_managers.index') }}">Proyectos</a></li>
+                    <li><a class="nav-link" href="{{ route('project_managers.index') }}">Proyectos</a></li>
                     <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Actividades</a></li>
-                    <li><a class="nav-link" data-toggle="tab"
-                            href="#tab-2">Tarjetas</a></li>
-                    <li><a class="nav-link" data-toggle="tab"
-                            href="#tab-3">Reporte</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Tarjetas</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-3">Reporte</a></li>
                 </ul>
                 <div class="modals">
-                    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel"
-                        aria-hidden="true">
+                    <div class="modal" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-
+                            <!-- Contenido del modal -->
                         </div>
                     </div>
-                    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"
+                    <div class="modal" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"
                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-dialog modal-lg">
 
                         </div>
                     </div>
@@ -43,7 +40,7 @@
                             @if ($activities->isNotEmpty())
                                 <x-project-manager.card-activities-view :collection="$activities" />
                             @else
-                            <h5>No hay Tarjetas en este proyecto.</h5>
+                                <h5>No hay Tarjetas en este proyecto.</h5>
                             @endif
                         </div>
                     </div>
@@ -64,35 +61,72 @@
 @push('js')
     @once
         <script>
+            // Funcion para morar errores de validación
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     toastr.error("{{ $error }}");
                 @endforeach
             @endif
 
-            var lastUrls = {};
-            $('[data-toggle="modal"]').on('click', function(event) {
-                event.preventDefault();
+            // Funciones para manejar los modales
+            $(document).on('click', '[data-toggle="modal"]', function() {
+                abrirModal($(this));
+            });
 
-                var button = $(this);
+            var lastUrls = {};
+            var modalStack = [];
+
+            function abrirModal(button) {
                 var modalTarget = button.data('target');
                 var url = button.data('url');
-                var modal = $(modalTarget);
 
+                if (!modalTarget || !url) {
+                    console.error("Modal target o URL no definido.");
+                    return;
+                }
+
+                var modal = $(modalTarget);
                 var currentModal = button.closest('.modal');
 
-                if (currentModal.length > 0) {
+                if (currentModal.length > 0 && !modalStack.includes(currentModal.attr('id'))) {
+                    modalStack.push(currentModal.attr('id'));
                     currentModal.modal('hide');
+                }
+                
+                modal.attr('data-modal-parent', modalStack.length > 0 ? '#' + modalStack[modalStack.length - 1] : '');
+
+                cargarModal(modal, url);
+            }
+
+            function cargarModal(modal, url) {
+                var modalTarget = modal.selector;
+
+                if (!modal.length) {
+                    console.error("Modal no encontrado: " + modalTarget);
+                    return;
                 }
 
                 if (url !== lastUrls[modalTarget]) {
-                    modal.find('.modal-dialog').load(url, function() {
-                        lastUrls[modalTarget] = url;
-                        modal.modal('show');
+                    modal.find('.modal-dialog').load(url, function(response, status, xhr) {
+                        if (status === "error") {
+                            console.error("Error al cargar el contenido del modal.");
+                        } else {
+                            lastUrls[modalTarget] = url;
+                        }
                     });
-                } else {
-                    modal.modal('show');
                 }
+            }
+
+            $('.modal').on('hidden.bs.modal', function () {
+                if (modalStack.length <= 0) return;
+
+                var modalParent = $(this).attr('data-modal-parent');
+                var lastModalId = modalStack[modalStack.length - 1];
+
+                if (modalParent !== '#' + lastModalId) return;
+                
+                modalStack.pop();
+                $(modalParent).modal('show');
             });
 
             // Mostrar confirmación del delete

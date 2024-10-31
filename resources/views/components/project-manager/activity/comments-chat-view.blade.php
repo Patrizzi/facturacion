@@ -2,7 +2,7 @@
     <h5>Historial de comentarios</h5>
     <div class="task-chat-action-icons">
         @if($data['task']->user_id == auth()->id())
-            <a href="#" class="fa fa-pencil-square-o" data-toggle="modal" data-target="#formModal" data-url="{{ $data['url_buttons']['edit_task'] }}"></a>
+            <a href="#" class="fa fa-pencil-square-o" data-toggle="modal" data-target="#formModal" data-url="{{ $data['url_buttons']['edit_task'] }}" onclick="abrirModal($(this))"></a>
             <a href="#" class="fa fa-trash" onclick="deleteItem('{{ $data['task']->id }}')"></a>
             <form action="{{ $data['url_buttons']['delete_task'] }}" method="POST" style="display: none;" id="delete-item-form-{{ $data['task']->id }}">
                 @csrf
