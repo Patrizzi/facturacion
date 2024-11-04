@@ -252,17 +252,22 @@
         align-items: center !important;
     }
 
-    .nav > li:first-child > .head-nav-logo:hover {
+    .head-nav-logo:hover {
         background-color: white !important;
-        padding: 20px 25px !important;
-        width: 260px !important;
+        /* padding: 20px 25px !important; */
+        /* width: 260px !important; */
     }
     body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo {
         padding: 20px 0px !important;
         background-color: white;
     }
-    body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo:hover {
+
+    .navbar-default:hover  .first-element , .navbar-default:hover .nav-last-footer {
         width: 260px !important;
+        padding: 0px 35px 0px 5px !important;
+    }
+    .navbar-default:hover .nav-last-footer{
+        padding: 0px 5px 0px 20px !important;
     }
 
     body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo > img {
@@ -270,21 +275,6 @@
     }
     .nav-footer-user{
         width: 66px;
-    }
-    .nav-footer-user > .nav-label {
-        margin: auto
-    }
-    .nav-footer-user:hover{
-        width: 260px;
-    }
-    .nav-footer-user > .nav-label:hover {
-        /* margin-left: 10px; */
-    }
-    .nav.metismenu > li:hover{
-        width: 260px !important;
-    }
-    li > a:hover{
-        width: 260px !important;
     }
 </style>
 
@@ -297,7 +287,7 @@
                 <ul class="nav metismenu" id="side-menu"
                     style="height:90vh !important; overflow-y: auto; position: fixed; display: block; top: 0px">
                     {{-- <div style="position: fixed; z-index: 9999;"> --}}
-                    <li class="" style="background-color: white;width: 70px;">
+                    <li class="first-element" style="background-color: white;width: 70px;">
                         {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
                         <a href="{{ route('usuario.index') }}" class="head-nav-logo" style=" padding: 20px 0px;">
                             <img alt="image" class="rounded-circle"
@@ -699,7 +689,7 @@
                     {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
 
-                <div style="position: fixed; bottom: 0px; background-color:#143593; height: 10vh;">
+                <div style="position: fixed; bottom: 0px; background-color:#143593; height: 10vh;" class="nav-last-footer">
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;" class="nav-footer-user">
                         <a class="nav-label" style="display: flex; align-items: center;"
                             {{-- href="{{route('usuario.index')}}" --}}>
