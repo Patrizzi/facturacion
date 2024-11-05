@@ -356,10 +356,9 @@
 
 
 {{-- INICIO FLAVIA --}}
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
       body {
           font-family: 'Montserrat', sans-serif; 
@@ -587,7 +586,7 @@
 </div>
 
 <!-- Tercera fila de tarjetas -->
-<div class="row row-cols-1 row-cols-md-2 g-4">
+<div class="row row-cols-1 row-cols-md-12 g-4">
 <div class="col mb-4"> <!-- Tarjeta Datos de Ubicación -->
     <div class="card text-center"  style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); height: 330px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);"> 
         <div class="card-body d-flex flex-column align-items-center justify-content-center">
@@ -954,15 +953,6 @@
     </div>
 </div>
 </div>
-</div>
-<div class='col mb-4'>
-    <div class='card text-center' style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5); height: 330px"> 
-        <div class='card-body d-flex flex-column justify-content-center align-items-center'> 
-            <h5 class='card-title'style="text-align: center;font-weight: bold; font-size: 1rem">IMPUESTOS</h5>
-            <p class='card-text'>IGV: 18 %</p>
-            <p class='card-text'>Impuesto Renta: 18 %</p>
-        </div>
-    </div>    
 </div>   
 </div>
 </div>
@@ -973,13 +963,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 {{-- FIN FLAVIA --}}
-
-
-
-
-
-
-
 
 
 
