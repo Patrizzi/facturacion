@@ -13,7 +13,7 @@
         <div class="col-lg-2" style="text-align: center;">
           <img src="planilla/datos_generales/perfil.png" alt="Perfil" class="perfil" width="200" height="200" style="border-radius: 50%;">
         </div>
-        
+
         <!-- Columna 2: Nombre -->
         <div class="col-lg-6" style="text-align: center;">
           <div class="form-group">
@@ -198,7 +198,7 @@
   <p class="" style="font-size: 40px; color: white; padding: 10px; text-align: center; align-items: center; background-color: #007bff">GUARDAR DATOS</p>
   <br>
 
-  
+
 </body>
 </html>
 
