@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Cliente;
 
 class ApiController extends Controller
 {
     public function getProductos(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $producto = DB::table('productos')
         ->select('*',
             'productos.id as prod_id' ,
@@ -27,6 +32,10 @@ class ApiController extends Controller
     }
 
     public function getGarantiaIngreso(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $garantia_ingreso_q = DB::table('garantia_guia_ingreso')
         ->select('*','garantia_guia_ingreso.id as gar_ing_id','garantia_guia_ingreso.created_at as gar_ing_ct_at', 'marcas.nombre as nombre_marca','clientes.nombre as cliente_nom', 'personal.nombres as personal_as', 'garantia_guia_ingreso.estado as estado_ga_ing')
         ->orderby('garantia_guia_ingreso.id', 'DESC')
@@ -39,6 +48,10 @@ class ApiController extends Controller
     }
 
     public function getGarantiaIngresoGuias(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $garantia_ingreso_q = DB::table('garantia_guia_ingreso')
         ->select('*','garantia_guia_ingreso.id as gar_ing_id','garantia_guia_ingreso.created_at as gar_ing_ct_at', 'marcas.nombre as nombre_marca','clientes.nombre as cliente_nom', 'personal.nombres as personal_as', 'garantia_guia_ingreso.estado as estado_ga_ing')
         ->where('garantia_guia_ingreso.estado','!=',0)
@@ -53,6 +66,10 @@ class ApiController extends Controller
     }
 
     public function getGarantiaEgresoGuias(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $garantia_egre_q = DB::table('garantia_guia_egreso')
         ->select('*','garantia_guia_egreso.id as egreso_id','marcas.nombre as nombre_marca','clientes.nombre as cliente_nom', 'personal.nombres as personal_as' ,'garantia_guia_egreso.estado as esta_egre')
         ->where('garantia_guia_egreso.estado','!=',0)
@@ -68,6 +85,10 @@ class ApiController extends Controller
     }
 
     public function getGarantiaEgreso(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $garantia_egre_q = DB::table('garantia_guia_egreso')
         ->select('*','garantia_guia_egreso.id as egreso_id','marcas.nombre as nombre_marca','clientes.nombre as cliente_nom', 'personal.nombres as personal_as' ,'garantia_guia_egreso.estado as esta_egre')
         ->join('garantia_guia_ingreso', 'garantia_guia_egreso.garantia_ingreso_id', '=', 'garantia_guia_ingreso.id')
@@ -79,6 +100,10 @@ class ApiController extends Controller
     }
 
     public function getInformeTecnico(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $inform_tec = DB::table('garantia_informe_tecnico')
         ->select('*','garantia_informe_tecnico.id as inf_tec_id','marcas.nombre as nombre_marca','clientes.nombre as cliente_nom', 'personal.nombres as personal_as' ,'garantia_informe_tecnico.estado as esta_egre')
         ->join('garantia_guia_egreso', 'garantia_informe_tecnico.garantia_egreso_id', '=', 'garantia_guia_egreso.id')
@@ -91,6 +116,10 @@ class ApiController extends Controller
     }
 
     public function getClientes(){
+        $user = Auth::user();
+        if(!$user){
+            return redirect('/');
+        }
         $cliente = Cliente::query();
         return Datatables($cliente)
         ->toJson();

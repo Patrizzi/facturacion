@@ -15,7 +15,7 @@
         "dompdf/dompdf": "^2.0",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
+        "fruitcake/laravel-cors": "^3.0",
         "greenter/greenter": "^5.0",
         "greenter/lite": "*",
         "guzzlehttp/guzzle": "^6.3.1|^7.0.1",

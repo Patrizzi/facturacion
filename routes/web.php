@@ -11,13 +11,16 @@
 // 	return $post->cotizacion();
 // });
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\RolController;
 use Illuminate\Support\Facades\Route;
 
+//GLOBAL LOGIN
+Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
 Route::group(
-	[ 'middleware' => ['auth','api','cambio_diario']],
+	[ 'middleware' => ['auth','cambio_diario']],
 	function(){
 
 		
