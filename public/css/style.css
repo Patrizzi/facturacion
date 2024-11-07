@@ -6880,7 +6880,8 @@ body.body-small .vote-icon {
   display: none;
 }
 .metismenu .collapse.in {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 .metismenu .collapsing {
   position: relative;
@@ -9312,7 +9313,7 @@ body.md-skin {
 .md-skin .pace-done .footer {
   -webkit-transition: all 0.4s;
   -moz-transition: all 0.4s;
-  -o-transition: all 0.4s;
+  -o-.navbar-static-sidetion: all 0.4s;
   transition: all 0.4s;
 }
 .md-skin .navbar-fixed-top {
