@@ -466,8 +466,7 @@
 
     {{-- INICIO FLAVIA --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -511,8 +510,12 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="infoModalLabel" style="color: blue;">Información de la Empresa</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="infoModalLabel" style="font-size: 20px; color: blue;">
+                            Información de la Empresa
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
+                            x <!-- Representa la "X" -->
+                        </button>
                     </div>
                     <div class="modal-body">
                         <!-- Formulario dentro del modal -->
@@ -612,7 +615,7 @@
                     <div class="card text-center"
                         style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5);">
                         <div class="card-body"
-                            style="min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            style="min-height: 270px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                             <h5 class="card-title"
                                 style="text-align: center; width: 100%;font-weight: bold; font-size: 1rem">NÚMERO DE
                                 CONTACTOS</h5>
@@ -684,23 +687,21 @@
                                                 Moneda Nacional</p>
                                         </div>
                                         <!-- Modal pequeño de soles -->
-                                        <div class="modal fade" id="monedaModal" tabindex="-1"
-                                            aria-labelledby="monedaModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                        <div class="modal fade" id="monedaModal" tabindex="-1" aria-labelledby="monedaModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;"> <!-- Ajusta el ancho aquí -->
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title text-center" id="monedaModalLabel"
-                                                            style="color: gold; width: 100%; text-align: center;">S/ SOLES
+                                                        <h5 class="modal-title text-center" id="monedaModalLabel" style="color: gold; width: 100%; text-align: center;font-size: 1.5rem;">S/ SOLES
                                                         </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: gold; border: none; background: transparent; font-size: 20px;">
+                                                            x <!-- Representa la "X" -->
+                                                        </button>
                                                     </div>
-                                                    <div class="modal-body">
+                                                    <div class="modal-body" style="max-height: 150px; overflow-y: auto;">
                                                         Moneda "soles" actualmente registrada como Moneda Principal.
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary"
-                                                            data-bs-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -712,26 +713,21 @@
                                                 style="width: 50px; height: 50px; margin-right: 30px; background-color: darkgreen; border: none;"
                                                 data-bs-toggle="modal" data-bs-target="#dolaresModal">
                                                 <span style="color: white; font-size: 24px;">$</span>
-                                            </button>
-
-                                            <p class="card-text mb-0" style="color: darkgreen; font-weight: bold;">Dólares
-                                                / Moneda Extranjera</p>
-                                        </div>
-
-                                        <!-- Modal pequeño para Dólares -->
-                                        <div class="modal fade" id="dolaresModal" tabindex="-1"
-                                            aria-labelledby="dolaresModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                        </button>
+                                        <p class="card-text mb-0" style="color: darkgreen; font-weight: bold;">Dólares
+                                                / Moneda Extranjera</p>                                       </div>
+                                    <!-- Modal pequeño para Dólares -->
+                                        <div class="modal fade" id="dolaresModal" tabindex="-1" aria-labelledby="dolaresModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;"> <!-- Ajusta el ancho aquí -->
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title text-center d-flex justify-content-center align-items-center"
-                                                            id="dolaresModalLabel"
-                                                            style="color: darkgreen; width: 100%; text-align: center;">
-                                                            <i class="bi bi-exclamation-circle-fill"
-                                                                style="color: red; font-size: 2rem; margin-right: 5px;"></i>
+                                                    <div class="modal-header d-flex align-items-center justify-content-between" style="width: 100%;">
+                                                        <h5 class="modal-title text-center d-flex align-items-center justify-content-center" id="dolaresModalLabel" style="color: darkgreen; font-size: 1rem; flex-grow: 1;">
+                                                            <i class="bi bi-exclamation-circle-fill" style="color: red; font-size: 2rem; margin-right: 5px;"></i>
+                                                            Dólares
                                                         </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: darkgreen; border: none; background: transparent; font-size: 20px; font-weight: bold;">
+                                                            x <!-- Representa la "X" -->
+                                                        </button>
                                                     </div>
                                                     <div class="modal-body">
                                                         ¿Deseas cambiar '$ Dólares' como moneda principal?
@@ -749,41 +745,43 @@
                                 </div>
 
                                 <!-- Tercera fila de tarjetas -->
-                                <div class="row row-cols-1 row-cols-md-12 g-4">
-                                    <div class="col mb-4"> <!-- Tarjeta Datos de Ubicación -->
-                                        <div class="card text-center"
-                                            style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-                                            <div
-                                                class="card-body d-flex flex-column align-items-center justify-content-center">
-                                                <h5 class="card-title"
-                                                    style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">
-                                                    Cuenta Ahorro</h5>
-                                                <img src="IMG/bcp.png" class="card-img-top" alt="BCP"
-                                                    style="width: 80px; height: auto; margin-bottom: 0px;"
-                                                    data-bs-toggle="modal" data-bs-target="#cuentaModal">
-
-                                                <h5 class="card-title"
-                                                    style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">
-                                                    Cuenta Corriente</h5>
-                                                <img src="IMG/scotiabank.png" class="card-img-top" alt="Scotiabank"
-                                                    style="width: 100px; height: auto; margin-bottom: 0px;"
-                                                    data-bs-toggle="modal" data-bs-target="#scotiabankModal">
-
-                                                <h5 class="card-title"
-                                                    style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">
-                                                    Cuenta Corriente</h5>
-                                                <img src="IMG/interbank.jpeg" class="card-img-top" alt="Interbank"
-                                                    style="width: 100px; height: auto; margin-bottom: 0px;"
-                                                    data-bs-toggle="modal" data-bs-target="#interbankModal">
-
-
-                                                <h5 class="card-title"
-                                                    style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">
-                                                    Cuenta Corriente</h5>
-                                                <img src="IMG/bbva.png" class="card-img-top" alt="BBVA"
-                                                    style="width: 80px; height: auto;" data-bs-toggle="modal"
-                                                    data-bs-target="#bbvaModal">
+                                <div class="row row-cols-1 row-cols-md-12 g-8">
+                                    <div class="col mb-8"> <!-- Tarjeta Datos de Ubicación -->
+                                        <div class="card text-center" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-height: 240px;">
+                                            <!-- Título de la tarjeta -->
+                                            <div class="card-header" style="background-color: transparent; border: none;">
+                                                <h4 style="font-weight: bold; color: blue;font-size: 20px;">CUENTAS BANCARIAS</h4>
+                                            
+                                        
+                                                <div class="card-body d-flex flex-row align-items-center justify-content-around">
+                                                    <!-- Columna izquierda con BCP e Interbank -->
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Ahorro</h5>-->
+                                                        <img src="IMG/bcp.png" class="card-img-top" alt="BCP" style="width: 80px; height: auto; margin-bottom: 60px;" data-bs-toggle="modal" data-bs-target="#cuentaModal">
+                                                        
+                                                        <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>-->
+                                                        <img src="IMG/interbank.jpeg" class="card-img-top" alt="Interbank" style="width: 100px; height: auto; margin-bottom: 10px;" data-bs-toggle="modal" data-bs-target="#interbankModal">
+                                                    </div>
+                                        
+                                                <!-- Columna central con los iconos de conexión -->
+                                                <div class="d-flex flex-column align-items-center mx-4">
+                                                    <i class="fa fa-bank" style="color: blue; font-size: 30px; margin-bottom: 10px;"></i>
+                                                    <div style="border-left: 2px solid blue; height: 40px; margin-bottom: 10px;"></div>
+                                                    <i class="fa fa-bank" style="color: blue; font-size: 30px;"></i>
+                                                </div>
+                                        
+                                                <!-- Columna derecha con Scotiabank y BBVA -->
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>-->
+                                                    <img src="IMG/scotiabank.png" class="card-img-top" alt="Scotiabank" style="width: 100px; height: auto; margin-bottom: 60px;" data-bs-toggle="modal" data-bs-target="#scotiabankModal">
+                                        
+                                                    <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>-->
+                                                    <img src="IMG/bbva.png" class="card-img-top" alt="BBVA" style="width: 80px; height: auto;margin-bottom: 10px;" data-bs-toggle="modal" data-bs-target="#bbvaModal">
+                                                </div>
                                             </div>
+                                        </div>
+                                        
+                                        
 
                                             <!-- Modal para la imagen de BCP -->
                                             <div class="modal fade" id="cuentaModal" tabindex="-1"
@@ -791,10 +789,12 @@
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="cuentaModalLabel">Cuenta Bancaria
+                                                            <h5 class="modal-title" id="cuentaModalLabel" style="font-size: 20px; color: blue;">
+                                                                Cuenta Bancaria
                                                             </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
+                                                                x <!-- Representa la "X" -->
+                                                            </button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <!-- Formulario de cuenta bancaria -->
@@ -823,38 +823,35 @@
                                                                 <div class="row mb-3">
                                                                     <!-- Tipo de cuenta y Moneda -->
                                                                     <div class="col-md-6">
-                                                                        <label for="tipoCuenta" class="form-label">Tipo de
-                                                                            Cuenta</label>
-                                                                        <select class="form-select" id="tipoCuenta">
+                                                                        <label for="tipoCuenta" class="form-label">Tipo de Cuenta</label>
+                                                                        <select class="form-control" id="tipoCuenta">
                                                                             <option selected>Cuenta Corriente</option>
                                                                             <option>Cuenta de Ahorros</option>
-                                                                            <option selected>Cuenta Detracciones</option>
-                                                                            <option>Cod. C. Interbancacio </option>
-
+                                                                            <option>Cuenta Detracciones</option>
+                                                                            <option>Cod. C. Interbancacio</option>
                                                                         </select>
                                                                     </div>
+                                                                
                                                                     <div class="col-md-6">
-                                                                        <label for="monedaCuenta"
-                                                                            class="form-label">Moneda</label>
-                                                                        <select class="form-select" id="monedaCuenta">
+                                                                        <label for="monedaCuenta" class="form-label">Moneda</label>
+                                                                        <select class="form-control" id="monedaCuenta">
                                                                             <option selected>soles</option>
                                                                             <option>dólares</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
+                                                                
 
                                                                 <div class="row mb-3">
                                                                     <!-- N° de cuenta y Código Interbancario -->
                                                                     <div class="col-md-6">
-                                                                        <label for="numeroCuenta" class="form-label">N° de
-                                                                            Cuenta</label>
-                                                                        <select class="form-select" id="numeroCuenta">
-                                                                            <option value="19130895186056" selected>
-                                                                                19130895186056</option>
-                                                                            <option value="00219113089518605654">
-                                                                                00219113089518605654</option>
+                                                                        <label for="numeroCuenta" class="form-label">N° de Cuenta</label>
+                                                                        <select class="form-control" id="numeroCuenta">
+                                                                            <option value="19130895186056" selected>19130895186056</option>
+                                                                            <option value="00219113089518605654">00219113089518605654</option>
                                                                         </select>
                                                                     </div>
+                                                                    
                                                                     <div class="col-md-6">
                                                                         <label for="codigoInterbancario"
                                                                             class="form-label">Cod. C.
@@ -869,22 +866,17 @@
                                                                     <!-- Detracción -->
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='detraccionCheck'>
+                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
-                                                                    <div
-                                                                        class='col-md-4 d-flex justify-content-center align-items-center'>
-                                                                        <button type='button'
-                                                                            class='btn btn-danger me-2'><i
-                                                                                class='bi bi-trash'></i></button>
-                                                                        <button type='button' class='btn btn-primary'><i
-                                                                                class='bi bi-plus'></i></button>
+                                                                    <!-- Botones de acción -->
+                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
+                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
                                                                     </div>
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'
                                                                             for='activoCheck'>Activo/Desactivo:</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='activoCheck' checked>
+                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
                                                                 </div>
                                                             </form>
@@ -904,10 +896,12 @@
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="scotiabankModalLabel">Cuenta
-                                                                Corriente</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <h5 class="modal-title" id="scotiabankModalLabel" style="font-size: 20px; color: blue;">
+                                                                Cuenta Corriente
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
+                                                                x <!-- Representa la "X" -->
+                                                            </button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <!-- Formulario de cuenta bancaria -->
@@ -939,41 +933,36 @@
                                                                 <div class="row mb-3">
                                                                     <!-- Tipo de cuenta y Moneda -->
                                                                     <div class="col-md-6">
-                                                                        <label for="tipoCuenta" class="form-label">Tipo de
-                                                                            Cuenta</label>
-                                                                        <select class="form-select" id="tipoCuenta">
+                                                                        <label for="tipoCuenta" class="form-label">Tipo de Cuenta</label>
+                                                                        <select class="form-control" id="tipoCuenta">
                                                                             <option selected>Cuenta Corriente</option>
                                                                             <option>Cod. C. Interbancario</option>
-                                                                            <option selected>Cuenta Corriente</option>
-                                                                            <option>Cod. C. Interbancario</option>
+                                                                            <option>Cuenta de Ahorros</option>
+                                                                            <option>Cuenta Detracciones</option>
                                                                         </select>
                                                                     </div>
+                                                                
                                                                     <div class="col-md-6">
-                                                                        <label for="monedaCuenta"
-                                                                            class="form-label">Moneda</label>
-                                                                        <select class="form-select" id="monedaCuenta">
+                                                                        <label for="monedaCuenta" class="form-label">Moneda</label>
+                                                                        <select class="form-control" id="monedaCuenta">
                                                                             <option selected>soles</option>
-                                                                            <option>soles</option>
-                                                                            <option>dólares</option>
                                                                             <option>dólares</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
+                                                                
 
                                                                 <div class="row mb-3">
                                                                     <!-- N° de cuenta y Código Interbancario -->
                                                                     <div class="col-md-6">
-                                                                        <label for="numeroCuenta" class="form-label">N° de
-                                                                            Cuenta</label>
-                                                                        <select class="form-select" id="numeroCuenta">
-                                                                            <option value="0873003385919" selected>
-                                                                                0873003385919</option>
-                                                                            <option value="00308700300338591">
-                                                                                00308700300338591</option>
-                                                                            <option value="2003002187954">2003002187954
-                                                                            </option>
+                                                                        <label for="numeroCuenta" class="form-label">N° de Cuenta</label>
+                                                                        <select class="form-control" id="numeroCuenta">
+                                                                            <option value="0873003385919" selected>0873003385919</option>
+                                                                            <option value="00308700300338591">00308700300338591</option>
+                                                                            <option value="2003002187954">2003002187954</option>
                                                                         </select>
                                                                     </div>
+                                                                    
                                                                     <div class="col-md-6">
                                                                         <label for="codigoInterbancario"
                                                                             class="form-label">Cod. C.
@@ -988,22 +977,17 @@
                                                                     <!-- Detracción -->
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='detraccionCheck'>
+                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
-                                                                    <div
-                                                                        class='col-md-4 d-flex justify-content-center align-items-center'>
-                                                                        <button type='button'
-                                                                            class='btn btn-danger me-2'><i
-                                                                                class='bi bi-trash'></i></button>
-                                                                        <button type='button' class='btn btn-primary'><i
-                                                                                class='bi bi-plus'></i></button>
+                                                                    <!-- Botones de acción -->
+                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
+                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
                                                                     </div>
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'
                                                                             for='activoCheck'>Activo/Desactivo:</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='activoCheck' checked>
+                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
                                                                 </div>
                                                             </form>
@@ -1017,16 +1001,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Modal para la imagen de Interbank 3 -->
+                                            <!-- Modal para la imagen de Interbank 3 - PENULTIMO-->
                                             <div class="modal fade" id="interbankModal" tabindex="-1"
                                                 aria-labelledby="interbankModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="interbankModalLabel">Cuenta
-                                                                Corriente</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <h5 class="modal-title" id="interbankModalLabel" style="font-size: 20px; color: blue;">
+                                                                Cuenta Corriente
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
+                                                                x <!-- Representa la "X" -->
+                                                            </button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <!-- Formulario de cuenta bancaria -->
@@ -1062,7 +1048,7 @@
                                                                     <div class="col-md-6">
                                                                         <label for="tipoCuentaInterbank"
                                                                             class="form-label">Tipo de Cuenta</label>
-                                                                        <select class="form-select"
+                                                                        <select class="form-control"
                                                                             id="tipoCuentaInterbank">
                                                                             <option selected>Cuenta Corriente</option>
                                                                             <option>Cod. C. Interbancario</option>
@@ -1073,7 +1059,7 @@
                                                                     <div class="col-md-6">
                                                                         <label for="monedaCuentaInterbank"
                                                                             class="form-label">Moneda</label>
-                                                                        <select class="form-select"
+                                                                        <select class="form-control"
                                                                             id="monedaCuentaInterbank">
                                                                             <option selected>soles</option>
                                                                             <option selected>soles</option>
@@ -1088,7 +1074,7 @@
                                                                     <div class="col-md-6">
                                                                         <label for="numeroCuentaInterbank"
                                                                             class="form-label">N° de Cuenta</label>
-                                                                        <select class="form-select" id="numeroCuentaBBVA">
+                                                                        <select class="form-control" id="numeroCuentaBBVA">
                                                                             <option value="00110175010006812876" selected>
                                                                                 00110175010006812876</option>
                                                                             <option value="01117500010006812876">
@@ -1111,22 +1097,17 @@
                                                                     <!-- Detracción -->
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='detraccionCheck'>
+                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
-                                                                    <div
-                                                                        class='col-md-4 d-flex justify-content-center align-items-center'>
-                                                                        <button type='button'
-                                                                            class='btn btn-danger me-2'><i
-                                                                                class='bi bi-trash'></i></button>
-                                                                        <button type='button' class='btn btn-primary'><i
-                                                                                class='bi bi-plus'></i></button>
+                                                                    <!-- Botones de acción -->
+                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
+                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
                                                                     </div>
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'
                                                                             for='activoCheck'>Activo/Desactivo:</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='activoCheck' checked>
+                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
                                                                 </div>
                                                             </form>
@@ -1141,16 +1122,18 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Modal para la imagen de BBVA -->
+                                            <!-- Modal para la imagen de BBVA - ULTIMO-->
                                             <div class="modal fade" id="bbvaModal" tabindex="-1"
                                                 aria-labelledby="bbvaModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="bbvaModalLabel">Cuenta Corriente
+                                                            <h5 class="modal-title" id="bbvaModalLabel" style="font-size: 20px; color: blue;">
+                                                                Cuenta Corriente
                                                             </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
+                                                                x <!-- Representa la "X" -->
+                                                            </button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <!-- Formulario de cuenta bancaria -->
@@ -1184,14 +1167,14 @@
                                                                     <div class="col-md-6">
                                                                         <label for="tipoCuentaBBVA"
                                                                             class="form-label">Tipo de Cuenta</label>
-                                                                        <select class="form-select" id="tipoCuentaBBVA">
+                                                                        <select class="form-control" id="tipoCuentaBBVA">
                                                                             <option selected>Cuenta Corriente</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="monedaCuentaBBVA"
                                                                             class="form-label">Moneda</label>
-                                                                        <select class="form-select" id="monedaCuentaBBVA">
+                                                                        <select class="form-control" id="monedaCuentaBBVA">
                                                                             <option selected>soles</option>
                                                                         </select>
                                                                     </div>
@@ -1202,7 +1185,7 @@
                                                                     <div class="col-md-6">
                                                                         <label for="numeroCuentaBBVA"
                                                                             class="form-label">N° de Cuenta</label>
-                                                                        <select class="form-select" id="numeroCuentaBBVA">
+                                                                        <select class="form-control" id="numeroCuentaBBVA">
                                                                             <option value="" selected>00-060-035172
                                                                             </option>
                                                                         </select>
@@ -1221,22 +1204,17 @@
                                                                     <!-- Detracción -->
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='detraccionCheck'>
+                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
-                                                                    <div
-                                                                        class='col-md-4 d-flex justify-content-center align-items-center'>
-                                                                        <button type='button'
-                                                                            class='btn btn-danger me-2'><i
-                                                                                class='bi bi-trash'></i></button>
-                                                                        <button type='button' class='btn btn-primary'><i
-                                                                                class='bi bi-plus'></i></button>
+                                                                    <!-- Botones de acción -->
+                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
+                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
                                                                     </div>
                                                                     <div class='col-md-4'>
                                                                         <label class='form-label'
                                                                             for='activoCheck'>Activo/Desactivo:</label>
-                                                                        <input class='form-check-input ms-2'
-                                                                            type='checkbox' id='activoCheck' checked>
+                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
                                                                     </div>
                                                                 </div>
                                                             </form>
@@ -1253,18 +1231,14 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-          </div>
-
+        </div>
                     <!-- Incluye las librerías de Bootstrap -->
-                    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}}
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     {{-- </body> --}}
     {{-- FIN FLAVIA --}}
 
