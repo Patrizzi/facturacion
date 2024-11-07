@@ -12,8 +12,8 @@ class WidgetNav extends Component {
      */
     public function __construct(
         public string $icon = "fa-check",
-        public string $span,
-        public string $text
+        public string $text = "",
+        public string $count = ""
     ) {
         //
     }

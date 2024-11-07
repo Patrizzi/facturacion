@@ -32,7 +32,7 @@ abstract class ProjectTableAbstract extends Component {
                     return $item->nombre;
                 },
                 'Cliente' => function ($item) {
-                    return $item->cliente->nombre;
+                    return $item->cliente ? $item->cliente->nombre : "Sin cliente";
                 },
                 'R.U.C.' => function ($item) {
                     return $item->ruc;
@@ -57,7 +57,7 @@ abstract class ProjectTableAbstract extends Component {
                     return $item->responsable->name;
                 },
                 'Cliente' => function ($item) {
-                    return $item->cliente->nombre;
+                    return $item->cliente ? $item->cliente->nombre : "Sin cliente"; // clientes sin nombre
                 },
                 'Administrador' => function ($item) {
                     return $item->administrador->name;

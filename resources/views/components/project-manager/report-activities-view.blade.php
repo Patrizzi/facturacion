@@ -2,8 +2,8 @@
     @foreach ($estados as $i => $estado)
         <x-widget-nav
             icon="{{ $estado['icon'] }}"
-            span="{{ $estado['text'] }}"
-            text="{{ $actividadesPorEstado[$i] }}" />
+            text="{{ $estado['text'] }}"
+            count="{{ $actividadesPorEstado[$i] }}" />
     @endforeach
 </div>
 <div class="row m-5">

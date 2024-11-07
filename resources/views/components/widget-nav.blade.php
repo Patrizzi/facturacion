@@ -5,8 +5,8 @@
                 <i class="fa {{ $icon }} fa-5x"></i>
             </div>
             <div class="col-8 text-right">
-                <span> {{ $span }} </span>
-                <h2 class="font-bold">{{ $text }}</h2>
+                <span> {{ $text }} </span>
+                <h2 class="font-bold">{{ $count }}</h2>
             </div>
         </div>
     </div>
