@@ -357,15 +357,15 @@
 
 {{-- INICIO FLAVIA --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
       body {
-          font-family: 'Montserrat', sans-serif; 
+          font-family: 'Montserrat', sans-serif;
       }
   </style>
-  <body>  
+  <body>
 
     <div class="container mt-4">
         <div class="row">
@@ -391,7 +391,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> 
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="infoModalLabel" style="color: blue;">Información de la Empresa</h5>
@@ -470,13 +470,13 @@
         </div>
     </div>
 </div>
-    
+
     <div class="container mt-4">
         <div class="row row-cols-1 row-cols-md-2 g-4">
     <div class="col mb-4"> <!-- Tarjeta de "Mi empresa" -->
         <div class="card text-center" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); height: 255px">
             <div style="display: flex; justify-content: center;">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrz_XKzKwCeiR3Te3FDc-zTIDtxgLMVE5CA&s" class="card-img-top" alt="..." style="width: 355px; height: auto;"> 
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrz_XKzKwCeiR3Te3FDc-zTIDtxgLMVE5CA&s" class="card-img-top" alt="..." style="width: 355px; height: auto;">
             </div>
             <div class="card-body">
             <h5 class="card-title" style="color: blue; font-weight: bold; font-size: 2rem;">MI EMPRESA</h5>
@@ -487,18 +487,18 @@
     <div class="col mb-4"> <!-- Tarjeta de "Número de contactos" -->
         <div class="card text-center" style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5);">
             <div class="card-body" style="min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h5 class="card-title" style="text-align: center; width: 100%;font-weight: bold; font-size: 1rem">NÚMERO DE CONTACTOS</h5> 
+                <h5 class="card-title" style="text-align: center; width: 100%;font-weight: bold; font-size: 1rem">NÚMERO DE CONTACTOS</h5>
                 <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-telephone"></i> Teléfono: 013308292</p>
                 <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-phone"></i> Celular: +51946201443</p>
                 <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-globe"></i> Sitio Web: www.jypsac.com/<a href="..." style="color: white; text-decoration: underline;"></a></p>
                 <p class="card-text" style="margin: 5px 0; text-align: center;">
-                <i class="bi bi-envelope"></i> Correo: 
+                <i class="bi bi-envelope"></i> Correo:
                 <a href="mailto:julioflores@jypsac.com" style="color: white; text-decoration: none;">
                     julioflores@jypsac.com
                 </a>
             </p>            </div>
         </div>
-    </div>                               
+    </div>
 </div>
 
 <!-- Segunda fila de tarjetas -->
@@ -506,15 +506,15 @@
 <div class="col mb-4"> <!-- Agregado mb-4 -->
     <div class="card text-center" style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5);">
         <div class="card-body d-flex flex-column justify-content-center" style="min-height: 260px; align-items: center;">
-            <h5 class="card-title" style="text-align: center;font-weight: bold; font-size: 1rem"> DATOS DE UBICACIÓN</h5> 
+            <h5 class="card-title" style="text-align: center;font-weight: bold; font-size: 1rem"> DATOS DE UBICACIÓN</h5>
             <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-flag"></i> País: Perú</p>
             <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-geo"></i> Provincia: Lima</p>
             <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-geo"></i> Ciudad: Lima</p>
             <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-geo-alt"></i> Dirección: Av. Bolivia 148 Of. 2218 Pta 4 - Galería Centro de Lima</p>
             <p class="card-text" style="margin: 5px 0 20px 0; text-align: center;"><i class="bi bi-file-earmark-binary"></i> Código Ubigeo: 150101</p>
             <!-- Mapa incrustado -->
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.5608069684718!2d-77.04077347304688!3d-12.07371039999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8ed9bc09107%3A0x65cd03781324adb2!2sJ%26P%20Perif%C3%A9ricos%20SAC%20-%20en%20LIMA%7C%20Venta%2C%20Computadoras%2C%20Laptop%20%7C%20Reparaci%C3%B3n%20y%20Mantenimiento%20de%20port%C3%A1tiles!5e0!3m2!1ses-419!2spe!4v1727195701956!5m2!1ses-419!2spe" 
-            width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>        
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.5608069684718!2d-77.04077347304688!3d-12.07371039999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8ed9bc09107%3A0x65cd03781324adb2!2sJ%26P%20Perif%C3%A9ricos%20SAC%20-%20en%20LIMA%7C%20Venta%2C%20Computadoras%2C%20Laptop%20%7C%20Reparaci%C3%B3n%20y%20Mantenimiento%20de%20port%C3%A1tiles!5e0!3m2!1ses-419!2spe!4v1727195701956!5m2!1ses-419!2spe"
+            width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
     </div>
 </div>
@@ -525,60 +525,60 @@
         <div class="card text-center" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); height: 200px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                 <h5 class="card-title mb-3" style="text-align: center; font-weight: bold; font-size: 1rem; color: blue;">MONEDA PRINCIPAL</h5>
-                <div class="d-flex flex-column align-items-start mb-3"> 
+                <div class="d-flex flex-column align-items-start mb-3">
                     <!-- Sección de Círculo y Texto -->
-                        <div class="d-flex align-items-center mb-3"> 
-                        <button type="button" class="rounded-circle bg-warning text-dark d-flex justify-content-center align-items-center" 
-                            style="width: 50px; height: 50px; margin-right: 30px; background-color: gold; border: none;" 
+                        <div class="d-flex align-items-center mb-3">
+                        <button type="button" class="rounded-circle bg-warning text-dark d-flex justify-content-center align-items-center"
+                            style="width: 50px; height: 50px; margin-right: 30px; background-color: gold; border: none;"
                             data-bs-toggle="modal" data-bs-target="#monedaModal">
                             <span style="color: white; font-size: 24px;">S/</span>
                             </button>
-<p class="card-text mb-0" style="color: gold; font-weight: bold;">Soles / Moneda Nacional</p> 
+<p class="card-text mb-0" style="color: gold; font-weight: bold;">Soles / Moneda Nacional</p>
 </div>
 <!-- Modal pequeño de soles -->
 <div class="modal fade" id="monedaModal" tabindex="-1" aria-labelledby="monedaModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered modal-sm"> 
+<div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title text-center" id="monedaModalLabel" style="color: gold; width: 100%; text-align: center;">S/ SOLES</h5>  
+            <h5 class="modal-title text-center" id="monedaModalLabel" style="color: gold; width: 100%; text-align: center;">S/ SOLES</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             Moneda "soles" actualmente registrada como Moneda Principal.
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button> 
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
         </div>
     </div>
 </div>
 </div>
 <!-- Sección de Círculo y Texto para Dólares -->
 <div class="d-flex align-items-center mb-3">
-<button type="button" class="rounded-circle bg-success d-flex justify-content-center align-items-center" 
-        style="width: 50px; height: 50px; margin-right: 30px; background-color: darkgreen; border: none;" 
+<button type="button" class="rounded-circle bg-success d-flex justify-content-center align-items-center"
+        style="width: 50px; height: 50px; margin-right: 30px; background-color: darkgreen; border: none;"
         data-bs-toggle="modal" data-bs-target="#dolaresModal">
-    <span style="color: white; font-size: 24px;">$</span> 
+    <span style="color: white; font-size: 24px;">$</span>
 </button>
 
-<p class="card-text mb-0" style="color: darkgreen; font-weight: bold;">Dólares / Moneda Extranjera</p> 
+<p class="card-text mb-0" style="color: darkgreen; font-weight: bold;">Dólares / Moneda Extranjera</p>
 </div>
 
 <!-- Modal pequeño para Dólares -->
 <div class="modal fade" id="dolaresModal" tabindex="-1" aria-labelledby="dolaresModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered modal-sm"> 
+<div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title text-center d-flex justify-content-center align-items-center" id="dolaresModalLabel" style="color: darkgreen; width: 100%; text-align: center;">
             <i class="bi bi-exclamation-circle-fill" style="color: red; font-size: 2rem; margin-right: 5px;"></i>
-        </h5>             
+        </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             ¿Deseas cambiar '$ Dólares' como moneda principal?
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button> 
-            <button type="button" class="btn btn-primary" id="cambiarButton">Sí, Cambiar</button> 
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="cambiarButton">Sí, Cambiar</button>
         </div>
     </div>
 </div>
@@ -589,19 +589,19 @@
 <!-- Tercera fila de tarjetas -->
 <div class="row row-cols-1 row-cols-md-2 g-4">
 <div class="col mb-4"> <!-- Tarjeta Datos de Ubicación -->
-    <div class="card text-center"  style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); height: 330px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);"> 
+    <div class="card text-center"  style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); height: 330px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
         <div class="card-body d-flex flex-column align-items-center justify-content-center">
-            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Ahorro</h5>              
-            <img src="IMG/bcp.png" class="card-img-top" alt="BCP" style="width: 80px; height: auto; margin-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#cuentaModal"> 
+            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Ahorro</h5>
+            <img src="IMG/bcp.png" class="card-img-top" alt="BCP" style="width: 80px; height: auto; margin-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#cuentaModal">
 
-            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>              
+            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>
             <img src="IMG/scotiabank.png" class="card-img-top" alt="Scotiabank" style="width: 100px; height: auto; margin-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#scotiabankModal">
 
-            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>              
+            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>
             <img src="IMG/interbank.jpeg" class="card-img-top" alt="Interbank" style="width: 100px; height: auto; margin-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#interbankModal">
 
 
-            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>              
+            <h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>
             <img src="IMG/bbva.png" class="card-img-top" alt="BBVA" style="width: 80px; height: auto;" data-bs-toggle="modal" data-bs-target="#bbvaModal">
         </div>
 
@@ -620,12 +620,12 @@
         <div class="col-md-6">
             <label for="nombreCuenta" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombreCuenta" value="Cuenta Ahorros">
-    
+
             <label for="titularCuenta" class="form-label">Titular</label>
             <input type="text" class="form-control" id="titularCuenta" value="19130895186056">
             </div>
 <!-- Imagen de la cuenta -->
-<div class="col-md-6 d-flex flex-column align-items-center justify-content-center"> 
+<div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
     <label for="imagenCuenta" class="form-label"></label>
     <img src="IMG/bcp.png" alt="BCP" class="img-fluid" style="max-width: 150px;">
 </div>
@@ -956,14 +956,14 @@
 </div>
 </div>
 <div class='col mb-4'>
-    <div class='card text-center' style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5); height: 330px"> 
-        <div class='card-body d-flex flex-column justify-content-center align-items-center'> 
+    <div class='card text-center' style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5); height: 330px">
+        <div class='card-body d-flex flex-column justify-content-center align-items-center'>
             <h5 class='card-title'style="text-align: center;font-weight: bold; font-size: 1rem">IMPUESTOS</h5>
             <p class='card-text'>IGV: 18 %</p>
             <p class='card-text'>Impuesto Renta: 18 %</p>
         </div>
-    </div>    
-</div>   
+    </div>
+</div>
 </div>
 </div>
 </div>
