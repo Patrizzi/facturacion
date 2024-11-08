@@ -27,7 +27,7 @@ Route::group(
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
 		Route::resource('/cotizacion_manual','CotizacionManualController');
-		// Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
 		Route::post('/cotizacion_manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
 		Route::get('/cotizacion_manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		Route::get('/cotizacion_manual/facturar/{id}','CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
@@ -81,7 +81,7 @@ Route::group(
 		Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
 		Route::resource('/cotizacion','CotizacionController');
-		// Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
+		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
 
 		Route::post('cotizacion/nota_venta/{id}', 'CotizacionController@nota_venta_gen')->name('cotizacion.nota_venta');
 		Route::post('cotizacion/nota_venta_store', 'CotizacionController@nota_venta_store')->name('cotizacion.nota_venta_store');
@@ -120,7 +120,7 @@ Route::group(
 //NOTA VENTA
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
-		// Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
 		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
