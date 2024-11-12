@@ -129,6 +129,82 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
+                   <div class="parent" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 50px; align-items: center; text-align: center;">
+                       <div class="div1" style="grid-column-start: 1; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold; width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 1</p>
+                           <p>1 DIA</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div2" style="grid-column-start: 2; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 2</p>
+                           <p>7 DIAS</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div3" style="grid-column-start: 3; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 3</p>
+                           <p>15 DIAS</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div4" style="grid-column-start: 1; grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 4</p>
+                           <p>6 MESES</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div5" style="grid-column-start: 2; grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 5</p>
+                           <p>1 AÑO</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                       <div class="div6" style="grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold; width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
+                           <p>Item 6</p>
+                           <p>3 AÑOS</p>
+                           <div style="display: flex; justify-content: center">
+                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
+                           </div>
+                           <div class="form-check form-switch">
+                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                           </div>
+                       </div>
+                   </div>
+                   <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
                 </div>
             </div>
         </div>
