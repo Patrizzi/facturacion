@@ -465,39 +465,26 @@
 
 
     {{-- INICIO FLAVIA --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-        }
-    </style>
-
-    {{-- <body> --}}
-
-        <div class="container mt-4">
+        <div class="mt-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="card text-center"
+                    <div class="card"
                         style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-                        <div class="d-flex flex-column flex-md-row align-items-center"
+                        <div class="row align-items-center"
                             style="padding: 20px; border-radius: 5px;">
                             <!-- Contenido de la tarjeta -->
-                            <div class="mb-3 mb-md-0" style="flex: 0 0 auto; margin-right: 0px;">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrz_XKzKwCeiR3Te3FDc-zTIDtxgLMVE5CA&s"
-                                    alt="Imagen de la empresa" style="max-width: 100%; height: auto; width: 100px;">
+                            <div class="col-sm-3" style="text-align: center">
+                                <img src="{{ asset('img/logos/' . $mi_empresa->foto) }}"
+                                    alt="Imagen de la empresa" style="max-height: 200px; height: 100%; max-width: 100%;">
                             </div>
-                            <div class="text-center" style="flex: 1;">
-                                <h5>J&P Perifericos S.A.C</h5>
-                                <p>RUC: 20545122520</p>
-                                <p>Empresa de mantenimiento informático, venta de computadoras, hardware, software ERP,
-                                    elaboración de páginas web, redes y comunicaciones, utilizando la tecnología actual para
-                                    servirlos mejor.</p>
+                            <div class="col-sm-8">
+                                <h3><strong>{{ $mi_empresa->razon_social}}</strong></h3>
+                                <h4>{{ $mi_empresa->ruc}}</h4>
+                                <p>{{ $mi_empresa->descripcion}}</p>
                             </div>
-                            <div style="flex: 0 0 auto;">
-                                <button class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#infoModal">Editar</button>
+                            <div class="col-sm-1">
+                                <button class="btn btn-primary" type="button" data-toggle="modal"
+                                    data-target="#infoModal">Editar</button>
                             </div>
                         </div>
                     </div>
@@ -510,104 +497,123 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="infoModalLabel" style="font-size: 20px; color: blue;">
+                        <h3 class="modal-title" id="infoModalLabel">
                             Información de la Empresa
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
-                            x <!-- Representa la "X" -->
-                        </button>
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
                     </div>
-                    <div class="modal-body">
-                        <!-- Formulario dentro del modal -->
-                        <form>
+                    <form action="{{ route('empresa.update', $mi_empresa->id) }}" enctype="multipart/form-data"
+                        method="post">
+                        @csrf
+                        @method('PATCH')
+                        <div class="modal-body">
                             <div class="row">
                                 <!-- Imagen -->
                                 <div class="col-md-12 mb-3 text-center">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrz_XKzKwCeiR3Te3FDc-zTIDtxgLMVE5CA&s"
-                                        alt="Imagen de la Empresa"
-                                        style="width: 300px; height: auto; object-fit: cover;">
+                                    <div class="image-container">
+                                        <img class="preview_img" id="preview" src="{{ asset('img/logos/' . $mi_empresa->foto) }}" alt="Clic para cambiar imagen">
+                                    </div>
+                                    <input type="file" id="fileInput" accept="image/*" style="display: none;" name="ori_foto">
+                                    <small>(Click para cambiar la imagen)</small>
                                 </div>
                                 <!-- Descripción -->
                                 <div class="col-md-12 mb-3">
-                                    <label for="descripcion" class="form-label">Descripción:</label>
-                                    <textarea class="form-control" id="descripcion" rows="3">Empresa de mantenimiento informático, venta de computadoras, hardware, software Erp, elaboración de páginas web, redes y más.</textarea>
+                                    <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{$mi_empresa->descripcion}}</textarea>
                                 </div>
 
                                 <!-- Movil y Teléfono -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="movil" class="form-label">Movil:</label>
-                                    <input type="text" class="form-control" id="movil" value="+51946201443">
+                                    <label for="movil" class="form-label"><strong>Movil:</strong></label>
+                                    <input type="text" class="form-control" id="movil" name="movil" value="{{$mi_empresa->movil}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="telefono" class="form-label">Teléfono:</label>
-                                    <input type="text" class="form-control" id="telefono" value="013308292">
+                                    <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
+                                    <input type="text" class="form-control" id="telefono" name="telefono" value="{{$mi_empresa->telefono}}">
                                 </div>
 
                                 <!-- Correo y País -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="correo" class="form-label">Correo:</label>
-                                    <input type="email" class="form-control" id="correo"
-                                        value="julioflores@jypsac.com">
+                                    <label for="correo" class="form-label"><strong>Correo:</strong></label>
+                                    <input type="email" class="form-control" name="correo" id="correo"
+                                        value="{{$mi_empresa->correo}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="pais" class="form-label">País:</label>
-                                    <input type="text" class="form-control" id="pais" value="Peru">
+                                    <label for="pais" class="form-label"><strong>País:</strong></label>
+                                    <select class="select2_pais form-control" name="pais" id="pais">
+                                        @php
+                                            $pais_encontrado = false;
+                                        @endphp
+
+                                        @foreach ($paises as $pais)
+                                            <option value="{{ $pais->nombre }}" @if ($mi_empresa->pais == $pais->nombre) selected @php $pais_encontrado = true; @endphp @endif>
+                                                {{ $pais->nombre }}
+                                            </option>
+                                        @endforeach
+
+                                        @if (!$pais_encontrado)
+                                            <option value="{{ $mi_empresa->pais }}" selected>{{ $mi_empresa->pais }}</option>
+                                        @endif
+                                    </select>
                                 </div>
 
                                 <!-- Calle y Rubro -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="calle" class="form-label">Calle:</label>
-                                    <textarea class="form-control" id="calle" rows="2">Av. Bolivia 148 Of. 2218 Pta 4 - Galería</textarea>
+                                    <label for="calle" class="form-label"><strong>Calle:</strong></label>
+                                    <textarea class="form-control" id="calle" name="calle" rows="2">{{$mi_empresa->calle}}</textarea>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="rubro" class="form-label">Rubro:</label>
-                                    <input type="text" class="form-control" id="rubro"
-                                        value="Hardware y Software">
+                                    <label for="rubro" class="form-label"><strong>Rubro:</strong></label>
+                                    <input type="text" class="form-control" id="rubro" name="rubro"
+                                        value="{{$mi_empresa->rubro}}">
                                 </div>
 
                                 <!-- Región y Ciudad -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="region" class="form-label">Región/Provincia:</label>
-                                    <input type="text" class="form-control" id="region" value="Lima">
+                                    <label for="region_provincia" class="form-label"><strong>Región/Provincia:</strong></label>
+                                    <input type="text" class="form-control" id="region_provincia" name="region_provincia" value="{{$mi_empresa->region_provincia}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="ciudad" class="form-label">Ciudad:</label>
-                                    <input type="text" class="form-control" id="ciudad" value="Lima">
+                                    <label for="ciudad" class="form-label"><strong>Ciudad:</strong></label>
+                                    <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{$mi_empresa->ciudad}}">
                                 </div>
 
                                 <!-- Código Ubigeo y Página Web -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="codigo" class="form-label">Código Ubigeo:</label>
-                                    <input type="text" class="form-control" id="codigo" value="150101">
+                                    <label for="codigo_postal" class="form-label"><strong>Código Ubigeo: </strong><a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
+                                    <input type="text" class="form-control" id="ubigeo" name="codigo_postal" value="{{$mi_empresa->codigo_postal}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="paginaWeb" class="form-label">Página Web:</label>
-                                    <input type="text" class="form-control" id="paginaWeb" value="www.jypsac.com">
+                                    <label for="pagina_web" class="form-label"><strong>Página Web:</strong></label>
+                                    <input type="text" class="form-control" id="pagina_web" name="pagina_web" value="{{$mi_empresa->pagina_web}}">
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Guardar</button>
-                    </div>
+                        
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class=" mt-4" style="padding-bottom: 1rem;margin-bottom: 1rem">
+            <div class="row row-cols-1 row-cols-md-2 g-4 ">
                 <div class="col mb-4"> <!-- Tarjeta de "Mi empresa" -->
                     <div class="card text-center"
-                        style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-                        <div style="display: flex; justify-content: center;">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrz_XKzKwCeiR3Te3FDc-zTIDtxgLMVE5CA&s"
-                                class="card-img-top" alt="..." style="width: 355px; height: auto;">
+                        style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);height: 100%;">
+                        <div style="margin: auto;text-align: center">
+                            <h5 class="card-title"
+                            style="text-align: center !important; width: 100%;font-weight: bold; font-size: 1rem">LOGO DE LA EMPRESA</h5>
+                            <img src="{{ asset('img/logos/' . $mi_empresa->foto) }}"
+                            alt="Imagen de la empresa" style="max-height: 200px; height: 100%;">
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title" style="color: blue; font-weight: bold; font-size: 2rem;">MI EMPRESA
-                            </h5>
-                        </div>
+                        {{-- <div class="card-body">
+                            <h5 class="card-title" style="color: blue; font-weight: bold; font-size: 2rem;"> {{ $mi_empresa->razon_social }}</h5>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -615,23 +621,26 @@
                     <div class="card text-center"
                         style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5);">
                         <div class="card-body"
-                            style="min-height: 270px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            style="min-height: 270px; display: flex; flex-direction: column; justify-content: center;align-items: center">
                             <h5 class="card-title"
-                                style="text-align: center; width: 100%;font-weight: bold; font-size: 1rem">NÚMERO DE
-                                CONTACTOS</h5>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i
-                                    class="bi bi-telephone"></i> Teléfono: 013308292</p>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-phone"></i>
-                                Celular: +51946201443</p>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-globe"></i>
-                                Sitio Web: www.jypsac.com/<a href="..."
-                                    style="color: white; text-decoration: underline;"></a></p>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;">
-                                <i class="bi bi-envelope"></i> Correo:
-                                <a href="mailto:julioflores@jypsac.com" style="color: white; text-decoration: none;">
-                                    julioflores@jypsac.com
-                                </a>
-                            </p>
+                                style="text-align: center !important; width: 100%;font-weight: bold; font-size: 1rem">INFORMACION DE LA EMPRESA</h5>
+                            <div style="text-align: left">
+                                <p class="card-text" style="margin: 5px 0;"><i
+                                    class="fa fa-phone"></i>&nbsp; <strong>Teléfono:</strong> {{ $mi_empresa->telefono }}</p>
+                                <p class="card-text" style="margin: 5px 0;"><i class="fa fa-phone"></i>
+                                    &nbsp;<strong>Celular:</strong> {{ $mi_empresa->movil }}</p>
+                                <p class="card-text" style="margin: 5px 0;"><i class="fa fa-globe"></i>
+                                    &nbsp;<strong>Sitio Web:</strong> {{ $mi_empresa->pagina_web }}<a h1ref="{{ $mi_empresa->pagina_web }}"
+                                        style="color: white; text-decoration: underline;"></a></p>
+                                <p class="card-text" style="margin: 5px 0;">
+                                    <i class="fa fa-envelope"></i> &nbsp;<strong>Correo:</strong>
+                                    <a href="mailto:{{ $mi_empresa->correo }}" style="color: white; text-decoration: none;">
+                                        {{ $mi_empresa->correo }}
+                                    </a>
+                                </p>
+                                <p class="card-text" style="margin: 5px 0;"><i
+                                    class="fa fa-phone"></i>&nbsp; <strong>Rubro:</strong> {{ $mi_empresa->rubro }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -641,591 +650,277 @@
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col mb-4"> <!-- Agregado mb-4 -->
                     <div class="card text-center"
-                        style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5);">
-                        <div class="card-body d-flex flex-column justify-content-center"
-                            style="min-height: 260px; align-items: center;">
+                        style="background-color: blue; color: white; box-shadow: 0 4px 15px rgba(0, 0, 255, 0.5);height: 100%;">
+                        <div class="card-body" style=" display: flex; flex-direction: column; justify-content: center;align-items: center">
                             <h5 class="card-title" style="text-align: center;font-weight: bold; font-size: 1rem"> DATOS DE
                                 UBICACIÓN</h5>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-flag"></i>
-                                País: Perú</p>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-geo"></i>
-                                Provincia: Lima</p>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-geo"></i>
-                                Ciudad: Lima</p>
-                            <p class="card-text" style="margin: 5px 0; text-align: center;"><i class="bi bi-geo-alt"></i>
-                                Dirección: Av. Bolivia 148 Of. 2218 Pta 4 - Galería Centro de Lima</p>
-                            <p class="card-text" style="margin: 5px 0 20px 0; text-align: center;"><i
-                                    class="bi bi-file-earmark-binary"></i> Código Ubigeo: 150101</p>
+                                <div style="text-align: left">
+                                    <p class="card-text" style="margin: 5px 0;"><i class="fa fa-flag"></i>
+                                        &nbsp; <strong>País:</strong> {{ $mi_empresa->pais }}</p>
+                                    <p class="card-text" style="margin: 5px 0;"><i class="fa fa-map"></i>
+                                        &nbsp; <strong>Provincia:</strong> {{ $mi_empresa->region_provincia }}</p>
+                                    <p class="card-text" style="margin: 5px 0;"><i class="fa fa-map"></i>
+                                        &nbsp; <strong>Ciudad:</strong> {{ $mi_empresa->ciudad }}</p>
+                                    <p class="card-text" style="margin: 5px 0;"><i class="fa fa-map"></i>
+                                        &nbsp; <strong>Dirección:</strong> {{ $mi_empresa->calle }}</p>
+                                    <p class="card-text" style="margin: 5px 0 20px 0;"><i
+                                            class="fa fa-file"></i>&nbsp;<strong> Código Ubigeo:</strong> {{ $mi_empresa->codigo_postal }}</p>
+                                </div>
                             <!-- Mapa incrustado -->
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.5608069684718!2d-77.04077347304688!3d-12.07371039999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8ed9bc09107%3A0x65cd03781324adb2!2sJ%26P%20Perif%C3%A9ricos%20SAC%20-%20en%20LIMA%7C%20Venta%2C%20Computadoras%2C%20Laptop%20%7C%20Reparaci%C3%B3n%20y%20Mantenimiento%20de%20port%C3%A1tiles!5e0!3m2!1ses-419!2spe!4v1727195701956!5m2!1ses-419!2spe"
                                 width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <br>
                         </div>
                     </div>
                 </div>
 
                 <div class="col mb-4">
                     <div class="row">
-                        <div class="col mb-4"> <!-- Columna para la tarjeta -->
+                        <div class="col-sm-12"> <!-- Columna para la tarjeta -->
                             <div class="card text-center"
-                                style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); height: 200px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                                style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
                                 <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                     <h5 class="card-title mb-3"
                                         style="text-align: center; font-weight: bold; font-size: 1rem; color: blue;">MONEDA
                                         PRINCIPAL</h5>
-                                    <div class="d-flex flex-column align-items-start mb-3">
-                                        <!-- Sección de Círculo y Texto -->
-                                        <div class="d-flex align-items-center mb-3">
-                                            <button type="button"
-                                                class="rounded-circle bg-warning text-dark d-flex justify-content-center align-items-center"
-                                                style="width: 50px; height: 50px; margin-right: 30px; background-color: gold; border: none;"
-                                                data-bs-toggle="modal" data-bs-target="#monedaModal">
-                                                <span style="color: white; font-size: 24px;">S/</span>
-                                            </button>
-                                            <p class="card-text mb-0" style="color: gold; font-weight: bold;">Soles /
-                                                Moneda Nacional</p>
-                                        </div>
-                                        <!-- Modal pequeño de soles -->
-                                        <div class="modal fade" id="monedaModal" tabindex="-1" aria-labelledby="monedaModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;"> <!-- Ajusta el ancho aquí -->
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title text-center" id="monedaModalLabel" style="color: gold; width: 100%; text-align: center;font-size: 1.5rem;">S/ SOLES
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: gold; border: none; background: transparent; font-size: 20px;">
-                                                            x <!-- Representa la "X" -->
+                                    <div class="">
+                                        @foreach ($moneda as $index2 => $monedas)
+                                            <div class="d-flex align-items-center mb-3 tooltip-demo" style="justify-content: space-between">
+                                                <span data-toggle="tooltip" data-placement="bottom" @if ($monedas->principal == 1) title="Moneda Principal" @else title="Moneda Secundaria" @endif >
+                                                    <span  @if ($monedas->principal == 0) id="demo{{ $monedas->id }}" @else id="demo_principal{{ $monedas->id }}" @endif style="display: flex; align-items: center; justify-content: center; align-content: center;cursor: pointer;">
+                                                        <button type="button"
+                                                            class="rounded-circle bg-warning text-dark d-flex justify-content-center align-items-center"
+                                                            style="width: 50px; height: 50px; margin-right: 30px; border: none;cursor: pointer; @if ($monedas->principal == 0) background-color: grey !important @endif "   >
+                                                            <span style="color: white;"><i class="fa fa-2x">{{ $monedas->simbolo }}</i></span>
                                                         </button>
-                                                    </div>
-                                                    <div class="modal-body" style="max-height: 150px; overflow-y: auto;">
-                                                        Moneda "soles" actualmente registrada como Moneda Principal.
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-                                                    </div>
-                                                </div>
+                                                        <p class="card-text mb-0" style="font-weight: bold;">{{ ucfirst($monedas->nombre) }} /
+                                                            Moneda {{ $monedas->tipo }}</p>
+                                                    </span>
+                                                </span>
                                             </div>
-                                        </div>
-                                        <!-- Sección de Círculo y Texto para Dólares -->
-                                        <div class="d-flex align-items-center mb-3">
-                                            <button type="button"
-                                                class="rounded-circle bg-success d-flex justify-content-center align-items-center"
-                                                style="width: 50px; height: 50px; margin-right: 30px; background-color: darkgreen; border: none;"
-                                                data-bs-toggle="modal" data-bs-target="#dolaresModal">
-                                                <span style="color: white; font-size: 24px;">$</span>
-                                        </button>
-                                        <p class="card-text mb-0" style="color: darkgreen; font-weight: bold;">Dólares
-                                                / Moneda Extranjera</p>                                       </div>
-                                    <!-- Modal pequeño para Dólares -->
-                                        <div class="modal fade" id="dolaresModal" tabindex="-1" aria-labelledby="dolaresModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;"> <!-- Ajusta el ancho aquí -->
-                                                <div class="modal-content">
-                                                    <div class="modal-header d-flex align-items-center justify-content-between" style="width: 100%;">
-                                                        <h5 class="modal-title text-center d-flex align-items-center justify-content-center" id="dolaresModalLabel" style="color: darkgreen; font-size: 1rem; flex-grow: 1;">
-                                                            <i class="bi bi-exclamation-circle-fill" style="color: red; font-size: 2rem; margin-right: 5px;"></i>
-                                                            Dólares
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: darkgreen; border: none; background: transparent; font-size: 20px; font-weight: bold;">
-                                                            x <!-- Representa la "X" -->
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        ¿Deseas cambiar '$ Dólares' como moneda principal?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Cancelar</button>
-                                                        <button type="button" class="btn btn-primary"
-                                                            id="cambiarButton">Sí, Cambiar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            @if($index2%2 == 0) <hr> @endif
+                                        @endforeach
                                     </div>
                                 </div>
-
-                                <!-- Tercera fila de tarjetas -->
-                                <div class="row row-cols-1 row-cols-md-12 g-8">
-                                    <div class="col mb-8"> <!-- Tarjeta Datos de Ubicación -->
-                                        <div class="card text-center" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-height: 240px;">
-                                            <!-- Título de la tarjeta -->
-                                            <div class="card-header" style="background-color: transparent; border: none;">
-                                                <h4 style="font-weight: bold; color: blue;font-size: 20px;">CUENTAS BANCARIAS</h4>
-                                            
-                                        
-                                                <div class="card-body d-flex flex-row align-items-center justify-content-around">
-                                                    <!-- Columna izquierda con BCP e Interbank -->
-                                                    <div class="d-flex flex-column align-items-center">
-                                                        <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Ahorro</h5>-->
-                                                        <img src="IMG/bcp.png" class="card-img-top" alt="BCP" style="width: 80px; height: auto; margin-bottom: 60px;" data-bs-toggle="modal" data-bs-target="#cuentaModal">
-                                                        
-                                                        <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>-->
-                                                        <img src="IMG/interbank.jpeg" class="card-img-top" alt="Interbank" style="width: 100px; height: auto; margin-bottom: 10px;" data-bs-toggle="modal" data-bs-target="#interbankModal">
-                                                    </div>
-                                        
-                                                <!-- Columna central con los iconos de conexión -->
-                                                <div class="d-flex flex-column align-items-center mx-4">
-                                                    <i class="fa fa-bank" style="color: blue; font-size: 30px; margin-bottom: 10px;"></i>
-                                                    <div style="border-left: 2px solid blue; height: 40px; margin-bottom: 10px;"></div>
-                                                    <i class="fa fa-bank" style="color: blue; font-size: 30px;"></i>
-                                                </div>
-                                        
+                            </div>
+                        </div>
+                        <div style="height: 3px !important; margin: 10px !important">
+                            <br>
+                        </div>
+                        <div class="col-sm-12">
+                            <!-- Tercera fila de tarjetas -->
+                            <div class="">
+                                <div class=""> <!-- Tarjeta Datos de Ubicación -->
+                                    <div class="card text-center" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-height: 240px;">
+                                        <!-- Título de la tarjeta -->
+                                        <div class="card-header" style="background-color: transparent; border: none;">
+                                            <h5 class="card-title mb-3" style="text-align: center; font-weight: bold; font-size: 1rem; color: blue;">CUENTAS BANCARIAS</h5>
+                                            <div class="card-body d-flex flex-row align-items-center justify-content-around">
                                                 <!-- Columna derecha con Scotiabank y BBVA -->
-                                                <div class="d-flex flex-column align-items-center">
-                                                    <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>-->
-                                                    <img src="IMG/scotiabank.png" class="card-img-top" alt="Scotiabank" style="width: 100px; height: auto; margin-bottom: 60px;" data-bs-toggle="modal" data-bs-target="#scotiabankModal">
-                                        
-                                                    <!--<h5 class="card-title" style="text-align: center; font-weight: bold; font-size: 0.80rem; color: blue;">Cuenta Corriente</h5>-->
-                                                    <img src="IMG/bbva.png" class="card-img-top" alt="BBVA" style="width: 80px; height: auto;margin-bottom: 10px;" data-bs-toggle="modal" data-bs-target="#bbvaModal">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        
-
-                                            <!-- Modal para la imagen de BCP -->
-                                            <div class="modal fade" id="cuentaModal" tabindex="-1"
-                                                aria-labelledby="cuentaModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="cuentaModalLabel" style="font-size: 20px; color: blue;">
-                                                                Cuenta Bancaria
-                                                            </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
-                                                                x <!-- Representa la "X" -->
-                                                            </button>
+                                                <div class="row" style="align-items: center;justify-content: center;">
+                                                    @foreach ($banco as $index  => $bancos)
+                                                        <div class="col-lg-5">
+                                                            <div class="tooltip-demo">
+                                                                <span data-toggle="tooltip" data-placement="bottom" @if ($bancos->estado == 0) title="Activado" @else title="Desactivado" @endif >
+                                                                    @if ($bancos->estado == 0)
+                                                                        <strong><span>{{ $bancos->nombre_banco }}</span></strong>
+                                                                        <br>
+                                                                        <i class="fa fa-circle" style="color: #5fa8f3;"></i>
+                                                                    @else
+                                                                        <i class="fa fa-circle"></i>
+                                                                    @endif
+                                                                    <img src="{{ asset('img/logos/' . $bancos->foto) }}" class="card-img-top" alt="Scotiabank" style="width: 150px; height: auto;margin: 20px 0px;cursor: pointer;" data-toggle="modal" data-target="#modal_banco_{{ $bancos->id }}">
+                                                                </span>
+                                                            </div>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <!-- Formulario de cuenta bancaria -->
-                                                            <form>
-                                                                <div class="row mb-3">
-                                                                    <div class="col-md-6">
-                                                                        <label for="nombreCuenta"
-                                                                            class="form-label">Nombre</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="nombreCuenta" value="Cuenta Ahorros">
-
-                                                                        <label for="titularCuenta"
-                                                                            class="form-label">Titular</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="titularCuenta" value="19130895186056">
-                                                                    </div>
-                                                                    <!-- Imagen de la cuenta -->
-                                                                    <div
-                                                                        class="col-md-6 d-flex flex-column align-items-center justify-content-center">
-                                                                        <label for="imagenCuenta"
-                                                                            class="form-label"></label>
-                                                                        <img src="IMG/bcp.png" alt="BCP"
-                                                                            class="img-fluid" style="max-width: 150px;">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row mb-3">
-                                                                    <!-- Tipo de cuenta y Moneda -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="tipoCuenta" class="form-label">Tipo de Cuenta</label>
-                                                                        <select class="form-control" id="tipoCuenta">
-                                                                            <option selected>Cuenta Corriente</option>
-                                                                            <option>Cuenta de Ahorros</option>
-                                                                            <option>Cuenta Detracciones</option>
-                                                                            <option>Cod. C. Interbancacio</option>
-                                                                        </select>
-                                                                    </div>
-                                                                
-                                                                    <div class="col-md-6">
-                                                                        <label for="monedaCuenta" class="form-label">Moneda</label>
-                                                                        <select class="form-control" id="monedaCuenta">
-                                                                            <option selected>soles</option>
-                                                                            <option>dólares</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                
-
-                                                                <div class="row mb-3">
-                                                                    <!-- N° de cuenta y Código Interbancario -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="numeroCuenta" class="form-label">N° de Cuenta</label>
-                                                                        <select class="form-control" id="numeroCuenta">
-                                                                            <option value="19130895186056" selected>19130895186056</option>
-                                                                            <option value="00219113089518605654">00219113089518605654</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    
-                                                                    <div class="col-md-6">
-                                                                        <label for="codigoInterbancario"
-                                                                            class="form-label">Cod. C.
-                                                                            Interbancario</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="codigoInterbancario"
-                                                                            value="00219113089518605654">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3 align-items-center">
-                                                                    <!-- Detracción -->
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                    <!-- Botones de acción -->
-                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
-                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
-                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
-                                                                    </div>
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'
-                                                                            for='activoCheck'>Activo/Desactivo:</label>
-                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class='modal-footer'>
-                                                            <button type='button' class='btn btn-secondary'
-                                                                data-bs-dismiss='modal'>Cancelar</button>
-                                                            <button type='button'
-                                                                class='btn btn-primary'>Guardar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Modal para la imagen de Scotiabank -->
-                                            <div class="modal fade" id="scotiabankModal" tabindex="-1"
-                                                aria-labelledby="scotiabankModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="scotiabankModalLabel" style="font-size: 20px; color: blue;">
-                                                                Cuenta Corriente
-                                                            </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
-                                                                x <!-- Representa la "X" -->
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!-- Formulario de cuenta bancaria -->
-                                                            <form>
-                                                                <div class="row mb-3">
-                                                                    <!-- Nombre -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="nombreCuenta"
-                                                                            class="form-label">Nombre</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="nombreCuenta" value="Cuenta Corriente">
-                                                                        <!-- Titular colocado directamente aquí -->
-                                                                        <label for="titularCuenta"
-                                                                            class="form-label">Titular</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="titularCuenta" value="0873003385919">
-                                                                    </div>
-
-                                                                    <!-- Imagen de la cuenta -->
-                                                                    <div
-                                                                        class="col-md-6 d-flex flex-column align-items-center justify-content-center">
-                                                                        <label for="imagenCuenta"
-                                                                            class="form-label"></label>
-                                                                        <img src="IMG/scotiabank.png" alt="BCP"
-                                                                            class="img-fluid" style="max-width: 150px;">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <!-- Tipo de cuenta y Moneda -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="tipoCuenta" class="form-label">Tipo de Cuenta</label>
-                                                                        <select class="form-control" id="tipoCuenta">
-                                                                            <option selected>Cuenta Corriente</option>
-                                                                            <option>Cod. C. Interbancario</option>
-                                                                            <option>Cuenta de Ahorros</option>
-                                                                            <option>Cuenta Detracciones</option>
-                                                                        </select>
-                                                                    </div>
-                                                                
-                                                                    <div class="col-md-6">
-                                                                        <label for="monedaCuenta" class="form-label">Moneda</label>
-                                                                        <select class="form-control" id="monedaCuenta">
-                                                                            <option selected>soles</option>
-                                                                            <option>dólares</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                
-
-                                                                <div class="row mb-3">
-                                                                    <!-- N° de cuenta y Código Interbancario -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="numeroCuenta" class="form-label">N° de Cuenta</label>
-                                                                        <select class="form-control" id="numeroCuenta">
-                                                                            <option value="0873003385919" selected>0873003385919</option>
-                                                                            <option value="00308700300338591">00308700300338591</option>
-                                                                            <option value="2003002187954">2003002187954</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    
-                                                                    <div class="col-md-6">
-                                                                        <label for="codigoInterbancario"
-                                                                            class="form-label">Cod. C.
-                                                                            Interbancario</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="codigoInterbancario"
-                                                                            value="00320000300218795">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3 align-items-center">
-                                                                    <!-- Detracción -->
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                    <!-- Botones de acción -->
-                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
-                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
-                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
-                                                                    </div>
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'
-                                                                            for='activoCheck'>Activo/Desactivo:</label>
-                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
+                                                        @if( $index%2 == 0)
+                                                            <div class="col-lg-2">
+                                                                <i class="fa fa-bank" style="color: blue; font-size: 30px; margin-bottom: 10px;"></i>
+                                                            </div>
+                                                        @endif
+                                                        {{-- MODAL BANCOS --}}
+                                                            <div class="modal fade" id="modal_banco_{{ $bancos->id }}" tabindex="-1"
+                                                                role="dialog" aria-labelledby="modal_banco_label" aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div style="padding-left: 15px;padding-right: 15px;">
+                                                                            <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;"
+                                                                                align="center">
+                                                                                <form action="{{ route('banco.update', $bancos->id) }}"
+                                                                                    enctype="multipart/form-data" method="post">
+                                                                                    @csrf
+                                                                                    @method('PATCH')
+                                                                                    <fieldset>
+                                                                                        <div>
+                                                                                            <div class="panel-body">
+                                                                                                <div class="row"
+                                                                                                    style="align-items: center !important">
+                                                                                                    {{-- Foto --}}
+                                                                                                    <div class="col-sm-6">
+                                                                                                        <strong>Nombre</strong>
+                                                                                                        <input type="text" class="form-control" name="nombre_banco" id="" value="{{ $bancos->nombre_banco }}"
+                                                                                                            autocomplete="off">
+                                                                                                        <strong>Titular</strong>
+                                                                                                        <input type="text" class="form-control" name="titular" id="" value="{{ $bancos->titular }}"
+                                                                                                            autocomplete="off">
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-6">
+                                                                                                        <strong>Imagen</strong><br>
+                                                                                                        <div class="form-control" style="margin: 0px">
+                                                                                                            <input type="file"
+                                                                                                                id="archivoInput{{ $bancos->id }}" name="foto"
+                                                                                                                onchange="return validarExt{{ $bancos->id }}()" />
+                                                                                                            <div id="visorArchivo{{ $bancos->id }}" style="text-align: center">
+                                                                                                                <!--Aqui se desplegará el fichero-->
+                                                                                                                <img src="{{ asset('img/logos/' . $bancos->foto) }}"
+                                                                                                                        style="width: 200px;margin: 13px 0px;border-radius: 10px">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <input type="text"
+                                                                                                            value="{{ $bancos->foto }}" class="form-control" name="ori_foto"
+                                                                                                            hidden="hidden">
+                                                                                                        <small>(Click para cambiar la imagen)</small>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <hr>
+                                                                                                {{-- / foto --}}
+                                                                                                {{-- Registros --}}
+                                                                                                <div class="row" style="align-items: center !important">
+                                                                                                    <div class="col-lg-3"
+                                                                                                        style="padding-bottom: 0px;">
+                                                                                                        <strong>Tipo de Cuenta</strong>
+                                                                                                    </div>
+                                                                                                    <div class="col-lg-3">
+                                                                                                        <strong>Moneda</strong>
+                                                                                                    </div>
+                                                                                                    <div class="col-lg-3"
+                                                                                                        style="padding-bottom: 0px;">
+                                                                                                        <strong>N° de Cuenta</strong>
+                                                                                                    </div>
+                                                                                                    <div class="col-lg-2"
+                                                                                                        style="padding-bottom: 0px;">
+                                                                                                        <strong>¿Detracción?</strong>
+                                                                                                    </div>
+                                                                                                    <div class="col-lg-1" style="padding-bottom: 0px;" align="right" id="div_boton{{ $bancos->id }}">
+                                                                                                        <button type="button" class="btn btn-info"
+                                                                                                            id="btn_add_{{ $bancos->id }}"> <i
+                                                                                                                class="fa fa-plus-square"></i></button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                @foreach ($banco_registro->where('banco_id', $bancos->id) as $banco_registros)
+                                                                                                    <div class="row delete_modal_edit_{{ $banco_registros->id }}"
+                                                                                                        style="padding-top: 10px;padding-bottom: 10px;align-items: center !important">
+                                                                                                        <div class="col-lg-3">
+                                                                                                            <input type="text" name="creadas_id[]" hidden value=" {{ $banco_registros->id }}" readonly>
+                                                                                                            <select name="descripcion1_creadas[]"
+                                                                                                                class="form-control" id="">
+                                                                                                                <option value="Cta C."
+                                                                                                                    @if ($banco_registros->tipo_cuenta == 'Cta C.') selected @endif>
+                                                                                                                    Cuenta Corriente</option>
+                                                                                                                <option value="Cta A."
+                                                                                                                    @if ($banco_registros->tipo_cuenta == 'Cta A.') selected @endif>
+                                                                                                                    Cuenta Ahorro</option>
+                                                                                                                <option value="Cta Det."
+                                                                                                                    @if ($banco_registros->tipo_cuenta == 'Cta Det.') selected @endif>
+                                                                                                                    Cuenta Detracciones</option>
+                                                                                                                <option value="CCI."
+                                                                                                                    @if ($banco_registros->tipo_cuenta == 'CCI') selected @endif>
+                                                                                                                    Cod. C. Interbancario</option>
+                                                                                                            </select>
+                                                                                                        </div>
+                                                                                                        <div class="col-lg-3">
+                                                                                                            <select name="moneda_creada[]"
+                                                                                                                class="form-control" id="">
+                                                                                                                @foreach ($moneda as $monedas)
+                                                                                                                    <option
+                                                                                                                        value="{{ $monedas->id }}"
+                                                                                                                        @if ($monedas->id == $banco_registros->moneda_id) selected @endif>
+                                                                                                                        {{ $monedas->nombre }}</option>
+                                                                                                                @endforeach
+                                                                                                            </select>
+                                                                                                        </div>
+                                                                                                        <div class="col-lg-3">
+                                                                                                            <input type="text"
+                                                                                                                name="descripcion2_creadas[]"
+                                                                                                                class="form-control descripcion2_creadas{{ $bancos->id }}"
+                                                                                                                value=" {{ $banco_registros->nombre_cuenta }}"
+                                                                                                                autocomplete="off">
+                                                                                                        </div>
+                                                                                                        <div class="col-lg-2" align="right">
+                                                                                                            <input type="checkbox"
+                                                                                                                class="form-control change_status"
+                                                                                                                name="estado_detraccion"
+                                                                                                                id=""
+                                                                                                                @if ($banco_registros->estado_detraccion == 1) checked @endif
+                                                                                                                value="on">
+                                                                                                            <input name="det_creada[]"
+                                                                                                                class="ipt_hidden" type="hidden"
+                                                                                                                id="input_check_{{ $banco_registros->id }}"
+                                                                                                                @if ($banco_registros->estado_detraccion == 1) value="on" @else value="off" @endif>
+                                                                                                        </div>
+                                                                                                        <div class="col-lg-1" align="right">
+                                                                                                            <button type="button"
+                                                                                                                class="btn btn-secondary"
+                                                                                                                onclick="eliminar_edit({{ $banco_registros->id }})"><i
+                                                                                                                    class="fa fa-trash-o"></i></button>
+                                                                                                            <input type="hidden"
+                                                                                                                name="value_eliminar[]"
+                                                                                                                id="eliminar_{{ $banco_registros->id }}"
+                                                                                                                value="0">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                @endforeach
+                                                                                                <input type="hidden"
+                                                                                                    id="count_reg_{{ $bancos->id }}"
+                                                                                                    value="{{ $banco_registro->where('banco_id', $bancos->id)->count() }}">
+                                                                                                <div id="conteiner_add_{{ $bancos->id }}">
+                                                                                                </div>
+                                                                                                {{-- Registros --}}
+                                                                                                <div class="row"
+                                                                                                    style="padding-top: 10px;padding-bottom: 10px;">
+                                                                                                    <label
+                                                                                                        class="col-sm-3 col-form-label">Activo/Desactivo:</label>
+                                                                                                    <div class="col-sm-3">
+                                                                                                        @if ($bancos->estado == 0)
+                                                                                                            <div class="switch-button">
+                                                                                                                <input type="checkbox" name="estado"
+                                                                                                                    id="switch-label{{ $bancos->id }}"
+                                                                                                                    class="switch-button__checkbox"
+                                                                                                                    checked="">
+                                                                                                                <label
+                                                                                                                    for="switch-label{{ $bancos->id }}"
+                                                                                                                    class="switch-button__label"></label>
+                                                                                                            </div>
+                                                                                                        @else
+                                                                                                            <div class="switch-button">
+                                                                                                                <input type="checkbox" name="estado"
+                                                                                                                    id="aswitch-label{{ $bancos->id }}"
+                                                                                                                    class="switch-button__checkbox">
+                                                                                                                <label
+                                                                                                                    for="aswitch-label{{ $bancos->id }}"
+                                                                                                                    class="switch-button__label"></label>
+                                                                                                            </div>
+                                                                                                        @endif
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-6">
+                                                                                                        <button class="ladda-button btn btn-primary"
+                                                                                                            type="submit"
+                                                                                                            data-style="zoom-out">Guardar</button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </fieldset>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class='modal-footer'>
-                                                            <button type='button' class='btn btn-secondary'
-                                                                data-bs-dismiss='modal'>Cancelar</button>
-                                                            <button type='button'
-                                                                class='btn btn-primary'>Guardar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Modal para la imagen de Interbank 3 - PENULTIMO-->
-                                            <div class="modal fade" id="interbankModal" tabindex="-1"
-                                                aria-labelledby="interbankModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="interbankModalLabel" style="font-size: 20px; color: blue;">
-                                                                Cuenta Corriente
-                                                            </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
-                                                                x <!-- Representa la "X" -->
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!-- Formulario de cuenta bancaria -->
-                                                            <form>
-                                                                <div class="row mb-3">
-                                                                    <!-- Nombre -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="nombreCuentaInterbank"
-                                                                            class="form-label">Nombre</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="nombreCuentaInterbank"
-                                                                            value="Cuenta Corriente">
-                                                                        <!-- Titular colocado directamente aquí -->
-                                                                        <label for="titularCuentaInterbank"
-                                                                            class="form-label">Titular</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="titularCuentaInterbank"
-                                                                            value="001101750100068128 76">
-                                                                    </div>
-
-                                                                    <!-- Imagen de la cuenta -->
-                                                                    <div
-                                                                        class="col-md-6 d-flex flex-column align-items-center justify-content-center">
-                                                                        <label for="imagenCuentaInterbank"
-                                                                            class="form-label"></label>
-                                                                        <img src="IMG/interbank.jpeg" alt="Interbank"
-                                                                            class="img-fluid" style="max-width: 150px;">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <!-- Tipo de cuenta y Moneda -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="tipoCuentaInterbank"
-                                                                            class="form-label">Tipo de Cuenta</label>
-                                                                        <select class="form-control"
-                                                                            id="tipoCuentaInterbank">
-                                                                            <option selected>Cuenta Corriente</option>
-                                                                            <option>Cod. C. Interbancario</option>
-                                                                            <option>Cuenta Corriente</option>
-                                                                            <option>Cod. C. Interbancario</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label for="monedaCuentaInterbank"
-                                                                            class="form-label">Moneda</label>
-                                                                        <select class="form-control"
-                                                                            id="monedaCuentaInterbank">
-                                                                            <option selected>soles</option>
-                                                                            <option selected>soles</option>
-                                                                            <option selected>soles</option>
-                                                                            <option selected>soles</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <!-- N° de cuenta y Código Interbancario -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="numeroCuentaInterbank"
-                                                                            class="form-label">N° de Cuenta</label>
-                                                                        <select class="form-control" id="numeroCuentaBBVA">
-                                                                            <option value="00110175010006812876" selected>
-                                                                                00110175010006812876</option>
-                                                                            <option value="01117500010006812876">
-                                                                                01117500010006812876</option>
-                                                                            <option value="001101470200665686">
-                                                                                001101470200665686</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label for="codigoInterbancarioInterbank"
-                                                                            class="form-label">Cod. C.
-                                                                            Interbancario</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="codigoInterbancarioInterbank"
-                                                                            value="01114700020066568668">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3 align-items-center">
-                                                                    <!-- Detracción -->
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                    <!-- Botones de acción -->
-                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
-                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
-                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
-                                                                    </div>
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'
-                                                                            for='activoCheck'>Activo/Desactivo:</label>
-                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class='modal-footer'>
-                                                            <button type='button' class='btn btn-secondary'
-                                                                data-bs-dismiss='modal'>Cancelar</button>
-                                                            <button type='button'
-                                                                class='btn btn-primary'>Guardar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Modal para la imagen de BBVA - ULTIMO-->
-                                            <div class="modal fade" id="bbvaModal" tabindex="-1"
-                                                aria-labelledby="bbvaModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="bbvaModalLabel" style="font-size: 20px; color: blue;">
-                                                                Cuenta Corriente
-                                                            </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 25px; font-weight: bold; color: blue;">
-                                                                x <!-- Representa la "X" -->
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!-- Formulario de cuenta bancaria -->
-                                                            <form>
-                                                                <div class="row mb-3">
-                                                                    <!-- Nombre -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="nombreCuentaBBVA"
-                                                                            class="form-label">Nombre</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="nombreCuentaBBVA" value="Cuenta Ahorros">
-                                                                        <!-- Titular colocado directamente aquí -->
-                                                                        <label for="titularCuentaBBVA"
-                                                                            class="form-label">Titular</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="titularCuentaBBVA" value="19130895186056">
-                                                                    </div>
-
-                                                                    <!-- Imagen de la cuenta -->
-                                                                    <div
-                                                                        class="col-md-6 d-flex flex-column align-items-center justify-content-center">
-                                                                        <label for="imagenCuentaBBVA"
-                                                                            class="form-label"></label>
-                                                                        <img src="IMG/bbva.png" alt="BBVA"
-                                                                            class="img-fluid" style="max-width: 150px;">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <!-- Tipo de cuenta y Moneda -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="tipoCuentaBBVA"
-                                                                            class="form-label">Tipo de Cuenta</label>
-                                                                        <select class="form-control" id="tipoCuentaBBVA">
-                                                                            <option selected>Cuenta Corriente</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label for="monedaCuentaBBVA"
-                                                                            class="form-label">Moneda</label>
-                                                                        <select class="form-control" id="monedaCuentaBBVA">
-                                                                            <option selected>soles</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <!-- N° de cuenta y Código Interbancario -->
-                                                                    <div class="col-md-6">
-                                                                        <label for="numeroCuentaBBVA"
-                                                                            class="form-label">N° de Cuenta</label>
-                                                                        <select class="form-control" id="numeroCuentaBBVA">
-                                                                            <option value="" selected>00-060-035172
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label for="codigoInterbancarioBBVA"
-                                                                            class="form-label">Cod. C.
-                                                                            Interbancario</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="codigoInterbancarioBBVA"
-                                                                            value="00219113089518605654">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3 align-items-center">
-                                                                    <!-- Detracción -->
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'>¿Detracción?</label>
-                                                                        <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                    <!-- Botones de acción -->
-                                                                    <div class="col-md-4 d-flex justify-content-center align-items-center">
-                                                                        <button type="button" class="btn btn-danger mx-2"><i class="bi bi-trash"></i></button>
-                                                                        <button type="button" class="btn btn-primary mx-2"><i class="bi bi-plus"></i></button>
-                                                                    </div>
-                                                                    <div class='col-md-4'>
-                                                                        <label class='form-label'
-                                                                            for='activoCheck'>Activo/Desactivo:</label>
-                                                                            <input class='form-check-input ms-2' type='checkbox' id='detraccionCheck' style="margin-left: 10px;">
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class='modal-footer'>
-                                                            <button type='button' class='btn btn-secondary'
-                                                                data-bs-dismiss='modal'>Cancelar</button>
-                                                            <button type='button'
-                                                                class='btn btn-primary'>Guardar</button>
-                                                        </div>
-                                                    </div>
+                                                            </div>
+                                                        {{-- FIN  MODAL BANCOS --}}
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -1237,24 +932,9 @@
                 </div>
             </div>
         </div>
-                    <!-- Incluye las librerías de Bootstrap -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    {{-- </body> --}}
     {{-- FIN FLAVIA --}}
 
-
-
     <style type="text/css" media="screen">
-        .col-lg-2 {
-            padding-right: 10px !important;
-            padding-left: 10px !important;
-        }
-
-        .col-lg-3 {
-            padding-right: 10px !important;
-            padding-left: 10px !important;
-        }
-
         #vertical-timeline.light-timeline:before {
             background: #0d9eff;
         }
@@ -1319,16 +999,42 @@
             border: 1px solid black
         }
 
+        .image-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .preview_img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            display: block;
+        }
+
+        .modal-dialog {
+            max-width: 900px;
+        }
+        .select2-container{
+            z-index: 99999999;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
+        .select2-container--default .select2-selection--single { border: none;}
+        .select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
+        span.select2.select2-container.select2-container--default{
+            width: 100% !important;
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
         input#archivoInputs {
             position: absolute;
             right: 130px;
             width: 350px;
             height: 100%;
             opacity: 0;
-        }
-
-        .modal-dialog {
-            max-width: 900px;
         }
     </style>
 
@@ -1384,8 +1090,11 @@
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}"rel="stylesheet">
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -1431,6 +1140,10 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            $(".select2_pais").select2({
+                placeholder: "Seleccionar Producto",
+            });
+
             var count_d = $('#count_check_detr').val();
             if (count_d > 0) {
                 all_ch = document.querySelectorAll('.change_status');
@@ -1442,28 +1155,24 @@
             }
 
         });
-        // {{-- Fotooos --}}
-        function validarExtImg() {
-            var archivoInput = document.getElementById('archivoInputs');
-            var archivoRuta = archivoInput.value;
-            var extPermitidas = /(.jpg|.png|.jfif)$/i;
-            if (!extPermitidas.exec(archivoRuta)) {
-                alert('Asegúrese de haber seleccionado una Imagen');
-                archivoInput.value = '';
-                return false;
-            } else {
-                //PRevio del PDF
-                if (archivoInput.files && archivoInput.files[0]) {
-                    var visor = new FileReader();
-                    visor.onload = function(e) {
-                        document.getElementById('visorArchivos').innerHTML =
-                            '<img name="fotos" src="' + e.target.result +
-                            '" style="width: 350px;margin-bottom: 15px;border-radius: 10px"/>';
-                    };
-                    visor.readAsDataURL(archivoInput.files[0]);
-                }
+        // {{-- Imagen de Logo --}}
+        const previewImage = document.getElementById('preview');
+        const fileInput = document.getElementById('fileInput');
+
+        previewImage.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-        }
+        });
 
         function eliminar_edit(y) {
             $(`.delete_modal_edit_${y}`).css('display', 'none');
@@ -1481,33 +1190,33 @@
                 var inp_mont{{ $bancos->id }} = suma{{ $bancos->id }} + otra_suma{{ $bancos->id }};
                 console.log(x);
                 var data = `
-          <div class="delete_modal${x} row" style="padding-top: 5px;padding-bottom: 5px;align-items: center !important;">
-            <div class="col-lg-3">
-              <select name="descripcion1[]" class="form-control" id="">
-                <option value="Cta C.">Cuenta Corriente</option>
-                <option value="Cta A.">Cuenta Ahorro</option>
-                <option value="Cta Det.">Cuenta Detracciones</option>
-                <option value="CCI">Cod. C. Interbancario</option>
-              </select>
-            </div>
-            <div class="col-lg-3">
-              <select name="moneda[]" id="" class="form-control">
-                @foreach ($moneda as $monedas)
-                  <option value="{{ $monedas->id }}">{{ $monedas->nombre }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-lg-3">
-              <input type="text" name="descripcion2[]" class="form-control descripcion2"  autocomplete="off">
-            </div>
-            <div class="col-lg-2" align="right">
-              <input type="checkbox" class="form-control change_status" name="estado_detraccion[]" id="" value="off" >
-              <input type="hidden" class="ipt_hidden" id="input_check_${x}" name="detrac[]" value="off" >
-            </div>
-            <div class="col-lg-1" align="right">
-              <button type="button" class="btn btn-secondary" onclick="eliminar(${x})"><i class="fa fa-trash-o"></i></button>
-            </div>
-          </div>`;
+                    <div class="delete_modal${x} row" style="padding-top: 5px;padding-bottom: 5px;align-items: center !important;">
+                        <div class="col-lg-3">
+                        <select name="descripcion1[]" class="form-control" id="">
+                            <option value="Cta C.">Cuenta Corriente</option>
+                            <option value="Cta A.">Cuenta Ahorro</option>
+                            <option value="Cta Det.">Cuenta Detracciones</option>
+                            <option value="CCI">Cod. C. Interbancario</option>
+                        </select>
+                        </div>
+                        <div class="col-lg-3">
+                        <select name="moneda[]" id="" class="form-control">
+                            @foreach ($moneda as $monedas)
+                            <option value="{{ $monedas->id }}">{{ $monedas->nombre }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="col-lg-3">
+                        <input type="text" name="descripcion2[]" class="form-control descripcion2"  autocomplete="off">
+                        </div>
+                        <div class="col-lg-2" align="right">
+                        <input type="checkbox" class="form-control change_status" name="estado_detraccion[]" id="" value="off" >
+                        <input type="hidden" class="ipt_hidden" id="input_check_${x}" name="detrac[]" value="off" >
+                        </div>
+                        <div class="col-lg-1" align="right">
+                        <button type="button" class="btn btn-secondary" onclick="eliminar(${x})"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    </div>`;
                 if (x <= 3) {
                     $('#conteiner_add_{{ $bancos->id }}').append(data);
                 }

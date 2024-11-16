@@ -6,6 +6,7 @@ use App\Banco;
 use App\BancoRegistro;
 use App\Empresa;
 use App\Moneda;
+use App\Pais;
 use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
@@ -30,7 +31,8 @@ class EmpresaController extends Controller
                 $bn->save();
             }
         }
-        return view('configuracion_general.empresa.index',compact('mi_empresa','banco','banco_registro','moneda'));
+        $paises = Pais::get();
+        return view('configuracion_general.empresa.index',compact('mi_empresa','banco','banco_registro','moneda','paises'));
     }
 
     /**
@@ -84,27 +86,28 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($request->hasfile('fotos')){
-            $image1 =$request->file('fotos');
-            $name =$image1->getClientOriginalName();
+        $empresa = Empresa::find($id);
+        if($request->hasfile('ori_foto')){
+            $image1 = $request->file('ori_foto');
+            $name = $image1->getClientOriginalName();
             $destinationPath = public_path('/img/logos/');
             $image1->move($destinationPath,$name);
         }else{
-            $name=$request->get('ori_foto') ;
+            $name = $empresa->foto;
         }
-        $empresa=Empresa::find($id);
-        $empresa->telefono=$request->get('telefono');
-        $empresa->movil=$request->get('movil');
-        $empresa->correo=$request->get('correo');
-        $empresa->pais=$request->get('pais');
-        $empresa->region_provincia=$request->get('region_provincia');
-        $empresa->ciudad=$request->get('ciudad');
-        $empresa->calle=$request->get('calle');
-        $empresa->codigo_postal=$request->get('codigo_postal');
-        $empresa->rubro=$request->get('rubro');
-        $empresa->descripcion=$request->get('descripcion');
-        $empresa->pagina_web=$request->get('pagina_web');
-        $empresa->foto=$name;
+        $empresa = Empresa::find($id);
+        $empresa->telefono = $request->get('telefono');
+        $empresa->movil = $request->get('movil');
+        $empresa->correo = $request->get('correo');
+        $empresa->pais = $request->get('pais');
+        $empresa->region_provincia = $request->get('region_provincia');
+        $empresa->ciudad = $request->get('ciudad');
+        $empresa->calle = $request->get('calle');
+        $empresa->codigo_postal = $request->get('codigo_postal');
+        $empresa->rubro = $request->get('rubro');
+        $empresa->descripcion = $request->get('descripcion');
+        $empresa->pagina_web = $request->get('pagina_web');
+        $empresa->foto = $name;
         $empresa->save();
         return back();
     }
