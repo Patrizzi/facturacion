@@ -561,7 +561,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: blue; font-size: 20px; padding: 0; margin: 0; border: none; background: none;">
+                    <strong>x</strong>
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Nav tabs -->
@@ -601,7 +603,7 @@
                                     <!-- Responsable -->
                                     <div class="col-md-6">
                                         <label for="responsable" class="form-label">Responsable:</label>
-                                        <select class="form-select" id="responsable">
+                                        <select class="form-control" id="responsable">
                                             <option selected>Administrador Web</option>
                                             <option value="1">Otro Responsable</option>
                                             <option value="2">Carlos Daniel Roman Berru</option>
@@ -670,16 +672,21 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <!-- Activo/Desactivo -->
                                     <div class="col-md-6 d-flex align-items-center">
-                                        <label for="activo" class="form-label me-2" style="font-size: 20px;">
-                                            Activo/desactivo:
-                                        </label>
-                                        <div class="form-check form-switch" style="transform: scale(1.5); margin-left: 20px;"> <!-- Added margin-left for spacing -->
-                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5);"> <!-- Scale the checkbox -->
-                                        </div>
+                                        <!-- Checkbox y texto alineados horizontalmente -->
+                                        <div class="form-check form-switch d-flex align-items-center">
+                                            <!-- Checkbox con color azul -->
+                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5); background-color: #007bff; border-color: #007bff;">
+                                            
+                                            <!-- Espaciado y estilo en el texto -->
+                                            <label for="activo" class="form-label ms-3" style="font-size: 20px; margin-bottom: 0;">
+                                                Activo/desactivo:
+                                            </label>
                                         </div>
                                     </div>
+                                </div>
+                                
+                                
                                 
                 
                                 <!-- Botón Guardar en el modal -->
@@ -806,9 +813,10 @@
                 </div>
             </div>
 
-            <div class="d-grid">
+            <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
+            
         </form>
     </div>
 </div>
@@ -817,7 +825,6 @@
 <!-- FIN Modal PRIMERO-->
 
 <!-- Bootstrap CSS y JS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
                             
 
@@ -867,8 +874,10 @@
                         <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editaralmacenLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title" id="myModalLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: blue; font-size: 20px; padding: 0; margin: 0; border: none; background: none;">
+                                        <strong>x</strong>
+                                    </button>
                                 </div>
                                 <div class="modal-body">
                                     <!-- Nav tabs -->
@@ -908,7 +917,7 @@
                                     <!-- Responsable -->
                                     <div class="col-md-6">
                                         <label for="responsable" class="form-label">Responsable:</label>
-                                        <select class="form-select" id="responsable">
+                                        <select class="form-control" id="responsable">
                                             <option selected>Administrador Web</option>
                                             <option value="1">Otro Responsable</option>
                                             <option value="2">Carlos Daniel Roman Berru</option>
@@ -928,7 +937,7 @@
                                         </select>
                                     </div>
                                 </div>
-                
+                                    
                                 <div class="row mb-3">
                                     <!-- Dirección -->
                                     <div class="col-md-6">
@@ -977,16 +986,20 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <!-- Activo/Desactivo -->
                                     <div class="col-md-6 d-flex align-items-center">
-                                        <label for="activo" class="form-label me-2" style="font-size: 20px;">
-                                            Activo/desactivo:
-                                        </label>
-                                        <div class="form-check form-switch" style="transform: scale(1.5); margin-left: 20px;"> <!-- Added margin-left for spacing -->
-                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5);"> <!-- Scale the checkbox -->
-                                        </div>
+                                        <!-- Checkbox y texto alineados horizontalmente -->
+                                        <div class="form-check form-switch d-flex align-items-center">
+                                            <!-- Checkbox con color azul -->
+                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5); background-color: #007bff; border-color: #007bff;">
+                                            
+                                            <!-- Espaciado y estilo en el texto -->
+                                            <label for="activo" class="form-label ms-3" style="font-size: 20px; margin-bottom: 0;">
+                                                Activo/desactivo:
+                                            </label>
                                         </div>
                                     </div>
+                                </div>
+                                
                                 
                 
                                 <!-- Botón Guardar en el modal -->
@@ -1113,9 +1126,10 @@
                 </div>
             </div>
 
-            <div class="d-grid">
+            <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
+            
         </form>
     </div>
 </div>
@@ -1193,7 +1207,7 @@
                                     <!-- Responsable -->
                                     <div class="col-md-6">
                                         <label for="responsable" class="form-label">Responsable:</label>
-                                        <select class="form-select" id="responsable">
+                                        <select class="form-control" id="responsable">
                                             <option selected>Administrador Web</option>
                                             <option value="1">Otro Responsable</option>
                                             <option value="2">Carlos Daniel Roman Berru</option>
