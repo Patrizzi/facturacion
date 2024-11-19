@@ -100,7 +100,7 @@
 <!--Inicio del código actual (14/11/2024)-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
-		<div class="col-lg-7">
+		<div class="col-xl-8 col-lg-7">
             <div class="ibox">
                 <div class="ibox-title">
                     <!-- Acá iria el titulo -->
@@ -129,13 +129,15 @@
             </div>
         </div>
         <!--Servicio más pedido-->
-        <div class="col-lg-5">
+        <div class="col-xl-4 col-lg-5">
             <div class="ibox">
                 <div class="ibox-content  align-content-center cont-size">
-                    <div class="row ">
-                        <div class="col-md-5 bg-success rounded-start-3 border border-end text-center d-flex justify-content-center align-items-center p-4 fs-4">SERVICIO MÁS PEDIDO</div>
-                        <div class="col-md-7 bg-success rounded-end-3 border border-start d-flex justify-content-center align-items-center p-4">
-                            <img src="../Inspina/img/router.jpeg" class="rounded-4 img-size" alt="Router">
+                    <div class="row mx-md-1">
+                        <div class="col-md-5 bg-success rounded-left border border-end d-flex justify-content-center align-items-center p-4">
+                           <h3 class="text-center fs-4">SERVICIO MÁS PEDIDO</h3>
+                        </div>
+                        <div class="col-md-7 bg-success rounded-right border border-start d-flex justify-content-center align-items-center p-4">
+                            <img src="..." class="rounded-4 img-size" alt="Router">
                         </div>
                     </div>
                 </div>
@@ -402,18 +404,15 @@
 </div>
 
 <style>
-    .row-size{
-        min-height: 283px;
-    }
     .cont-size{
         min-height: 320px;
     }
 
     .img-size{
-        min-height: 237px;
-        min-width: 237px;
-        max-height: 237px;
-        max-width: 237px;
+        min-height: 200px;
+        min-width: 200px;
+        max-height: 200px;
+        max-width: 200px;
     }
     @media (max-width: 1440px){
         .img-size{
@@ -421,6 +420,9 @@
             min-width: 200px;
             max-height: 200px;
             max-width: 200px;
+        }
+        .cont-size{
+            min-height: 320px;
         }
     }
     @media (max-width: 1024px){
@@ -431,7 +433,11 @@
             max-width: 120px;
         }
     }
-
+    @media (max-width: 768px){
+        .cont-size{
+            min-height: 200px;
+        }
+    }
 
 </style>
 

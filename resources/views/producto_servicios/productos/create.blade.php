@@ -230,7 +230,7 @@
     <form action="">
         <div class="row bg-white p-3 m-5 align-content-center" >
             <!--Primera columna-->
-            <div class="col-md-7 col-xl-5 p-5 border border-primary border-left-0 border-bottom-0 border-top-0">
+            <div class="col-md-7 col-lg-6 col-xl-6 p-5 border border-primary border-left-0 border-bottom-0 border-top-0">
                 <div class="row d-flex justify-content-between">
                     <input type="text" placeholder="PRO-0X33X345XX" class="form-control m-b col-lg-5">
 
@@ -347,7 +347,7 @@
             </div>
 
             <!--Segunda columna-->
-            <div class="col-md-5 col-xl-7 align-content-center align-items-center px-4">
+            <div class="col-md-5 col-lg-6 col-xl-6 align-content-center align-items-center px-4">
                 <div class="row">
                     <div class="col-xl-8">
                         <div class="form-group row">
@@ -412,26 +412,26 @@
     }
     @media(min-width:500px){
         .img-size{
-            min-height: 100px;
-            min-width: 100px;
-            max-height: 100px;
-            max-width: 100px;
+            min-height: 90px;
+            min-width: 90px;
+            max-height: 90px;
+            max-width: 90px;
         }
     }
     @media(min-width:740px){
         .img-size{
-            min-height: 150px;
-            min-width: 150px;
-            max-height: 150px;
-            max-width: 170px;
+            min-height: 130px;
+            min-width: 130px;
+            max-height: 130px;
+            max-width: 130px;
         }
     }
     @media(min-width:1440px){
         .img-size{
-            min-height: 20px;
+            min-height: 200px;
             min-width: 200px;
-            max-height: 230px;
-            max-width: 250px;
+            max-height: 200px;
+            max-width: 200px;
         }
     }
 </style>

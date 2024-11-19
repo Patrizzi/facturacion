@@ -55,7 +55,7 @@
                     <h4>Productos</h4>
                 </div>
                 <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-around px-4 text-center">
+                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between px-xl-4 px-md-2 text-center">
 
                         <div class="col-auto">
                             <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
@@ -86,13 +86,16 @@
                 </div>
             </div>
         </div>
+        <!--Producto más vendido-->
         <div class="col-lg-4">
             <div class="ibox">
-                <div class="ibox-content align-content-center">
-                    <div class="row">
-                        <div class="col-md-5 bg-success rounded-start-3 border border-end text-center d-flex justify-content-center align-items-center p-4 fs-4">PRODUCTO MÁS PEDIDO</div>
-                        <div class="col-md-7 bg-success rounded-end-3 border border-start d-flex justify-content-center align-items-center p-4">
-                            <img src="../Inspina/img/router2.jpeg" class="rounded-4 img-size" alt="Router">
+                <div class="ibox-content align-content-center cont-size">
+                    <div class="row mx-xl-1">
+                        <div class="col-md-5 bg-success rounded-left border border-end d-flex justify-content-center align-items-center p-4">
+                           <h4 class="text-center">PRODUCTO MÁS PEDIDO</h4>
+                        </div>
+                        <div class="col-md-7 bg-success rounded-right border border-start d-flex justify-content-center align-items-center p-4">
+                            <img src="..." class="rounded-4 img-size" alt="Router">
                         </div>
                     </div>
                 </div>
@@ -457,15 +460,42 @@
 
 <style>
     .img-size{
-       min-height: 237px;
-       min-width: 237px;
-       max-height: 237px;
-       max-width: 237px;
+       min-height: 200px;
+       min-width: 200px;
+       max-height: 200px;
+       max-width: 200px;
     }
     .circle-size{
         min-height: 110px;
         min-width: 110px;
     }
+    .cont-size{
+        min-height: 320px;
+    }
+
+    @media (max-width: 1440px){
+        .img-size{
+            min-height: 200px;
+            min-width: 200px;
+            max-height: 200px;
+            max-width: 200px;
+        }
+    }
+    @media (max-width: 1024px){
+        .img-size{
+            min-height: 100px;
+            min-width: 100px;
+            max-height: 100px;
+            max-width: 100px;
+        }
+    }
+    @media (max-width: 768px){
+        .cont-size{
+            min-height: 200px;
+        }
+
+    }
+
 </style>
 <!--Fin código actual-->
 

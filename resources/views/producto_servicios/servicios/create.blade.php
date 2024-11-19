@@ -191,11 +191,11 @@
     <form action="">
         <div class="row bg-white p-3 m-5 align-content-center">
             <!--Primera columna-->
-            <div class="col-md-5 p-5">
+            <div class="col-xl-5 col-lg-4 col-md-6 p-xl-5 p-md-4">
                 <div class="row d-flex justify-content-between">
-                    <input type="text" placeholder="SERV-0X33X345XX" class="form-control m-b col-md-5">
+                    <input type="text" placeholder="SERV-0X33X345XX" class="form-control m-b col-xl-5">
 
-                    <select class="form-control m-b col-md-5" name="account">
+                    <select class="form-control m-b col-xl-5" name="account">
                         <option>Servidores</option>
                         <option>Perifericos</option>
                         <option>Tablets</option>
@@ -205,7 +205,7 @@
                     </select>
                 </div>
                 <div class="row my-3 d-flex justify-content-between">
-                    <select class="form-control m-b col-md-5" name="account">
+                    <select class="form-control m-b col-xl-5" name="account">
                         <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option>Sub familia</option>
@@ -213,7 +213,7 @@
                         <option value="">Sub familia</option>
                         <option value="">Sub familia</option>
                     </select>
-                    <select class="form-control m-b col-md-5" name="account">
+                    <select class="form-control m-b col-xl-5" name="account">
                         <option>HP</option>
                         <option>Samsung</option>
                         <option>Lenovo</option>
@@ -232,12 +232,12 @@
             </div>
 
             <!--Segunda columna-->
-            <div class="col-md-7 align-content-center align-items-center py-4 ps-4 border border-primary border-right-0 border-bottom-0 border-top-0">
+            <div class="col-xl-7 col-lg-8 col-md-6 align-content-center align-items-center py-xl-4 py-md-3 ps-xl-4 border border-primary border-right-0 border-bottom-0 border-top-0">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-xl-8 col-lg-9">
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Descuento:</label>
-                            <div class="input-group m-b col-sm-10">
+                            <label class="col-xl-2 col-md-3 col-form-label">Descuento:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
                                 <div class="input-group-prepend">
                                     <span class="input-group-addon">%</span>
                                 </div>
@@ -245,8 +245,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Utilidad:</label>
-                            <div class="input-group m-b col-sm-10">
+                            <label class="col-xl-2 col-md-3 col-form-label">Utilidad:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
                                 <div class="input-group-prepend">
                                     <span class="input-group-addon">%</span>
                                 </div>
@@ -254,8 +254,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Afectación:</label>
-                            <div class="input-group m-b col-sm-10">
+                            <label class="col-xl-2 col-md-3 col-form-label">Afectación:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
                                 <select class="form-control m-b" name="account">
                                     <option>Gravado - Operación Onerosa</option>
                                     <option>Gravado - Retiro</option>
@@ -265,8 +265,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Precio S/IGV:</label>
-                            <div class="input-group m-b col-sm-10">
+                            <label class="col-xl-2 col-md-3 col-form-label">Precio S/IGV:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
                                 <div class="input-group-prepend">
                                     <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button" aria-expanded="false">Action </button>
                                     <ul class="dropdown-menu" x-placement="bottom-start" style="position: absolute; top: 35px; left: 0px; will-change: top, left;">
@@ -279,7 +279,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 d-flex justify-content-center align-items-center">
+                    <div class="col-xl-4 col-lg-3 d-flex justify-content-center align-items-center">
                         <p>
                             <a href=""><img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" alt="" class="img-size"></a>
                         </p>
@@ -319,18 +319,18 @@
     }
     @media(min-width:740px){
         .img-size{
-            min-height: 150px;
-            min-width: 150px;
-            max-height: 150px;
-            max-width: 150px;
+            min-height: 120px;
+            min-width: 120px;
+            max-height: 120px;
+            max-width: 120px;
         }
     }
     @media(min-width:1440px){
         .img-size{
-            min-height: 200px;
-            min-width: 200px;
-            max-height: 200px;
-            max-width: 200px;
+            min-height: 180px;
+            min-width: 180px;
+            max-height: 180px;
+            max-width: 180px;
         }
     }
 </style>
