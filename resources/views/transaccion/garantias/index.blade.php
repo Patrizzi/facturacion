@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Guias Ingreso') 
+@section('title', 'Guias Ingreso')
 @section('breadcrumb', 'Guia de ingreso')
 @section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -13,7 +13,7 @@
             <div class="ibox-title" style="display: flex; align-items: center;">
     <span>RESUMEN DE SEPTIEMBRE DEL 2024</span>
 </div>
-            
+
             <div class="ibox-content">
                 {{-- Acá iria el tema del contenido --}}
                 <div class="card-group">
@@ -69,22 +69,20 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> BOLETA MANUAL
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> GUIA DE INGRESO
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: orange;">&#9632;</span> FACTURA MANUAL
+                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: orange;">&#9632;</span> GUIA DE EGRESO
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: red;">&#9632;</span> INFORME TECNICO
+                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: red;">&#9632;</span> GUIA DE INFORME TECNICO
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
-
-
                                 <li class="ml-auto">
                                 <div class="btn-group mx-2">
                                     <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
@@ -94,8 +92,6 @@
                                     </ul>
                                 </div>
                             </li>
-
-
                             <li>
                                 <div class="btn-group mx-3">
                                     <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
@@ -108,7 +104,6 @@
                                 </div>
                             </li>
                         </ul>
-
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
                             <div class="input-group col-md-4 mx-5">
@@ -120,7 +115,6 @@
                                     <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
                                 </span>
                             </div>
-
                             <div class="row g-3 col-md-5">
                                 <div class="col-auto">
                                     <label for="inputBuscar" class="col-form-label">Buscar:</label>
@@ -130,7 +124,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
@@ -178,7 +171,7 @@
                                             <td>Jul 16, 2013</td>
                                             <td>Contado</td>
                                             <td>s/ 2,456.50</td>
-                                            <td>  
+                                            <td>
                                                 <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
                                                     <i class="fa fa-check" style="color:white;"></i>
                                                 </a>
@@ -222,8 +215,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
-
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-2" class="tab-pane">
@@ -407,8 +398,6 @@
                                     </table>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
