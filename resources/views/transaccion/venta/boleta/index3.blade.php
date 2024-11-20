@@ -81,20 +81,12 @@
                         <li class="ml-auto">
                             <div style="position: relative; display: inline-block;">
                                 <a href="#" class="button"
-                                   style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px;
-                                          background-color: #007bff; color: white; border: none; border-radius: 8px;
-                                          padding: 1px 20px; text-decoration: none; cursor: pointer;
-                                          margin-right: 8px"
-                                   onclick="toggleOptions(event)">+</a>
-                                <div id="options" style="display: none; position: absolute; top: 100%; left: 50%;
-                                     transform: translateX(-50%); background-color: white;
-                                     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px;
-                                     z-index: 1; margin-top: 8px; white-space: nowrap;">
+                                    style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px;background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; margin-right: 8px"
+                                    onclick="toggleOptions(event)">+</a>
+                                <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
                                     <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
-                                    <a href="#" style="display: block; padding: 10px 16px; color: black;
-                                       border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
-                                    <a href="#" style="display: block; padding: 8px 16px; color: black;
-                                       border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
+                                    <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
+                                    <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
                                 </div>
                             </div>
                         </li>
@@ -423,6 +415,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>

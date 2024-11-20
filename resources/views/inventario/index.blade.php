@@ -53,91 +53,33 @@
                                                     <div role="tabpanel" id="contenido-tab-1" class="tab-pane active">
                                                         <!-- Título centrado -->
                                                         <h2 style="text-align: center; margin-bottom: 20px;">Almacen Principal - Oficina Arequipa</h2>
-
-                                                        <!-- Barra de búsqueda con botones -->
                                                         <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                            <!-- Barra de búsqueda y botón Buscar -->
                                                             <div style="flex-grow: 1;">
                                                                 <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
                                                                 <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
                                                             </div>
-                                                            <div>
-                                                                <button id="btn-agregar-EP" class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                <button class="btn btn-primary">Actualizar</button>
-                                                            </div>
 
-                                                            <div id="formulario-agregar-producto" style="display: none; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); width: 1500px; z-index: 1000; background-color: white; padding: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 15px;">
-                                                                <form>
-                                                                    <h4 style="text-align: center;">Agregar Producto</h4>
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="opciones" style="font-weight: bold; margin-right: 10px;">Motivos:</label>
-                                                                                <select id="opciones" class="form-control" style="flex-grow: 1;">
-                                                                                    <option value="opcion1">Opción 1</option>
-                                                                                    <option value="opcion2">Opción 2</option>
-                                                                                    <option value="opcion3">Opción 3</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="texto" style="font-weight: bold; margin-right: 10px;">Factura:</label>
-                                                                                <input type="text" id="texto" class="form-control" placeholder="Escribe aquí..." style="flex-grow: 1;">
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="tipo-transporte" style="font-weight: bold; margin-right: 10px;">T.Transporte:</label>
-                                                                                <select id="tipo-transporte" class="form-control" style="flex-grow: 1;">
-                                                                                    <option value="opcion1">Opción 1</option>
-                                                                                    <option value="opcion2">Opción 2</option>
-                                                                                    <option value="opcion3">Opción 3</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="categoria" style="font-weight: bold; margin-right: 10px;">Categoría:</label>
-                                                                                <input type="text" id="categoria" class="form-control" placeholder="Escribe aquí..." style="flex-grow: 1;">
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="fecha" style="font-weight: bold; margin-right: 10px;">Fecha de compra:</label>
-                                                                                <input type="date" id="fecha" class="form-control" style="flex-grow: 1;">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="g-remision" style="font-weight: bold; margin-right: 10px;">G Remisión:</label>
-                                                                                <input type="text" id="g-remision" class="form-control" placeholder="Escribe aquí..." style="flex-grow: 1;">
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="proveedor" style="font-weight: bold; margin-right: 10px;">Proveedor:</label>
-                                                                                <select id="proveedor" class="form-control" style="flex-grow: 1;">
-                                                                                    <option value="opcion1">Opción 1</option>
-                                                                                    <option value="opcion2">Opción 2</option>
-                                                                                    <option value="opcion3">Opción 3</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="informaciones" style="font-weight: bold; margin-right: 10px;">Informaciones:</label>
-                                                                                <input type="text" id="informaciones" class="form-control" placeholder="Escribe aquí..." style="flex-grow: 1;">
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="moneda" style="font-weight: bold; margin-right: 10px;">Moneda:</label>
-                                                                                <select id="moneda" class="form-control" style="flex-grow: 1;">
-                                                                                    <option value="opcion1">Opción 1</option>
-                                                                                    <option value="opcion2">Opción 2</option>
-                                                                                    <option value="opcion3">Opción 3</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group" style="display: flex; align-items: center;">
-                                                                                <label for="archivo" style="font-weight: bold; margin-right: 10px;">Archivo:</label>
-                                                                                <input type="text" id="archivo" class="form-control" placeholder="Escribe aquí..." style="flex-grow: 1;">
-                                                                            </div>
-                                                                        </div>
+                                                            <!-- Botones Agregar, Actualizar y Descarga -->
+                                                            <div>
+                                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+
+                                                                <!-- Botón de Descarga con menú desplegable -->
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        Descarga
+                                                                    </button>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="dropdown-item" href="#">Copy</a>
+                                                                        <a class="dropdown-item" href="#">CSV</a>
+                                                                        <a class="dropdown-item" href="#">Excel</a>
+                                                                        <a class="dropdown-item" href="#">PDF</a>
+                                                                        <a class="dropdown-item" href="#">Print</a>
                                                                     </div>
-                                                                    <div style="text-align: center;">
-                                                                        <button type="button" class="btn btn-primary" style="margin-right: 10px;">Guardar</button>
-                                                                        <button id="btn-cerrar-form" class="btn btn-secondary" onclick="cerrarFormulario();">Cerrar</button>
-                                                                    </div>
-                                                                </form>
+                                                                </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="panel-body">
                                                             <!-- Contenido de Nested Tab 1 -->
                                                             <table class="table table-striped table-bordered table-hover">
@@ -488,62 +430,53 @@
 
                                     <!-- Contenido de Tab 2 -->
                                     <div role="tabpanel" id="tab-2" class="tab-pane">
-                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                            <!-- Botones Agregar y Actualizar -->
-                                            <div>
-                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                <button class="btn btn-primary">Actualizar</button>
-                                            </div>
-                                            <!-- Boton Para Descargar -->
-                                            <div class="accordion accordion-flush" id="accordionFlushExample">
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected style="font-weight: bold; color: white; background-color: #007bff;">F. Descarga</option>
-                                                    <option value="1">Copy</option>
-                                                    <option value="2">CSV</option>
-                                                    <option value="3">Excel</option>
-                                                    <option value="4">PDF</option>
-                                                    <option value="5">Print</option>
-                                                </select>
+                                        <div>
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                <li style="align-items: center">
+                                                    <div style="position: relative; display: inline-block;">
+                                                        <a href="#" class="button"
+                                                            style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; margin-right: 8px"
+                                                            onclick="toggleOptions(event)">+</a>
+                                                        <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
+                                                            <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
+                                                            <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
+                                                            <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div>
+                                                        <a href="#" class="button " style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 20px; text-decoration: none; cursor: pointer; align-items: flex-end;"><i class="fas fa-download download-icon"></i></a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="btn-group">
+                                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Descarga
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                    <a class="dropdown-item" href="#">CSV</a>
+                                                    <a class="dropdown-item" href="#">Excel</a>
+                                                    <a class="dropdown-item" href="#">PDF</a>
+                                                    <a class="dropdown-item" href="#">Print</a>
+                                                </div>
                                             </div>
                                         </div>
+                                        <br>
+                                        <div id="reportrange1" class="form-control">
+                                            <i class="fa fa-calendar"></i>
+                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
+                                        </div>
+
+
+
+
+
+
+
+
                                         <div class="panel-body">
-                                            <button class="btn btn-primary" id="toggleForm">Nueva Entrada</button> <!-- Botón Nueva Entrada -->
-                                            <div id="entryForm" style="display: none; margin-top: 15px; background-color: #007bff; padding: 20px; border-radius: 5px; color: white;"> <!-- Formulario oculto inicialmente -->
-                                                <form>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="startDate" style="font-weight: bold;">Fecha de Inicio:</label>
-                                                            <input type="date" class="form-control" id="startDate">
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label for="endDate" style="font-weight: bold;">Fecha Final:</label>
-                                                            <input type="date" class="form-control" id="endDate">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                            <label style="font-weight: bold;">Almacen:</label>
-                                                            <select class="form-control">
-                                                                <option>Todos los almacenes</option>
-                                                                <option>Oficina Arequipa</option>
-                                                                <option>Galería Centro de Lima</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label style="font-weight: bold;">Categoría:</label>
-                                                            <select class="form-control">
-                                                                <option>Seleccione categoría</option>
-                                                                <option>Productos</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group text-center">
-                                                        <button type="submit" class="btn btn-light">CONSULTAR</button> <!-- Botón con estilo -->
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <br>
-                                            <!-- CONTENIDO DENTRO DEL TAB 2 -->
                                             <br>
                                             <table class="table table-striped table-bordered table-hover">
                                                 <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
@@ -686,62 +619,46 @@
                                     </div>
                                     <!-- Contenido de Tab 4 -->
                                     <div role="tabpanel" id="tab-4" class="tab-pane">
-                                        <!-- Barra de búsqueda con botones -->
-                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                            <!-- Botones Agregar y Actualizar -->
-                                            <div>
-                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                <button class="btn btn-primary">Actualizar</button>
-                                            </div>
-                                            <!-- Boton Para Descargar -->
-                                            <div class="accordion accordion-flush" id="accordionFlushExample">
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected style="font-weight: bold; color: white; background-color: #007bff;">F. Descarga</option>
-                                                    <option value="1">Copy</option>
-                                                    <option value="2">CSV</option>
-                                                    <option value="3">Excel</option>
-                                                    <option value="4">PDF</option>
-                                                    <option value="5">Print</option>
-                                                </select>
+                                        <div>
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                <li style="align-items: center">
+                                                    <div style="position: relative; display: inline-block;">
+                                                        <a href="#" class="button"
+                                                            style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; margin-right: 8px"
+                                                            onclick="toggleOptions(event)">+</a>
+                                                        <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
+                                                            <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
+                                                            <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
+                                                            <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div>
+                                                        <a href="#" class="button " style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 20px; text-decoration: none; cursor: pointer; align-items: flex-end;"><i class="fas fa-download download-icon"></i></a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="btn-group">
+                                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Descarga
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                    <a class="dropdown-item" href="#">CSV</a>
+                                                    <a class="dropdown-item" href="#">Excel</a>
+                                                    <a class="dropdown-item" href="#">PDF</a>
+                                                    <a class="dropdown-item" href="#">Print</a>
+                                                </div>
                                             </div>
                                         </div>
+                                        <br>
+                                        <div id="reportrange1" class="form-control">
+                                            <i class="fa fa-calendar"></i>
+                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
+                                        </div>
+
                                         <div class="panel-body">
-                                            <button class="btn btn-primary" id="toggleForm">Nueva Entrada</button> <!-- Botón Nueva Entrada -->
-                                            <div id="entryForm" style="display: none; margin-top: 15px; background-color: #007bff; padding: 20px; border-radius: 5px; color: white;"> <!-- Formulario oculto inicialmente -->
-                                                <form>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                            <label for="startDate" style="font-weight: bold;">Fecha de Inicio:</label>
-                                                            <input type="date" class="form-control" id="startDate">
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label for="endDate" style="font-weight: bold;">Fecha Final:</label>
-                                                            <input type="date" class="form-control" id="endDate">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6">
-                                                            <label style="font-weight: bold;">Almacen:</label>
-                                                            <select class="form-control">
-                                                                <option>Todos los almacenes</option>
-                                                                <option>Oficina Arequipa</option>
-                                                                <option>Galería Centro de Lima</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label style="font-weight: bold;">Categoría:</label>
-                                                            <select class="form-control">
-                                                                <option>Seleccione categoría</option>
-                                                                <option>Productos</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group text-center">
-                                                        <button type="submit" class="btn btn-light">CONSULTAR</button> <!-- Botón con estilo -->
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <br>
                                             <table class="table table-striped table-bordered table-hover">
                                                 <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
                                                 <br>
@@ -893,37 +810,6 @@ $(document).ready(function(){
 </script>
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-<!-- Script para mostrar/ocultar el formulario con animación tab-2 -->
-<script>
-    document.getElementById("toggleForm").addEventListener("click", function() {
-        const entryForm = document.getElementById("entryForm");
-        if (entryForm.style.display === "none") {
-            entryForm.style.display = "block"; // Mostrar el formulario
-            entryForm.style.opacity = 0; // Iniciar con opacidad 0
-            let opacity = 0;
-            const interval = setInterval(() => {
-                if (opacity < 1) {
-                    opacity += 0.1; // Incrementar opacidad
-                    entryForm.style.opacity = opacity;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 50); // Controla la velocidad de la animación
-        } else {
-            let opacity = 1;
-            const interval = setInterval(() => {
-                if (opacity > 0) {
-                    opacity -= 0.1; // Decrementar opacidad
-                    entryForm.style.opacity = opacity;
-                } else {
-                    entryForm.style.display = "none"; // Ocultar el formulario
-                    clearInterval(interval);
-                }
-            }, 50); // Controla la velocidad de la animación
-        }
-    });
-</script>
-
 <script>
     document.getElementById("btn-agregar-EP").onclick = function() {
         document.getElementById("formulario-agregar-producto").style.display = "block";
@@ -934,5 +820,139 @@ $(document).ready(function(){
     }
 </script>
 
+
+<!-- scrip para los calendarios -->
+<script>
+    $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+    $('#reportrange').daterangepicker({
+        format: 'MM/DD/YYYY',
+        startDate: moment().subtract(29, 'days'),
+        endDate: moment(),
+        minDate: '01/01/2012',
+        maxDate: '12/31/2015',
+        dateLimit: { days: 60 },
+        showDropdowns: true,
+        showWeekNumbers: true,
+        timePicker: false,
+        timePickerIncrement: 1,
+        timePicker12Hour: true,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        opens: 'right',
+        drops: 'down',
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-primary',
+        cancelClass: 'btn-default',
+        separator: ' to ',
+        locale: {
+            applyLabel: 'Submit',
+            cancelLabel: 'Cancel',
+            fromLabel: 'From',
+            toLabel: 'To',
+            customRangeLabel: 'Custom',
+            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            firstDay: 1
+        }
+    }, function(start, end, label) {
+        console.log(start.toISOString(), end.toISOString(), label);
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    });
+</script>
+<script>
+    $('#reportrange1 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+    $('#reportrange1').daterangepicker({
+        format: 'MM/DD/YYYY',
+        startDate: moment().subtract(29, 'days'),
+        endDate: moment(),
+        minDate: '01/01/2012',
+        maxDate: '12/31/2015',
+        dateLimit: { days: 60 },
+        showDropdowns: true,
+        showWeekNumbers: true,
+        timePicker: false,
+        timePickerIncrement: 1,
+        timePicker12Hour: true,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        opens: 'right',
+        drops: 'down',
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-primary',
+        cancelClass: 'btn-default',
+        separator: ' to ',
+        locale: {
+            applyLabel: 'Submit',
+            cancelLabel: 'Cancel',
+            fromLabel: 'From',
+            toLabel: 'To',
+            customRangeLabel: 'Custom',
+            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            firstDay: 1
+        }
+    }, function(start, end, label) {
+        console.log(start.toISOString(), end.toISOString(), label);
+        $('#reportrange1 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    });
+</script>
+<script>
+    $('#reportrange2 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+    $('#reportrange2').daterangepicker({
+        format: 'MM/DD/YYYY',
+        startDate: moment().subtract(29, 'days'),
+        endDate: moment(),
+        minDate: '01/01/2012',
+        maxDate: '12/31/2015',
+        dateLimit: { days: 60 },
+        showDropdowns: true,
+        showWeekNumbers: true,
+        timePicker: false,
+        timePickerIncrement: 1,
+        timePicker12Hour: true,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        opens: 'right',
+        drops: 'down',
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-primary',
+        cancelClass: 'btn-default',
+        separator: ' to ',
+        locale: {
+            applyLabel: 'Submit',
+            cancelLabel: 'Cancel',
+            fromLabel: 'From',
+            toLabel: 'To',
+            customRangeLabel: 'Custom',
+            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            firstDay: 1
+        }
+    }, function(start, end, label) {
+        console.log(start.toISOString(), end.toISOString(), label);
+        $('#reportrange2 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    });
+</script>
 
 @endsection
