@@ -10,4 +10,16 @@ class EstadisticasController extends Controller
     {
         return view('estadisticas.index');
     }
+    public function servicios()
+    {
+        return view('estadisticas.servicios');
+    }
+    public function clientes()
+    {
+        return view('estadisticas.clientes');
+    }
+    public function empleados()
+    {
+        return view('estadisticas.empleados');
+    }
 }

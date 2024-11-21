@@ -194,7 +194,7 @@
         overflow-x: hidden;
         scrollbar-width: thin;
         scrollbar-color: #1e3a8a #f0f4ff;
-        
+
     }
     #side-menu:hover{
         max-width: 260px;
@@ -493,7 +493,7 @@
                                     src="{{ asset('/archivos/imagenes/layout/inventario.svg') }}" class="iconos">
                                 <span class="nav-label">Inventario Inicial</span></a>
                         @else
-                        
+
                             @can('inventario')
                                 <li>
                                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg') }}"
@@ -523,7 +523,7 @@
                                                 <li><a href="{{ route('periodo-consulta.index') }}"><span>Consultas de inventario</span></a></li>
                                                 <!-- Periodo Consulta -->
                                             @endcan
-                    
+
                                             <li><a href="{{ route('cierre-periodo.index') }}"><span>Cierre Periodo</span></a></li>
                                             <li><a href="{{ route('movimiento-consulta.index') }}"><span>Movimiento Consulta</span></a></li>
                                             @endcan
@@ -808,7 +808,7 @@
                                                 <div>
                                                     Tiene @if ($fact_view_count > 0) <strong>{{$fact_view_count}} Facturas</strong>  @endif @if ($fact_m_view_count > 0 && $fact_view_count > 0) y @endif  @if ($fact_m_view_count > 0) <strong>{{$fact_m_view_count}} Facturas Manuales</strong> @endif pendientes de enviar a SUNAT
                                                 </div>
-                                            </a>    
+                                            </a>
                                         </li>
                                         @endif
                                         @if ($bol_view_count > 0 || $bol_m_view_count > 0)
@@ -819,7 +819,7 @@
                                                         Tiene @if ($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if ($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if ($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
                                                     </div>
                                                 </a>
-                                            </li>    
+                                            </li>
                                         @endif
                                         @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                             <li class="dropdown-divider"></li>
@@ -829,7 +829,7 @@
                                                         Tiene @if ($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if ($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if ($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
                                                     </div>
                                                 </a>
-                                            </li>    
+                                            </li>
                                         @endif
                                         @if ($n_credito_view_count > 0)
                                             <li class="dropdown-divider"></li>
@@ -839,7 +839,7 @@
                                                         Tiene @if ($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
                                                     </div>
                                                 </a>
-                                            </li>    
+                                            </li>
                                         @endif
                                         @if ($n_debito_view_count > 0)
                                             <li class="dropdown-divider"></li>
@@ -849,7 +849,7 @@
                                                         Tiene @if ($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
                                                     </div>
                                                 </a>
-                                            </li>    
+                                            </li>
                                         @endif
                                         @if ($fact_view_count == 0 && $fact_m_view_count == 0 && $bol_view_count == 0 && $bol_m_view_count == 0 && $n_credito_view_count == 0 && $n_credito_view_count == 0)
                                             <li>
@@ -857,13 +857,13 @@
                                                     <div>
                                                         Sin envios Pendientes a SUNAT
                                                     </div>
-                                                </a>    
+                                                </a>
                                             </li>
                                         @endif
                                     </ul>
                                 </li>
-                            </div> 
-                            <div class="hide-on2">   
+                            </div>
+                            <div class="hide-on2">
                                 <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="padding: 0;">
                                     <a href="{{ route('usuario.index') }}" class="d-flex align-items-center text-center">
                                         <span class="block m-t-xs text-black font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
@@ -900,12 +900,12 @@
                             <li class=" mr-5" >
                                     <a href="{{ route('logout') }}" class="logout-btn"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        
+
                                     <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                                 @csrf
                                             </form>
-                                        
+
                                     </a>
                             </li>
                         </div> --}}
@@ -947,7 +947,6 @@
             </div>
 
             @yield('content')
-
 
 
 

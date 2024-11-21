@@ -48,6 +48,16 @@ Route::group(
 
 		Route::resource('/registros','Ventas_registroController');
 
+		// COTIZACIONES - ajax para el llamado de datos
+		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
+		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
+		Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
+		Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
+
+
+		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
+		Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
+
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
 		Route::resource('/cliente_sucursal','ClienteSucursalController')->except('[store]');
@@ -549,6 +559,20 @@ Route::group(
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 
         Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
+        Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
+        Route::get('/estadisticas/clientes', 'EstadisticasController@clientes')->name('estadisticas.clientes');
+        Route::get('/estadisticas/empleados', 'EstadisticasController@empleados')->name('estadisticas.empleados');
+
+		// NUEVAS RUTAS EN VENTAS (cotizacion, cotizacion_manua, nota_venta)
+		Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
+		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
+		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
+
+		Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
+		Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
+		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
+
+
 	});
 
 Auth::routes([
@@ -578,8 +602,6 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
-
-
 
 
 

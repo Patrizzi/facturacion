@@ -8,6 +8,7 @@ use App\Banco;
 use App\Boleta_m;
 use App\Boleta_registros_m;
 use App\Cliente;
+use App\Cotizacion;
 use App\Empresa;
 use App\Forma_pago;
 use App\Garantia;
@@ -29,6 +30,7 @@ use App\Validez;
 use App\kardex_entrada_registro;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
+use App\Ventas_registro;
 use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -1248,6 +1250,19 @@ class CotizacionManualController extends Controller
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
         
         return view('transaccion.venta.cotizacion.manual.free_print', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
+    }
+
+    //  NUEVAS VISTAS
+    public function index2(){
+        $mes_año = Carbon::now()->format('d-m-Y');
+        $cotizacion_mes = Cotizacion::count_mes($mes_año);
+        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
+        $nota_venta_mes = NotaVenta::count_mes($mes_año);
+        
+        $almacen = Almacen::get();
+        $count_all_ventas = Ventas_registro::count_day_ventas();
+        return view('transaccion.venta.cotizacion.manual.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
+        
     }
 }
  
