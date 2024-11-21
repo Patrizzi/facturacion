@@ -490,7 +490,7 @@
         </div>
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
-                <h2>@yield('title', 'Inicio')</h2>
+                <h2>@yield('title', 'Inicio')</h2> <!-- modificaodoaow">
                         <!-- <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                         <a>@yield('breadcrumb', '')</a>
@@ -522,7 +522,6 @@
 
 
 
-
                     <div class="footer">
                         <div class="float-right">
                             Visitanos: &nbsp;&nbsp; <a href="https://www.facebook.com/JYPPERIFERICOSSAC" target="_blank" ><i class="fa fa-facebook-square" aria-hidden="true"></i></a>&nbsp;
@@ -531,13 +530,12 @@
                         <div>
                             <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank" > JyP Periféricos</a>&nbsp;  &copy; 2019-2022
                         </div>
-
+            
                     </div>
                 </div>
             </div>
-
-
         </body>
+
         <!-- Ladda -->
         <script src="{{ asset('js/plugins/ladda/spin.min.js') }}"></script>
         <script src="{{ asset('js/plugins/ladda/ladda.min.js') }}"></script>

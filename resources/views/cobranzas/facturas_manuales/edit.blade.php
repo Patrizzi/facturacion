@@ -110,7 +110,7 @@
                                                                         $precio_adel = $adelantos->precio_adelanto;
                                                                     }
                                                                 @endphp
-                                                                <span hidden>{{ $pago_total = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
+                                                                <span hidden>{{ $pago_total = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }} {{$tot_pagar = $pago_total}}</span>
                                                                 {{number_format( $pago_total ,2)}}
                                                             @endif
                                                         </p>

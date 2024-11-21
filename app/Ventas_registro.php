@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Ventas_registro extends Model
@@ -36,4 +37,41 @@ class Ventas_registro extends Model
  //        return $this->belongsTo(Personal::class,'personal_id');
  //    }
 
+	public static function count_day_ventas(){
+		// Fecha de Hoy
+		$fecha_conv = Carbon::now()->format('Y-m-d');
+		$cotizacion_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
+
+		$cotizacion_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
+
+		$nota_venta_dia = NotaVenta::whereDate('created_at', '=', $fecha_conv )->count();
+
+		$count_mes = array(
+            "cotizacion_day_count" => $cotizacion_dia,
+            "cotizacion_m_day_count" => $cotizacion_manual_dia,
+            "nota_venta_day_count" => $nota_venta_dia
+            
+        );
+
+		return $count_mes;
+	}
+
+	public static function moneda_principal_convert($moneda_id, $total){
+		$principal = Moneda::where('principal', 1)->first();
+		$cambio = TipoCambio::orderBy('created_at', 'desc')->first();
+		if($principal->tipo == "nacional"){ //SOLES
+			if($moneda_id == 1){ //SOLES	
+				$total_conv = $total;
+			}else{ //DOLARES
+				$total_conv = $total * $cambio->paralelo;
+			}
+		}else{ //DOLAR
+			if($moneda_id == 2){ //DOLAR
+				$total_conv = $total;
+			}else{ //SOLES
+				$total_conv = $total / $cambio->paralelo;
+			}
+		}
+		return $total_conv;
+	}
 }

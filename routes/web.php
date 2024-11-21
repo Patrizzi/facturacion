@@ -27,7 +27,7 @@ Route::group(
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
 		Route::resource('/cotizacion_manual','CotizacionManualController');
-		Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		// Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
 		Route::post('/cotizacion_manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
 		Route::get('/cotizacion_manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		Route::get('/cotizacion_manual/facturar/{id}','CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
@@ -48,10 +48,20 @@ Route::group(
 
 		Route::resource('/registros','Ventas_registroController');
 
+		// COTIZACIONES - ajax para el llamado de datos
+		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
+		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
+		Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
+		Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
+
+
+		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
+		Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
+
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
 		Route::resource('/cliente_sucursal','ClienteSucursalController')->except('[store]');
-		Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
+		// Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
 		// Route::post('/cliente_sucursal/departamento','ClienteController@ajax_dep')->name('sucursal_dep_cli.ajax_dep');
 
 		Route::post('/cliente_retenedores/{id}' , 'ClienteRetenedoresController@update')->name('cliente_retenedores.reupdate');
@@ -81,7 +91,7 @@ Route::group(
 		Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
 		Route::resource('/cotizacion','CotizacionController');
-		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
+		// Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
 
 		Route::post('cotizacion/nota_venta/{id}', 'CotizacionController@nota_venta_gen')->name('cotizacion.nota_venta');
 		Route::post('cotizacion/nota_venta_store', 'CotizacionController@nota_venta_store')->name('cotizacion.nota_venta_store');
@@ -106,7 +116,7 @@ Route::group(
 		Route::post('/cotizacion_servicio/boletear_store' , 'CotizacionServiciosController@boletear_store')->name('cotizacion_servicio.boletear_store');
 
 		Route::resource('/cotizacion_servicio','CotizacionServiciosController')->except(['store']);
-		Route::put('/cotizacion_servicio/store/{id_moneda}','CotizacionServiciosController@store')->name('cotizacion.store');
+		// Route::put('/cotizacion_servicio/store/{id_moneda}','CotizacionServiciosController@store')->name('cotizacion.store');
 		Route::post('ticket_ajax_coti_serv', 'CotizacionServiciosController@ticket_ajax_cotizacion')->name('ticket_ajax_coti_serv');
 //FACTURACION SERVICIOS
 		Route::post('/facturacion_servicio/create_ms','FacturacionServicioController@create_ms')->name('facturacion_servicio.create_ms');
@@ -120,7 +130,7 @@ Route::group(
 //NOTA VENTA
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
-		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		// Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
 		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
@@ -252,7 +262,7 @@ Route::group(
 
 		Route::resource('/guia_remision','GuiaRemisionController');
 		Route::post('/guia_remision/sucursal','GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
-		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
+		// Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
 		// Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
 		Route::post('/guia_remision/peso_stock','GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
 		/* REMISION MANUAL */
@@ -304,8 +314,8 @@ Route::group(
 
 		Route::resource('/familia','FamiliaController');
 		Route::resource('/subfamilia','SubfamiliaController');
-		Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
-		Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
+		// Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
+		// Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
 		Route::post('/subfamilia_search','SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
 
 		//Agregado rapido
@@ -320,7 +330,7 @@ Route::group(
 		Route::resource('/configuracion_email','EmailConfiguracionesController');
 		// Route::get('/email_backup','EmailConfiguracionesController@email_backup')->name('email_backup');
 		Route::post('/email_backup/save','EmailConfiguracionesController@backup_save')->name('backup_save');
-		Route::post('/configuracion_email/update/{id}','EmailConfiguracionesController@update')->name('configuracion_email.update');
+		// Route::post('/configuracion_email/update/{id}','EmailConfiguracionesController@update')->name('configuracion_email.update');
 		Route::post('/email/config/pdf','EmailConfiguracionesController@store')->name('email.config');
 		// * MailBox Borradores
 		Route::resource('/borradores_email','EmailBorradoresController');
@@ -329,7 +339,7 @@ Route::group(
 		
 		Route::post('email/delete','EmailBandejaEnviosController@delete')->name('email.delete');
 		Route::get('/trash','EmailBandejaEnviosController@trash')->name('email.trash');
-		Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
+		// Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
 		Route::post('/email/config','EmailBandejaEnviosController@configstore')->name('email.configstore');
 		Route::post('/email/config/{id}','EmailBandejaEnviosController@configupdate')->name('email.configupdate');
 
@@ -406,7 +416,7 @@ Route::group(
 		Route::resource('/kardex-entrada-Distribucion','KardexEntradaDistribucionController');
 		Route::get('/kardex_distribucion_guia_print/{id}','KardexEntradaDistribucionController@print')->name('kardex-distribucion.print');
 		Route::resource('/kardex-entrada','KardexEntradaController');
-		Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
+		// Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
 		Route::post('/kardex-entrada/inventario-inicial','KardexEntradaController@InventarioInicial')->name('kardex-entrada.i_inicial');
 
 
@@ -501,7 +511,7 @@ Route::group(
 		Route::resource('/provedor','ProvedorController');
 
 		Route::resource('/servicios','ServiciosController');
-		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+		// Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
 		Route::resource('/transaccion-compra','TransaccionCompraController');
 		Route::resource('/unidad-medida','UnidadMedidaController');
 
@@ -533,7 +543,7 @@ Route::group(
 		// Route::post('/api','api.php');
 
 		Route::resource('/eventos', 'EventosController');
-		Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
+		// Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
 		Route::get('/mis_eventos', 'EventosController@evento_user')->name('eventos.user_indes');
 		
 		Route::resource('/categorias_eventos', 'CategoriasEventosController')->except('update');
@@ -547,6 +557,18 @@ Route::group(
 		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
+
+
+		// NUEVAS RUTAS EN VENTAS (cotizacion, cotizacion_manua, nota_venta)
+		Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
+		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
+		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
+
+		Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
+		Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
+		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
+
+
 	});
 
 Auth::routes([
@@ -576,8 +598,6 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
-
-
 
 
 
