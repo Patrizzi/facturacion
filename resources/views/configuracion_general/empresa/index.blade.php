@@ -589,7 +589,7 @@
                                     <input type="text" class="form-control" id="pagina_web" name="pagina_web" value="{{$mi_empresa->pagina_web}}">
                                 </div>
                             </div>
-                        
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -1090,7 +1090,7 @@
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    
+
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 

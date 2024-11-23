@@ -67,10 +67,10 @@
                                 @foreach($categorias as $categoria)
                                 <tr class="gradeX">
                                     <td>@if($categoria->estado==0) <i class="fa fa-circle" style="color: green;"></i>@else
-                                       <i class="fa fa-circle"></i>@endif {{$categoria->id}}</td>
-                                       <td>{{$categoria->codigo}}</td>
-                                       <td>{{$categoria->descripcion}}</td>
-                                       <td>
+                                    <i class="fa fa-circle"></i>@endif {{$categoria->id}}</td>
+                                    <td>{{$categoria->codigo}}</td>
+                                    <td>{{$categoria->descripcion}}</td>
+                                    <td>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$categoria->id}}"><i class="fa fa-edit"></i></button>
                                         <div class="modal fade" id="exampleModal{{$categoria->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -86,38 +86,36 @@
                                                                     <div>
                                                                         <div class="panel-body" >
                                                                             <div class="row">
-                                                                             <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/categoria.svg')}}" width="100px"></div>
-                                                                             <label class="col-sm-3 col-form-label">Descripcion:</label>
-                                                                             <div class="col-sm-9">
+                                                                            <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/categoria.svg')}}" width="100px"></div>
+                                                                            <label class="col-sm-3 col-form-label">Descripcion:</label>
+                                                                            <div class="col-sm-9">
                                                                                 <input type="text" class="form-control" readonly="readonly" value="{{$categoria->descripcion}}">
                                                                             </div>
                                                                             @if($conteo > 1 || $categoria->estado==1 )
                                                                             <div class="col-sm-12" align="center" style="padding-top: 10px">
-                                                                             <input type="checkbox" class="js-switch_{{$categoria->id}}" name="estado"  @if($categoria->estado==0) checked="" @endif />
-                                                                         </div>
-                                                                         @endif
-                                                                     </div>
-                                                                 </div>
-                                                             </div>
-                                                         </fieldset>
-                                                         <button class="ladda-button btn btn-primary" type="submit" >Grabar</button>
-                                                     </form>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <!-- / Modal Create  -->
-
-                             </td>
-                         </tr>
-                         @endforeach
-                     </tbody>
-                 </table>
-             </div>
-         </div>
-     </div>
- </div>
+                                                                            <input type="checkbox" class="js-switch_{{$categoria->id}}" name="estado"  @if($categoria->estado==0) checked="" @endif />
+                                                                        </div>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <button class="ladda-button btn btn-primary" type="submit" >Grabar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- / Modal Create  --></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 </div>
 
@@ -145,7 +143,7 @@
                                     </div>
                                     <!-- Botón para abrir el modal -->
                                     <div class="btn-group mx-0"> <!-- Cambia mx-2 a mx-0 -->
-                                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-bs-toggle="modal" data-bs-target="#myModal">Agregar</button>                                    </div>
+                                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-toggle="modal" data-target="#myModal">Agregar</button></div>
                                 </div>
                             </li>
         <!-- Modal -->
@@ -154,7 +152,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="myModalLabel"  style="color: blue; font-size: 18px; font-weight: bold;">Agregar nueva categoría</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="col-md-12 mb-3">
@@ -165,20 +163,16 @@
                             <textarea class="form-control" id="descripcion" rows="1" style="margin-top: 10px;"></textarea> <!-- Agrega margen superior -->
                         </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="button" class="btn btn-primary">Guardar cambios</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 <!-- Bootstrap CSS y JS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-                            </li>
-                            </ul>
-
+</li>
+</ul>
 <!-- Tablas y su contenido -->
 <div class="tab-content">
     <div role="tabpanel" id="tab-1" class="tab-pane active show">
@@ -203,9 +197,9 @@
                     <td>
                         <!-- Botón para abrir el modal -->
                     <div><a href="#"
-                           style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
-                           data-bs-toggle="modal"
-                           data-bs-target="#modaluno"> <!-- Cambiado a modaluno -->
+                        style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                        data-toggle="modal"
+                        data-target="#modaluno"> <!-- Cambiado a modaluno -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
                         <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
@@ -219,7 +213,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalunoLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar Categoría</h5> <!-- Cambiado a "Editar Categoría" -->
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-md-12 mb-3">
@@ -236,14 +230,13 @@
                                                 Activar/Desactivar
                                             </label>
                                         </div>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                         <button type="button" class="btn btn-primary">Guardar cambios</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
             </td>
         </tr>
     <tr>
@@ -253,23 +246,22 @@
                     <td>GARANTIAS</td>
                     <td>
                         <div><a href="#"
-                           style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
-                           data-bs-toggle="modal"
-                           data-bs-target="#modaldos"> <!-- Cambiado a modaldos -->
+                        style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                        data-toggle="modal"
+                        data-target="#modaldos"> <!-- Cambiado a modaldos -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
                         <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
                             <i class="fa fa-check" style="color:white;"></i>
                         </button></div>
                     </td>
-
                     <!-- Modal -->
                     <div class="modal fade" id="modaldos" tabindex="-1" aria-labelledby="modaldosLabel" aria-hidden="true"> <!-- Cambiado a modaldos -->
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modaldosLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar Categoría</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-md-12 mb-3">
@@ -286,7 +278,7 @@
                                                 Activar/Desactivar
                                             </label>
                                         </div>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                         <button type="button" class="btn btn-primary">Guardar cambios</button>
                                     </div>
                                 </div>
@@ -300,24 +292,22 @@
                     <td>SERVICIOS</td>
                     <td>
                         <div><a href="#"
-                           style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
-                           data-bs-toggle="modal"
-                           data-bs-target="#modaldos"> <!-- Cambiado a modaldos -->
+                        style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
+                        data-toggle="modal"
+                        data-target="#modaldos"> <!-- Cambiado a modaldos -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
-
                         <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
                             <i class="fa fa-arrows-alt" style="color:white;"></i>
                         </button></div>
                     </td>
-
                     <!-- Modal -->
                     <div class="modal fade" id="modaltres" tabindex="-1" aria-labelledby="modaltresLabel" aria-hidden="true"> <!-- Cambiado a modaltres -->
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modaltresLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar categoría</h5> <!-- Cambiado a "Editar categoría" -->
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-md-12 mb-3">
@@ -334,7 +324,7 @@
                                                 Activar/Desactivar
                                             </label>
                                         </div>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                         <button type="button" class="btn btn-primary">Guardar cambios</button>
                                     </div>
                                 </div>
@@ -343,8 +333,8 @@
                     </div>
             </tbody>
         </table>
-
-
+</div>
+</div>
         </div>
     </div>
     <div role="tabpanel" id="tab-2" class="tab-pane">
@@ -717,6 +707,14 @@
     <script src="js/plugins/c3/c3.min.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

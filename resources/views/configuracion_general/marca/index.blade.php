@@ -296,29 +296,29 @@
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <div style="flex: 1; display: flex; align-items: center;">
                             <label for="nombre" style="margin-right: 20px; color: black; font-weight: bold; font-size: 14px;">Nombre:</label>
-                            <input type="text" id="nombre" name="nombre" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->  
+                            <input type="text" id="nombre" name="nombre" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                         </div>
                         <div style="flex: 1; display: flex; align-items: center;">
                             <label for="telefono" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Teléfono:</label>
-                            <input type="text" id="telefono" name="telefono" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->  
+                            <input type="text" id="telefono" name="telefono" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                         </div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <div style="flex: 1; display: flex; align-items: center;">
                             <label for="abreviatura" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Abreviatura:</label>
-                            <input type="text" id="abreviatura" name="abreviatura" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->  
+                            <input type="text" id="abreviatura" name="abreviatura" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                         </div>
                         <div style="flex: 1; display: flex; align-items: center;">
                             <label for="empresa" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Empresa:</label>
-                            <input type="text" id="empresa" name="empresa" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->  
+                            <input type="text" id="empresa" name="empresa" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                         </div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                         <div style="flex: 1; display: flex; align-items: center;">
                             <label for="descripcion" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Descripción:</label>
-                            <input type="text" id="descripcion" name="descripcion" placeholder="Opcional" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->  
+                            <input type="text" id="descripcion" name="descripcion" placeholder="Opcional" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                         </div>
                         <div style="flex: 1; display: flex; align-items: center;">
                             <label for="foto" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Foto:</label>
@@ -385,29 +385,29 @@
                                                             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                                                                 <div style="flex: 1; display: flex; align-items: center;">
                                                                     <label for="nombre" style="margin-right: 20px; color: black; font-weight: bold; font-size: 14px;">Nombre:</label>
-                                                                    <input type="text" id="nombre" name="nombre" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->                        
+                                                                    <input type="text" id="nombre" name="nombre" style="flex: 0 0 250px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                                                                 </div>
                                                                 <div style="flex: 1; display: flex; align-items: center;">
                                                                     <label for="telefono" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Teléfono:</label>
-                                                                    <input type="text" id="telefono" name="telefono" style="flex: 0 0 230px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->   
+                                                                    <input type="text" id="telefono" name="telefono" style="flex: 0 0 230px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                                                                 </div>
                                                             </div>
 
                                                             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                                                                 <div style="flex: 1; display: flex; align-items: center;">
                                                                     <label for="abreviatura" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Abreviatura:</label>
-                                                                    <input type="text" id="abreviatura" name="abreviatura" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->               
+                                                                    <input type="text" id="abreviatura" name="abreviatura" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                                                                 </div>
                                                                 <div style="flex: 1; display: flex; align-items: center;">
                                                                     <label for="empresa" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Empresa:</label>
-                                                                    <input type="text" id="empresa" name="empresa" style="flex: 0 0 230px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->               
+                                                                    <input type="text" id="empresa" name="empresa" style="flex: 0 0 230px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                                                                 </div>
                                                             </div>
 
                                                             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                                                                 <div style="flex: 1; display: flex; align-items: center;">
                                                                     <label for="descripcion" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Descripción:</label>
-                                                                    <input type="text" id="descripcion" name="descripcion" placeholder="Opcional" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->               
+                                                                    <input type="text" id="descripcion" name="descripcion" placeholder="Opcional" style="flex: 0 0 233px; height: 30px; background-color: #F0F0F0; border: none; outline: none;"> <!-- Ajusta el width, height y color aquí -->
                                                                 </div>
                                                                 <div style="flex: 1; display: flex; align-items: center;">
                                                                     <label for="foto" style="margin-right: 10px; color: black; font-weight: bold; font-size: 14px;">Foto:</label>
