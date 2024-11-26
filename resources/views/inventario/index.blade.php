@@ -430,26 +430,32 @@
 
                                     <!-- Contenido de Tab 2 -->
                                     <div role="tabpanel" id="tab-2" class="tab-pane">
-                                        <div>
-                                            <ul class="nav nav-tabs" role="tablist">
-                                                <li style="align-items: center">
-                                                    <div style="position: relative; display: inline-block;">
-                                                        <a href="#" class="button"
-                                                            style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; margin-right: 8px"
-                                                            onclick="toggleOptions(event)">+</a>
-                                                        <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
-                                                            <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
-                                                            <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
-                                                            <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
-                                                        </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                        <!-- Calendario -->
+                                        <div id="reportrange1" class="form-control">
+                                            <i class="fa fa-calendar"></i>
+                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
+                                        </div>
+                                    
+                                        <!-- Botones -->
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="display: flex; gap: 10px;">
+                                                <div style="position: relative;">
+                                                    <a href="#" class="button"
+                                                        style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 5px 15px; text-decoration: none; cursor: pointer;"
+                                                        onclick="toggleOptions(event)">+</a>
+                                                    <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
+                                                        <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
+                                                        <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
+                                                        <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
                                                     </div>
-                                                </li>
-                                                <li>
-                                                    <div>
-                                                        <a href="#" class="button " style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 20px; text-decoration: none; cursor: pointer; align-items: flex-end;"><i class="fas fa-download download-icon"></i></a>
-                                                    </div>
-                                                </li>
-                                            </ul>
+                                                </div>
+                                    
+                                                <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 15px; text-decoration: none; cursor: pointer;">
+                                                    <i class="fas fa-download download-icon"></i>
+                                                </a>
+                                            </div>
+                                    
                                             <div class="btn-group">
                                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     Descarga
@@ -463,11 +469,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div id="reportrange1" class="form-control">
-                                            <i class="fa fa-calendar"></i>
-                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                        </div>
+                                    </div>
 
 
 
@@ -619,26 +621,32 @@
                                     </div>
                                     <!-- Contenido de Tab 4 -->
                                     <div role="tabpanel" id="tab-4" class="tab-pane">
-                                        <div>
-                                            <ul class="nav nav-tabs" role="tablist">
-                                                <li style="align-items: center">
-                                                    <div style="position: relative; display: inline-block;">
-                                                        <a href="#" class="button"
-                                                            style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 1px 20px; text-decoration: none; cursor: pointer; margin-right: 8px"
-                                                            onclick="toggleOptions(event)">+</a>
-                                                        <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
-                                                            <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
-                                                            <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
-                                                            <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
-                                                        </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                        <!-- Calendario -->
+                                        <div id="reportrange1" class="form-control">
+                                            <i class="fa fa-calendar"></i>
+                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
+                                        </div>
+                                    
+                                        <!-- Botones -->
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="display: flex; gap: 10px;">
+                                                <div style="position: relative;">
+                                                    <a href="#" class="button"
+                                                        style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 5px 15px; text-decoration: none; cursor: pointer;"
+                                                        onclick="toggleOptions(event)">+</a>
+                                                    <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
+                                                        <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
+                                                        <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
+                                                        <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
                                                     </div>
-                                                </li>
-                                                <li>
-                                                    <div>
-                                                        <a href="#" class="button " style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 20px; text-decoration: none; cursor: pointer; align-items: flex-end;"><i class="fas fa-download download-icon"></i></a>
-                                                    </div>
-                                                </li>
-                                            </ul>
+                                                </div>
+                                    
+                                                <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 15px; text-decoration: none; cursor: pointer;">
+                                                    <i class="fas fa-download download-icon"></i>
+                                                </a>
+                                            </div>
+                                    
                                             <div class="btn-group">
                                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     Descarga
@@ -652,11 +660,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div id="reportrange1" class="form-control">
-                                            <i class="fa fa-calendar"></i>
-                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                        </div>
+                                    </div>
 
                                         <div class="panel-body">
                                             <table class="table table-striped table-bordered table-hover">
