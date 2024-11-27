@@ -226,104 +226,83 @@
  </table>
 </div>
 <!-- Sección de USUARIO------------------------------------------------------------------------------------------------------------------------- -->
-<div>
-    <h1 style="text-align: center; margin-bottom: 20px;">USUARIO</h1>
-    <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div style="flex-grow: 1;">
-            <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-            <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-        </div>
-        <div>
-            <button style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;" id="btn-agregar">
-                AGREGAR
-            </button>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th style="background-color: #007bff;color: white;">ID </th>
-                                <th style="background-color: #007bff;color: white;">PERSONAL</th>
-                                <th style="background-color: #007bff;color: white;">CARGO</th>
-                                <th style="background-color: #007bff;color: white;">CORREO</th>
-                                <th style="background-color: #007bff;color: white;">CELULAR</th>
-                                <th style="background-color: #007bff;color: white;">ALMACEN ASIGNADO</th>
-                                <th style="background-color: #007bff;color: white;">ACTIVO/RESACTIVADO</th>
-                                <th style="background-color: #007bff;color: white;">EDITAR</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>FABRICIO</td>
-                                <td>PRACTICANTE</td>
-                                <td>SMITELEVELUP632@GMAIL.COM</td>
-                                <td>983719672</td>
-                                <td>CENTRAL</td>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                                </td>
-                                <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>SANTIAGO</td>
-                                <td>PRACTICANTE</td>
-                                <td>SANTIAGO@GMAIL.COM</td>
-                                <td>965863245</td>
-                                <td>WILSON</td>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                                </td>
-                                <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>AARON</td>
-                                <td>PRACTICANTE</td>
-                                <td>ARRONSHIT@GMAIL.COM</td>
-                                <td>635896574</td>
-                                <td>CENTRAL</td>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                                </td>
-                                <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>GONZALO</td>
-                                <td>PRACTICANTE</td>
-                                <td>KFCGONZALO@GMAIL.COM</td>
-                                <td>896531456</td>
-                                <td>CENTRAL</td>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                                </td>
-                                <td><a href="#" class="edit-icon"><i class="fas fa-edit"></i></a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                    <button class="btn btn-white">1</button>
-                    <button class="btn btn-white  active">2</button>
-                    <button class="btn btn-white">3</button>
-                    <button class="btn btn-white">4</button>
-                    <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
-                </div>
+<div class="tab-pane active">
+    <!-- Título centrado -->
+    <h2 style="text-align: center; margin-bottom: 20px;">USUARIO</h2>
+    <div class="panel-body">
+        <!-- Contenido de Nested Tab 1 -->
+        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <!-- Barra de búsqueda y botón Buscar -->
+            <div style="flex-grow: 1;">
+                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+            </div>
+
+            <!-- Botones Agregar, Actualizar y Descarga -->
+            <div>
+                <button class="btn btn-success" id="btn-agregar" onclick="toggleForm()" style="margin-right: 10px;">Agregar</button>
             </div>
         </div>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>ID </th>
+                    <th>PERSONAL </th>
+                    <th>CARGO </th>
+                    <th>CORREO</th>
+                    <th>CELULAR</th>
+                    <th>ALMACEN ASIGNADO</th>
+                    <td>ACTIVO/REACTIVO</td>
+                    <td>EDITAR</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>01</td>
+                    <td>FABRICIO</td>
+                    <td>PRACTICANTE</td>
+                    <td>SMITELEVELUP632@GMAIL.COM</td>
+                    <td>983719672</td>
+                    <td>GSO@CENTRAL</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td>FABRICIO</td>
+                    <td>PRACTICANTE</td>
+                    <td>SMITELEVELUP632@GMAIL.COM</td>
+                    <td>983719672</td>
+                    <td>GSO@CENTRAL</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td>FABRICIO</td>
+                    <td>PRACTICANTE</td>
+                    <td>SMITELEVELUP632@GMAIL.COM</td>
+                    <td>983719672</td>
+                    <td>GSO@CENTRAL</td>
+                    <td></td>
+                    <td></td>
+                </tr>
 
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="btn-group">
+            <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+            <button class="btn btn-white">1</button>
+            <button class="btn btn-white  active">2</button>
+            <button class="btn btn-white">3</button>
+            <button class="btn btn-white">4</button>
+            <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+        </div>
     </div>
-
     <!-- Formulario oculto -->
     <div id="form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
         <div class="modal-content">

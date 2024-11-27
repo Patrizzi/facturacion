@@ -1,5 +1,5 @@
 @extends('layout')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
@@ -53,105 +53,102 @@
                                                     <div role="tabpanel" id="contenido-tab-1" class="tab-pane active">
                                                         <!-- Título centrado -->
                                                         <h2 style="text-align: center; margin-bottom: 20px;">Almacen Principal - Oficina Arequipa</h2>
-                                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                            <!-- Barra de búsqueda y botón Buscar -->
-                                                            <div style="flex-grow: 1;">
-                                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                            </div>
+                                                        <div class="panel-body">
+                                                            <!-- Contenido de Nested Tab 1 -->
+                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                                <!-- Barra de búsqueda y botón Buscar -->
+                                                                <div style="flex-grow: 1;">
+                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                                </div>
 
-                                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                                            <div>
-                                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                <!-- Botones Agregar, Actualizar y Descarga -->
+                                                                <div>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
 
-                                                                <!-- Botón de Descarga con menú desplegable -->
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Descarga
-                                                                    </button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                                        <a class="dropdown-item" href="#">Print</a>
+                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            Descarga
+                                                                        </button>
+                                                                        <div class="dropdown-menu">
+                                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                                            <a class="dropdown-item" href="#">Print</a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 1 -->
-                                                            <table class="table table-striped table-bordered table-hover">
-                                                                <br>
-                                                                <thead>
+                                                            <br>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-striped table-bordered">
+                                                                    <thead>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
-                                                                        <td>ID</td>
-                                                                        <td>CODIGO</td>
-                                                                        <td>MOTIVO</td>
-                                                                        <td>PROVEEDOR</td>
-                                                                        <td>FECHA D. INGRESO</td>
-                                                                        <td>N° DE G. DE REMISION</td>
-                                                                        <td>N° DE FACTURA</td>
-                                                                        <td>VISUALIZAR</td>
-                                                                        <td>ESTADO</td>
-                                                                    </tr>
-                                                                </thead>
 
-                                                                <tbody>
+                                                                        <th></th>
+                                                                        <th>ID </th>
+                                                                        <th>CODIGO </th>
+                                                                        <th>MOTIVO </th>
+                                                                        <th>PROVEEDOR</th>
+                                                                        <th>F. INGRESO</th>
+                                                                        <th>N° GUIA DE REMISION</th>
+                                                                        <td>N° FACTURA</td>
+                                                                        <td>ACCIONES</td>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
-                                                                        <td>GE001-00000002</td>
-                                                                        <td>Compras locales</td>
+                                                                        <td>GE001-00000001</td>
+                                                                        <td>COMPRAS LOCALES</td>
                                                                         <td>GRUPO INFOZONAL S.A.C.</td>
                                                                         <td>10/01/2022</td>
-                                                                        <td>0</td>
-                                                                        <td>0</td>
+                                                                        <td>0001</td>
+                                                                        <td>0001</td>
                                                                         <td>
                                                                             <div>
-                                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                    VER
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
                                                                                 </button>
                                                                             </div>
-                                                                        </td>
-                                                                        <td style="text-align: center">
-                                                                            <button style="padding: 5PX 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                ANULAR
-                                                                            </button>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
-                                                                        <td>02</td>
-                                                                        <td>GE001-00000003</td>
-                                                                        <td>Compras locales</td>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td>01</td>
+                                                                        <td>GE001-00000001</td>
+                                                                        <td>COMPRAS LOCALES</td>
                                                                         <td>Saar HK Electronic Limited</td>
-                                                                        <td>18/01/2022</td>
-                                                                        <td>1</td>
-                                                                        <td>1</td>
+                                                                        <td>18/01/2024</td>
+                                                                        <td>0001</td>
+                                                                        <td>0001</td>
                                                                         <td>
                                                                             <div>
-                                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                    VER
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                                <button style="padding: 5PX 10px; background-color: rgb(12, 196, 241); border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-file-pdf-o" style="color: white; font-size: 20px;"></i></a></div>
                                                                                 </button>
                                                                             </div>
                                                                         </td>
-                                                                        <td style="text-align: center">
-                                                                            <button style="padding: 5PX 10px; background-color: rgb(12, 196, 241); color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                Guia en circulacion
-                                                                            </button>
-                                                                        </td>
                                                                     </tr>
-                                                                </tbody>
-                                                            </table>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+
+
+
+
                                                             <br>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
@@ -164,95 +161,111 @@
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" id="contenido-tab-2" class="tab-pane">
-                                                        <!-- Barra de búsqueda con botones -->
-                                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                            <!-- Barra de búsqueda y botón Buscar -->
-                                                            <div style="flex-grow: 1;">
-                                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                            </div>
+                                                        <div class="panel-body">
+                                                            <!-- Contenido de Nested Tab 2 -->
+                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                                <!-- Barra de búsqueda y botón Buscar -->
+                                                                <div style="flex-grow: 1;">
+                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                                </div>
 
-                                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                                            <div>
-                                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                <!-- Botones Agregar, Actualizar y Descarga -->
+                                                                <div>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
 
-                                                                <!-- Botón de Descarga con menú desplegable -->
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Descarga
-                                                                    </button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                                        <a class="dropdown-item" href="#">Print</a>
+                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            Descarga
+                                                                        </button>
+                                                                        <div class="dropdown-menu">
+                                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                                            <a class="dropdown-item" href="#">Print</a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 2 -->
-                                                            <table class="table table-striped table-bordered table-hover">
-                                                                <br>
-                                                                <thead>
+                                                            <br>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-striped table-bordered">
+                                                                    <thead>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
-                                                                        <td>ID</td>
-                                                                        <td>CODIGO</td>
-                                                                        <td>F. DISTRIBUCION</td>
-                                                                        <td>CANT. DE PRODUCTOS</td>
-                                                                        <td>CANT. DISTRIBUIDA</td>
-                                                                        <td>ALMACEN</td>
-                                                                        <td>GUIA DE REMISION</td>
-                                                                        <td>VER</td>
-                                                                    </tr>
-                                                                </thead>
 
-                                                                <tbody>
+                                                                        <th></th>
+                                                                        <th>ID </th>
+                                                                        <th>CODIGO </th>
+                                                                        <th>F. DISTRIBUCION</th>
+                                                                        <th>CANT. PRODUCTOS</th>
+                                                                        <th>CANT. TOTAL</th>
+                                                                        <th>ALMACEN</th>
+                                                                        <th>GUIA DE REMISION</th>
+                                                                        <th>VER</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
                                                                         <td>GE001-00000001</td>
                                                                         <td>10/01/2022</td>
                                                                         <td>1000</td>
                                                                         <td>250</td>
-                                                                        <td>20</td>
-                                                                        <td>AUN NO</td>
+                                                                        <td>ALMACEN</td>
+                                                                        <td>0001</td>
                                                                         <td>
                                                                             <div>
-                                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                    VER
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
                                                                                 </button>
                                                                             </div>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
                                                                         <td>GE001-00000001</td>
-                                                                        <td>15/04/2023</td>
-                                                                        <td>500</td>
-                                                                        <td>80</td>
-                                                                        <td>30</td>
-                                                                        <td>AUN NO</td>
+                                                                        <td>15/05/2022</td>
+                                                                        <td>1500</td>
+                                                                        <td>530</td>
+                                                                        <td>ALMACEN</td>
+                                                                        <td>0002</td>
                                                                         <td>
                                                                             <div>
-                                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                    VER
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
                                                                                 </button>
                                                                             </div>
                                                                         </td>
                                                                     </tr>
-                                                                </tbody>
-                                                            </table>
+                                                                    <tr>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td>01</td>
+                                                                        <td>GE001-00000001</td>
+                                                                        <td>21/10/2023</td>
+                                                                        <td>2300</td>
+                                                                        <td>700</td>
+                                                                        <td>ALMACEN</td>
+                                                                        <td>0003</td>
+                                                                        <td>
+                                                                            <div>
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+
+
+
                                                             <br>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
@@ -265,76 +278,106 @@
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" id="contenido-tab-3" class="tab-pane">
-                                                        <!-- Barra de búsqueda con botones -->
-                                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                            <!-- Barra de búsqueda y botón Buscar -->
-                                                            <div style="flex-grow: 1;">
-                                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                            </div>
+                                                        <div class="panel-body">
+                                                            <!-- Contenido de Nested Tab 3 -->
+                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                                <!-- Barra de búsqueda y botón Buscar -->
+                                                                <div style="flex-grow: 1;">
+                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                                </div>
 
-                                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                                            <div>
-                                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                <!-- Botones Agregar, Actualizar y Descarga -->
+                                                                <div>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
 
-                                                                <!-- Botón de Descarga con menú desplegable -->
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Descarga
-                                                                    </button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                                        <a class="dropdown-item" href="#">Print</a>
+                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            Descarga
+                                                                        </button>
+                                                                        <div class="dropdown-menu">
+                                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                                            <a class="dropdown-item" href="#">Print</a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 3 -->
-                                                            <table class="table table-striped table-bordered table-hover">
-                                                                <br>
-                                                                <thead>
+                                                            <br>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-striped table-bordered">
+                                                                    <thead>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
-                                                                        <td>ID</td>
-                                                                        <td>CODIGO</td>
-                                                                        <td>ALMACEN. EMISOR</td>
-                                                                        <td>ALMACEN RECEPTOR</td>
-                                                                        <td>VER</td>
-                                                                        <td>ESTADO</td>
-                                                                    </tr>
-                                                                </thead>
 
-                                                                <tbody>
+                                                                        <th></th>
+                                                                        <th>ID </th>
+                                                                        <th>CODIGO </th>
+                                                                        <th>ALMACEN - EMISOR</th>
+                                                                        <th>ARMALEC - RECEPTOR</th>
+                                                                        <th>ACCIONES</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
                                                                         <td>GE001-00000001</td>
                                                                         <td>CENTRAL</td>
-                                                                        <td>WILSON</td>
+                                                                        <td>MIRAFLORES</td>
                                                                         <td>
                                                                             <div>
-                                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                    VER
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
                                                                                 </button>
                                                                             </div>
                                                                         </td>
-                                                                        <td style="text-align: center">
-                                                                            <button style="padding: 5PX 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                ANULAR
-                                                                            </button>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td>02</td>
+                                                                        <td>GE001-00000001</td>
+                                                                        <td>MIRAFLORE</td>
+                                                                        <td>WILSON</td>
+                                                                        <td>
+                                                                            <div>
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                            </div>
                                                                         </td>
                                                                     </tr>
-                                                                </tbody>
-                                                            </table>
+                                                                    <tr>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td>03</td>
+                                                                        <td>GE001-00000001</td>
+                                                                        <td>WILSON</td>
+                                                                        <td>CENTRAL</td>
+                                                                        <td>
+                                                                            <div>
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+
                                                             <br>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
@@ -349,68 +392,93 @@
                                                     <div role="tabpanel" id="contenido-tab-4" class="tab-pane">
                                                         <!-- Título centrado -->
                                                         <h2 style="text-align: center; margin-bottom: 20px;">Creacion de Almacen</h2>
-                                                        <!-- Barra de búsqueda con botones -->
-                                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                            <!-- Barra de búsqueda y botón Buscar -->
-                                                            <div style="flex-grow: 1;">
-                                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                            </div>
+                                                        <div class="panel-body">
+                                                            <!-- Contenido de Nested Tab 4 -->
+                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                                <!-- Barra de búsqueda y botón Buscar -->
+                                                                <div style="flex-grow: 1;">
+                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                                </div>
 
-                                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                                            <div>
-                                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                <!-- Botones Agregar, Actualizar y Descarga -->
+                                                                <div>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
 
-                                                                <!-- Botón de Descarga con menú desplegable -->
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Descarga
-                                                                    </button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                                        <a class="dropdown-item" href="#">Print</a>
+                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            Descarga
+                                                                        </button>
+                                                                        <div class="dropdown-menu">
+                                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                                            <a class="dropdown-item" href="#">Print</a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 4 -->
-                                                            <table class="table table-striped table-bordered table-hover">
-                                                                <br>
-                                                                <thead>
+                                                            <br>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-striped table-bordered">
+                                                                    <thead>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
-                                                                        <td>ID</td>
-                                                                        <td>MOTIVO</td>
-                                                                        <td>INFORMACION</td>
-                                                                        <td>VER</td>
-                                                                    </tr>
-                                                                </thead>
 
-                                                                <tbody>
+                                                                        <th></th>
+                                                                        <th>ID </th>
+                                                                        <th>MOTIVO </th>
+                                                                        <th>INFORMACION</th>
+                                                                        <th>VER</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
                                                                     <tr>
-                                                                        <td>
-                                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                                        </td>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
-                                                                        <td>Devolucion cliente</td>
-                                                                        <td>Salida</td>
+                                                                        <td>DEVOLUCION CLIENTE</td>
+                                                                        <td>SALIDA</td>
                                                                         <td>
                                                                             <div>
-                                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                                    VER
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
                                                                                 </button>
                                                                             </div>
                                                                         </td>
                                                                     </tr>
-                                                                </tbody>
-                                                            </table>
+                                                                    <tr>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td>02</td>
+                                                                        <td>DEVOLUCION CLIENTE</td>
+                                                                        <td>SALIDA</td>
+                                                                        <td>
+                                                                            <div>
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td>03</td>
+                                                                        <td>DEVOLUCION CLIENTE</td>
+                                                                        <td>SALIDA</td>
+                                                                        <td>
+                                                                            <div>
+                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <br>
+
                                                             <br>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
@@ -430,263 +498,270 @@
 
                                     <!-- Contenido de Tab 2 -->
                                     <div role="tabpanel" id="tab-2" class="tab-pane">
-                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                        <!-- Calendario -->
-                                        <div id="reportrange1" class="form-control">
-                                            <i class="fa fa-calendar"></i>
-                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                        </div>
-                                    
-                                        <!-- Botones -->
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="display: flex; gap: 10px;">
-                                                <div style="position: relative;">
-                                                    <a href="#" class="button"
-                                                        style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 5px 15px; text-decoration: none; cursor: pointer;"
-                                                        onclick="toggleOptions(event)">+</a>
-                                                    <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
-                                                        <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
-                                                        <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
-                                                        <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
-                                                    </div>
-                                                </div>
-                                    
-                                                <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 15px; text-decoration: none; cursor: pointer;">
-                                                    <i class="fas fa-download download-icon"></i>
-                                                </a>
-                                            </div>
-                                    
-                                            <div class="btn-group">
-                                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Descarga
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Copy</a>
-                                                    <a class="dropdown-item" href="#">CSV</a>
-                                                    <a class="dropdown-item" href="#">Excel</a>
-                                                    <a class="dropdown-item" href="#">PDF</a>
-                                                    <a class="dropdown-item" href="#">Print</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-
-
-
-
 
                                         <div class="panel-body">
+                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                                <!-- Calendario -->
+                                                <div id="reportrange1" class="form-control">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
+                                                </div>
+
+                                                <!-- Botones -->
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <div style="display: flex; gap: 10px;">
+                                                        <div style="position: relative;">
+                                                            <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Descarga
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                            <a class="dropdown-item" href="#">Print</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <br>
-                                            <table class="table table-striped table-bordered table-hover">
+                                            <div class="table-responsive">
                                                 <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <thead>
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>Nombre del Producto</td>
-                                                        <td>Cantidad Inicial</td>
-                                                        <td>Precio Nacional</td>
-                                                        <td>Precio en el Extranjero</td>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
+                                                        <th></th>
+                                                        <th>NOMBRE DE PRODUCTO </th>
+                                                        <th>CANT. INICIAL </th>
+                                                        <th>PRECIO NACIONAL</th>
+                                                        <th>PRECIO EN EL EXTRANJERO</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>Lagtop</td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>LAPTOP</td>
                                                         <td>1200</td>
                                                         <td>S/ 600</td>
                                                         <td>$ 200</td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                            <table class="table table-striped table-bordered table-hover">
+                                                    <tr>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>monitor</td>
+                                                        <td>100</td>
+                                                        <td>S/ 8000</td>
+                                                        <td>$ 3000</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>p. termica</td>
+                                                        <td>10</td>
+                                                        <td>S/ 500</td>
+                                                        <td>$ 126</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br>
+                                            <div class="table-responsive">
                                                 <h3 class="text-center">VENTAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <thead>
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>Tipo</td>
-                                                        <td>Nombre del Producto</td>
-                                                        <td>Cantidad</td>
-                                                        <td>Precio Nacional</td>
-                                                        <td>Precio Extranjero</td>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
+                                                        <th></th>
+                                                        <th>TIPO</th>
+                                                        <th>NOMBRE DEL PRODUCTO</th>
+                                                        <th>CANTIDAD</th>
+                                                        <th>PRECIO NACIONAL</th>
+                                                        <th>PRECIO EXTRANJERO</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>Electronica</td>
-                                                        <td>Lagtop</td>
+                                                        <td>Laptop</td>
                                                         <td>4 Unid</td>
                                                         <td>S/ 600</td>
                                                         <td>$ 200</td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-
+                                                    <tr>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>Electronica</td>
+                                                        <td>teclados</td>
+                                                        <td>60 Unid</td>
+                                                        <td>S/ 1200</td>
+                                                        <td>$ 400</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>Electronica</td>
+                                                        <td>placa madre</td>
+                                                        <td>50 Unid</td>
+                                                        <td>S/ 3000</td>
+                                                        <td>$ 260</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- Contenido de Tab 3 -->
                                     <div role="tabpanel" id="tab-3" class="tab-pane">
-                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                            <!-- Barra de búsqueda y botón Buscar -->
-                                            <div style="flex-grow: 1;">
-                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                            </div>
+                                        <div class="panel-body">
+                                            <!-- CONTENIDO DENTRO DEL TAB 3 -->
+                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                                <!-- Barra de búsqueda y botón Buscar -->
+                                                <div style="flex-grow: 1;">
+                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                </div>
 
-                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                            <div>
-                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                <!-- Botones Agregar, Actualizar y Descarga -->
+                                                <div>
+                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
 
-                                                <!-- Botón de Descarga con menú desplegable -->
-                                                <div class="btn-group">
-                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Descarga
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                        <a class="dropdown-item" href="#">Print</a>
+                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Descarga
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                            <a class="dropdown-item" href="#">Print</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="panel-body">
-                                            <!-- CONTENIDO DENTRO DEL TAB 3 -->
-                                            <table class="table table-striped table-bordered table-hover">
-                                                <br>
-                                                <thead>
+                                            <br>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>ID</td>
-                                                        <td>MES</td>
-                                                        <td>AÑO</td>
-                                                        <td>VISUALIZAR</td>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
+                                                        <th></th>
+                                                        <th>ID </th>
+                                                        <th>MES </th>
+                                                        <th>AÑO</th>
+                                                        <th>VISUALIZAR</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>01</td>
-                                                        <td>Octubre</td>
+                                                        <td>OCTUBRE</td>
                                                         <td>2021</td>
                                                         <td>
                                                             <div>
-                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                    VER
+                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
                                                                 </button>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>02</td>
-                                                        <td>Noviembre</td>
-                                                        <td>2021</td>
+                                                        <td>NOVIEMBRE</td>
+                                                        <td>2022</td>
                                                         <td>
                                                             <div>
-                                                                <button style="padding: 5PX 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                                    VER
+                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
                                                                 </button>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
+                                                    <tr>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>03</td>
+                                                        <td>FEBRERO</td>
+                                                        <td>2025</td>
+                                                        <td>
+                                                            <div>
+                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+
                                         </div>
                                     </div>
                                     <!-- Contenido de Tab 4 -->
                                     <div role="tabpanel" id="tab-4" class="tab-pane">
-                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                        <!-- Calendario -->
-                                        <div id="reportrange1" class="form-control">
-                                            <i class="fa fa-calendar"></i>
-                                            <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                        </div>
-                                    
-                                        <!-- Botones -->
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <div style="display: flex; gap: 10px;">
-                                                <div style="position: relative;">
-                                                    <a href="#" class="button"
-                                                        style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 5px 15px; text-decoration: none; cursor: pointer;"
-                                                        onclick="toggleOptions(event)">+</a>
-                                                    <div id="options" style="display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 4px; z-index: 1; margin-top: 8px; white-space: nowrap;">
-                                                        <a style="font-weight: bold; font-size: 16px; padding: 10px 5px">Almacenes:</a>
-                                                        <a href="#" style="display: block; padding: 10px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Arequipa</a>
-                                                        <a href="#" style="display: block; padding: 8px 16px; color: black; border-radius: 4px; margin: 4px 0;">Galeria Centro de Lima</a>
+                                        <div class="panel-body">
+                                            <!-- CONTENIDO DENTRO DEL TAB 4 -->
+                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                                <!-- Calendario -->
+                                                <div id="reportrange1" class="form-control">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
+                                                </div>
+
+                                                <!-- Botones -->
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <div style="display: flex; gap: 10px;">
+                                                        <div style="position: relative;">
+                                                            <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Descarga
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                            <a class="dropdown-item" href="#">Print</a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                    
-                                                <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; font-size: 24px; background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 7px 15px; text-decoration: none; cursor: pointer;">
-                                                    <i class="fas fa-download download-icon"></i>
-                                                </a>
                                             </div>
-                                    
-                                            <div class="btn-group">
-                                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Descarga
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Copy</a>
-                                                    <a class="dropdown-item" href="#">CSV</a>
-                                                    <a class="dropdown-item" href="#">Excel</a>
-                                                    <a class="dropdown-item" href="#">PDF</a>
-                                                    <a class="dropdown-item" href="#">Print</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                        <div class="panel-body">
-                                            <table class="table table-striped table-bordered table-hover">
+                                            <br>
+                                            <div class="table-responsive">
                                                 <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <thead>
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>Fecha</td>
-                                                        <td>Nº RUC</td>
-                                                        <td>Proveedor</td>
-                                                        <td>RUC</td>
-                                                        <td>Nº DOC Prov</td>
-                                                        <td>Sub.Total</td>
-                                                        <td>IGV</td>
-                                                        <td>Total</td>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
+                                                        <th></th>
+                                                        <th>FECHA</th>
+                                                        <th>N° RUC</th>
+                                                        <th>PROVEEDOR</th>
+                                                        <th>RUC</th>
+                                                        <th>N° DOC. PROVEEDOR</th>
+                                                        <th>SUB TOTAL</th>
+                                                        <th>IGV</th>
+                                                        <th>TOTAL</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>23/10/2024</td>
                                                         <td>20601381461</td>
                                                         <td>IMPACTO</td>
@@ -696,33 +771,32 @@
                                                         <td>S/ 216</td>
                                                         <td>S/ 1416</td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                            <table class="table table-striped table-bordered table-hover">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br>
+                                            <div class="table-responsive">
                                                 <h3 class="text-center">FACTURAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <thead>
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>Fecha</td>
-                                                        <td>Nº RUC</td>
-                                                        <td>Proveedor</td>
-                                                        <td>RUC</td>
-                                                        <td>Nº DOC</td>
-                                                        <td>Moneda</td>
-                                                        <td>Sub. Total</td>
-                                                        <td>IGV</td>
-                                                        <td>Total</td>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
+                                                        <th></th>
+                                                        <th>FECHA</th>
+                                                        <th>N° RUC</th>
+                                                        <th>PROVEEDOR</th>
+                                                        <th>RUC</th>
+                                                        <th>N° DOC</th>
+                                                        <th>MONEDA</th>
+                                                        <th>SUB TOTAL</th>
+                                                        <th>IGV</th>
+                                                        <th>TOTAL</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>23/10/2024</td>
                                                         <td>20956328574</td>
                                                         <td>LOGISTICA FERRE</td>
@@ -733,48 +807,47 @@
                                                         <td>S/ 216</td>
                                                         <td>S/ 1416</td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                            <table class="table table-striped table-bordered table-hover">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br>
+                                            <div class="table-responsive">
                                                 <h3 class="text-center">BOLETAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <thead>
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
-                                                        <td>Fecha</td>
-                                                        <td>Nº DOC</td>
-                                                        <td>Cliente</td>
-                                                        <td>RUC</td>
-                                                        <td>Nº Doc</td>
-                                                        <td>Moneda</td>
-                                                        <td>Sub. Total</td>
-                                                        <td>IGV</td>
-                                                        <td>Total</td>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
+                                                        <th></th>
+                                                        <th>FECHA</th>
+                                                        <th>N° DOC</th>
+                                                        <th>CLIENTE</th>
+                                                        <th>RUC</th>
+                                                        <th>N° DOC</th>
+                                                        <th>MONEDA</th>
+                                                        <th>SUB TOTAL</th>
+                                                        <th>IGV</th>
+                                                        <th>TOTAL</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox"  checked class="i-checks" name="input[]">
-                                                        </td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>23/10/2024</td>
-                                                        <td>72846344</td>
-                                                        <td>Fabricio</td>
-                                                        <td>20601381461</td>
-                                                        <td>72846344</td>
+                                                        <td>20956328574</td>
+                                                        <td>LOGISTICA FERRE</td>
+                                                        <td>20635894521</td>
+                                                        <td>84526955</td>
                                                         <td>PEN</td>
                                                         <td>s/ 1200</td>
                                                         <td>S/ 216</td>
                                                         <td>S/ 1416</td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -782,6 +855,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 <!-- Mainly scripts -->
