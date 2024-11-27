@@ -45,7 +45,8 @@ class NotaCreditoController extends Controller
         //cambiar de 0 a 1 en f_electronica
         $facturas=Facturacion::where('f_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
         $facturas_manuales=Facturacion_m::where('f_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
-        return view('transaccion.venta.nota_credito.lista_facturacion',compact('facturas','facturas_manuales'));
+        $igv=Igv::first();
+        return view('transaccion.venta.nota_credito.lista_facturacion',compact('facturas','facturas_manuales','igv'));
     }
 
     public function create_boleta()
@@ -53,7 +54,8 @@ class NotaCreditoController extends Controller
         //cambiar de 0 a 1 en f_electronica
         $boletas=Boleta::where('b_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
         $boletas_manuales=Boleta_m::where('b_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
-        return view('transaccion.venta.nota_credito.lista_boleta',compact('boletas','boletas_manuales'));
+        $igv=Igv::first();
+        return view('transaccion.venta.nota_credito.lista_boleta',compact('boletas','boletas_manuales','igv'));
     }
 
     public function create_nota_credito(Request $request){
