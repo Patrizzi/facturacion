@@ -149,7 +149,11 @@
                                         <td>AVENIDA A</td>
                                         <td>659865235</td>
                                         <td>GSO@GMAIL.COM</td>
-                                        <td>0001</td>
+                                        <td>
+                                            <div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>01</td>
@@ -158,7 +162,11 @@
                                         <td>AVENIDA C</td>
                                         <td>58462593</td>
                                         <td>FLIMA@GMAIL.COM</td>
-                                        <td>0001</td>
+                                        <td>
+                                            <div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>01</td>
@@ -167,7 +175,11 @@
                                         <td>AVENIDA E</td>
                                         <td>125486532</td>
                                         <td>TPERU@GMAIL.COM</td>
-                                        <td>0001</td>
+                                        <td>
+                                            <div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
+                                            </div>
+                                        </td>
                                     </tr>
 
                                     </tbody>

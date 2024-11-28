@@ -254,8 +254,7 @@
                     <th>CORREO</th>
                     <th>CELULAR</th>
                     <th>ALMACEN ASIGNADO</th>
-                    <td>ACTIVO/REACTIVO</td>
-                    <td>EDITAR</td>
+                    <td>ACCIONES</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -266,28 +265,16 @@
                     <td>SMITELEVELUP632@GMAIL.COM</td>
                     <td>983719672</td>
                     <td>GSO@CENTRAL</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>01</td>
-                    <td>FABRICIO</td>
-                    <td>PRACTICANTE</td>
-                    <td>SMITELEVELUP632@GMAIL.COM</td>
-                    <td>983719672</td>
-                    <td>GSO@CENTRAL</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>01</td>
-                    <td>FABRICIO</td>
-                    <td>PRACTICANTE</td>
-                    <td>SMITELEVELUP632@GMAIL.COM</td>
-                    <td>983719672</td>
-                    <td>GSO@CENTRAL</td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        <div>
+                            <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-check" style="color: white"></i></a></div>
+                            </button>
+                            <button style="padding: 5PX 5px; border: none; border-radius: 5px;">
+                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
 
                 </tbody>
