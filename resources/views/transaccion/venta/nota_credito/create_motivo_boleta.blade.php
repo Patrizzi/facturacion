@@ -115,7 +115,163 @@
     </div>
 </div>
 
- 
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row animated fadeInDown">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    @if(isset($boleta->codigo_boleta))
+                    <form method="POST" action="{{route('nota-credito.create_nota_credito_boleta')}}" class="row">
+                        @csrf
+                        <input type="hidden" name="tipo" id="" value="boleta_origi">
+                    <div class="container col-lg-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <h2><strong>Motivo de Nota de {{$boleta->codigo_boleta}}</strong></h2>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Número de BE:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" name="boleta_id" id="boleta_id" required value="{{$boleta->codigo_boleta}}" readonly/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Tipo:</strong></label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
+                                                    <option value="0"></option>
+                                                    <option value="01">Anulacion de la operacion</option>
+                                                    <option value="02">Anulacion por error en el RUC</option>
+                                                    <option value="03">Correcion por error en la descripcion</option>
+                                                    <option value="06">Devolucion Total</option>
+                                                    <option value="07">Devolucion por Item</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="div2">
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Número Nuevo:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" name="nueva_boleta" id="nueva_boleta">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision">
+                                            </div>
+                                        </div>
+                                        <div class="div1">
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label" ><strong>Motivo o sustento:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="text" name="sustento" id="sustento" class="form-control" autocomplete="off" placeholder="Observación" style="margin-top: 5px;"></input>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="div3">
+                                        <div class="form-group row">
+                                            <label>Descuento Global </label> 
+                                            <div class="col-sm-7">
+                                            <input type="text" class="form-control" name="descuento_global" id="descuento_global">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <button type="button" class="btn btn-success">Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+                @else
+                <form method="POST" action="{{route('nota-credito.create_nota_credito_boleta')}}" class="row">
+                    @csrf
+                    <input type="hidden" name="tipo" id="" value="boleta_manual">
+                <div class="container col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading text-center">
+                            <h2><strong>Motivo de Nota de {{$boleta_m->codigo_boleta}}</strong></h2>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Número de BE:</strong></label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" name="boleta_id" id="boleta_id" required value="{{$boleta_m->codigo_boleta}}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Tipo:</strong></label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" name="tipo_nota_credito" id="tipo_nota_credito" onchange="seleccion_motivo()">
+                                                <option value="0"></option>
+                                                <option value="01">Anulacion de la operacion</option>
+                                                <option value="02">Anulacion por error en el RUC</option>
+                                                <option value="03">Correcion por error en la descripcion</option>
+                                                <option value="06">Devolucion Total</option>
+                                                <option value="07">Devolucion por Item</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="div2">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Número Nuevo:</strong></label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" name="nueva_boleta" id="nueva_boleta">
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
+                                        <div class="col-sm-7">
+                                            <input type="date" placeholder="Ingrese Fecha" class="form-control" name="fecha_emision" id="fecha_emision">
+                                        </div>
+                                    </div>
+                                    <div class="div1">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label" ><strong>Motivo o sustento:</strong></label>
+                                        <div class="col-sm-7">
+                                            <input type="text" name="sustento" id="sustento" class="form-control" autocomplete="off" placeholder="Observación" style="margin-top: 5px;"></input>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="div3">
+                                    <div class="form-group row">
+                                        <label>Descuento Global </label> 
+                                        <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="descuento_global" id="descuento_global">
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-success">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @endif
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     seleccion_motivo();

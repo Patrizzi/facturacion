@@ -388,63 +388,54 @@
 
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-    <div class="col-lg-12">
+    <div class="row col-lg-12">
         <div class="ibox-content" style="padding-bottom: 0px;" >
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
                         <h3><strong>Condiones Generales</strong></h3>
                     </div>
                     <div class="panel-body">
-                        <div class="row col-lg-12">
-                            <div class="col-md-6">
+                        <div class="row col-lg-12">                        
                                 <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>T. Documento:</strong></label>
-                                    <div class="col-sm-7">
+                                    <label class="col-sm-2 col-form-label"><strong>T. Documento:</strong></label>
+                                    <div class="col-sm-4">
                                         <select class="form-control">
                                             <option>Factura</option>
                                             <option>Boleta</option>
                                             <option>Nota de Venta</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Validez:</strong></label>
-                                    <div class="col-sm-7">
+                          
+                                    <label class="col-sm-2 col-form-label"><strong>Validez:</strong></label>
+                                    <div class="col-sm-4">
                                         <select class="form-control">
                                             <option>Seleccione</option>
                                             <option>1 Día</option>
                                             <option>1 Semana</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
-                                    <div class="col-sm-7">
+                             
+                                    <label class="col-sm-2 col-form-label"><strong>Garantía:</strong></label>
+                                    <div class="col-sm-4">
                                         <select class="form-control">
                                             <option>Seleccione</option>
                                             <option>A Convenir</option>
                                             <option>---</option>
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
-                                    <div class="col-sm-7">
+
+                                    <label class="col-sm-2 col-form-label"><strong>Fecha de Emisión:</strong></label>
+                                    <div class="col-sm-4">
                                         <input type="date" class="form-control" value="2024-11-06" readonly />
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
-                                    <div class="col-sm-7">
+
+                                    <label class="col-sm-2 col-form-label"><strong>Cliente:</strong></label>
+                                    <div class="col-sm-4">
                                         <input type="text" class="form-control" placeholder="Cliente" />
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
-                                    <div class="col-sm-7">
+
+                                    <label class="col-sm-2 col-form-label"><strong>Forma de Pago:</strong></label>
+                                    <div class="col-sm-4">
                                         <select class="form-control">
                                             <option>Seleccione</option>
                                             <option>Contado</option>
@@ -452,15 +443,13 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
+                            
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label"><strong>Observación:</strong></label>
-                                    <div class="col-sm-10">
+                                    <label class="col-sm-1 col-form-label"><strong>Observación:</strong></label>
+                                    <div class="col-sm-11">
                                         <textarea id="Observación" name="Observación" class="form-control" placeholder="Observación"></textarea>
                                     </div>
                                 </div>
-                            </div>
                         </div>
                         <!--TABLA DE ELIMINAR--> 
                             <div class="table-responsive">
@@ -567,12 +556,15 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>       
         </div>
     </div>
 </div>
+
+
 <style>
     .col-form-label{margin-top: 15px!important;}
     .col-sm-5{margin-top: 15px!important;}
