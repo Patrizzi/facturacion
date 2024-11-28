@@ -28,7 +28,7 @@
                                 <address class="col-sm-4" align="left">
                                     <img src="{{asset('img/logos/'.$empresa->foto)}}" alt="" width="300px">
                                 </address>
-                            </div>  
+                            </div>
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4">
                                 <div class="form-control tooltip-demo" align="center" style="height: auto;">
@@ -170,6 +170,195 @@
     </div>
 </div>
 
+<!--Código GTS-->
+<div class="wrapper wrapper-content animated fadeInRight m-3">
+    <div class="row bg-white p-4">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading text-center">
+                    <h3><strong>CONDICIONES GENERALES</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row p-3">
+                        <!--Primera columna-->
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-5 col-xl-2 col-form-label"><strong>Cliente:</strong></label>
+                                <div class="col-lg-9 col-md-7 col-xl-10">
+                                    <select class="form-control m-b" name="account">
+                                        <option>option 1</option>
+                                        <option>option 2</option>
+                                        <option>option 3</option>
+                                        <option>option 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-5 col-xl-2 col-form-label"><strong>F.Pago:</strong></label>
+                                <div class="col-lg-9 col-md-7 col-xl-10">
+                                    <select class="form-control m-b" name="account">
+                                        <option>option 1</option>
+                                        <option>option 2</option>
+                                        <option>option 3</option>
+                                        <option>option 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group  row">
+                                <label class="col-lg-3 col-md-5 col-xl-2 col-form-label"><strong>Validez:</strong></label>
+                                <div class="col-lg-9 col-md-7 col-xl-10">
+                                    <select class="form-control m-b">
+                                        <option>option 1</option>
+                                        <option>option 2</option>
+                                        <option>option 3</option>
+                                        <option>option 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Segunda columna-->
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-5 col-xl-2 col-form-label"><strong>F.Emisión:</strong></label>
+                                <div class="col-lg-9 col-md-7 col-xl-10">
+                                    <input type="text" class="form-control m-b" />
+                                </div>
+                            </div>
+                            <div class="form-group  row">
+                                <label class="col-lg-3 col-md-5 col-xl-2 col-form-label"><strong>Garantía:</strong></label>
+                                <div class="col-lg-9 col-md-7 col-xl-10">
+                                    <select class="form-control m-b">
+                                        <option>option 1</option>
+                                        <option>option 2</option>
+                                        <option>option 3</option>
+                                        <option>option 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group  row">
+                                <label class="col-lg-3 col-md-5 col-xl-2 col-form-label"><strong>Moneda:</strong></label>
+                                <div class="col-lg-9 col-md-7 col-xl-10">
+                                    <select class="form-control m-b">
+                                        <option>option 1</option>
+                                        <option>option 2</option>
+                                        <option>option 3</option>
+                                        <option>option 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tercera columna-->
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-xl-1 col-md-3 col-lg-2 col-form-label"><strong>Observación:</strong></label>
+                                <div class="col-xl-11 col-md-9 col-lg-10">
+                                    <input id="observacion" name="observacion" type="text" class="form-control" placeholder="Observación">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--TABLA DE AGREGAR-->
+                        <div class="table-responsive mt-5">
+                            <table cellspacing="0" class="table tables">
+                                <thead>
+                                    <tr style="background-color: #3366cc; color: white; text-align: center;">
+                                        <th></th>
+                                        <th style="width: 30%;">Producto</th>
+                                        <th style="width: 30%;">Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>P.Segurido</th>
+                                        <th>Precio</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="addmore btn btn-danger">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"><option>Seleccione Articulo</option></select>                                        </td>
+                                        <td>
+                                            <input type="text" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" placeholder="Descripción" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="stock0" disabled name="stock[]" class="form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="addmore btn btn-danger">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"><option>Seleccione Articulo</option></select>                                        </td>
+                                        <td>
+                                            <input type="text" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" placeholder="Descripción" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="stock0" disabled name="stock[]" class="form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="text-center">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><strong>Total:</strong></td>
+                                        <td>
+                                            <input  id="total_final"  type="text" disabled class="form-control" required="">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <button class="btn btn-info" type="submit">
+                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
+                            </button>
+                            <button class="btn btn-warning" type="submit">
+                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar y Finalizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Código GTS-->
+
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
@@ -212,9 +401,9 @@
 <!-- Sweet alert -->
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
- 
+
 <script type="text/javascript">
-  
+
     $('.demo3').click(function (e) {
         if(document.forms['nota_venta_store'].reportValidity()){
             swal({
@@ -247,7 +436,7 @@
     });
 
     // $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    
+
     function mostrarMensaje(mensaje){
        $("#divmsg").empty(); //limpiar div
        $("#divmsg").append(mensaje);
@@ -257,7 +446,7 @@
         $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        
+
     });
     $(".finalizar").on('click', function (e) {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
@@ -277,7 +466,7 @@
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
-                    tipo_coti: tipo_coti    
+                    tipo_coti: tipo_coti
                 };
             },
             processResults: function (data) {
@@ -350,16 +539,16 @@
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term, // search term 
+                        search: params.term, // search term
                         almacen: 0,
-                        tipo_doc: 'manual' 
+                        tipo_doc: 'manual'
                     };
                 },
                 processResults: function (data) {
                     //validador de articulos multiples
                     let data_length = data.length;
                     let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
-                    let articles_selected_count_ajax = articles_selected_ajax.length; 
+                    let articles_selected_count_ajax = articles_selected_ajax.length;
                     // for(var z=0;z<articles_selected_count_ajax;z++){
                     //     var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
                     //     for(var y=0;y<data_length;y++){
@@ -395,7 +584,7 @@
         }else{
             var articulo = document.getElementById(`articulo${a}`).value;
             document.getElementById(`input_prod${a}`).value = articulo;
-            
+
         }
 
         var almacen = $('[id="almacen_id"]').val();
@@ -408,7 +597,7 @@
                 '_token': $('input[name=_token]').val(),
                 'articulo': articulo,
                 'almacen': almacen,
-                'moneda': moneda	
+                'moneda': moneda
             },
             success: function (msg) {
                 if(msg.price == 0 && msg.amount == 0){
@@ -518,8 +707,8 @@
             url: "{{ route('nota_venta.precio_sugerido') }}",
             data: {
                 '_token': $('input[name=_token]').val(),
-                'item': item,		
-                'moneda': moneda,		
+                'item': item,
+                'moneda': moneda,
             },
             success: function (msg) {
                 console.log(msg);
