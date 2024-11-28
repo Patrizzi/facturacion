@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <!-- Modal Create  -->
+    {{-- <!-- Modal Create  -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document" style="margin-left: 25%">
@@ -162,7 +162,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- MONEDAS --}}
+                    <!-- MONEDAS -->
                     <div class="col-lg-5">
                         <div class="ibox-content">
                             <span style="font-size: 15px;"><b>Moneda Principal</b> <i style="color:#0f0ff7ad;"
@@ -197,7 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- FIN MONEDAS --}}
+                    <!-- FIN MONEDAS -->
                     <div class="col-lg-4 m-b-lg">
                         <div id="vertical-timeline" class="vertical-container light-timeline no-margins">
                             @foreach ($banco as $bancos)
@@ -207,7 +207,7 @@
                                     </div>
                                     <div class="vertical-timeline-content" align="center">
                                         @if ($bancos->estado == 0)
-                                            {{-- TIPO DE CUENTA = NOMBRE DE BANCO --}}
+                                            <!-- TIPO DE CUENTA = NOMBRE DE BANCO  -->
                                             <strong><span>{{ $bancos->nombre_banco }}</span></strong>
                                             <br>
                                             <i class="fa fa-circle" style="color: #5fa8f3;"></i>
@@ -219,7 +219,7 @@
                                             style="width: 150px;cursor: pointer;"><br>
                                     </div>
                                 </div>
-                                {{-- MODAL BANCOS --}}
+                                <!-- MODAL BANCOS  -->
                                 <div class="modal fade" id="exampleModal{{ $bancos->id }}" tabindex="-1"
                                     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -236,7 +236,7 @@
                                                                 <div class="panel-body">
                                                                     <div class="row"
                                                                         style="align-items: center !important">
-                                                                        {{-- Foto --}}
+                                                                        <!-- Foto -->
                                                                         <div class="col-sm-6">
                                                                             <strong>Nombre</strong>
                                                                             <input type="text" class="form-control"
@@ -272,8 +272,8 @@
 
                                                                     </div>
                                                                     <hr>
-                                                                    {{-- / foto --}}
-                                                                    {{-- Registros --}}
+                                                                     <!-- / foto -->
+                                                                     <!-- Registros -->
                                                                     <div class="row"
                                                                         style="align-items: center !important">
                                                                         <div class="col-lg-3"
@@ -300,38 +300,6 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    {{-- @if (count($banco_registro->where('banco_id', $bancos->id)) == 0)
-                                    <div class="row delete_modal_edit_0"  style="padding-top: 10px;padding-bottom: 10px;align-items: center !important">
-                                      <div class="col-lg-3">
-                                        <input type="text" name="creadas_id[]" hidden value="" readonly>
-                                        <select name="descripcion1_creadas[]" class="form-control" id="">
-                                          <option value="Cta C.">Cuenta Corriente</option>
-                                          <option value="Cta A.">Cuenta Ahorro</option>
-                                          <option value="Cta Det.">Cuenta Detracciones</option>
-                                          <option value="CCI">Cod. C. Interbancario</option>
-                                        </select>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <select name="moneda_creada[]" class="form-control" id="">
-                                          @foreach ($moneda as $monedas)
-                                            <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                          @endforeach
-                                        </select>
-                                      </div>
-                                      <div class="col-lg-3">
-                                        <input type="text" name="descripcion2_creadas[]" class="form-control descripcion2_creadas" value=""  autocomplete="off">
-                                      </div>
-                                      <div class="col-lg-2" align="right">
-                                        <input type="checkbox" class="form-control change_status" name="estado_detraccion" id="" value="on" >
-                                        <input type="hidden" class="ipt_hidden" id="input_check_0" name="det_creada[]">
-                                      </div>
-                                      <div class="col-lg-1" align="right">
-                                        <button type="button" class="btn btn-secondary" onclick="eliminar_edit(0)"><i class="fa fa-trash-o"></i></button>
-                                        <input type="hidden" name="value_eliminar[]" id="eliminar_0" value="0">
-                                      </div>
-                                    </div>
-                                    <input type="" id="count_reg_0" value="0">
-                                  @else --}}
                                                                     @foreach ($banco_registro->where('banco_id', $bancos->id) as $banco_registros)
                                                                         <div class="row delete_modal_edit_{{ $banco_registros->id }}"
                                                                             style="padding-top: 10px;padding-bottom: 10px;align-items: center !important">
@@ -340,7 +308,7 @@
                                                                                     hidden
                                                                                     value=" {{ $banco_registros->id }}"
                                                                                     readonly>
-                                                                                {{-- <input type="t ext" name="descripcion1_creadas[]" class="form-control" value=" {{$banco_registros->tipo_cuenta}}"> --}}
+                                                                                <!-- <input type="t ext" name="descripcion1_creadas[]" class="form-control" value=" {{$banco_registros->tipo_cuenta}}"> -->
                                                                                 <select name="descripcion1_creadas[]"
                                                                                     class="form-control" id="">
                                                                                     <option value="Cta C."
@@ -403,10 +371,10 @@
                                                                         id="count_reg_{{ $bancos->id }}"
                                                                         value="{{ $banco_registro->where('banco_id', $bancos->id)->count() }}">
 
-                                                                    {{-- @endif --}}
+                                                                     <!-- @endif -->
                                                                     <div id="conteiner_add_{{ $bancos->id }}">
                                                                     </div>
-                                                                    {{-- Registros --}}
+                                                                     <!-- Registros -->
                                                                     <div class="row"
                                                                         style="padding-top: 10px;padding-bottom: 10px;">
                                                                         <label
@@ -448,7 +416,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- FIN  MODAL BANCOS --}}
+                                <!-- FIN  MODAL BANCOS -->
                             @endforeach
                             <input type="hidden" id="count_check_detr"
                                 value="{{ $banco_registro->where('estado_detraccion', 1)->count() }}">
@@ -458,11 +426,7 @@
             </div>
         </div>
     </div>
-
-
-
-
-
+--}}
 
     {{-- INICIO FLAVIA --}}
         <div class="mt-4">
@@ -921,6 +885,7 @@
                                                             </div>
                                                         {{-- FIN  MODAL BANCOS --}}
                                                     @endforeach
+                                                    <input type="hidden" id="count_check_detr" value="{{ $banco_registro->where('estado_detraccion', 1)->count() }}">
                                                 </div>
                                             </div>
                                         </div>
