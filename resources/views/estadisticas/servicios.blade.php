@@ -110,29 +110,107 @@
                                         <div id="ct-chart7"  class="ct-perfect-fourth"></div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="ibox">
+                                    <div class="ibox-title">
+                                        <h5>Venta por Distritos </h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div id="ct-chart5" class="ct-perfect-fourth"  ></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="ibox ">
+                                    <div class="ibox-title">
+                                        <h5>Total de Gatos y Ingresos</h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div>
+                                            <canvas id="barChart" height="120"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-title">
+                                                <h5>Recomendaciones en 6 meses</h5>
+                                                <div class="ibox-tools">
+                                                    <a class="collapse-link">
+                                                        <i class="fa fa-chevron-up"></i>
+                                                    </a>
+                                                    <a class="close-link">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="ibox-content" style="display: none;">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-hover margin bottom">
+                                                            <thead>
+                                                            <tr>
+                                                                <th style="width: 1%" class="text-center">No.</th>
+                                                                <th>Productos</th>
+                                                                <th class="text-center">%</th>
+                                                                <th class="text-center">Vendido</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td class="text-center">1</td>
+                                                                <td> Producto 1
+                                                                    </td>
+                                                                <td class="text-center small">90%</td>
+                                                                <td class="text-center"><span class="label label-primary">$483.00</span></td>
 
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">2</td>
+                                                                <td> Producto 2
+                                                                </td>
+                                                                <td class="text-center small">80%</td>
+                                                                <td class="text-center"><span class="label label-primary">$327.00</span></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">3</td>
+                                                                <td> Producto 3
+                                                                </td>
+                                                                <td class="text-center small">20%</td>
+                                                                <td class="text-center"><span class="label label-warning">$125.00</span></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">4</td>
+                                                                <td> Producto 4</td>
+                                                                <td class="text-center small">60%</td>
+                                                                <td class="text-center"><span class="label label-primary">$344.00</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">5</td>
+                                                                <td>Producto 5</td>
+                                                                <td class="text-center small">50%</td>
+                                                                <td class="text-center"><span class="label label-primary">$235.00</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">6</td>
+                                                                <td>Producto 6</td>
+                                                                <td class="text-center small">40%</td>
+                                                                <td class="text-center"><span class="label label-primary">$100.00</span></td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div role="tabpanel" id="tab-3" class="tab-pane">
-                    <div class="panel-body">
-                    <iframe title="power-tr1" width="100%" height="900" src="https://app.powerbi.com/view?r=eyJrIjoiOTJjZmRjZjktNDE2Ni00ZjY4LWIzMjktNDI1OTJmMGVjZGY4IiwidCI6ImI0YTQwNTQ1LTc3NzktNGIzOC1hZmY3LTFmMTczOGY4MDg0MCIsImMiOjR9" frameborder="0" allowFullScreen="true"></iframe>
-                    </div>
-                </div>
-                <div role="tabpanel" id="tab-4" class="tab-pane">
-                    <div class="panel-body">
-                        <strong>Donec quam felis</strong>
-
-                        <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the
-                            stalks, and grow familiar with the countless indescribable forms of the insects
-                            and flies, then I feel the presence of the Almighty, who formed us in his own image, and the
-                            breath </p>
-
-                        <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of
-                            souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                            sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a
-                            single stroke at the present moment; and yet.</p>
                     </div>
                 </div>
             </div>
@@ -336,7 +414,64 @@
         // Adjuntamos la leyenda al contenedor del gráfico
         $('#ct-chart7').after(legend);
         });
+        
+        $(document).ready(function(){
 
+        // Stocked horizontal bar
+
+        new Chartist.Bar('#ct-chart5', {
+            labels: ['San borja', 'Independencia', 'Los Olivos', 'Cercado de Lima', 'Comas', 'Jesus Maria'],
+            series: [
+                [67, 55, 53, 40, 32, 23]
+            ]
+        }, {
+            seriesBarDistance: 10,
+            reverseData: true,
+            horizontalBars: true,
+            axisY: {
+                offset: 70
+            },
+            axisX: {
+                labelInterpolationFnc: function(value, index) {
+                    // Mostrar solo 5 etiquetas en el eje X, en intervalos uniformes
+                    const numLabels = 10;
+                    const totalLabels = 10; // Número total de valores del eje X
+                    if (index % Math.ceil(totalLabels / numLabels) === 0) {
+                        return Math.round(value); // Mostrar el valor redondeado
+                    } else {
+                        return null; // Ocultar otras etiquetas
+                    }
+                }
+            }
+        });
+        });
+            var barData = {
+            labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Nobiembre", "Diciembre"],
+            datasets: [
+                {
+                    label: "Ventas Totales",
+                    backgroundColor: 'rgba(255, 255, 0, 0.5)',
+                    pointBorderColor: "#fff",
+                    data: [65, 59, 80, 81, 56, 55, 40, 70, 60, 65, 68, 83]
+                },
+                {
+                    label: "Gastos Totales",
+                    backgroundColor: 'rgba(26,179,148,0.5)',
+                    borderColor: "rgba(26,179,148,0.7)",
+                    pointBackgroundColor: "rgba(26,179,148,1)",
+                    pointBorderColor: "#fff",
+                    data: [28, 38, 40, 40, 26, 27, 25, 31, 43, 34, 25, 30]
+                }
+            ]
+        };
+
+        var barOptions = {
+            responsive: true
+        };
+
+            var ctx2 = document.getElementById("barChart").getContext("2d");
+            new Chart(ctx2, {type: 'bar', data: barData, options:barOptions});
+            
 
     </script>
 

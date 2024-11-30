@@ -134,82 +134,82 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                            <div class="col-lg-12">
-                                <div class="ibox ">
-                                    <div class="ibox-title">
-                                        <h5>Recomendaciones en 6 meses</h5>
-                                        <div class="ibox-tools">
-                                            <a class="collapse-link">
-                                                <i class="fa fa-chevron-up"></i>
-                                            </a>
-                                            <a class="close-link">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="ibox-content" style="display: none;">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <table class="table table-hover margin bottom">
-                                                    <thead>
-                                                    <tr>
-                                                        <th style="width: 1%" class="text-center">No.</th>
-                                                        <th>Productos</th>
-                                                        <th class="text-center">%</th>
-                                                        <th class="text-center">Vendido</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="text-center">1</td>
-                                                        <td> Producto 1
-                                                            </td>
-                                                        <td class="text-center small">90%</td>
-                                                        <td class="text-center"><span class="label label-primary">$483.00</span></td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">2</td>
-                                                        <td> Producto 2
-                                                        </td>
-                                                        <td class="text-center small">80%</td>
-                                                        <td class="text-center"><span class="label label-primary">$327.00</span></td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">3</td>
-                                                        <td> Producto 3
-                                                        </td>
-                                                        <td class="text-center small">20%</td>
-                                                        <td class="text-center"><span class="label label-warning">$125.00</span></td>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">4</td>
-                                                        <td> Producto 4</td>
-                                                        <td class="text-center small">60%</td>
-                                                        <td class="text-center"><span class="label label-primary">$344.00</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">5</td>
-                                                        <td>Producto 5</td>
-                                                        <td class="text-center small">50%</td>
-                                                        <td class="text-center"><span class="label label-primary">$235.00</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center">6</td>
-                                                        <td>Producto 6</td>
-                                                        <td class="text-center small">40%</td>
-                                                        <td class="text-center"><span class="label label-primary">$100.00</span></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
+                                    <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-title">
+                                                <h5>Recomendaciones en 6 meses</h5>
+                                                <div class="ibox-tools">
+                                                    <a class="collapse-link">
+                                                        <i class="fa fa-chevron-up"></i>
+                                                    </a>
+                                                    <a class="close-link">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="ibox-content" style="display: none;">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-hover margin bottom">
+                                                            <thead>
+                                                            <tr>
+                                                                <th style="width: 1%" class="text-center">No.</th>
+                                                                <th>Productos</th>
+                                                                <th class="text-center">%</th>
+                                                                <th class="text-center">Vendido</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td class="text-center">1</td>
+                                                                <td> Producto 1
+                                                                    </td>
+                                                                <td class="text-center small">90%</td>
+                                                                <td class="text-center"><span class="label label-primary">$483.00</span></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">2</td>
+                                                                <td> Producto 2
+                                                                </td>
+                                                                <td class="text-center small">80%</td>
+                                                                <td class="text-center"><span class="label label-primary">$327.00</span></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">3</td>
+                                                                <td> Producto 3
+                                                                </td>
+                                                                <td class="text-center small">20%</td>
+                                                                <td class="text-center"><span class="label label-warning">$125.00</span></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">4</td>
+                                                                <td> Producto 4</td>
+                                                                <td class="text-center small">60%</td>
+                                                                <td class="text-center"><span class="label label-primary">$344.00</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">5</td>
+                                                                <td>Producto 5</td>
+                                                                <td class="text-center small">50%</td>
+                                                                <td class="text-center"><span class="label label-primary">$235.00</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">6</td>
+                                                                <td>Producto 6</td>
+                                                                <td class="text-center small">40%</td>
+                                                                <td class="text-center"><span class="label label-primary">$100.00</span></td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="ibox ">
