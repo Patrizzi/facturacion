@@ -381,6 +381,285 @@
     </div>
 </div>
 <div id="loaderGif"></div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="ibox">
+                        <div class="ibox-content"> 
+                            <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <h3><strong> Datos del cliente</strong></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row ">
+                                    <div class="col-sm-12">
+                                            <div style="margin: auto 50px">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
+                                                    <div class="col-sm-8">
+                                                        <p class="form-control">Marlo Samaniego Calderon</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label
+                                                        class="col-sm-4 col-form-label"><strong>RUC:</strong></label>
+                                                    <div class="col-sm-8">
+                                                        <p class="form-control">75451201</p>
+                                                    </div>
+                                                </div>   
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-lg-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <h3><strong> Datos del Vendedor</strong></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row ">
+                                    <div class="col-sm-12">
+                                            <div style="margin: auto 50px">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
+                                                    <div class="col-sm-8">
+                                                        <p class="form-control">Administrador</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label
+                                                        class="col-sm-4 col-form-label"><strong>Contacto:</strong></label>
+                                                    <div class="col-sm-8">
+                                                        <p class="form-control">999876543</p>
+                                                    </div>
+                                                </div>   
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+               <div class="col-lg-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <h3><strong>Datos de la Venta</strong></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row col-lg-12">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Orden de Compra:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Guía de Remisión:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Almacén:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Forma de pago:</strong></label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control">
+                                                    <option>Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Observación:</strong></label>
+                                            <div class="col-sm-7">
+                                                <textarea id="Observación" name="Observación" class="form-control" autocomplete="off" placeholder="Observación" style="margin-top: 5px;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>F. Inicio:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="date" class="form-control" value="2024-11-06" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>F. Vencimiento:</strong></label>
+                                            <div class="col-sm-7">
+                                                <input type="date" class="form-control" value="2024-11-06" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control">
+                                                    <option>Seleccione</option>
+                                                    <option>Soles</option>
+                                                    <option>Dolares</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>T. Operación:</strong></label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control">
+                                                    <option>Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label"><strong>Detracción:</strong></label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control">
+                                                    <option>Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--TABLA DE AGREGAR--> 
+                                    <div class="table-responsive">
+                                        <table cellspacing="0" class="table tables">
+                                            <thead>
+                                                <tr style="background-color: #3366cc; color: white; text-align: center;">
+                                                    <th>Acción</th>
+                                                    <th style="width: 300px;">Artículo</th>
+                                                    <th>Cantidad</th>
+                                                    <th>P. Sugerido</th>
+                                                    <th>Precio S/Igv</th>
+                                                    <th>Precio C/Igv</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" class="addmore btn btn-success">
+                                                            <i class="fa fa-plus-square" aria-hidden="true"></i> 
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
+                                                        <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
+                                                        <textarea id="Serie" name="Serie" class="form-control" autocomplete="off" placeholder="Número de Serie" style="margin-top: 5px;"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="cantidad" name="cantidad[]" min="1" class="monto0 form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="preciosugerido" name="precio[]" disabled class="monto0 form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="precioS" name="descuento" class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="precioC" disabled class="form-control" required autocomplete="off" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="total" name="total" disabled class="total form-control" required autocomplete="off" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                   <!--TABLA DE ELIMINAR--> 
+                                    <div class="table-responsive">
+                                        <table cellspacing="0" class="table tables">
+                                            <thead>
+                                                <tr style="background-color: #3366cc; color: white; text-align: center;">
+                                                    <th>Acción</th>
+                                                    <th style="width: 300px;">Artículo</th>
+                                                    <th>Cantidad</th>
+                                                    <th>P. Sugerido</th>
+                                                    <th>Precio S/Igv</th>
+                                                    <th>Precio C/Igv</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
+                                                        <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
+                                                        <textarea id="Serie" name="Serie" class="form-control" autocomplete="off" placeholder="Número de Serie" style="margin-top: 5px;"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" id="cantidad" name="cantidad[]" min="1" class="monto0 form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="preciosugerido" name="precio[]" disabled class="monto0 form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="precioS" name="descuento" class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="precioC" disabled class="form-control" required autocomplete="off" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="total" name="total" disabled class="total form-control" required autocomplete="off" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr >
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td> 
+                                                    <td><strong>Subtotal:</strong></td>
+                                                    <td colspan="2">
+                                                    <input  id="subtotal"  type="text" disabled class="form-control" required="">
+                                                </td>
+                                                </tr>
+                                                <tr >
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><strong>IGV:</strong></td>
+                                                    <td colspan="2">
+                                                        <input  id="igv"  type="text" disabled class="form-control" required=""></td>
+                                                </tr>
+                                                <tr >
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><strong>Total:</strong></td>
+                                                    <td colspan="2">
+                                                    <input  id="total_final"  type="text" disabled class="form-control" required=""></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <div>
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
+                                            </button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>       
+                </div>
+            </div>
+
 <style>
     .form-control{border-radius: 10px}
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
