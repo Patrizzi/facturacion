@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4    ">
+                            <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
                                         <h5>Ranking por Unidades Vendidas</h5>
@@ -125,10 +125,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4    ">
+                            <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
-                                        <h5>Ranking por Unidades Vendidas</h5>
+                                        <h5>Ranking por Facturas Realizadas</h5>
                                     </div>
                                     <div class="ibox-content">
                                         <div id="ct-chart9" class="ct-perfect-fourth"></div>
@@ -144,7 +144,9 @@
         </div>
     </div>
     <style>
-
+        .tabs-container .panel-body{
+            background-color: black;
+        }
         #ct-chart4 {
             width: 100% !important; /* Ajusta el ancho según necesites */
             height: 300px !important; /* Ajusta el alto según necesites */
@@ -239,6 +241,10 @@
         .ct-series-b .ct-bar {
             stroke: #ece9fe !important; /* Verde */
             fill: #ece9fe !important;   /* Verde */
+        }
+        .ct-label {
+            font-size: 12px !important;
+            
         }
 
     </style>
@@ -368,7 +374,7 @@
         new Chartist.Bar('#ct-chart8', {
             labels: ['Cliente1', 'Cliente2', 'Cliente3', 'Cliente4', 'Cliente5', 'Cliente6'],
             series: [
-                [50000, 33000, 23000, 20000, 14000, 10000]
+                [20000, 16000, 12000, 8500, 4000, 1000]
             ]
         }, {
             seriesBarDistance: 10,

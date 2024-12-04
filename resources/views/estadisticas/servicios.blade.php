@@ -220,7 +220,7 @@
     </div>
     <style>
         .tabs-container .panel-body{
-            background-color: #f3f3f4;
+            background-color: black;
         }
         #ct-chart4 {
             width: 100% !important; /* Ajusta el ancho según necesites */

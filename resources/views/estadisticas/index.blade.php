@@ -231,6 +231,10 @@
         </div>
     </div>
     <style>
+        .tabs-container .panel-body{
+            background-color: black;
+        }
+
         #ct-chart4 {
             width: 100% !important; /* Ajusta el ancho según necesites */
             height: 300px !important; /* Ajusta el alto según necesites */
