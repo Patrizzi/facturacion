@@ -430,14 +430,14 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
                                                 <div class="col-sm-8">
-                                                    <p class="form-control">Paolo Guerrero Gonzales</p>
+                                                    <input type="text" class="form-control m-b" name="cliente" required  autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label
                                                     class="col-sm-4 col-form-label"><strong>RUC:</strong></label>
                                                 <div class="col-sm-8">
-                                                    <p class="form-control">80561230</p>
+                                                    <input type="text" class="form-control m-b" name="RUC" required  autocomplete="off">
                                                 </div>
                                             </div>   
                                         </div>
@@ -459,14 +459,14 @@
                                                 <div class="form-group row">
                                                 <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
                                                 <div class="col-sm-8">
-                                                    <p class="form-control">Administrador</p>
+                                                    <input type="text" class="form-control m-b" name="admin" required  autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label
                                                     class="col-sm-4 col-form-label"><strong>Contacto:</strong></label>
                                                 <div class="col-sm-8">
-                                                    <p class="form-control">987654320</p>
+                                                    <input type="text" class="form-control m-b" name="contacto" required  autocomplete="off">
                                                 </div>
                                             </div>   
                                         </div>

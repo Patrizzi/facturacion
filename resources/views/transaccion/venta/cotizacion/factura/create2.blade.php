@@ -443,13 +443,13 @@
                                         </select>
                                     </div>
                                 </div>
-                            
-                                <div class="form-group row">
-                                    <label class="col-sm-1 col-form-label"><strong>Observación:</strong></label>
-                                    <div class="col-sm-11">
-                                        <textarea id="Observación" name="Observación" class="form-control" placeholder="Observación"></textarea>
-                                    </div>
-                                </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-1 col-form-label"><strong>Observación:</strong></label>
+                                        <div class="col-sm-11">
+                                            <textarea id="Observación" name="Observación" class="form-control" placeholder="Observación"></textarea>
+                                        </div>
+                                    </div>                    
                         </div>
                         <!--TABLA DE ELIMINAR--> 
                             <div class="table-responsive">
@@ -559,10 +559,8 @@
                         </div>
                     </div>
                 </div>
-            </div>       
+            </div>
         </div>
-    </div>
-</div>
 
 
 <style>

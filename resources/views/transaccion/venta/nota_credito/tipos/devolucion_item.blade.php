@@ -279,6 +279,211 @@
             </div>
         </div>
     </div>
+
+    <div class="wrapper wrapper-content">
+        <div class="row animated fadeInDown">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center">
+                                <h2><strong>Devolucion por Item</strong></h2>
+                            </div>
+                                <div class="col-lg-12">
+                                    <div class="ibox">
+                                        <div class="ibox-content">
+                                                <!--Datos Generales -->
+                                                <div class="panel panel-success">
+                                                    <div class="panel-heading" >
+                                                        <h3 class="text-center"><strong>Datos Generales</strong></h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control" value="EM PLAST PERU E.I.R.L." readonly />
+                                                                    </div>
+                                                                </div>                                                  
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label"><strong>Condiciones:</strong></label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control">
+                                                                            <option value="Contado" selected>Contado</option>
+                                                                            <option value="Crédito">Crédito</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label"><strong>RUC o DNI:</strong></label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control" value="20600184666" readonly />
+                                                                    </div>
+                                                                </div>                                           
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label"><strong>Tipo:</strong></label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control">
+                                                                            <option value="Soles" selected>Soles</option>
+                                                                            <option value="Dólares">Dólares</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-2 col-form-label"><strong>Dirección:</strong></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" class="form-control" value="AV. SANTA ANA LOTE 56 INT. A1 LOT. CHACRA CERRO ZONA E LIMA LIMA COMAS" readonly />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <!-- Condiciones Generales -->
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading" >
+                                                            <h3 class="text-center"><strong>Condiciones Generales</strong></h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Orden de Compra:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control" value="0" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Guía de Remisión:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control" value="0" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Tipo:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <select class="form-control">
+                                                                                <option value="Devolucion" selected>Devolución por Item</option>
+                                                                                <option value="Descuento">Descuento Global</option>
+                                                                                <option value="Descripcion">Error en descripcion</option>
+                                                                                <option value="RUC">Anulacion error RUC</option>
+                                                                                <option value="Operacion">Anulacion de Operacion</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Motivo o Sustento:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <textarea type="textarea " class="form-control" placeholder="Descripción"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Fecha de Inicio:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <input class="form-control" value="2024-11-14 12:11:43" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>F. de Vencimiento:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <input class="form-control" value="2024-11-14 12:11:43" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Descuento Global:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control" value="..." readonly />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-4 col-form-label"><strong>Nueva Factura Electronica:</strong></label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control" value="..." readonly />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Tabla-->
+                                                    <div class="table-responsive">
+                                                        <table cellspacing="0" class="table tables">
+                                                            <thead>
+                                                                <tr style="background-color: #3366cc; color: white; text-align: center;">
+                                                                    <th>Acción</th>
+                                                                    <th>N°</th>
+                                                                    <th>Código</th>
+                                                                    <th>Item</th>
+                                                                    <th>Cantidad</th>
+                                                                    <th>Precio Unitario</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>
+                                                                    <td><input type="text" class="form-control border-0" value="1" /></td>
+                                                                    <td><input type="text" class="form-control border-0" value="SERV-0000001"/></td>
+                                                                    <td><input type="text" class="form-control border-0" value="1" /></td>
+                                                                    <td><input type="text" class="form-control" value="1" /></td>
+                                                                    <td><input type="text" class="form-control" value="67.8" /></td>
+                                                                    <td><input type="text" class="form-control" value="67.8" readonly /></td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td><strong>Subtotal:</strong></td>
+                                                                    <td colspan="2">
+                                                                    <input id="subtotal" type="text" class="form-control" value="67.8" readonly></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td><strong>IGV:</strong></td>
+                                                                    <td colspan="2">
+                                                                    <input id="igv" type="text" class="form-control" value="12.2" readonly></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td><strong>Total:</strong></td>
+                                                                    <td colspan="2">
+                                                                    <input  id="total_final" type="text" class="form-control" value="80.0" readonly></td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                    <div class="text-center" style="margin-top: 20px;">
+                                                        <button class="btn btn-success">Guardar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <style>
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
