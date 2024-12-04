@@ -110,7 +110,9 @@
                                 <!-- Botones Agregar, Actualizar y Descarga -->
                                 <div>
                                     <button class="btn btn-success" id="btn-agregar" onclick="toggleForm()" style="margin-right: 10px;">Agregar</button>
-                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                    <button class="btn btn-primary" style="margin-right: 10px;">
+                                        <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-refresh" style="font-size: 20px; color:white"></i></a></div>
+                                    </button>
 
                                     <!-- Botón de Descarga con menú desplegable -->
                                     <div class="btn-group">
@@ -138,7 +140,7 @@
                                         <th>DIRECCION</th>
                                         <th>TELEFONO</th>
                                         <th>CORREO</th>
-                                        <td>EDITAR</td>
+                                        <td>ACCIONES</td>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -150,7 +152,7 @@
                                         <td>659865235</td>
                                         <td>GSO@GMAIL.COM</td>
                                         <td>
-                                            <div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                            <div style="box-shadow: none;">
                                                 <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
                                             </div>
                                         </td>
@@ -163,7 +165,7 @@
                                         <td>58462593</td>
                                         <td>FLIMA@GMAIL.COM</td>
                                         <td>
-                                            <div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                            <div style="box-shadow: none;">
                                                 <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
                                             </div>
                                         </td>
@@ -176,7 +178,7 @@
                                         <td>125486532</td>
                                         <td>TPERU@GMAIL.COM</td>
                                         <td>
-                                            <div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                            <div style="box-shadow: none;">
                                                 <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
                                             </div>
                                         </td>

@@ -240,7 +240,7 @@
 
             <!-- Botones Agregar, Actualizar y Descarga -->
             <div>
-                <button class="btn btn-success" id="btn-agregar" onclick="toggleForm()" style="margin-right: 10px;">Agregar</button>
+                <button class="btn btn-success" id="btn-agregar" onclick="toggleForm()" style="margin-right: 10px;">+</button>
             </div>
         </div>
         <br>
@@ -267,16 +267,16 @@
                     <td>GSO@CENTRAL</td>
                     <td>
                         <div>
-                            <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-check" style="color: white"></i></a></div>
+                            <button type="button" class="btn btn-primary">
+                                <i class="fa fa-edit" style="font-size: 20px; color:white"></i></a>
                             </button>
-                            <button style="padding: 5PX 5px; border: none; border-radius: 5px;">
-                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
+
+                            <button type="button" class="btn btn-success" id="show-form-button">
+                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-refresh" style="font-size: 20px; color:white"></i></a></div>
                             </button>
                         </div>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
         </div>
@@ -290,38 +290,79 @@
             <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
         </div>
     </div>
-    <!-- Formulario oculto -->
-    <div id="form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
-        <div class="modal-content">
-            <h2>NUEVO USUARIO</h2>
-
-            <div class="button-container" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <button id="btn-descargar" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1; margin-right: 5px;">Descargar</button>
-                <button id="btn-agregar-form" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1;">Agregar</button>
+    <!-- Formulario oculto de agregar usuario -->
+    <div id="form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; width: 1000px;">
+        <div>
+            <div class="button-container" style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                <h2 style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 12px 15px; cursor: pointer; flex: 1; text-align: center;">NUEVO USUARIO</h2>
             </div>
 
             <div class="form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: left;">
-                <div style=" flex-direction: column;">
-                    <label for="id" style="display: block;">ID:</label>
-                    <input type="text" id="id" placeholder="Ingrese ID" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="personal" style="width: 100px;">PERSONAL:</label>
+                    <input type="text" id="personal" placeholder="Ingrese nombre personal" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="CARGO" style="width: 100px;">Cargo:</label>
+                    <input type="text" id="CARGO" placeholder="Ingrese Cargo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="correo" style="width: 100px;">CORREO:</label>
+                    <input type="text" id="correo" placeholder="Ingrese Correo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="celular" style="width: 100px;">CELULAR:</label>
+                    <input type="text" id="celular" placeholder="Ingrese numero de celular" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="almacen" style="width: 100px;">ALMACEN:</label>
+                    <input type="text" id="almacen" placeholder="Ingrese almacen" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <button id="btn-agregar-form" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 12px 15px; cursor: pointer; font-size: 15px;">AGREGAR USUARIO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Formulario oculto para actualizar datos del usuario -->
+    <div id="edit-form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; width: 600px;">
+        <div>
+            <!-- Encabezado con imagen -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="placeholder.jpg" alt="Foto de perfil" style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid #ccc; object-fit: cover;">
+            </div>
 
-                    <label for="personal" style="display: block;">PERSONAL:</label>
-                    <input type="text" id="personal" placeholder="Ingrese nombre personal" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                    <label for="activar" style="display: block;">ACTIVAR:</label>
-                    <input type="checkbox" id="activar" style="margin-top: 10px;">
+            <!-- Campos del formulario -->
+            <div class="form-fields" style="display: flex; flex-direction: column; gap: 15px; text-align: left;">
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="cargo" style="width: 150px;">Cargo:</label>
+                    <input type="text" id="cargo" placeholder="Ingrese Cargo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
 
-                <div style="flex-direction: column;">
-                    <label for="busqueda" style="display: block;">BÚSQUEDA:</label>
-                    <input type="text" id="busqueda" placeholder="Buscar..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                    <label for="nombre" style="display: block;">NOMBRE:</label>
-                    <input type="text" id="nombre" placeholder="Ingrese nombre" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                    <label for="correo" style="display: block;">CORREO:</label>
-                    <input type="email" id="correo" placeholder="Ingrese correo" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="correo" style="width: 150px;">Correo:</label>
+                    <input type="email" id="correo" placeholder="Ingrese Correo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
+
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="contraseña-actual" style="width: 150px;">Contraseña actual:</label>
+                    <input type="password" id="contraseña-actual" placeholder="Ingrese Contraseña Actual" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="contraseña-nueva" style="width: 150px;">Contraseña nueva:</label>
+                    <input type="password" id="contraseña-nueva" placeholder="Ingrese Contraseña Nueva" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <label for="almacen" style="width: 150px;">Almacén asignado:</label>
+                    <input type="text" id="almacen" placeholder="Ingrese Almacén" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+            </div>
+
+            <!-- Botón guardar cambios -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button id="btn-guardar-cambios" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 12px 20px; cursor: pointer; font-size: 16px;">Guardar cambios</button>
             </div>
         </div>
     </div>
@@ -401,9 +442,16 @@
 
 </script>
 <script>
-    // Mostrar el formulario de usuario
+    // Mostrar el formulario de agregar usuario
     document.getElementById("btn-agregar").onclick = function() {
         var formContainer = document.getElementById("form-container");
+        formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+    };
+</script>
+<script>
+    // Mostrar el formulario de editar usuario
+    document.getElementById("show-form-button").onclick = function() {
+        var formContainer = document.getElementById("edit-form-container");
         formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
     };
 </script>
