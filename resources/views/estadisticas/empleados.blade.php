@@ -31,14 +31,14 @@
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="ibox">
-                                    <div class="ibox-content">
+                                    <div class="ibox-content" id="tarjetas">
                                         <h1 class="text-bold" style="font-size: 38px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Dashboard Empleados</h1>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="ibox">
-                                    <div class="ibox-content">
+                                    <div class="ibox-content" id="tarjetas">
                                         <h5>Mayor Venta por Unidades</h5>
                                         <h1 class="no-margins">Empleado 1</h1>
                                         <div class="stat-percent font-bold text-navy">18% <i class="fa fa-bolt"></i></div>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="ibox">
-                                    <div class="ibox-content">
+                                    <div class="ibox-content" id="tarjetas">
                                         <h5>Empleado mas Importante</h5>
                                         <h1 class="no-margins">Empleado 2</h1>
                                         <div class="stat-percent font-bold text-navy">42% <i class="fa fa-level-up"></i></div>
@@ -91,7 +91,7 @@
                             <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
-                                        <h5>Metodos de Pago</h5>
+                                        <h5>Ventas Totales por Rol</h5>
                                     </div>
                                     <div class="ibox-content">
                                         <div>
@@ -109,9 +109,19 @@
         </div>
     </div>
     <style>
+         #tarjetas{
+            border-radius: 10px 10px 10px 10px
+        }
+        .ibox-title{
+            border-radius: 10px 10px 0px 0px
+        }
+        .ibox-content{
+            border-radius: 0px 0px 10px 10px
+        }
+
 
         .tabs-container .panel-body{
-            background-color: black;
+            background-color: #143ca4;
         }
         #ct-chart4 {
             width: 100% !important; /* Ajusta el ancho según necesites */
