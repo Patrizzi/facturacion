@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="ibox ">
                                     <div class="ibox-title">
                                         <h5>Ingresos por Canales de Venta</h5>
@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="doughnutChart2" height="190"></canvas>
+                                            <canvas id="doughnutChart2" height="260"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -96,18 +96,20 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="lineChart2" height="148"></canvas>
+                                            <canvas id="lineChart2" height="145"></canvas>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
-                                        <h5>Comparacion de Stock y Ventas por Producto </h5>
+                                        <h5>Consultas por Servicios</h5>
                                     </div>
                                     <div class="ibox-content">
-                                        <div id="ct-chart7"  class="ct-perfect-fourth"></div>
+                                        <div>
+                                            <canvas id="barChart2" height="185"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -146,14 +148,14 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div class="ibox-content" style="display: none;">
+                                            <div class="ibox-content"  >
                                                 <div class="row">
-                                                    <div class="col-lg-12">
+                                                    <div class="col-lg-6">
                                                         <table class="table table-hover margin bottom">
                                                             <thead>
                                                             <tr>
                                                                 <th style="width: 1%" class="text-center">No.</th>
-                                                                <th>Productos</th>
+                                                                <th>servicios</th>
                                                                 <th class="text-center">%</th>
                                                                 <th class="text-center">Vendido</th>
                                                             </tr>
@@ -161,7 +163,7 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td class="text-center">1</td>
-                                                                <td> Producto 1
+                                                                <td> Servicio 1
                                                                     </td>
                                                                 <td class="text-center small">90%</td>
                                                                 <td class="text-center"><span class="label label-primary">$483.00</span></td>
@@ -169,7 +171,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">2</td>
-                                                                <td> Producto 2
+                                                                <td> Servicio 2
                                                                 </td>
                                                                 <td class="text-center small">80%</td>
                                                                 <td class="text-center"><span class="label label-primary">$327.00</span></td>
@@ -177,7 +179,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">3</td>
-                                                                <td> Producto 3
+                                                                <td> Servicio 3
                                                                 </td>
                                                                 <td class="text-center small">20%</td>
                                                                 <td class="text-center"><span class="label label-warning">$125.00</span></td>
@@ -185,28 +187,50 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">4</td>
-                                                                <td> Producto 4</td>
+                                                                <td> Servicio 4</td>
                                                                 <td class="text-center small">60%</td>
                                                                 <td class="text-center"><span class="label label-primary">$344.00</span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">5</td>
-                                                                <td>Producto 5</td>
+                                                                <td>Servicio 5</td>
                                                                 <td class="text-center small">50%</td>
                                                                 <td class="text-center"><span class="label label-primary">$235.00</span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">6</td>
-                                                                <td>Producto 6</td>
+                                                                <td>Servicio 6</td>
                                                                 <td class="text-center small">40%</td>
                                                                 <td class="text-center"><span class="label label-primary">$100.00</span></td>
                                                             </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="ibox ">
+                                                            <div class="ibox-title">
+                                                                <h5>Metodos de Pago</h5>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div>
+                                                                    <div id="pie"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="ibox ">
+                                    <div class="ibox-title">
+                                        <h5>Margen de Utilidad por Servicio</h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div id="ct-chart6" class="ct-perfect-fourth"></div>
                                     </div>
                                 </div>
                             </div>
@@ -219,6 +243,8 @@
         </div>
     </div>
     <style>
+
+
          #tarjetas{
             border-radius: 10px 10px 10px 10px
         }
@@ -324,6 +350,9 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+
     <!-- Chartist -->
     <script src="{{ asset('js/plugins/chartist/chartist.min.js') }}"></script>
 
@@ -424,7 +453,7 @@
         // Adjuntamos la leyenda al contenedor del gráfico
         $('#ct-chart7').after(legend);
         });
-        
+
         $(document).ready(function(){
 
         // Stocked horizontal bar
@@ -481,7 +510,96 @@
 
             var ctx2 = document.getElementById("barChart").getContext("2d");
             new Chart(ctx2, {type: 'bar', data: barData, options:barOptions});
-            
+
+            $(document).ready(function () {
+
+            c3.generate({
+                bindto: '#pie',
+                data:{
+                    columns: [
+                        ['servicio1', 30],
+                        ['servicio2', 50],
+                        ['servicio3', 100],
+                        ['servicio4', 120]
+                    ],
+                    colors:{
+                        servicio1: '#1ab394',
+                        servicio2: '#e90202',
+                        servicio3: '#1adf29',
+                        servicio4: '#3654df'
+                    },
+                    type : 'pie'
+                }
+            });
+        });
+        $(document).ready(function(){
+
+        // Stocked horizontal bar
+
+        new Chartist.Bar('#ct-chart6', {
+            labels: ['Servicio1 1', 'Servicio 2', 'Servicio 3', 'Servicio 4', 'Servicio 5', 'Servicio 6'],
+            series: [
+                [250, 280, 200, 175, 200, 190],
+                [100, 80, 110, 100, 140, 150],
+                [150, 200, 90, 75, 60, 50]
+            ]
+        }, {
+            seriesBarDistance: 10,
+            reverseData: true,
+            horizontalBars: true,
+            axisY: {
+                offset: 70
+            },
+            axisX: {
+                labelInterpolationFnc: function(value, index) {
+                    // Mostrar solo 5 etiquetas en el eje X, en intervalos uniformes
+                    const numLabels = 5;
+                    const totalLabels = 10; // Número total de valores del eje X
+                    if (index % Math.ceil(totalLabels / numLabels) === 0) {
+                        return Math.round(value); // Mostrar el valor redondeado
+                    } else {
+                        return null; // Ocultar otras etiquetas
+                    }
+                }
+            }
+        });
+        // Leyenda personalizada (agregamos esto después del gráfico)
+        var legend = $('<div class="chart-legend">')
+            .append('<div class="legend-item"><span class="legend-color" style="background-color: #5dcde4;"></span> Ganancias</div>') // Primer color de la serie
+            .append('<div class="legend-item"><span class="legend-color" style="background-color: #ffa49d;"></span> Gastos</div>') // Segundo color de la serie
+            .append('<div class="legend-item"><span class="legend-color" style="background-color: #9d90ff;"></span> Ventas</div>'); // Tercero color de la serie
+        // Adjuntamos la leyenda al contenedor del gráfico
+        $('#ct-chart6').after(legend);
+
+        });
+        var barData = {
+        labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Nobiembre", "Diciembre"],
+        datasets: [
+            {
+                label: "Consultados",
+                backgroundColor: '#a194fe',
+                pointBorderColor: "#fff",
+                data: [65, 59, 80, 81, 56, 55, 40, 70, 60, 65, 68, 83]
+            },
+            {
+                label: "Solicitados",
+                backgroundColor: '#ffa8a1',
+                borderColor: "rgba(26,179,148,0.7)",
+                pointBackgroundColor: "rgba(26,179,148,1)",
+                pointBorderColor: "#fff",
+                data: [28, 38, 40, 40, 26, 27, 25, 31, 43, 34, 25, 30]
+            }
+        ]
+    };
+
+    var barOptions = {
+        responsive: true
+    };
+
+        var ctx2 = document.getElementById("barChart2").getContext("2d");
+        new Chart(ctx2, {type: 'bar', data: barData, options:barOptions});
+
+
 
     </script>
 

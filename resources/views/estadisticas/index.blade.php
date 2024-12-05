@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="doughnutChart" height="190"></canvas>
+                                            <canvas id="doughnutChart" height="170"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="lineChart" height="148"></canvas>
+                                            <canvas id="lineChart" height="130"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -104,13 +104,14 @@
                             <div class="col-lg-3">
                                 <div class="ibox ">
                                     <div class="ibox-title">
-                                        <h5>Comparacion de Stock y Ventas por Producto </h5>
+                                        <h5>Meta de Venta</h5>
                                     </div>
                                     <div class="ibox-content">
-                                        <div id="ct-chart4" class="ct-perfect-fourth"></div>
+                                        <div>
+                                            <div id="gauge"></div>
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="col-lg-4">
                                 <div class="ibox">
@@ -231,6 +232,11 @@
         </div>
     </div>
     <style>
+
+        #gauge{
+            height: 300px;
+            text-align: center
+        }
         #tarjetas{
             border-radius: 10px 10px 10px 10px
         }
@@ -338,6 +344,9 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
 
     <!-- Chartist -->
     <script src="{{ asset('js/plugins/chartist/chartist.min.js') }}"></script>
@@ -539,6 +548,25 @@
 
         var ctx2 = document.getElementById("barChart").getContext("2d");
         new Chart(ctx2, {type: 'bar', data: barData, options:barOptions});
+
+
+        $(document).ready(function () {
+
+            c3.generate({
+                bindto: '#gauge',
+                data:{
+                    columns: [
+                        ['data', 64.4]
+                    ],
+
+                    type: 'gauge'
+                },
+                color:{
+                    pattern: ['#00A2FF', '#000000']
+                }
+            });
+
+        });
 
     {{-----------------------------FIN DE TABLA 1-----------------------------}}
 

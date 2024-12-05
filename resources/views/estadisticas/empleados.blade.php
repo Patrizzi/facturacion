@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="ibox">
                                     <div class="ibox-content" id="tarjetas">
                                         <h5>Mayor Venta por Unidades</h5>
@@ -45,12 +45,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="ibox">
                                     <div class="ibox-content" id="tarjetas">
                                         <h5>Empleado mas Importante</h5>
                                         <h1 class="no-margins">Empleado 2</h1>
                                         <div class="stat-percent font-bold text-navy">42% <i class="fa fa-level-up"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="ibox">
+                                    <div class="ibox-content" id="tarjetas">
+                                        <h5>Mas venta por Rol de Empleado</h5>
+                                        <h1 class="no-margins">Vendedor Interno</h1>
+                                        <div class="stat-percent font-bold text-navy">40% <i class="fa fa-level-up"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -210,7 +219,7 @@
         }
         .ct-label {
             font-size: 12px !important;
-            
+
         }
         #ct-chart2 .ct-series-a .ct-bar {
             stroke: #a194fe !important;
@@ -241,7 +250,7 @@
     <!-- Chartist -->
     <script src="{{ asset('js/plugins/chartist/chartist.min.js') }}"></script>
 
-    
+
 
     <!-- ChartJS-->
     <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
@@ -328,7 +337,7 @@
         }
         });
         //Grafico3
-       
+
         $(document).ready(function () {
 
         c3.generate({

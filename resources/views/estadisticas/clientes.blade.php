@@ -70,7 +70,7 @@
                                     <div class="ibox-title">
                                         <h5>Tipo de Cliente</h5>
                                     </div>
-                                    <div class="ibox-content" style="height: 380px">
+                                    <div class="ibox-content" style="height: 360px">
                                         <ul id="legend" style="list-style-type:none; padding-left: 0;">
                                             <li><span style="background-color: #007BFF; width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></span> Empresa</li>
                                             <li><span style="background-color: #00A2FF; width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></span> Cliente</li>
@@ -86,7 +86,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="barChart" height="120"></canvas>
+                                            <canvas id="barChart" height="130"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                                         <h5>Ranking por Utilidad</h5>
                                     </div>
                                     <div class="ibox-content">
-                                        <div id="ct-chart8" class="ct-perfect-fourth"  ></div>
+                                        <div id="ct-chart8" class="ct-perfect-fourth"></div>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +144,15 @@
         </div>
     </div>
     <style>
-         #tarjetas{
+
+        .ct-perfect-fourth{
+            height: 400px
+        }
+
+        #pie{
+            text-align: center
+        }
+        #tarjetas{
             border-radius: 10px 10px 10px 10px
         }
         .ibox-title{
@@ -254,7 +262,7 @@
         }
         .ct-label {
             font-size: 12px !important;
-            
+
         }
 
     </style>
