@@ -8,7 +8,6 @@
  @section('config',route('Configuracion'))
 
  @section('content')
-    <!--
     @if($errors->any())
     <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
         <a class="alert-link" href="#">
@@ -18,7 +17,7 @@
         </a>
     </div>
     @endif
-    <!-- Modal Create
+    <!-- Modal Create -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -48,7 +47,7 @@
             </div>
         </div>
     </div>
-    <!-- / Modal Create
+    <!-- / Modal Create -->
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -126,7 +125,7 @@
                                                     </div>
                                                 </div>
                                             </div>  --}}
-                                            <!-- / Modal Create
+                                            <!-- / Modal Create -->
                                         </td>
                                     </tr>
                                 @endforeach
@@ -141,10 +140,10 @@
     <style>
         .col-sm-10{padding-bottom: 5px;padding-top: 5px;}
         .form-control{border-radius: 5px}
-    </style>-->
+    </style>
 
 
-
+<!-- Inicio código - Gaby -->
     <div class="wrapper wrapper-content animated fadeInRight pb-0">
         <div class="row">
             <div class="col-lg-12">

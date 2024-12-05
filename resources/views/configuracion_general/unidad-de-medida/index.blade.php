@@ -10,6 +10,7 @@
 @section('config',route('Configuracion'))
 
 @section('content')
+<!--Inicio código - Gaby-->
 <div class="wrapper wrapper-content animated fadeInRight align-content-center">
     <div class="row">
         <div class="col-lg-12">
@@ -342,12 +343,10 @@
         </div>
     </div>
 </div>
+<!--Fin código - Gaby-->
 
 
-
-
-<!-- Modal Create
-
+<!-- Modal Create -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -398,8 +397,8 @@
            </div>
        </div>
    </div>
-</div>-->
-<!-- / Modal Create
+</div>
+<!-- / Modal Create -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -499,7 +498,7 @@
                                              </div>
                                          </div>
                                      </div>
-                                     <!-- / Modal Create
+                                     <!-- / Modal Create -->
                                  </td>
                              </tr>
                              @endforeach
@@ -510,7 +509,7 @@
          </div>
      </div>
  </div>
-</div>-->
+</div>
 <style>
     .form-control{border-radius: 5px;margin-top: 5px;margin-bottom: 5px;}
     .col-sm-2{ margin-top:8px;}
