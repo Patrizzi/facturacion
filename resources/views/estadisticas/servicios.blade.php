@@ -75,6 +75,24 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-lg-1">                              
+                                    <div class="ibox-content" id="filter">
+                                        <div class="form-group" style="text-align: center;">
+                                            <h5>Año</h5>
+                                            <div>
+                                                <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
+                                                    <option value="2024">2024</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2022">2022</option>
+                                                    <option value="2021">2021</option>
+                                                    <option value="2020">2020</option>
+                                                    <option value="2019">2019</option>
+                                                    <option value="2018">2018</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div> 
                             <div class="col-lg-3">
                                 <div class="ibox ">
                                     <div class="ibox-title">
@@ -83,12 +101,12 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="doughnutChart2" height="260"></canvas>
+                                            <canvas id="doughnutChart2" height="225"></canvas>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
                                         <h5>Ventas Totales y Beneficios
@@ -96,7 +114,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="lineChart2" height="145"></canvas>
+                                            <canvas id="lineChart2" height="160"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -108,12 +126,30 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="barChart2" height="185"></canvas>
+                                            <canvas id="barChart2" height="160"></canvas>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-1">                              
+                                    <div class="ibox-content" id="filter">
+                                        <div class="form-group" style="text-align: center;">
+                                            <h5>Meses</h5>
+                                            <div>
+                                                <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
+                                                    <option value="2024">2024</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2022">2022</option>
+                                                    <option value="2021">2021</option>
+                                                    <option value="2020">2020</option>
+                                                    <option value="2019">2019</option>
+                                                    <option value="2018">2018</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div> 
+                            <div class="col-lg-3">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Venta por Distritos </h5>
@@ -243,7 +279,9 @@
         </div>
     </div>
     <style>
-
+        #filter{
+            border-radius: 10px 10px 10px 10px !important
+        }
 
          #tarjetas{
             border-radius: 10px 10px 10px 10px
@@ -264,11 +302,11 @@
         }
         #ct-chart5 {
             width: 100%; /* Ajusta el ancho según necesites */
-            height: 550px; /* Ajusta el alto según necesites */
+            height: 400px; /* Ajusta el alto según necesites */
         }
         #ct-chart6 {
             width: 100%; /* Ajusta el ancho según necesites */
-            height: 520px; /* Ajusta el alto según necesites */
+            height: 380px; /* Ajusta el alto según necesites */
         }
         #ct-chart7 {
             width: 100% !important; /* Ajusta el ancho según necesites */
@@ -338,6 +376,7 @@
     </style>
 
     <link href="{{ asset('css/plugins/chartist/chartist.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/chosen/bootstrap-chosen.css') }}" rel="stylesheet">
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -352,6 +391,9 @@
 
     <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
     <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+
+    <!-- Chosen -->
+    <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
 
     <!-- Chartist -->
     <script src="{{ asset('js/plugins/chartist/chartist.min.js') }}"></script>
@@ -598,7 +640,18 @@
 
         var ctx2 = document.getElementById("barChart2").getContext("2d");
         new Chart(ctx2, {type: 'bar', data: barData, options:barOptions});
+    //filtro
+    $('.chosen-select').chosen({width: "100%"});
 
+    $("#ionrange_1").ionRangeSlider({
+        min: 0,
+        max: 5000,
+        type: 'double',
+        prefix: "$",
+        maxPostfix: "+",
+        prettify: false,
+        hasGrid: true
+    });
 
 
     </script>

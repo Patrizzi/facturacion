@@ -65,7 +65,25 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-1">                              
+                                    <div class="ibox-content" id="filter">
+                                        <div class="form-group" style="text-align: center;">
+                                            <h5>Año</h5>
+                                            <div>
+                                                <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
+                                                    <option value="2024">2024</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2022">2022</option>
+                                                    <option value="2021">2021</option>
+                                                    <option value="2020">2020</option>
+                                                    <option value="2019">2019</option>
+                                                    <option value="2018">2018</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            <div class="col-lg-2">
                                 <div class="ibox ">
                                     <div class="ibox-title">
                                         <h5>Tipo de Cliente</h5>
@@ -86,7 +104,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <div>
-                                            <canvas id="barChart" height="130"></canvas>
+                                            <canvas id="barChart" height="145"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -105,6 +123,24 @@
                             </div>
                         </div>
                         <div class="row">
+                                <div class="col-lg-1">                              
+                                    <div class="ibox-content" id="filter">
+                                        <div class="form-group" style="text-align: center;">
+                                            <h5>Meses</h5>
+                                            <div>
+                                                <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
+                                                    <option value="2024">2024</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2022">2022</option>
+                                                    <option value="2021">2021</option>
+                                                    <option value="2020">2020</option>
+                                                    <option value="2019">2019</option>
+                                                    <option value="2018">2018</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
                             <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
@@ -115,7 +151,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Ranking por Utilidad</h5>
@@ -144,7 +180,9 @@
         </div>
     </div>
     <style>
-
+        #filter{
+            border-radius: 10px 10px 10px 10px !important
+        }
         .ct-perfect-fourth{
             height: 400px
         }
@@ -268,6 +306,7 @@
     </style>
 
     <link href="{{ asset('css/plugins/chartist/chartist.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/chosen/bootstrap-chosen.css') }}" rel="stylesheet">
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -285,6 +324,9 @@
 
     <!-- Chartist -->
     <script src="{{ asset('js/plugins/chartist/chartist.min.js') }}"></script>
+
+    <!-- Chosen -->
+    <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
 
     <!-- ChartJS-->
     <script src="{{ asset('js/plugins/chartJs/Chart.min.js') }}"></script>
@@ -436,6 +478,18 @@
                 style: 'stroke-width: 40px'
             });
         }
+    });
+    //filtro
+    $('.chosen-select').chosen({width: "100%"});
+
+    $("#ionrange_1").ionRangeSlider({
+        min: 0,
+        max: 5000,
+        type: 'double',
+        prefix: "$",
+        maxPostfix: "+",
+        prettify: false,
+        hasGrid: true
     });
 
 
