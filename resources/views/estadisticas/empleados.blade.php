@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="ibox">
                                     <div class="ibox-content" id="tarjetas">
                                         <h5>Mas venta por Rol de Empleado</h5>
@@ -120,6 +120,7 @@
     <style>
          #tarjetas{
             border-radius: 10px 10px 10px 10px
+        
         }
         .ibox-title{
             border-radius: 10px 10px 0px 0px
