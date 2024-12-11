@@ -1,15 +1,13 @@
- @extends('layout')
-
- @section('title', 'Tiempo de Validez')
- @section('data-toggle', 'modal')
- @section('href_accion', '#exampleModal')
- @section('value_accion', 'Agregar')
- @section('button2', 'Atras')
- @section('config',route('Configuracion'))
-
- @section('content')
- @if($errors->any())
- <div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+@extends('layout')
+@section('title', 'Tiempo de Validez')
+@section('data-toggle', 'modal')
+@section('href_accion', '#exampleModal')
+@section('value_accion', 'Agregar')
+@section('button2', 'Atras')
+@section('config',route('Configuracion'))
+@section('content')
+@if($errors->any())
+<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
     <a class="alert-link" href="#">
         @foreach ($errors->all() as $error)
         <li class="error" style="color: red">{{ $error }}</li>
@@ -130,86 +128,100 @@
                         </table>
                     </div>
                     <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
-                   <div class="parent" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 50px; align-items: center; text-align: center;">
-                       <div class="div1" style="grid-column-start: 1; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold; width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
-                           <p>Item 1</p>
-                           <p>1 DIA</p>
-                           <div style="display: flex; justify-content: center">
-                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
-                           </div>
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-                           </div>
-                       </div>
-                       <div class="div2" style="grid-column-start: 2; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
-                           <p>Item 2</p>
-                           <p>7 DIAS</p>
-                           <div style="display: flex; justify-content: center">
-                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
-                           </div>
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-                           </div>
-                       </div>
-                       <div class="div3" style="grid-column-start: 3; grid-row-start: 1; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
-                           <p>Item 3</p>
-                           <p>15 DIAS</p>
-                           <div style="display: flex; justify-content: center">
-                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
-                           </div>
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-                           </div>
-                       </div>
-                       <div class="div4" style="grid-column-start: 1; grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
-                           <p>Item 4</p>
-                           <p>6 MESES</p>
-                           <div style="display: flex; justify-content: center">
-                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
-                           </div>
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-                           </div>
-                       </div>
-                       <div class="div5" style="grid-column-start: 2; grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold;  width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
-                           <p>Item 5</p>
-                           <p>1 AÑO</p>
-                           <div style="display: flex; justify-content: center">
-                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
-                           </div>
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-                           </div>
-                       </div>
-                       <div class="div6" style="grid-row-start: 2; color: white; background-color: blue; font-size: 20px; font-weight: bold; width: 40%; height: 180px; padding: 15px; margin: 0 auto;">
-                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-edit"></i></button>
-                           <p>Item 6</p>
-                           <p>3 AÑOS</p>
-                           <div style="display: flex; justify-content: center">
-                               <div style="width: 80%; border-bottom: 1px solid white; height: 1px;"></div>
-                           </div>
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                               <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-                           </div>
-                       </div>
-                   </div>
-                   <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
+                    <!-- --------------------------------------------------------------------------------------------------------------------------------- -->
+
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <!-- Sección de Proveedor  ------------------------------------------------------------------------------------  -->
+                    <div class="tab-pane active">
+                        <!-- Título centrado -->
+                        <h2 style="text-align: center; margin-bottom: 20px;">TIEMPO DE VALIDEZ</h2>
+                        <div class="panel-body">
+                            <div>
+                                <div style="background-color: blue; color: white; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                                    <strong>AGREGAR PROVEEDOR</strong>
+                                </div>
+
+                                <div class="form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label for="Item" style="display: block;">ITEM:</label>
+                                        <input type="text" id="Item" placeholder="item" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
+
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label for="Descripcion" style="display: block;">DESCRIPCION:</label>
+                                        <input type="text" id="Descripcion" placeholder="descripcion" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
+                                </div>
+                                <div style="margin-top: 20px;">
+                                    <button id="btn-previus" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1; margin-right: 5px;">AGREGAR ITEM</button>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>ID </th>
+                                        <td>DESCRIPCION</td>
+                                        <th>ACCONES</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>01</td>
+                                        <td>3 Meses</td>
+                                        <td>
+                                            <div style="box-shadow: none;">
+                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white;"></i>  </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+
+
+                            <br>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                <button class="btn btn-white">1</button>
+                                <button class="btn btn-white  active">2</button>
+                                <button class="btn btn-white">3</button>
+                                <button class="btn btn-white">4</button>
+                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                            </div>
+                        </div>
+                    </div>
+                    hola mundo
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 <style>
     .col-sm-10{padding-bottom: 5px;padding-top: 5px;}
     .form-control{border-radius: 5px}

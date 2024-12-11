@@ -26,75 +26,7 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example" style="font-size: 13px" >
-                            <thead>
-                                <tr >
-                                    <th>ID</th>
-                                    <th>RUC</th>
-                                    <th>Empresa</th>
-                                    <th>Direccion</th>
-                                    <th>Telefonos</th>
-                                    <th>Correo</th>
-                                    <th style="width: 50px;">Editar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($provedores as $provedor)
-                                <tr class="gradeX"  id="vista{{$provedor->id}}">
-                                    <td>{{$provedor->id}}</td>
-                                    <td>{{$provedor->ruc}}</td>
-                                    <td>{{$provedor->empresa}}</td>
-                                    <td>{{$provedor->direccion}}</td>
-                                    <td>{{$provedor->telefonos}}</td>
-                                    <td>{{$provedor->email}}</td>
-                                    <td><div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
-                                        <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
-                                    </div></td>
-                                </tr>
-                                <tr hidden id="forma{{$provedor->id}}">
-                                    <form action="{{ route('provedor.update',$provedor->id) }}"  enctype="multipart/form-data" method="post">
-                                        @csrf
-                                        @method('PATCH')
-                                        <td>{{$provedor->id}}</td>
-                                        <td><input class="form-control" name="" value="{{$provedor->ruc}}" readonly=""  type="text"></td>
-                                        <td><input class="form-control" name="empresa" value="{{$provedor->empresa}}" type="text"></td>
-                                        <td><input class="form-control" name="direccion" value="{{$provedor->direccion}}" type="text"></td>
-                                        <td><input class="form-control" name="telefonos" value="{{$provedor->telefonos}}" type="text"></td>
-                                        <td><input class="form-control" name="correo_provedor" value="{{$provedor->email}}" type="text"></td>
-                                        <td > {{-- <div  style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
-                                            <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i></a>
-                                        </div> --}} <input class="btn  btn-success" type="submit"> </td>
-                                    </form>
-                                </tr>
-                                <script>
-                                    var clic = 1;
-                                    function divAuto{{$provedor->id}}(){
-                                        if(clic==1){
-                                             // document.getElementById("div-mostrar").style.height = "50px";
-                                             document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
-                                             document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
-                                             clic = clic + 1;
-                                         } else{
-                                            // document.getElementById("div-mostrar").style.height = "0px";
-                                            document.getElementById("vista{{$provedor->id}}").removeAttribute("hidden", "");
-                                            document.getElementById("forma{{$provedor->id}}").setAttribute("hidden", "");
-                                            clic = 1;
-                                        }
-                                    }
-                                </script>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
                     <!-- Sección de Proveedor  ------------------------------------------------------------------------------------  -->
-
-
-
-
-
-
-
                     <div class="tab-pane active">
                         <!-- Título centrado -->
                         <h2 style="text-align: center; margin-bottom: 20px;">PROVEEDOR</h2>

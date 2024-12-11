@@ -41,7 +41,7 @@
                                     <td>Familias</td>
                                     <td><a class="btn btn-primary" href="{{route('familia.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
-                                 <tr class="gradeX">
+                                <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/garantia.png')}}" width="20px" alt=""></td>
                                     <td>Garantia</td>
                                     <td><a class="btn btn-primary" href="{{route('garantia.index')}}"><i class="fa fa-gear"></i></a></td>
@@ -71,7 +71,7 @@
                                     <td>Usuarios</td>
                                     <td><a class="btn btn-primary" href="{{route('usuarios.index')}}"><i class="fa fa-gear"></i></a></td>
                                 </tr>
-                                 <tr class="gradeX">
+                                <tr class="gradeX">
                                     <td><img src="{{asset('img/logos/validez.png')}}" width="20px" alt=""></td>
                                     <td>Validez</td>
                                     <td><a class="btn btn-primary" href="{{route('validez.index')}}"><i class="fa fa-gear"></i></a></td>
