@@ -119,8 +119,8 @@ class CotizacionManualController extends Controller
         $cotizacion_numero_fac="CMF ".$sucursal_nr_fac."-".$correlativo_fac;
 
         $clientes=Cliente::all();
-        $moneda=Moneda::where('principal','1')->first();
-
+        //$moneda=Moneda::where('principal','1')->first();
+        $moneda=Moneda::get();
         $forma_pagos= Forma_pago::all();
         $igv=Igv::first();
         $servicios = Servicios::all();

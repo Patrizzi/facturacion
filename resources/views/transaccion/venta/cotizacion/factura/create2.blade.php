@@ -388,69 +388,106 @@
 
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row col-lg-12">
-        <div class="ibox-content" style="padding-bottom: 0px;" >
+    <div class="ibox">
+        <div class="ibox-content" >   
+            <div class="col-lg-12">
                 <div class="panel panel-success">
                     <div class="panel-heading text-center">
                         <h3><strong>Condiones Generales</strong></h3>
-                    </div>
+                    </div>                  
                     <div class="panel-body">
-                        <div class="row col-lg-12">                        
+                        <div class="row col-lg-12">
+                            <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label"><strong>T. Documento:</strong></label>
-                                    <div class="col-sm-4">
+                                    <label class="col-sm-5 col-form-label"><strong>T. Documento:</strong></label>
+                                    <div class="col-sm-7">
                                         <select class="form-control">
-                                            <option>Factura</option>
-                                            <option>Boleta</option>
-                                            <option>Nota de Venta</option>
-                                        </select>
-                                    </div>
-                          
-                                    <label class="col-sm-2 col-form-label"><strong>Validez:</strong></label>
-                                    <div class="col-sm-4">
-                                        <select class="form-control">
-                                            <option>Seleccione</option>
-                                            <option>1 Día</option>
-                                            <option>1 Semana</option>
-                                        </select>
-                                    </div>
-                             
-                                    <label class="col-sm-2 col-form-label"><strong>Garantía:</strong></label>
-                                    <div class="col-sm-4">
-                                        <select class="form-control">
-                                            <option>Seleccione</option>
-                                            <option>A Convenir</option>
-                                            <option>---</option>
-                                        </select>
-                                    </div>
-
-                                    <label class="col-sm-2 col-form-label"><strong>Fecha de Emisión:</strong></label>
-                                    <div class="col-sm-4">
-                                        <input type="date" class="form-control" value="2024-11-06" readonly />
-                                    </div>
-
-                                    <label class="col-sm-2 col-form-label"><strong>Cliente:</strong></label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control" placeholder="Cliente" />
-                                    </div>
-
-                                    <label class="col-sm-2 col-form-label"><strong>Forma de Pago:</strong></label>
-                                    <div class="col-sm-4">
-                                        <select class="form-control">
-                                            <option>Seleccione</option>
-                                            <option>Contado</option>
-                                            <option>Crédito</option>
+                                            <option name="tipo_coti" id="radio1" value="1" >Factura</option>
+                                            <option name="tipo_coti" id="radio2" value="3">Boleta</option>
+                                            <option name="tipo_coti" id="radio3" value="4">Nota de Venta</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                    <div class="form-group row">
-                                        <label class="col-sm-1 col-form-label"><strong>Observación:</strong></label>
-                                        <div class="col-sm-11">
-                                            <textarea id="Observación" name="Observación" class="form-control" placeholder="Observación"></textarea>
-                                        </div>
-                                    </div>                    
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Validez:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select  class="form-control" name="validez" required="required">
+                                            @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" name="garantia">
+                                            @foreach($garantia as $garantias) 
+                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> 
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" name="moneda" required="required">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>T. Operación:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" name="tipo_operacion" >
+                                            @foreach($tipo_operacion as $t_op)
+                                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" name="forma_pago" required="required">
+                                        @foreach($forma_pagos as $forma_pago) 
+                                            <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> 
+                                        @endforeach  
+                                        <select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Observación:</strong></label>
+                                    <div class="col-sm-7">
+                                        <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Comisionista:</strong></label>
+                                    <div class="col-sm-7">
+                                        <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <!--TABLA DE ELIMINAR--> 
                             <div class="table-responsive">
                                 <table cellspacing="0" class="table tables">
@@ -471,41 +508,51 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button type="button" class="btn btn-danger">
-                                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                                </button>
+                                                <button type="button" class='delete borrar e btn btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                            </td>
+                                            <td class="td_selected">
+                                                <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                                <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
+                                                <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
+                                                <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
                                             </td>
                                             <td>
-                                                <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
-                                                <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
+                                                <input style="min-width: 80px;margin: 0px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required autocomplete="off"/>
                                             </td>
                                             <td>
-                                                <input type="text" id="stock0" disabled name="stock[]" class="form-control" />
+                                                <input style="min-width: 80px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
+                                                <input style="min-width: 85px" type='text' id='precio0' name='precio[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
+                                                <div style="position: relative;">
+                                                    <input class="text_des" type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required autocomplete="off"/>
+                                                </div>
+                                                <div  class="div_check">
+                                                    <input class="check" type='checkbox' id='check0' name='check[]' onclick="multi(0)" style="" autocomplete="off"/>
+                                                </div>
+                                                <input type='hidden' id='check_descuento0' name='check_descuento[]' class="form-control"  required >
+                                                <input type='hidden' id='promedio_original0' name='promedio_original[]' class="form-control" required >
                                             </td>
                                             <td>
-                                                <input type="text" id="descuento" name="descuento" class="form-control" />
+                                                <input style="min-width: 85px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
+                                            </td>
+                                            <input type='hidden' name="comision[]" id='comision0'  readonly="readonly" class="form-control"  required  autocomplete="off" />
+                                            <td>
+                                                <input style="min-width: 85px" type='text' id='precio_unitario_comision0' name='precio_unitario_comision[]' readonly="readonly" class="form-control"  required autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input type="text" id="precio_unitario_descuento0" name="precio_unitario_descuento[]" disabled class="precio_unitario_descuento0 form-control" required autocomplete="off" />
+                                                <input style="min-width: 85px" type='text' id='total0' name='total' disabled="disabled" class="total form-control" required  autocomplete="off" />
+                                                <input type='text' id='afectacion0' name='afectacion' disabled="disabled" class="afectacion form-control" hidden="" required  autocomplete="off"/>
                                             </td>
                                             <td>
-                                                <input type="text" id="precio_unitario_comision0" disabled class="form-control" required autocomplete="off" />
+                                                <input style="min-width: 85px" type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
                                             </td>
-                                            <td>
-                                                <input type="text" id="total0" name="total" disabled class="total form-control" required autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <input type="text" id="total0" name="totalIGV" disabled class="total form-control" required autocomplete="off" />
-                                            </td>
+                                            <span id="spTotal"></span>
                                         </tr>
                                     </tbody>
-                                    <tfoot>
+                                    <tbody>
                                         <tr >
                                             <td></td>
                                             <td></td>
@@ -515,10 +562,12 @@
                                             <td></td>
                                             <td></td>
                                             <td><strong>Subtotal:</strong></td>
-                                            <td colspan="2">
-                                            <input  id="subtotal"  type="text" disabled class="form-control" required=""></td>
+                                            <td colspan="3">
+                                                <input id='sub_total' disabled="disabled" class="form-control" required />
+                                                <input id='subtotal_gravado'  disabled="disabled"  hidden="" class="form-control" required />
+                                            </td>
                                         </tr>
-                                        <tr >
+                                        <tr>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -527,10 +576,9 @@
                                             <td></td>
                                             <td></td>
                                             <td><strong>IGV:</strong></td>
-                                            <td colspan="2">
-                                                <input  id="igv"  type="text" disabled class="form-control" required=""></td>
+                                            <td colspan="3"><input id='igv' disabled="disabled" class="form-control" required /></td>
                                         </tr>
-                                        <tr >
+                                        <tr>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -539,20 +587,20 @@
                                             <td></td>
                                             <td></td>
                                             <td><strong>Total:</strong></td>
-                                            <td colspan="2">
-                                            <input  id="total_final"  type="text" disabled class="form-control" required=""></td>
+                                            <td colspan="3"><input id='total_final' disabled="disabled" class="form-control" required /></td>
                                         </tr>
-                                    </tfoot>
+                                    </tbody>
                                 </table>
                             </div>
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <button class="btn btn-success" type="submit">
-                                        <i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                    <button class=" addmore btn btn-success" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i></button>&nbsp;
+
                                     <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <button class="btn btn-primary me-3" type="button">
-                                            <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar </button>
-                                        <button class="btn btn-warning" type="button"> Guardar y Enviar</button>
+                                        <button data-style="zoom-out" class="guardar ladda-button btn btn-primary me-3" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar </button>
+
+                                        <button class="btn btn-warning demo3 float-right" style="margin-left: 10px;"  type="button"> Guardar y Enviar</button>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -561,7 +609,6 @@
                 </div>
             </div>
         </div>
-
 
 <style>
     .col-form-label{margin-top: 15px!important;}

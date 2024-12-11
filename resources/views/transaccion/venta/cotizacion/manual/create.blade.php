@@ -112,27 +112,27 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!--<tr>
                                     <td>Moneda</td>
                                     <td>:</td>
                                     <td>
                                         <div class="row">
-                                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal}}" readonly="readonly">
-                                            <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{--{{$sucursal}}--}}" readonly="readonly">
+                                            <input type="hidden" id="moneda_id" class="form-control " value="{{--{{$moneda->id}}--}}" readonly="readonly">
                                             <div class="col-sm-5">
-                                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{--{{$moneda->nombre}}--}}" readonly="readonly">
                                             </div>
 
                                             <a class="col-sm-5 button_money" onclick="changeMoney()">
                                                 <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
-                                                    @if($moneda->tipo=='nacional')
+                                                   {{-- @if($moneda->tipo=='nacional')
                                                         Dolares 
                                                     @elseif($moneda->tipo=='extranjera') 
                                                         Soles 
-                                                    @endif
+                                                    @endif--}}
                                                 </button>
                                             </a>
-                                        </div>
+                                        </div>-->
                                     </td>
                                     <td>Fecha de cotizacion</td>
                                     <td>:</td>
@@ -253,14 +253,15 @@
 <div id="loaderGif"></div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-                <div class="row">
                     <div class="ibox">
                         <div class="ibox-content">
-                <div class="col-lg-12">
+                            <div class="col-lg-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading text-center">
                                     <h3><strong>Condiones Generales</strong></h3>
                                 </div>
+                                <form action="{{route('cotizacion_manual.store')}}"  enctype="multipart/form-data" method="post" id="form_sto" onsubmit="return valida(this)">
+                                    @csrf
                                 <div class="panel-body">
                                     <div class="row col-lg-12">
                                         <div class="col-md-6">
@@ -268,40 +269,43 @@
                                                 <label class="col-sm-5 col-form-label"><strong>T. Documento:</strong></label>
                                                 <div class="col-sm-7">
                                                     <select class="form-control">
-                                                        <option>Factura</option>
-                                                        <option>Boleta</option>
-                                                        <option>Nota de Venta</option>
+                                                        <option name="tipo_coti" id="radio1" value="1" >Factura</option>
+                                                        <option name="tipo_coti" id="radio2" value="0">Boleta</option>
+                                                        <option name="tipo_coti" id="radio3" value="3">Nota de Venta</option>
                                                     </select>
+
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Validez:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <select class="form-control">
-                                                        <option>Seleccione</option>
-                                                        <option>1 Día</option>
-                                                        <option>1 Semana</option>
+                                                    <select  class="form-control" name="validez" required="required">
+                                                        @foreach($validez as $validezz)
+                                                            <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <select class="form-control">
-                                                        <option>Seleccione</option>
-                                                        <option>A Convenir</option>
-                                                        <option>---</option>
+                                                    <select class="form-control" name="garantia">
+                                                        @foreach($garantia as $garantias)
+                                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <select class="form-control">
-                                                        <option>Seleccione</option>
-                                                        <option>Soles</option>
-                                                        <option>Dolares</option>
+
+                                                    <select class="form-control" name="moneda" required="required">
+                                                        @foreach($moneda as $monedas)
+                                                        <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                                        @endforeach
                                                     </select>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -309,36 +313,37 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="date" class="form-control" value="2024-11-06" readonly />
+                                                    <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" placeholder="Cliente" />
+                                                    <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <select class="form-control">
-                                                        <option>Seleccione</option>
-                                                        <option>Contado</option>
-                                                        <option>Crédito</option>
-                                                    </select>
+                                                    <select class="form-control" name="forma_pago" required="required">
+                                                        @foreach($forma_pagos as $forma_pago)
+                                                            <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
+                                                        @endforeach
+                                                    <select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-5 col-form-label"><strong>Observación:</strong></label>
                                                 <div class="col-sm-7">
-                                                    <textarea id="Observación" name="Observación" class="form-control" placeholder="Observación"></textarea>
+                                                    <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <!--TABLA DE ELIMINAR--> 
                                         <div class="table-responsive">
-                                            <table cellspacing="0" class="table tables">
+                                            <table cellspacing="0" class="table_form tables" id="inp_s">
                                                 <thead>
                                                     <tr style="background-color: #3366cc; color: white; text-align: center;">
                                                         <th>Acción</th>
@@ -353,78 +358,73 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <button type="button" class="btn btn-danger">
+                                                            <button type="button" class='delete borrar e btn btn-danger'>
                                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                                             </button>
                                                         </td>
-                                                        <td>
-                                                            <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
-                                                            <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
+                                                        <td class="td_selected">
+                                                            <select class="select2_demo_3 select_change"  required="" id="articulo" onchange="inputs_campos(0),ajax(0)" name="select_articulo"></select>
+                                                            <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
+                                                            <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
                                                         </td>
                                                         <td>
-                                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
+                                                            <input type='number' min="1" id='cantidad0' name='cantidad[]' max="" class="cantidad monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
+                                                            <input  type='text' id='precio_oficial0' name='precio_oficial[]' ondblclick="copy(0)"  class="precio_oficial0 p_inp form-control inp" required readonly  data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)"/>
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="s/Igv" name="s/Igv" class="form-control" />
+                                                            <input  type='number' step="0.0000001" id='precio_s_igv0' name='precio_s_igv[]'  class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)" required  autocomplete="off" />
+                                                            <input hidden type='text' id='precio_s_igv_float0' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(0),multi(0)"   autocomplete="off" />
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="c/Igv" name="c/Igv" class="total form-control" required autocomplete="off" />
-                                                        </td>
+                                                            <input type='number' step="0.0000001" id='precio_c_igv0' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv(0),multi(0)" required  autocomplete="off" />
+                                                        </td> 
                                                         <td>
-                                                            <input type="text" id="total0" name="totalIGV" disabled class="total form-control" required autocomplete="off" />
+                                                            <input  type='number' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
                                                         </td>
+                                                        <span id="spTotal"></span>
                                                     </tr>
                                                 </tbody>
-                                                <tfoot>
-                                                    <tr >
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><strong>Subtotal:</strong></td>
+                                                <tbody>
+                                                    <input id='sub_total' hidden /></td>
+                                                    <input id='total' hidden   /></td>  
+                                                    <tr>
+                                                        <td colspan="4"></td>
+                                                        <td><strong>Subtotal: </strong></td>
                                                         <td colspan="2">
-                                                        <input  id="subtotal"  type="text" disabled class="form-control" required=""></td>
+                                                            <input type="text" id='subtotal' name="subtotal"  readonly="readonly" class="subtotal form-control" required />
+                                                        </td>
                                                     </tr>
-                                                    <tr >
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><strong>IGV:</strong></td>
+                                                    <tr>
+                                                        <td colspan="4"></td>
+                                                        <td><strong>Igv :</strong></td>
                                                         <td colspan="2">
-                                                            <input  id="igv"  type="text" disabled class="form-control" required=""></td>
+                                                            <input type="text" id='igv' name="igv"  readonly="readonly" class="igv form-control" required />
+                                                        </td>
                                                     </tr>
-                                                    <tr >
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><strong>Total:</strong></td>
+                                                    <tr>
+                                                        <td colspan="4"></td>
+                                                        <td> <strong>Total :</strong></td>
                                                         <td colspan="2">
-                                                        <input  id="total_final"  type="text" disabled class="form-control" required=""></td>
+                                                            <input type="text" id='total_final' name="total_final"  readonly="readonly" class="total_final form-control" required />
+                                                       </td>
                                                     </tr>
-                                                </tfoot>
+                                                </tbody>
                                             </table>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                                <button class="btn btn-success" type="submit">
-                                                    <i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                                <button type="button" class='addmore btn btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+
                                                 <div class="d-flex justify-content-between align-items-center mt-3">
-                                                    <button class="btn btn-primary me-3" type="button">
-                                                        <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar </button>
-                                                    <button class="btn btn-warning" type="button"> Guardar y Enviar</button>
+                                                    <button class="guardar ladda-button btn btn-primary" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"></i>Guardar</button>
+                                                    <button class="btn btn-warning demo3 float-right"  id="finalizar_button"  style="margin-left: 10px;" type="button">Guardar y Enviar</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>       
@@ -521,7 +521,6 @@
     }
 
 </script>
-
 
 <script type="text/javascript">
     // $(document).ready(function () {
