@@ -65,7 +65,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-1">                              
+                            <div class="col-lg-1">
                                     <div class="ibox-content" id="filter">
                                         <div class="form-group" style="text-align: center;">
                                             <h5>Año</h5>
@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             <div class="col-lg-2">
                                 <div class="ibox ">
                                     <div class="ibox-title">
@@ -91,7 +91,7 @@
                                     <div class="ibox-content" style="height: 360px">
                                         <ul id="legend" style="list-style-type:none; padding-left: 0;">
                                             <li><span style="background-color: #007BFF; width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></span> Empresa</li>
-                                            <li><span style="background-color: #00A2FF; width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></span> Cliente</li>
+                                            <li><span style="background-color: #00A2FF; width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></span> Persona</li>
                                         </ul>
                                         <div id="ct-chart5" class="ct-perfect-fourth"></div>
                                     </div>
@@ -123,24 +123,29 @@
                             </div>
                         </div>
                         <div class="row">
-                                <div class="col-lg-1">                              
+                                <div class="col-lg-1">
                                     <div class="ibox-content" id="filter">
                                         <div class="form-group" style="text-align: center;">
                                             <h5>Meses</h5>
                                             <div>
                                                 <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
-                                                    <option value="2024">2024</option>
-                                                    <option value="2023">2023</option>
-                                                    <option value="2022">2022</option>
-                                                    <option value="2021">2021</option>
-                                                    <option value="2020">2020</option>
-                                                    <option value="2019">2019</option>
-                                                    <option value="2018">2018</option>
+                                                    <option value="Enero">Enero</option>
+                                                    <option value="Febrero">Febrero</option>
+                                                    <option value="Marzo">Marzo</option>
+                                                    <option value="Abril">Abril</option>
+                                                    <option value="Mayo">Mayo</option>
+                                                    <option value="Junio">Junio</option>
+                                                    <option value="Julio">Julio</option>
+                                                    <option value="Agosto">Agosto</option>
+                                                    <option value="Setiembre">Setiembre</option>
+                                                    <option value="Octubre">Octubre</option>
+                                                    <option value="Noviembre">Noviembre</option>
+                                                    <option value="Diciembre">Diciembre</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                             <div class="col-lg-4">
                                 <div class="ibox ">
                                     <div class="ibox-title">
@@ -359,7 +364,7 @@
         datasets: [
             {
                 label: "Persona",
-                backgroundColor: 'rgba(255, 255, 0, 0.5)',
+                backgroundColor: 'rgba(255, 255, 0)',
                 pointBorderColor: "#fff",
                 data: [65, 59, 80, 81, 56, 55, 40, 70, 60, 65, 68, 83]
             },

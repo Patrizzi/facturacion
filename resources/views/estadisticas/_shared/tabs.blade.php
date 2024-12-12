@@ -26,7 +26,7 @@
 <style>
     .nav-item {
         transition: background-color 0.3s ease; /* Suaviza la transición */
-        
+
     }
 
     .nav-item:hover {
@@ -34,7 +34,7 @@
         border-radius: 10px 10px 0 0;
     }
     #tablas {
-    background-color: #2641f8;    
+    background-color: #2641f8;
     border-radius: 10px 10px 0 0; /* Solo redondea las esquinas superiores */
     overflow: hidden;
     }
