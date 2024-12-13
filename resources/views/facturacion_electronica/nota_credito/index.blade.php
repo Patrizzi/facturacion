@@ -228,6 +228,267 @@
     }
 </style>
 
+
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+            <div class="ibox-title" style="display: flex; align-items: center;">
+    <span>RESUMEN DE DICIEMBRE DEL 2024</span>
+</div>
+            <div class="ibox-content">
+                <div class="card-group">
+                    <div class="card p-3" style="border: none;">
+                        <div class="d-flex justify-content-center align-items-center card-img-top">
+                            <div class="bg-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                                <i class="fa fa-envelope-open text-white"></i>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" style="font-size: 18px">NOTA DE CREDITO ELECTRONICA</h5>
+                            <p class="card-text" style="font-size: 14px">5 Documentos</p>
+                            <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{--Base para agregar el tab para el los contenidos--}}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li>
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> NOTA DE CREDITO
+                                    {{-- link del tab 1 --}}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> ENVIADOS
+                                    {{-- link del tab 2 --}}
+                                </a>
+                            </li>
+                                <li class="ml-auto">
+                                <div class="btn-group mx-2">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
+                                    <ul class=" dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
+                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="btn-group mx-3">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">PDF</a></li>
+                                        <li><a class="dropdown-item" href="#">WORD</a></li>
+                                        <li><a class="dropdown-item" href="#">CSV</a></li>
+                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
+                        <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                            <div class="input-group col-md-4 mx-5">
+                                <input class="form-control col-md-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
+                                </span>
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
+                                </span>
+                            </div>
+                            <div class="row g-3 col-md-5">
+                                <div class="col-auto">
+                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tablas y su contenido -->
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-6" class="tab-pane active show">
+                                <div class="panel-body">
+                                    <!-- CONTENIDO DENTRO DEL TAB  -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
+                                                <th >Item</th>
+                                                <th >Código de NC</th>
+                                                <th >Nª de Doc.</th>
+                                                <th>Cliente</th>
+                                                <th>Ruc/DNI</th>
+                                                <th>Tipo</th>
+                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                            </td>                                            
+                                            <td>1</td>
+                                            <td>FA00-00000001</td>
+                                            <td>FF01-00000001</td>
+                                            <td>FITOBONOS S.A.C</td>
+                                            <td>20600184866</td>
+                                            <td>Factura</td>
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                            </td>                                            
+                                            <td>2</td>
+                                            <td>FA00-00000001</td>
+                                            <td>FF01-00000001</td>
+                                            <td>FITOBONOS S.A.C</td>
+                                            <td>20600184866</td>
+                                            <td>Factura</td>
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                            </td>
+                                            <td>3</td>
+                                            <td>FA00-00000001</td>
+                                            <td>FF01-00000001</td>
+                                            <td>FITOBONOS S.A.C</td>
+                                            <td>20600184866</td>
+                                            <td>Factura</td>
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                            </td>                                            
+                                            <td>4</td>
+                                            <td>FA00-00000001</td>
+                                            <td>FF01-00000001</td>
+                                            <td>FITOBONOS S.A.C</td>
+                                            <td>20600184866</td>
+                                            <td>Factura</td>
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                    <tr><td colspan="7" align="right" style="padding-right: 2em"></td>
+                                        <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
+                                </tr>
+                                </table>
+                                </div>
+                            </div>
+                            <div role="tabpanel" id="tab-7" class="tab-pane">
+                                <div class="panel-body">
+                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th >Item</th>
+                                                <th >Código de NC</th>
+                                                <th >Nª de Doc.</th>
+                                                <th>Cliente</th>
+                                                <th>Ruc/DNI</th>
+                                                <th>Tipo</th>
+                                                <th >XML</th>
+                                                <th>ZIP</th>
+                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                </td>                                                
+                                                <td>1</td>
+                                                <td>FM00-00000002</td>
+                                                <td>FM00-00000002</td>
+                                                <td>NETKA S.A.Ctd</td>
+                                                <td>20603807104</td>
+                                                <td>Factura</td>
+                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td>
+                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                </td>
+                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                </td>
+                                                <td>2</td>
+                                                <td>FM00-00000002</td>
+                                                <td>FM00-00000002</td>
+                                                <td>NETKA S.A.Ctd</td>
+                                                <td>20603807104</td>
+                                                <td>Factura</td>
+                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td>
+                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                </td>
+                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                </td>
+                                                <td>3</td>
+                                                <td>FM00-00000003</td>
+                                                <td>FM00-00000003</td>
+                                                <td>NETKA S.A.Ctd</td>
+                                                <td>20603807104</td>
+                                                <td>Factura</td>
+                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td>
+                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                </td>
+                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                </td>
+                                                <td>4</td>
+                                                <td>FM00-00000004</td>
+                                                <td>FM00-00000004</td>
+                                                <td>NETKA S.A.Ctd</td>
+                                                <td>20603807104</td>
+                                                <td>Factura</td>
+                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td>
+                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                </td>
+                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>
+                                        </tbody>
+                                        <tr><td colspan="9" align="right" style="padding-right: 2em"></td>
+                                            <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
+                                    </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

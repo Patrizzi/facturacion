@@ -345,6 +345,7 @@
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
+                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th> 
                                                 <th >ID</th>
                                                 <th >Nombre</th>
                                                 <th >Abreviatura</th>
@@ -355,6 +356,7 @@
                                         </thead>
                                         <tbody>
                                         <tr>
+                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th> 
                                             <td>1</td>
                                             <td>EPSON</td>
                                             <td>EP</td>
@@ -425,6 +427,7 @@
                                             </div>
                                         </div>
                                         <tr>
+                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th> 
                                             <td>2</td>
                                             <td>CANON</td>
                                             <td>CA</td>
@@ -443,6 +446,7 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th> 
                                             <td>3</td>
                                             <td>COMPATIBLE</td>
                                             <td>CP</td>
@@ -461,6 +465,7 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th> 
                                             <td>4</td>
                                             <td>HP</td>
                                             <td>HP</td>
@@ -479,6 +484,7 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th> 
                                             <td>5</td>
                                             <td>DELL</td>
                                             <td>DELL</td>
@@ -506,56 +512,6 @@
         </div>
     </div>
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
