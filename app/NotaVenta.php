@@ -36,7 +36,9 @@ class NotaVenta extends Model
     {
         // CANTIDAD DE COTIZACIONES Formato = "02-09-2023"
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
-        $nota_venta = NotaVenta::whereDate('created_at', '=', $fecha_conv)->get();
+        $year = date('Y', strtotime($fecha_conv)); // Obtiene el año de la fecha
+        $month = date('m', strtotime($fecha_conv)); // Obtiene el mes de la fecha
+        $nota_venta  = NotaVenta::whereYear('created_at', $year)->whereMonth('created_at', $month)->get();
         $moneda = Moneda::where('principal', '1')->first();
         $igv = Igv::first();
         $suma = 0;

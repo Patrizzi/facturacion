@@ -85,7 +85,9 @@ class Ventas_registroController extends Controller
     public function destroy($id) {}
 
 
-    public function cotizacion_tab(Request $request) {}
+    public function cotizacion_tab(Request $request) {
+        
+    }
     //* DATA DE DATATABLES
     public function cotizacion_registers(Request $request)
     {
