@@ -541,17 +541,16 @@
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
-                            <li class="ml-auto mb-2"> <!-- Added mb-2 for small bottom margin -->
-                                <div class="btn-group mx-2">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                            <li class="ml-auto mb-2">
+                                <div class="row mx-2"> <!-- Usamos row para la distribución -->
+                                    <!-- Input de búsqueda -->
+                                    <div class="col-md-8 mb-2"> <!-- Ocupa más espacio -->
+                                        <input type="search" class="form-control" placeholder="Buscar:" id="search_all_column">
                                     </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                    <!-- Botón para abrir el modal -->
-                                    <div class="btn-group mx-0">
-                                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-bs-toggle="modal" data-bs-target="#myModal">Agregar</button>                                    
+
+                                    <!-- Botón para agregar -->
+                                    <div class="col-md-4 mb-2 "> <!-- Alineado a la derecha -->
+                                        <button type="button" class="btn btn-success w-100" style="background-color: blue;" data-bs-toggle="modal" data-bs-target="#myModal">Agregar</button>
                                     </div>
                                 </div>
                             </li>
@@ -833,7 +832,8 @@
     <div role="tabpanel" id="tab-1" class="tab-pane active show">
         <div class="panel-body">
             <!-- CONTENIDO DENTRO DEL TAB  -->
-            <table class="table table-striped text-md-center">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                        
@@ -857,18 +857,13 @@
                     <td>Calle emilio Fernandez 160</td>
                     <td>
                         <!-- Botón para abrir el modal -->
-                    <div class="btn-group mx-0">
-                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white; padding: 10px; margin-right: 5px;" data-bs-toggle="modal" data-bs-target="#myModal">
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal"><i class="fa fa-edit"></i></button>
+                        <!-- <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white; padding: 10px; margin-right: 5px;" >
                             <i class="fa fa-edit" style="color:white;"></i>
-                        </button> 
-                        <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
-                            <i class="fa fa-check" style="color:white;"></i>
-                        </button>
-                        <button style="display:inline-block; padding:10px; background-color:#28a745; border-radius:5px; border:none; cursor:pointer;">
-                            <i class="fa fa-eye" style="color:white;"></i>
-                        </button>
-                    </div>
-                    
+                        </button> -->
+                        <button class="btn btn-primary" style="background-color: green;"><i class="fa fa-check" ></i></button>
+                        <button class="btn btn-success"><i class="fa fa-eye"></i></button>
+                    </td>
                     <!-- Modal DOS -->
                     <div class="modal fade" id="editaralmacen" tabindex="-1" aria-labelledby="editaralmacenLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
@@ -1009,6 +1004,7 @@
                 </div>
             </form>
         <!-- Fin del contenido modal -->
+        </div>
     </div>
 </div>
                 
