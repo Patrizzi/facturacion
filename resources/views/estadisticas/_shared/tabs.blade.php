@@ -1,5 +1,5 @@
 <div class="nav" id="tablas">
-    <li class="nav-item">
+    <li class="nav-item" >
         <a class="nav-link" href="{{route('estadisticas.index')}}" id="tab-1-tab">
             <span class="badge badge-success" style="background-color :green "></span>
             Ventas
