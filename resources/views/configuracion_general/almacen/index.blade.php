@@ -533,7 +533,9 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-content">
+                <div class="ibox-content" onsubmit="return valida(this)">
+                    <form action="{{route('almacen.store')}}"  enctype="multipart/form-data" method="post">
+                        @csrf
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
@@ -597,28 +599,15 @@
                                     <!-- Nombre -->
                                     <div class="col-md-6">
                                         <label for="nombreAlmacen" class="form-label"><b>Nombre:</b></label>
-                                        <input type="text" class="form-control" id="nombreAlmacen" value="Oficina Arequipa">
+                                        <input type="text" placeholder="Almacén" class="form-control" required="required" name="nombre" autocomplete="off">
                                     </div>
                                     <!-- Responsable -->
                                     <div class="col-md-6">
                                         <label for="responsable" class="form-label"><b>Responsable:</b></label>
-                                        <select class="form-control" id="responsable">
-                                            <option selected>Administrador Web</option>
-                                            <option value="1">Otro Responsable</option>
-                                            <option value="2">Carlos Daniel Roman Berru</option>
-                                            <option value="3">Christopher Javier Huaman Guevara</option>
-                                            <option value="4">Luis Fernando Miranda Valdez</option>
-                                            <option value="5">Daniela Greys Yanavilca Matta</option>
-                                            <option value="6">Julio Flores Vicuña</option>
-                                            <option value="7">Karla Alexandra Paola Flores Ramos</option>
-                                            <option value="8">Wilber Leydin Sánchez Rojas</option>
-                                            <option value="9">Areliz Madeleine Tiburcio Galarza</option>
-                                            <option value="10">Sebastian Flores Garcia</option>
-                                            <option value="11">Jack Carlos Huaman Asencio</option>
-                                            <option value="12">Fiorela Mariel Calderón Miranda</option>
-                                            <option value="13">Lucero Margarita Changra Mendoza</option>
-                                            <option value="14">Brisila Bedregal</option>
-                                            <option value="14">Alessandra Nicolle Barrantes Cruzado</option>
+                                        <select name="responsable" required  class="form-control m-b" autocomplete="off" required="required" style="margin-bottom: 0px;">
+                                            @foreach($personal as $personals)
+                                            <option value="{{$personals->id}}" > {{$personals->nombres}} {{$personals->apellidos}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -627,12 +616,12 @@
                                     <!-- Dirección -->
                                     <div class="col-md-6">
                                         <label for="direccion" class="form-label"><b>Dirección:</b></label>
-                                        <input type="text" class="form-control" id="direccion" value="Calle emilio Fernandez 16C">
+                                        <input type="text" class="form-control" placeholder="Av. , Calle, Ciudad" name="direccion" autocomplete="off" required="required">
                                     </div>
                                     <!-- Abreviatura -->
                                     <div class="col-md-6">
                                         <label for="abreviatura" class="form-label"><b>Abreviatura:</b></label>
-                                        <input type="text" class="form-control" id="abreviatura" value="ALM1">
+                                        <input type="text" class="form-control" name="abreviatura" autocomplete="off" required="required" placeholder="ALM.">
                                     </div>
                                 </div>
                 
@@ -640,7 +629,7 @@
                                     <!-- Código Sunat -->
                                     <div class="col-md-6">
                                         <label for="codigoSunat" class="form-label"> <b>Código Sunat:</b></label>
-                                        <input type="text" class="form-control" id="codigoSunat" value="1">
+                                        <input  type="number" class="form-control" name="cod_sunat" autocomplete="off" required="required" placeholder="Numero de sucursal">
                                     </div>
                                     <!-- Cod. Ubigeo -->
                                     <div class="col-md-6">
@@ -651,7 +640,7 @@
                                             <b>Cod. Ubigeo:</b>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="codigoUbigeo" value="150101">
+                                            <input type="text"  class="form-control" name="ubigeo" autocomplete="off" required="required" value="150101" minlength="6" maxlength="6">
                                         </div>
                                     </div>
                                 </div>
@@ -660,7 +649,7 @@
                                     <!-- Descripción -->
                                     <div class="col-md-6">
                                         <label for="descripcion" class="form-label"><b>Descripción:</b></label>
-                                        <textarea class="form-control" id="descripcion" rows="2"></textarea>
+                                        <textarea class="form-control" name="descripcion" autocomplete="off" required="required">Almacen ...</textarea>
                                     </div>
                                     <!-- Nota -->
                                     <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
@@ -687,7 +676,7 @@
                                 <!-- Botón Guardar en el modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: blue;">Guardar cambios</button>
                 </div>
             </form>
         <!-- Fin del contenido modal -->
@@ -712,32 +701,32 @@
                 <!-- Cod. Facturación -->
                 <div class="col-md-4">
                     <label for="codFacturacion" class="form-label"><b>Cod.Facturación:</b></label>
-                    <div class="d-flex">
+                    <div class="input-group m-b">
                         <input type="text" class="form-control input-blanco" value="F00" readonly>
-                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" value="" class="form-control write_button" name="serie_factura" autocomplete="off"  required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
-
+                        <input type="text" value="" required name="cod_fac" class="form-control write_button">
                     </div>
+
                 </div>
                 <!-- Cod. Boleta -->
                 <div class="col-md-4">
                     <label for="codBoleta" class="form-label"><b>Cod.Boleta:</b></label>
-                    <div class="d-flex">
+                    <div class="input-group m-b">
                         <input type="text" class="form-control input-blanco" value="B00" readonly>
-                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" value="" class="form-control write_button" name="serie_boleta" autocomplete="off"  required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_bol" class="form-control write_button">
                     </div>
                 </div>
                 <!-- Cod. Guía R -->
                 <div class="col-md-4">
                     <label for="codGuia" class="form-label"><b>Cod.Guía Remisión:</b></label>
                     <div class="d-flex">
-                        <input type="text" class="form-control input-blanco" value="F00" readonly>
-                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" class="form-control input-blanco" value="T00" readonly>
+                        <input type="text" value="" class="form-control write_button" name="serie_remision" autocomplete="off"  required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_guia" class="form-control write_button">
                     </div>
                 </div>
             </div>
@@ -748,9 +737,9 @@
                     <label for="codNotaCreditoFactura" class="form-label"><b>Cod. Nota Crédito Factura:</b></label>
                     <div class="d-flex">
                         <input type="text" class="form-control input-blanco" value="FF0" readonly>
-                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" value="" class="form-control write_button" name="serie_credito" autocomplete="off"  required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_credito" class="form-control write_button">
                     </div>
                 </div>
                 <!-- Cod. Nota Crédito Boleta -->
@@ -758,9 +747,9 @@
                     <label for="codNotaCreditoBoleta" class="form-label"><b>Cod. Nota Crédito Boleta:</b></label>
                     <div class="d-flex">
                         <input type="text" class="form-control input-blanco" value="BB0" readonly>
-                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" value="" class="form-control write_button" name="serie_credito_b" autocomplete="off" required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_credito_b" class="form-control write_button">
                     </div>
                 </div>
                 <!-- Cod. Nota Débito -->
@@ -768,9 +757,9 @@
                     <label for="codNotaDebito" class="form-label"><b>Cod. Nota Débito:</b></label>
                     <div class="d-flex">
                         <input type="text" class="form-control input-blanco" value="F00" readonly>
-                        <input type="text" class="form-control input-gris" value="1">
+                        <input type="text" value="" class="form-control write_button" name="serie_debito" autocomplete="off" required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_debito" class="form-control write_button">
                     </div>
                 </div>
             </div>
@@ -781,9 +770,9 @@
                     <label for="codFacturaManual" class="form-label"><b>Cod. Factura manual:</b></label>
                     <div class="d-flex">
                         <input type="text" class="form-control input-blanco" value="FA0" readonly>
-                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" value="" class="form-control write_button" name="serie_boleta_m" autocomplete="off" required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_boleta_m" class="form-control write_button">
                     </div>
                 </div>
                 <!-- Cod. Boleta Manual -->
@@ -791,9 +780,9 @@
                     <label for="codBoletaManual" class="form-label"><b>Cod. Boleta manual:</b></label>
                     <div class="d-flex">
                         <input type="text" class="form-control input-blanco" value="BA0" readonly>
-                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" value="" class="form-control write_button" name="serie_factura_m" autocomplete="off" required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_factura_m" class="form-control write_button">
                     </div>
                 </div>
                 <!-- Cod. Guía Remisión Manual -->
@@ -801,17 +790,16 @@
                     <label for="codGuiaManual" class="form-label"><b>Cod. Guía Remisión manual:</b></label>
                     <div class="d-flex">
                         <input type="text" class="form-control input-blanco" value="TA0" readonly>
-                        <input type="text" class="form-control input-gris" value="0">
+                        <input type="text" value="" class="form-control write_button" name="serie_remision_m" autocomplete="off" required="required">
                         <input type="text" class="form-control input-blanco" value="-000" readonly>
-                        <input type="text" class="form-control input-gris" value="">
+                        <input type="text" value="" required name="cod_remision_m" class="form-control write_button">
                     </div>
                 </div>
             </div>
 
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button class="btn btn-primary" type="submit" name="action" id="boton" style="background-color: blue;">Guardar</button>
             </div>
-            
         </form>
     </div>
 </div>
@@ -829,36 +817,35 @@
         <div class="panel-body">
             <!-- CONTENIDO DENTRO DEL TAB  -->
             <div class="table-responsive">
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered table-hover dataTables-example">
                 <thead>
                     <tr>
-                        <th >ID</th>
-                        <th >Nombre</th>
-                        <th >Abreviatura</th>
-                        <th>Descrippción</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Abreviatura</th>
+                        <th>Descripción</th>
                         <th>Responsable</th>
-                        <th >Dirección</th>
+                        <th>Dirección</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Oficina Arequipa</td>
-                    <td>ALM1</td>
-                    <td>Descripción</td>
-                    <td>Administrador Web</td>
-                    <td>Calle emilio Fernandez 160</td>
+                    @foreach($almacenes as $almacen)
+                    <tr class="gradeX">
+                    <td>{{$almacen->id}}</td>
+                    <td>{{$almacen->nombre}}</td>
+                    <td>{{$almacen->abreviatura}}</td>
+                    <td>{{$almacen->descripcion}}</td>
+                    <td>{{$almacen->personal->nombres}} {{$almacen->personal->apellidos}}</td>
+                    <td>{{$almacen->direccion}}</td>
                     <td>
                         <!-- Botón para abrir el modal -->
+                        @if($almacen->estado==0)Activo @elseif($almacen->estado==1)Desactivo @endif</td>
                         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal"><i class="fa fa-edit"></i></button>
-                        <!-- <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white; padding: 10px; margin-right: 5px;" >
-                            <i class="fa fa-edit" style="color:white;"></i>
-                        </button> -->
-                        <button class="btn btn-primary" style="background-color: green;"><i class="fa fa-check" ></i></button>
-                        <button class="btn btn-success"><i class="fa fa-eye"></i></button>
                     </td>    
                 </tr>
+            </tbody>
+            @endforeach
                     <td>2</td>
                     <td>Galeria Centro Lima</td>
                     <td>ALM2</td>
@@ -897,7 +884,6 @@
                 <div class="tab-content mt-3" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
                     
-                
                         <!-- Aquí se agrega el contenido del modal -->
                         <div class="col-md-12 mb-3">
                             <!-- Título con ícono -->
@@ -1026,7 +1012,7 @@
 </div>
 </div>
 </div>
-</tbody>
+
 <!-- FIN FLAVIA-->   
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
