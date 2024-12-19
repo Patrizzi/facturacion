@@ -1255,13 +1255,11 @@ class CotizacionManualController extends Controller
     //  NUEVAS VISTAS
     public function index2(){
         $mes_año = Carbon::now()->format('d-m-Y');
-        $cotizacion_mes = Cotizacion::count_mes($mes_año);
-        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
-        $nota_venta_mes = NotaVenta::count_mes($mes_año);
+        $count_month_ventas = Ventas_registro::count_month_ventas($mes_año);
         
         $almacen = Almacen::get();
         $count_all_ventas = Ventas_registro::count_day_ventas();        
-        return view('transaccion.venta.cotizacion.manual.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
+        return view('transaccion.venta.cotizacion.manual.index2',compact('count_month_ventas', 'almacen','count_all_ventas'));
         
     }
 }

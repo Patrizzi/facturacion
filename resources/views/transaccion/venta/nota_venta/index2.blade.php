@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cotización')
+@section('title', 'Ventas | Nota de Venta')
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">

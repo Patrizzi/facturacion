@@ -569,6 +569,7 @@ Route::group(
 		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
 	// COMPROBANTES (NEW VISTAS V2.1)
 		Route::get('/comprobantes/boleta','ComprobantesVentasController@index_boleta')->name('comprobantes.index_boleta');
+		Route::get('/comprobantes/boleta_registers', 'ComprobantesVentasController@boleta_registers')->name('comprobantes.boleta_registers');
 		Route::get('/comprobantes/boleta_manual','ComprobantesVentasController@index_boleta_manual')->name('comprobantes.index_boleta_manual');
 		Route::get('/comprobantes/factura','ComprobantesVentasController@index_factura')->name('comprobantes.index_factura');
 		Route::get('/comprobantes/factura_manual','ComprobantesVentasController@index_factura_manual')->name('comprobantes.index_factura_manual');
