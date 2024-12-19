@@ -12,6 +12,7 @@
 // });
 
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\ProductosController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -577,6 +578,8 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
+Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
 
