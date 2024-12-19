@@ -511,7 +511,7 @@ Route::group(
 		Route::resource('/provedor','ProvedorController');
 
 		Route::resource('/servicios','ServiciosController');
-		// Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
 		Route::resource('/transaccion-compra','TransaccionCompraController');
 		Route::resource('/unidad-medida','UnidadMedidaController');
 
@@ -557,6 +557,11 @@ Route::group(
 		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
+
+        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
         Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
         Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');

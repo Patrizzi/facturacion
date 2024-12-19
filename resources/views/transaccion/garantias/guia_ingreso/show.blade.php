@@ -77,7 +77,7 @@
             <form action="{{ route('email.guia_ingreso', $garantia_guia_ingreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                 @csrf
                 <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                    <i class="fa fa-envelope fa-lg" ></i> 
+                    <i class="fa fa-envelope fa-lg" ></i>
                 </button>
             </form>
         @endif

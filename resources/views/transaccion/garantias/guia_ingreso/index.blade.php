@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Guias Ingreso') 
+@section('title', 'Guias Ingreso')
 @section('breadcrumb', 'Guia de ingreso')
 @section('breadcrumb2', 'Garantia')
 @section('data-toggle', 'modal')
@@ -74,7 +74,7 @@
                     <div class="ibox ">
                         <div class="ibox-content">
                             <div class="table-responsive">
-                            
+
                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="table_productos" >
                                     <thead>
                                         <tr>
