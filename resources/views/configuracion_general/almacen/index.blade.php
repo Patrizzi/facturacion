@@ -528,6 +528,9 @@
 </style>
 
 <tbody>
+
+
+
     {{--Base para agregar el tab para el los contenidos--}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -539,7 +542,7 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> ALMACÉN
+                                <a class="nav-link active show" data-toggle="tab" href=""><span style="color: green;">&#9632; </span> ALMACÉN
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
@@ -655,21 +658,6 @@
                                     <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
                                         <div class="alert alert-primary mb-0 mt-3" role="alert"> <!-- Added margin-top for spacing -->
                                             Nota: Los campos siguientes es el número de registro que se continuará en el sistema.
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6 d-flex align-items-center">
-                                        <!-- Checkbox y texto alineados horizontalmente -->
-                                        <div class="form-check form-switch d-flex align-items-center">
-                                            <!-- Checkbox con color azul -->
-                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5); background-color: #007bff; border-color: #007bff;">
-                                            
-                                            <!-- Espaciado y estilo en el texto -->
-                                            <label for="activo" class="form-label ms-3" style="font-size: 20px; margin-bottom: 0;">
-                                                Activo/desactivo:
-                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -796,7 +784,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="d-flex justify-content-center">
                 <button class="btn btn-primary" type="submit" name="action" id="boton" style="background-color: blue;">Guardar</button>
             </div>
@@ -810,7 +797,6 @@
 <!-- Bootstrap CSS y JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
                             
-
 <!-- Tablas y su contenido -->
 <div class="tab-content">
     <div role="tabpanel" id="tab-1" class="tab-pane active show">
@@ -839,50 +825,43 @@
                     <td>{{$almacen->personal->nombres}} {{$almacen->personal->apellidos}}</td>
                     <td>{{$almacen->direccion}}</td>
                     <td>
+                        @if($almacen->estado==0)
+                        <button type="submit" class="btn btn-info"><i  class=" fa fa-check"></i></button>
+                        @elseif($almacen->estado==1)
+                        <button type="button" class="btn btn-default"><i class="fa fa-times-rectangle"></i></button> 
+                        @endif 
                         <!-- Botón para abrir el modal -->
-                        @if($almacen->estado==0)Activo @elseif($almacen->estado==1)Desactivo @endif</td>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editaralmacen{{$almacen->id}}"><i class="fa fa-edit"></i></button>
                     </td>    
-                </tr>
-            </tbody>
-            @endforeach
-                    <td>2</td>
-                    <td>Galeria Centro Lima</td>
-                    <td>ALM2</td>
-                    <td>Hardware</td>
-                    <td>Administrador Web</td>
-                    <td>Av. Bolivia 148 int. 2218 Cercado de Lima</td>
-                    <td>
-                        <!-- Botón para abrir el modal -->
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal"><i class="fa fa-edit"></i></button>
-                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer; margin-right: 5px;">
-                            <i class="fa fa-arrows-alt" style="color:white;"></i>
-                        </button>
-                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:5px; margin-right:2px; border:none;">
-                            <i class="fa fa-eye-slash" style="color:white;"></i>
-                        </button>
+                    </tr>
+                    </tbody>
+                    
                     <!-- Modal DOS -->
-                    <div class="modal fade" id="editaralmacen" tabindex="-1" aria-labelledby="editaralmacenLabel" aria-hidden="true">
+                    <div class="modal fade" id="editaralmacen{{$almacen->id}}" tabindex="-1" aria-labelledby="editaralmacenLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editaralmacenLabel" style="color: blue; font-size: 18px; font-weight: bold;">Agregar en almacén</h5>
+                                    <h5 class="modal-title" id="editaralmacenLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar el almacén</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
+                                <form action="{{route('almacen.update',$almacen->id)}}"  enctype="multipart/form-data" method="post">
+                                    @csrf
+                                    @method('PATCH')
                                 <div class="modal-body">
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                                         <li class="nav-item" role="presentation">
-                                            <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Información General</a>
+                                            <a class="nav-link active" id="tab3-tab" data-bs-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="true">Información General</a>
                                         </li>
                                         <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Información de la Sunat</a>
+                                            <a class="nav-link" id="tab4-tab" data-bs-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Información de la Sunat</a>
                                         </li>
                                     </ul>
 
-                <!-- Tab content -->
+                                    
+                                    <!-- Tab content -->
                 <div class="tab-content mt-3" id="myTabContent">
-                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                    <div class="tab-pane fade show active" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
                     
                         <!-- Aquí se agrega el contenido del modal -->
                         <div class="col-md-12 mb-3">
@@ -900,29 +879,18 @@
                                 <div class="row mb-3">
                                     <!-- Nombre -->
                                     <div class="col-md-6">
-                                        <label for="nombreAlmacen" class="form-label">Nombre:</label>
-                                        <input type="text" class="form-control" id="nombreAlmacen" value="Oficina Arequipa">
+                                        <label for="nombreAlmacen" class="form-label"><b>Nombre:</b></label>
+                                        <input type="text" class="form-control" name="nombre" value="{{$almacen->nombre}}">
                                     </div>
                                     <!-- Responsable -->
                                     <div class="col-md-6">
-                                        <label for="responsable" class="form-label">Responsable:</label>
-                                        <select class="form-control" id="responsable">
-                                            <option selected>Administrador Web</option>
-                                            <option value="1">Otro Responsable</option>
-                                            <option value="2">Carlos Daniel Roman Berru</option>
-                                            <option value="3">Christopher Javier Huaman Guevara</option>
-                                            <option value="4">Luis Fernando Miranda Valdez</option>
-                                            <option value="5">Daniela Greys Yanavilca Matta</option>
-                                            <option value="6">Julio Flores Vicuña</option>
-                                            <option value="7">Karla Alexandra Paola Flores Ramos</option>
-                                            <option value="8">Wilber Leydin Sánchez Rojas</option>
-                                            <option value="9">Areliz Madeleine Tiburcio Galarza</option>
-                                            <option value="10">Sebastian Flores Garcia</option>
-                                            <option value="11">Jack Carlos Huaman Asencio</option>
-                                            <option value="12">Fiorela Mariel Calderón Miranda</option>
-                                            <option value="13">Lucero Margarita Changra Mendoza</option>
-                                            <option value="14">Brisila Bedregal</option>
-                                            <option value="14">Alessandra Nicolle Barrantes Cruzado</option>
+                                        <label for="responsable" class="form-label"><b>Responsable:</b></label>
+                                        <select class="form-control" name="responsable">
+                                            <option value="{{$almacen->personal->id}}">{{$almacen->personal->nombres}}</option>
+                                            <option disabled="disabled">----------------------------</option>
+                                            @foreach($personal as $personals)
+                                            <option value="{{$personals->id}}">{{$personals->nombres}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -930,32 +898,31 @@
                                 <div class="row mb-3">
                                     <!-- Dirección -->
                                     <div class="col-md-6">
-                                        <label for="direccion" class="form-label">Dirección:</label>
-                                        <input type="text" class="form-control" id="direccion" value="Calle emilio Fernandez 16C">
+                                        <label for="direccion" class="form-label"><b>Dirección:</b></label>
+                                        <input type="text" class="form-control" name="direccion" value="{{$almacen->direccion}}">
                                     </div>
                                     <!-- Abreviatura -->
                                     <div class="col-md-6">
-                                        <label for="abreviatura" class="form-label">Abreviatura:</label>
-                                        <input type="text" class="form-control" id="abreviatura" value="ALM1">
+                                        <label for="abreviatura" class="form-label"><b>Abreviatura:</b></label>
+                                        <input type="text" class="form-control" name="abreviatura" value="{{$almacen->abreviatura}}">
                                     </div>
                                 </div>
                 
                                 <div class="row mb-3">
                                     <!-- Código Sunat -->
                                     <div class="col-md-6">
-                                        <label for="codigoSunat" class="form-label">Código Sunat:</label>
-                                        <input type="text" class="form-control" id="codigoSunat" value="1">
+                                        <label for="codigoSunat" class="form-label"><b>Código Sunat:</b></label>
+                                        <input style="padding-right: 0;padding-left:  7px"  type="text" class="form-control"  value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_sunat')->first()}}" name="cod_sunat">
                                     </div>
                                     <!-- Cod. Ubigeo -->
                                     <div class="col-md-6">
                                         <label for="codigoUbigeo" class="form-label">
                                             <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank" style="text-decoration: none;">
                                                 <i class="fa fa-podcast" aria-hidden="true"></i>
-                                            </a>
-                                            Cod. Ubigeo:
+                                            </a><b>Cod. Ubigeo:</b>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="codigoUbigeo" value="150101">
+                                            <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}" maxlength="6" minlength="6">
                                         </div>
                                     </div>
                                 </div>
@@ -963,8 +930,8 @@
                                 <div class="row mb-3">
                                     <!-- Descripción -->
                                     <div class="col-md-6">
-                                        <label for="descripcion" class="form-label">Descripción:</label>
-                                        <textarea class="form-control" id="descripcion" rows="2"></textarea>
+                                        <label for="descripcion" class="form-label"><b>Descripción:</b></label>
+                                        <textarea class="form-control" name="descripcion" autocomplete="off" required="required" >{{$almacen->descripcion}}</textarea>
                                     </div>
                                     <!-- Nota -->
                                     <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
@@ -980,29 +947,265 @@
                                         <label for="activo" class="form-label me-2" style="font-size: 20px;">
                                             Activo/desactivo:
                                         </label>
-                                        <div class="form-check form-switch" style="transform: scale(1.5); margin-left: 20px;"> <!-- Added margin-left for spacing -->
-                                            <input class="form-check-input" type="checkbox" id="activo" checked style="transform: scale(1.5);"> <!-- Scale the checkbox -->
-                                        </div>
+                                        <div class="col-sm-1" style="vertical-align: middle;margin-top: auto;margin-bottom: auto">
+                                            @if($almacen->estado == 0)
+                                                @if($conteo_almacen == 1)
+                                                <div class="switch-button">
+                                                    <input type="text" name="estado" value="on" hidden="hidden">
+                                                    <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked  disabled="disabled" />
+                                                </div>
+                                                @elseif($conteo_almacen >1)
+                                                <div class="switch-button">
+                                                    <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked   />
+                                                </div>
+                                                @endif
+                                            @elseif($almacen->estado == 1)
+                                                <div class="switch-button">
+                                                    <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" />
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
-                                
-                
+
                                 <!-- Botón Guardar en el modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 </div>
             </form>
+            
         <!-- Fin del contenido modal -->
     </div>
 </div>
-                
-</li>
-</ul>
+<div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+    <!-- Sección de codificación de documentos -->
+    <div class="col-md-12 mb-3">
+        <!-- Centrado de la imagen y el texto de descripción -->
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUkvtg9L1oBVOoWUMqrwmLVo4Fc4QF5xoNsg&s" width="100px" style="margin-right: 10px;">
+            <label for="descripcion2" class="form-label" style="color: rgb(0, 0, 0); font-size: 22px; font-weight: bold;">Sunat:</label>
+        </div>
+    </div>
+
+    <!-- Formulario de codificación dentro de la ventana 2 -->
+    <div class="col-md-12">
+        <form>
+            <div class="row mb-3">
+                <!-- Cod. Facturación -->
+                <div class="col-md-4">
+                    <label for="codFacturacion" class="form-label"><b>Cod.Facturación:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">F00 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura')->first()}}" class="form-control" name="serie_factura" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura')->first()}}" name="cod_fac" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura')->first()}}" class="form-control" name="serie_factura" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_fac" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+                <!-- Cod. Boleta -->
+                <div class="col-md-4">
+                    <label for="codBoleta" class="form-label"><b>Cod.Boleta:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">B00 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_boleta')->first()}}" class="form-control" name="serie_boleta" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta')->first()}}" name="cod_bol" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_boleta')->first()}}" class="form-control" name="serie_boleta" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_bol" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+                <!-- Cod. Guía R -->
+                <div class="col-md-4">
+                    <label for="codGuia" class="form-label"><b>Cod.Guía Remisión:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">T00 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_remision')->first()}}" class="form-control" name="serie_remision" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision')->first()}}" name="cod_guia" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_remision')->first()}}" class="form-control" name="serie_remision" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_guia" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Nota Crédito Factura -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoFactura" class="form-label"><b>Cod. Nota Crédito Factura:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">FF0 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_credito')->first()}}" class="form-control" name="serie_credito" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito')->first()}}" name="cod_credito" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_credito')->first()}}" class="form-control" name="serie_credito" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_credito" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+                <!-- Cod. Nota Crédito Boleta -->
+                <div class="col-md-4">
+                    <label for="codNotaCreditoBoleta" class="form-label"><b>Cod. Nota Crédito Boleta:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">BB0 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito_b')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_credito_b')->first()}}" class="form-control" name="serie_credito_b" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_credito_b')->first()}}" name="cod_credito_b" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_credito_b')->first()}}" class="form-control" name="serie_credito_b" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_credito" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+                <!-- Cod. Nota Débito -->
+                <div class="col-md-4">
+                    <label for="codNotaDebito" class="form-label"><b>Cod. Nota Débito:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">F00 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_debito')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_debito')->first()}}" class="form-control" name="serie_debito" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_nota_debito')->first()}}" name="cod_debito" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_nota_debito')->first()}}" class="form-control" name="serie_debito" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_debito" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- Cod. Factura Manual -->
+                <div class="col-md-4">
+                    <label for="codFacturaManual" class="form-label"><b>Cod. Factura manual:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">FA0 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura_m')->first()}}" class="form-control" name="serie_factura_m" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_factura_m')->first()}}" name="cod_factura_m" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_factura_m')->first()}}" class="form-control" name="serie_factura_m" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_factura_m" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+                <!-- Cod. Boleta Manual -->
+                <div class="col-md-4">
+                    <label for="codBoletaManual" class="form-label"><b>Cod. Boleta manual:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">BA0 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta_m')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_boleta_m')->first()}}" class="form-control" name="serie_boleta_m" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_boleta_m')->first()}}" name="cod_boleta_m" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_boleta_m')->first()}}" class="form-control" name="serie_boleta_m" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_boleta_m" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+                <!-- Cod. Guía Remisión Manual -->
+                <div class="col-md-4">
+                    <label for="codGuiaManual" class="form-label"><b>Cod. Guía Remisión manual:</b></label>
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">TA0 &nbsp;</span>
+                        </div>
+                        @if(is_numeric($cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision_m')->first()))
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_remision_m')->first()}}" class="form-control" name="serie_remision_m" autocomplete="off" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_remision_m')->first()}}" name="cod_remision_m" class="form-control ">
+                        @else
+                            <input type="text" value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('serie_remision_m')->first()}}" class="form-control" name="serie_remision_m" autocomplete="off" readonly="" required="required">
+                            <div class="input-group-append">
+                                <span class="input-group-addon">- 000</span>
+                            </div>
+                            <input type="text" value="" readonly name="cod_boleta_m" class="form-control ">
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary" type="submit" name="action" id="boton" style="background-color: blue;">Guardar</button>
+            </div> 
+        </form>
+        @endforeach
+    </div>
+</div>
+</table>
+</div>
 <!-- FIN Modal DOS-->    
-            </td>
-        </tr>
-        </table>
         </div>
     </div>
 </div>
@@ -1015,6 +1218,24 @@
 
 <!-- FIN FLAVIA-->   
 
+<style>
+   /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        } 
+</style>
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -1026,8 +1247,8 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-@foreach($almacenes as $almacen)
 
+@foreach($almacenes as $almacen)
 <!-- Switchery -->
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
