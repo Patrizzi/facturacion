@@ -663,7 +663,6 @@
                                 </div>
                                 <!-- Botón Guardar en el modal -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary" style="background-color: blue;">Guardar cambios</button>
                 </div>
             </form>
@@ -858,7 +857,6 @@
                                         </li>
                                     </ul>
 
-                                    
                                     <!-- Tab content -->
                 <div class="tab-content mt-3" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
@@ -933,16 +931,6 @@
                                         <label for="descripcion" class="form-label"><b>Descripción:</b></label>
                                         <textarea class="form-control" name="descripcion" autocomplete="off" required="required" >{{$almacen->descripcion}}</textarea>
                                     </div>
-                                    <!-- Nota -->
-                                    <div class="col-md-6 d-flex align-items-start"> <!-- Changed to align-items-start for better alignment -->
-                                        <div class="alert alert-primary mb-0 mt-3" role="alert"> <!-- Added margin-top for spacing -->
-                                            Nota: Los campos siguientes es el número de registro que se continuará en el sistema.
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <!-- Activo/Desactivo -->
                                     <div class="col-md-6 d-flex align-items-center">
                                         <label for="activo" class="form-label me-2" style="font-size: 20px;">
                                             Activo/desactivo:
@@ -970,12 +958,12 @@
                                 <!-- Botón Guardar en el modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn btn-primary" nmae="action" style="background-color: blue;">Guardar</button>
                 </div>
             </form>
-            
         <!-- Fin del contenido modal -->
     </div>
+</div>
 </div>
 <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
     <!-- Sección de codificación de documentos -->
@@ -989,7 +977,6 @@
 
     <!-- Formulario de codificación dentro de la ventana 2 -->
     <div class="col-md-12">
-        <form>
             <div class="row mb-3">
                 <!-- Cod. Facturación -->
                 <div class="col-md-4">
