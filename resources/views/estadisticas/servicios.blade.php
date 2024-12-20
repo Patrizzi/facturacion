@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-1">                              
+                            <div class="col-lg-1">
                                     <div class="ibox-content" id="filter">
                                         <div class="form-group" style="text-align: center;">
                                             <h5>Año</h5>
@@ -92,7 +92,7 @@
                                             </div>
                                         </div>
                                     </div>
-                            </div> 
+                            </div>
                             <div class="col-lg-3">
                                 <div class="ibox ">
                                     <div class="ibox-title">
@@ -131,28 +131,33 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-1">                              
+                            <div class="col-lg-1">
                                     <div class="ibox-content" id="filter">
                                         <div class="form-group" style="text-align: center;">
                                             <h5>Meses</h5>
                                             <div>
                                                 <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
-                                                    <option value="2024">2024</option>
-                                                    <option value="2023">2023</option>
-                                                    <option value="2022">2022</option>
-                                                    <option value="2021">2021</option>
-                                                    <option value="2020">2020</option>
-                                                    <option value="2019">2019</option>
-                                                    <option value="2018">2018</option>
+                                                    <option value="Enero">Enero</option>
+                                                    <option value="Febrero">Febrero</option>
+                                                    <option value="Marzo">Marzo</option>
+                                                    <option value="Abril">Abril</option>
+                                                    <option value="Mayo">Mayo</option>
+                                                    <option value="Junio">Junio</option>
+                                                    <option value="Julio">Julio</option>
+                                                    <option value="Agosto">Agosto</option>
+                                                    <option value="Setiembre">Setiembre</option>
+                                                    <option value="Octubre">Octubre</option>
+                                                    <option value="Noviembre">Noviembre</option>
+                                                    <option value="Diciembre">Diciembre</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                            </div> 
+                            </div>
                             <div class="col-lg-3">
                                 <div class="ibox">
                                     <div class="ibox-title">
-                                        <h5>Venta por Distritos </h5>
+                                        <h5>Servicios por Distritos </h5>
                                     </div>
                                     <div class="ibox-content">
                                         <div id="ct-chart5" class="ct-perfect-fourth"  ></div>
@@ -162,7 +167,7 @@
                             <div class="col-lg-5">
                                 <div class="ibox ">
                                     <div class="ibox-title">
-                                        <h5>Total de Gatos y Ingresos</h5>
+                                        <h5>Gatos y Ingresos</h5>
                                     </div>
                                     <div class="ibox-content">
                                         <div>
@@ -172,7 +177,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div class="ibox ">
+                                        <div class="ibox">
                                             <div class="ibox-title">
                                                 <h5>Recomendaciones en 6 meses</h5>
                                                 <div class="ibox-tools">
@@ -184,10 +189,10 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div class="ibox-content"  >
+                                            <div class="ibox-content" style="display: none" >
                                                 <div class="row">
                                                     <div class="col-lg-6">
-                                                        <table class="table table-hover margin bottom">
+                                                        <table class="table table-hover ">
                                                             <thead>
                                                             <tr>
                                                                 <th style="width: 1%" class="text-center">No.</th>
@@ -244,12 +249,9 @@
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="ibox ">
-                                                            <div class="ibox-title">
-                                                                <h5>Metodos de Pago</h5>
-                                                            </div>
-                                                            <div class="ibox-content">
+                                                            <div class="ibox-content" style="border-style: none">
                                                                 <div>
-                                                                    <div id="pie"></div>
+                                                                    <canvas id="doughnutChart3" height="225"></canvas>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -270,6 +272,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -279,6 +282,9 @@
         </div>
     </div>
     <style>
+        .ibox{
+            border-bottom: 0px !important
+        }
         #filter{
             border-radius: 10px 10px 10px 10px !important
         }
@@ -425,6 +431,26 @@
             data: doughnutData,
             options: doughnutOptions
         });
+        //nuevo grafico
+        var doughnutOptions = {
+        responsive: true
+        };
+
+
+        var doughnutData = {
+            labels: ["Servicio 1", "Servicio 2", "Servicio 3", "Servicio 4", "Servicio 5"],
+            datasets: [{
+                data: [300, 50, 100, 65, 240],
+                backgroundColor: ["black", "yellow", "blue", "red", "Green"]
+            }]
+        };
+        var ctx4 = document.getElementById("doughnutChart3").getContext("2d");
+        new Chart(ctx4, {
+            type: 'doughnut',
+            data: doughnutData,
+            options: doughnutOptions
+        });
+        //squip
 
         var lineOptions = {
         responsive: true
@@ -531,13 +557,13 @@
             datasets: [
                 {
                     label: "Ventas Totales",
-                    backgroundColor: 'rgba(255, 255, 0, 0.5)',
+                    backgroundColor: '#12239e',
                     pointBorderColor: "#fff",
                     data: [65, 59, 80, 81, 56, 55, 40, 70, 60, 65, 68, 83]
                 },
                 {
                     label: "Gastos Totales",
-                    backgroundColor: 'rgba(26,179,148,0.5)',
+                    backgroundColor: '#118dff',
                     borderColor: "rgba(26,179,148,0.7)",
                     pointBackgroundColor: "rgba(26,179,148,1)",
                     pointBorderColor: "#fff",
