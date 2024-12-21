@@ -63,12 +63,46 @@
                             </li>
                             <li class="ml-auto align-content-center">
                                 <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
-                                    <ul class="dropdown-menu p-2">
-                                        <p class="pl-3"><b>Almacenes:</b></p>
-                                        <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
-                                        <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
-                                    </ul>
+                                    <a data-toggle="modal" class="btn btn-primary btn-sm" href="#modal-form1"><i class="fa fa-plus"></i></a>
+                                    <div id="modal-form1" class="modal fade align-content-center" style="display: none;" aria-modal="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <!--Contenido de modal-->
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="ibox collapsed border-bottom">
+                                                                <div class="ibox-title">
+                                                                    <h3><i class="fa fa-user-circle-o" aria-hidden="true"></i>  AGREGAR Unidad de Medida</h3>
+
+                                                                </div>
+                                                                <!--Contenido-->
+                                                                <div class="ibox-content px-2" style="display: block;">
+                                                                    <div class="form-group row d-flex justify-content-between">
+                                                                        <div class="col-md-6">
+                                                                            <input type="text" placeholder="Símbolo:" class="form-control pb-4 m-b">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input type="text" placeholder="Medida:" class="form-control pb-4 m-b">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row d-flex justify-content-center mt-lg-3">
+                                                                        <div class="col-md-8">
+                                                                            <input type="text" placeholder="Unidad:" class="form-control pb-4 m-b">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <button type="button" class="btn btn-block btn-success py-2"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/ modal-->
                                 </div>
                             </li>
                             <li class="align-content-center">
@@ -114,7 +148,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -126,7 +160,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -138,7 +172,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -150,7 +184,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -162,7 +196,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -174,7 +208,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -186,7 +220,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -198,7 +232,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -210,7 +244,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -222,7 +256,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -234,7 +268,7 @@
                                                 <td>Abril 25, 1987</td>
                                                 <td>Jul 14, 2013</td>
                                                 <td>
-                                                    <a href="" class="fs-5"><i class="fa fa-edit text-navy"></i></a>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -312,6 +346,45 @@
                                 </div>
                             </div>
                             -->
+
+                            <div id="modal-form5" class="modal fade align-content-center" style="display: none;" aria-modal="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <!--Contenido de modal-->
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="ibox collapsed border-bottom">
+                                                        <div class="ibox-title">
+                                                            <h3><i class="fa fa-user-circle-o" aria-hidden="true"></i>  EDITAR UNIDAD DE MEDIDA</h3>
+
+                                                        </div>
+                                                        <!--Contenido-->
+                                                        <div class="ibox-content px-2" style="display: block;">
+                                                            <div class="form-group row d-flex justify-content-between">
+                                                                <div class="col-md-6">
+                                                                    <input type="text" placeholder="Símbolo:" class="form-control pb-4 m-b">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <input type="text" placeholder="Medida:" class="form-control pb-4 m-b">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row d-flex justify-content-center mt-lg-3">
+                                                                <div class="col-md-8">
+                                                                    <input type="text" placeholder="Unidad:" class="form-control pb-4 m-b">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-block btn-success py-2"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 

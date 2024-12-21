@@ -17,8 +17,8 @@
             @endforeach
         </a>
     </div>
-    @endif
-    <!-- Modal Create
+    @endif-->
+    <!-- Modal Create--><!--
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -47,8 +47,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- / Modal Create
+    </div>-->
+    <!-- / Modal Create--><!--
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -125,8 +125,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>  --}}
-                                            <!-- / Modal Create
+                                            </div>  --}}-->
+                                            <!-- / Modal Create--><!--
                                         </td>
                                     </tr>
                                 @endforeach
@@ -214,14 +214,50 @@
                                 </div>
 
                                 <div class="col-md-5 d-flex justify-content-end">
-                                    <div class="col-md-2 d-flex justify-content-end align-content-center align-items-md-center ms-5">
-                                        <div class="btn-group">
-                                            <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
-                                            <ul class="dropdown-menu py-2">
-                                                <p class="pl-3"><b>Almacenes:</b></p>
-                                                <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
-                                                <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
-                                            </ul>
+                                    <div class="col-md-2 d-flex justify-content-end align-content-center align-items-md-center">
+                                        <a data-toggle="modal" class="btn btn-primary btn-sm ms-5" href="#modal-form"><i class="fa fa-plus"></i></a>
+                                        <div id="modal-form" class="modal fade align-content-center" style="display: none;" aria-modal="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <!--Contenido de modal-->
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="ibox collapsed border-bottom">
+                                                                    <div class="ibox-title">
+                                                                        <h3><i class="fa fa-user-circle-o" aria-hidden="true"></i>  AGREGAR FAMILIA</h3>
+
+                                                                    </div>
+                                                                    <!--Contenido-->
+                                                                    <div class="ibox-content px-2" style="display: block;">
+                                                                        <div class="form-group row my-lg-3">
+                                                                            <div class="col-lg-12">
+                                                                                <input type="text" placeholder="Descripción:" class="form-control pb-4 m-b ">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row d-flex justify-content-between">
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" placeholder="Padre:" class="form-control pb-4 m-b">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" placeholder="Ubicación:" class="form-control pb-4 m-b">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row d-flex justify-content-between mt-lg-3">
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" placeholder="Código:" class="form-control pb-4 m-b">
+                                                                            </div>
+                                                                            <div class="col-md-6 ">
+                                                                                <button type="button" class="btn btn-block btn-success py-3"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

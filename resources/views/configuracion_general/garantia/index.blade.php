@@ -18,8 +18,8 @@
     </a>
 </div>
 
-@endif
-<!-- Modal Create
+@endif-->
+<!-- Modal Create--><!--
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -48,8 +48,8 @@
             </div>
         </div>
     </div>
-</div>
-<!-- / Modal Create
+</div>-->
+<!-- / Modal Create--><!--
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -111,8 +111,8 @@
                                                </div>
                                            </div>
                                        </div>
-                                   </div>
-                                   <!-- / Modal Create
+                                   </div>-->
+                                   <!-- / Modal Create--><!--
                                </td>
                            </tr>
                            @endforeach
@@ -201,13 +201,65 @@
 
                                 <div class="col-md-5 d-flex justify-content-end">
                                     <div class="col-md-2 d-flex justify-content-end align-content-center align-items-md-center ms-5">
-                                        <div class="btn-group">
-                                            <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
-                                            <ul class="dropdown-menu">
-                                                <p class="pl-3"><b>Almacenes:</b></p>
-                                                <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
-                                                <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
-                                            </ul>
+
+                                        <!--<button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>-->
+                                        <a data-toggle="modal" class="btn btn-primary btn-sm" href="#modal-form2"><i class="fa fa-plus"></i></a>
+                                        <div id="modal-form2" class="modal fade" style="display: none;" aria-modal="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <!--Contenido de modal-->
+                                                        <div class="row mb-3">
+                                                            <div class="col-lg-12">
+                                                                <div class="ibox collapsed border-bottom">
+                                                                    <div class="ibox-title">
+                                                                        <h3><i class="fa fa-copyright fs-4"></i> AGREGAR GARANTÍA</h3>
+
+                                                                    </div>
+                                                                    <!--Contenido-->
+                                                                    <div class="ibox-content" style="display: block;">
+                                                                        <div class="form-group row">
+                                                                            <div class="col-lg-12">
+                                                                                <input type="text" placeholder="Descripción:" class="form-control pb-4 m-b ">
+                                                                            </div>
+                                                                            <div class="col-lg-12">
+                                                                                <input type="text" placeholder="Duración:" class="form-control pb-4 m-b ">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <div class="col-md-12">
+                                                                                <button type="button" class="btn btn-block btn-lg btn-success fs-6"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading">
+                                                                <h3><i class="fa fa-copyright fs-4"></i>  AGREGAR GARANTÍA</h3>
+                                                            </div>
+                                                            <div class="panel-body">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <input type="text" placeholder="Descripción:" class="form-control pb-4 m-b ">
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <input type="text" placeholder="Duración:" class="form-control pb-4 m-b ">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <div class="col-md-12">
+                                                                        <button type="button" class="btn btn-block btn-lg btn-success fs-6"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
