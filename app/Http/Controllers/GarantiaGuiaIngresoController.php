@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\GarantiaGuiaIngreso;
+use App\GarantiaGuiaEgreso;
+use App\GarantiaInformeTecnico;
 use App\Marca;
 use App\Cliente;
 use App\Contacto;
@@ -448,8 +450,10 @@ class GarantiaGuiaIngresoController extends Controller
         $printer->close();
       }
       public function index2(){
-     
-      return view('transaccion.garantias.index');
+      $garantias_guias_ingresos=GarantiaGuiaIngreso::all();
+      $garantias_guias_egresos=GarantiaGuiaEgreso::all();
+      $garantias_informe_tecnicos=GarantiaInformeTecnico::all();
+      return view('transaccion.garantias.index',compact('garantias_guias_ingresos','garantias_guias_egresos','garantias_informe_tecnicos'));
   
       }
     }

@@ -1,6 +1,8 @@
 @extends('layout')
 @section('title', 'Guias Ingreso')
 @section('breadcrumb', 'Guia de ingreso')
+@section('href_accion', route('consultas.garantias.guias_ingreso'))
+@section('value_accion', 'Consulta')
 @section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -129,7 +131,7 @@
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example">
                                         <thead>
                                             <tr>
                                                 <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
@@ -144,75 +146,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach($garantias_guias_ingresos as $garantias_guias_ingreso)
                                         <tr>
                                             <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>1</td>
-                                            <td>FA00-00000001</td>
-                                            <td>203837834</td>
-                                            <td>Fact1</td>
-                                            <td>Jul 14, 2013</td>
-                                            <td>Contado</td>
-                                            <td>S/ 1,800.00</td>
+                                            <td>{{$garantias_guias_ingreso->id}} </td>
+                                            <td>{{$garantias_guias_ingreso->orden_servicio}}</td>
+                                            <td>{{$garantias_guias_ingreso->marcas_i->nombre}}</td>
+                                            <td>{{$garantias_guias_ingreso->fecha}} </td>
+                                            <td>{{$garantias_guias_ingreso->motivo}}</td>
+                                            <td>{{$garantias_guias_ingreso->asunto}} </td>
+                                            <td>{{$garantias_guias_ingreso->clientes_i->nombre}} / {{$garantias_guias_ingreso->clientes_i->empresa}}</td>
                                             <td>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                    <i class="fa fa-check" style="color:white;"></i>
-                                                </a>
+                                                <a href="{{ route('garantia_guia_ingreso.show', $garantias_guias_ingreso->id) }}">
+                                                <button type="button" class="btn btn-w-m btn-primary"><i class="fa fa-check" style="color:white;"></i></button></a>
+
                                                 <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
                                                     <i class="bi bi-eye-fill" style="color:white;"></i>
                                                 </a>
+                                                @if($garantias_guias_ingreso->estado==1)
+                                                Activo
+                                                @else
+                                                Anulado
+                                                @endif
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>2</td>
-                                            <td>FA00-00000001</td>
-                                            <td>23908223</td>
-                                            <td>Dexter</td>
-                                            <td>Jul 16, 2013</td>
-                                            <td>Contado</td>
-                                            <td>s/ 2,456.50</td>
-                                            <td>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                    <i class="fa fa-check" style="color:white;"></i>
-                                                </a>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>3</td>
-                                            <td>FA00-00000001</td>
-                                            <td>23908223</td>
-                                            <td>Dexter</td>
-                                            <td>Jul 18, 2013</td>
-                                            <td>Contado</td>
-                                            <td>s/ 2,456.50</td>
-                                            <td>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                    <i class="fa fa-check" style="color:white;"></i>
-                                                </a>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>4</td>
-                                            <td>FA00-00000001</td>
-                                            <td>23908223</td>
-                                            <td>Dexter</td>
-                                            <td>Jul 22, 2013</td>
-                                            <td>Contado</td>
-                                            <td>s/ 2,456.50</td>
-                                            <td>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                    <i class="fa fa-check" style="color:white;"></i>
-                                                </a>
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 </div>
@@ -235,74 +193,30 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($garantias_guias_egresos as $garantias_guias_egreso)
                                             <tr>
                                                 <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>1</td>
-                                                <td>FM00-00000002</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td>Contado</td>
-                                                <td>S/ 1,800.00</td>
+                                                <td>{{$garantias_guias_egreso->id}}</td>
+                                                <td>{{$garantias_guias_egreso->orden_servicio}}
+                                                <td>{{$garantias_guias_egreso->garantia_ingreso_i->marcas_i->nombre}}
+                                                <td>{{$garantias_guias_egreso->garantia_ingreso_i->fecha}}</td>
+                                                <td>{{$garantias_guias_egreso->garantia_ingreso_i->motivo}}</td>
+                                                <td>{{$garantias_guias_egreso->garantia_ingreso_i->asunto}}</td>
+                                                <td>{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->nombre}}</td>
                                                 <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
+                                                    <a href="{{ route('garantia_guia_egreso.show', $garantias_guias_egreso->id) }}">
+                                                    <button type="button" class="btn btn-w-m btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
+
+                                                        @if($garantias_guias_egreso->estado==1)
+                                                        <a style=" background-color:#28a745;">
                                                         <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
+                                                        @else
+                                                        Anulado
+                                                        @endif
+
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td>Contado</td>
-                                                <td>s/ 2,456.50</td>
-                                                <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>FM00-00000002</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td>Contado</td>
-                                                <td>s/ 2,456.50</td>
-                                                <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000002</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td>Contado</td>
-                                                <td>s/ 2,456.50</td>
-                                                <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -326,74 +240,22 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($garantias_informe_tecnicos as $garantias_informe_tecnico)
                                             <tr>
                                                 <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>1</td>
-                                                <td>FM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td>Contado</td>
-                                                <td>S/ 1,800.00</td>
+                                                <td>{{$garantias_informe_tecnico->id}}</td>
+                                                <td>{{$garantias_informe_tecnico->orden_servicio}}</td>
+                                                <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre}}</td>
+                                                <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->fecha}}</td>
+                                                <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->motivo}}</td>
+                                                <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->asunto}}</td>
+                                                <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}</td>
                                                 <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
+                                                <a href="{{ route('garantia_informe_tecnico.show', $garantias_informe_tecnico->id) }}">
+                                                    <button type="button" class="btn btn-w-m btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td>Contado</td>
-                                                <td>s/ 2,456.50</td>
-                                                <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td>Contado</td>
-                                                <td>s/ 2,456.50</td>
-                                                <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td>Contado</td>
-                                                <td>s/ 2,456.50</td>
-                                                <td>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#007bff; border-radius:5px; margin-right:2px;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
-                                                    </a>
-                                                    <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                        <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
