@@ -62,41 +62,38 @@
 </div>
 </div>
 
-{{--Base para agregar el tab para el los contenidos--}}
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: green;">&#9632; </span> GUIA DE INGRESO
-                                    {{-- link del tab 1 --}}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: orange;">&#9632;</span> GUIA DE EGRESO
-                                    {{-- link del tab 2 --}}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: red;">&#9632;</span> GUIA DE INFORME TECNICO
-                                    {{-- link del tab 2 --}}
-                                </a>
-                            </li>
-                                <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
-                                    <ul class=" dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
+    {{--Base para agregar el tab para el los contenidos--}}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="d-flex justify-content-between align-items-center">
+                        <!-- Tabs -->
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li>
+                                        <a class="nav-link active show" data-toggle="tab" href="#tab-1">
+                                            <span style="color: green;">&#9632; </span> Guía de Ingreso
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" data-toggle="tab" href="#tab-2">
+                                            <span style="color: orange;">&#9632;</span> Guía de Egreso
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" data-toggle="tab" href="#tab-3">
+                                            <span style="color: red;">&#9632;</span> Guía de Informe Técnico
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>  <!-- Botón de descarga -->
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
+                                        <i class="fa fa-cloud-download"></i>
+                                    </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">PDF</a></li>
                                         <li><a class="dropdown-item" href="#">WORD</a></li>
@@ -104,8 +101,8 @@
                                         <li><a class="dropdown-item" href="#">EXCEL</a></li>
                                     </ul>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
                             <div class="input-group col-md-4 mx-5">
@@ -131,24 +128,24 @@
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                    <table class="table table-striped dataTables-example">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <th >ID</th>
-                                                <th >Orden Servicio</th>
-                                                <th >Marca</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>   
+                                                <th>ID</th>
+                                                <th>Orden Servicio</th>
+                                                <th>Marca</th>
                                                 <th>Fecha</th>
                                                 <th>Motivo</th>
-                                                <th >Asuntos</th>
-                                                <th >Cliente</th>
+                                                <th>Asuntos</th>
+                                                <th>Cliente</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @foreach($garantias_guias_ingresos as $garantias_guias_ingreso)
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                        
                                             <td>{{$garantias_guias_ingreso->id}} </td>
                                             <td>{{$garantias_guias_ingreso->orden_servicio}}</td>
                                             <td>{{$garantias_guias_ingreso->marcas_i->nombre}}</td>
@@ -158,15 +155,13 @@
                                             <td>{{$garantias_guias_ingreso->clientes_i->nombre}} / {{$garantias_guias_ingreso->clientes_i->empresa}}</td>
                                             <td>
                                                 <a href="{{ route('garantia_guia_ingreso.show', $garantias_guias_ingreso->id) }}">
-                                                <button type="button" class="btn btn-w-m btn-primary"><i class="fa fa-check" style="color:white;"></i></button></a>
+                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
 
-                                                <a href="#" style="display:inline-block; padding:5px; background-color:#28a745; border-radius:5px;">
-                                                    <i class="bi bi-eye-fill" style="color:white;"></i>
-                                                </a>
                                                 @if($garantias_guias_ingreso->estado==1)
-                                                Activo
+                                                <button class="btn btn-info" style="border-color: #28a745; background-color:#28a745;">
+                                                        <i class="fa fa-check" style="color:white;"></i></button>
                                                 @else
-                                                Anulado
+                                                <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button> 
                                                 @endif
                                             </td>
                                         </tr>
@@ -178,10 +173,10 @@
                             <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped ">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <th >ID</th>
                                                 <th >Orden Servicio</th>
                                                 <th >Marca</th>
@@ -195,7 +190,7 @@
                                         <tbody>
                                             @foreach($garantias_guias_egresos as $garantias_guias_egreso)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <td>{{$garantias_guias_egreso->id}}</td>
                                                 <td>{{$garantias_guias_egreso->orden_servicio}}
                                                 <td>{{$garantias_guias_egreso->garantia_ingreso_i->marcas_i->nombre}}
@@ -205,13 +200,13 @@
                                                 <td>{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->nombre}}</td>
                                                 <td>
                                                     <a href="{{ route('garantia_guia_egreso.show', $garantias_guias_egreso->id) }}">
-                                                    <button type="button" class="btn btn-w-m btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
+                                                    <button type="button" class="btn btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
 
                                                         @if($garantias_guias_egreso->estado==1)
-                                                        <a style=" background-color:#28a745;">
-                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                        <button class="btn btn-info" style="border-color: #28a745; background-color:#28a745;">
+                                                        <i class="fa fa-check" style="color:white;"></i></button>
                                                         @else
-                                                        Anulado
+                                                        <button type="button" class="btn btn-danger"><i class="fa fa-times"></i></button> 
                                                         @endif
 
                                                 </td>
@@ -225,10 +220,10 @@
                             <div role="tabpanel" id="tab-3" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped ">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                             <th >ID</th>
                                                 <th >Orden Servicio</th>
                                                 <th >Marca</th>
@@ -242,7 +237,7 @@
                                         <tbody>
                                             @foreach($garantias_informe_tecnicos as $garantias_informe_tecnico)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <td>{{$garantias_informe_tecnico->id}}</td>
                                                 <td>{{$garantias_informe_tecnico->orden_servicio}}</td>
                                                 <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre}}</td>
@@ -252,7 +247,7 @@
                                                 <td>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}</td>
                                                 <td>
                                                 <a href="{{ route('garantia_informe_tecnico.show', $garantias_informe_tecnico->id) }}">
-                                                    <button type="button" class="btn btn-w-m btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
+                                                <button type="button" class="btn btn-primary"><i class="fa fa-eye" style="color:white;"></i></button></a>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -266,8 +261,25 @@
             </div>
         </div>
     </div>
-</div>
 
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -286,19 +298,80 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <!-- check -->
-<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-<script src="{{ asset('js/icheck.min.js') }}"></script>
-<script>
-$(document).ready(function(){
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-        });
 
-</script>
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
 
 <!-- Page-Level Scripts -->
+<script>
+        $(document).ready(function(){
+            $('.dataTables-example').DataTable({
+                pageLength: 8,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+    </script>
+<!--
 <script>
     $(document).ready(function() {
         table = $('.dataTables-example-facturacion').DataTable({
@@ -411,7 +484,7 @@ $(document).ready(function(){
 
 
 </script>
-
+-->
 
     @endsection
 
