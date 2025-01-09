@@ -18,7 +18,7 @@
                 </div>
                 <div class="tabs-container">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Facturas</a></li>
+                        <li><a class="nav-link " data-toggle="tab" href="#tab-1">Facturas</a></li>
                         <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
                         <li><a class="nav-link" style="color:#0a0a0a;" data-toggle="tab" href="#tab-3">Facturacion Manual</a></li>
                         <li><a class="nav-link" style="color:#0a0a0a;" data-toggle="tab" href="#tab-4">Enviados</a></li>
@@ -34,7 +34,7 @@
                                             <div class="sk-double-bounce1"></div>
                                             <div class="sk-double-bounce2"></div>
                                         </div>
-                                        <table class="table table-striped table-bordered table-hover dataTables-example ibox-content">
+                                        <table class="table table-striped table-bordered table-hover dataTables-example ibox-content active show">
                                             <thead>
                                                 <tr>
                                                     {{-- Seleccion all --}}
@@ -428,54 +428,50 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
+                    <div class="d-flex justify-content-between align-items-center">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-5"><span style="color: green;">&#9632; </span> FACTURAS
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-5"><span style="color: green;">&#9632; </span> Facturas
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-6"><span style="color: orange;">&#9632;</span> ENVIADOS
+                                <a class="nav-link" data-toggle="tab" href="#tab-6"><span style="color: orange;">&#9632;</span> Enviados
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: rgb(0, 255, 72);">&#9632;</span> FACTURACION MANUAL
+                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: rgb(0, 255, 72);">&#9632;</span> Factura Manual
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: red;">&#9632;</span> ENVIADOS
+                                <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: red;">&#9632;</span> Enviados
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-9"><span style="color: rgb(14, 14, 194);">&#9632;</span> DETRACCIONES
+                                <a class="nav-link" data-toggle="tab" href="#tab-9"><span style="color: rgb(14, 14, 194);">&#9632;</span> Detracciones
                                     {{-- link del tab 2 --}}
                                 </a>
-                            </li>
-                                <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
-                                    <ul class=" dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">WORD</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
-                                    </ul>
-                                </div>
-                            </li>
+                            </li>  
                         </ul>
+                        </div>
+                        <div>  <!-- Botón de descarga -->
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
+                                    <i class="fa fa-cloud-download"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#">WORD</a></li>
+                                    <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        </div>
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
                             <div class="input-group col-md-4 mx-5">
@@ -501,60 +497,41 @@
                             <div role="tabpanel" id="tab-5" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <th >Item</th>
-                                                <th >Código</th>
-                                                <th >Cliente</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                  
+                                                <th>Item</th>
+                                                <th>Código</th>
+                                                <th>Cliente</th>
                                                 <th>N° Doc</th>
                                                 <th>Fecha de vencimiento</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                                 </tr>
                                         </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
+                                            <span hidden>{{$a=1}}</span>
+                                            @foreach($facturacion as $facturaciones)
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>1</td>
-                                            <td>FA00-00000001</td>
-                                            <td>EM PLAST PERU E.I.R.L</td>
-                                            <td>20600184866</td>
-                                            <td>2020-03-22 16:45:32</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]" value="{{$facturaciones->codigo_fac}}" ></td>                                             
+                                            <td>{{$a++}}</td>
+                                                    <td>{{$facturaciones->codigo_fac}}</td>
+                                                    @if(isset($facturaciones->cliente_id))
+                                                    <td>{{$facturaciones->cliente->nombre}}</td>
+                                                    <td>{{$facturaciones->cliente->numero_documento}}</td>
+                                                    @else
+                                                    <td>{{$facturaciones->cotizacion->cliente->nombre}}</td>
+                                                    <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
+                                                    @endif
+                                                    <td>{{$facturaciones->fecha_vencimiento }}</td>
+                                            <td><button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="factura_ind" value="{{$facturaciones->codigo_fac}}" onclick="envio_factura(this)"><i class="fa fa-cloud-upload" ></i></button>
                                         </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
-                                            <td>2</td>
-                                            <td>FA00-00000002</td>
-                                            <td>COPACO S.A.C</td>
-                                            <td>20600184811</td>
-                                            <td>2022-06-24 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>3</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>2060018483</td>
-                                            <td>2022-04-24 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>4</td>
-                                            <td>FA00-00000001</td>
-                                            <td>COPACO S.A.C</td>
-                                            <td>206001844</td>
-                                            <td>2022-04-16 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            <tr></tr>
-                                        </tr>
-                                        <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
+                                        @endforeach
+                                        <tfooter >
+                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
                                             <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-
-                                    </tr>
+                                        </tfooter>
                                     </tbody>
                                 </table>
                                 </div>
@@ -562,73 +539,45 @@
                             <div role="tabpanel" id="tab-6" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                            
                                                 <th >Item</th>
                                                 <th >Código</th>
                                                 <th >Cliente</th>
                                                 <th>N° Doc</th>
                                                 <th>Fecha de emisión</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                                 <th >XML</th>
                                                 <th>ZIP</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$a=1}}</span>
+                                            @foreach($facturacion_enviada as $facturaciones)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>NETKA S.A.C</td>
-                                                <td>20603807104</td>
-                                                <td>2022-02-24 23:18:04</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>                                                
+                                                <td>{{$a++}}</td>
+                                                <td>{{$facturaciones->codigo_fac}}</td>
+                                                @if(isset($facturaciones->cliente_id)) <!-- Nombre del cliente -->
+                                                <td>{{$facturaciones->cliente->nombre}}</td>
+                                                <td>{{$facturaciones->cliente->numero_documento}}</td>
+                                                @else
+                                                <td>{{$facturaciones->cotizacion->cliente->nombre}}</td>
+                                                <td>{{$facturaciones->cotizacion->cliente->numero_documento}}</td>
+                                                @endif
+                                                <td>{{$facturaciones->created_at}}</td>
+                                                   
+                                                <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
+                                                <td style="align: center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$facturaciones->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                                </td>
                                                 <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$facturaciones->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>ESCUELA SUPERIOR DE SALUD COMPLEJO HOSPITALARIO SAN PABLO SOCIEDAD ANONIMA CERRADA</td>
-                                                <td>20390910461</td>
-                                                <td>2022-03-08 12:01:27</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>FM00-00000002</td>
-                                                <td>MACHEN PERU S.A.C.</td>
-                                                <td>20508630345	</td>
-                                                <td>2022-03-09 14:20:33</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>SM CONSULTORES LEGALES SOCIEDAD ANONIMA CERRADA</td>
-                                                <td>20608262271</td>
-                                                <td>2022-03-14 15:58:14</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -640,66 +589,52 @@
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <th >Item</th>
                                                 <th >Código</th>
                                                 <th >Cliente</th>
                                                 <th>N° Doc</th>
-                                                <th>Fecha de emisión</th>
+                                                <th>Fecha de Vencimiento</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$a=1}}</span>
+                                            @foreach($facturacion_m as $facturaciones_m)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"  value="{{$facturaciones_m->codigo_fac}}"></th>                                                
+                                                <td>{{$a++}}</td>
+                                                    <td>{{$facturaciones_m->codigo_fac}}</td>
+                                                    @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
+                                                    <td>{{$facturaciones_m->cliente->nombre}}</td>
+                                                    <td>{{$facturaciones_m->cliente->numero_documento}}</td>
+                                                    @else
+                                                    <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
+                                                    <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
+                                                    @endif
+                                                <td>{{$facturaciones_m->fecha_vencimiento }}</td>
+                                                <td><button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="factura_ind" value="{{$facturaciones_m->codigo_fac}}" onclick="envio_factura_manual(this)"><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>      
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
                                                 <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                        </tr>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
+                                        <tfooter >
+                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td align="center"><button type="button" class="btn btn-primary" id="fac_m_elec_all">Enviar</button></td>
+                                            </tfooter>
                                     </table>
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <th >Item</th>
                                                 <th >Código</th>
                                                 <th >Cliente</th>
@@ -711,58 +646,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$a=1}}</span>
+                                            @foreach($facturacion_enviada_m as $facturaciones_m)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>{{$a++}}</td>
+                                                <td>{{$facturaciones_m->codigo_fac}}</td>
+                                                @if(isset($facturaciones_m->cliente_id)) <!-- Nombre del cliente -->
+                                                <td>{{$facturaciones_m->cliente->nombre}}</td>
+                                                <td>{{$facturaciones_m->cliente->numero_documento}}</td>
+                                                @else
+                                                <td>{{$facturaciones_m->cotizacion->cliente->nombre}}</td>
+                                                <td>{{$facturaciones_m->cotizacion->cliente->numero_documento}}</td>
+                                                @endif
+                                                <td>{{$facturaciones_m->created_at }}</td>
+                                                <td align="center">
+                                                    <button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button>
+                                                </td>
+                                                <td align="center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$facturaciones_m->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                                </td>
+                                                <td align="center">
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$facturaciones_m->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -770,68 +678,45 @@
                             <div role="tabpanel" id="tab-9" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
-                                                <th >ID</th>
-                                                <th >N° de DOC</th>
-                                                <th >Tipo</th>
-                                                <th>Fecha de Emision</th>
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th>ID</th>
+                                                <th>N° de Doc</th>
+                                                <th>Tipo</th>
+                                                <th>Fecha de Emisión</th>
                                                 <th>Moneda</th>
                                                 <th>Monto Detracción</th>
-                                                <th >Ver</th>
+                                                <th>Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($detraccion_facturas as $fact_det)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>5</td>
-                                                <td>FM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td>S/100</td>
-                                                <td><button style="display:inline-block; padding:6px; background-color:blue; border-radius:5px; margin-right:1px; border:none;">
-                                                    <i class="fa fa-eye-slash" style="color:white;"></i>
-                                                </button></td>
+                                                @if ($fact_det->factura_id != null)
+                                                    <td>{{$fact_det->id }}</td>
+                                                    <td>{{$fact_det->factura->codigo_fac}}</td>
+                                                    <td>Factura</td>
+                                                    <td>{{Carbon\Carbon::parse($fact_det->factura->fecha_emision)->format('d-m-Y') }}</td>
+                                                    <td>{{$fact_det->factura->moneda->simbolo }} | {{$fact_det->factura->moneda->nombre }}</td>
+                                                    <td>S/. {{$fact_det->monto_detraccion }}</td>
+                                                    <td>
+                                                        <a class="btn btn-secondary" href="{{route('facturacion.show', $fact_det->factura->id)}}"><i class="fa fa-eye"></i></a>
+                                                    </td>
+                                                @else
+                                                    <td>{{$fact_det->id }}</td>
+                                                    <td>{{$fact_det->factura_m->codigo_fac}}</td>
+                                                    <td>Factura M.</td>
+                                                    <td>{{Carbon\Carbon::parse($fact_det->factura_m->fecha_emision)->format('d-m-Y') }}</td>
+                                                    <td>{{$fact_det->factura_m->moneda->simbolo }} | {{$fact_det->factura_m->moneda->nombre }}</td>
+                                                    <td>S/. {{$fact_det->monto_detraccion }}</td>
+                                                    <td>
+                                                        <a class="btn btn-secondary" href="{{route('facturacion_manual.show', $fact_det->factura_m->id)}}"><i class="fa fa-eye"></i></a>
+                                                    </td>
+                                                @endif
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>5</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td>S/100</td>
-                                                <td><button style="display:inline-block; padding:6px; background-color:blue; border-radius:5px; margin-right:1px; border:none;">
-                                                    <i class="fa fa-eye-slash" style="color:white;"></i>
-                                                </button></td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>5</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td>S/100</td>
-                                                <td><button style="display:inline-block; padding:6px; background-color:blue; border-radius:5px; margin-right:1px; border:none;">
-                                                    <i class="fa fa-eye-slash" style="color:white;"></i>
-                                                </button></td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>5</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td>S/100</td>
-                                                <td><button style="display:inline-block; padding:6px; background-color:blue; border-radius:5px; margin-right:1px; border:none;">
-                                                    <i class="fa fa-eye-slash" style="color:white;"></i>
-                                                </button></td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -843,6 +728,16 @@
         </div>
     </div>
 </div>
+
+<style>
+    .ibox-content{
+        padding: 0px;
+        border: none;
+    }
+    .model-footer{
+        > :not(:last-child) { margin-right: .0rem; }
+    }
+</style>
 
 <!-- scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -857,15 +752,95 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
+
 <style>
-    .ibox-content{
-        padding: 0px;
-        border: none;
-    }
-    .model-footer{
-        > :not(:last-child) { margin-right: .0rem; }
-    }
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
 </style>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example2').DataTable({
+            pageLength: 11,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+        });
+    });
+</script>
+
 <!-- Page Scripts -->
 <script>
     $(document).ready(function(){
