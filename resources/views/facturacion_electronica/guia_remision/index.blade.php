@@ -538,15 +538,6 @@
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
-                                <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
-                                    <ul class=" dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
-                                    </ul>
-                                </div>
-                            </li>
                             <li>
                                 <div class="btn-group mx-3">
                                     <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
@@ -587,75 +578,72 @@
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                <th >ID</th>
-                                                <th >Código de Guia</th>
-                                                <th >Fecha emision</th>
-                                                <th>Fecha entrega</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th>ID</th>
+                                                <th>Código de Guía</th>
+                                                <th>Fecha de emisión</th>
+                                                <th>Fecha de entrega</th>
                                                 <th>Tipo Transporte</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                                 </tr>
                                         </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
+                                        @foreach($guia_remisiones as $guia_remision)
                                         <tr>
                                             <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                <input type="checkbox" class="i-checks" name="input[] ">
                                             </td>                                            
-                                            <td>1</td>
-                                            <td>FA00-00000001</td>
-                                            <td>EM PLAST PERU E.I.R.L</td>
-                                            <td>20600184866</td>
-                                            <td>2020-03-22 16:45:32</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
+                                            <td>{{$a++}}</td>
+                                                <td>{{$guia_remision->cod_guia}}</td>
+                                                <td>{{$guia_remision->fecha_emision}}</td>
+                                                <td>{{$guia_remision->fecha_entrega}}</td>
+    
+                                                @if($guia_remision->tipo_transporte==0)
+                                                <td>Sin Trasporte</td>
+                                                @elseif($guia_remision->tipo_transporte==1)
+                                                <td>Trasporte Publico</td>
+                                                @else
+                                                <td>Trasporte Privado</td>
+                                                @endif
                                             <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>2</td>
-                                            <td>FA00-00000002</td>
-                                            <td>COPACO S.A.C</td>
-                                            <td>20600184811</td>
-                                            <td>2022-06-24 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                                {{-- <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
+                                                 @csrf
+                                                    <input type="hidden" name="factura_id" value="{{$guia_remision->id}}"> --}}
+                                                    {{-- <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
+                                                    {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
+                                                    <i class="fa fa-cloud-upload"></i>
+                                                    </span> --}}
+                                                    {{-- </form> --}}
+                                                    <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$guia_remision->cod_guia}}" onclick="envio_guia(this)"><i class="fa fa-cloud-upload" ></i></button></td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>
-                                            <td>3</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>2060018483</td>
-                                            <td>2022-04-24 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>4</td>
-                                            <td>FA00-00000001</td>
-                                            <td>COPACO S.A.C</td>
-                                            <td>206001844</td>
-                                            <td>2022-04-16 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            <tr></tr>
-                                        </tr>
-                                        <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-
-                                    </tr>
+                                        @endforeach
                                     </tbody>
+                                    <tfooter >
+                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                            <td align="center">
+                                                <button type="submit" class="btn btn-primary" id="remision_elec_all">Enviar</button>
+                                                {{-- <span class="btn btn-primary btn-ls disabled"> --}}
+                                                    {{-- Enviar
+                                                </span> --}}
+                                            </td>
+                                        </tfooter>
                                 </table>
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-7" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
+                                    <div class="ibox-content">
+                                        <div class="alert alert-warning">
+                                        <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
+                                    </div>
+                                </div>
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                <th >ID</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[] "></th>                                                
+                                                <th >ID</th>
                                                 <th >Código de Guia</th>
                                                 <th >Fecha emision</th>
                                                 <th>Fecha entrega</th>
@@ -666,66 +654,56 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($guia_remision_enviados as $guia_remision)
                                             <tr>
                                                 <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                <input type="checkbox" class="i-checks" name="input[] ">
                                                 </td>                                                
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>NETKA S.A.C</td>
-                                                <td>20603807104</td>
-                                                <td>2022-02-24 23:18:04</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td>{{$i++}}</td>
+                                                <td>{{$guia_remision->cod_guia}}</td>
+                                                <td>{{$guia_remision->fecha_emision}}</td>
+                                                <td>{{$guia_remision->fecha_entrega}}</td>
+
+                                                @if($guia_remision->tipo_transporte==0)
+                                                <td>Sin Trasporte</td>
+                                                @elseif($guia_remision->tipo_transporte==1)
+                                                <td>Trasporte Publico</td>
+                                                @else
+                                                <td>Trasporte Privado</td>
+                                                @endif
+                                                <td><a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
                                                 <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                @if ( !isset($guia_remision->ticket_guia_remision_sunat) ||  $guia_remision->estado_ticket_guia == 1 )
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                @else
+                                                    <div id="div_btn_app">
+                                                        <button type="button" class="btn" id="guia_remi_ind_man" value="{{$guia_remision->id}}" onclick="valid_cdr_normal(this)"><img src="{{asset('zip.png')}}" width="25px"></button>
+                                                    </div>
+                                                    <div style="display: none;" id="div_dw_non">
+                                                        <a id="download_cdr_post" href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision->cod_guia}}.zip" download ><img src="{{asset('zip.png')}}" width="25px"></a>   
+                                                    </div>
+                                                @endif
                                                 </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
+                                                <td> 
+                                                @if ($guia_remision->ticket_guia_remision_sunat == null)
+                                                    <span style="font-style: italic"> Sin Ticket | Enviado con la version antigua de las Guia de Remision</span>
+                                                @else   
+                                                    <strong>{{$guia_remision->ticket_guia_remision_sunat}}</strong>
+                                                @endif
+                                                </td>
+
+                                                {{-- <td>
+                                                <span></span> --}}
+                                                {{-- <center>
+                                                    <form action="{{route('facturacion_electronica.guia_remision_baja_sunat')}}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="factura_id" value="{{$guia_remision->id}}">
+                                                        <button type="submit" class="btn btn-w-m btn-danger">Anular</button>
+                                                    </form>
+                                                </center> --}}
+                                                {{-- </td> --}}
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>ESCUELA SUPERIOR DE SALUD COMPLEJO HOSPITALARIO SAN PABLO SOCIEDAD ANONIMA CERRADA</td>
-                                                <td>20390910461</td>
-                                                <td>2022-03-08 12:01:27</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>3</td>
-                                                <td>FM00-00000002</td>
-                                                <td>MACHEN PERU S.A.C.</td>
-                                                <td>20508630345	</td>
-                                                <td>2022-03-09 14:20:33</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>SM CONSULTORES LEGALES SOCIEDAD ANONIMA CERRADA</td>
-                                                <td>20608262271</td>
-                                                <td>2022-03-14 15:58:14</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -737,7 +715,8 @@
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                <th >ID</th>
+                                            <th><input type="checkbox" class="i-checks" name="input[] "></th>                                                
+                                            <th >ID</th>
                                                 <th >Código de Guia</th>
                                                 <th >Fecha emision</th>
                                                 <th>Fecha entrega</th>
@@ -746,53 +725,48 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach($guia_remision_anulado as $guia_remision)
                                             <tr>
                                                 <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                <input type="checkbox" class="i-checks" name="input[] ">
                                                 </td>
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
+                                                <td>{{$o++}}</td>
+                                                <td>{{$guia_remision->cod_guia}}</td>
+                                                <td>{{$guia_remision->fecha_emision}}</td>
+                                                <td>{{$guia_remision->fecha_entrega}}</td>
+                                                @if($guia_remision->tipo_transporte==0)
+                                                <td>Sin Trasporte</td>
+                                                @elseif($guia_remision->tipo_transporte==1)
+                                                <td>Trasporte Publico</td>
+                                                @else
+                                                <td>Trasporte Privado</td>
+                                                @endif
                                                 <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$remision_manuals->cod_guia}}" onclick="envio_guia_manual(this)"><i class="fa fa-cloud-upload" ></i></button>
+
+                                                {{-- <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="remision_id" value="{{$remision_manuals->id}}">
+                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
+                                                        <i class="fa fa-cloud-upload"></i>
+                                                    </span>
+                                                </form> --}}
+
                                                 </td>
-                                                <td>2</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
                                             </tr>
+                                        @endforeach
+                                        </tbody>
+                                        <tbody>
                                             <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td align="center">
+                                                    <button type="submit" class="btn btn-primary" id="remision_m_elec_all">Enviar</button>
+                                                    {{-- <span class="btn btn-primary btn-ls disabled">
+                                                        Enviar
+                                                    </span> --}}
                                                 </td>
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
-                                                <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -800,10 +774,14 @@
                             <div role="tabpanel" id="tab-9" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
+                                    <div class="alert alert-warning">
+                                        <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
+                                    </div>
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                <th >ID</th>
+                                            <th><input type="checkbox" class="i-checks" name="input[] "></th>
+                                                <th >ID</th>
                                                 <th >Código de Guia</th>
                                                 <th >Fecha emision</th>
                                                 <th>Fecha entrega</th>
@@ -814,65 +792,44 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach($remision_m_enviados as $guia_remision_m)
                                             <tr>
                                                 <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                <input type="checkbox" class="i-checks" name="input[] ">
                                                 </td>                                                                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td>{{$y++}}</td>
+                                                <td>{{$guia_remision_m->cod_guia}}</td>
+                                                <td>{{$guia_remision_m->fecha_emision}}</td>
+                                                <td>{{$guia_remision_m->fecha_entrega}}</td>
+
+                                                @if($guia_remision_m->tipo_transporte==0)
+                                                <td>Sin Trasporte</td>
+                                                @elseif($guia_remision_m->tipo_transporte==1)
+                                                <td>Trasporte Publico</td>
+                                                @else
+                                                <td>Trasporte Privado</td>
+                                                @endif
+
+                                                <td> <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
                                                 <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                @if ( !isset($guia_remision_m->ticket_guia_remi_m_sunat) ||  $guia_remision_m->estado_ticket_guia_m == 1 )
+                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                                @else
+                                                    <div id="div_btn_app_man">
+                                                        <button type="button" class="btn" id="guia_remi_ind_man" value="{{$guia_remision_m->id}}" onclick="valid_cdr_manual(this)"><img src="{{asset('zip.png')}}" width="25px"></button>
+                                                    </div>
+                                                    <div style="display: none;" id="div_dw_non_man">
+                                                        <a id="download_cdr_post" href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download ><img src="{{asset('zip.png')}}" width="25px"></a>   
+                                                    </div>
+                                                @endif
                                                 </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
+                                                <td> @if ($guia_remision_m->ticket_guia_remi_m_sunat == null)
+                                                    <span style="font-style: italic"> Sin Ticket | Enviado con la version antigua de las Guia de Remision</span>
+                                                @else   
+                                                    <strong>{{$guia_remision_m->ticket_guia_remi_m_sunat}}</strong>
+                                                @endif</td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>                                                                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5);">
-                                                </td>                                                
-                                                <td>4</td>
-                                                <td>FM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td>Sin ticket/Enviado con la verision antigua de las Guias de Remision</td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -897,6 +854,50 @@
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
 
 <!-- Page Scripts -->
 <script>

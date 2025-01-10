@@ -362,16 +362,6 @@
                                 <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: red;">&#9632;</span> ENVIADOS
                                     {{-- link del tab 2 --}}
                                 </a>
-                            </li>
-                                <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
-                                    <ul class=" dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
-                                    </ul>
-                                </div>
-                            </li>
                             <li>
                                 <div class="btn-group mx-3">
                                     <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
@@ -409,69 +399,57 @@
                             <div role="tabpanel" id="tab-5" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped ">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <th >Item</th>
                                                 <th >Código de Boleta</th>
                                                 <th >Cliente</th>
                                                 <th>RUC / DNI</th>
                                                 <th>Fecha de vencimiento</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
-                                                </tr>
+                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
+                                            </tr>
                                         </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
+                                            <span hidden>{{$i=1}}</span>
+                                            @foreach($boletas as $boleta)
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>1</td>
-                                            <td>BA00-00000001</td>
-                                            <td>EM PLAST PERU E.I.R.L</td>
-                                            <td>20600184866</td>
-                                            <td>2020-03-22 16:45:32</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>                                            
+                                            <td>{{$i++}}</td>
+                                            <td>{{$boleta->codigo_boleta}}</td>
+                                            @if(isset($boleta->cliente_id)) <!-- Nombre del cliente -->
+                                            <td>{{$boleta->cliente->nombre}}</td>
+                                            <td>{{$boleta->cliente->numero_documento}}</td>
+                                            @else
+                                            <td>{{$boleta->cotizacion->cliente->nombre}}</td>
+                                            <td>{{$boleta->cotizacion->cliente->numero_documento}}</td>
+                                            @endif
+                                            <td>{{$boleta->fecha_vencimiento }}</td>
+                                            <td> {{-- <form action="{{route('facturacion_electronica.boleta_sunat')}}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="boleta_id" value="{{$boleta->id}}">
+                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                </form> --}}
+                                                <button type="button" class="btn btn-success btn-circle btn-ls boleta_ind" id="boleta_ind" value="{{$boleta->codigo_boleta}}" onclick="envio_boleta(this)"><i class="fa fa-check" ></i></button>
                                         </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>2</td>
-                                            <td>BA00-00000002</td>
-                                            <td>COPACO S.A.C</td>
-                                            <td>20600184811</td>
-                                            <td>2022-06-24 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>3</td>
-                                            <td>BA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>2060018483</td>
-                                            <td>2022-04-24 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                            
-                                            <td>4</td>
-                                            <td>BA00-00000001</td>
-                                            <td>COPACO S.A.C</td>
-                                            <td>206001844</td>
-                                            <td>2022-04-16 11:41:48</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                    </tr>
+                                    @endforeach
                                     </tbody>
+                                    <tfooter>
+                                        <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                        <td align="center"><button type="button" class="btn btn-primary" id="boleta_elec_all">Enviar</button></td>
+                                    </tfooter>
                                 </table>
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-6" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped ">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <th >Item</th>
                                                 <th >Código de Boleta</th>
                                                 <th >Cliente</th>
@@ -483,58 +461,27 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$i=1}}</span>
+                                            @foreach($boletas_enviadas as $boleta_env)
                                             <tr>
                                                 <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>BM00-00000002</td>
-                                                <td>NETKA S.A.C</td>
-                                                <td>20603807104</td>
-                                                <td>2022-02-24 23:18:04</td>
+                                                <td>{{$i++}}</td>
+                                                <td>{{$boleta_env->codigo_boleta}}</td>
+                                                @if(isset($boleta_env->cliente_id)) <!-- Nombre del cliente -->
+                                                <td>{{$boleta_env->cliente->nombre}}</td>
+                                                <td>{{$boleta_env->cliente->numero_documento}}</td>
+                                                @else
+                                                <td>{{$boleta_env->cotizacion->cliente->nombre}}</td>
+                                                <td>{{$boleta_env->cotizacion->cliente->numero_documento}}</td>
+                                                @endif
+                                                <td>{{$boleta_env->fecha_vencimiento }}</td>
                                                 <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td><a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-03-{{$boleta_env->codigo_boleta}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
                                                 <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-03-{{$boleta_env->codigo_boleta}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>BM00-00000002</td>
-                                                <td>ESCUELA SUPERIOR DE SALUD COMPLEJO HOSPITALARIO SAN PABLO SOCIEDAD ANONIMA CERRADA</td>
-                                                <td>20390910461</td>
-                                                <td>2022-03-08 12:01:27</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>BM00-00000002</td>
-                                                <td>MACHEN PERU S.A.C.</td>
-                                                <td>20508630345	</td>
-                                                <td>2022-03-09 14:20:33</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>BM00-00000002</td>
-                                                <td>SM CONSULTORES LEGALES SOCIEDAD ANONIMA CERRADA</td>
-                                                <td>20608262271</td>
-                                                <td>2022-03-14 15:58:14</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -546,56 +493,39 @@
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                             <th >Item</th>
-                                                <th >Código de Boleta</th>
-                                                <th >Cliente</th>
+                                                <th>Código de Boleta Manual</th>
+                                                <th>Cliente</th>
                                                 <th>RUC / DNI</th>
                                                 <th>Fecha de vencimiento</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                             </tr>
                                         </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
+                                            <span hidden>{{$i=1}}</span>
+                                            @foreach($boletas_m as $boleta_m)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>BM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>                                                
+                                                <td>{{$i++}}</td>
+                                                <td>{{$boleta_m->codigo_boleta}}</td>
+                                                <td>{{$boleta_m->cliente->nombre}}</td>
+                                                <td>{{$boleta_m->cliente->numero_documento}}</td>
+                                                <td>{{$boleta_m->fecha_vencimiento }}</td>
+                                                {{-- <form action="{{route('facturacion_electronica.boleta_m_e')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="boleta_id" value="{{$boleta_m->id}}">
+                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    </form> --}}
+                                                    <button type="button" class="btn btn-success btn-circle btn-ls boleta_ind" id="boleta_ind" value="{{$boleta_m->codigo_boleta}}" onclick="envio_boleta_m(this)"><i class="fa fa-cloud-upload" ></i></button>                  
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>2</td>
-                                                <td>BM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>3</td>
-                                                <td>BM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>BM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
-                                                <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                        </tr>
+                                            @endforeach
                                         </tbody>
+                                        <tfooter >
+                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                            <td align="center"><button type="button" class="btn btn-primary" id="boleta_elec_all_m">Enviar</button></td>
+                                         </tfooter>
                                     </table>
                                 </div>
                             </div>
@@ -605,9 +535,9 @@
                                     <table class="table table-striped text-md-center">
                                         <thead>
                                         <tr>
-                                            <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                             <th >Item</th>
-                                                <th >Código de Boleta</th>
+                                                <th >Código de Boleta Manual</th>
                                                 <th >Cliente</th>
                                                 <th>RUC /DNI</th>
                                                 <th>Fecha de emisión</th>
@@ -617,58 +547,22 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$i=1}}</span>
+                                            @foreach($boletas_enviadas_m as $boleta_env_m)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>BM00-00000003</td>
-                                                <td>203837834</td>
-                                                <td>Fact2</td>
-                                                <td>Jul 14, 2013</td>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
+                                                <td>{{$i++}}</td>
+                                                <td>{{$boleta_env_m->codigo_boleta}}</td>
+                                                <td>{{$boleta_env_m->cliente->nombre}}</td>
+                                                <td>{{$boleta_env_m->cliente->numero_documento}}</td>
+                                                <td>{{$boleta_env_m->fecha_vencimiento }}</td>
                                                 <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
+                                                <td><a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-03-{{$boleta_env_m->codigo_boleta}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
                                                 <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
+                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-03-{{$boleta_env_m->codigo_boleta}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>BM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Dexter</td>
-                                                <td>Jul 16, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>BM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>Jacinto</td>
-                                                <td>Jul 18, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <td>4</td>
-                                                <td>BM00-00000003</td>
-                                                <td>23908223</td>
-                                                <td>aronou</td>
-                                                <td>Jul 22, 2013</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -694,6 +588,49 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
 
 <!-- Page Scripts -->
 <script>
