@@ -55,80 +55,55 @@ class AlmacenController extends Controller
     public function store(Request $request)
     {
 
-        // return "limite";
+        // return $request;
         $this->validate($request,[
             'nombre' => ['required'],
             'abreviatura' => ['required','unique:almacen'],
-            'serie_factura' => ['required','unique:cod_guia_almacen'],
-            'serie_boleta' => ['required','unique:cod_guia_almacen'],
-            'serie_remision' => ['required','unique:cod_guia_almacen'],
-            'serie_factura_m' => ['required','unique:cod_guia_almacen'],
-            'serie_boleta_m' => ['required','unique:cod_guia_almacen'],
-            'serie_remision_m' => ['required','unique:cod_guia_almacen'],
             'responsable' => ['required'],
             'direccion' => ['required'],
             'descripcion' => ['required'],
-            'cod_fac' => ['required','integer'],
-            'cod_bol' => ['required','integer'],
-            'cod_guia' => ['required','integer'],
-            'cod_factura_m' => ['required','integer'],
-            'cod_sunat' => ['required','unique:cod_guia_almacen'],
             'ubigeo' => ['required', 'max:6', 'min:6'],
         ]);
 
         $almacen=new Almacen;
         $almacen->nombre=$request->get('nombre');
-        // $serie_fact_last = Almacen::orderBy('serie_factura','DESC')->latest()->first();
-        // $almacen->serie_factura=$request->get('serie_factura');
-        // $serie_bol_last = Almacen::orderBy('serie_boleta','DESC')->latest()->first();
-        // $almacen->serie_boleta=$request->get('serie_boleta');
-        // $serie_guia_last = Almacen::orderBy('serie_remision','DESC')->latest()->first();
-        // $almacen->serie_remision=$request->get('serie_remision');;
         $almacen->abreviatura=$request->get('abreviatura');
         $almacen->responsable=$request->get('responsable');
         $almacen->direccion=$request->get('direccion');
         $almacen->cod_postal=$request->get('ubigeo');
         $almacen->descripcion=$request->get('descripcion');
-        // $almacen->cod_fac=$request->get('cod_fac');
-        // $almacen->cod_bol=$request->get('cod_bol');
-        // $almacen->cod_guia=$request->get('cod_guia');
-        // $almacen->codigo_sunat=$request->get('codigo_sunat');
         $almacen->estado='0';
         $almacen->principal='0';
         $almacen->save();
-        //INSERCION EN LA NUEVA TABLA PARA CODIGOS
-        $cod_guia_almacen= new Codigo_guia_almacen;
-        $cod_guia_almacen->almacen_id = $almacen->id;
-        $cod_guia_almacen->cod_sunat = $request->get('cod_sunat');
-        //factura
-        $cod_guia_almacen->serie_factura = $request->get('serie_factura');
-        $cod_guia_almacen->cod_factura = $request->get('cod_fac');
-        ///boleta
-        $cod_guia_almacen->serie_boleta = $request->get('serie_boleta');
-        $cod_guia_almacen->cod_boleta = $request->get('cod_bol');
-        //remision
-        $cod_guia_almacen->serie_remision = $request->get('serie_remision');
-        $cod_guia_almacen->cod_remision = $request->get('cod_guia');
-        //nota de credito - Factura
-        $cod_guia_almacen->serie_nota_credito = $request->get('serie_credito');
-        $cod_guia_almacen->cod_nota_credito = $request->get('cod_credito');
-        //nota de credito - Boleta
-        $cod_guia_almacen->serie_nota_credito_b = $request->get('serie_credito_b');
-        $cod_guia_almacen->cod_nota_credito_b = $request->get('cod_credito_b');
-        //nota de debito
-        $cod_guia_almacen->serie_nota_debito = $request->get('serie_debito');
-        $cod_guia_almacen->cod_nota_debito = $request->get('cod_debito');
-        // factura manual
-        $cod_guia_almacen->serie_factura_m = $request->get('serie_factura_m');
-        $cod_guia_almacen->cod_factura_m = $request->get('cod_factura_m');
-        // boleta manual
-        $cod_guia_almacen->serie_boleta_m = $request->get('serie_boleta_m');
-        $cod_guia_almacen->cod_boleta_m = $request->get('cod_boleta_m');
-        // remision  manual
-        $cod_guia_almacen->serie_remision_m = $request->get('serie_remision_m');
-        $cod_guia_almacen->cod_remision_m = $request->get('cod_remision_m');
-        $cod_guia_almacen->save();
 
+        $new_series = Codigo_guia_almacen::new_series($request);
+        $new_correlative = Codigo_guia_almacen::new_correlative($request);
+
+        $cod_guia_almacen = new Codigo_guia_almacen;
+        $cod_guia_almacen->cod_sunat = $request->get('cod_sunat');
+        $cod_guia_almacen->almacen_id = $almacen->id;
+        $cod_guia_almacen->serie_factura = $new_series['factura'];
+        $cod_guia_almacen->cod_factura = $new_correlative['factura'];
+        $cod_guia_almacen->serie_boleta = $new_series['boleta'];
+        $cod_guia_almacen->cod_boleta = $new_correlative['boleta'];
+        $cod_guia_almacen->serie_remision = $new_series['remision'];
+        $cod_guia_almacen->cod_remision = $new_correlative['remision'];
+        $cod_guia_almacen->serie_factura_m = $new_series['factura_m'];
+        $cod_guia_almacen->cod_factura_m = $new_correlative['factura_m'];
+        $cod_guia_almacen->serie_boleta_m = $new_series['boleta_m'];
+        $cod_guia_almacen->cod_boleta_m = $new_correlative['boleta_m'];
+        $cod_guia_almacen->serie_remision_m = $new_series['remision_m'];
+        $cod_guia_almacen->cod_remision_m = $new_correlative['remision_m'];
+        $cod_guia_almacen->serie_nota_credito = $new_series['credito_fact'];
+        $cod_guia_almacen->cod_nota_credito = $new_correlative['credito_fact'];
+        $cod_guia_almacen->serie_nota_credito_b = $new_series['credito_bol'];
+        $cod_guia_almacen->cod_nota_credito_b = $new_correlative['credito_bol'];
+        $cod_guia_almacen->serie_nota_debito = $new_series['debito'];
+        $cod_guia_almacen->cod_nota_debito = $new_correlative['debito'];
+        $cod_guia_almacen->save();
+        // return $new_series;
+        //INSERCION EN LA NUEVA TABLA PARA CODIGOS
+      
         $productos= Producto::get();
         foreach($productos as $producto){
             $stock_almacen=new Stock_almacen;
@@ -176,7 +151,8 @@ class AlmacenController extends Controller
             'responsable' => ['required'],
             'direccion' => ['required'],
             'descripcion' => ['required'],
-            'cod_sunat' => ['required','unique:cod_guia_almacen,cod_sunat,'.$id],
+            'cod_sunat' => ['required','unique:cod_guia_almacen,cod_sunat,'.$id.',almacen_id\
+            '],
         ]);
 
         $estado=$request->get('estado');

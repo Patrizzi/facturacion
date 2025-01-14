@@ -2,6 +2,7 @@
 
 namespace App;
 
+use CodGuiaAlmacenTable;
 use Illuminate\Database\Eloquent\Model;
 
 class Almacen extends Model
@@ -13,4 +14,5 @@ class Almacen extends Model
 	public function personal(){
         return $this->belongsTo(Personal::class,'responsable');
     }
+    
 }
