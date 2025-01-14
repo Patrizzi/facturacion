@@ -472,32 +472,38 @@
                             </div>
                         </div>
                         </div>
-                        <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
-                        <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                            <div class="input-group col-md-4 mx-5">
-                                <input class="form-control col-md-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
-                                </span>
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
-                                </span>
-                            </div>
-                            <div class="row g-3 col-md-5">
-                                <div class="col-auto">
-                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                </div>
-                            </div>
-                        </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                    <div class="input-group col-md-4 mx-5">
+                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                        <input class="form-control" type="text" name="daterange2"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+    
+                                <div class="row g-3 col-md-5">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                                </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-example">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                  
@@ -536,10 +542,37 @@
                                 </table>
                                 </div>
                             </div>
+
                             <div role="tabpanel" id="tab-6" class="tab-pane">
+                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                    <div class="input-group col-md-4 mx-5">
+                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                        <input class="form-control" type="text" name="daterange3"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+    
+                                <div class="row g-3 col-md-5">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                                </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <table class="table table-striped dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>                                            
@@ -583,10 +616,36 @@
                                 </div>
                             </div>
 
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
+                            <div role="tabpanel" id="tab-7" class="tab-pane">  
+                                    <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                        <div class="input-group col-md-4 mx-5">
+                                            <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                            <input class="form-control" type="text" name="daterange4"
+                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                    <i class="fa fa-history"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                    <i class="fa fa-eraser"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+        
+                                    <div class="row g-3 col-md-5">
+                                        <div class="col-auto">
+                                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                        </div>
+                                    </div>
+                                    </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example4">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
@@ -628,10 +687,37 @@
                                     </table>
                                 </div>
                             </div>
+
                             <div role="tabpanel" id="tab-8" class="tab-pane">
+                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                        <div class="input-group col-md-4 mx-5">
+                                            <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                            <input class="form-control" type="text" name="daterange5"
+                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                    <i class="fa fa-history"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                    <i class="fa fa-eraser"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+        
+                                    <div class="row g-3 col-md-5">
+                                        <div class="col-auto">
+                                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                        </div>
+                                    </div>
+                                    </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <table class="table table-striped dataTables-example5">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
@@ -675,10 +761,37 @@
                                     </table>
                                 </div>
                             </div>
+
                             <div role="tabpanel" id="tab-9" class="tab-pane">
+                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                    <div class="input-group col-md-4 mx-5">
+                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                        <input class="form-control" type="text" name="daterange6"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+    
+                                <div class="row g-3 col-md-5">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                                </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <table class="table table-striped dataTables-example6">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[]"></th>
@@ -748,9 +861,17 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
 <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
@@ -813,11 +934,10 @@
             display: none;
         }
 </style>
-
 <script>
     $(document).ready(function(){
-        $('.dataTables-example2').DataTable({
-            pageLength: 11,
+        table2 = $('.dataTables-example2').DataTable({
+            pageLength: 12,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [
@@ -837,9 +957,417 @@
                 }
                 }
             ]
+
         });
-    });
-</script>
+        $('input[name="daterange2"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table2.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table2.column(5).search("").draw();
+        }
+        function revert_select() {
+            table2.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table3 = $('.dataTables-example3').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterange3"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table3.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table3.column(5).search("").draw();
+        }
+        function revert_select() {
+            table3.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table4 = $('.dataTables-example4').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterange4"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table4.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table4.column(5).search("").draw();
+        }
+        function revert_select() {
+            table4.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table5 = $('.dataTables-example5').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterange5"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table5.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table5.column(5).search("").draw();
+        }
+        function revert_select() {
+            table5.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table6 = $('.dataTables-example6').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterange6"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table6.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table6.column(4).search("").draw();
+        }
+        function revert_select() {
+            table6.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
 
 <!-- Page Scripts -->
 <script>

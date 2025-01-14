@@ -267,6 +267,7 @@
                                                 <th>Tipo</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
+                                                <th>Fecha Emisión</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                                 </tr>
                                         </thead>
@@ -282,6 +283,7 @@
                                             <td>Factura</td>
                                             <td>{{$nota_d->nota_i_facturacion->cliente->nombre}}</td>
                                             <td>{{$nota_d->nota_i_facturacion->cliente->numero_documento}}</td>
+                                            <td>{{$nota_d->nota_i_facturacion->created_at}}</td>
                                             <td style="text-align: center">
                                                 <form action="{{route('facturacion_electronica.nota_debito')}}" method="POST">
                                                     @csrf
@@ -294,6 +296,7 @@
                                             <td>Boleta</td>
                                             <td>{{$nota_d->nota_i_boleta->cliente->nombre}}</td>
                                             <td>{{$nota_d->nota_i_boleta->cliente->numero_documento}}</td>
+                                            <td>{{$nota_d->nota_i_boleta->created_at}}</td>
                                             <td style="text-align: center">
                                                 <form action="{{route('facturacion_electronica.nota_debito_bol')}}" method="POST">
                                                     @csrf
@@ -306,6 +309,7 @@
                                             <td>Boleta Manual</td>
                                             <td>{{$nota_d->nota_i_boleta_manual->cliente->nombre}}</td>
                                             <td>{{$nota_d->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                            <td>{{$nota_d->nota_i_boleta_manual->created_at}}</td>
                                             <td style="text-align: center">
                                                 <form action="{{route('facturacion_electronica.nota_debito_bol')}}" method="POST">
                                                     @csrf
@@ -318,6 +322,7 @@
                                             <td>Factura Manual</td>
                                             <td>{{$nota_d->nota_i_fac_manual->cliente->nombre}}</td>
                                             <td>{{$nota_d->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                            <td>{{$nota_d->nota_i_fac_manual->created_at}}</td>
                                             <td style="text-align: center">
                                                 <form action="{{route('facturacion_electronica.nota_debito')}}" method="POST">
                                                     @csrf
@@ -330,7 +335,7 @@
                                         @endforeach
                                     </tbody>
                                     <tfooter>
-                                        <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                        <td colspan="7" align="right" style="padding-right: 2em"></td>
                                         <td align="center"><button type="button" class="btn btn-primary" id="nota_debito_elec_all">Enviar</button></td>
                                     </tfooter>
                                 </table>
@@ -348,6 +353,7 @@
                                                 <th>Tipo</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
+                                                <th>Fecha Emisión</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                             </tr>
                                         </thead>
@@ -363,21 +369,25 @@
                                                 <td>Factura</td>
                                                 <td>{{$n_d_env->nota_i_facturacion->cliente->nombre}}</td>
                                                 <td>{{$n_d_env->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_facturacion->created_at}}</td>
                                             
                                             @elseif(isset($n_d_env->boleta_id))
                                                 <td>Boleta</td>
                                                 <td>{{$n_d_env->nota_i_boleta->cliente->nombre}}</td>
                                                 <td>{{$n_d_env->nota_i_boleta->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta->created_at}}</td>
 
                                             @elseif(isset($n_d_env->boleta_m_id))
                                                 <td>Boleta Manual</td>
                                                 <td>{{$n_d_env->nota_i_boleta_manual->cliente->nombre}}</td>
                                                 <td>{{$n_d_env->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta_manual->created_at}}</td>
 
                                             @else
                                                 <td>Facturacion Manual</td>
                                                 <td>{{$n_d_env->nota_i_fac_manual->cliente->nombre}}</td>
                                                 <td>{{$n_d_env->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_fac_manual->created_at}}</td>
                                             @endif    
                                             
                                             <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>

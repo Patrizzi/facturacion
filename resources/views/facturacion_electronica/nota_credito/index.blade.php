@@ -329,6 +329,7 @@
                                                 <th >N° de Doc.</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
+                                                <th>Fecha Emisión</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                                 </tr>
                                         </thead>
@@ -345,6 +346,7 @@
                                                     <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito->nota_i_facturacion->id)}}">{{$n_credito->nota_i_facturacion->codigo_fac}}</a></td>
                                                     <td>{{$n_credito->nota_i_facturacion->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                    <td>{{$n_credito->nota_i_facturacion->created_at}}</td>
                                                     <td> <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
                                                         @csrf
                                                             <input type="hidden" name="id" value="{{$n_credito->id}}">
@@ -357,6 +359,7 @@
                                                     <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito->nota_i_boleta->id)}}">{{$n_credito->nota_i_boleta->codigo_boleta}}</a></td>
                                                     <td>{{$n_credito->nota_i_boleta->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_boleta->cliente->numero_documento}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta->created_at}}</td>
                                                     <td><form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="id" value="{{$n_credito->id}}">
@@ -369,6 +372,7 @@
                                                     <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito->nota_i_boleta_manual->id)}}">{{$n_credito->nota_i_boleta_manual->codigo_boleta}}</td>
                                                     <td>{{$n_credito->nota_i_boleta_manual->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta_manual->created_at}}</td>
                                                     <td><form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="id" value="{{$n_credito->id}}">
@@ -381,6 +385,7 @@
                                                     <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito->nota_i_fac_manual->id)}}">{{$n_credito->nota_i_fac_manual->codigo_fac}}</td>
                                                     <td>{{$n_credito->nota_i_fac_manual->cliente->nombre}}</td>
                                                     <td>{{$n_credito->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                    <td>{{$n_credito->nota_i_fac_manual->created_at}}</td>
                                                     <td><form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="id" value="{{$n_credito->id}}">
@@ -392,7 +397,7 @@
                                         @endforeach
                                     </tbody>
                                     <tfooter >
-                                        <td colspan="7" align="right" style="padding-right: 2em"></td>
+                                        <td colspan="8" align="right" style="padding-right: 2em"></td>
                                         <td align="center"><button type="button" class="btn btn-primary" id="nota_credito_elec_all">Enviar</button></td>
                                     </tfooter>
                                 </table>
@@ -411,6 +416,7 @@
                                                 <th>N° de Doc.</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
+                                                <th>Fech Emisión</th>
                                                 <th>XML</th>
                                                 <th>ZIP</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
@@ -430,6 +436,7 @@
                                                 <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito_enviado->nota_i_facturacion->id)}}">{{$n_credito_enviado->nota_i_facturacion->codigo_fac}}</a></td>
                                                 <td>{{$n_credito_enviado->nota_i_facturacion->cliente->nombre}}</td>
                                                 <td>{{$n_credito_enviado->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_facturacion->created_at}}</td>
 
                                             @elseif($n_credito_enviado->boleta_id !=NULL)
                                                 <td>{{$n_credito_enviado->codigo_n_c}}</td>
@@ -437,6 +444,7 @@
                                                 <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito_enviado->nota_i_boleta->id)}}">{{$n_credito_enviado->nota_i_boleta->codigo_boleta}}</a></td>
                                                 <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
                                                 <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta->created_at}}</td>
                                             
                                             @elseif($n_credito_enviado->boleta_m_id !=NULL)
                                                 <td>{{$n_credito_enviado->codigo_n_c}}</td>
@@ -444,6 +452,7 @@
                                                 <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito_enviado->nota_i_boleta_manual->id)}}">{{$n_credito_enviado->nota_i_boleta_manual->codigo_boleta}}</td>
                                                 <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->nombre}}</td>
                                                 <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta_manual->created_at}}</td>
                                                 
                                             @else
                                                 <td>{{$n_credito_enviado->codigo_n_c}}</td>
@@ -451,6 +460,7 @@
                                                 <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito_enviado->nota_i_fac_manual->id)}}">{{$n_credito_enviado->nota_i_fac_manual->codigo_fac}}</td>
                                                 <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
                                                 <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_fac_manual->created_at}}</td>
                                             @endif
 
                                             <td>
