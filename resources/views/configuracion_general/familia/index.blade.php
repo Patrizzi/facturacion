@@ -1,11 +1,11 @@
- @extends('layout')
+@extends('layout')
 
- @section('title', 'Familia')
- @section('data-toggle', 'modal')
- @section('href_accion', '#exampleModal')
- @section('value_accion', 'Agregar')
- @section('button2', 'Atras')
- @section('config',route('Configuracion'))
+@section('title', 'Familia')
+@section('data-toggle', 'modal')
+@section('href_accion', '#exampleModal')
+@section('value_accion', 'Agregar')
+@section('button2', 'Atras')
+@section('config',route('Configuracion'))
 
  @section('content')
     <!--
@@ -144,7 +144,7 @@
     </style>-->
 
 
-
+<!-- Inicio código - Gaby -->
     <div class="wrapper wrapper-content animated fadeInRight pb-0">
         <div class="row">
             <div class="col-lg-12">

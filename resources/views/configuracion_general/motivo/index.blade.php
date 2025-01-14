@@ -8,6 +8,7 @@
 @section('config',route('Configuracion'))
 
 @section('content')
+<!--Inicio código - Gaby-->
 <div class="wrapper wrapper-content animated fadeInRight align-content-center">
     <div class="row">
         <div class="col-lg-12">
@@ -373,12 +374,12 @@
         </div>
     </div>
 </div>
+<!--Fin código - Gaby-->
 
 
 
 
-
-<!-- Modal Create
+<!-- Modal Create -->
 <div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 3">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -412,7 +413,7 @@
         </div>
     </div>
 </div>
-<!-- / Modal Create
+<!-- / Modal Create -->
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -497,7 +498,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <!-- / Modal Create
+                                    <!-- / Modal Create -->
                                     </td>
                                 </tr>
                                 @endforeach
@@ -541,7 +542,7 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                    <!-- Modal Create
+                                                    <!-- Modal Create -->
                                                     <div class="modal fade" id="edit_{{$m_compras->id}}" role="dialog" aria-labelledby="edit_{{$m_compras->id}}" aria-hidden="true"  >
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
@@ -590,7 +591,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- / Modal Create
+                                                    <!-- / Modal Create -->
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -628,7 +629,7 @@
                                                                 Editar
                                                             </button>
                                                         </td>
-                                                        <!-- Modal Create
+                                                        <!-- Modal Create -->
                                                         <div class="modal fade" id="edit_{{$m_devol->id}}" role="dialog" aria-labelledby="edit_{{$m_devol->id}}" aria-hidden="true"  >
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -677,7 +678,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- / Modal Create
+                                                        <!-- / Modal Create -->
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
@@ -706,7 +707,7 @@
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 33px;
     }
-</style>-->
+</style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
