@@ -199,18 +199,18 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> NOTA DE DEBITO ELECTRONICA
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> Nota de Débito
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> ENVIADOS
+                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> Enviados
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                                 <li class="ml-auto">
                                 <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
+                                    <button data-toggle="dropdown" type="button" class="btn btn-default bg-primary"><i class="fa fa-plus"></i></button>
                                     <ul class=" dropdown-menu">
                                         <li><a class="dropdown-item" href="#">Oficia 1</a></li>
                                         <li><a class="dropdown-item" href="#">Oficina 2</a></li>
@@ -219,7 +219,7 @@
                             </li>
                             <li>
                                 <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
+                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle "><i class="fa fa-cloud-download"></i></button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">PDF</a></li>
                                         <li><a class="dropdown-item" href="#">WORD</a></li>
@@ -254,134 +254,132 @@
                             <div role="tabpanel" id="tab-6" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
-                                                <th >Item</th>
-                                                <th >Código de NC</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th>Item</th>
+                                                <th>Código de NC</th>
+                                                <th>Tipo</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
-                                                <th>Tipo</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                                 </tr>
                                         </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
+                                            <span hidden>{{$i=1}}</span>
+                                            @foreach ($n_debitos as $nota_d)
                                         <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>1</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>                                            
+                                            <td>{{$i++}}</td>
+                                            <td>{{$nota_d->codigo_n_d}}</td>
+                                        @if($nota_d->facturacion_id !=NULL)
                                             <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>2</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                            <td>{{$nota_d->nota_i_facturacion->cliente->nombre}}</td>
+                                            <td>{{$nota_d->nota_i_facturacion->cliente->numero_documento}}</td>
+                                            <td style="text-align: center">
+                                                <form action="{{route('facturacion_electronica.nota_debito')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
+                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                </form>
                                             </td>
-                                            <td>3</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+
+                                        @elseif($nota_d->boleta_id !=NULL)
+                                            <td>Boleta</td>
+                                            <td>{{$nota_d->nota_i_boleta->cliente->nombre}}</td>
+                                            <td>{{$nota_d->nota_i_boleta->cliente->numero_documento}}</td>
+                                            <td style="text-align: center">
+                                                <form action="{{route('facturacion_electronica.nota_debito_bol')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
+                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                </form>
+                                            </td>
+
+                                        @elseif($nota_d->boleta_m_id !=NULL)
+                                            <td>Boleta Manual</td>
+                                            <td>{{$nota_d->nota_i_boleta_manual->cliente->nombre}}</td>
+                                            <td>{{$nota_d->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                            <td style="text-align: center">
+                                                <form action="{{route('facturacion_electronica.nota_debito_bol')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
+                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                </form>
+                                            </td>
+                                        
+                                        @else
+                                            <td>Factura Manual</td>
+                                            <td>{{$nota_d->nota_i_fac_manual->cliente->nombre}}</td>
+                                            <td>{{$nota_d->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                            <td style="text-align: center">
+                                                <form action="{{route('facturacion_electronica.nota_debito')}}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
+                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                </form>
+                                            </td>
+                                        @endif
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>4</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
-                                    <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
-                                        <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                </tr>
+                                    <tfooter>
+                                        <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                        <td align="center"><button type="button" class="btn btn-primary" id="nota_debito_elec_all">Enviar</button></td>
+                                    </tfooter>
                                 </table>
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-7" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
-                                                <th >Item</th>
-                                                <th >Código de NC</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th>Item</th>
+                                                <th>Código de NC</th>
+                                                <th>Tipo</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
-                                                <th>Tipo</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$h=1}}</span>
+                                            @foreach ($n_debitos_enviados as $n_d_env)
                                             <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>                                                
-                                                <td>1</td>
-                                                <td>FM00-00000001</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>                                                
+                                                <td>{{$h}}</td>
+                                                <td>{{$n_d_env->codigo_n_d}}</td>
+
+                                            @if(isset($n_d_env->facturacion_id))
                                                 <td>Factura</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                                <td>{{$n_d_env->nota_i_facturacion->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_facturacion->cliente->numero_documento}}</td>
+                                            
+                                            @elseif(isset($n_d_env->boleta_id))
+                                                <td>Boleta</td>
+                                                <td>{{$n_d_env->nota_i_boleta->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta->cliente->numero_documento}}</td>
+
+                                            @elseif(isset($n_d_env->boleta_m_id))
+                                                <td>Boleta Manual</td>
+                                                <td>{{$n_d_env->nota_i_boleta_manual->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta_manual->cliente->numero_documento}}</td>
+
+                                            @else
+                                                <td>Facturacion Manual</td>
+                                                <td>{{$n_d_env->nota_i_fac_manual->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                            @endif    
+                                            
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
-                                                <td>Factura</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
-                                                <td>Factura</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>4</td>
-                                                <td>FM00-00000002</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
-                                                <td>Factura</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
-                                        <tr><td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                    </tr>
                                     </table>
                                 </div>
                             </div>
@@ -405,6 +403,99 @@
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
+
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+
+    });
+
+</script>
+
 <script>
     $(document).ready(function(){
         $('.dataTables-example').DataTable({

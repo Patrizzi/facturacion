@@ -267,12 +267,12 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> NOTA DE CREDITO
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> Nota de Crédito
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> ENVIADOS
+                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> Enviados
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
@@ -322,162 +322,150 @@
                             <div role="tabpanel" id="tab-6" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                 <th >Item</th>
                                                 <th >Código de NC</th>
-                                                <th >Nª de Doc.</th>
+                                                <th>Tipo</th>
+                                                <th >N° de Doc.</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
-                                                <th>Tipo</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                                 </tr>
                                         </thead>
+                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
+                                            <span hidden>{{$i=1}}</span>
+                                            @foreach($n_creditos as $n_credito)
                                         <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>1</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FF01-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                            <td><input type="checkbox" class="i-checks" name="input[]" value="{{$n_credito->codigo_n_c}}"></td>                                            
+                                            <td>{{$i++}}</td>
+                                                @if($n_credito->facturacion_id !=NULL)
+                                                    <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td>Factura</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito->nota_i_facturacion->id)}}">{{$n_credito->nota_i_facturacion->codigo_fac}}</a></td>
+                                                    <td>{{$n_credito->nota_i_facturacion->cliente->nombre}}</td>
+                                                    <td>{{$n_credito->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                    <td> <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
+                                                        @csrf
+                                                            <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                        </form>
+                                                    </td>
+                                                @elseif($n_credito->boleta_id !=NULL)
+                                                    <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td>Boleta</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito->nota_i_boleta->id)}}">{{$n_credito->nota_i_boleta->codigo_boleta}}</a></td>
+                                                    <td>{{$n_credito->nota_i_boleta->cliente->nombre}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta->cliente->numero_documento}}</td>
+                                                    <td><form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
+                                                    </td>
+                                                @elseif($n_credito->boleta_m_id !=NULL)
+                                                    <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td>Boleta Manual</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito->nota_i_boleta_manual->id)}}">{{$n_credito->nota_i_boleta_manual->codigo_boleta}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta_manual->cliente->nombre}}</td>
+                                                    <td>{{$n_credito->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                    <td><form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
+                                                    </td>
+                                                @else
+                                                    <td>{{$n_credito->codigo_n_c}}</td>
+                                                    <td>Factura Manual</td>
+                                                    <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito->nota_i_fac_manual->id)}}">{{$n_credito->nota_i_fac_manual->codigo_fac}}</td>
+                                                    <td>{{$n_credito->nota_i_fac_manual->cliente->nombre}}</td>
+                                                    <td>{{$n_credito->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                    <td><form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id" value="{{$n_credito->id}}">
+                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
+                                                    </td>
+                                                @endif
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>2</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FF01-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>
-                                            <td>3</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FF01-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                            </td>                                            
-                                            <td>4</td>
-                                            <td>FA00-00000001</td>
-                                            <td>FF01-00000001</td>
-                                            <td>FITOBONOS S.A.C</td>
-                                            <td>20600184866</td>
-                                            <td>Factura</td>
-                                            <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
-                                    <tr><td colspan="7" align="right" style="padding-right: 2em"></td>
-                                        <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                </tr>
+                                    <tfooter >
+                                        <td colspan="7" align="right" style="padding-right: 2em"></td>
+                                        <td align="center"><button type="button" class="btn btn-primary" id="nota_credito_elec_all">Enviar</button></td>
+                                    </tfooter>
                                 </table>
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-7" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
-                                                <th >Item</th>
-                                                <th >Código de NC</th>
-                                                <th >Nª de Doc.</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
+                                                <th>Item</th>
+                                                <th>Código de NC</th>
+                                                <th>Tipo</th>
+                                                <th>N° de Doc.</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
-                                                <th>Tipo</th>
-                                                <th >XML</th>
+                                                <th>XML</th>
                                                 <th>ZIP</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <span hidden>{{$q=1}}</span>
+                                            @foreach($n_creditos_enviados as $n_credito_enviado)
                                             <tr>
                                                 <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
+                                                    <input type="checkbox" class="i-checks" name="input[]">
                                                 </td>                                                
-                                                <td>1</td>
-                                                <td>FM00-00000002</td>
-                                                <td>FM00-00000002</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
+                                                <td>{{$q++}}</td>
+                                            @if($n_credito_enviado->facturacion_id !=NULL)
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
                                                 <td>Factura</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
+                                                <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito_enviado->nota_i_facturacion->id)}}">{{$n_credito_enviado->nota_i_facturacion->codigo_fac}}</a></td>
+                                                <td>{{$n_credito_enviado->nota_i_facturacion->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_facturacion->cliente->numero_documento}}</td>
+
+                                            @elseif($n_credito_enviado->boleta_id !=NULL)
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Boleta</td>  
+                                                <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito_enviado->nota_i_boleta->id)}}">{{$n_credito_enviado->nota_i_boleta->codigo_boleta}}</a></td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
+                                            
+                                            @elseif($n_credito_enviado->boleta_m_id !=NULL)
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Boleta Manual</td>
+                                                <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito_enviado->nota_i_boleta_manual->id)}}">{{$n_credito_enviado->nota_i_boleta_manual->codigo_boleta}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                
+                                            @else
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Factura Manual</td>
+                                                <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito_enviado->nota_i_fac_manual->id)}}">{{$n_credito_enviado->nota_i_fac_manual->codigo_fac}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                            @endif
+
+                                            <td>
+                                                <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                            </td>
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>2</td>
-                                                <td>FM00-00000002</td>
-                                                <td>FM00-00000002</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
-                                                <td>Factura</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>3</td>
-                                                <td>FM00-00000003</td>
-                                                <td>FM00-00000003</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
-                                                <td>Factura</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);">
-                                                </td>
-                                                <td>4</td>
-                                                <td>FM00-00000004</td>
-                                                <td>FM00-00000004</td>
-                                                <td>NETKA S.A.Ctd</td>
-                                                <td>20603807104</td>
-                                                <td>Factura</td>
-                                                <td><img src="http://127.0.0.1:8000/xml.png" width="25px"></td>
-                                                <td>
-                                                    <img src="http://127.0.0.1:8000/zip.png" width="25px">
-                                                </td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
-                                        <tr><td colspan="9" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary" id="fac_elec_all">Enviar</button></td>
-                                    </tr>
                                     </table>
                                 </div>
                             </div>
@@ -501,6 +489,98 @@
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
+
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <!-- Seleccionar todos los check -->
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead 
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona 
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab 
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes 
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+
+    });
+
+</script>
 
 <!-- Page Scripts -->
 <script>
