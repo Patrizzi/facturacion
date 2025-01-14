@@ -286,10 +286,10 @@
 {{-- ESTILOS --}}
 <style type="text/css">
     .a{width: 200px}
-    .ibox-content{
+    /* .ibox-content{
         padding: 0px;
         border: none;
-    }
+    }*/
     .model-footer{
         > :not(:last-child) { margin-right: .0rem; }
     }
@@ -341,50 +341,63 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
+                    <div class="d-flex justify-content-between align-items-center">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-5"><span style="color: green;">&#9632; </span> BOLETAS
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-5"><span style="color: green;">&#9632; </span> Boletas
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-6"><span style="color: orange;">&#9632;</span> ENVIADOS
+                                <a class="nav-link" data-toggle="tab" href="#tab-6"><span style="color: orange;">&#9632;</span> Enviados
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: rgb(0, 255, 72);">&#9632;</span> BOLETA MANUAL
+                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: rgb(0, 255, 72);">&#9632;</span> Boleta Manual
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: red;">&#9632;</span> ENVIADOS
+                                <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: red;">&#9632;</span> Enviados
                                     {{-- link del tab 2 --}}
                                 </a>
                             <li>
-                                <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">WORD</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                            </ul>   
+                        </div>                             
+                        <div>  <!-- Botón de descarga -->
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
+                                    <i class="fa fa-cloud-download"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#">WORD</a></li>
+                                    <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                 </div>
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                            <div class="input-group col-md-4 mx-5">
-                                <input class="form-control col-md-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
-                                </span>
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
-                                </span>
-                            </div>
+                                <div class="input-group col-md-4 mx-5">
+                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                    <input class="form-control" type="text" name="daterange"
+                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                            <i class="fa fa-history"></i>
+                                        </button>
+                                    </span>
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                            <i class="fa fa-eraser"></i>
+                                        </button>
+                                    </span>
+                                </div>
+
                             <div class="row g-3 col-md-5">
                                 <div class="col-auto">
                                     <label for="inputBuscar" class="col-form-label">Buscar:</label>
@@ -399,7 +412,7 @@
                             <div role="tabpanel" id="tab-5" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped ">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
@@ -446,7 +459,7 @@
                             <div role="tabpanel" id="tab-6" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped ">
+                                    <table class="table table-striped dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
@@ -464,7 +477,7 @@
                                             <span hidden>{{$i=1}}</span>
                                             @foreach($boletas_enviadas as $boleta_env)
                                             <tr>
-                                                <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                                                
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
                                                 <td>{{$i++}}</td>
                                                 <td>{{$boleta_env->codigo_boleta}}</td>
                                                 @if(isset($boleta_env->cliente_id)) <!-- Nombre del cliente -->
@@ -490,7 +503,7 @@
                             <div role="tabpanel" id="tab-7" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example4">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
@@ -532,13 +545,13 @@
                             <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example5">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
-                                            <th >Item</th>
-                                                <th >Código de Boleta Manual</th>
-                                                <th >Cliente</th>
+                                                <th>Item</th>
+                                                <th>Código de Boleta Manual</th>
+                                                <th>Cliente</th>
                                                 <th>RUC /DNI</th>
                                                 <th>Fecha de emisión</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
@@ -584,9 +597,34 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
 
 <!-- check -->
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
@@ -631,6 +669,188 @@
             });
         });
     </script>
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterange"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(6).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table.column(6).search("").draw();
+        }
+        function revert_select() {
+            table.column(6).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterange"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(6).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table.column(6).search("").draw();
+        }
+        function revert_select() {
+            table.column(6).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+
+
+
+
+
+
+
 
 <!-- Page Scripts -->
 <script>

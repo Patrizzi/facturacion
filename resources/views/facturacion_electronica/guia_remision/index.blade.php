@@ -448,14 +448,14 @@
 </div>
 {{-- ESTILOS --}}
 <style type="text/css">
-    .table{
+   .table{
         font-size: 13px;
     }
     .a{width: 200px}
-    .ibox-content{
+    /* .ibox-content{
         padding: 0px;
         border: none;
-    }
+    }*/
     .model-footer{
         > :not(:last-child) { margin-right: .0rem; }
     }
@@ -516,40 +516,41 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
+                    <div class="d-flex justify-content-between align-items-center">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> GUIA DE REMISION
-                                    {{-- link del tab 1 --}}
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-6"><span style="color: green;">&#9632; </span> Guía de Remisión
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> ENVIADOS
-                                    {{-- link del tab 2 --}}
+                                <a class="nav-link" data-toggle="tab" href="#tab-7"><span style="color: orange;">&#9632;</span> Enviados
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: rgb(0, 255, 72);">&#9632;</span> G. REMISION MANUAL
-                                    {{-- link del tab 2 --}}
+                                <a class="nav-link" data-toggle="tab" href="#tab-8"><span style="color: rgb(0, 255, 72);">&#9632;</span> Guía de Remisión Manual
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-9"><span style="color: red;">&#9632;</span> ENVIADOS
-                                    {{-- link del tab 2 --}}
+                                <a class="nav-link" data-toggle="tab" href="#tab-9"><span style="color: red;">&#9632;</span> Enviados
                                 </a>
                             </li>
-                            <li>
-                                <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">WORD</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                        </ul>   
+                    </div>                             
+                    <div>  <!-- Botón de descarga -->
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
+                                <i class="fa fa-cloud-download"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">PDF</a></li>
+                                <li><a class="dropdown-item" href="#">WORD</a></li>
+                                <li><a class="dropdown-item" href="#">CSV</a></li>
+                                <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                            </ul>
+                        </div>
+                    </div>
+             </div>
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
                             <div class="input-group col-md-4 mx-5">
@@ -575,7 +576,7 @@
                             <div role="tabpanel" id="tab-6" class="tab-pane active show">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>
@@ -584,7 +585,7 @@
                                                 <th>Fecha de emisión</th>
                                                 <th>Fecha de entrega</th>
                                                 <th>Tipo Transporte</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                                 </tr>
                                         </thead>
                                         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
@@ -639,7 +640,7 @@
                                         <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
                                     </div>
                                 </div>
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[] "></th>                                                
@@ -712,7 +713,7 @@
                             <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped dataTables-example2">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[] "></th>                                                
@@ -777,7 +778,7 @@
                                     <div class="alert alert-warning">
                                         <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
                                     </div>
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-example2">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox" class="i-checks" name="input[] "></th>
@@ -855,6 +856,25 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
+
 <!-- check -->
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>  
     <script src="{{ asset('js/icheck.min.js') }}"></script>
@@ -898,6 +918,37 @@
             });
         });
     </script>
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+
+    });
+
+</script>
+
 
 <!-- Page Scripts -->
 <script>

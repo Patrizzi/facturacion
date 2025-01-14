@@ -264,6 +264,7 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
+                    <div class="d-flex justify-content-between align-items-center">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
@@ -276,18 +277,13 @@
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
-                                <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-plus"></i></button>
-                                    <ul class=" dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle bg-primary"><i class="fa fa-cloud-download"></i></button>
+                        </ul>
+                        </div>   
+                            <div>  <!-- Botón de descarga -->
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
+                                        <i class="fa fa-cloud-download"></i>
+                                    </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">PDF</a></li>
                                         <li><a class="dropdown-item" href="#">WORD</a></li>
@@ -295,8 +291,9 @@
                                         <li><a class="dropdown-item" href="#">EXCEL</a></li>
                                     </ul>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                     </div>
+                        
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
                             <div class="input-group col-md-4 mx-5">

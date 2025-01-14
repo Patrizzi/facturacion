@@ -196,6 +196,7 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
+                    <div class="d-flex justify-content-between align-items-center">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
@@ -208,38 +209,41 @@
                                     {{-- link del tab 2 --}}
                                 </a>
                             </li>
-                                <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-default bg-primary"><i class="fa fa-plus"></i></button>
-                                    <ul class=" dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Oficia 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Oficina 2</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="btn-group mx-3">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle "><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">WORD</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                             </ul>   
+                        </div>                             
+                        <div>  <!-- Botón de descarga -->
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
+                                    <i class="fa fa-cloud-download"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#">WORD</a></li>
+                                    <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                 </div>
+                       
                         <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
                         <div class="d-flex justify-content-md-start row mx-3 mt-4">
                             <div class="input-group col-md-4 mx-5">
-                                <input class="form-control col-md-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
+                                <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                <input class="form-control" type="text" name="daterange"
+                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                 <span class="input-group-append">
-                                    <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
+                                    <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                        <i class="fa fa-history"></i>
+                                    </button>
                                 </span>
                                 <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
+                                    <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                        <i class="fa fa-eraser"></i>
+                                    </button>
                                 </span>
                             </div>
+                            
                             <div class="row g-3 col-md-5">
                                 <div class="col-auto">
                                     <label for="inputBuscar" class="col-form-label">Buscar:</label>
@@ -490,11 +494,67 @@
                 }
             ]
 
+        })
+            ;$('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
         });
-
-    });
-
-</script>
+        function limpiar_select(){
+            table.column(4).search("").draw();
+        }
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
 
 <script>
     $(document).ready(function(){

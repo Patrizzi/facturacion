@@ -569,11 +569,11 @@
                                                 @endif
                                                 <td>{{$facturaciones->created_at}}</td>
                                                    
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
+                                                <td style="align: center"><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
                                                 <td style="align: center">
                                                     <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-01-{{$facturaciones->codigo_fac}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
                                                 </td>
-                                                <td>
+                                                <td style="align: center">
                                                     <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-01-{{$facturaciones->codigo_fac}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
                                                 </td>
                                             </tr>
@@ -730,10 +730,10 @@
 </div>
 
 <style>
-    .ibox-content{
+    /*.ibox-content{
         padding: 0px;
         border: none;
-    }
+    }*/
     .model-footer{
         > :not(:last-child) { margin-right: .0rem; }
     }
