@@ -225,37 +225,36 @@
                             </div>
                         </div>
                  </div>
-                       
-                        <!-- Input seleccionar fecha inicio y fin, y Botón agregar y Descargar -->
-                        <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                            <div class="input-group col-md-4 mx-5">
-                                <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                <input class="form-control" type="text" name="daterange"
-                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                        <i class="fa fa-history"></i>
-                                    </button>
-                                </span>
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                        <i class="fa fa-eraser"></i>
-                                    </button>
-                                </span>
-                            </div>
-                            
-                            <div class="row g-3 col-md-5">
-                                <div class="col-auto">
-                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                </div>
-                            </div>
-                        </div>
+
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-6" class="tab-pane active show">
+                            <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                    <div class="input-group col-md-4 mx-5">
+                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                        <input class="form-control" type="text" name="daterange2"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+    
+                                <div class="row g-3 col-md-5">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                                </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
                                     <table class="table table-striped dataTables-example2">
@@ -342,9 +341,35 @@
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-7" class="tab-pane">
+                            <div class="d-flex justify-content-md-start row mx-3 mt-4">
+                                    <div class="input-group col-md-4 mx-5">
+                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                        <input class="form-control" type="text" name="daterange3"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+    
+                                <div class="row g-3 col-md-5">
+                                    <div class="col-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                                </div>
                                 <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <table class="table table-striped dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>
@@ -414,9 +439,17 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
 <style>
     /* OCULTANDO LO DE ORGANIZAR*/
