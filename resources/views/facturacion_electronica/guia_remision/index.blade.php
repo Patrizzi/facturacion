@@ -601,7 +601,7 @@
                                             <td>
                                                 <input type="checkbox" class="i-checks" name="input[] ">
                                             </td>                                            
-                                                <td>{{$a++}}</td>
+                                            zz<td>{{$a++}}</td>
                                                 <td>{{$guia_remision->cod_guia}}</td>
                                                 <td>{{$guia_remision->fecha_emision}}</td>
                                                 <td>{{$guia_remision->fecha_entrega}}</td>
