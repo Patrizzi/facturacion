@@ -100,35 +100,40 @@
 <!--Inicio del código actual (14/11/2024)-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
-		<div class="col-xl-8 col-lg-7">
+		<div class="col-lg-12">
             <div class="ibox">
+                <!--
                 <div class="ibox-title">
-                    <!-- Acá iria el titulo -->
                     <h4>Servicios</h4>
-                </div>
+                </div>-->
                 <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-around px-4 text-center">
-                        <div class="col-auto">
-                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente">
+                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between text-center">
+
+                        <div class="col-6"><!--
+                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
                                 <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div><br>
-                            <h4>Servicios inactivos</h4>
-                            <p>3 documentos</p>
+                            </div>-->
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div id="pie"></div><!--Azul, plomo y blanco-->
+                            </div>
+                            <br>
+                            <a href="#"><h4>Productos: 134</h4></a>
                             <p class="text-danger"><b>Total</b></p>
                         </div>
-                        <div class="col-auto">
-                            <div class="border border-success rounded-circle d-flex justify-content-center align-items-center">
-                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div><br>
-                            <h4>Servicios activos</h4>
-                            <p>12 documentos</p>
+
+                        <div class="col-6">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div id="pie2"></div>
+                            </div>
+                            <br>
+                            <a href="#"><h4>Servicios: 28</h4></a>
                             <p class="text-danger"><b>Total</b></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--Servicio más pedido-->
+        <!--Servicio más pedido
         <div class="col-xl-4 col-lg-5">
             <div class="ibox">
                 <div class="ibox-content  align-content-center cont-size">
@@ -142,7 +147,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 
@@ -243,7 +248,7 @@
                                                 <td>SERVICIOS</td>
                                                 <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -257,7 +262,7 @@
                                                 <td>tab1</td>
                                                 <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash"></i></a>
                                                 </td>
@@ -271,7 +276,7 @@
                                                 <td>tab1</td>
                                                 <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash"></i></a>
                                                 </td>
@@ -285,7 +290,7 @@
                                                 <td>tab1</td>
                                                 <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash"></i></a>
                                                 </td>
@@ -457,6 +462,10 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+<!-- d3 and c3 charts -->
+<script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+<script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
+
 <!-- Page-Level Scripts -->
 <script>
     $(document).ready(function(){
@@ -465,6 +474,39 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
+        });
+
+        c3.generate({
+            bindto: '#pie',
+            data:{
+                columns: [
+                    ['Activos', 70],
+                    ['Inactivos', 20],
+                    ['Anulados', 10]
+                ],
+                colors:{
+                    Activos: '#4d7ef7',
+                    Inactivos: '#b3b3b3',
+                    Anulados: '#e9e9e9'
+                },
+                type : 'pie'
+            }
+        });
+        c3.generate({
+            bindto: '#pie2',
+            data:{
+                columns: [
+                    ['Activos', 60],
+                    ['Inactivos', 80],
+                    ['data3', 80]
+                ],
+                colors:{
+                    Activos: '#1ab394',
+                    Inactivos: '#BABABA',
+                    data3: '#b4e5de'
+                },
+                type : 'pie'
+            }
         });
     });
     function abrir_modal(a){

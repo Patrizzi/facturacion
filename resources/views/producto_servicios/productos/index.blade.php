@@ -48,45 +48,40 @@
 <!--Código actual 14/11/2024-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
-		<div class="col-lg-8">
-            <div class="ibox ">
+		<div class="col-lg-12">
+            <div class="ibox">
+                <!--
                 <div class="ibox-title">
-                    <!-- Acá iria el titulo -->
                     <h4>Productos</h4>
-                </div>
+                </div>-->
                 <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between px-xl-4 px-md-2 text-center">
+                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between text-center">
 
-                        <div class="col-auto">
+                        <div class="col-6"><!--
                             <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
                                 <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div><br>
-                            <h4>Sin stock</h4>
-                            <p>2 documentos</p>
-                            <p class="text-danger"><b>Total</b></p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="border border-warning rounded-circle d-flex justify-content-center align-items-center circle-size">
-                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div><br>
-                            <h4>Stock mínimo</h4>
-                            <p>6 documentos</p>
-                            <p class="text-danger"><b>Total</b></p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="border border-success rounded-circle d-flex justify-content-center align-items-center circle-size">
-                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div><br>
-                            <h4>Stock mayor a 10</h4>
-                            <p>4 documentos</p>
+                            </div>-->
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div id="pie"></div><!--Azul, plomo y blanco-->
+                            </div>
+                            <br>
+                            <a href="#"><h4>Productos: 134</h4></a>
                             <p class="text-danger"><b>Total</b></p>
                         </div>
 
+                        <div class="col-6">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div id="pie2"></div>
+                            </div>
+                            <br>
+                            <a href="#"><h4>Servicios: 28</h4></a>
+                            <p class="text-danger"><b>Total</b></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--Producto más vendido-->
+        <!--Producto más vendido
         <div class="col-lg-4">
             <div class="ibox">
                 <div class="ibox-content align-content-center cont-size">
@@ -100,7 +95,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 
@@ -115,17 +110,17 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: white; background-color: blue;" class="px-1">2</span> Sin stock
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: white; background-color: blue;" class="px-1">2</span> Activos
 
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: white; background-color: orange;" class="px-1">6</span> Stock mínimo
+                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: white; background-color: #949494;" class="px-1">6</span> Inactivos
 
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: white; background-color: green;" class="px-1">4</span> Stock mayor a 10
+                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: white; background-color: #dadada;" class="px-1">4</span> Anulados
 
                                 </a>
                             </li>
@@ -190,9 +185,9 @@
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
                                                 <th>Código original</th>
+                                                <th>Categorìa</th>
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
-                                                <th>Foto</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -203,9 +198,9 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
                                                     <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
@@ -218,9 +213,9 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
                                                     <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
@@ -243,9 +238,9 @@
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
                                                 <th>Código original</th>
+                                                <th>Categorìa</th>
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
-                                                <th>Foto</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -256,11 +251,11 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -271,11 +266,11 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -286,11 +281,11 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -301,11 +296,11 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -316,11 +311,11 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -331,11 +326,11 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
@@ -356,9 +351,9 @@
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
                                                 <th>Código original</th>
+                                                <th>Categorìa</th>
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
-                                                <th>Foto</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -369,13 +364,13 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
+                                                    <i class="fa fa-trash text-secondary px-3"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -384,13 +379,13 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
+                                                    <i class="fa fa-trash text-secondary px-3"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -399,13 +394,13 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
+                                                    <i class="fa fa-trash text-secondary px-3"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -414,13 +409,13 @@
                                                 <td>Antivirus Bitdefender Total Security 1PC</td>
                                                 <td>BT-000001</td>
                                                 <td>BT-000001</td>
+                                                <td>Perifèricos</td>
                                                 <td>Bitdefender</td>
                                                 <td>Gravado-Operación Orenosa</td>
-                                                <td></td>
                                                 <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
                                                     <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
+                                                    <i class="fa fa-trash text-secondary px-3"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -459,36 +454,14 @@
 </div>
 
 <style>
-    .img-size{
-       min-height: 200px;
-       min-width: 200px;
-       max-height: 200px;
-       max-width: 200px;
-    }
     .circle-size{
-        min-height: 110px;
-        min-width: 110px;
+        min-height: 40px;
+        min-width: 40px;
     }
     .cont-size{
         min-height: 320px;
     }
 
-    @media (max-width: 1440px){
-        .img-size{
-            min-height: 200px;
-            min-width: 200px;
-            max-height: 200px;
-            max-width: 200px;
-        }
-    }
-    @media (max-width: 1024px){
-        .img-size{
-            min-height: 100px;
-            min-width: 100px;
-            max-height: 100px;
-            max-width: 100px;
-        }
-    }
     @media (max-width: 768px){
         .cont-size{
             min-height: 200px;
@@ -513,6 +486,11 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<!-- d3 and c3 charts -->
+<script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+<script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
+
 
 <script>
     $(document).ready(function(){
@@ -585,6 +563,40 @@
                 }
             }
             ]
+        });
+
+        //Poner cantidad en vez de porcentaje
+        c3.generate({
+            bindto: '#pie',
+            data:{
+                columns: [
+                    ['Activos', 70],
+                    ['Inactivos', 20],
+                    ['Anulados', 10]
+                ],
+                colors:{
+                    Activos: '#4d7ef7',
+                    Inactivos: '#b3b3b3',
+                    Anulados: '#e9e9e9'
+                },
+                type : 'pie'
+            }
+        });
+        c3.generate({
+            bindto: '#pie2',
+            data:{
+                columns: [
+                    ['Activos', 60],
+                    ['Inactivos', 80],
+                    ['data3', 80]
+                ],
+                colors:{
+                    Activos: '#1ab394',
+                    Inactivos: '#BABABA',
+                    data3: '#b4e5de'
+                },
+                type : 'pie'
+            }
         });
     });
 
