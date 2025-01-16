@@ -680,8 +680,7 @@
                         <select class="form-control" name="account">
                             <option>Servicios</option>
                             <option>Productos</option>
-                            <option>Ventas</option>
-                            <option>option 4</option>
+                            <option>Ventas</option>   
                         </select>
                     </div>
                     <div class="col-6">
@@ -708,61 +707,24 @@
                     </div>
                 </div>
                 <div class="row bg-light p-3 m-1 table-responsive">
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-categorias">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Código</th>
                                 <th>Descripción</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($categorias as $categoria)
                             <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
+                                <td>{{$categoria->id}}</td>
+                                <td>{{$categoria->codigo}}</td>
+                                <td>{{$categoria->descripcion}}</td>
                             </tr>
-                            <tr>
-                                <td>0202</td>
-                                <td>Servicios</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
+                            @endforeach                       
                         </tbody>
                     </table>
-
-                    <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
