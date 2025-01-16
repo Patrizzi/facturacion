@@ -4,30 +4,15 @@
 @section('href_accion', route('boleta.index'))
 @extends('layout_agregado_rapido')
 {{-- Boton para modal de Clientes --}}
+
+{{-- FIN DE MODAL CLIENTE --}}
+@section('value_accion', 'Atrás')
+
+{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
+@section('content')
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
-{{-- FIN DE MODAL CLIENTE --}}
-@section('value_accion', 'Atrás')
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<head>
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-            $("form").keypress(function(e) {
-                if (e.which == 13) {
-                    setTimeout(function() {
-                        e.target.value += ' | ';
-                    }, 4);
-                    e.preventDefault();
-                }
-            });
-
-
-        });
-    </script>
-</head>
-@section('content')
 @if (session('repite'))
 <div class="alert alert-success">
     {{ session('repite') }}
@@ -49,6 +34,266 @@
     </a>
 </div>
 @endif
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <form action="{{route('boleta.store',$moneda->id)}}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
+        @csrf
+        @method('put')
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading text-center">
+                        <h3><strong> Datos del cliente</strong></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row ">
+                            <div class="col-sm-12">
+                                <div style="margin: auto 50px">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
+                                        <div class="col-sm-8">
+                                            <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Nombre:</strong></label>
+                                        <div class="col-sm-8">
+                                            <span class="form-control" id="nombre_cliente">&nbsp;</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>RUC:</strong></label>
+                                        <div class="col-sm-8">
+                                            <span class="form-control" id="rucdni_cliente">&nbsp;</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading text-center">
+                        <h3><strong> Datos del Vendedor</strong></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row ">
+                            <div class="col-sm-12">
+                                <div style="margin: auto 50px">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
+                                        <div class="col-sm-8">
+                                            <span class="form-control" id="nombre_vendedor">{{auth()->user()->name}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Celular:</strong></label>
+                                        <div class="col-sm-8">
+                                            <span class="form-control" id="celular_vendedor">@if(auth()->user()->celular != null ) {{auth()->user()->celular}} @else <i>Sin celular</i> @endif</span>
+                                            {{-- <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"> --}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Correo:</strong></label>
+                                        <div class="col-sm-8">
+                                            <span class="form-control" id="celular_vendedor">@if(auth()->user()->email_user != null ) {{auth()->user()->email_user}} @else {{auth()->user()->email}}> @endif</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading text-center">
+                        <h3><strong>Datos de la Venta</strong></h3>
+                    </div>
+                    <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
+                    <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                    <div class="panel-body">
+                        <div class="row col-lg-12">
+                            <div class="col-md-6" style="margin: auto 0px">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Orden de Compra:</strong></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Guía de Remisión:</strong></label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" value="0" name="guia_r">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Comisionista:</strong></label>
+                                    <div class="col-sm-8">
+                                        <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
+                                        <datalist id="browsersc2" >
+                                            <option id="">Sin comision - 0 </option>
+                                            @foreach($p_venta as $p_ventas)
+                                                <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
+                                            @endforeach
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Forma de pago:</strong></label>
+                                    <div class="col-sm-8">
+                                        <div class="row">
+                                            <div class="col-sm-12 pago_first_column">
+                                                <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                    @foreach($forma_pagos as $forma_pago)
+                                                        <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                    @endforeach
+                                                <select>
+                                            </div>
+                                            <div class="col-sm-3" id="credito_pago" style="display: none;">
+                                                <button  type="button" class='cuota_modal btn btn-w-m btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal" style="margin-left: -5px">Cuotas</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="margin: auto 00px">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Fecha de Inicio:</strong></label>
+                                    <div class="col-sm-8">
+                                        {{-- <input type="date" class="form-control" value="2024-11-06" /> --}}
+                                        <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group row" id="data_1">
+                                    <label class="col-sm-4 col-form-label"><strong>Fecha de Vencimiento:</strong></label>
+                                    <div class="col-sm-8 input-group date">
+                                        <span class="input-group-addon" style="display: none"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="{{date("d-m-Y")}}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Moneda:</strong></label>
+                                    <div class="col-sm-5" style="padding-right: 0px">
+                                        <input type="text" name="moneda" id="moneda" class="form-control " value="{{ucwords($moneda->nombre)}}" readonly="readonly">
+                                    </div>
+                                    <a class="col-sm-2 button_money" onclick="changeMoney()">
+                                        <button style="" type="button" class='money_change btn btn-w-m btn-info' id="button_changeMoney">
+                                            Cambiar
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Tipo de Operacion</strong></label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control select2_operacion" name="tipo_operacion">
+                                            @foreach($tipo_operacion as $index => $t_op)
+                                                <option id="{{$t_op->id}}" @if($index == 0) selected @endif >{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label"><strong>Observación:</strong></label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" name="observacion" id="observacion" autocomplete="off" placeholder="Observación"  rows="2" style="margin-top: 5px;"  >Emitimos la siguiente Boleta a vuestra solicitud</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- Articulos --}}
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table cellspacing="0" class="table tables">
+                                        <thead>
+                                            <tr style="background-color: #3366cc; color: white; text-align: center;font-size: 90%">
+                                                <th style="vertical-align: middle;width: 50px;">
+                                                    <span><i class="fa fa-plus"></i></span>
+                                                </th>
+                                                <th style="width: 300px; text-align: left !important">Artículo</th>
+                                                <th>Stock</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio</th>
+                                                <th>Dcto</th>
+                                                <th>PU. Dcto.</th>
+                                                <th>PU. Com.</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><button type="button" class='addmore btn btn-sm btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i></button></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Tipo de Pago | Cuotas -->
+<div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+                    <strong style="font-size:11px">Rellenar todos los campos</strong>
+                    <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+                    <strong style="font-size:11px">La suma de las cuotas es diferente del monto total</strong>
+                    <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row_number">
+                    <div class="pago_modal row">
+                        <div class="col-sm-1"><label>Fecha:</label></div>
+                        <div class="col-sm-4">
+                            <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1}}">
+                        </div>
+                        <div class="col-sm-1"><label>Monto:</label></div>
+                        <div class="col-sm-4">
+                            <div class="input-group mb-3" style="padding-right:15px">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
+                            </div>
+                            <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"  onkeypress="return filterFloat(event,this);" >
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: block">
+                <div class="row">
+                    <div class="col-sm-6" style="">
+                        <label for=""><strong>Precio Total: &nbsp;</strong><span id="simb_fot">{{$moneda->simbolo}}</span>&nbsp;</label><label id="cuotas_footer"></label>
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -85,8 +330,8 @@
                                     <td>Cliente</td>
                                     <td>:</td>
                                     <td>
-                                        <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
-                                        </select>
+                                        {{-- <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
+                                        </select> --}}
                                     </td>
                                     <td>Comisionista</td>
                                     <td>:</td>
@@ -105,10 +350,9 @@
                                     <td>:</td>
                                     <td class="row" style="padding-left: 20px">
                                         <div class="row">
-                                            <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
-                                            <input type="hidden" id="moneda_id" class="form-control " value="{{$moneda->id}}" readonly="readonly">
+                                            
                                             <div class="col-sm-5">
-                                                <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly">
+                                                {{-- <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly"> --}}
                                             </div>
                                             <a class="col-sm-5 button_money" onclick="changeMoney()">
                                                 <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
@@ -124,99 +368,46 @@
                                     <td>Guia remision</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" class="form-control" value="0" name="guia_r">
+                                        {{-- <input type="text" class="form-control" value="0" name="guia_r"> --}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Vendedor</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
+                                        {{-- <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"> --}}
                                     </td>
                                     <td>Tipo de Operacion</td>
                                     <td>:</td>
                                     <td>
-                                        <select class="form-control" name="tipo_operacion" >
+                                        {{-- <select class="form-control" name="tipo_operacion" >
                                         @foreach($tipo_operacion as $t_op)
                                             <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
                                         @endforeach
-                                        </select>
+                                        </select> --}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Fecha</td>
                                     <td>:</td>
                                     <td>
-                                        <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                        {{-- <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"> --}}
                                     </td>
                                     <td>Forma de pago</td>
                                     <td>:</td>
                                     <td>
                                         <div class="row">
-                                            <div class="col-sm-5">
+                                            {{-- <div class="col-sm-5">
                                                 <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
                                                     @foreach($forma_pagos as $forma_pago)
                                                         <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
                                                     @endforeach
-                                                    <select>
-                                                    </div>
-                                                    <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
-                                                        <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                                    </div>
-                                                    <!-- Modal -->
-                                                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                                                    <div class="modal-dialog modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
-                                                                <strong style="font-size:11px">Rellenar todos los campos</strong>
-                                                                <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
-                                                                <strong style="font-size:11px">La suma de las cuotas es diferente del monto total</strong>
-                                                                <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="row_number">
-                                                                <div class="pago_modal row">
-                                                                    <div class="col-sm-1"><label>Fecha:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1}}">
-                                                                    </div>
-                                                                    <div class="col-sm-1"><label>Monto:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <div class="input-group mb-3" style="padding-right:15px">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text" id="basic-addon3">{{$moneda->simbolo}}</span>
-                                                                        </div>
-                                                                        <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control"  onkeypress="return filterFloat(event,this);" >
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer" style="display: block">
-                                                            <div class="row">
-                                                                <div class="col-sm-6" style="">
-                                                                    <label for=""><strong>Precio Total: &nbsp;</strong><span id="simb_fot">{{$moneda->simbolo}}</span>&nbsp;</label><label id="cuotas_footer"></label>
-                                                                </div>
-                                                                <div class="col-sm-6" align="right">
-                                                                    <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <select>
                                             </div>
+                                            <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
+                                                <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                            </div> --}}
+                                            
                                         </div>
                                     </td>             
                                 </tr>
@@ -224,7 +415,7 @@
                                     <td>Observacion</td>
                                     <td>:</td>
                                     <td colspan="">
-                                        <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Boleta a vuestra solicitud</textarea>
+                                        {{-- <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Boleta a vuestra solicitud</textarea> --}}
                                     </td>
                                     <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td>
                                     <td id="ven_2p" style="visibility: initial;">:</td>
@@ -424,6 +615,11 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -433,9 +629,11 @@
 
 <!-- Steps -->
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
 
 <script type="text/javascript">
+    
+
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {
@@ -453,7 +651,11 @@
                 };
             },
             processResults: function (data) {
-                return {
+                console.log(data);
+                console.log();
+                $('#nombre_cliente').html();
+                $('#rucdni_cliente').html();
+                return {    
                     results: $.map(data, function (item) {
                         return {
                             id: item.id,
@@ -461,6 +663,9 @@
                         };
                     })
                 };
+            },
+            formatSelection: function(element){
+             console.log(element)
             },
             cache: true
         }
@@ -552,6 +757,25 @@
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
     $(document).ready(function() {
         articlesSelect2();
+
+        $('.select2_operacion').select2({
+            placeholder: "Seleccionar Tipo Operacion"
+        });
+        $("form").keypress(function(e) {
+            if (e.which == 13) {
+                setTimeout(function() {
+                    e.target.value += ' | ';
+                }, 4);
+                e.preventDefault();
+            }
+        });
+        var mem = $('#data_1 .input-group.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                dateFormat: 'dd-mm-yyyy'
+            });
     });
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
@@ -896,14 +1120,20 @@
     function seleccionado_fp(){
         var opt = $('#forma_pago').val();
         if(opt=="1"){
-            document.getElementById('credito_pago').style.visibility = "hidden";
+            document.getElementById('credito_pago').style.display = "none";
+            document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-8");
+            document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-12");
+            
             document.getElementById('ven_1p').style.visibility = "initial";
             document.getElementById('ven_2p').style.visibility = "initial";
             document.getElementById('ven_3p').style.visibility = "initial";
             document.getElementById('fecha_vencimiento').removeAttribute('disabled');
 
         }else{
-            document.getElementById('credito_pago').style.visibility = "initial";
+            document.getElementById('credito_pago').style.display = "contents";
+            document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-12");
+            document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-8");
+            // $('#pago_first_column').addClass('col-lg-12')
             document.getElementById('ven_1p').style.visibility = "hidden";
             document.getElementById('ven_2p').style.visibility = "hidden";
             document.getElementById('ven_3p').style.visibility = "hidden";
@@ -1130,7 +1360,7 @@
                 //Cambio de moneda
                 $(`#moneda_id`).val(msg.id);
                 $(`#moneda`).val(msg.nombre);
-                $(`#button_changeMoney`).html(msg.other);
+                // $(`#button_changeMoney`).html(msg.other);
                 $(`#basic-addon3`).html(msg.simbolo);
                 $(`#simb_fot`).html(msg.simbolo);
                 
