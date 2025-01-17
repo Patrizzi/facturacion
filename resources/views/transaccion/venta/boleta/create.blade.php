@@ -99,7 +99,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Correo:</strong></label>
                                         <div class="col-sm-8">
-                                            <span class="form-control" id="celular_vendedor">@if(auth()->user()->email_user != null ) {{auth()->user()->email_user}} @else {{auth()->user()->email}}> @endif</span>
+                                            <span class="form-control" id="celular_vendedor">@if(auth()->user()->email_user != null ) {{auth()->user()->email_user}} @else {{auth()->user()->email}}  @endif</span>
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@
                                 <div class="form-group row" id="data_1">
                                     <label class="col-sm-4 col-form-label"><strong>Fecha de Vencimiento:</strong></label>
                                     <div class="col-sm-8 input-group date">
-                                        <span class="input-group-addon" style="display: none"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="{{date("d-m-Y")}}">
+                                        <span class="input-group-addon" style="display: none"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" value="{{date("d-m-Y")}}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -651,10 +651,6 @@
                 };
             },
             processResults: function (data) {
-                console.log(data);
-                console.log();
-                $('#nombre_cliente').html();
-                $('#rucdni_cliente').html();
                 return {    
                     results: $.map(data, function (item) {
                         return {
@@ -664,13 +660,14 @@
                     })
                 };
             },
-            formatSelection: function(element){
-             console.log(element)
-            },
             cache: true
         }
     });
-
+    $('.select2_demo_client').on('select2:selecting', function(e){
+        var text = e.params.args.data.text.split(' | ');
+        $('#nombre_cliente').html(text[0]);
+        $('#rucdni_cliente').html(text[1]);
+    });
     // Validar Formulario / No doble insercion de datos(Gente desdesperada)
 
     function valida(f) {
@@ -1124,19 +1121,14 @@
             document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-8");
             document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-12");
             
-            document.getElementById('ven_1p').style.visibility = "initial";
-            document.getElementById('ven_2p').style.visibility = "initial";
-            document.getElementById('ven_3p').style.visibility = "initial";
             document.getElementById('fecha_vencimiento').removeAttribute('disabled');
 
         }else{
             document.getElementById('credito_pago').style.display = "contents";
+
             document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-12");
             document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-8");
-            // $('#pago_first_column').addClass('col-lg-12')
-            document.getElementById('ven_1p').style.visibility = "hidden";
-            document.getElementById('ven_2p').style.visibility = "hidden";
-            document.getElementById('ven_3p').style.visibility = "hidden";
+
             document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
         }
     }
@@ -1225,7 +1217,7 @@
             fin = parseFloat(fin) + parseFloat(monto_c[i].value);
         }
         var fin_r = Math.round(fin * 100) / 100;
-        console.log(fin_r);
+        console.log(inp_mont);
 
         for (var i = 0; i < inp_mont; i++) {
             var fecha = monto_fc[i].id;
@@ -1237,13 +1229,16 @@
                 document.getElementById('alert_campos').style.display = "flex";                    
                 setTimeout(mostrarMensaje, 3000 );
                 return;
-            }
+            
+            var end_date = document.getElementById(`fecha_pago` + inp_mont);}
         }
         
         if(fin_r != total){
             document.getElementById('suma_campos').style.display = "flex";
         }else{
-            console.log('e')
+            
+            end_date.toLocaleDateString("d-mm-yyyy");
+            $('#fecha_vencimiento').val(end_date)
             $('#cuotas_modal').modal('hide')
         }
         mostrarMensaje();
