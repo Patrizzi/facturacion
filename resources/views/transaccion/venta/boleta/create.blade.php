@@ -296,6 +296,82 @@
 </div>
 
 
+
+
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_product_data">
+    Launch demo modal
+</button>
+  
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 15px">
+                        <input type="text" name="" id="search_product" class="form-control" placeholder="Buscar por código o nombre del producto o Servicio">
+                    </div>
+                    <div class="col-lg-12">
+                        @php
+                            use App\Producto;
+                            $producto =  Producto::first();
+                        @endphp
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" style="font-size: 90%;border-top: 1px solid #e7eaec;">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Codigo</th>
+                                        <th>PRODUCTO | SERVICIO</th>
+                                        <th>STOCK</th>
+                                        <th>PRECIO UNITARO</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$producto->id}}</td>
+                                        <td>{{$producto->codigo_original}}</td>
+                                        <td>{{$producto->nombre}}</td>
+                                        <td>0</td>
+                                        <td>S/. 30.00</td>
+                                        <td>
+                                            <input type="checkbox" name="" id="" class="form-control">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+           </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -767,12 +843,18 @@
             }
         });
         var mem = $('#data_1 .input-group.date').datepicker({
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                autoclose: true,
-                dateFormat: 'dd-mm-yyyy'
-            });
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            dateFormat: 'dd-mm-yyyy'
+        });
+        $('.dataTables-example').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
     });
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
@@ -1217,7 +1299,6 @@
             fin = parseFloat(fin) + parseFloat(monto_c[i].value);
         }
         var fin_r = Math.round(fin * 100) / 100;
-        console.log(inp_mont);
 
         for (var i = 0; i < inp_mont; i++) {
             var fecha = monto_fc[i].id;
@@ -1230,15 +1311,17 @@
                 setTimeout(mostrarMensaje, 3000 );
                 return;
             
-            var end_date = document.getElementById(`fecha_pago` + inp_mont);}
+            }
+            var end_date = document.getElementById(`${fecha}`).value;
         }
         
         if(fin_r != total){
             document.getElementById('suma_campos').style.display = "flex";
         }else{
             
-            end_date.toLocaleDateString("d-mm-yyyy");
-            $('#fecha_vencimiento').val(end_date)
+            var [year, month, day] = end_date.split("-");
+            var formattedDate = `${day}-${month}-${year}`;
+            $('#fecha_vencimiento').val(formattedDate)
             $('#cuotas_modal').modal('hide')
         }
         mostrarMensaje();
@@ -1420,6 +1503,58 @@
             $(`.button_money`).removeClass('not-active');
         }, 10000);
     }
+
+
+    $('#search_product').on('keypress', function(e){
+        var busqueda = $(this).val();
+        console.log(busqueda)
+    });
+    function search(product){
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.description') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'articulo': articulo,
+                'almacen': almacen,
+                'moneda': moneda	
+            },
+            success: function (msg) {
+                $(`#tipo_afec${a}`).val(msg.afectacion);
+                $(`#precio${a}`).val(msg.price);
+                $(`#cantidad${a}`).val(1);
+                $(`#precio_unitario_descuento${a}`).val(msg.price);
+                $(`#promedio_original${a}`).val(msg.average);
+                $(`#stock${a}`).val(msg.amount);
+                $(`#descuento${a}`).val(msg.discount);
+                $(`#check_descuento${a}`).val(0);
+                $(`#cantidad${a}`).attr('max', msg.amount );
+                $(`#cantidad`).attr('max', msg.amount );
+                var separador=" ";
+                var comision=document.querySelector(`#comisionista`).value;
+                //revirtiendo la cadena
+                var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
+                //para comision
+                var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
+                var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
+                var comision_v =reverseString(comision_v_r[0]);//convierte el precio al revez a la normalidad
+                if(comision){
+                    document.getElementById(`comision${a}`).value = comision_v;
+                }else{
+                    document.getElementById(`comision${a}`).value = 0;
+                }
+                multi(a);
+                $(`.addmore`).prop("disabled", false);
+            },
+            error: function(eject) {
+                if(eject.status===400){
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache:true
+        });
+    }
+
     </script>
     <style type="text/css">
     .a{color: red}
