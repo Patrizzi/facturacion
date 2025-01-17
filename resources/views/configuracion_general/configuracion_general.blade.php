@@ -5,6 +5,30 @@
  @section('atributo_1', 'hidden')
 
  @section('content')
+ 
+ @php
+use App\Categoria; 
+$categorias = Categoria::get();
+
+use App\Familia;
+$familias = Familia::get();
+
+use App\Garantia;
+$garantia = Garantia::get();
+
+use App\Marca;
+$marcas=Marca::get();
+
+use App\Motivo;
+$motivos_compra=Motivo::get();
+$motivos_dev=Motivo::get();
+
+use App\TipoCambio;
+$tipo_cambio=TipoCambio::get();
+
+use App\Unidad_medida;
+$unidad_de_medida=Unidad_medida::get();
+@endphp
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -202,7 +226,7 @@
                 </div>
                 <div class="row p-2 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-example">
                         <thead>
                             <tr>
                                 <th>Compra</th>
@@ -212,57 +236,18 @@
                                 <th>Fecha Actualización</th>
                             </tr>
                         </thead>
+                            @foreach($tipo_cambio as $tipo_cambios)
                         <tbody>
                             <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
+                                <td>{{$tipo_cambios->compra}}</td>
+                                <td>{{$tipo_cambios->venta}}</td>
+                                <td>{{$tipo_cambios->paralelo}}</td>
+                                <td>w</td>
+                                <td>{{$tipo_cambios->created_at}}</td>
                             </tr>
-                            <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
-                            </tr>
-                            <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
-                            </tr>
-                            <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
-                            </tr>
+                            @endforeach  
                         </tbody>
                     </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -338,70 +323,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($unidad_de_medida as $u_medida)
                             <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
+                                <td>{{$u_medida->simbolo}}</td>
+                                <td>{{$u_medida->medida}}</td>
+                                <td>{{$u_medida->unidad}}</td>
+                                <td>{{$u_medida->created_at}}</td>
+                                <td>{{$u_medida->updated_at}}</td>
                             </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
+                            @endforeach 
                         </tbody>
                     </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -473,7 +405,7 @@
                         </ul>
 
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content" style="width: 147%;">
+                        <div class="tab-content">
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
                                     <table class="table table-striped text-md-center">
@@ -483,23 +415,13 @@
                                                 <th>Fecha de Modificación</th>
                                             </tr>
                                         </thead>
+                                        @foreach ($motivos_compra as $m_compras)
                                         <tbody>
                                             <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
+                                            <td>{{$m_compras->nombre}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($m_compras->updated_at)->format('d/m/Y H:i:s')}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
-                                            </tr>
-                                            <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
-                                            </tr>
-                                            <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
-                                            </tr>
+                                        @endforeach   
                                         </tbody>
                                     </table>
                                 </div>
@@ -514,51 +436,19 @@
                                                 <th>Fecha de Modificación</th>
                                             </tr>
                                         </thead>
+                                        @foreach ($motivos_dev as $m_devol)
                                         <tbody>
                                             <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
+                                            <td>{{$m_devol->nombre}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($m_devol->updated_at)->format('d/m/Y H:i:s')}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
-                                            </tr>
+                                        @endforeach    
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
                         </div>
-
-                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                            <label class="btn btn-sm btn-white ">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                            </label>
-                            <label class="btn btn-sm btn-white active">
-                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                            </label>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -617,46 +507,16 @@
                                 <th>Duración</th>
                             </tr>
                         </thead>
+                            <span hidden="hidden">{{$i=1}}</span>
+                            @foreach($garantia as $garantias)
                         <tbody>
                             <tr>
-                                <td>Extendida anual</td>
+                            <td>{{$garantias->descripcion}}</td>
                                 <td>5 años</td>
                             </tr>
-                            <tr>
-                                <td>semestre</td>
-                                <td>6 meses</td>
-                            </tr>
-                            <tr>
-                                <td>eds</td>
-                                <td>70 días</td>
-                            </tr>
-                            <tr>
-                                <td>bimestral</td>
-                                <td>2 meses</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
-
-                    <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -710,7 +570,6 @@
                     <table class="table table-striped text-md-center dataTables-categorias">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Código</th>
                                 <th>Descripción</th>
                             </tr>
@@ -718,7 +577,6 @@
                         <tbody>
                             @foreach($categorias as $categoria)
                             <tr>
-                                <td>{{$categoria->id}}</td>
                                 <td>{{$categoria->codigo}}</td>
                                 <td>{{$categoria->descripcion}}</td>
                             </tr>
@@ -783,7 +641,7 @@
                 </div>-->
                 <div class="row px-2 py-3 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-familias">
                         <thead>
                             <tr>
                                 <th style="width: 10%;">Código</th>
@@ -794,70 +652,29 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <span hidden="hidden">{{$i=1}}</span>
+                            @foreach($familias as $familia)
                             <tr>
-                                <td>001</td>
-                                <td>Lavadora Samsung modelo S12</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                            <td>{{$familia->codigo}}</td>
+                            <td>{{$familia->descripcion}}</td>
+
+                            <td>Electrodomésticos</td>
+
+                            <td>@if($familia->ubicacion != null)
+                                    {{$familia->ubicacion}}
+                                @else
+                                    Sin Ubicacion
+                                @endif
+                            </td>
+                            <td>
+                            <a href="{{route('familia.show',$familia->id)}}">
+                                <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
+                            </a>
+                            </td>
                             </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
+                            @endforeach                          
                         </tbody>
-                    </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
+                    </table>        
                 </div>
             </div>
         </div>
@@ -934,7 +751,7 @@
                 </div>
                 <div class="row px-2 py-3 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-marcas">
                         <thead>
                             <tr>
                                 <th style="width: 25%;">Nombre</th>
@@ -945,71 +762,22 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @foreach($marcas as $marca)
                             <tr>
-                                <td>Samsung</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
+                                <td>{{$marca->nombre}}</td>
+                                <td>{{$marca->abreviatura}}</td>
+                                <td>@if($marca->telefono != null)
+                                    {{$marca->telefono}}
+                                @else
+                                    Sin número
+                                @endif
+                                </td>
+                                <td>{{$marca->descripcion}}</td>
+                                <td>Aqui va la foto</td>
                             </tr>
-                            <tr>
-                                <td>Faber-Castell</td>
-                                <td>FC</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-
+                        @endforeach
                         </tbody>
                     </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1146,6 +914,50 @@
 
 <!-- Data picker -->
 <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-categorias').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-marcas').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-familias').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [  ]
+    });
+    });
+</script>
 
 <style>
     .dropdown-menu {
