@@ -214,19 +214,23 @@ $unidad_de_medida=Unidad_medida::get();
                 <!--Buscar y tabla-->
                 <div class="row mb-3">
                     <div class="col-12 input-group row">
-                        <label class="col-sm-2 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
-                        </span>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
-                        </span>
-                    </div>
+                                        <input class="form-control" type="text" name="daterangecambio"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                        </div>
                 </div>
                 <div class="row p-2 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center dataTables-example">
+                    <table class="table table-striped text-md-center dataTables-cambio">
                         <thead>
                             <tr>
                                 <th>Compra</th>
@@ -297,22 +301,30 @@ $unidad_de_medida=Unidad_medida::get();
                 <!--Fecha, Buscar y tabla-->
                 <div class="row mb-3">
                     <div class="input-group col-6">
-                        <input class="form-control col-sm-10" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
+                        <input class="form-control col-sm-10" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
+                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                <i class="fa fa-history"></i>
+                            </button>
                         </span>
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
+                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                <i class="fa fa-eraser"></i>
+                            </button>
                         </span>
                     </div>
                     <div class="input-group col-6">
-                        <label class="col-sm-3 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-9" type="text" name="">
+                        <div class="col-4">
+                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                         </div>
+                        <div class="col-md-8">
+                            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                        </div>
                     </div>
                 </div>
                 <div class="row px-2 py-3 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-medida">
                         <thead>
                             <tr>
                                 <th style="width: 10%;">Símbolo</th>
@@ -376,19 +388,6 @@ $unidad_de_medida=Unidad_medida::get();
                     </div>
                 </div>
                 <hr>
-                <!--Buscar y tabla-->
-                <div class="row mb-3">
-                    <div class="col-12 input-group row">
-                        <label class="col-sm-2 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-10" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
-                        </span>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
-                        </span>
-                    </div>
-                </div>
                 <div class="row bg-light p-3 m-1">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs active show" role="tablist">
@@ -407,8 +406,24 @@ $unidad_de_medida=Unidad_medida::get();
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center">
+                                <div class="panel-body table-responsive"> 
+
+                                    <div class="col-12 input-group row">
+                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos1" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                            <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <br>
+
+                                    <table class="table table-striped text-md-center dataTables-motivos1">
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
@@ -429,7 +444,23 @@ $unidad_de_medida=Unidad_medida::get();
 
                             <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center">
+
+                                    <div class="col-12 input-group row">
+                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                            <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <br>
+
+                                    <table class="table table-striped text-md-center dataTables-motivos2">
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
@@ -500,7 +531,7 @@ $unidad_de_medida=Unidad_medida::get();
                     </div>
                 </div>
                 <div class="row bg-light p-3 m-1 table-responsive">
-                    <table class="col-12 table table-striped text-md-center">
+                    <table class="col-12 table table-striped text-md-center dataTables-garantia">
                         <thead>
                             <tr>
                                 <th>Descripción</th>
@@ -873,14 +904,6 @@ $unidad_de_medida=Unidad_medida::get();
 </div>
 -->
 
-<style>
-    /*Para el tamaño de los botones*/
-    .tam{
-        min-width: 150px;
-        min-height: 150px;
-    }
-</style>
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -914,6 +937,29 @@ $unidad_de_medida=Unidad_medida::get();
 
 <!-- Data picker -->
 <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+        /* Tamaño de los botones del index */
+        .tam{
+        min-width: 150px;
+        min-height: 150px;*/
+        }
+</style>
 
 <script>
     $(document).ready(function(){
@@ -950,14 +996,363 @@ $unidad_de_medida=Unidad_medida::get();
 
 <script>
     $(document).ready(function(){
-        $('.dataTables-example').DataTable({
-            pageLength: 25,
+        $('.dataTables-garantia').DataTable({
+            pageLength: 10,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [  ]
     });
     });
 </script>
+
+<script>
+    $(document).ready(function(){
+        table1 = $('.dataTables-motivos1').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangemotivos1"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table1.column(2).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table1.column(2).search("").draw();
+        }
+        function revert_select() {
+            table1.column(2).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table2 = $('.dataTables-motivos2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangemotivos2"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table2.column(2).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table2.column(2).search("").draw();
+        }
+        function revert_select() {
+            table2.column(2).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table3 = $('.dataTables-cambio').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangecambio"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table3.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table3.column(5).search("").draw();
+        }
+        function revert_select() {
+            table3.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table4 = $('.dataTables-medida').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangemedida"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table4.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table4.column(5).search("").draw();
+        }
+        function revert_select() {
+            table4.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
 
 <style>
     .dropdown-menu {
