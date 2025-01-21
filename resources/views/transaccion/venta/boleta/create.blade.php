@@ -2,8 +2,8 @@
 @section('title', 'Boleta ')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('boleta.index'))
-@extends('layout_agregado_rapido')
-{{-- Boton para modal de Clientes --}}
+
+ {{-- Boton para modal de Clientes --}}
 
 {{-- FIN DE MODAL CLIENTE --}}
 @section('value_accion', 'Atrás')
@@ -34,7 +34,11 @@
     </a>
 </div>
 @endif
-
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_product_data">
+    Launch demo modal
+</button>
+  
 <div class="wrapper wrapper-content animated fadeInRight">
     <form action="{{route('boleta.store',$moneda->id)}}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
         @csrf
@@ -205,6 +209,7 @@
                                 </div>
                             </div>
                             {{-- Articulos --}}
+                            <input type="text" name="" id="count_articles" value="0">
                             <div class="col-sm-12">
                                 <div class="table-responsive">
                                     <table cellspacing="0" class="table tables">
@@ -225,8 +230,101 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><button type="button" class='addmore btn btn-sm btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i></button></td>
+                                                <td>
+                                                    <button type="button" class='addmore btn btn-sm btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                                </td>
                                                 <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td >
+                                                    <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                                </td>
+                                                <td class="td_selected">
+                                                    <select class="monto0 select2_demo_3 select_change" required="" id="articulo"  onchange="ajax(0)"  autocomplete="off">
+                                                    </select>
+                                                    <textarea  type='text' name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                    <textarea id='numero_serie0'  name='numero_serie[]' class="form-control"  placeholder="N° de Serie" autocomplete="off" style="margin-top: 5px"></textarea>
+                                                    <input style="min-width: 76px" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" hidden="" required  autocomplete="off"  />
+                                                    <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
+        
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 76px" type='text' id='stock0' disabled="disabled" name='stock[]' class="form-control" required  autocomplete="off"/>
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 76px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 76px" type='number' id='precio0' name='precio[]' disabled="disabled" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <div style="position: relative; " > <input style="min-width: 76px" class="text_des"type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required  autocomplete="off"/></div>
+                                                    <div  class="div_check" >
+                                                        <input style="min-width: 76px" class="check"  type='checkbox' id='check0' name='check[]'    onclick="multi(0)" style="" autocomplete="off"/>
+                                                    </div>
+                                                    <input style="min-width: 76px" type='hidden' id='check_descuento0' name='check_descuento[]'  class="form-control"  required >
+                                                    <input style="min-width: 76px" type='hidden' id='promedio_original0' name='promedio_original[]'  class="form-control"  required >
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 76px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
+                                                </td>
+                                                {{--                                        <td>--}}
+                                                    <input style="min-width: 76px" type='hidden' name="1" id='comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
+                                                {{--                                        </td>--}}
+                                                <td>
+                                                    <input style="min-width: 76px" type='text' id='precio_unitario_comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 76px" type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
+                                                    <input style="min-width: 76px" type='text' id='afectacion0'  style=""  name='afectacion' disabled="disabled" class="afectacion form-control " hidden=""  required  autocomplete="off"/>
+        
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 76px"   type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
+                                                </td>
+                                                <span id="spTotal"></span>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr style="background-color: #f5f5f500;" align="center">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Subtotal:</td>
+                                                <td colspan="2">
+                                                    <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
+                                                    <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color: #f5f5f500;" align="center">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>IGV :</td>
+                                                <td colspan="2">
+                                                    <input id='igv' type="text"     disabled="disabled" class="form-control" required />
+                                                </td>
+                                            </tr>
+                                            <tr  align="center">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Total :</td>
+                                                <td colspan="2">
+                                                    <input id='total_final' type="text" name="total_comi"    readonly="" class="form-control" required />
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -295,16 +393,6 @@
     </div>
 </div>
 
-
-
-
-
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_product_data">
-    Launch demo modal
-</button>
-  
 <!-- Modal -->
 <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -317,37 +405,29 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-lg-12" style="margin-bottom: 15px">
-                        <input type="text" name="" id="search_product" class="form-control" placeholder="Buscar por código o nombre del producto o Servicio">
+                    <div class="col-lg-9" style="margin-bottom: 15px">
+                        <input type="text" name="" id="search_product" class="form-control" placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
+                        <small>Filtrado por Producto o Servicio</small>
+                    </div>
+                    <div class="col-lg-3" style="margin-bottom: 15px">
+                        <input type="text" name="" id="quantity_modal" class="form-control" placeholder="Cantidad" autocomplete="off">
+                        <small>Cantidad a Usar</small>
                     </div>
                     <div class="col-lg-12">
-                        @php
-                            use App\Producto;
-                            $producto =  Producto::first();
-                        @endphp
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover" style="font-size: 90%;border-top: 1px solid #e7eaec;">
+                            <table class="table table-striped table-hover data_table_multiple" style="font-size: 90%;border-top: 1px solid #e7eaec;">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Codigo</th>
-                                        <th>PRODUCTO | SERVICIO</th>
+                                        <th>CODIGO</th>
+                                        <th>ARTICULO</th>
                                         <th>STOCK</th>
+                                        <th>CANTIDAD</th>
                                         <th>PRECIO UNITARO</th>
-                                        <th>Accion</th>
+                                        <th>PRECIO TOTAL</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{$producto->id}}</td>
-                                        <td>{{$producto->codigo_original}}</td>
-                                        <td>{{$producto->nombre}}</td>
-                                        <td>0</td>
-                                        <td>S/. 30.00</td>
-                                        <td>
-                                            <input type="checkbox" name="" id="" class="form-control">
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -372,262 +452,9 @@
 
 
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <form action="{{route('boleta.store',$moneda->id)}}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="form_store">
-                        @csrf
-                        @method('put')
-                        <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
-                                <address class="col-sm-4" align="left">
-                                   <img src="{{asset('img/logos/')}}//{{$empresa->foto}}" alt="" width="300px">
-                               </address>
-                            </div>
-                            <div class="col-sm-4">
-
-                            </div>
-                            <div class="col-sm-4 ">
-                                <div class="form-control ruc tooltip-demo" style="height: 125px">
-                                    <center>
-                                        <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                        <h2>BOLETA ELECTRONICA</h2>
-                                        <h4>{{$boleta_numero}} <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span></h4>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>Cliente</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{old('nombre')}}">
-                                        </select> --}}
-                                    </td>
-                                    <td>Comisionista</td>
-                                    <td>:</td>
-                                    <td> 
-                                        <input list="browsersc2" class="form-control m-b" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
-                                        <datalist id="browsersc2" >
-                                            <option id="">Sin comision - 0 </option>
-                                            @foreach($p_venta as $p_ventas)
-                                                <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
-                                            @endforeach
-                                        </datalist>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Moneda</td>
-                                    <td>:</td>
-                                    <td class="row" style="padding-left: 20px">
-                                        <div class="row">
-                                            
-                                            <div class="col-sm-5">
-                                                {{-- <input type="text" name="moneda" id="moneda" class="form-control " value="{{$moneda->nombre}}" readonly="readonly"> --}}
-                                            </div>
-                                            <a class="col-sm-5 button_money" onclick="changeMoney()">
-                                                <button style="height: 35px;width: auto" type="button" class='money_change btn btn-info' id="button_changeMoney">
-                                                    @if($moneda->tipo=='nacional')
-                                                        Dolares 
-                                                    @elseif($moneda->tipo=='extranjera') 
-                                                        Soles 
-                                                    @endif
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td>Guia remision</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <input type="text" class="form-control" value="0" name="guia_r"> --}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Vendedor</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}"> --}}
-                                    </td>
-                                    <td>Tipo de Operacion</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <select class="form-control" name="tipo_operacion" >
-                                        @foreach($tipo_operacion as $t_op)
-                                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
-                                        @endforeach
-                                        </select> --}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Fecha</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"> --}}
-                                    </td>
-                                    <td>Forma de pago</td>
-                                    <td>:</td>
-                                    <td>
-                                        <div class="row">
-                                            {{-- <div class="col-sm-5">
-                                                <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
-                                                    @foreach($forma_pagos as $forma_pago)
-                                                        <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
-                                                    @endforeach
-                                                <select>
-                                            </div>
-                                            <div class="col-sm-5" id="credito_pago" style="visibility: hidden;">
-                                                <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                            </div> --}}
-                                            
-                                        </div>
-                                    </td>             
-                                </tr>
-                                <tr>
-                                    <td>Observacion</td>
-                                    <td>:</td>
-                                    <td colspan="">
-                                        {{-- <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Boleta a vuestra solicitud</textarea> --}}
-                                    </td>
-                                    <td id="ven_1p" style="visibility: initial;">Fecha de Vencimiento</td>
-                                    <td id="ven_2p" style="visibility: initial;">:</td>
-                                    <td id="ven_3p" style="visibility: initial;">
-                                        <input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}">
-                                    </td>
-                                </tr>
-                            {{-- </div> --}}
-                            </tbody>
-                        </table>
-                        <div id="resultado_moneda"></div>
-                        <div class="div table-responsive">
-                            <table cellspacing="0" class="table tables">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10px"></th>
-                                        <th style="width: 500px;font-size: 13px">Articulo</th>
-                                        <th>Stock</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio</th>
-                                        <th>Dcto</th>
-                                        <th>PU. Dcto.</th>
-                                        <th>PU. Com.</th>
-                                        <th>Total</th>
-                                        <th>Total IGV</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td >
-                                            <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                                        </td>
-                                        <td class="td_selected">
-                                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo"  onchange="ajax(0)"  autocomplete="off">
-                                            </select>
-                                            <textarea  type='text' name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                                            <textarea id='numero_serie0'  name='numero_serie[]' class="form-control"  placeholder="N° de Serie" autocomplete="off" style="margin-top: 5px"></textarea>
-                                            <input style="min-width: 76px" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" hidden="" required  autocomplete="off"  />
-                                            <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
-
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 76px" type='text' id='stock0' disabled="disabled" name='stock[]' class="form-control" required  autocomplete="off"/>
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 76px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control"  onkeyup="multi(0)"  required  autocomplete="off" />
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 76px" type='number' id='precio0' name='precio[]' disabled="disabled" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                        </td>
-                                        <td>
-                                            <div style="position: relative; " > <input style="min-width: 76px" class="text_des"type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required  autocomplete="off"/></div>
-                                            <div  class="div_check" >
-                                                <input style="min-width: 76px" class="check"  type='checkbox' id='check0' name='check[]'    onclick="multi(0)" style="" autocomplete="off"/>
-                                            </div>
-                                            <input style="min-width: 76px" type='hidden' id='check_descuento0' name='check_descuento[]'  class="form-control"  required >
-                                            <input style="min-width: 76px" type='hidden' id='promedio_original0' name='promedio_original[]'  class="form-control"  required >
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 76px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
-                                        </td>
-                                        {{--                                        <td>--}}
-                                            <input style="min-width: 76px" type='hidden' name="1" id='comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
-                                        {{--                                        </td>--}}
-                                        <td>
-                                            <input style="min-width: 76px" type='text' id='precio_unitario_comision0'  disabled="disabled" class="form-control"  required  autocomplete="off" />
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 76px" type='text' id='total0' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" />
-                                            <input style="min-width: 76px" type='text' id='afectacion0'  style=""  name='afectacion' disabled="disabled" class="afectacion form-control " hidden=""  required  autocomplete="off"/>
-
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 76px"   type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
-                                        </td>
-                                        <span id="spTotal"></span>
-                                    </tr>
-
-                                </tbody>
-                                <br>
-                                <tbody>
-                                    <tr style="background-color: #f5f5f500;" align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Subtotal:</td>
-                                        <td colspan="2">
-                                            <input id='sub_total' type="text" name="sub_total_sin_igv" readonly class="form-control" required />
-                                            <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly class="form-control" required hidden="" />
-                                        </td>
-                                    </tr>
-                                    <tr style="background-color: #f5f5f500;" align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>IGV :</td>
-                                        <td colspan="2">
-                                            <input id='igv' type="text"     disabled="disabled" class="form-control" required />
-                                        </td>
-                                    </tr>
-                                    <tr  align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Total :</td>
-                                        <td colspan="2">
-                                            <input id='total_final' type="text" name="total_comi"    readonly="" class="form-control" required />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <button type="button" class='addmore btn btn-success'><i class="fa fa-plus-square" aria-hidden="true"></i></button>&nbsp;
-                        <button class="ladda-button btn btn-primary float-right" type="boton"  id="boton" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
-                        <button class="ladda-button btn btn-primary float-right" type="submit" hidden  id="button_submit" name="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar DB</i></button>&nbsp;
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div id="loaderGif"></div>
 <style>
-     .form-control{border-radius: 10px}
+    /* .form-control{border-radius: 10px} */
     .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
     .check{-webkit-appearance: none;height: 34px;background-color: #ffffff00;-moz-appearance: none;border: none;appearance: none;width: 80px;border-radius: 10px;}
     .div_check{position: relative;top: -33px;left: 0px;background-color: #ffffff00;  top: -35;}
@@ -660,7 +487,7 @@
         color: red
     }
     #loaderGif{
-        background:url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
+        background: url({{ asset('img/loading.gif') }}) 50% 50% no-repeat #000000a3;
         background-size: 250px;
         display: none;
         position: fixed;
@@ -679,6 +506,27 @@
             /* width: 376px !important; */
             min-width: 376px !important;
         }
+    }
+    @media (min-width: 992px) {
+        #add_product_data > .modal-lg{
+            max-width: 1200px;
+        }
+    }
+    .input_cantidad_modal{
+        width: 50%;
+    }
+    #DataTables_Table_0_wrapper{
+        padding-bottom: 0px !important;
+    }
+    #DataTables_Table_0_wrapper > .row:first-child{
+        display: none;
+    }
+    #DataTables_Table_0_wrapper > .row > .col-sm-12{
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    #DataTables_Table_0 > tbody > tr > td{
+        cursor: pointer !important;
     }
 </style>
 
@@ -825,6 +673,7 @@
         };
         $(".addmore").prop("disabled", true);
         $(".borrar").prop("disabled", false);
+        
     });
 
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
@@ -1504,47 +1353,69 @@
         }, 10000);
     }
 
-
-    $('#search_product').on('keypress', function(e){
-        var busqueda = $(this).val();
-        console.log(busqueda)
+    // MODAL BUSQUEDA DE PRODUCTO
+    let debounceTimer;
+    $('#search_product').on('keyup', function(e){
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            var busqueda = $(this).val();
+            search_multiple(busqueda);
+        }, 1000); // Espera 300 ms antes de ejecutar la acción
     });
-    function search(product){
+    function search_multiple(busqueda){
+        var almacen = $('[id="almacen_id"]').val();
+        var moneda = $('[id="moneda_id"]').val();
         $.ajax({
             type: "post",
-            url: "{{ route('pa.description') }}",
+            url: "{{ route('pa.search_multiple') }}",
             data: {
                 '_token': $('input[name=_token]').val(),
-                'articulo': articulo,
+                'articulo': busqueda,
                 'almacen': almacen,
                 'moneda': moneda	
             },
             success: function (msg) {
-                $(`#tipo_afec${a}`).val(msg.afectacion);
-                $(`#precio${a}`).val(msg.price);
-                $(`#cantidad${a}`).val(1);
-                $(`#precio_unitario_descuento${a}`).val(msg.price);
-                $(`#promedio_original${a}`).val(msg.average);
-                $(`#stock${a}`).val(msg.amount);
-                $(`#descuento${a}`).val(msg.discount);
-                $(`#check_descuento${a}`).val(0);
-                $(`#cantidad${a}`).attr('max', msg.amount );
-                $(`#cantidad`).attr('max', msg.amount );
-                var separador=" ";
-                var comision=document.querySelector(`#comisionista`).value;
-                //revirtiendo la cadena
-                var reverse9=reverseString(comision);//devuelve toda la cadena articulo al reves
-                //para comision
-                var comision_v_r=reverse9.split(separador,1); //devuelve el precio en objeto al revez
-                var comision_r=comision_v_r[0];//obtiene el precio del objeto [0] al revez
-                var comision_v =reverseString(comision_v_r[0]);//convierte el precio al revez a la normalidad
-                if(comision){
-                    document.getElementById(`comision${a}`).value = comision_v;
-                }else{
-                    document.getElementById(`comision${a}`).value = 0;
+                var data=JSON.parse(msg);
+                var quantity = $('#quantity_modal').val();
+                if(quantity == ""){
+                    quantity = 1;
                 }
-                multi(a);
-                $(`.addmore`).prop("disabled", false);
+                $('.data_table_multiple').dataTable({
+                    "autoWidth": false,
+                    pageLength: 10,
+                    responsive: true,
+                    "aaData": data,
+                    "columns": [
+                        { "data": "id" },
+                        { "data": "codigo" },
+                        { "data": "nombre" , "defaultContent": ""},
+                        { "data": "stock" , "defaultContent": ""},
+                        {
+                            data: null,
+                            title: 'CANTIDAD',
+                            render: function (data, type, row, meta) {
+                                return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
+
+                            }
+                        },
+                        {
+                            data: 'price',
+                            title: 'PRECIO U.',
+                            render: function (data, type, row) {
+                                const simbolo = row.moneda.simbolo; // Obtén el símbolo de la moneda
+                                const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data); // Formatea el precio
+                                return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
+                            }
+                        },                    
+                        {
+                            data: null,
+                            title: 'PRECIO TOTAL',
+                            render: function (data, type, row, meta) {
+                                return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                            }
+                        },
+                    ]
+                });
             },
             error: function(eject) {
                 if(eject.status===400){
@@ -1554,9 +1425,52 @@
             cache:true
         });
     }
+    $('.data_table_multiple').on('input', '.input-cantidad', function () {
+        const cantidad = parseFloat($(this).val()) || 0; // Cantidad ingresada
+        const price = parseFloat($(this).data('price')); // Precio desde el atributo data
+        const total = cantidad * price; // Cálculo del total
+        var simbolo = $('#basic-addon3').html();
+        // Actualizar el total en la columna correspondiente
+        const id = $(this).data('id'); // ID para identificar la fila
+        $(`.total[data-id="${id}"]`).text(`${simbolo}`+`${total.toFixed(2)}`);
+    });
 
+    $('.data_table_multiple').on('click', 'tr', function () {
+        // condicional para saber el numero siguiente?
+        // var arti = $('#')
+        var count_artc = $('#count_articles').val();
+        console.log(count_artc);
+
+        // $('#add_product_data').modal('dismiss')
+        // $('.addmore').click(); // Crear la linea 
+        var id = $(this).find("td:eq(0)").text();
+        var codigos = $(this).find("td:eq(1)").text();
+        var nombres = $(this).find("td:eq(2)").text();
+        var concat_data = id+" | "+codigos+" | "+nombres; 
+        const newOption = new Option(concat_data, concat_data, true, true);
+        if(count_artc!=0){
+            $('.addmore').click();
+            $('#count_articles').val(count_artc++);
+            $(`#articulo${count_artc}`).append(newOption).trigger('change');
+        }else{
+            $('#articulo').append(newOption).trigger('change');
+            
+        }
+        
+        
+        
+        // Verificar si la fila seleccionada existe
+        // if (!table.row(this).data()) return;
+
+        // // Obtener datos de la fila seleccionada
+        // const rowData = table.row(this).data();
+
+        // // Mostrar información de la fila en la consola
+        // console.log('Datos de la fila seleccionada:', rowData);
+
+        // // Ejemplo: Redirigir a una página con el ID de la fila
+        // alert(`ID seleccionado: ${rowData.id}`);
+    });
     </script>
-    <style type="text/css">
-    .a{color: red}
-</style>
+ 
 @endsection

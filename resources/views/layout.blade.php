@@ -33,7 +33,7 @@
 {{--  --}}
 <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
-    body {
+    /* body {
         @if(auth()->user()->config->letra != 'none') font-family: @yield('Letra', auth()->user()->config->letra) !important; @endif 
         @if(auth()->user()->config->tamano_letra != '') font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important; @endif
     }
@@ -48,7 +48,7 @@
         color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
         font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
         text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);
-    }
+    } */
 
     .nav-header {
         background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");

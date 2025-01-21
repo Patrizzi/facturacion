@@ -547,6 +547,7 @@ Route::group(
 		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
+		Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
 	});
 
