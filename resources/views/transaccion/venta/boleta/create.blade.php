@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                             {{-- Articulos --}}
-                            <input type="text" name="" id="count_articles" value="0">
+                            <input type="text" name="" id="count_articles" value="">
                             <div class="col-sm-12">
                                 <div class="table-responsive">
                                     <table cellspacing="0" class="table tables">
@@ -657,6 +657,8 @@
             </td>
         </tr>`;
         $('.tables').append(data);
+        console.log(i);
+        $('#count_articles').val(i);
         i++;
         //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
         articlesSelect2();
@@ -1375,7 +1377,7 @@
                 'moneda': moneda	
             },
             success: function (msg) {
-                var data=JSON.parse(msg);
+                var data = JSON.parse(msg);
                 var quantity = $('#quantity_modal').val();
                 if(quantity == ""){
                     quantity = 1;
@@ -1448,13 +1450,12 @@
         var nombres = $(this).find("td:eq(2)").text();
         var concat_data = id+" | "+codigos+" | "+nombres; 
         const newOption = new Option(concat_data, concat_data, true, true);
-        if(count_artc!=0){
-            $('.addmore').click();
-            $('#count_articles').val(count_artc++);
-            $(`#articulo${count_artc}`).append(newOption).trigger('change');
-        }else{
+        if(count_artc == ""){           
             $('#articulo').append(newOption).trigger('change');
-            
+            $('#count_articles').val(1);
+        }else{
+            $('.addmore').click();
+            $(`#articulo${count_artc}`).append(newOption).trigger('change');
         }
         
         
