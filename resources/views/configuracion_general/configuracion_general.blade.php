@@ -28,6 +28,9 @@ $tipo_cambio=TipoCambio::get();
 
 use App\Unidad_medida;
 $unidad_de_medida=Unidad_medida::get();
+
+use App\Validez;
+$validez=Validez::get();
 @endphp
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -156,7 +159,11 @@ $unidad_de_medida=Unidad_medida::get();
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                             <button class="btn btn-success dim tam pt-4" type="button">
-                                <a href="{{route('validez.index')}}">
+                               <!-- <a href="{{route('validez.index')}}">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/validez.png')}}" width="50px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
+                                </a>-->
+                                <a data-toggle="modal" href="#modal-forms8">
                                     <img class="rounded bg-white p-2" src="{{asset('img/logos/validez.png')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
                                 </a>
@@ -443,8 +450,7 @@ $unidad_de_medida=Unidad_medida::get();
                             </div>
 
                             <div role="tabpanel" id="tab-2" class="tab-pane">
-                                <div class="panel-body table-responsive">
-
+                                <div class="panel-body table-responsive ">
                                     <div class="col-12 input-group row">
                                         <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                         <span class="input-group-append">
@@ -543,7 +549,7 @@ $unidad_de_medida=Unidad_medida::get();
                         <tbody>
                             <tr>
                             <td>{{$garantias->descripcion}}</td>
-                                <td>5 años</td>
+                            <td style="color: red;">5 años</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -677,26 +683,27 @@ $unidad_de_medida=Unidad_medida::get();
                             <tr>
                                 <th style="width: 10%;">Código</th>
                                 <th style="width: 35%;">Descripción</th>
-                                <th style="width: 20%;">Padre</th>
                                 <th style="width: 15%;">Ubicación</th>
+                                <th style="width: 20%;">Cantidad de SubFamilias</th>
                                 <th style="width: 10%;">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php 
+                            use App\Subfamilia;
+                            @endphp
                             <span hidden="hidden">{{$i=1}}</span>
                             @foreach($familias as $familia)
                             <tr>
                             <td>{{$familia->codigo}}</td>
                             <td>{{$familia->descripcion}}</td>
-
-                            <td>Electrodomésticos</td>
-
                             <td>@if($familia->ubicacion != null)
                                     {{$familia->ubicacion}}
                                 @else
                                     Sin Ubicacion
                                 @endif
                             </td>
+                            <td>{{ $count_sub = Subfamilia::where('id_familia', $familia->id)->count()}}</td>
                             <td>
                             <a href="{{route('familia.show',$familia->id)}}">
                                 <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
@@ -804,7 +811,12 @@ $unidad_de_medida=Unidad_medida::get();
                                 @endif
                                 </td>
                                 <td>{{$marca->descripcion}}</td>
-                                <td>Aqui va la foto</td>
+                                <td> 
+                                @if(isset($marca->imagen))
+                                <img name="imagen" src="{{asset('archivos/imagenes/marcas/'.$marca->imagen)}}" width="100px" height="100px"   />
+                                @else
+                                <img src="{{asset('img/logos/marca_ejemplo.svg')}}" width="100px">
+                                @endif </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -814,6 +826,65 @@ $unidad_de_medida=Unidad_medida::get();
         </div>
     </div>
 </div>
+
+<!-- modal - Validez -->
+<div id="modal-forms8" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel7">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> 
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="staticBackdropLabel7">Validez</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--Contenido de modal-->
+                <div class="row">
+                    <div class="col-12 row">
+                        <div class="col-8">
+                            <input type="text" placeholder="Descripción: Tiempo ..." class="form-control m-b">
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <!--Fecha, Buscar y tabla-->
+                <div class="row mb-3 mx-1">
+                    <div class="col-12 input-group">
+                        <label class="col-sm-2 col-form-label">Buscar:</label>
+                        <input class="form-control col-sm-8" type="text" name="">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <!--Tabla-->
+                    <table class="table table-striped text-md-center dataTables-validez">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <span hidden="hidden">{{$i=1}}</span>
+                        @foreach($validez as $validezz)
+                            <tr>
+                            <td>{{$validezz->id}}</td>
+                            <td>{{$validezz->descripcion}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- fin código Gaby-->
 
@@ -1017,16 +1088,6 @@ $unidad_de_medida=Unidad_medida::get();
                 {extend: 'excel', title: 'ExampleFile'},
                 {extend: 'pdf', title: 'ExampleFile'},
 
-                {extend: 'print',
-                 customize: function (win){
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-
-                        $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                }
-                }
             ]
 
         });
@@ -1353,6 +1414,16 @@ $unidad_de_medida=Unidad_medida::get();
         }
     </script>
 
+<script>
+    $(document).ready(function(){
+        $('.dataTables-validez').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
 
 <style>
     .dropdown-menu {
