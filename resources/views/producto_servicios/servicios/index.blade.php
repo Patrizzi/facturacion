@@ -253,48 +253,6 @@
                                                     <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>10</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Servicio asf</td>
-                                                <td>tab1</td>
-                                                <td></td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>12</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Servicio asf</td>
-                                                <td>tab1</td>
-                                                <td></td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>13</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Servicio asf</td>
-                                                <td>tab1</td>
-                                                <td></td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -331,74 +289,11 @@
                                                     <a href="#" class="px-3"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>6</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Servicio asf</td>
-                                                <td>tab3</td>
-                                                <td></td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>7</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Servicio asf</td>
-                                                <td>tab3</td>
-                                                <td></td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>8</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Servicio asf</td>
-                                                <td>tab3</td>
-                                                <td></td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                            </tr>
+                                           
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
-                        </div>
-
-                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                            <label class="btn btn-sm btn-white ">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                            </label>
-                            <label class="btn btn-sm btn-white active">
-                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                            </label>
                         </div>
 
                     </div>

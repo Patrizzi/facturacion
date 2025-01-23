@@ -197,8 +197,6 @@ $validez=Validez::get();
                             <select class="form-control m-b" name="account">
                                 <option>Dolar</option>
                                 <option>Sol</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
                             </select>
                         </div>
                         <div class="col-1">
@@ -214,14 +212,13 @@ $validez=Validez::get();
                     </div>
                     <div class="col-6">
                         <input type="text" placeholder="Paralelo Compra: 3.69" class="form-control m-b">
-                        <input type="text" placeholder="Paralelo Venta: 3.75" class="form-control">
                     </div>
                 </div>
                 <hr>
                 <!--Buscar y tabla-->
-                <div class="row mb-3">
-                    <div class="col-12 input-group row">
-                                        <input class="form-control" type="text" name="daterangecambio"
+                <div class="col-12">
+                    <div class=" input-group row">
+                        <input class="form-control" type="text" name="daterangecambio"
                                             value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
@@ -235,25 +232,23 @@ $validez=Validez::get();
                                         </span>
                         </div>
                 </div>
-                <div class="row p-2 bg-light m-1 table-responsive">
+                <div class="table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center dataTables-cambio">
+                    <table class="table table-striped text-md-center dataTables-cambio12">
                         <thead>
                             <tr>
                                 <th>Compra</th>
                                 <th>Venta</th>
                                 <th>Paralelo C.</th>
-                                <th>Paralelo V.</th>
                                 <th>Fecha Actualización</th>
                             </tr>
                         </thead>
+                        <tbody> 
                             @foreach($tipo_cambio as $tipo_cambios)
-                        <tbody>
                             <tr>
                                 <td>{{$tipo_cambios->compra}}</td>
                                 <td>{{$tipo_cambios->venta}}</td>
                                 <td>{{$tipo_cambios->paralelo}}</td>
-                                <td>w</td>
                                 <td>{{$tipo_cambios->created_at}}</td>
                             </tr>
                             @endforeach  
@@ -362,7 +357,7 @@ $validez=Validez::get();
 <!-- modal - Motivos -->
 <div id="modal-forms3" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel3">Motivos</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -389,13 +384,11 @@ $validez=Validez::get();
                         <select class="form-control m-b" name="account">
                             <option>Compras</option>
                             <option>Ventas</option>
-                            <option>option 3</option>
-                            <option>option 4</option>
                         </select>
                     </div>
                 </div>
                 <hr>
-                <div class="row bg-light p-3 m-1">
+                <div class="">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs active show" role="tablist">
                             <li>
@@ -411,7 +404,7 @@ $validez=Validez::get();
                         </ul>
 
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
+                        <div class="tab-content" >
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive"> 
 
@@ -437,8 +430,9 @@ $validez=Validez::get();
                                                 <th>Fecha de Modificación</th>
                                             </tr>
                                         </thead>
-                                        @foreach ($motivos_compra as $m_compras)
+                                        
                                         <tbody>
+                                        @foreach ($motivos_compra as $m_compras)
                                             <tr>
                                             <td>{{$m_compras->nombre}}</td>
                                             <td>{{ \Carbon\Carbon::parse($m_compras->updated_at)->format('d/m/Y H:i:s')}}</td>
@@ -495,7 +489,7 @@ $validez=Validez::get();
 
 <!-- modal - Garantía-->
 <div id="modal-forms4" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel4">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel4">Garantía</h3>
@@ -511,7 +505,6 @@ $validez=Validez::get();
                             <option>Extendida</option>
                             <option>Anual</option>
                             <option>option 3</option>
-                            <option>option 4</option>
                         </select>
                     </div>
                     <div class="col-6">
@@ -536,7 +529,7 @@ $validez=Validez::get();
                         <input type="text" class="form-control col-md-9 col-sm-8">
                     </div>
                 </div>
-                <div class="row bg-light p-3 m-1 table-responsive">
+                <div class="row bg-light table-responsive">
                     <table class="col-12 table table-striped text-md-center dataTables-garantia">
                         <thead>
                             <tr>
@@ -562,7 +555,7 @@ $validez=Validez::get();
 
 <!-- modal - Categorías -->
 <div id="modal-forms5" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel5">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel5">Categorías</h3>
@@ -629,7 +622,7 @@ $validez=Validez::get();
 <!-- modal - Familias -->
 <div id="modal-forms6" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel6">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel6">Familias</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -813,9 +806,9 @@ $validez=Validez::get();
                                 <td>{{$marca->descripcion}}</td>
                                 <td> 
                                 @if(isset($marca->imagen))
-                                <img name="imagen" src="{{asset('archivos/imagenes/marcas/'.$marca->imagen)}}" width="100px" height="100px"   />
+                                <img name="imagen" src="{{asset('archivos/imagenes/marcas/'.$marca->imagen)}}" width="80px" height="80px"   />
                                 @else
-                                <img src="{{asset('img/logos/marca_ejemplo.svg')}}" width="100px">
+                                <img src="{{asset('img/logos/marca_ejemplo.svg')}}" width="80px">
                                 @endif </td>
                             </tr>
                         @endforeach
@@ -1242,7 +1235,7 @@ $validez=Validez::get();
 
 <script>
     $(document).ready(function(){
-        table3 = $('.dataTables-cambio').DataTable({
+        table3 = $('.dataTables-cambio12').DataTable({
             pageLength: 12,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
@@ -1318,7 +1311,8 @@ $validez=Validez::get();
                     table3.column(5).search(dateRangeString, true, false).draw();
                 }
             );
-        });
+    });
+        
         function limpiar_select(){
             table3.column(5).search("").draw();
         }
