@@ -486,7 +486,7 @@ Route::group(
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');
 
-		Route::get('/personal2/creacion2','PersonalController@creacion2');
+		Route::get('/personal2/creacion2','PersonalController@creacion2')->name('personal2.create2');
 
 		Route::get('/personal-laboral/{id}','PersonalDatosLaboralesController@idpersonal')->name('create.laboral');
 		Route::resource('/personal-datos-laborales','PersonalDatosLaboralesController');
