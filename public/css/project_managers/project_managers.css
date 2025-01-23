@@ -1,0 +1,103 @@
+/* app/assets/stylesheets/custom.scss */
+.ibox-activities {
+    margin-bottom: 0px;
+}
+
+.ibox-content {
+    padding: 5px 20px 0px 20px;
+}
+
+.modal-body {
+    font-size: 12px;
+}
+
+.modal-body .row {
+    margin-bottom: 15px;
+}
+
+.modal-body input, .modal-body select {
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.modal-body .color-picker-input {
+    margin-left: 3rem;
+    width: 50px;
+    height: 20px;
+    padding: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
+}
+
+.modal-body .color-picker-input::-webkit-color-swatch {
+    border-radius: 4px;
+    border: none;
+}
+
+.modal-body .color-picker-input::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border: none;
+}
+
+.modal-body input[type=file]::file-selector-button {
+    display: none;
+}
+
+.name-options {
+    display: flex;
+    justify-content: space-between;
+}
+
+.simple-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilos para el truncado de texto */
+.truncate-text {
+    display: block;
+    white-space: normal;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    margin-bottom: 0px;
+}
+.ver-mas, .ver-menos {
+    color: black;
+    opacity: 0.6;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.card-container {
+    display: flex;
+    /* overflow-x: auto; */ /*Carrusel*/
+    flex-wrap: wrap; /*Paginación*/
+    align-items: start;
+    justify-content: center;
+    gap: 13px;
+    border-radius: 8px;
+    padding: 8px 8px 18px 8px;
+    /* min-height: 600px; */
+}
+/* Paginación */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.carousel-container::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+}
+.carousel-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+.carousel-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.carousel-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+}
