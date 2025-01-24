@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+<!--    <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -15,7 +15,7 @@
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
                             <tr>
-                                <!--<th>COD. GENERAL</th> En comentario. No se muestra este dato-->
+                                <th>COD. GENERAL</th> En comentario. No se muestra este dato
                                 
                                 <th>N° Registro</th>
                                 <th>Código Servicio</th>
@@ -221,17 +221,16 @@
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <!-- Tab 1: Activos -->
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-servicios">
                                         <thead>
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Código</th>
                                                 <th>Código original</th>
                                                 <th>Nombre</th>
-                                                <th>Categoría</th>
+                                                <th>Familia</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -243,7 +242,7 @@
                                                     <td>{{$servicio->codigo_servicio}}</td>
                                                     <td>{{$servicio->codigo_original}}</td>
                                                     <td>{{$servicio->nombre}}</td>
-                                                    <td>Servicios</td>
+                                                    <td>{{$servicio->familia->descripcion}}</td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-info btn-s-m">
                                                             <i class="fa fa-check text-white"></i>
@@ -265,17 +264,16 @@
                                 </div>
                             </div>
 
-                            <!-- Tab 2: Inactivos/Anulados -->
                             <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-servicios2">
                                         <thead>
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Código</th>
                                                 <th>Código original</th>
                                                 <th>Nombre</th>
-                                                <th>Categoría</th>
+                                                <th>Familia</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -287,7 +285,7 @@
                                                     <td>{{$servicio->codigo_servicio}}</td>
                                                     <td>{{$servicio->codigo_original}}</td>
                                                     <td>{{$servicio->nombre}}</td>
-                                                    <td>Servicios</td>
+                                                    <td>{{$servicio->familia->descripcion}}</td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-danger btn-s-m">
                                                             <i class="fa fa-times"></i>
@@ -309,7 +307,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -428,5 +425,50 @@
         $('#servicio_modal').modal('show');
 
     }
+</script>
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+        /* Tamaño de los botones del index */
+        .tam{
+        min-width: 150px;
+        min-height: 150px;*/
+        }
+</style>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-servicios').DataTable({
+            pageLength: 16,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-servicios2').DataTable({
+            pageLength: 15,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
 </script>
 @endsection
