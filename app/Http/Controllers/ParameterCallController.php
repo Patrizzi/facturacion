@@ -50,7 +50,7 @@ class ParameterCallController extends Controller
         //Obtención de los datos del articulo (producto-servicio)
         $product = Producto::where('id', $id[0])->where('codigo_producto', $id[2])->where('codigo_original', $id[4])->first();
         $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[2])->where('codigo_original', $id[4])->first();
-
+        // return $service;
         // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS 
         // $product=Producto::where('codigo_producto',$id[2])->first();
         // $service=Servicios::where('codigo_servicio',$id[2])->first();
@@ -527,7 +527,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio." | ". $product->codigo_original,
+                        'codigo' => $service->codigo_servicio." | ". $service->codigo_original,
                         'nombre' => $service->nombre,
                         'description' => $service->descripcion,
                         'utility' => $utilidad_serv,
