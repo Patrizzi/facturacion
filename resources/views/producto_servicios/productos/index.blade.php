@@ -176,7 +176,7 @@
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB -->
-                                    <table class="table table-striped text-md-center dataTables-example2" id="table_prodac">
+                                    <table class="table table-striped text-md-center dataTables-example2" id="table_prodac" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
@@ -261,6 +261,24 @@
     }
 </style>
 <!--Fin código actual-->
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
