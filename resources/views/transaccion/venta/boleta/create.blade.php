@@ -500,11 +500,6 @@
                                 placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
                             <small>Filtrado por Producto o Servicio</small>
                         </div>
-                        {{-- <div class="col-lg-3" style="margin-bottom: 15px">
-                            <input type="text" name="" id="quantity_modal" class="form-control"
-                                placeholder="Cantidad" autocomplete="off">
-                            <small>Cantidad Pre a Usar</small>
-                        </div> --}}
                         <div class="col-lg-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover data_table_multiple"
@@ -528,8 +523,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" id="close_add_product_data">Close</button>
                 </div>
             </div>
         </div>
@@ -595,6 +589,7 @@
         }
 
         span.select2.select2-container.select2-container--default {
+            max-width: 500px !important; 
             width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
@@ -1465,14 +1460,14 @@
             });
         }
 
-        $(document).on({
-            ajaxStart: function() {
-                $("body").addClass("loading");
-            },
-            ajaxStop: function() {
-                $("body").removeClass("loading");
-            }
-        });
+        // $(document).on({
+        //     ajaxStart: function() {
+        //         $("body").addClass("loading");
+        //     },
+        //     ajaxStop: function() {
+        //         $("body").removeClass("loading");
+        //     }
+        // });
 
         jQuery.event.special.touchstart = {
             setup: function(_, ns, handle) {
@@ -1525,6 +1520,11 @@
 
         function search_multiple(busqueda) {
             // CLEAN DATABLE(?)
+            if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
+                $('.data_table_multiple').DataTable().clear().destroy();
+            }
+            $('.data_table_multiple tbody').empty();
+
             var almacen = $('[id="almacen_id"]').val();
             var moneda = $('[id="moneda_id"]').val();
             $.ajax({
@@ -1537,12 +1537,13 @@
                     'moneda': moneda
                 },
                 success: function(msg) {
+                    // console.log(data.mone)
                     var data = JSON.parse(msg);
                     var quantity = $('#quantity_modal').val();
                     if (quantity == "") {
                         quantity = 1;
                     }
-                    $('.data_table_multiple').dataTable({
+                    $('.data_table_multiple').DataTable({
                         "autoWidth": false,
                         pageLength: 10,
                         responsive: true,
@@ -1599,25 +1600,35 @@
             });
         }
         $('.data_table_multiple').on('input', '.input-cantidad', function() {
-            const cantidad = parseFloat($(this).val()) || 0; // Cantidad ingresada
-            const price = parseFloat($(this).data('price')); // Precio desde el atributo data
-            const total = cantidad * price; // Cálculo del total
+            const cantidad = parseFloat($(this).val()) || 0;
+            const price = parseFloat($(this).data('price'));
+            const total = cantidad * price;
             var simbolo = $('#basic-addon3').html();
-            // Actualizar el total en la columna correspondiente
-            const id = $(this).data('id'); // ID para identificar la fila
+            const id = $(this).data('id');
             $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
         });
 
-        $('.data_table_multiple').on('click', 'tr', function(e) {
-            if ($(e.target).is('input')) {
+        $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
+            if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
+                return;
+            }
+            var stock = $(this).find("td:eq(3)").text();    
+            var cantidad = $(this).find('input').val();
+            console.log(stock);
+            console.log(cantidad);
+            if(parseFloat(cantidad) > parseFloat(stock)){
+                console.log("dentro del if");
+                toastr.warning("Cantidad mayor al stock",
+                '', {
+                    timeOut: 3000
+                });
                 return;
             }
             var count_artc = $('#count_articles').val();
             var id = $(this).find("td:eq(0)").text();
             var codigos = $(this).find("td:eq(1)").text();
             var nombres = $(this).find("td:eq(2)").text();
-            var cantidad = $(this).find('input').val();
-            console.log(cantidad);
+            
             var concat_data = id + " | " + codigos + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
@@ -1629,7 +1640,8 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                }, 200);
+                    console.log("se cambio de cantidad");
+                }, 1500);
                 //
             } else {
                 $('.addmore').click();
@@ -1641,11 +1653,16 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                }, 200);
+                    console.log("se cambio de cantidad")
+                }, 1500);
                 //
             }
-            
+            toastr.info("Se agregó el Articulo correctamente",
+            '', {
+                timeOut: 3000
+            });
         });
+
     </script>
 
 @endsection
