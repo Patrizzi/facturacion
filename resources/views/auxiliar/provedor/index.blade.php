@@ -6,9 +6,8 @@
 @section('data-toggle', 'modal')
 @section('href_accion', '#ModalProvedor')
 @section('value_accion', 'Agregar')
-@extends('layout_agregado_rapido')
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
 @section('content')
 @if($errors->any())
 <div style="padding-top: 20px;">
@@ -26,7 +25,7 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <!-- Sección de Proveedor  ------------------------------------------------------------------------------------  -->
+                    <!-- Sección de Proveedor  ------->
                     <div class="tab-pane active">
                         <!-- Título centrado -->
                         <h2 style="text-align: center; margin-bottom: 20px;">PROVEEDOR</h2>
@@ -63,118 +62,75 @@
                             </div>
                             <br>
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped  table-hover text-md-center dataTables-pro">
                                     <thead>
                                     <tr>
-                                        <th>ID </th>
-                                        <th>RUC </th>
-                                        <th>EMPRESA </th>
-                                        <th>DIRECCION</th>
-                                        <th>TELEFONO</th>
-                                        <th>CORREO</th>
-                                        <td>ACCIONES</td>
+                                        <th>ID</th>
+                                        <th>Ruc</th>
+                                        <th>Empresa </th>
+                                        <th>Dirección</th>
+                                        <th>Telefono</th>
+                                        <th>Correo</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td>01</td>
                                         <td>415646498465</td>
-                                        <td>GSO SAC</td>
-                                        <td>AVENIDA A</td>
+                                        <td>Gso</td>
+                                        <td>United States - WEB</td>
                                         <td>659865235</td>
-                                        <td>GSO@GMAIL.COM</td>
+                                        <td>gso@gmail.com</td>
                                         <td>
-                                            <div style="box-shadow: none;">
-                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
-                                            </div>
+                                            <button type="button" class="btn btn-success"><i class="fa fa-edit"></i></button> 
+                                            <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>56165468684984</td>
-                                        <td>FACUTRASLIMA SAC</td>
-                                        <td>AVENIDA C</td>
-                                        <td>58462593</td>
-                                        <td>FLIMA@GMAIL.COM</td>
-                                        <td>
-                                            <div style="box-shadow: none;">
-                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>654949652619</td>
-                                        <td>TELEFONICAPERUI SAC</td>
-                                        <td>AVENIDA E</td>
-                                        <td>125486532</td>
-                                        <td>TPERU@GMAIL.COM</td>
-                                        <td>
-                                            <div style="box-shadow: none;">
-                                                <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-
+                                   
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- Formulario oculto -->
-                    <div id="form-proveedor" class="form-proveedor" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
-                        <h2>AGREGAR PROVEEDOR</h2>
+                                    <!-- Formulario oculto -->
+                            <div id="form-proveedor" class="form-proveedor" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+                                <h2>AGREGAR PROVEEDOR</h2>
 
-                        <label for="ruc" style="display: block;">Introducir RUC (inestable):</label>
-                        <input type="text" id="ruc" placeholder="Buscar RUC" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px;">
+                                <label for="ruc" style="display: block;">Introducir RUC (inestable):</label>
+                                <input type="text" id="ruc" placeholder="Buscar RUC" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px;">
 
-                        <div style="background-color: blue; color: white; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                            <strong>1. Datos Personales</strong>
-                        </div>
+                                <div style="background-color: blue; color: white; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                                    <strong>1. Datos Personales</strong>
+                                </div>
 
-                        <div class="form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <div style="display: flex; flex-direction: column;">
-                                <label for="nombre" style="display: block;">Nombre:</label>
-                                <input type="text" id="nombre" placeholder="Ingrese nombre" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                <div class="form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label for="nombre" style="display: block;">Nombre:</label>
+                                        <input type="text" id="nombre" placeholder="Ingrese nombre" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-                                <label for="direccion" style="display: block;">Dirección:</label>
-                                <input type="text" id="direccion" placeholder="Ingrese dirección" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                        <label for="direccion" style="display: block;">Dirección:</label>
+                                        <input type="text" id="direccion" placeholder="Ingrese dirección" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-                                <label for="celular" style="display: block;">Celular:</label>
-                                <input type="text" id="celular" placeholder="Ingrese celular" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                            </div>
+                                        <label for="celular" style="display: block;">Celular:</label>
+                                        <input type="text" id="celular" placeholder="Ingrese celular" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
 
-                            <div style="display: flex; flex-direction: column;">
-                                <label for="documento" style="display: block;">Documentos:</label>
-                                <input type="text" id="documento" placeholder="Ingrese documentos" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label for="documento" style="display: block;">Documentos:</label>
+                                        <input type="text" id="documento" placeholder="Ingrese documentos" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-                                <label for="correo" style="display: block;">Correo:</label>
-                                <input type="email" id="correo" placeholder="Ingrese correo" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                        <label for="correo" style="display: block;">Correo:</label>
+                                        <input type="email" id="correo" placeholder="Ingrese correo" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-                                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                                    <button id="btn-previus" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1; margin-right: 5px;">PREVIUS</button>
-                                    <button id="btn-finish" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1;">FINISH</button>
+                                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                            <button id="btn-previus" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1; margin-right: 5px;">PREVIUS</button>
+                                            <button id="btn-finish" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer; flex: 1;">FINISH</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-
-
-
-
-
-                            <br>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                <button class="btn btn-white">1</button>
-                                <button class="btn btn-white  active">2</button>
-                                <button class="btn btn-white">3</button>
-                                <button class="btn btn-white">4</button>
-                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
-                            </div>
-                        </div>
-                    </div>
-                    hola mundo
-
-
                 </div>
             </div>
         </div>
@@ -200,6 +156,8 @@
 
 <!-- Steps -->
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+@include('layout_agregado_rapido')
+<!-- Fabricio:
 {{-- scritp de modal agregar --}}
 <script>
     $(document).ready(function(){
@@ -282,6 +240,7 @@
         });
     </script>
     {{-- / --}}
+-->
 
     <!-- Page-Level Scripts -->
     <script>
@@ -319,5 +278,16 @@
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
     </script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-pro').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
 
     @endsection

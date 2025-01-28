@@ -5,7 +5,7 @@
 @section('button2', 'Atras')
 @section('config',route('Configuracion'))
 @section('content')
-<!-- Sección de USUARIO------------------------------------------------------------------------------------------------------------------------- -->
+<!-- Sección de USUARIO ---------->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -31,53 +31,81 @@
                             </div>
                             <br>
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-hover">
                                     <thead>
                                     <tr>
                                         <th>ID </th>
-                                        <th>PERSONAL </th>
-                                        <th>CARGO </th>
-                                        <th>CORREO</th>
-                                        <th>CELULAR</th>
-                                        <th>ALMACEN ASIGNADO</th>
-                                        <td>ACCIONES</td>
+                                        <th>Personal </th>
+                                        <th>Cargo </th>
+                                        <th>Correo</th>
+                                        <th>Celular</th>
+                                        <th>Almacén </th>
+                                        <td>Acciones</td>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td>01</td>
-                                        <td>FABRICIO</td>
-                                        <td>PRACTICANTE</td>
+                                        <td>Fabricio</td>
+                                        <td>Practicante</td>
                                         <td>SMITELEVELUP632@GMAIL.COM</td>
                                         <td>983719672</td>
-                                        <td>GSO@CENTRAL</td>
+                                        <td>GSo@CENTRAL</td>
                                         <td>
-                                            <div>
-                                                <button type="button" class="btn btn-primary" style="background-color:blue">
-                                                    <i class="fa fa-edit" style="font-size: 20px; color:white;"></i></a>
-                                                </button>
-
-                                                <button class="btn btn-primary" style="margin-right: 10px; background-color:blue;">
-                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-refresh" style="font-size: 20px; color:white;"></i></a></div>
-                                                </button>
-                                                <button class="btn btn-primary btn-circle" type="button" style="background-color:blue"><i class="fa fa-check"></i>
-                                            </div>
+                                            <button type="button" class="btn btn-success"> <i class="fa fa-edit" ></i></a></button>
+                                            <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <br>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                <button class="btn btn-white">1</button>
-                                <button class="btn btn-white  active">2</button>
-                                <button class="btn btn-white">3</button>
-                                <button class="btn btn-white">4</button>
-                                <button type="button" class="btn btn-white" style="background-color:blue; color:white"><i class="fa fa-chevron-right"></i> </button>
-                            </div>
                         </div>
-                        <!-- Formulario oculto de agregar usuario -->
+
+                        <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="nuevoUsuarioModalLabel">Nuevo Usuario</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                          
+                                <!-- Modal Body -->
+                                <div class="modal-body">
+                                  <form id="formNuevoUsuario">
+                                    <div class="mb-3">
+                                      <label for="personal" class="form-label">Personal</label>
+                                      <input type="text" class="form-control" id="personal" placeholder="Ingrese nombre personal">
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="cargo" class="form-label">Cargo</label>
+                                      <input type="text" class="form-control" id="cargo" placeholder="Ingrese Cargo">
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="correo" class="form-label">Correo</label>
+                                      <input type="email" class="form-control" id="correo" placeholder="Ingrese Correo">
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="celular" class="form-label">Celular</label>
+                                      <input type="text" class="form-control" id="celular" placeholder="Ingrese número de celular">
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="almacen" class="form-label">Almacén</label>
+                                      <input type="text" class="form-control" id="almacen" placeholder="Ingrese almacén">
+                                    </div>
+                                  </form>
+                                </div>
+                          
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                  <button type="button" class="btn btn-primary" id="btn-agregar-usuario">Agregar Usuario</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        <!-- Formulario oculto de agregar usuario 
                         <div id="form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; width: 1000px;">
                             <div>
                                 <div class="button-container" style="display: flex; justify-content: space-between; margin-bottom: 30px;">
@@ -110,7 +138,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
+
+
                         <!-- Formulario oculto para actualizar datos del usuario -->
                         <div id="edit-form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; width: 600px;">
                             <div>

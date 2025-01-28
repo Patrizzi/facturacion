@@ -8,12 +8,11 @@
 
 @section('content')
 
-        <div class="wrapper wrapper-content animated fadeInRight">
-                    <div class="row">
-                        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-content">
-
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                                         <thead>
@@ -29,47 +28,60 @@
                                                 <th>Ver</th>
                                             </tr>
                                         </thead>
-                                    <tbody>
-                                        @foreach($personales as $personal)
-                                            <tr class="gradeX">
-                                                <td>{{$i++}}</td>
-                                                <td>{{$personal->nombres}}</td>
-                                                <td>{{$personal->apellidos}}</td>
-                                                <td>{{$personal->numero_documento}}</td>
-                                                <td>{{$personal->celular}}</td>
-                                                <td>{{$personal->email}}</td>
-                                                <td>{{$personal->estado_trabajador_laboral}}</td>
-                                                <td><img src="
-                                                    {{ asset('/profile/images/')}}/{{$personal->foto}}" style="width: 45px;">
-                                                </td>
-                                                <td><center><a href="{{ route('personal.show', $personal->id) }}"><button type="button" class="btn btn-s-m btn-primary">VER</button></a></center></td>{{--
-                                                <td><center><a href="{{ route('personal.edit', $personal->id) }}" ><button type="button" class="btn btn-s-m btn-success">Editar</button></a></center></td> --}}
-                                                {{--  <td>
-                                                    <center>
-                                                        <form action="{{ route('personal.destroy', $personal->id)}}" method="POST">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="btn btn-s-m btn-danger">Eliminar</button>
-                                                        </form>
-                                                    </center>
-                                                </td> --}}
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
+                                        <tbody>
+                                            @foreach($personales as $personal)
+                                                <tr class="gradeX">
+                                                    <td>{{$i++}}</td>
+                                                    <td>{{$personal->nombres}}</td>
+                                                    <td>{{$personal->apellidos}}</td>
+                                                    <td>{{$personal->numero_documento}}</td>
+                                                    <td>{{$personal->celular}}</td>
+                                                    <td>{{$personal->email}}</td>
+                                                    <td>{{$personal->estado_trabajador_laboral}}</td>
+                                                    <td><img src="
+                                                        {{ asset('/profile/images/')}}/{{$personal->foto}}" style="width: 45px;">
+                                                    </td>
+                                                    <td><center><a href="{{ route('personal.show', $personal->id) }}"><button type="button" class="btn btn-s-m btn-primary">VER</button></a></center></td>{{--
+                                                    <td><center><a href="{{ route('personal.edit', $personal->id) }}" ><button type="button" class="btn btn-s-m btn-success">Editar</button></a></center></td> --}}
+                                                    {{--  <td>
+                                                        <center>
+                                                            <form action="{{ route('personal.destroy', $personal->id)}}" method="POST">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <button type="submit" class="btn btn-s-m btn-danger">Eliminar</button>
+                                                            </form>
+                                                        </center>
+                                                    </td> --}}
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  
+
+
+
 <!-- CODIGO PERSONAL----------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-                                <div class="tab-pane active">
+                                
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-content">
+                            <div class="tab-pane active">
                                     <!-- Título centrado -->
                                     <h2 style="text-align: center; margin-bottom: 20px;">PERSONAL</h2>
-                                    <!-- linea azul -->
-                                    <hr style="border: 2px solid #007BFF;">
                                     <div class="panel-body">
                                         <!-- Contenido de Nested Tab 1 -->
                                         <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                                             <div class="btn-group">
                                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    SEDE
+                                                    Sede
                                                 </button>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#">J&P</a>
@@ -79,7 +91,7 @@
                                             </div>
                                             <div class="btn-group">
                                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    CARGO
+                                                    Cargo
                                                 </button>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#">SUPERVISOR</a>
@@ -113,32 +125,18 @@
                                             </div>
                                         </div>
                                         <br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered">
+                                            <table class="table table-striped table-hover text-md-center">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
+                                                        <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
                                                         <th>ID </th>
-                                                        <th>NOMBRE </th>
-                                                        <th>APELLIDO </th>
-                                                        <th>N° DOCUMENTO</th>
-                                                        <th>CELULAR</th>
-                                                        <th>CORREO</th>
-                                                        <td>ACCIONES</td>
+                                                        <th>Nombre </th>
+                                                        <th>Apellidos </th>
+                                                        <th>N° Documento</th>
+                                                        <th>Celular</th>
+                                                        <th>Correo</th>
+                                                        <td>Acciones</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -151,10 +149,8 @@
                                                         <td>936292675</td>
                                                         <td>danielrberru@gmail.com</td>
                                                         <td>
-                                                            <div>
-                                                                <a href="#" class="check-link" style="font-size: 25px;"><i class="fa fa-check-square"></i></a>
-                                                                <button class="btn btn-xs btn-primary  toggle-row"><i class="fa fa-plus"></i></button>
-                                                            </div>
+                                                            <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
+                                                            <button type="button" class="btn btn-success  toggle-row"><i class="fa fa-plus"></i></button>
                                                         </td>
                                                     </tr>
                                                     <!-- Fila oculta -->
@@ -337,97 +333,22 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
-                                                        <td>02</td>
-                                                        <td>Christopher Javier</td>
-                                                        <td>Huaman Guevara</td>
-                                                        <td>74894537</td>
-                                                        <td>934361536</td>
-                                                        <td>christojhg@gmail.com</td>
-                                                        <td>
-                                                            <div>
-                                                                <a href="#" class="check-link" style="font-size: 25px;"><i class="fa fa-check-square"></i></a>
-                                                                <button class="btn btn-xs btn-primary  toggle-row"><i class="fa fa-plus"></i></button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <!-- Fila oculta -->
-                                                    <tr class="details-row" style="display: none;">
-                                                        <td colspan="8">
-                                                            <div style="display: flex;">
-                                                                <!-- Columna 1: Imagen -->
-                                                                <div style="flex: 4; padding: 10px; text-align: center;">
-                                                                    <img src="https://via.placeholder.com/100" alt="Foto" style="max-width: 100%; height: auto;">
-                                                                </div>
-                                                                <!-- Columna 2: Datos -->
-                                                                <div style="flex: 8; padding: 10px;">
-                                                                    <table class="table table-bordered">
-                                                                        <tr>
-                                                                            <th>Detalle 1</th>
-                                                                            <td>Valor 1</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <th>Detalle 2</th>
-                                                                            <td>Valor 2</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <th>Detalle 3</th>
-                                                                            <td>Valor 3</td>
-                                                                        </tr>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                   
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <br>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                            <button class="btn btn-white">1</button>
-                                            <button class="btn btn-white  active">2</button>
-                                            <button class="btn btn-white">3</button>
-                                            <button class="btn btn-white">4</button>
-                                            <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
-                                        </div>
+
                                     </div>
-
-
-
-
-
-
                                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- FIN DE CODIGO PERSONAL----------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-                                hola mundo
                             </div>
                         </div>
-                        </div>
                     </div>
-        </div>
+                </div>
+            </div>
+
+  
+<!-- FIN DE CODIGO PERSONAL----------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
 
 
     <!-- Mainly scripts -->
