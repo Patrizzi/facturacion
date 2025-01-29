@@ -268,18 +268,25 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <span hidden>{{$i=1}}</span>
+                                    @foreach($usuarios as $usuario)
                                     <tr>
-                                        <td>01</td>
-                                        <td>Fabricio</td>
-                                        <td>Practicante</td>
-                                        <td>SMITELEVELUP632@GMAIL.COM</td>
-                                        <td>983719672</td>
-                                        <td>GSo@CENTRAL</td>
-                                        <td>
+                                    <td>{{$i++}}</td>
+                                    <td>{{$usuario->personal->nombres}}</td>
+                                    <td>{{$usuario->name}}</td>
+                                    <td>{{$usuario->email}}</td>
+                                    <td>{{$usuario->celular}}</td>
+                                    <td>{{$usuario->almacen->nombre}}</td>
+                                    <td>
+                                        @if($usuario->estado == 1)
+                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+                                    @elseif($usuario->estado == 0)
+                                        <button type="button" class="btn btn-danger"><i class="fa fa-times-circle"></i></button>
+                                    @endif
                                             <button type="button" class="btn btn-success"> <i class="fa fa-edit" ></i></a></button>
-                                            <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
-                                        </td>
+                                    </td>
                                     </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
