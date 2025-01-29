@@ -5,6 +5,232 @@
 @section('button2', 'Atras')
 @section('config',route('Configuracion'))
 @section('content')
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if($errors->any())
+    <div style="padding-top: 20px;">
+     <div class="alert alert-danger">
+        <a class="alert-link" href="#">
+          @foreach ($errors->all() as $error)
+          <li class="error">{{ $error }}</li>
+          @endforeach
+      </a>
+  </div>
+</div>
+@endif
+@if(isset($errores))
+<div>
+  <div class="alert alert-danger">
+    <div class="alert-link" href="#">
+      <li style="color: red;">{{ $errores }}</li>
+  </div>
+</div>
+</div>
+@endif
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Personal</th>
+                                <th>Cargo</th>
+                                <th>Correo</th>
+                                <th>Celular</th>
+                                <th>Almacen Asignado</th>
+                                <th>Activo/desactivo</th>
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <span hidden>{{$i=1}}</span>
+                            @foreach($usuarios as $usuario)
+                            <tr class="gradeX">
+                                <td>{{$i++}}</td>
+                                <td>{{$usuario->personal->nombres}}</td>
+                                <td>{{$usuario->name}}</td>
+                                <td>{{$usuario->email}}</td>
+                                <td>{{$usuario->celular}}</td>
+                                <td>{{$usuario->almacen->nombre}}</td>
+                                @if($usuario->estado == 1)
+                                <td>Activo</td>
+                                @elseif($usuario->estado == 0)
+                                <td>Desactivo</td>
+                                @endif
+                                @if($usuario->estado_validacion == 1)
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$usuario->id}}">Editar</button> <i class="fa fa-check" aria-hidden="true"></i>
+                                    <div class="modal fade" id="exampleModal{{$usuario->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div style="padding-left: 15px;padding-right: 15px;">
+                                                    {{-- ccccccccccccccccc --}}
+                                                    <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+                                                        <form action="{{ route('usuario.update',$usuario->id) }}"  enctype="multipart/form-data" method="post">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                                    <img src=" {{ asset('/profile/images/')}}/{{$usuario->avatar}}" style="width: 200px;height: 200px;  border-radius: 5px">
+                                                                <p style="font-size: 15px">{{$usuario->name}}</p>
+                                                                <div>
+                                                                    <div class="panel-body" >
+                                                                        <div class="row">
+                                                                            <label class="col-sm-3 col-form-label">Correo:</label>
+                                                                            <div class="col-sm-9"><input type="text" class="form-control" name="correo" value="{{$usuario->email}}"></div>
+
+                                                                            <label class="col-sm-3 col-form-label">Almacen Asignado:</label>
+                                                                            <div class="col-sm-4">
+                                                                                <select class="form-control" name="almacen_id">
+                                                                                    <option value="{{$usuario->almacen->id}}">{{$usuario->almacen->nombre}}</option>
+                                                                                    <option value="" disabled="">-------------</option>
+                                                                                    @foreach($almacen as $almacens)
+                                                                                    <option value="{{$almacens->id}}">{{$almacens->nombre}}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <label class="col-sm-1 col-form-label">Desactivado</label>
+                                                                            <div class="col-sm-2">
+                                                                                @if($usuario->estado == 1)
+                                                                                <div class="switch-button">
+                                                                                    <input type="checkbox" name="estado" id="switch-label{{$usuario->id}}" class="switch-button__checkbox" checked="">
+                                                                                    <label for="switch-label{{$usuario->id}}" class="switch-button__label"></label>
+                                                                                </div>
+                                                                                @else
+                                                                                <div class="switch-button">
+                                                                                    <input type="checkbox" name="estado" id="aswitch-label{{$usuario->id}}" class="switch-button__checkbox" >
+                                                                                    <label for="aswitch-label{{$usuario->id}}" class="switch-button__label"></label>
+                                                                                </div>
+                                                                                @endif
+
+                                                                            </div>
+                                                                            <label class="col-sm-2 col-form-label">Activado:</label>
+                                                                            <div class="col-sm-12">
+                                                                                {{-- Boton 2do modal --}}
+                                                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#2do_modal{{$usuario->id}}">Guardar</button>
+                                                                                <div class="modal fade" id="2do_modal{{$usuario->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                                    <div class="modal-dialog" role="document">
+                                                                                        <div class="modal-content">
+                                                                                            <div class="modal-header">
+                                                                                                <h5 class="modal-title" id="exampleModalLabel"> Confirmar Contraseña para Realizar Cambios</h5>
+                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div style="padding-left: 15px;padding-right: 15px;">
+                                                                                                {{-- ccccccccccccccccc --}}
+                                                                                                <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+                                                                                                    <fieldset >
+                                                                                                        <div>
+                                                                                                            <div class="panel-body" >
+                                                                                                                <div class="row">
+                                                                                                                    <label class="col-sm-3 col-form-label">Contraseña Usuario:</label>
+                                                                                                                    <div class="col-sm-9">
+                                                                                                                        <input required="required" type="password" class="form-control" name="contrasena_confirmar" placeholder="******" autocomplete="off">
+                                                                                                                        <input type="text" name="contrasena_adm" value="{{auth()->user()->password}}" hidden="">
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+
+                                                                                                    </fieldset>
+                                                                                                    <button class="btn btn-primary" type="submit">Guardar</button>
+                                                                                                    {{--   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- / Modal Create  -->
+
+
+                                                                                {{--  --}}
+                                                                                {{-- <button class="btn btn-primary" type="submit">Grabar</button> --}}
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </fieldset>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / Modal Create  -->
+
+                    </td>
+                    @elseif($usuario->estado_validacion == 0)
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{$usuario->id}}">Editar</button> <i class="fa fa-times" aria-hidden="true"></i>
+                        <div class="modal fade" id="exampleModal{{$usuario->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content" style="width: 550px">
+                                    <div style="padding-left: 15px;padding-right: 15px;">
+                                        {{-- ccccccccccccccccc --}}
+                                        <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+
+                                            <form action="{{ route('usuario.envio_codigo',$usuario->id) }}"  enctype="multipart/form-data" method="post">
+                                                @csrf
+                                                <fieldset >
+                                                    <legend style="height: 240px;"> <img src="
+                                                        {{ asset('/profile/images/')}}/{{$usuario->avatar}}" style="width: 200px;height: 200px;border-radius: 5px"> <br>{{$usuario->personal->nombres}} {{$usuario->personal->apellidos}}
+                                                        <p style="font-size: 15px">{{$usuario->name}}</p></legend>
+                                                        <div>
+                                                            <div class="panel-body" >
+                                                                <div class="row">
+                                                                    <label class="col-sm-3 col-form-label">Correo:</label>
+                                                                    <div class="col-sm-6"><input type="text" class="form-control" name="correo" value="{{$usuario->email}}"></div>
+                                                                    <div class="col-sm-3" style="padding-bottom: 15px"> <input type="submit" name="accion" class="btn btn-s-m btn-info" value="Cambiar Correo"></div>
+                                                                    <label class="col-sm-3 col-form-label">Codigo de Confirmacion:</label>
+                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_1" maxlength="3"></div>
+                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_2"  maxlength="3"></div>
+                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_3"  maxlength="3"></div>
+
+                                                                    <div class="col-sm-12">
+                                                                        <p>No me ha llegado el Codigo de confirmacion<input type="submit" name="accion" class="reenviar"  value="Reenviar Codigo" style="border: none;background: #ff000000;"> </p>
+                                                                    </div>
+                                                                    <div class="col-sm-12">
+                                                                     <input type="submit" name="accion" class="btn btn-s-m btn-info" value="Validar">
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+
+                                         </fieldset>
+
+                                     </form>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <!-- / Modal Create  -->
+             </td>
+             @endif
+         </tr>
+         @endforeach
+     </tbody>
+ </table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
 <!-- Sección de USUARIO ---------->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -23,15 +249,13 @@
                                     <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
                                     <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;background-color:blue">Buscar</button>
                                 </div>
-
-                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                <div>
-                                    <button class="btn btn-success" id="btn-agregar" onclick="toggleForm()" style="margin-right: 10px; background-color:blue">+</button>
-                                </div>
+                                <button class="btn btn-success" data-toggle="modal" href="#nuevoUsuarioModal " style="background-color: blue;">
+                                <i class="fa fa-plus" ></i>
+                                </button>
                             </div>
-                            <br>
+
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover">
+                                <table class="table table-striped table-hover text-md-center dataTables-usu">
                                     <thead>
                                     <tr>
                                         <th>ID </th>
@@ -40,7 +264,7 @@
                                         <th>Correo</th>
                                         <th>Celular</th>
                                         <th>Almacén </th>
-                                        <td>Acciones</td>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -62,145 +286,64 @@
                         </div>
 
                         <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="nuevoUsuarioModalLabel">Nuevo Usuario</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                          
-                                <!-- Modal Body -->
-                                <div class="modal-body">
-                                  <form id="formNuevoUsuario">
-                                    <div class="mb-3">
-                                      <label for="personal" class="form-label">Personal</label>
-                                      <input type="text" class="form-control" id="personal" placeholder="Ingrese nombre personal">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="nuevoUsuarioModalLabel">Nuevo Usuario</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                    <div class="mb-3">
-                                      <label for="cargo" class="form-label">Cargo</label>
-                                      <input type="text" class="form-control" id="cargo" placeholder="Ingrese Cargo">
+                                    <!-- Modal Body -->
+                                    <div class="modal-body">
+                                        <form id="formNuevoUsuario">
+                                            <div class="row mb-3">
+                                                <strong for="personal" class="col-sm-2 col-form-label fw-bold">Personal:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="personal" placeholder="Ingrese nombre personal">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="cargo" class="col-sm-2 col-form-label fw-bold">Cargo:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="cargo" placeholder="Ingrese Cargo">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="correo" class="col-sm-2 col-form-label fw-bold">Correo:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="correo" placeholder="Ingrese Correo">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="celular" class="col-sm-2 col-form-label fw-bold">Celular:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="celular" placeholder="Ingrese número de celular">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="almacen" class="col-sm-2 col-form-label fw-bold">Almacén:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="almacen" placeholder="Ingrese almacén">
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="mb-3">
-                                      <label for="correo" class="form-label">Correo</label>
-                                      <input type="email" class="form-control" id="correo" placeholder="Ingrese Correo">
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-primary" id="btn-agregar-usuario" style="background-color: blue;">Agregar Usuario</button>
                                     </div>
-                                    <div class="mb-3">
-                                      <label for="celular" class="form-label">Celular</label>
-                                      <input type="text" class="form-control" id="celular" placeholder="Ingrese número de celular">
-                                    </div>
-                                    <div class="mb-3">
-                                      <label for="almacen" class="form-label">Almacén</label>
-                                      <input type="text" class="form-control" id="almacen" placeholder="Ingrese almacén">
-                                    </div>
-                                  </form>
-                                </div>
-                          
-                                <!-- Modal Footer -->
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                  <button type="button" class="btn btn-primary" id="btn-agregar-usuario">Agregar Usuario</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                        <!-- Formulario oculto de agregar usuario 
-                        <div id="form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; width: 1000px;">
-                            <div>
-                                <div class="button-container" style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                                    <h2 style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 12px 15px; cursor: pointer; flex: 1; text-align: center;">NUEVO USUARIO</h2>
-                                </div>
-
-                                <div class="form-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: left;">
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="personal" style="width: 100px;">PERSONAL:</label>
-                                        <input type="text" id="personal" placeholder="Ingrese nombre personal" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="CARGO" style="width: 100px;">Cargo:</label>
-                                        <input type="text" id="CARGO" placeholder="Ingrese Cargo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="correo" style="width: 100px;">CORREO:</label>
-                                        <input type="text" id="correo" placeholder="Ingrese Correo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="celular" style="width: 100px;">CELULAR:</label>
-                                        <input type="text" id="celular" placeholder="Ingrese numero de celular" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="almacen" style="width: 100px;">ALMACEN:</label>
-                                        <input type="text" id="almacen" placeholder="Ingrese almacen" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <button id="btn-agregar-form" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 12px 15px; cursor: pointer; font-size: 15px;">AGREGAR USUARIO</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-
-
-                        <!-- Formulario oculto para actualizar datos del usuario -->
-                        <div id="edit-form-container" class="form-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border: 1px solid #ccc; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; width: 600px;">
-                            <div>
-                                <!-- Encabezado con imagen -->
-                                <div style="text-align: center; margin-bottom: 20px;">
-                                    <img src="placeholder.jpg" alt="Foto de perfil" style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid #ccc; object-fit: cover;">
-                                </div>
-
-                                <!-- Campos del formulario -->
-                                <div class="form-fields" style="display: flex; flex-direction: column; gap: 15px; text-align: left;">
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="cargo" style="width: 150px;">Cargo:</label>
-                                        <input type="text" id="cargo" placeholder="Ingrese Cargo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="correo" style="width: 150px;">Correo:</label>
-                                        <input type="email" id="correo" placeholder="Ingrese Correo" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="contraseña-actual" style="width: 150px;">Contraseña actual:</label>
-                                        <input type="password" id="contraseña-actual" placeholder="Ingrese Contraseña Actual" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="contraseña-nueva" style="width: 150px;">Contraseña nueva:</label>
-                                        <input type="password" id="contraseña-nueva" placeholder="Ingrese Contraseña Nueva" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-
-                                    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                                        <label for="almacen" style="width: 150px;">Almacén asignado:</label>
-                                        <input type="text" id="almacen" placeholder="Ingrese Almacén" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                                    </div>
-                                </div>
-
-                                <!-- Botón guardar cambios -->
-                                <div style="text-align: center; margin-top: 30px;">
-                                    <button id="btn-guardar-cambios" class="blue-button" style="background-color: blue; color: white; border: none; border-radius: 5px; padding: 12px 20px; cursor: pointer; font-size: 16px;">Guardar cambios</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
 
 
 <style>
@@ -284,4 +427,34 @@
         formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
     };
 </script>
+
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-usu').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
 @endsection
