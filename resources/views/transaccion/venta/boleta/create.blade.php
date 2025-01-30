@@ -3,12 +3,7 @@
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('boleta.index'))
 
-{{-- Boton para modal de Clientes --}}
-
-{{-- FIN DE MODAL CLIENTE --}}
 @section('value_accion', 'Atrás')
-
-{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 @section('content')
 
     <div class="social-bar">
@@ -139,7 +134,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Orden de Compra:</strong></label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" />
+                                            <input type="text" class="form-control" name="orden_compra" value="0"  />
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -166,23 +161,18 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Forma de pago:</strong></label>
-                                        <div class="col-sm-8">
-                                            <div class="row">
-                                                <div class="col-sm-12 pago_first_column">
-                                                    <select class="form-control" name="forma_pago" id ="forma_pago"
-                                                        onchange="seleccionado_fp()">
-                                                        @foreach ($forma_pagos as $forma_pago)
-                                                            <option value="{{ $forma_pago->id }}">
-                                                                {{ $forma_pago->nombre }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-3" id="credito_pago" style="display: none;">
-                                                    <button type="button" class='cuota_modal btn btn-w-m btn-info'
-                                                        id="cuota_modal" data-toggle="modal" data-target="#cuotas_modal"
-                                                        style="margin-left: -5px">Cuotas</button>
-                                                </div>
-                                            </div>
+                                        <div class="col-sm-8 pago_first_column">
+                                            <select class="form-control" name="forma_pago" id ="forma_pago"
+                                                onchange="seleccionado_fp()">
+                                                @foreach ($forma_pagos as $forma_pago)
+                                                    <option value="{{ $forma_pago->id }}">
+                                                        {{ $forma_pago->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4" id="credito_pago" style="display: none;">
+                                            <button type="button" class='cuota_modal btn btn-w-m btn-info'
+                                                id="cuota_modal" data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
                                         </div>
                                     </div>
                                 </div>
@@ -210,17 +200,17 @@
                                         <div class="col-sm-5" style="padding-right: 0px">
                                             <input type="text" name="moneda" id="moneda" class="form-control "
                                                 value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
-                                        </div>
-                                        <a class="col-sm-3 button_money" onclick="changeMoney()">
-                                            <button style="" type="button"
-                                                class='money_change btn btn-block btn-info' id="button_changeMoney">
-                                                Cambiar
-                                            </button>
-                                        </a>
+                                    </div>
+                                    <a class="col-sm-3 button_money" onclick="changeMoney()">
+                                        <button style="" type="button"
+                                            class='money_change btn btn-block btn-info' id="button_changeMoney">
+                                            Cambiar
+                                        </button>
+                                    </a>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Tipo de Operacion</strong></label>
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-8" id="operacion_select">
                                             <select class="form-control select2_operacion" name="tipo_operacion">
                                                 @foreach ($tipo_operacion as $index => $t_op)
                                                     <option id="{{ $t_op->id }}"
@@ -268,11 +258,6 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{-- <tr>
-                                                    <td>
-                                                        
-                                                    </td>
-                                                </tr> --}}
                                                 <tr>
                                                     <td>
                                                         <button type="button"
@@ -503,7 +488,7 @@
                         <div class="col-lg-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover data_table_multiple"
-                                    style="font-size: 90%;border-top: 1px solid #e7eaec;">
+                                    style="font-size: 100%;border-top: 1px solid #e7eaec;">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -523,7 +508,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="close_add_product_data">Close</button>
+                    <button type="button" class="btn btn-secondary" id="close_add_product_data" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -598,7 +583,9 @@
             padding: 3px 12px;
             border: 1px solid #e5e6e7;
         }
-
+        #operacion_select > span.select2.select2-container.select2-container--default{
+            max-width: 100% !important;
+        }
         .a {
             color: red
         }
@@ -1197,7 +1184,7 @@
             } else {
                 document.getElementById('credito_pago').style.display = "contents";
 
-                document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-12");
+                document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-4");
                 document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-8");
 
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
