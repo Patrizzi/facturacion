@@ -83,7 +83,7 @@
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB - Productos -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-productos">
                                         <thead>
                                             <tr>
                                                 <th >Nombre</th>
@@ -104,82 +104,27 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($stock_producto->sortByDesc('updated_at') as $index => $stock_productos)
                                             <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
-                                                <td>BA00-00000001</td>
+                                                <td>{{$stock_productos->producto->nombre}}</td>
+                                                <td>{{$stock_productos->producto->codigo_producto}}</td>
                                                 <td>UN</td>
                                                 <td>150</td>
                                                 <td>13</td>
                                                 <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>6 meses</td>
-                                                <td>Bimbo</td>
+                                                <td>{{$moneda_nacional->simbolo}}. {{$precio_nacional[$index] }}</td>
+                                                <td>{{$moneda_nacional->simbolo}}. {{round($precio_nacional[$index] + ($precio_nacional[$index] * ($igv->igv_total/100)),2)}}</td>
+                                                <td>{{$moneda_extranjera->simbolo}}. {{$precio_extranjero[$index] }}</td>
+                                                <td>{{$moneda_extranjera->simbolo}}. {{round($precio_extranjero[$index] + ($precio_extranjero[$index] * ($igv->igv_total/100)),2)}}</td>
+                                                <td>{{$stock_productos->producto->garantia}} </td>
+                                                <td>{{$stock_productos->producto->marcas_i_producto->nombre}}</td>
                                                 <td>39</td>
                                                 <td>47</td>
                                                 <td class="tooltip-demo">
                                                     <a href="#" data-toggle="tooltip" data-placement="left" title="Stock mínimo"><i class="fa fa-caret-square-o-down text-danger"></i></a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>1 año</td>
-                                                <td>Bimbo</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td class="tooltip-demo">
-                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock máximo"><i class="fa fa-caret-square-o-up text-dark"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>3 meses</td>
-                                                <td>Bimbo</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td class="tooltip-demo">
-                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock mayor al promedio"><i class="fa fa-circle text-success"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>12 meses</td>
-                                                <td>Bimbo</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td class="tooltip-demo">
-                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock menor al promedio"><i class="fa fa-square text-warning"></i></a>
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
 
@@ -345,25 +290,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                            <label class="btn btn-sm btn-white ">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                            </label>
-                            <label class="btn btn-sm btn-white active">
-                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                            </label>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -555,7 +481,19 @@
 </div>
 </div>
 
+<style>
+    #DataTables_Table_0_filter{
+        display:none;
+    }
+    #DataTables_Table_0_length{
+        display: none;
+    }
+    div.dt-buttons{
+        display: none;
+    }
+</style>
 
+<!-- Mainly scripts
 <style type="text/css">
     .footable > thead > tr > th.null > span.footable-sort-indicator{
         display: none;
@@ -583,7 +521,7 @@
 
     input[type=number] { -moz-appearance:textfield; }
 </style>
-<!-- Mainly scripts -->
+-->
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -755,6 +693,16 @@
 
 
     }
+</script>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-productos').DataTable({
+            pageLength: 15,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
 </script>
 
 @endsection
