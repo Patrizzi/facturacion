@@ -283,9 +283,40 @@
                                     @elseif($usuario->estado == 0)
                                         <button type="button" class="btn btn-danger"><i class="fa fa-times-circle"></i></button>
                                     @endif
-                                            <button type="button" class="btn btn-success"> <i class="fa fa-edit" ></i></a></button>
+                                    <button style="box-shadow: none;" onclick="divAuto{{$usuario->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button> 
                                     </td>
                                     </tr>
+                                    <tr hidden id="forma{{$usuario->id}}">
+                                        <form action="{{ route('usuario.update',$usuario->id) }}"  enctype="multipart/form-data" method="post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <td>{{$usuario->id}}</td>
+                                            <td>{{$usuario->personal->nombres}}</td>
+                                            <td>{{$usuario->name}}</td>
+                                            <td><input class="form-control" name="correo" value="{{$usuario->email}}" type="text"></td>
+                                            <td><input class="form-control" name="celular" value="{{$usuario->celular}}" type="text"></td>
+                                            <td><input class="form-control" name="almacen" value="{{$usuario->almacen->nombre}}" type="text"></td>
+                                            <td><input class="btn  btn-success" type="submit"> </td>
+                                            <!-- Agregar sobre el editar  -->
+                                        </form>
+                                    </tr>
+                                    <script>
+                                        var clic = 1;
+                                        function divAuto{{$usuario->id}}(){
+                                            if(clic==1){
+                                                 // document.getElementById("div-mostrar").style.height = "50px";
+                                                 document.getElementById("forma{{$usuario->id}}").removeAttribute("hidden", "");
+                                                 document.getElementById("vista{{$usuario->id}}").setAttribute("hidden", "");
+                                                 clic = clic + 1;
+                                             } else{
+                                                // document.getElementById("div-mostrar").style.height = "0px";
+                                                document.getElementById("vista{{$usuario->id}}").removeAttribute("hidden", "");
+                                                document.getElementById("forma{{$usuario->id}}").setAttribute("hidden", "");
+                                                clic = 1;
+                                            }
+                                        }
+                                    </script>
+
                                     @endforeach
                                     </tbody>
                                 </table>

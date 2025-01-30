@@ -20,6 +20,7 @@
     </div>
 </div>
 @endif
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -109,6 +110,11 @@
                                     <button class="btn btn-primary">Buscar</button>
                                 </div>
                                 <div style="margin-left: 10px;">    
+                                    <button class="btn btn-success" data-toggle="modal" href="#ModalProvedor">
+                                        Agregar
+                                    </button>
+                                </div>
+                                <div style="margin-left: 10px;">    
                                     <button class="btn btn-success" data-toggle="modal" href="#nuevoProveedorModal" style="background-color: blue;">
                                         <i class="fa fa-plus"></i>
                                     </button>
@@ -152,11 +158,43 @@
                                         <td>{{$provedor->direccion}}</td>
                                         <td>{{$provedor->telefonos}}</td>
                                         <td>{{$provedor->email}}</td>
+                                        <!--Agregar el estado y que se cambie mediante el switch y se visualice por los botones-->
                                         <td>
-                                            <button type="button" class="btn btn-success"><i class="fa fa-edit"></i></button> 
+                                            <button style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button> 
+
                                             <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button> 
+
                                         </td>
                                     </tr>
+                                    <tr hidden id="forma{{$provedor->id}}">
+                                        <form action="{{ route('provedor.update',$provedor->id) }}"  enctype="multipart/form-data" method="post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <td>{{$provedor->id}}</td>
+                                            <td><input class="form-control" name="" value="{{$provedor->ruc}}" readonly=""  type="text"></td>
+                                            <td><input class="form-control" name="empresa" value="{{$provedor->empresa}}" type="text"></td>
+                                            <td><input class="form-control" name="direccion" value="{{$provedor->direccion}}" type="text"></td>
+                                            <td><input class="form-control" name="telefonos" value="{{$provedor->telefonos}}" type="text"></td>
+                                            <td><input class="form-control" name="correo_provedor" value="{{$provedor->email}}" type="text"></td>
+                                            <td><input class="btn  btn-success" type="submit"></td>
+                                        </form>
+                                    </tr>
+                                    <script>
+                                        var clic = 1;
+                                        function divAuto{{$provedor->id}}(){
+                                            if(clic==1){
+                                                 // document.getElementById("div-mostrar").style.height = "50px";
+                                                 document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
+                                                 document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
+                                                 clic = clic + 1;
+                                             } else{
+                                                // document.getElementById("div-mostrar").style.height = "0px";
+                                                document.getElementById("vista{{$provedor->id}}").removeAttribute("hidden", "");
+                                                document.getElementById("forma{{$provedor->id}}").setAttribute("hidden", "");
+                                                clic = 1;
+                                            }
+                                        }
+                                    </script>
                                     @endforeach
                                     </tbody>
                                 </table>
