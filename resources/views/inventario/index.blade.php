@@ -64,13 +64,12 @@
 
                                                                 <!-- Botones Agregar, Actualizar y Descarga -->
                                                                 <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
 
                                                                     <!-- Botón de Descarga con menú desplegable -->
                                                                     <div class="btn-group">
                                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            Descarga
+                                                                            <i class="fa fa-cloud-download"></i>
                                                                         </button>
                                                                         <div class="dropdown-menu">
                                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -84,79 +83,56 @@
                                                             </div>
                                                             <br>
                                                             <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered">
+                                                                <table class="table table-striped table-hover text-center datatables-entrada">
                                                                     <thead>
-                                                                    <tr>
-
-                                                                        <th></th>
-                                                                        <th>ID </th>
-                                                                        <th>CODIGO </th>
-                                                                        <th>MOTIVO </th>
-                                                                        <th>PROVEEDOR</th>
-                                                                        <th>F. INGRESO</th>
-                                                                        <th>N° GUIA DE REMISION</th>
-                                                                        <td>N° FACTURA</td>
-                                                                        <td>ACCIONES</td>
-                                                                    </tr>
+                                                                        <tr>
+                                                                            <th></th>
+                                                                            <th>ID </th>
+                                                                            <th>Código</th>
+                                                                            <th>Motivo</th>
+                                                                            <th>Proveedor</th>
+                                                                            <th>F.Ingreso</th>
+                                                                            <th>N° Guía de Remisión</th>
+                                                                            <th>N° Factura</th>
+                                                                            <th>Acciones</th>
+                                                                        </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                    <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>COMPRAS LOCALES</td>
-                                                                        <td>GRUPO INFOZONAL S.A.C.</td>
-                                                                        <td>10/01/2022</td>
-                                                                        <td>0001</td>
-                                                                        <td>0001</td>
-                                                                        <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>COMPRAS LOCALES</td>
-                                                                        <td>Saar HK Electronic Limited</td>
-                                                                        <td>18/01/2024</td>
-                                                                        <td>0001</td>
-                                                                        <td>0001</td>
-                                                                        <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                                <button style="padding: 5PX 10px; background-color: rgb(12, 196, 241); border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-file-pdf-o" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
+                                                                        <tr>
+                                                                            <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                            <td>01</td>
+                                                                            <td>GE001-00000001</td>
+                                                                            <td>COMPRAS LOCALES</td>
+                                                                            <td>GRUPO INFOZONAL S.A.C.</td>
+                                                                            <td>10/01/2022</td>
+                                                                            <td>0001</td>
+                                                                            <td>0001</td>
+                                                                            <td>
+                                                                                <p>
+                                                                                    <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                                    <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+                                                                                </p>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                                            <td>01</td>
+                                                                            <td>GE001-00000001</td>
+                                                                            <td>COMPRAS LOCALES</td>
+                                                                            <td>Saar HK Electronic Limited</td>
+                                                                            <td>18/01/2024</td>
+                                                                            <td>0001</td>
+                                                                            <td>0001</td>
+                                                                            <td>
+                                                                                <p>
+                                                                                    <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                                    <button type="button" class="btn btn-sm btn-info"><i class="fa fa-file-pdf-o"></i></button>
+                                                                                </p>
+                                                                            </td>
+                                                                        </tr>
 
                                                                     </tbody>
                                                                 </table>
-                                                            </div>
-
-
-
-
-
-                                                            <br>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                                                <button class="btn btn-white">1</button>
-                                                                <button class="btn btn-white  active">2</button>
-                                                                <button class="btn btn-white">3</button>
-                                                                <button class="btn btn-white">4</button>
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -172,13 +148,12 @@
 
                                                                 <!-- Botones Agregar, Actualizar y Descarga -->
                                                                 <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
 
                                                                     <!-- Botón de Descarga con menú desplegable -->
                                                                     <div class="btn-group">
                                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            Descarga
+                                                                            <i class="fa fa-cloud-download"></i>
                                                                         </button>
                                                                         <div class="dropdown-menu">
                                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -192,19 +167,19 @@
                                                             </div>
                                                             <br>
                                                             <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered">
+                                                                <table class="table table-striped table-hover text-center datatables-distribucion">
                                                                     <thead>
                                                                     <tr>
 
                                                                         <th></th>
                                                                         <th>ID </th>
-                                                                        <th>CODIGO </th>
-                                                                        <th>F. DISTRIBUCION</th>
-                                                                        <th>CANT. PRODUCTOS</th>
-                                                                        <th>CANT. TOTAL</th>
-                                                                        <th>ALMACEN</th>
-                                                                        <th>GUIA DE REMISION</th>
-                                                                        <th>VER</th>
+                                                                        <th>Código</th>
+                                                                        <th>F. Distribución</th>
+                                                                        <th>Cant.Productos</th>
+                                                                        <th>Cant.Total</th>
+                                                                        <th>Almacén</th>
+                                                                        <th>Guía de Remisión</th>
+                                                                        <th>Ver</th>
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -218,15 +193,13 @@
                                                                         <td>ALMACEN</td>
                                                                         <td>0001</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
                                                                         <td>GE001-00000001</td>
                                                                         <td>15/05/2022</td>
@@ -235,15 +208,13 @@
                                                                         <td>ALMACEN</td>
                                                                         <td>0002</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                         <td>01</td>
                                                                         <td>GE001-00000001</td>
                                                                         <td>21/10/2023</td>
@@ -252,11 +223,9 @@
                                                                         <td>ALMACEN</td>
                                                                         <td>0003</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
@@ -267,6 +236,7 @@
 
 
                                                             <br>
+                                                            <!--
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
                                                                 <button class="btn btn-white">1</button>
@@ -275,6 +245,8 @@
                                                                 <button class="btn btn-white">4</button>
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
                                                             </div>
+                                                            -->
+
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" id="contenido-tab-3" class="tab-pane">
@@ -289,13 +261,12 @@
 
                                                                 <!-- Botones Agregar, Actualizar y Descarga -->
                                                                 <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
 
                                                                     <!-- Botón de Descarga con menú desplegable -->
                                                                     <div class="btn-group">
                                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            Descarga
+                                                                            <i class="fa fa-cloud-download"></i>
                                                                         </button>
                                                                         <div class="dropdown-menu">
                                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -309,16 +280,16 @@
                                                             </div>
                                                             <br>
                                                             <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered">
+                                                                <table class="table table-striped table-hover text-center datatables-traslado">
                                                                     <thead>
                                                                     <tr>
 
                                                                         <th></th>
                                                                         <th>ID </th>
-                                                                        <th>CODIGO </th>
-                                                                        <th>ALMACEN - EMISOR</th>
-                                                                        <th>ARMALEC - RECEPTOR</th>
-                                                                        <th>ACCIONES</th>
+                                                                        <th>Código</th>
+                                                                        <th>Almacén - Emisor</th>
+                                                                        <th>Almacén - Receptor</th>
+                                                                        <th>Acciones</th>
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -329,63 +300,40 @@
                                                                         <td>CENTRAL</td>
                                                                         <td>MIRAFLORES</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                         <td>02</td>
                                                                         <td>GE001-00000001</td>
                                                                         <td>MIRAFLORE</td>
                                                                         <td>WILSON</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                         <td>03</td>
                                                                         <td>GE001-00000001</td>
                                                                         <td>WILSON</td>
                                                                         <td>CENTRAL</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                                <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                                <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
                                                                 </table>
-                                                            </div>
-
-
-                                                            <br>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                                                <button class="btn btn-white">1</button>
-                                                                <button class="btn btn-white  active">2</button>
-                                                                <button class="btn btn-white">3</button>
-                                                                <button class="btn btn-white">4</button>
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -403,13 +351,12 @@
 
                                                                 <!-- Botones Agregar, Actualizar y Descarga -->
                                                                 <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
 
                                                                     <!-- Botón de Descarga con menú desplegable -->
                                                                     <div class="btn-group">
                                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            Descarga
+                                                                            <i class="fa fa-cloud-download"></i>
                                                                         </button>
                                                                         <div class="dropdown-menu">
                                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -423,15 +370,15 @@
                                                             </div>
                                                             <br>
                                                             <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered">
+                                                                <table class="table table-striped table-hover text-center datatables-salida">
                                                                     <thead>
                                                                     <tr>
 
                                                                         <th></th>
                                                                         <th>ID </th>
-                                                                        <th>MOTIVO </th>
-                                                                        <th>INFORMACION</th>
-                                                                        <th>VER</th>
+                                                                        <th>Motivo</th>
+                                                                        <th>Información</th>
+                                                                        <th>Ver</th>
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -441,53 +388,37 @@
                                                                         <td>DEVOLUCION CLIENTE</td>
                                                                         <td>SALIDA</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                         <td>02</td>
                                                                         <td>DEVOLUCION CLIENTE</td>
                                                                         <td>SALIDA</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                                         <td>03</td>
                                                                         <td>DEVOLUCION CLIENTE</td>
                                                                         <td>SALIDA</td>
                                                                         <td>
-                                                                            <div>
-                                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                                </button>
-                                                                            </div>
+                                                                            <p>
+                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </p>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
                                                             <br>
-
-                                                            <br>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                                                <button class="btn btn-white">1</button>
-                                                                <button class="btn btn-white  active">2</button>
-                                                                <button class="btn btn-white">3</button>
-                                                                <button class="btn btn-white">4</button>
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -511,13 +442,13 @@
                                                 <div style="display: flex; align-items: center; gap: 10px;">
                                                     <div style="display: flex; gap: 10px;">
                                                         <div style="position: relative;">
-                                                            <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                            <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
                                                         </div>
                                                     </div>
 
                                                     <div class="btn-group">
                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Descarga
+                                                            <i class="fa fa-cloud-download"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -533,15 +464,15 @@
                                             <div class="table-responsive">
                                                 <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-bordered">
+                                                <table class="table table-striped table-hover text-center datatables-compras">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>NOMBRE DE PRODUCTO </th>
-                                                        <th>CANT. INICIAL </th>
-                                                        <th>PRECIO NACIONAL</th>
-                                                        <th>PRECIO EN EL EXTRANJERO</th>
+                                                        <th>Nombre de Producto</th>
+                                                        <th>Cant.Inicial</th>
+                                                        <th>Precio nacional</th>
+                                                        <th>Precio extranjero</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -553,14 +484,14 @@
                                                         <td>$ 200</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                         <td>monitor</td>
                                                         <td>100</td>
                                                         <td>S/ 8000</td>
                                                         <td>$ 3000</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                         <td>p. termica</td>
                                                         <td>10</td>
                                                         <td>S/ 500</td>
@@ -573,21 +504,21 @@
                                             <div class="table-responsive">
                                                 <h3 class="text-center">VENTAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-bordered">
+                                                <table class="table table-striped table-hover text-center datatables-ventas">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>TIPO</th>
-                                                        <th>NOMBRE DEL PRODUCTO</th>
-                                                        <th>CANTIDAD</th>
-                                                        <th>PRECIO NACIONAL</th>
-                                                        <th>PRECIO EXTRANJERO</th>
+                                                        <th>Tipo</th>
+                                                        <th>Nombre de Producto</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio nacional</th>
+                                                        <th>Precio extranjero</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
                                                         <td>Electronica</td>
                                                         <td>Laptop</td>
                                                         <td>4 Unid</td>
@@ -595,7 +526,7 @@
                                                         <td>$ 200</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
                                                         <td>Electronica</td>
                                                         <td>teclados</td>
                                                         <td>60 Unid</td>
@@ -603,7 +534,7 @@
                                                         <td>$ 400</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
                                                         <td>Electronica</td>
                                                         <td>placa madre</td>
                                                         <td>50 Unid</td>
@@ -628,13 +559,12 @@
 
                                                 <!-- Botones Agregar, Actualizar y Descarga -->
                                                 <div>
-                                                    <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                    <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
 
                                                     <!-- Botón de Descarga con menú desplegable -->
                                                     <div class="btn-group">
                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Descarga
+                                                            <i class="fa fa-cloud-download"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -648,15 +578,15 @@
                                             </div>
                                             <br>
                                             <div class="table-responsive">
-                                                <table class="table table-striped table-bordered">
+                                                <table class="table table-striped table-hover text-center datatables-cierre">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>ID </th>
-                                                        <th>MES </th>
-                                                        <th>AÑO</th>
-                                                        <th>VISUALIZAR</th>
+                                                        <th>ID</th>
+                                                        <th>Mes</th>
+                                                        <th>Año</th>
+                                                        <th>Visualizar</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -666,37 +596,31 @@
                                                         <td>OCTUBRE</td>
                                                         <td>2021</td>
                                                         <td>
-                                                            <div>
-                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                </button>
-                                                            </div>
+                                                            <p>
+                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
                                                         <td>02</td>
                                                         <td>NOVIEMBRE</td>
                                                         <td>2022</td>
                                                         <td>
-                                                            <div>
-                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                </button>
-                                                            </div>
+                                                            <p>
+                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                         <td>03</td>
                                                         <td>FEBRERO</td>
                                                         <td>2025</td>
                                                         <td>
-                                                            <div>
-                                                                <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                    <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                                </button>
-                                                            </div>
+                                                            <p>
+                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -722,13 +646,13 @@
                                                 <div style="display: flex; align-items: center; gap: 10px;">
                                                     <div style="display: flex; gap: 10px;">
                                                         <div style="position: relative;">
-                                                            <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                            <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
                                                         </div>
                                                     </div>
 
                                                     <div class="btn-group">
                                                         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Descarga
+                                                            <i class="fa fa-cloud-download"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
                                                             <a class="dropdown-item" href="#">Copy</a>
@@ -744,19 +668,19 @@
                                             <div class="table-responsive">
                                                 <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-bordered">
+                                                <table class="table table-striped table-hover text-center datatables-compra-producto">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>FECHA</th>
-                                                        <th>N° RUC</th>
-                                                        <th>PROVEEDOR</th>
-                                                        <th>RUC</th>
-                                                        <th>N° DOC. PROVEEDOR</th>
-                                                        <th>SUB TOTAL</th>
+                                                        <th>Fecha</th>
+                                                        <th>N° Ruc</th>
+                                                        <th>Proveedor</th>
+                                                        <th>Ruc</th>
+                                                        <th>N° Doc. Proveedor</th>
+                                                        <th>Sub total</th>
                                                         <th>IGV</th>
-                                                        <th>TOTAL</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -778,20 +702,20 @@
                                             <div class="table-responsive">
                                                 <h3 class="text-center">FACTURAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-bordered">
+                                                <table class="table table-striped table-hover text-center datatables-facturas">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>FECHA</th>
-                                                        <th>N° RUC</th>
-                                                        <th>PROVEEDOR</th>
-                                                        <th>RUC</th>
-                                                        <th>N° DOC</th>
-                                                        <th>MONEDA</th>
-                                                        <th>SUB TOTAL</th>
+                                                        <th>Fecha</th>
+                                                        <th>N° Ruc</th>
+                                                        <th>Proveedor</th>
+                                                        <th>Ruc</th>
+                                                        <th>N° Doc</th>
+                                                        <th>Moneda</th>
+                                                        <th>Sub total</th>
                                                         <th>IGV</th>
-                                                        <th>TOTAL</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -814,20 +738,20 @@
                                             <div class="table-responsive">
                                                 <h3 class="text-center">BOLETAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-bordered">
+                                                <table class="table table-striped table-hover text-center datatables-boletas">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>FECHA</th>
-                                                        <th>N° DOC</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>RUC</th>
-                                                        <th>N° DOC</th>
-                                                        <th>MONEDA</th>
-                                                        <th>SUB TOTAL</th>
+                                                        <th>Fecha</th>
+                                                        <th>N° Doc</th>
+                                                        <th>Cliente</th>
+                                                        <th>Ruc</th>
+                                                        <th>N° Doc</th>
+                                                        <th>Moneda</th>
+                                                        <th>Sub total</th>
                                                         <th>IGV</th>
-                                                        <th>TOTAL</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -878,11 +802,90 @@
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('js/icheck.min.js') }}"></script>
 <script>
-$(document).ready(function(){
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+    $(document).ready(function(){
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+    });
+
+</script>
+
+<style>
+    div.datatables_length{
+        display:none;
+    }
+    div.datatables_filter{
+        display: none;
+    }
+    div.dt-buttons{
+        display: none;
+    }
+</style>
+
+<script>
+    //dataTables-example
+    $(document).ready(function(){
+        $('.datatables-entrada').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-distribucion').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-traslado').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-salida').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-compras').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-ventas').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-cierre').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-compra-producto').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-facturas').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-boletas').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
         });
 
 </script>
