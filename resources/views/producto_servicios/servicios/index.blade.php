@@ -117,7 +117,7 @@
                                 <div id="pie"></div><!--Azul, plomo y blanco-->
                             </div>
                             <br>
-                            <a href="#"><h4>Productos: 134</h4></a>
+                            <a href="{{ route('productos.index') }}"><h4>Productos: 134</h4></a>
                             <p class="text-danger"><b>Total</b></p>
                         </div>
 
@@ -476,6 +476,7 @@
             buttons: []
         });
 
+        //Poner cantidad en vez de porcentaje-backend
         c3.generate({
             bindto: '#pie',
             data:{

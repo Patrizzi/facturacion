@@ -74,7 +74,7 @@
                                 <div id="pie2"></div>
                             </div>
                             <br>
-                            <a href="#"><h4>Servicios: 28</h4></a>
+                            <a href="{{ route('servicios.index') }}"><h4>Servicios: 28</h4></a>
                             <p class="text-danger"><b>Total</b></p>
                         </div>
                     </div>
@@ -565,7 +565,7 @@
             ]
         });
 
-        //Poner cantidad en vez de porcentaje
+        //Poner cantidad en vez de porcentaje - backend
         c3.generate({
             bindto: '#pie',
             data:{
