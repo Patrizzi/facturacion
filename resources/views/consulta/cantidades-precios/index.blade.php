@@ -8,6 +8,371 @@
 
 @section('content')
 
+<!-- Inico código Gaby -->
+<div class="wrapper wrapper-content animated fadeInRight pb-0">
+	<div class="row">
+		<div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row pt-3 d-flex justify-content-around justify-content-between align-content-center text-center">
+                        <div class="col-auto">
+                            <div><span id="sparkline5"></span></div>
+                            <br><br>
+                            <h4 class="text-danger">Productos: 34</h4>
+                            <p>Stock mín: 10<br>Stock máx: 3</p>
+                        </div>
+                        <div class="col-auto">
+                            <div><span id="sparkline6"></span></div>
+                            <br><br>
+                            <h4 class="text-warning">Servicios: 27</h4>
+                            <p>Activos: 23<br>Inactivos: 4</p>
+                        </div>
+                        <div class="col-auto">
+                            <div><span id="sparkline7"></span></div>
+                            <br><br>
+                            <h4 class="text-success">Garantías: 40</h4>
+                            <p>Activos: 23<br>Inactivos: 17</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight pt-0">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li>
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"><span style="color: white; background-color: red;" class="px-1">34</span> Productos
+
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: white; background-color: orange;" class="px-1">27</span> Servicios
+
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: white; background-color: blue;" class="px-1">40</span> Garantías
+
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Buscar -->
+                        <div class="d-flex justify-content-end row pt-3 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
+                            <div class="col-auto">
+                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                            </div>
+                            <div class="col-5 input-group">
+                                <input type="text" id="inputBuscar" class="form-control" >
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Tablas y su contenido -->
+                        <div class="tab-content">
+
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body table-responsive">
+                                    <!-- CONTENIDO DENTRO DEL TAB - Productos -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th >Nombre</th>
+                                                <th >Còdigo</th>
+                                                <th >UdM</th>
+                                                <th >Stock</th>
+                                                <th>Stock mín.</th>
+                                                <th>Stock máx.</th>
+                                                <th>Precio Nac. Venta</th>
+                                                <th>/IGV nac.</th>
+                                                <th>Precio Ext. Venta</th>
+                                                <th>/IGV ext.</th>
+                                                <th>Garantía</th>
+                                                <th>Marca</th>
+                                                <th>Entradas</th>
+                                                <th>Salidas</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>6 meses</td>
+                                                <td>Bimbo</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td class="tooltip-demo">
+                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock mínimo"><i class="fa fa-caret-square-o-down text-danger"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>1 año</td>
+                                                <td>Bimbo</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td class="tooltip-demo">
+                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock máximo"><i class="fa fa-caret-square-o-up text-dark"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>3 meses</td>
+                                                <td>Bimbo</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td class="tooltip-demo">
+                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock mayor al promedio"><i class="fa fa-circle text-success"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Dulce de chocolate sabor fresa">Candy slim 2.9</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>12 meses</td>
+                                                <td>Bimbo</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td class="tooltip-demo">
+                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock menor al promedio"><i class="fa fa-square text-warning"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                                <div class="panel-body table-responsive">
+                                    <!-- CONTENIDO DENTRO DEL TAB  2 - Servicios -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th >Nombre</th>
+                                                <th >Còdigo</th>
+                                                <th>Precio Nac. Venta</th>
+                                                <th>/IGV nac.</th>
+                                                <th>Precio Ext. Venta</th>
+                                                <th>/IGV ext.</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de diagnostico</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-times"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de reseteo del contador de gotas</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de tramite de garantía epson - según informe ID:101550</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de reparación de impresoras Epson</a></td>
+                                                <td>BA00-00000001</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div role="tabpanel" id="tab-3" class="tab-pane">
+                                <div class="panel-body table-responsive">
+                                    <!-- CONTENIDO DENTRO DEL TAB  3 - Garantía-->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th >Nombre</th>
+                                                <th >Còdigo</th>
+                                                <th >UdM</th>
+                                                <th >Stock</th>
+                                                <th>Stock mín.</th>
+                                                <th>Stock máx.</th>
+                                                <th>Precio Nac. Venta</th>
+                                                <th>/IGV nac.</th>
+                                                <th>Precio Ext. Venta</th>
+                                                <th>/IGV ext.</th>
+                                                <th>Entradas</th>
+                                                <th>Salidas</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Caddy slim 2.9</td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Caddy slim 2.9</td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Caddy slim 2.9</td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Caddy slim 2.9</td>
+                                                <td>BA00-00000001</td>
+                                                <td>UN</td>
+                                                <td>150</td>
+                                                <td>13</td>
+                                                <td>145</td>
+                                                <td>S/5.2</td>
+                                                <td>S/6.4</td>
+                                                <td>$1.4</td>
+                                                <td>$1.65</td>
+                                                <td>39</td>
+                                                <td>47</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
+                            <label class="btn btn-sm btn-white ">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
+                            </label>
+                            <label class="btn btn-sm btn-white active">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin código Gaby -->
+
+
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modal-form">
   <div class="modal-dialog modal-lg" style="width: 120%">
@@ -234,7 +599,8 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <!-- Sparkline -->
-<script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+<script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js')}}"></script>
+
 
 <!-- Page-Level Scripts -->
 <script>
@@ -333,6 +699,23 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+
+            //
+            $("#sparkline5").sparkline([10, 21, 3], {
+            type: 'pie',
+            height: '150px',
+            sliceColors: ['#a14832', '#d4afa7', '#ffedab']});
+
+            $("#sparkline6").sparkline([23, 4], {
+                type: 'pie',
+                height: '150px',
+                sliceColors: ['#f2d8a0', '#d19d54']});
+
+            $("#sparkline7").sparkline([5, 12, 7], {
+                type: 'pie',
+                height: '150px',
+                sliceColors: ['#1ab394', '#b8c2d4', '#e4f0fb']});
+
         });
 </script>
 <script>

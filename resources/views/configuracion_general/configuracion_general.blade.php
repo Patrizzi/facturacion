@@ -5,6 +5,33 @@
  @section('atributo_1', 'hidden')
 
  @section('content')
+ 
+ @php
+use App\Categoria; 
+$categorias = Categoria::get();
+
+use App\Familia;
+$familias = Familia::get();
+
+use App\Garantia;
+$garantia = Garantia::get();
+
+use App\Marca;
+$marcas=Marca::get();
+
+use App\Motivo;
+$motivos_compra=Motivo::get();
+$motivos_dev=Motivo::get();
+
+use App\TipoCambio;
+$tipo_cambio=TipoCambio::get();
+
+use App\Unidad_medida;
+$unidad_de_medida=Unidad_medida::get();
+
+use App\Validez;
+$validez=Validez::get();
+@endphp
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -132,7 +159,11 @@
                         </div>
                         <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                             <button class="btn btn-success dim tam pt-4" type="button">
-                                <a href="{{route('validez.index')}}">
+                               <!-- <a href="{{route('validez.index')}}">
+                                    <img class="rounded bg-white p-2" src="{{asset('img/logos/validez.png')}}" width="50px" alt="">
+                                    <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
+                                </a>-->
+                                <a data-toggle="modal" href="#modal-forms8">
                                     <img class="rounded bg-white p-2" src="{{asset('img/logos/validez.png')}}" width="50px" alt="">
                                     <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
                                 </a>
@@ -166,8 +197,6 @@
                             <select class="form-control m-b" name="account">
                                 <option>Dolar</option>
                                 <option>Sol</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
                             </select>
                         </div>
                         <div class="col-1">
@@ -183,86 +212,48 @@
                     </div>
                     <div class="col-6">
                         <input type="text" placeholder="Paralelo Compra: 3.69" class="form-control m-b">
-                        <input type="text" placeholder="Paralelo Venta: 3.75" class="form-control">
                     </div>
                 </div>
                 <hr>
                 <!--Buscar y tabla-->
-                <div class="row mb-3">
-                    <div class="col-12 input-group row">
-                        <label class="col-sm-2 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-auto" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
-                        </span>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
-                        </span>
-                    </div>
+                <div class="col-12">
+                    <div class=" input-group row">
+                        <input class="form-control" type="text" name="daterangecambio"
+                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                        </div>
                 </div>
-                <div class="row p-2 bg-light m-1 table-responsive">
+                <div class="table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-cambio12">
                         <thead>
                             <tr>
                                 <th>Compra</th>
                                 <th>Venta</th>
                                 <th>Paralelo C.</th>
-                                <th>Paralelo V.</th>
                                 <th>Fecha Actualización</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody> 
+                            @foreach($tipo_cambio as $tipo_cambios)
                             <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
+                                <td>{{$tipo_cambios->compra}}</td>
+                                <td>{{$tipo_cambios->venta}}</td>
+                                <td>{{$tipo_cambios->paralelo}}</td>
+                                <td>{{$tipo_cambios->created_at}}</td>
                             </tr>
-                            <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
-                            </tr>
-                            <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
-                            </tr>
-                            <tr>
-                                <td>3.74</td>
-                                <td>3.75</td>
-                                <td>3.69</td>
-                                <td>3.75</td>
-                                <td>Jul 14, 2013</td>
-                            </tr>
+                            @endforeach  
                         </tbody>
                     </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -312,22 +303,30 @@
                 <!--Fecha, Buscar y tabla-->
                 <div class="row mb-3">
                     <div class="input-group col-6">
-                        <input class="form-control col-sm-10" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
+                        <input class="form-control col-sm-10" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
+                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                <i class="fa fa-history"></i>
+                            </button>
                         </span>
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
+                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                <i class="fa fa-eraser"></i>
+                            </button>
                         </span>
                     </div>
                     <div class="input-group col-6">
-                        <label class="col-sm-3 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-9" type="text" name="">
+                        <div class="col-4">
+                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                         </div>
+                        <div class="col-md-8">
+                            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                        </div>
                     </div>
                 </div>
                 <div class="row px-2 py-3 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-medida">
                         <thead>
                             <tr>
                                 <th style="width: 10%;">Símbolo</th>
@@ -338,70 +337,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($unidad_de_medida as $u_medida)
                             <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
+                                <td>{{$u_medida->simbolo}}</td>
+                                <td>{{$u_medida->medida}}</td>
+                                <td>{{$u_medida->unidad}}</td>
+                                <td>{{$u_medida->created_at}}</td>
+                                <td>{{$u_medida->updated_at}}</td>
                             </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
-                            <tr>
-                                <td>BOL</td>
-                                <td>Bolsa</td>
-                                <td>12</td>
-                                <td>03-06-2010</td>
-                                <td>29-12-2023</td>
-                            </tr>
+                            @endforeach 
                         </tbody>
                     </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -411,7 +357,7 @@
 <!-- modal - Motivos -->
 <div id="modal-forms3" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel3">Motivos</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -438,26 +384,11 @@
                         <select class="form-control m-b" name="account">
                             <option>Compras</option>
                             <option>Ventas</option>
-                            <option>option 3</option>
-                            <option>option 4</option>
                         </select>
                     </div>
                 </div>
                 <hr>
-                <!--Buscar y tabla-->
-                <div class="row mb-3">
-                    <div class="col-12 input-group row">
-                        <label class="col-sm-2 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-10" type="text" name="daterange" value="01/01/2015 - 01/31/2015">
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary px-3"><i class="fa fa-history"></i></button>
-                        </span>
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-primary px-3"><i class="fa fa-eraser"></i></button>
-                        </span>
-                    </div>
-                </div>
-                <div class="row bg-light p-3 m-1">
+                <div class="">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs active show" role="tablist">
                             <li>
@@ -473,92 +404,82 @@
                         </ul>
 
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content" style="width: 147%;">
+                        <div class="tab-content" >
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center">
+                                <div class="panel-body table-responsive"> 
+
+                                    <div class="col-12 input-group row">
+                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos1" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                            <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <br>
+
+                                    <table class="table table-striped text-md-center dataTables-motivos1">
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
                                                 <th>Fecha de Modificación</th>
                                             </tr>
                                         </thead>
+                                        
                                         <tbody>
+                                        @foreach ($motivos_compra as $m_compras)
                                             <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
+                                            <td>{{$m_compras->nombre}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($m_compras->updated_at)->format('d/m/Y H:i:s')}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
-                                            </tr>
-                                            <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
-                                            </tr>
-                                            <tr>
-                                                <td>BOL</td>
-                                                <td>Abril 25, 1987</td>
-                                            </tr>
+                                        @endforeach   
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
                             <div role="tabpanel" id="tab-2" class="tab-pane">
-                                <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center">
+                                <div class="panel-body table-responsive ">
+                                    <div class="col-12 input-group row">
+                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                <i class="fa fa-history"></i>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                            <i class="fa fa-eraser"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <br>
+
+                                    <table class="table table-striped text-md-center dataTables-motivos2">
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
                                                 <th>Fecha de Modificación</th>
                                             </tr>
                                         </thead>
+                                        @foreach ($motivos_dev as $m_devol)
                                         <tbody>
                                             <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
+                                            <td>{{$m_devol->nombre}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($m_devol->updated_at)->format('d/m/Y H:i:s')}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tab2</td>
-                                                <td>Jul 14, 2013</td>
-                                            </tr>
+                                        @endforeach    
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
                         </div>
-
-                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                            <label class="btn btn-sm btn-white ">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                            </label>
-                            <label class="btn btn-sm btn-white active">
-                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                            </label>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -568,7 +489,7 @@
 
 <!-- modal - Garantía-->
 <div id="modal-forms4" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel4">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel4">Garantía</h3>
@@ -584,7 +505,6 @@
                             <option>Extendida</option>
                             <option>Anual</option>
                             <option>option 3</option>
-                            <option>option 4</option>
                         </select>
                     </div>
                     <div class="col-6">
@@ -609,54 +529,24 @@
                         <input type="text" class="form-control col-md-9 col-sm-8">
                     </div>
                 </div>
-                <div class="row bg-light p-3 m-1 table-responsive">
-                    <table class="col-12 table table-striped text-md-center">
+                <div class="row bg-light table-responsive">
+                    <table class="col-12 table table-striped text-md-center dataTables-garantia">
                         <thead>
                             <tr>
                                 <th>Descripción</th>
                                 <th>Duración</th>
                             </tr>
                         </thead>
+                            <span hidden="hidden">{{$i=1}}</span>
+                            @foreach($garantia as $garantias)
                         <tbody>
                             <tr>
-                                <td>Extendida anual</td>
-                                <td>5 años</td>
+                            <td>{{$garantias->descripcion}}</td>
+                            <td style="color: red;">5 años</td>
                             </tr>
-                            <tr>
-                                <td>semestre</td>
-                                <td>6 meses</td>
-                            </tr>
-                            <tr>
-                                <td>eds</td>
-                                <td>70 días</td>
-                            </tr>
-                            <tr>
-                                <td>bimestral</td>
-                                <td>2 meses</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
-
-                    <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -665,7 +555,7 @@
 
 <!-- modal - Categorías -->
 <div id="modal-forms5" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel5">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel5">Categorías</h3>
@@ -680,8 +570,7 @@
                         <select class="form-control" name="account">
                             <option>Servicios</option>
                             <option>Productos</option>
-                            <option>Ventas</option>
-                            <option>option 4</option>
+                            <option>Ventas</option>   
                         </select>
                     </div>
                     <div class="col-6">
@@ -708,7 +597,7 @@
                     </div>
                 </div>
                 <div class="row bg-light p-3 m-1 table-responsive">
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-categorias">
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -716,53 +605,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($categorias as $categoria)
                             <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
+                                <td>{{$categoria->codigo}}</td>
+                                <td>{{$categoria->descripcion}}</td>
                             </tr>
-                            <tr>
-                                <td>0202</td>
-                                <td>Servicios</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
-                            <tr>
-                                <td>0201</td>
-                                <td>Productos</td>
-                            </tr>
+                            @endforeach                       
                         </tbody>
                     </table>
-
-                    <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -772,7 +622,7 @@
 <!-- modal - Familias -->
 <div id="modal-forms6" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel6">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel6">Familias</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -821,81 +671,41 @@
                 </div>-->
                 <div class="row px-2 py-3 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-familias">
                         <thead>
                             <tr>
                                 <th style="width: 10%;">Código</th>
                                 <th style="width: 35%;">Descripción</th>
-                                <th style="width: 20%;">Padre</th>
                                 <th style="width: 15%;">Ubicación</th>
+                                <th style="width: 20%;">Cantidad de SubFamilias</th>
                                 <th style="width: 10%;">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php 
+                            use App\Subfamilia;
+                            @endphp
+                            <span hidden="hidden">{{$i=1}}</span>
+                            @foreach($familias as $familia)
                             <tr>
-                                <td>001</td>
-                                <td>Lavadora Samsung modelo S12</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
+                            <td>{{$familia->codigo}}</td>
+                            <td>{{$familia->descripcion}}</td>
+                            <td>@if($familia->ubicacion != null)
+                                    {{$familia->ubicacion}}
+                                @else
+                                    Sin Ubicacion
+                                @endif
+                            </td>
+                            <td>{{ $count_sub = Subfamilia::where('id_familia', $familia->id)->count()}}</td>
+                            <td>
+                            <a href="{{route('familia.show',$familia->id)}}">
+                                <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
+                            </a>
+                            </td>
                             </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>001</td>
-                                <td>Lavadora</td>
-                                <td>Electrodomésticos</td>
-                                <td>A14</td>
-                                <td><a href="#"><i class="fa fa-eye"></i></a></td>
-                            </tr>
+                            @endforeach                          
                         </tbody>
-                    </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
+                    </table>        
                 </div>
             </div>
         </div>
@@ -972,7 +782,7 @@
                 </div>
                 <div class="row px-2 py-3 bg-light m-1 table-responsive">
                     <!--Tabla-->
-                    <table class="table table-striped text-md-center">
+                    <table class="table table-striped text-md-center dataTables-marcas">
                         <thead>
                             <tr>
                                 <th style="width: 25%;">Nombre</th>
@@ -983,76 +793,91 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @foreach($marcas as $marca)
                             <tr>
-                                <td>Samsung</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
+                                <td>{{$marca->nombre}}</td>
+                                <td>{{$marca->abreviatura}}</td>
+                                <td>@if($marca->telefono != null)
+                                    {{$marca->telefono}}
+                                @else
+                                    Sin número
+                                @endif
+                                </td>
+                                <td>{{$marca->descripcion}}</td>
+                                <td> 
+                                @if(isset($marca->imagen))
+                                <img name="imagen" src="{{asset('archivos/imagenes/marcas/'.$marca->imagen)}}" width="80px" height="80px"   />
+                                @else
+                                <img src="{{asset('img/logos/marca_ejemplo.svg')}}" width="80px">
+                                @endif </td>
                             </tr>
-                            <tr>
-                                <td>Faber-Castell</td>
-                                <td>FC</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-                            <tr>
-                                <td>Epson</td>
-                                <td>EP</td>
-                                <td>987654321</td>
-                                <td>Empresa encargada de la importación de ...</td>
-                                <td>foto</td>
-                            </tr>
-
+                        @endforeach
                         </tbody>
                     </table>
-                    <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                        <label class="btn btn-sm btn-white ">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                        </label>
-                        <label class="btn btn-sm btn-white active">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                        </label>
-                        <label class="btn btn-sm btn-white">
-                            <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- modal - Validez -->
+<div id="modal-forms8" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel7">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> 
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="staticBackdropLabel7">Validez</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--Contenido de modal-->
+                <div class="row">
+                    <div class="col-12 row">
+                        <div class="col-8">
+                            <input type="text" placeholder="Descripción: Tiempo ..." class="form-control m-b">
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <!--Fecha, Buscar y tabla-->
+                <div class="row mb-3 mx-1">
+                    <div class="col-12 input-group">
+                        <label class="col-sm-2 col-form-label">Buscar:</label>
+                        <input class="form-control col-sm-8" type="text" name="">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <!--Tabla-->
+                    <table class="table table-striped text-md-center dataTables-validez">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <span hidden="hidden">{{$i=1}}</span>
+                        @foreach($validez as $validezz)
+                            <tr>
+                            <td>{{$validezz->id}}</td>
+                            <td>{{$validezz->descripcion}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- fin código Gaby-->
 
@@ -1143,14 +968,6 @@
 </div>
 -->
 
-<style>
-    /*Para el tamaño de los botones*/
-    .tam{
-        min-width: 150px;
-        min-height: 150px;
-    }
-</style>
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -1184,6 +1001,423 @@
 
 <!-- Data picker -->
 <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+        /* Tamaño de los botones del index */
+        .tam{
+        min-width: 150px;
+        min-height: 150px;*/
+        }
+</style>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-categorias').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-marcas').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-familias').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-garantia').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [  ]
+    });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        table1 = $('.dataTables-motivos1').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+            ]
+
+        });
+        $('input[name="daterangemotivos1"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table1.column(2).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table1.column(2).search("").draw();
+        }
+        function revert_select() {
+            table1.column(2).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table2 = $('.dataTables-motivos2').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangemotivos2"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table2.column(2).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table2.column(2).search("").draw();
+        }
+        function revert_select() {
+            table2.column(2).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table3 = $('.dataTables-cambio12').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangecambio"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table3.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+    });
+        
+        function limpiar_select(){
+            table3.column(5).search("").draw();
+        }
+        function revert_select() {
+            table3.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        table4 = $('.dataTables-medida').DataTable({
+            pageLength: 12,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'ExampleFile'},
+                {extend: 'pdf', title: 'ExampleFile'},
+
+                {extend: 'print',
+                 customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                }
+                }
+            ]
+
+        });
+        $('input[name="daterangemedida"]').daterangepicker({
+            
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table4.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+        function limpiar_select(){
+            table4.column(5).search("").draw();
+        }
+        function revert_select() {
+            table4.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+
+<script>
+    $(document).ready(function(){
+        $('.dataTables-validez').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
 
 <style>
     .dropdown-menu {

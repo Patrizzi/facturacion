@@ -5,7 +5,7 @@
 @section('href_accion', route('productos.create'))
 @section('content')
 
-<!--
+
 <div class="wrapper wrapper-content animated fadeInRight">
     @if (session('anulacion'))
     <div class="alert alert-danger">
@@ -34,7 +34,6 @@
                                 </tr>
                             </thead>
 
-
                         </table>
                     </div>
                 </div>
@@ -43,7 +42,7 @@
     </div>
 
 </div>
--->
+
 
 <!--Código actual 14/11/2024-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
@@ -177,7 +176,7 @@
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-example2" id="table_prodac" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
@@ -185,44 +184,13 @@
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
                                                 <th>Código original</th>
-                                                <th>Categorìa</th>
+                                                <th>Familia</th>
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>1</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>2</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
+                                        
                                     </table>
                                 </div>
                             </div>
@@ -230,112 +198,19 @@
                             <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-example3" id="table_prodin" style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
                                                 <th>Item</th>
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
-                                                <th>Código original</th>
-                                                <th>Categorìa</th>
+                                                <th>Código original</th> 
+                                                <th>Familia</th>                
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>5</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>6</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>7</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>8</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>13</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>14</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-times text-navy"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <a href="" class="px-3"><i class="fa fa-trash text-danger"></i></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -343,107 +218,23 @@
                             <div role="tabpanel" id="tab-3" class="tab-pane">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-example4" id="table_prodan" style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
                                                 <th>Item</th>
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
                                                 <th>Código original</th>
-                                                <th>Categorìa</th>
+                                                <th>Familia</th>
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>9</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <i class="fa fa-trash text-secondary px-3"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>10</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <i class="fa fa-trash text-secondary px-3"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>11</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <i class="fa fa-trash text-secondary px-3"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <!--<td><input type="checkbox" class="i-checks" name="input[]"></td>-->
-                                                <td>12</td>
-                                                <td>Antivirus Bitdefender Total Security 1PC</td>
-                                                <td>BT-000001</td>
-                                                <td>BT-000001</td>
-                                                <td>Perifèricos</td>
-                                                <td>Bitdefender</td>
-                                                <td>Gravado-Operación Orenosa</td>
-                                                <td>
-                                                    <a href="#" class="px-3"><i class="fa fa-mail-reply-all text-warning"></i></a>
-                                                    <a href="#" class="px-3"><i class="fa fa-eye"></i></a>
-                                                    <i class="fa fa-trash text-secondary px-3"></i>
-                                                </td>
-                                            </tr>
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
-                            <label class="btn btn-sm btn-white ">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
-                            </label>
-                            <label class="btn btn-sm btn-white active">
-                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
-                            </label>
-                            <label class="btn btn-sm btn-white">
-                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
-                            </label>
                         </div>
 
                     </div>
@@ -468,11 +259,26 @@
         }
 
     }
-
 </style>
 <!--Fin código actual-->
 
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
 
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -490,7 +296,6 @@
 <!-- d3 and c3 charts -->
 <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
 <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
-
 
 <script>
     $(document).ready(function(){
@@ -602,10 +407,211 @@
 
 </script>
 
+<script>
+    $(document).ready(function(){
+        $('#table_prodac').DataTable({
+            "serverSide":true,
+            "ajax":"{{url('api/productos')}}",
+            "columns":[
+            {data : 'prod_id'},
+            {data : 'prod_nomnre'},
+            {data : 'codigo_producto'},
+            {data : 'codigo_original'},
+            {data : 'familia_desc'},
+            {data : 'nombre_marca'},
+            {data : 'afectacion_info'},
+
+            {
+                name: '',
+                data: null,
+                sortable: false,
+                searchable: false,
+                render: function (data) {
+                    var actions = '';
+
+                        // Botón del estado
+                        actions += '<button type="button" class="btn btn-info">' +'<i class="fa fa-check"></i>'+ '</button>';
+
+                        // Botón de "Ver producto"
+                        actions += '<a class="px-3 href="{{ route('productos.show',':id') }}" target="_blank">' +
+                                '<button type="button" class="btn btn-success">' +
+                                '<i class="fa fa-eye"></i>' +
+                                '</button></a>';
+
+                        // Botón de "Anular producto" o acción deshabilitada
+                        if (data.estado_anular == 1) {
+                            actions += '<button type="button" class="btn btn-s-m btn-danger" data-toggle="modal" data-target="#:id">' +
+                                    '<i class="fa fa-trash-o" aria-hidden="true"></i>' +
+                                    '</button>' +
+                                    '<div class="modal fade" id=":id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+                                    '<div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">' +
+                                    '<div class="modal-content">' +
+                                    '<div class="modal-body" style="padding: 0px;">' +
+                                    '<div class="ibox-content float-e-margins">' +
+                                    '<h3 class="font-bold col-lg-12" align="center">' +
+                                    '¿Esta Seguro que Deseas Anular el Producto: :id"?<br>' +
+                                    '<h4 align="center"><strong>Nota: Una vez Anulado no hay opción de devolver la acción</strong></h4>' +
+                                    '</h3>' +
+                                    '<p align="center">' +
+                                    '<form action="{{ route('productos.destroy',':id')}}" method="POST">' +
+                                    '@csrf @method('delete')'+
+                                    '<center><button type="submit" class="btn btn-w-m btn-primary">Anular</button></form>' +
+                                    '</p></div></div></div></div></div>';
+                        } else {
+                            actions += '<a href="#">' +
+                                    '<span class="btn btn-secondary">' +
+                                    '<i class="fa fa-times-circle" aria-hidden="true"></i>' +
+                                    '</span></a>';
+                        }
+
+                        // Reemplazar ":id" con el valor real de data.prod_id
+                        return actions.replace(/:id/g, data.prod_id);
+                    }
+                }
+            ]
+        });
+
+        
+    });
+
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('#table_prodin').DataTable({
+            "serverSide":true,
+            "ajax":"{{url('api/productos-inactivo')}}",
+            "columns":[
+            {data : 'prod_id'},
+            {data : 'prod_nomnre'},
+            {data : 'codigo_producto'},
+            {data : 'codigo_original'},
+            {data : 'familia_desc'},
+            {data : 'nombre_marca'},
+            {data : 'afectacion_info'},
+
+            {
+                name: '',
+                data: null,
+                sortable: false,
+                searchable: false,
+                render: function (data) {
+                    var actions = '';
+
+                        // Botón del estado
+                        actions += '<button type="button" class="btn btn-danger">' +'<i class="fa fa-times"></i>'+ '</button>';
+
+                        // Botón de "Ver producto"
+                        actions += '<a  class="px-3" href="{{ route('productos.show',':id') }}" target="_blank">' +
+                    '<button type="button" class="btn btn-success">' +
+                                '<i class="fa fa-eye"></i>' +
+                                '</button></a>';
+
+                        // Botón de "Anular producto" o acción deshabilitada
+                        if (data.estado_anular == 1) {
+                            actions += '<button type="button" class="btn btn-s-m btn-danger" data-toggle="modal" data-target="#:id">' +
+                                    '<i class="fa fa-trash-o" aria-hidden="true"></i>' +
+                                    '</button>' +
+                                    '<div class="modal fade" id=":id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+                                    '<div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">' +
+                                    '<div class="modal-content">' +
+                                    '<div class="modal-body" style="padding: 0px;">' +
+                                    '<div class="ibox-content float-e-margins">' +
+                                    '<h3 class="font-bold col-lg-12" align="center">' +
+                                    '¿Esta Seguro que Deseas Anular el Producto: :id"?<br>' +
+                                    '<h4 align="center"><strong>Nota: Una vez Anulado no hay opción de devolver la acción</strong></h4>' +
+                                    '</h3>' +
+                                    '<p align="center">' +
+                                    '<form action="{{ route('productos.destroy',':id')}}" method="POST">' +
+                                    '@csrf @method('delete')'+
+                                    '<center><button type="submit" class="btn btn-w-m btn-primary">Anular</button></form>' +
+                                    '</p></div></div></div></div></div>';
+                        } else {
+                            actions += '<a href="#">' +
+                                    '<span class="btn btn-secondary">' +
+                                    '<i class="fa fa-times-circle" aria-hidden="true"></i>' +
+                                    '</span></a>';
+                        }
+
+                        // Reemplazar ":id" con el valor real de data.prod_id
+                        return actions.replace(/:id/g, data.prod_id);
+                    }
+                }
+            ]
+        });
+
+        
+    });
+
+</script>
 
 
+<script>
+    $(document).ready(function(){
+        $('#table_prodan').DataTable({
+            "serverSide":true,
+            "ajax":"{{url('api/productos-anular')}}",
+            "columns":[
+            {data : 'prod_id'},
+            {data : 'prod_nomnre'},
+            {data : 'codigo_producto'},
+            {data : 'codigo_original'},
+             {data : 'familia_desc'},
+            {data : 'nombre_marca'},
+            {data : 'afectacion_info'},
 
+            {
+                name: '',
+                data: null,
+                sortable: false,
+                searchable: false,
+                render: function (data) {
+                    var actions = '';
 
+                    
+                        // Botón de "Ver producto"
+                        actions += '<a  class="px-3" href="{{ route('productos.show',':id') }}" target="_blank">' +
+                                '<button type="button" class="btn btn-success">' +
+                                '<i class="fa fa-eye"></i>' +
+                                '</button></a>';
+
+                        // Botón de "Anular producto" o acción deshabilitada
+                        if (data.estado_anular == 1) {
+                            actions += '<button type="button" class="btn btn-s-m btn-danger" data-toggle="modal" data-target="#:id">' +
+                                    '<i class="fa fa-trash-o" aria-hidden="true"></i>' +
+                                    '</button>' +
+                                    '<div class="modal fade" id=":id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+                                    '<div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">' +
+                                    '<div class="modal-content">' +
+                                    '<div class="modal-body" style="padding: 0px;">' +
+                                    '<div class="ibox-content float-e-margins">' +
+                                    '<h3 class="font-bold col-lg-12" align="center">' +
+                                    '¿Esta Seguro que Deseas Anular el Producto: :id"?<br>' +
+                                    '<h4 align="center"><strong>Nota: Una vez Anulado no hay opción de devolver la acción</strong></h4>' +
+                                    '</h3>' +
+                                    '<p align="center">' +
+                                    '<form action="{{ route('productos.destroy',':id')}}" method="POST">' +
+                                    '@csrf @method('delete')'+
+                                    '<center><button type="submit" class="btn btn-w-m btn-primary">Anular</button></form>' +
+                                    '</p></div></div></div></div></div>';
+                        } else {
+                            actions += '<a href="#">' +
+                                    '<span class="btn btn-secondary">' +
+                                    '<i class="fa fa-times-circle" aria-hidden="true"></i>' +
+                                    '</span></a>';
+                        }
+
+                        // Reemplazar ":id" con el valor real de data.prod_id
+                        return actions.replace(/:id/g, data.prod_id);
+                    }
+                }
+            ]
+        });
+
+        
+    });
+
+</script>
 <!-- Page-Level Scripts
 
 

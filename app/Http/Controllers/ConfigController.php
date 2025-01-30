@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Categoria;
 use App\Config;
+use App\Familia;
 use Illuminate\Http\Request;
 
 class ConfigController extends Controller
@@ -16,7 +18,8 @@ class ConfigController extends Controller
     {
         $user=auth()->user()->id;
         $config=Config::where('id',$user)->get();
-        return view('configuracion_general.apariencia.index',compact('config'));
+        $categorias=Categoria::all();
+        return view('configuracion_general.apariencia.index',compact('config','categorias'));
     }
 
     /**
