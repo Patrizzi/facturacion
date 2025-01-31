@@ -389,7 +389,7 @@
                                     </div>
                                     <div class="row justify-content-md-center" >
                                         <div class="col-sm-2">
-                                            <button class="btn btn-block btn-info" type="submit">Guardar</button>
+                                            <button class="btn btn-block btn-info ladda-button" type="submit">Guardar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -774,7 +774,6 @@
                 </tr>
             `;
             $('.tables').append(data);
-            console.log(i);
             $('#count_articles').val(i);
             i++;
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)

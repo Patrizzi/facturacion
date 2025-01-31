@@ -230,6 +230,7 @@
                                     </div>
                                 </div>
                                 {{-- Articulos --}}
+                                <input type="hidden" name="" id="count_articles" value="">
                                 <div class="col-sm-12">
                                     <div class="table-responsive">
                                         <table cellspacing="0" class="table tables">
@@ -250,9 +251,9 @@
                                                     <th style="width: 600px; text-align: left !important">Artículo</th>
                                                     <th>CANTIDAD</th>
                                                     <th>P. SUGERIDO</th>
-                                                    <th>PRECIO S/ IGV</th>
-                                                    <th>PRECIO C/ IGV</th>
-                                                    <th>TOTAL</th>
+                                                    <th>PRECIO U. S/ IGV</th>
+                                                    <th>PRECIO U. C/ IGV</th>
+                                                    <th>TOTAL C/ IGV</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -316,7 +317,38 @@
                                                     <span id="spTotal"></span>
                                                 </tr>
                                             </tbody>
+                                            <tbody>
+                                                <tr style="background-color: #f5f5f500;" align="right">
+                                                    <td colspan="5">Subtotal :</td>
+                                                    <td colspan="2">
+                                                        <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
+                                                            class="form-control inp" required />
+                                                        <input id='subtotal_gravado' type="text" name="subtotal_gravado"
+                                                            readonly class="form-control inp" required hidden="" />
+                                                    </td>
+                                                </tr>
+                                                <tr style="background-color: #f5f5f500;" align="right">
+                                                    <td colspan="5">IGV :</td>
+                                                    <td colspan="2">
+                                                        <input id='igv' type="number" disabled="disabled"
+                                                            class="form-control inp" required />
+                                                    </td>
+                                                </tr>
+                                                <tr align="right">
+                                                    <td colspan="5">Total :</td>
+                                                    <td colspan="2"><input id='total_final' type="number" name="costo_total"
+                                                            readonly="readonly" class="form-control inp" required /></td>
+                                                </tr>
+                                            </tbody>
                                         </table>
+                                    </div>
+                                    <div class="row justify-content-md-center" >
+                                        <div class="col-sm-2">
+                                            {{-- <button class="btn btn-block btn-info" type="submit">Guardar</button> --}}
+                                            <button type="button" name="name" value="submit"
+                                                class="ladda-button btn btn-block btn-info" id="boton">Enviar</button>
+                                            <button type="submit" id="button_submit" hidden>Button DB</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -328,145 +360,7 @@
     </div>
 
 
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <form action="{{ route('boleta_manual.store') }}" enctype="multipart/form-data" method="post"
-                            id="form_store">
-                            @csrf
-                            {{-- <div class="row">
-                                <div class="col-sm-4 text-left" align="left">
-                                    <address class="col-sm-4">
-                                        <img src="{{ asset('img/logos/') }}//{{ $empresa->foto }}" alt=""
-                                            width="300px">
-                                    </address>
-                                </div>
-                                <div class="col-sm-4"></div>
-                                <div class="col-sm-4">
-                                    <div class="form-control ruc">
-                                        <center>
-                                            <h3>{{ $empresa->ruc }}</h3>
-                                            <h2>Boleta Electronica</h2>
-                                            <h4 id="codigo_bola_manual">{{ $boleta_numero }} <span class="small"
-                                                    data-toggle="tooltip" data-placement="bottom"
-                                                    title="N° Referencial"><i class="fa fa-question-circle"></i></span>
-                                            </h4>
-                                        </center>
-                                    </div>
-                                </div>
-                            </div> --}}
-                            <br>
-                            <div class="table-responsive">
-                                <table cellspacing="0" class="table tables">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px"></th>
-                                            <th>Articulo</th>
-                                            <th style="width:100px">Cantidad</th>
-                                            <th style="width:100px">P.Sugerido</th>
-                                            <th style="width:100px">Precio s/Igv</th>
-                                            <th style="width:100px">Precio c/Igv</th>
-                                            <th style="width:100px">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <button type="button" class='delete borrar e btn btn-danger'> <i
-                                                        class="fa fa-trash" aria-hidden="true"></i></button>
-                                            </td>
-                                            <td class="td_selected">
-                                                <select class="monto0 select2_demo_3 select_change" required=""
-                                                    id="articulo" onchange="ajax(0)" autocomplete="off"></select>
-                                                <textarea type='text' {{-- id='descripcion0' --}} name='descripcion_item[]' class="form-control" autocomplete="off"
-                                                    style="margin-top: 5px;"></textarea>
-                                                <textarea type='text' id='numero_serie0' name='numero_serie[]' class="form-control" autocomplete="off"
-                                                    style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
-                                                <input style="min-width: 100px" hidden="" type='text'
-                                                    id='tipo_afec0' name='tipo_afec[]' readonly="readonly"
-                                                    class="monto0 form-control" onkeyup="multi(0)" autocomplete="off" />
-                                                <input type="hidden" class="celda" name="articulo[]" id="input_prod1">
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 100px" type='text' id='cantidad0'
-                                                    name='cantidad[]' max="" class="monto0 form-control inp"
-                                                    onkeyup="multi(0)" required autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 100px" type='text' id='precio_oficial0'
-                                                    name='precio_oficial[]' ondblclick="copy(0)"
-                                                    class="precio_oficial0 form-control inp" required readonly
-                                                    data-toggle="tooltip" data-placement="top"
-                                                    title="Doble click (Copiar)" />
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 100px" type='number' step="0.0000001"
-                                                    id='precio0' name='precio[]' class="monto0 form-control inp"
-                                                    onkeyup="multi_s_igv(0),multi(0)" required autocomplete="off" />
-                                                <input hidden type='text' id='precio_s_igv_float0'
-                                                    name='precio_s_igv_float' class="precio_s_igv_float form-control"
-                                                    onkeyup="multi_s_igv(0),multi(0)" required autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 100px" type='number' step="0.0000001"
-                                                    id='precio_c_igv0' name='precio_c_igv[]'
-                                                    class="precio_c_igv monto0 form-control inp"
-                                                    onkeyup="multi_c_igv(0),multi(0)" required autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 100px" type='number' id='total0'
-                                                    name='total' disabled="disabled" class="total form-control inp"
-                                                    required autocomplete="off" />
-                                            </td>
-                                            <span id="spTotal"></span>
-                                        </tr>
-                                    </tbody>
-                                    <tbody>
-                                        <tr style="background-color: #f5f5f500;" align="right">
-                                            <td colspan="5">Subtotal :</td>
-                                            <td colspan="2">
-                                                <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
-                                                    class="form-control inp" required />
-                                                <input id='subtotal_gravado' type="text" name="subtotal_gravado"
-                                                    readonly class="form-control inp" required hidden="" />
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #f5f5f500;" align="right">
-                                            <td colspan="5">IGV :</td>
-                                            <td colspan="2">
-                                                <input id='igv' type="number" disabled="disabled"
-                                                    class="form-control inp" required />
-                                            </td>
-                                        </tr>
-                                        <tr align="right">
-                                            <td colspan="5">Total :</td>
-                                            <td colspan="2"><input id='total_final' type="number" name="costo_total"
-                                                    readonly="readonly" class="form-control inp" required /></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button type="button" class='addmore btn btn-success'> <i class="fa fa-plus-square"
-                                            aria-hidden="true"></i> </button>&nbsp;
-                                </div>
-                                <div class="col-sm-6">
-                                    <button type="button" name="name" value="submit"
-                                        class="ladda-button btn btn-info float-right" id="boton"
-                                        style="margin-right: 5px">Enviar</button>
-                                    <button type="submit" id="button_submit" hidden>Button DB</button>
-
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     {{-- MODALES Y BOTONES FLOTANTES --}}
     <!-- Modal de Cuotas -->
     <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog"
@@ -570,11 +464,10 @@
                                             <th>CODIGO</th>
                                             <th>ARTICULO</th>
                                             <th>CANTIDAD</th>
-                                            <th>PRECIO SUGERIDO </th>
-                                            <th>PRECIO UNI. S/IGV</th>
-                                            <th>PRECIO UNI. C/IGV</th>
-                                            <th>TOTAL</th>
-                                        </tr>
+                                            <th>PRECIO U. SUGERIDO </th>
+                                            <th>PRECIO S/IGV</th>
+                                            <th>PRECIO C/IGV</th>
+                                            </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -706,9 +599,6 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
     <script type="text/javascript">
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Producto",
-        });
         $(".select2_demo_almacen").select2({
             placeholder: "Seleccionar Almacen",
         });
@@ -808,6 +698,7 @@
             </tr>
         `;
             $('.tables').append(data);
+            $('#count_articles').val(i);
             i++;
 
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
@@ -1472,7 +1363,7 @@
                             },
                             {
                                 data: 'price',
-                                title: 'PRECIO UNI. S / IGV',
+                                title: 'PRECIO S / IGV',
                                 render: function(data, type, row) {
                                     const simbolo = row.moneda.simbolo;
                                     const formattedPrice = $.fn.dataTable.render.number(',',
@@ -1482,14 +1373,14 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-addon" id="basic-addon3">${simbolo}</span>
                                             </div>
-                                            <input type="text" class="form-control form-control-sm" value="${formattedPrice}" id="precio_s_igv" data-id="sin_igv_${row.id}">
+                                            <input type="text" class="form-control form-control-sm total_s_igv" value="${formattedPrice}" id="precio_s_igv${row.id}" data-id="${row.id}">
                                         </div>
                                     `;
                                 }
                             },
                             {
                                 data: 'price',
-                                title: 'PRECIO UNO. C / IGV',
+                                title: 'PRECIO  C / IGV',
                                 render: function(data, type, row) {
                                     const simbolo = row.moneda.simbolo;
                                     const formattedPrice = $.fn.dataTable.render.number(',',
@@ -1499,18 +1390,11 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-addon" >${simbolo}</span>
                                             </div>
-                                            <input type="text" class="form-control form-control-sm" value="${formattedPrice}" data-id="con_igv_${row.id}">
+                                            <input type="text" class="form-control form-control-sm total_c_igv" value="${formattedPrice}" id="precio_c_igv${row.id}" data-id="${row.id}">
                                         </div>
                                     `; // Retorna el precio con el símbolo
                                 }
-                            },
-                            {
-                                data: null,
-                                title: 'PRECIO TOTAL',
-                                render: function(data, type, row, meta) {
-                                    return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
-                                }
-                            },
+                            }
                         ]
                     });
                 },
@@ -1522,55 +1406,37 @@
                 cache: true
             });
         }
-        $('.data_table_multiple').on('input', '.input-cantidad', function() {
-            const cantidad = parseFloat($(this).val()) || 0;
-            const price = parseFloat($(this).data('price'));
-            const total = cantidad * price;
-            var simbolo = $('#basic-addon3').html();
+
+        // PRECIO SIN IGV
+        $('.data_table_multiple').on('input', '.total_s_igv', function() {
+            console.log($(this));
             const id = $(this).data('id');
-            $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-            // igv y sin igv
-            $(`.total[data-id="sin_igv_${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-            $(`.total[data-id="con_igv_${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-        });
-        $('.data_table_multiple').on('input', '#precio_s_igv', function() {
-            const cantidad = parseFloat($(this).val()) || 0;
-            const price = parseFloat($(this).data('price'));
-            const total = cantidad * price;
+            const price = parseFloat($(`#precio_s_igv${id}`).val());
             var simbolo = $('#basic-addon3').html();
-            const id = $(this).data('id');
-            $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-            // igv y sin igv
-            $(`.total[data-id="sin_igv_${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-            $(`.total[data-id="con_igv_${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
+            
+            var igv = $('#igv_input').val();
+            const precio_c_gv = price + (price * (igv/100) );
+            $(`#precio_c_igv${id}`).val(`${precio_c_gv.toFixed(2)}`);
         });
-        $('.data_table_multiple').on('input', '#precio_s_igv', function() {
-            const cantidad = parseFloat($(this).val()) || 0;
-            const price = parseFloat($(this).data('price'));
-            const total = cantidad * price;
+        // PRECIO SIN IGV
+        $('.data_table_multiple').on('input', '.total_c_igv', function() {
+            console.log($(this));
+            const id = $(this).data('id');
+            const price = parseFloat($(`#precio_c_igv${id}`).val());
             var simbolo = $('#basic-addon3').html();
-            const id = $(this).data('id');
-            $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-            // igv y sin igv
-            $(`.total[data-id="sin_igv_${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
-            $(`.total[data-id="con_igv_${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
+            
+            var igv = $('#igv_input').val();
+            const precio_s_igv = price / (1 + (igv/100) );
+            $(`#precio_s_igv${id}`).val(`${precio_s_igv.toFixed(2)}`);
         });
+
         $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
-            if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
+            if ($(e.target).is('input') || $(e.target).closest('td').index() === 3 || $(e.target).closest('td').index() === 5 || $(e.target).closest('td').index() === 6) {
                 return;
             }
-            var stock = $(this).find("td:eq(3)").text();    
-            var cantidad = $(this).find('input').val();
-            console.log(stock);
-            console.log(cantidad);
-            if(parseFloat(cantidad) > parseFloat(stock)){
-                console.log("dentro del if");
-                toastr.warning("Cantidad mayor al stock",
-                '', {
-                    timeOut: 3000
-                });
-                return;
-            }
+            var cantidad = $(this).find('.input-cantidad').val();
+            var precio_s_igv = $(this).find('.total_s_igv').val();
+
             var count_artc = $('#count_articles').val();
             var id = $(this).find("td:eq(0)").text();
             var codigos = $(this).find("td:eq(1)").text();
@@ -1587,8 +1453,11 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
+                    $(`#precio0`).val(precio_s_igv);
+                    multi_s_igv(0);
+                    multi(0);
                     console.log("se cambio de cantidad");
-                }, 1500);
+                }, 1000);
                 //
             } else {
                 $('.addmore').click();
@@ -1600,8 +1469,11 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
+                    $(`#precio${count_artc}`).val(precio_s_igv);
+                    multi_s_igv(`${count_artc}`);
+                    multi(`${count_artc}`);
                     console.log("se cambio de cantidad")
-                }, 1500);
+                }, 1000);
                 //
             }
             toastr.info("Se agregó el Articulo correctamente",
