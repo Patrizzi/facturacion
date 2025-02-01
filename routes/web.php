@@ -520,6 +520,7 @@ Route::group(
 		Route::resource('/venta','VentaController');
 
 		Route::get('/cantidad_precio/servicio','CantidadPrecioController@index_servicio')->name('cantidad_precio.index_servicio');
+
 		Route::resource('/cantidad_precio','CantidadPrecioController');
 
 		Route::view('/configuracion_general' , 'configuracion_general.configuracion_general')->name('Configuracion');

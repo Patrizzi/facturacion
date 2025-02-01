@@ -53,7 +53,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-2"><span style="color: white; background-color: orange;" class="px-1">27</span> Servicios
+                                <a class="nav-link" data-toggle="tab" href="#"><span style="color: white; background-color: orange;" class="px-1">27</span> Servicios
 
                                 </a>
                             </li>
@@ -133,11 +133,11 @@
                             <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 - Servicios -->
-                                    <table class="table table-striped text-md-center">
+                                    <table class="table table-striped text-md-center dataTables-servicios">
                                         <thead>
                                             <tr>
-                                                <th >Nombre</th>
-                                                <th >Còdigo</th>
+                                                <th>Nombre</th>
+                                                <th>Còdigo</th>
                                                 <th>Precio Nac. Venta</th>
                                                 <th>/IGV nac.</th>
                                                 <th>Precio Ext. Venta</th>
@@ -155,39 +155,6 @@
                                                 <td>$1.65</td>
                                                 <td>
                                                     <a href="#"><i class="fa fa-times"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de reseteo del contador de gotas</a></td>
-                                                <td>BA00-00000001</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de tramite de garantía epson - según informe ID:101550</a></td>
-                                                <td>BA00-00000001</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tooltip-demo"><a href="#" data-toggle="tooltip" data-placement="left" title="Servicio de diagnostico sin solución de impresora">Servicio de reparación de impresoras Epson</a></td>
-                                                <td>BA00-00000001</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check"></i></a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -488,12 +455,18 @@
     #DataTables_Table_0_length{
         display: none;
     }
+    #DataTables_Table_1_filter{
+        display:none;
+    }
+    #DataTables_Table_1_length{
+        display: none;
+    }
     div.dt-buttons{
         display: none;
     }
 </style>
 
-<!-- Mainly scripts
+<!--
 <style type="text/css">
     .footable > thead > tr > th.null > span.footable-sort-indicator{
         display: none;
@@ -522,7 +495,7 @@
     input[type=number] { -moz-appearance:textfield; }
 </style>
 -->
-
+<!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -697,6 +670,12 @@
 <script>
     $(document).ready(function(){
         $('.dataTables-productos').DataTable({
+            pageLength: 15,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.dataTables-servicios').DataTable({
             pageLength: 15,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',

@@ -194,7 +194,7 @@ class CantidadPrecioController extends Controller
         foreach ($servicio as $serv) {
             $servi_id[] = $serv->id;
         }
-        
+
         for ($i=0; $i < $servicio_count ; $i++) {
             $servicios[]=Servicios::where('id',$servi_id[$i])->first();
         }
