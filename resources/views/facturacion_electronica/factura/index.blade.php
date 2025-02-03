@@ -121,33 +121,35 @@
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-5" class="tab-pane active show">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange2"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary"
-                                                onclick="revert_select_factura()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary"
-                                                onclick="limpiar_select_factura()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
+                                <div class="panel-body row ">
+                                    <div class="col-md-5">
+                                        <div class="input-group">
+                                            <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                            <input class="form-control" type="text" name="daterange2"
+                                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary"
+                                                    onclick="revert_select_factura()">
+                                                    <i class="fa fa-history"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-primary"
+                                                    onclick="limpiar_select_factura()">
+                                                    <i class="fa fa-eraser"></i>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
-
-                                    <div class="row g-3 col-md-5">
-                                        <div class="col-auto">
-                                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                        </div>
-                                        <div class="col-md-7">
+                                    <div class="col-md-5 ">
+                                        <div class="input-group">
+                                            <label for="inputBuscar" class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
                                             <input type="text" id="inputBuscar" class="form-control"
-                                                aria-describedby="passwordHelpInline">
+                                        aria-describedby="passwordHelpInline">
                                         </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary  btn-block">Buscar</button>
                                     </div>
                                 </div>
                                 <div class="panel-body">
@@ -221,8 +223,7 @@
                                             </button>
                                         </span>
                                     </div>
-
-                                    <div class="row g-3 col-md-5">
+                                    <div class="col-lg-3 col-md-5">
                                         <div class="col-auto">
                                             <label for="inputBuscar" class="col-form-label">Buscar:</label>
                                         </div>
@@ -230,6 +231,9 @@
                                             <input type="text" id="inputBuscar" class="form-control"
                                                 aria-describedby="passwordHelpInline">
                                         </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-2">
+                                        <button>Buscar</button>
                                     </div>
                                 </div>
                                 <div class="panel-body">
@@ -415,7 +419,7 @@
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
                                                     rowspan="1" colspan="1"
                                                     aria-label="SUNAT: activate to sort column ascending"><img
-                                                        src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT
+                                                        src="{{ asset('sunat.png') }}" width="15px">SUNAT
                                                 </th>
                                                 <th>XML</th>
                                                 <th>ZIP</th>
@@ -553,9 +557,9 @@
 
     <style>
         /*.ibox-content{
-                                padding: 0px;
-                                border: none;
-                            }*/
+                                    padding: 0px;
+                                    border: none;
+                                }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -565,18 +569,18 @@
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
         div.dataTables_length {
-            display: none;
-        }
+                display: none;
+            }
 
         /* El Buscar */
         div.dataTables_filter {
-            display: none;
-        }
+                display: none;
+            }
 
         /* CSV, Excel, PDF, Print */
         div.dt-buttons {
-            display: none;
-        }
+                display: none;
+            }
     </style>
 
     <!-- scripts -->
@@ -590,59 +594,25 @@
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
     {{-- <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script> --}}
 
-    <!-- check -->
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
     {{-- <script src="{{ asset('js/icheck.min.js') }}"></script> --}}
 
     <!-- Seleccionar todos los check -->
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
 
-            // Controlar el checkbox del thead 
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
 
 
     <script>
@@ -714,6 +684,8 @@
                     table_factura.column(5).search(dateRangeString, true, false).draw();
                 }
             );
+
+            
             table_factura_enviada = $('.dataTables-fact_enviadas').DataTable({
                 pageLength: 15,
                 order: [
@@ -727,59 +699,59 @@
                     'aTargets': [0]
                 }]
             });
-            $('input[name="daterange3"]').daterangepicker({
+            // $('input[name="daterange3"]').daterangepicker({
 
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+            //         "locale": {
+            //             "separator": " | ",
+            //             "applyLabel": "Guardar",
+            //             "cancelLabel": "Cancelar",
+            //             "fromLabel": "Desde",
+            //             "toLabel": "Hasta",
+            //             "customRangeLabel": "Custom",
+            //             "daysOfWeek": [
+            //                 "Do",
+            //                 "Lu",
+            //                 "Ma",
+            //                 "Mi",
+            //                 "Ju",
+            //                 "Vi",
+            //                 "Sa"
+            //             ],
+            //             "monthNames": [
+            //                 "Enero",
+            //                 "Febrero",
+            //                 "Marzo",
+            //                 "Abril",
+            //                 "Mayo",
+            //                 "Junio",
+            //                 "Julio",
+            //                 "Agosto",
+            //                 "Septiembre",
+            //                 "Octubre",
+            //                 "Noviembre",
+            //                 "Diciembre"
+            //             ],
+            //             "firstDay": 1
+            //         }
+            //     },
+            //     function(start, end, label) {
+            //         var dates = [];
+            //         var currentDate = new Date(start);
+            //         while (currentDate <= end) {
+            //             var day = ('0' + currentDate.getDate()).slice(-2);
+            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            //             var year = currentDate.getFullYear();
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
+            //             var formattedDate = day + '-' + month + '-' + year;
+            //             dates.push(formattedDate);
 
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table_factura_enviada.column(5).search(dateRangeString, true, false).draw();
-                }
-            );
+            //             currentDate.setDate(currentDate.getDate() + 1);
+            //         }
+            //         var dateRangeString = dates.join('|');
+            //         console.log(dateRangeString);
+            //         table_factura_enviada.column(5).search(dateRangeString, true, false).draw();
+            //     }
+            // );
             // {{-- Datatable Facturas Enviadas --}}
             table_fact_manual = $('.dataTables-fact_manual').DataTable({
                 pageLength: 15,
@@ -794,58 +766,58 @@
                     'aTargets': [0]
                 }]
             });
-            $('input[name="daterange4"]').daterangepicker({
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+            // $('input[name="daterange4"]').daterangepicker({
+            //         "locale": {
+            //             "separator": " | ",
+            //             "applyLabel": "Guardar",
+            //             "cancelLabel": "Cancelar",
+            //             "fromLabel": "Desde",
+            //             "toLabel": "Hasta",
+            //             "customRangeLabel": "Custom",
+            //             "daysOfWeek": [
+            //                 "Do",
+            //                 "Lu",
+            //                 "Ma",
+            //                 "Mi",
+            //                 "Ju",
+            //                 "Vi",
+            //                 "Sa"
+            //             ],
+            //             "monthNames": [
+            //                 "Enero",
+            //                 "Febrero",
+            //                 "Marzo",
+            //                 "Abril",
+            //                 "Mayo",
+            //                 "Junio",
+            //                 "Julio",
+            //                 "Agosto",
+            //                 "Septiembre",
+            //                 "Octubre",
+            //                 "Noviembre",
+            //                 "Diciembre"
+            //             ],
+            //             "firstDay": 1
+            //         }
+            //     },
+            //     function(start, end, label) {
+            //         var dates = [];
+            //         var currentDate = new Date(start);
+            //         while (currentDate <= end) {
+            //             var day = ('0' + currentDate.getDate()).slice(-2);
+            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            //             var year = currentDate.getFullYear();
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
+            //             var formattedDate = day + '-' + month + '-' + year;
+            //             dates.push(formattedDate);
 
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table_fact_manual.column(5).search(dateRangeString, true, false).draw();
-                }
-            );
+            //             currentDate.setDate(currentDate.getDate() + 1);
+            //         }
+            //         var dateRangeString = dates.join('|');
+            //         console.log(dateRangeString);
+            //         table_fact_manual.column(5).search(dateRangeString, true, false).draw();
+            //     }
+            // );
             // {{-- Datatable Facturas Manual --}}
             table_fact_manual_env = $('.dataTables-factura_m_env').DataTable({
                 pageLength: 15,
@@ -860,59 +832,59 @@
                     'aTargets': [0]
                 }]
             });
-            $('input[name="daterange5"]').daterangepicker({
+            // $('input[name="daterange5"]').daterangepicker({
 
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+            //         "locale": {
+            //             "separator": " | ",
+            //             "applyLabel": "Guardar",
+            //             "cancelLabel": "Cancelar",
+            //             "fromLabel": "Desde",
+            //             "toLabel": "Hasta",
+            //             "customRangeLabel": "Custom",
+            //             "daysOfWeek": [
+            //                 "Do",
+            //                 "Lu",
+            //                 "Ma",
+            //                 "Mi",
+            //                 "Ju",
+            //                 "Vi",
+            //                 "Sa"
+            //             ],
+            //             "monthNames": [
+            //                 "Enero",
+            //                 "Febrero",
+            //                 "Marzo",
+            //                 "Abril",
+            //                 "Mayo",
+            //                 "Junio",
+            //                 "Julio",
+            //                 "Agosto",
+            //                 "Septiembre",
+            //                 "Octubre",
+            //                 "Noviembre",
+            //                 "Diciembre"
+            //             ],
+            //             "firstDay": 1
+            //         }
+            //     },
+            //     function(start, end, label) {
+            //         var dates = [];
+            //         var currentDate = new Date(start);
+            //         while (currentDate <= end) {
+            //             var day = ('0' + currentDate.getDate()).slice(-2);
+            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            //             var year = currentDate.getFullYear();
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
+            //             var formattedDate = day + '-' + month + '-' + year;
+            //             dates.push(formattedDate);
 
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table_fact_manual_env.column(5).search(dateRangeString, true, false).draw();
-                }
-            );
+            //             currentDate.setDate(currentDate.getDate() + 1);
+            //         }
+            //         var dateRangeString = dates.join('|');
+            //         console.log(dateRangeString);
+            //         table_fact_manual_env.column(5).search(dateRangeString, true, false).draw();
+            //     }
+            // );
             // {{-- Datatable Facturas Manual Enviadas --}}
             table_detraccion = $('.dataTables-detraccion').DataTable({
                 pageLength: 15,
@@ -927,58 +899,58 @@
                     'aTargets': [0]
                 }]
             });
-            $('input[name="daterange6"]').daterangepicker({
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+            // $('input[name="daterange6"]').daterangepicker({
+            //         "locale": {
+            //             "separator": " | ",
+            //             "applyLabel": "Guardar",
+            //             "cancelLabel": "Cancelar",
+            //             "fromLabel": "Desde",
+            //             "toLabel": "Hasta",
+            //             "customRangeLabel": "Custom",
+            //             "daysOfWeek": [
+            //                 "Do",
+            //                 "Lu",
+            //                 "Ma",
+            //                 "Mi",
+            //                 "Ju",
+            //                 "Vi",
+            //                 "Sa"
+            //             ],
+            //             "monthNames": [
+            //                 "Enero",
+            //                 "Febrero",
+            //                 "Marzo",
+            //                 "Abril",
+            //                 "Mayo",
+            //                 "Junio",
+            //                 "Julio",
+            //                 "Agosto",
+            //                 "Septiembre",
+            //                 "Octubre",
+            //                 "Noviembre",
+            //                 "Diciembre"
+            //             ],
+            //             "firstDay": 1
+            //         }
+            //     },
+            //     function(start, end, label) {
+            //         var dates = [];
+            //         var currentDate = new Date(start);
+            //         while (currentDate <= end) {
+            //             var day = ('0' + currentDate.getDate()).slice(-2);
+            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            //             var year = currentDate.getFullYear();
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
+            //             var formattedDate = day + '-' + month + '-' + year;
+            //             dates.push(formattedDate);
 
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table_detraccion.column(4).search(dateRangeString, true, false).draw();
-                }
-            );
+            //             currentDate.setDate(currentDate.getDate() + 1);
+            //         }
+            //         var dateRangeString = dates.join('|');
+            //         console.log(dateRangeString);
+            //         table_detraccion.column(4).search(dateRangeString, true, false).draw();
+            //     }
+            // );
 
         });
 
@@ -1024,7 +996,44 @@
             table_detraccion.column(4).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
+    <script>
+        // $(document).ready(function() {
+        //     $('.i-checks').iCheck({
+        //         checkboxClass: 'icheckbox_square-green',
+        //         radioClass: 'iradio_square-green',
+        //     });
 
+        //     // Controlar el checkbox del thead 
+        //     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        //         var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+        //         if (event.type === 'ifChecked') {
+        //             // Selecciona 
+        //             table.find('tbody input[type="checkbox"]').iCheck('check');
+        //         } else {
+        //             // Deselecciona 
+        //             table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+        //         }
+        //     });
+
+        //     // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+        //     $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+        //         var table = $(this).closest('table'); // Limita el control a la tabla visible
+        //         if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+        //                 'tbody input[type="checkbox"]').length) {
+        //             table.find('thead input[type="checkbox"]').iCheck('check');
+        //         } else {
+        //             table.find('thead input[type="checkbox"]').iCheck('uncheck');
+        //         }
+        //     });
+
+        //     // Detectar cuando se cambia de tab 
+        //     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        //         // Restablecer el estado de los checkboxes 
+        //         var activeTab = $(e.target).attr('href'); // ID del tab activo
+        //         $(activeTab).find('.i-checks').iCheck('update');
+        //     });
+        // });
+    </script>
     <!-- Page Scripts -->
     <script>
         $(document).ready(function() {
