@@ -615,6 +615,7 @@
 
     <script>
         $(document).ready(function() {
+            $('#tab_factura').addClass('active');
             $('.i-checks-facturas').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',

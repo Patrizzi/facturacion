@@ -524,6 +524,9 @@
 
     <script>
         $(document).ready(function() {
+            // "ACTIVA EL TAB DE FACTURAS "
+            $('#tab_fact_env').addClass('active');
+
             $('.i-checks-facturas').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',

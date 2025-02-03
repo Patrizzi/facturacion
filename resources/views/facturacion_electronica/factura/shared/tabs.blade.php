@@ -1,12 +1,12 @@
 <ul class="nav nav-tabs" role="tablist">
     <li>
-        <a class="nav-link active" data-toggle="tab" href="#tab-5"><span style="color: green;">&#9632; </span>
+        <a class="nav-link" data-toggle="tab" href="#tab-5" id="tab_factura"><span style="color: green;">&#9632; </span>
             Facturas
             {{-- link del tab 1 --}}
         </a>
     </li>
     <li>
-        <a class="nav-link" href="{{ route('facturacion_electronica.facturas_enviadas_list') }}"><span
+        <a class="nav-link" href="{{ route('facturacion_electronica.facturas_enviadas_list') }}" id="tab_fact_env"><span
                 style="color: orange;">&#9632;</span> Enviados
             {{-- link del tab 2 --}}
         </a>
