@@ -94,100 +94,7 @@
                         </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-5" class="tab-pane active show">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
-
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="input-group">
-                                                <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                                <input class="form-control" type="text" name="dateranger_factura"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        onclick="revert_select_factura()">
-                                                        <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select_factura()">
-                                                        <i class="fa fa-eraser"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5 ">
-                                            <div class="input-group">
-                                                <label for="inputBuscar"
-                                                    class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
-                                                <input type="text" id="inputBuscar" class="form-control"
-                                                    aria-describedby="passwordHelpInline">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {{-- <button class="btn btn-primary  btn-block">Buscar</button> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped table-hover dataTables-factura">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks-facturas"
-                                                        name="input_facturas[]"></th>
-                                                <th>Item</th>
-                                                <th>Código</th>
-                                                <th>Cliente</th>
-                                                <th>N° Doc</th>
-                                                <th>Fecha de Creacion</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
-                                                    class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
-                                                        width="15px">SUNAT
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($facturacion as $index => $facturaciones)
-                                                <tr @if ($facturaciones->diff_day > 3) style="color: red" @endif>
-                                                    <td><input type="checkbox" class="i-checks-facturas" name="input[]"
-                                                            value="{{ $facturaciones->codigo_fac }}"></td>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $facturaciones->codigo_fac }}</td>
-                                                    @if (isset($facturaciones->cliente_id))
-                                                        <td>{{ $facturaciones->cliente->nombre }}</td>
-                                                        <td>{{ $facturaciones->cliente->numero_documento }}</td>
-                                                    @else
-                                                        <td>{{ $facturaciones->cotizacion->cliente->nombre }}</td>
-                                                        <td>{{ $facturaciones->cotizacion->cliente->numero_documento }}
-                                                        </td>
-                                                    @endif
-                                                    <td>
-                                                        <span>{{ $facturaciones->fecha_emision }}</span>
-                                                    </td>
-                                                    <td style="text-align: center"><button type="button"
-                                                            class="btn btn-success btn-circle btn-ls"
-                                                            value="{{ $facturaciones->codigo_fac }}"
-                                                            onclick="envio_factura(this)"><i
-                                                                class="fa fa-cloud-upload"></i></button></td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="fac_elec_all">Enviar</button></td>
-                                        </tfooter>
-                                    </table>
-                                </div>
-                            </div>
+                            {{-- TAB 5 PARA LA FACTURAS NORMALES --}}
 
                             <div role="tabpanel" id="tab-6" class="tab-pane">
                                 <div class="panel-body ">
@@ -230,7 +137,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="panel-body">
+                                <div class="panel-body">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
                                     <table class="table table-striped dataTables-fact_enviadas">
                                         <thead>
@@ -282,10 +189,10 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                </div> --}}
+                                </div>
                             </div>
 
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
+                            {{-- <div role="tabpanel" id="tab-7" class="tab-pane">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
@@ -366,9 +273,9 @@
                                         </tfooter>
                                     </table>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div role="tabpanel" id="tab-8" class="tab-pane">
+                            {{-- <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
@@ -455,9 +362,9 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div role="tabpanel" id="tab-9" class="tab-pane">
+                            {{-- <div role="tabpanel" id="tab-9" class="tab-pane">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
@@ -540,7 +447,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -551,9 +458,9 @@
 
     <style>
         /*.ibox-content{
-                                            padding: 0px;
-                                            border: none;
-                                        }*/
+                                                padding: 0px;
+                                                border: none;
+                                            }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -611,7 +518,9 @@
 
     <!-- Seleccionar todos los check -->
 
-
+    <script>
+        $('')
+    </script>
 
     <script>
         $(document).ready(function() {

@@ -74,17 +74,31 @@ class FacturacionElectronicaController extends Controller
     public function index()
     {
         $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
 
         $facturacion=Facturacion::where('f_electronica',0)->get();
-        $facturas_enviadas=Facturacion::where('f_electronica',1)->get();
+        foreach ($facturacion as $factura) {
+            $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
+        }
 
         $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
         $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
         
         $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
         // return $detraccion_facturacion;
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturas_enviadas','facturacion_m','facturacion_enviada_m','empresa','detraccion_facturas'));
+        
+        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_m','facturacion_enviada_m','empresa','detraccion_facturas'));
     }
+
+    public function facturas_enviadas(){
+        // $facturas_enviadas=Facturacion::select('id','codigo_fac','cliente_id', 'fecha_emision','fecha_vencimiento','created_at')->where('f_electronica',1)->get();
+        $empresa=Empresa::first();
+
+        $facturas_enviadas=Facturacion::where('f_electronica',1)->get();
+        // return $facturas_enviadas;
+        return view('facturacion_electronica.factura.enviado',compact('facturas_enviadas','empresa'));
+    }
+
 
     public function index_boleta(){
 
@@ -187,6 +201,7 @@ class FacturacionElectronicaController extends Controller
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
         $factura=Facturacion::where('f_electronica',0)->where('codigo_fac',$factura_codigo)->first();
+        return "suceess";
         $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
         if($factura->guia_remision=="0"){
             $guia=0;
