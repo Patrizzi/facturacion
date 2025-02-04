@@ -77,6 +77,12 @@
                         <div class="">
                             <div class="tabs-container">
                                 @include('facturacion_electronica.factura.shared.tabs')
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <button class="btn btn-success" type="button">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
+                                </ul>
+                                
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->

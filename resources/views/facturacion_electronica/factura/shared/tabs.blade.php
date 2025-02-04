@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs d-flex w-100" role="tablist">
+<ul class="nav nav-tabs" role="tablist">
     <li>
         <a class="nav-link" href="{{ route('facturacion_electronica.facturas_enviadas_list') }}" id="tab_factura"><span style="color: green;">&#9632; </span>
             Facturas
@@ -26,11 +26,6 @@
         <a class="nav-link" href="#tab-9"><span style="color: rgb(14, 14, 194);">&#9632;</span>
             Detracciones
             {{-- link del tab 2 --}}
-        </a>
-    </li>
-    <li class="ms-auto">
-        <a class="nav-link" href="#tab-10">
-            <span style="color: rgb(14, 14, 194);">&#9632;</span> Detracciones
         </a>
     </li>
 </ul>
