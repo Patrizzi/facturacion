@@ -37,14 +37,10 @@ class ComprobantesVentas extends Model
 		// Fecha de Hoy
 		$fecha_conv = Carbon::now()->format('Y-m-d');
 
-		$boleta_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
-		$boleta_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
-		$factura_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
-		$factura_ma = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
-        $boleta_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
-		$boleta_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
-        $boleta_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
-		$boleta_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
+		$cotizacion_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
+		$cotizacion_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
+		$nota_venta_dia = NotaVenta::whereDate('created_at', '=', $fecha_conv )->count();
+
 
 		$count_day_ventas = array(
             "cotizacion_day_count" => $cotizacion_dia,
