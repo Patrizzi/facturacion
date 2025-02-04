@@ -80,7 +80,7 @@ class ProjectManagerController extends Controller {
     public function store(Request $request) {
         $numbers = ['required', 'integer', 'min:1'];
         $request->validate([
-            'nombre', 'centro_costo',
+            'nombre', 'required',
             'ruc' => 'required',
             'administrador_id' => $numbers,
             'responsable_id' => $numbers,
@@ -88,7 +88,8 @@ class ProjectManagerController extends Controller {
             'cliente_id' => $numbers,
             'fecha_inicio' => 'required',
             'fecha_cierre' => 'required',
-            'prioridad' => $numbers
+            'prioridad' => $numbers,
+            'centro_costo' => 'required'
         ]);
         ProjectManager::create($request->all());
         return redirect()->route('project_managers.index')->with('success', 'Creado exitosamente');
