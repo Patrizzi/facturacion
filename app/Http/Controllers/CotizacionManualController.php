@@ -8,6 +8,7 @@ use App\Banco;
 use App\Boleta_m;
 use App\Boleta_registros_m;
 use App\Cliente;
+use App\ComprobantesVentas;
 use App\Cotizacion;
 use App\Empresa;
 use App\Forma_pago;
@@ -1255,10 +1256,10 @@ class CotizacionManualController extends Controller
     //  NUEVAS VISTAS
     public function index2(){
         $mes_año = Carbon::now()->format('d-m-Y');
-        $count_month_ventas = Ventas_registro::count_month_ventas($mes_año);
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
         
         $almacen = Almacen::get();
-        $count_all_ventas = Ventas_registro::count_day_ventas();        
+        $count_all_ventas = ComprobantesVentas::count_day_ventas();        
         return view('transaccion.venta.cotizacion.manual.index2',compact('count_month_ventas', 'almacen','count_all_ventas'));
         
     }
