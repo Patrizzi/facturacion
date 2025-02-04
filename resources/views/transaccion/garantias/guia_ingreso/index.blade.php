@@ -8,7 +8,7 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
-
+<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/index.css') }}">
 <!-- modal -->
 <div id="modal-form" class="modal fade" aria-hidden="true">
     <div class="modal-dialog">
@@ -56,7 +56,7 @@
     </div>
     @endif
 
-    <div><ul class="nav nav-underline">
+    {{-- <div><ul class="nav nav-underline">
   <li class="nav-item">
     <a class="nav-link active" aria-current="page" href="#">Guia de ingreso<span class=" badge badge-pill badge-success">1</span></a>
   </li>
@@ -67,6 +67,7 @@
     <a class="nav-link" href="#">Informe Técnico <span class=" badge badge-pill badge-warning">3 </span></a>
   </li>
 </ul></div>
+
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -97,7 +98,541 @@
             </div>
         </div>
 
+    </div>
 
+</div> --}}
+
+<div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#tab-1"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #34d313; padding: 5px 10px;">1</span>Guias de Ingreso</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-2"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #c45a20; padding: 5px 10px;">2</span>Guia de Salida</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-3"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #e22b35; padding: 5px 10px;">3</span>Infrome Tecnico</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-4"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #2dade0; padding: 5px 10px;">4</span>Solicitud de Servicio</a>
+                                </li>
+                            </ul>
+                            <br>
+                            <div class="tab-content">
+                                <!-- Contenido de Tab 1 -->
+                                <div role="tabpanel" id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <!-- Contenido de Nested Tab 1 -->
+                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <!-- Barra de búsqueda y botón Buscar -->
+                                            <div style="flex-grow: 1;">
+                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                            </div>
+                                            <!-- Botones Agregar, Actualizar y Descarga -->
+                                            <div>
+                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                <!-- Botón de Descarga con menú desplegable -->
+                                                <div class="btn-group">
+                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Descarga
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">Copy</a>
+                                                        <a class="dropdown-item" href="#">CSV</a>
+                                                        <a class="dropdown-item" href="#">Excel</a>
+                                                        <a class="dropdown-item" href="#">PDF</a>
+                                                        <a class="dropdown-item" href="#">Print</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>ID </th>
+                                                        <th>NOMBRE </th>
+                                                        <th>APELLIDO </th>
+                                                        <th>N° DOCUMENTO</th>
+                                                        <th>CELULAR</th>
+                                                        <th>CORREO</th>
+                                                        <td>ACCIONES</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
+                                                        <td>01</td>
+                                                        <td>Carlos Daniel</td>
+                                                        <td>Roman Berru</td>
+                                                        <td>73588510</td>
+                                                        <td>936292675</td>
+                                                        <td>danielrberru@gmail.com</td>
+                                                        <td>
+                                                            <div>
+                                                                <a href="#" class="check-link" style="font-size: 25px;"><i class="fa fa-check-square"></i></a>
+                                                                <button class="btn btn-xs btn-primary  toggle-row"><i class="fa fa-plus"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Fila oculta -->
+                                                    <tr class="details-row" style="display: none;">
+                                                        <td colspan="8">
+                                                            <div class="container-fluid">
+                                                                <div class="row">
+                                                                    <!-- Primera columna - Cliente -->
+                                                                    <div class="col-6 pe-3">
+                                                                        <p class="text-white text-center fw-bold p-2" style="background-color: #007bff;">CLIENTE</p>
+                                                                        <div class="row mb-1 align-items-center">
+                                                                            <label class="col-2 col-form-label text-start pe-1">DNI</label>
+                                                                            <div class="col-3"><input type="text" class="form-control form-control-sm"></div>
+                                                                            <label class="col-2 col-form-label text-start pe-1">Nombre</label>
+                                                                            <div class="col-5"><input type="text" class="form-control form-control-sm"></div>
+                                                                        </div>
+                                                                        <div class="row mb-1 align-items-center">
+                                                                            <label class="col-2 col-form-label text-start pe-1">Dirección</label>
+                                                                            <div class="col-10"><input type="text" class="form-control form-control-sm"></div>
+                                                                        </div>
+                                                                        <div class="row mb-1 align-items-center">
+                                                                            <label class="col-2 col-form-label text-start pe-1">Contacto</label>
+                                                                            <div class="col-3"><input type="text" class="form-control form-control-sm"></div>
+                                                                            <label class="col-2 col-form-label text-start pe-1">Teléfono</label>
+                                                                            <div class="col-5"><input type="text" class="form-control form-control-sm"></div>
+                                                                        </div>
+                                                                        <div class="row mb-1 align-items-center">
+                                                                            <label class="col-2 col-form-label text-start pe-1">Sucursal</label>
+                                                                            <div class="col-10"><input type="text" class="form-control form-control-sm"></div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Segunda columna - Datos Generales -->
+                                                                    <div class="col-6 ps-3">
+                                                                        <p class="text-white text-center fw-bold p-2" style="background-color: #007bff;">DATOS GENERALES</p>
+                                                                        <div class="row mb-1 align-items-center">
+                                                                            <label class="col-3 col-form-label text-start pe-1">Recepcionista</label>
+                                                                            <div class="col-3"><input type="text" class="form-control form-control-sm"></div>
+                                                                            <label class="col-3 col-form-label text-start pe-1">Fecha de ingreso</label>
+                                                                            <div class="col-3"><input type="date" class="form-control form-control-sm"></div>
+                                                                        </div>
+                                                                        <div class="row mb-1 align-items-center">
+                                                                            <label class="col-3 col-form-label text-start pe-1">Orden de servicio</label>
+                                                                            <div class="col-3"><input type="text" class="form-control form-control-sm"></div>
+                                                                            <label class="col-3 col-form-label text-start pe-1">Fecha estimada</label>
+                                                                            <div class="col-3"><input type="date" class="form-control form-control-sm"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Segunda fila vacía -->
+                                                                <div class="row mt-3">
+                                                                    <div class="col-12 text-center">
+                                                                        <div class="panel-body">
+                                                                            <div class="search-bar d-flex justify-content-between align-items-center mb-3">
+                                                                                <div class="flex-grow-1">
+                                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                                                    <button class="btn btn-primary ms-2">Buscar</button>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <button class="btn btn-success me-2">Agregar</button>
+                                                                                    <button class="btn btn-primary me-2">Actualizar</button>
+                                                                                    <div class="btn-group">
+                                                                                        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">Descarga</button>
+                                                                                        <ul class="dropdown-menu">
+                                                                                            <li><a class="dropdown-item" href="#">Copy</a></li>
+                                                                                            <li><a class="dropdown-item" href="#">CSV</a></li>
+                                                                                            <li><a class="dropdown-item" href="#">Excel</a></li>
+                                                                                            <li><a class="dropdown-item" href="#">PDF</a></li>
+                                                                                            <li><a class="dropdown-item" href="#">Print</a></li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="table-responsive">
+                                                                                <table class="table table-striped table-bordered w-100">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>ID</th>
+                                                                                            <th>SERIE</th>
+                                                                                            <th>DESCRIPCION</th>
+                                                                                            <th>OBSERVACION</th>
+                                                                                            <th>TEC. REVISION</th>
+                                                                                            <th>FECHA</th>
+                                                                                            <th>DIAGNOSTICO</th>
+                                                                                            <th>ESTADO</th>
+                                                                                            <th>TEC. REPARAR</th>
+                                                                                            <th>FECHA</th>
+                                                                                            <th>EST. REPARACION</th>
+                                                                                            <th>RECOMENDACIONES</th>
+                                                                                            <th>Edit</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td>01</td>
+                                                                                            <td>LKDO</td>
+                                                                                            <td>Laptop mojada</td>
+                                                                                            <td>El tecnico observo agua en el equipo</td>
+                                                                                            <td>Marlo</td>
+                                                                                            <td>hoy</td>
+                                                                                            <td>Equipo mojado</td>
+                                                                                            <td>Aceptado</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>
+                                                                                                <div>
+                                                                                                    <button class="btn btn-xs btn-primary  toggle-row"><i class="fa fa-plus"></i></button>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <!-- Fila oculta -->
+                                                                                        <tr class="details-row" style="display: none;">
+                                                                                            <td colspan="8">
+                                                                                                <div class="update-servicio-content">
+
+                                                                                                    <div class="row mb-3 first-fila-service-content">
+                                                                                                        <div class="input-diagnostico-content sevice-col">
+                                                                                                            <label>Diagnóstico</label>
+                                                                                                            <input type="text" class="form-control form-control-sm"/>
+                                                                                                        </div>
+                                                                                                        <div class="select-estado-content sevice-col">
+                                                                                                            <label>Estado</label>
+                                                                                                            <select id="" class="form-control form-control-sm">
+                                                                                                                <option value="1">Aceptado</option>
+                                                                                                                <option value="2">Rechazado</option>
+                                                                                                            </select>
+                                                                                                        </div>
+                                                                                                        <div class="input-reparar-content sevice-col">
+                                                                                                            <label>Tec. Reparar</label>
+                                                                                                            <input type="text" value="{{ auth()->user()->name }}" class="form-control form-control-sm" readonly/>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    <div class="row mb-3 second-fila-service-content">
+                                                                                                        <div class="input-reparacion-content sevice-col">
+                                                                                                            <label>Est. Reparación</label>
+                                                                                                            <input type="text" value="NULL" class="form-control form-control-sm" readonly/>
+                                                                                                        </div>
+
+                                                                                                        <div class="text-recomendaciones-content sevice-col">
+                                                                                                            <label>Recomendaciones</label>
+                                                                                                            <textarea type="text" class="recomendaciones-service form-control form-control-sm" >.......</textarea>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td>02</td>
+                                                                                            <td>MJYL</td>
+                                                                                            <td>Monitor con mancha</td>
+                                                                                            <td>El tecnico obervo varias fallas</td>
+                                                                                            <td>Brissssssila</td>
+                                                                                            <td>hoy</td>
+                                                                                            <td>Equipo dañado</td>
+                                                                                            <td>Rechazado</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>sdawd</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td>03</td>
+                                                                                            <td>FYUL</td>
+                                                                                            <td>trx 3060</td>
+                                                                                            <td>Tecnico observo ventilacion rota</td>
+                                                                                            <td>Daniel</td>
+                                                                                            <td>hoy</td>
+                                                                                            <td>Equipo dañado</td>
+                                                                                            <td>Rechazado</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>NULL</td>
+                                                                                            <td>sdawd</td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
+                                                        <td>02</td>
+                                                        <td>Christopher Javier</td>
+                                                        <td>Huaman Guevara</td>
+                                                        <td>74894537</td>
+                                                        <td>934361536</td>
+                                                        <td>christojhg@gmail.com</td>
+                                                        <td>
+                                                            <div>
+                                                                <a href="#" class="check-link" style="font-size: 25px;"><i class="fa fa-check-square"></i></a>
+                                                                <button class="btn btn-xs btn-primary  toggle-row"><i class="fa fa-plus"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Fila oculta -->
+                                                    <tr class="details-row" style="display: none;">
+                                                        <td colspan="8">
+                                                            <div style="display: flex;">
+                                                                <!-- Columna 1: Imagen -->
+                                                                <div style="flex: 4; padding: 10px; text-align: center;">
+                                                                    <img src="https://via.placeholder.com/100" alt="Foto" style="max-width: 100%; height: auto;">
+                                                                </div>
+                                                                <!-- Columna 2: Datos -->
+                                                                <div style="flex: 8; padding: 10px;">
+                                                                    <table class="table table-bordered">
+                                                                        <tr>
+                                                                            <th>Detalle 1</th>
+                                                                            <td>Valor 1</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Detalle 2</th>
+                                                                            <td>Valor 2</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Detalle 3</th>
+                                                                            <td>Valor 3</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <br>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
+                                            <button class="btn btn-white">1</button>
+                                            <button class="btn btn-white  active">2</button>
+                                            <button class="btn btn-white">3</button>
+                                            <button class="btn btn-white">4</button>
+                                            <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Contenido de Tab 2 -->
+                                <div role="tabpanel" id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <!-- Barra de búsqueda y botón Buscar -->
+                                            <div style="flex-grow: 1;">
+                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                            </div>
+                                            <!-- Botones Agregar, Actualizar y Descarga -->
+                                            <div>
+                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                <!-- Botón de Descarga con menú desplegable -->
+                                                <div class="btn-group">
+                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Descarga
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">Copy</a>
+                                                        <a class="dropdown-item" href="#">CSV</a>
+                                                        <a class="dropdown-item" href="#">Excel</a>
+                                                        <a class="dropdown-item" href="#">PDF</a>
+                                                        <a class="dropdown-item" href="#">Print</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <br>
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>NOMBRE DE PRODUCTO </th>
+                                                    <th>CANT. INICIAL </th>
+                                                    <th>PRECIO NACIONAL</th>
+                                                    <th>PRECIO EN EL EXTRANJERO</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                    <td>LAPTOP</td>
+                                                    <td>1200</td>
+                                                    <td>S/ 600</td>
+                                                    <td>$ 200</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                    <td>monitor</td>
+                                                    <td>100</td>
+                                                    <td>S/ 8000</td>
+                                                    <td>$ 3000</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                    <td>p. termica</td>
+                                                    <td>10</td>
+                                                    <td>S/ 500</td>
+                                                    <td>$ 126</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Contenido de Tab 3 -->
+                                <div role="tabpanel" id="tab-3" class="tab-pane">
+                                    <div class="panel-body">
+                                        <!-- CONTENIDO DENTRO DEL TAB 3 -->
+                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <!-- Barra de búsqueda y botón Buscar -->
+                                            <div style="flex-grow: 1;">
+                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                            </div>
+                                            <!-- Botones Agregar, Actualizar y Descarga -->
+                                            <div>
+                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                <!-- Botón de Descarga con menú desplegable -->
+                                                <div class="btn-group">
+                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Descarga
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">Copy</a>
+                                                        <a class="dropdown-item" href="#">CSV</a>
+                                                        <a class="dropdown-item" href="#">Excel</a>
+                                                        <a class="dropdown-item" href="#">PDF</a>
+                                                        <a class="dropdown-item" href="#">Print</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID </th>
+                                                    <th>MES </th>
+                                                    <th>AÑO</th>
+                                                    <th>VISUALIZAR</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                    <td>01</td>
+                                                    <td>OCTUBRE</td>
+                                                    <td>2021</td>
+                                                    <td>
+                                                        <div>
+                                                            <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Contenido de Tab 4 -->
+                                <div role="tabpanel" id="tab-4" class="tab-pane">
+                                    <div class="panel-body">
+                                        <!-- CONTENIDO DENTRO DEL TAB 4 -->
+                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <!-- Barra de búsqueda y botón Buscar -->
+                                            <div style="flex-grow: 1;">
+                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                            </div>
+                                            <!-- Botones Agregar, Actualizar y Descarga -->
+                                            <div>
+                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
+                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
+                                                <!-- Botón de Descarga con menú desplegable -->
+                                                <div class="btn-group">
+                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Descarga
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">Copy</a>
+                                                        <a class="dropdown-item" href="#">CSV</a>
+                                                        <a class="dropdown-item" href="#">Excel</a>
+                                                        <a class="dropdown-item" href="#">PDF</a>
+                                                        <a class="dropdown-item" href="#">Print</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID </th>
+                                                    <th>Nº GUIA </th>
+                                                    <th>T. SERVICIO </th>
+                                                    <th>RUC/DNI</th>
+                                                    <th>CLIENTE</th>
+                                                    <th>F. EMISION</th>
+                                                    <td>ACCIONES</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                    <td>01</td>
+                                                    <td>GE001-00000001</td>
+                                                    <td>COMPRAS LOCALES</td>
+                                                    <td>72816344</td>
+                                                    <td>INVERSIONAES MC</td>
+                                                    <td>29/15/2025</td>
+                                                    <td>
+                                                        <div>
+                                                            <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
+                                                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
+                                                            </button>
+                                                            <button style="padding: 5PX 5px; background-color: RED; border: none; border-radius: 5px;">
+                                                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-trash-o" style="color: white; font-size: 20px;"></i></a></div>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -115,7 +650,7 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-
+{{--
 <script >
     $(document).ready(function(){
         $('#table_productos').DataTable({
@@ -190,7 +725,33 @@
         ]
     });
     });
-</script>
+</script> --}}
 
+<script>
+    $(document).ready(function() {
+
+        $('.footable').footable();
+        $('.footable2').footable();
+
+    });
+
+</script>
+<!-- Despliegue de la tabla para editar -->
+<script>
+    // Selecciona todos los botones con la clase toggle-row
+    document.querySelectorAll('.toggle-row').forEach((button) => {
+        button.addEventListener('click', () => {
+            // Encuentra la fila oculta siguiente a la fila actual
+            const detailsRow = button.closest('tr').nextElementSibling;
+
+            // Alterna la visibilidad de la fila
+            if (detailsRow.style.display === 'none') {
+                detailsRow.style.display = 'table-row';
+            } else {
+                detailsRow.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 @endsection
