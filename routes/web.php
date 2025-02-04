@@ -135,6 +135,7 @@ Route::group(
 		Route::get('/facturas_elecronicas/enviadas','FacturacionElectronicaController@facturas_enviadas')->name('facturacion_electronica.facturas_enviadas_list');
 		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
 		Route::post('/facturacion_electronica/validacion','FacturacionElectronicaController@validacion_sunat')->name('facturacion_electronica.validacion_sunat');
+		Route::get('facturas_electronicas/enviadas/list', 'FacturacionElectronicaController@list_facturas_env')->name('facturas_electronicas.enviadas_lst');
 		//factura manual
 		Route::post('/facturacion_electronica_factura_m','FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
 		Route::post('/facturacion_electronica_factura_m/send_all','FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');

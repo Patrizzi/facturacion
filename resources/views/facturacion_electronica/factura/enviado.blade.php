@@ -78,38 +78,20 @@
                             <div class="tabs-container">
                                 @include('facturacion_electronica.factura.shared.tabs')
                             </div>
-                            {{-- <div> <!-- Botón de descarga -->
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
-                                        <i class="fa fa-cloud-download"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">WORD</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
-                                    </ul>
-                                </div>
-                            </div> --}}
                         </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             {{-- TAB 5 PARA LA FACTURAS NORMALES --}}
 
-                            <div role="tabpanel" id="tab-6" class="tab-pane">
+                            <div role="tabpanel" id="tab-6" class="tab-pane active">
                                 <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura_env">
-
-                                        </div>
-                                    </div>
-                                    <hr />
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="daterange-factura_env"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="{{ date('m/01/2010') }} - {{ date('m/t/Y') }}"
+                                                    id="daterange-factura_env" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select_fact_env()">
@@ -133,7 +115,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            {{-- <button class="btn btn-primary  btn-block">Buscar</button> --}}
+                                            <button class="btn btn-primary  btn-block">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -142,12 +124,14 @@
                                     <table class="table table-striped dataTables-fact_enviadas">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th><input type="checkbox" class="i-checks-facturas_env" name="input[]">
+                                                </th>
                                                 <th>Item</th>
                                                 <th>Código</th>
                                                 <th>Cliente</th>
                                                 <th>N° Doc</th>
                                                 <th>Fecha de emisión</th>
+                                                <th>Precio Total</th>
                                                 <th style="text-align:center;color: #0073c1"><img
                                                         src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
                                                 <th>XML</th>
@@ -155,10 +139,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <span hidden>{{ $a = 1 }}</span>
+                                            {{-- <span hidden>{{ $a = 1 }}</span>
                                             @foreach ($facturas_enviadas as $factura_enviada)
                                                 <tr>
-                                                    <td><input type="checkbox" class="" name="input[]"></td>
+                                                    <td><input type="checkbox" class="i-checks-facturas_env"
+                                                            name="input[]"></td>
                                                     <td>{{ $a++ }}</td>
                                                     <td>{{ $factura_enviada->codigo_fac }}</td>
                                                     @if (isset($factura_enviada->cliente_id))
@@ -186,7 +171,7 @@
                                                                 width="25px"></a>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -457,10 +442,10 @@
     </div>
 
     <style>
-        /*.ibox-content{
-                                                padding: 0px;
-                                                border: none;
-                                            }*/
+        .dropdown-menu {
+            left: 70px;
+            padding: 20px 0;
+        }
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -517,104 +502,117 @@
     {{-- <script src="{{ asset('js/icheck.min.js') }}"></script> --}}
 
     <!-- Seleccionar todos los check -->
-
+    {{-- 
     <script>
         $('')
-    </script>
+    </script> --}}
 
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE FACTURAS "
             $('#tab_fact_env').addClass('active');
 
-            $('.i-checks-facturas').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-            // {{-- Datatable Facturas --}}
-            table_factura = $('.dataTables-factura').DataTable({
-                pageLength: 15,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
-            });
-            $('input[name="dateranger_factura"]').daterangepicker({
-
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
+            // {{-- Datatable Facturas Enviadas  --}}
+            var table_factura_enviada = $('.dataTables-fact_enviadas').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('facturas_electronicas.enviadas_lst') }}",
+                    method: "get",
+                    data: function(d) {
+                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
+                        d.daterange = $('#daterange-factura_env')
+                            .val(); // Supongamos que tienes un select para el tipo de cotización
+                        d.value = $('#inputBuscar').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
                     }
                 },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+                "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+                    $(nRow).addClass('tooltip-demo');
+                    return nRow;
+                },
+                "columnDefs": [{
+                        'width': '1vmax',
+                        'targets': [0], // Aplica a la primera columna (index 0)
+                        'orderable': false, // Deshabilitar ordenación en esta columna
+                        'render': function(data, type, full, meta) {
+                            // Renderizar el checkbox en la primera columna
+                            return '<input type="checkbox" name="select_row" value="' + full[0] +
+                                '" class="i-checks-facturas_env">';
+                        }
+                    },
+                    {
+                        'width': '30%',
+                        'targets': [4]
+                    },
+                    {
+                        'targets': [7], // Estado
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var end = ``;
+                            if (full[7] == 1) {
+                                end +=
+                                    `<button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button> `;
+                            } else {
+                                end +=
+                                    `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
+                            }
+                            // NOTA DE CREDITO
+                            if (full[9] != 0 ) {
+                                if (full[9] == 1) {
+                                    end +=
+                                        `<button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i style="font-weight: 700">NC</i></button> `;
+                                } else {
+                                    end +=
+                                        `<button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i style="font-weight: 700">NC</i></button> `;
+                                }
+                            }
+                            // NOTA DE DEBITO
+                            if (full[10] != 0) {
+                                if (full[10] == 1) {
+                                end +=
+                                    `<button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i style="font-weight: 700">ND</i></button>`;
+                            } else {
+                                end +=
+                                    `<button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i style="font-weight: 700">ND</i></button>`;
+                            }
+                            }
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
+                            return end;
+                        }
+                    },
+                    {
+                        'targets': [8], // Descargar XML
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.xml`;
+                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                        }
+                    },
+                    {
+                        'targets': [9],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.zip`;
+                            return `<a href="${url}" download ><img src="{{ asset('zip.png') }}" width="25px"></i></a>`;
+                        }
                     }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table_factura.column(5).search(dateRangeString, true, false).draw();
-                }
-            );
-
-
-
-            // {{-- Datatable Facturas Enviadas  --}}
-            table_factura_enviada = $('.dataTables-fact_enviadas').DataTable({
-                pageLength: 15,
-                order: [
-                    [0, "desc"]
                 ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
+                drawCallback: function() {
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $('.i-checks-facturas_env').iCheck({
+                        checkboxClass: 'icheckbox_square-green',
+                        radioClass: 'iradio_square-green',
+                    });
+                }
             });
+
+
+
+            
             // $('input[name="daterange3"]').daterangepicker({
 
             //         "locale": {
