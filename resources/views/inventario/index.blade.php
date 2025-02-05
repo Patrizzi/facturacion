@@ -436,10 +436,10 @@
 </script>
 
 <style>
-    div.datatables_length{
+    #DataTables_Table_0_length{
         display:none;
     }
-    div.datatables_filter{
+    #DataTables_Table_0_filter{
         display: none;
     }
     div.dt-buttons{
@@ -472,24 +472,6 @@
             buttons: []
         });
         $('.datatables-salida').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-compras').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-ventas').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-cierre').DataTable({
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',

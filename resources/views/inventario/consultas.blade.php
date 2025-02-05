@@ -187,10 +187,10 @@
 </script>
 
 <style>
-    div.datatables_length{
+    #DataTables_Table_0_length{
         display:none;
     }
-    div.datatables_filter{
+    #DataTables_Table_0_filter{
         display: none;
     }
     div.dt-buttons{

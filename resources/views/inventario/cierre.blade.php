@@ -1,6 +1,6 @@
 @extends('layout')
-
 @section('content')
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
     <!-- Sección de Inventario -->
@@ -33,9 +33,6 @@
                                                     <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
                                                 </div>
 
-                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                <div>
-                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
 
                                                     <!-- Botón de Descarga con menú desplegable -->
                                                     <div class="btn-group">
@@ -50,15 +47,13 @@
                                                             <a class="dropdown-item" href="#">Print</a>
                                                         </div>
                                                     </div>
-                                                </div>
                                             </div>
                                             <br>
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-hover text-center datatables-cierre">
                                                     <thead>
                                                     <tr>
-
-                                                        <th></th>
+                                                        <th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
                                                         <th>ID</th>
                                                         <th>Mes</th>
                                                         <th>Año</th>
@@ -66,39 +61,17 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
+                                                    @foreach($cierre_periodo as $cierre_periodos)
                                                     <tr>
                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>01</td>
-                                                        <td>OCTUBRE</td>
-                                                        <td>2021</td>
+                                                        <td>{{$cierre_periodos->id}}</td>
+                                                        <td>{{$cierre_periodos->mes}}</td>
+                                                        <td>{{$cierre_periodos->año}}</td>
                                                         <td>
-                                                            <p>
-                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                            </p>
+                                                            <a href="{{ route('cierre-periodo.show', $cierre_periodos->id) }}" class="btn btn-success"><i class="fa fa-eye"></i></a>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>02</td>
-                                                        <td>NOVIEMBRE</td>
-                                                        <td>2022</td>
-                                                        <td>
-                                                            <p>
-                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>03</td>
-                                                        <td>FEBRERO</td>
-                                                        <td>2025</td>
-                                                        <td>
-                                                            <p>
-                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                            </p>
-                                                        </td>
-                                                    </tr>
+                                                    @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -289,10 +262,10 @@
 </script>
 
 <style>
-    div.datatables_length{
+    #DataTables_Table_0_length{
         display:none;
     }
-    div.datatables_filter{
+    #DataTables_Table_0_filter{
         display: none;
     }
     div.dt-buttons{
@@ -303,56 +276,15 @@
 <script>
     //dataTables-example
     $(document).ready(function(){
-        $('.datatables-entrada').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-distribucion').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-traslado').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-salida').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
+        $('#tab-3').addClass('active show');
         
         $('.datatables-cierre').DataTable({
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
-        });
-        $('.datatables-compra-producto').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-facturas').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-boletas').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-
+        }); 
+    });      
 </script>
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->

@@ -16,7 +16,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     <!-- Contenido de Tab 1 -->
-                                    <div role="tabpanel" id="tab-1" class="tab-pane active">
+                                    <div role="tabpanel" id="tab-1" class="tab-pane">
                                     </div>
 
                                     <!-- Contenido de Tab 2 -->
@@ -27,7 +27,7 @@
 
                                     </div>
                                     <!-- Contenido de Tab 4 -->
-                                    <div role="tabpanel" id="tab-4" class="tab-pane">
+                                    <div role="tabpanel" id="tab-4" class="tab-pane active show">
                                         <div class="panel-body">
                                             <!-- CONTENIDO DENTRO DEL TAB 4 -->
                                             <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
@@ -208,10 +208,10 @@
 </script>
 
 <style>
-    div.datatables_length{
+    #DataTables_Table_0_length{
         display:none;
     }
-    div.datatables_filter{
+    #DataTables_Table_0_filter{
         display: none;
     }
     div.dt-buttons{
@@ -222,37 +222,8 @@
 <script>
     //dataTables-example
     $(document).ready(function(){
-        $('.datatables-entrada').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-distribucion').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-traslado').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-salida').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        
-        $('.datatables-cierre').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
+        // Asegúrate de que el tab esté activo
+        $('#tab-4').addClass('active show');
         $('.datatables-compra-producto').DataTable({
             pageLength: 25,
             responsive: true,
@@ -271,6 +242,7 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
+    });
 
 </script>
 
