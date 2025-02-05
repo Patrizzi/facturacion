@@ -38,7 +38,7 @@ abstract class ProjectTableAbstract extends Component {
                     return $item->ruc;
                 },
                 'Servicio' => function ($item) {
-                    return $item->project_service->nombre;
+                    return optional($item->servicio)->nombre ?? 'N/A';
                 }
             ],
             'manyProjects' => [
@@ -63,7 +63,7 @@ abstract class ProjectTableAbstract extends Component {
                     return $item->administrador->name;
                 },
                 'Servicio' => function ($item) {
-                    return $item->project_service->nombre;
+                    return optional($item->servicio)->nombre ?? 'N/A';
                 },
                 'Fecha Inicio' => function ($item) {
                     return $item->fecha_inicio->format('d-m-Y');
@@ -82,7 +82,7 @@ abstract class ProjectTableAbstract extends Component {
                 "F.T." => function ($item) {
                     return $item->fecha_cierre;
                 },
-                "Reponsable" => function($item) {
+                "Reponsable" => function ($item) {
                     return $item->responsable->name;
                 },
                 "Estado" => function ($item) {
