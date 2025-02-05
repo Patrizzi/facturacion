@@ -527,4 +527,35 @@ class KardexEntradaDistribucionController extends Controller
 
     }
 
+    public function index2()
+    {
+        $kardex_distribucion=Kardex_entrada::where('tipo_registro_id',"3")->get();
+        // return count($kardex_distribucion);
+        if (count($kardex_distribucion) != 0) {
+            // return "a";
+            foreach($kardex_distribucion as $index => $kd){
+                // return $kd;
+                $cantidad_tot[$index] = kardex_entrada_registro::where('kardex_entrada_id', $kd->id)->sum('cantidad_inicial');
+                $cantidad_prod[$index] = kardex_entrada_registro::where('kardex_entrada_id', $kd->id)->count();
+                $guia_remi_kardex_dist = GuiaRTraslado::where('id_kardex',$kd->id)->first();
+                if(isset($guia_remi_kardex_dist)){
+                    $kd->cod_guia_remisio = $guia_remi_kardex_dist->cod_guia;
+                }else{
+                    $kd->cod_guia_remisio =  'Sin guia';
+                }
+            }
+            
+        } else {
+            // return "b";
+            $cantidad_tot = 0 ;
+            $cantidad_prod = 0;
+        }
+        
+        // return $kardex_distribucion;
+        $almacen = Almacen::all();
+
+        // return kardex_entrada_registro::where('kardex_entrada_id', 96)->sum('cantidad_inicial');
+        return view('inventario.distribucion',compact('kardex_distribucion','almacen', 'cantidad_tot','cantidad_prod'));
+    }
+
   }

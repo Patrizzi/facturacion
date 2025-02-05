@@ -25,77 +25,10 @@
                                                 </ul>
 
                                                 <div class="tab-content">
-                                                    <div role="tabpanel" id="contenido-tab-1" class="tab-pane active show">
-                                                        <!-- Título centrado -->
-                                                        <h2 style="text-align: center; margin-bottom: 20px;">Almacen Principal - Oficina Arequipa</h2>
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 1 -->
-                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                                <div style="flex-grow: 1;">
-                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                                </div>
-
-                                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                                <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                                    <!-- Botón de Descarga con menú desplegable -->
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-cloud-download"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu">
-                                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                                            <a class="dropdown-item" href="#">Print</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-hover text-center datatables-entrada">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th></th>
-                                                                            <th>ID </th>
-                                                                            <th>Código</th>
-                                                                            <th>Motivo</th>
-                                                                            <th>Proveedor</th>
-                                                                            <th>F.Ingreso</th>
-                                                                            <th>N° Guía de Remisión</th>
-                                                                            <th>N° Factura</th>
-                                                                            <th>Acciones</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                            <td>01</td>
-                                                                            <td>GE001-00000001</td>
-                                                                            <td>COMPRAS LOCALES</td>
-                                                                            <td>GRUPO INFOZONAL S.A.C.</td>
-                                                                            <td>10/01/2022</td>
-                                                                            <td>0001</td>
-                                                                            <td>0001</td>
-                                                                            <td>
-                                                                                <p>
-                                                                                    <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                                    <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                                                </p>
-                                                                            </td>
-                                                                        </tr>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
+                                                    <div role="tabpanel" id="contenido-tab-1" class="tab-pane ">
                                                     </div>
-                                                    <div role="tabpanel" id="contenido-tab-2" class="tab-pane">
+
+                                                    <div role="tabpanel" id="contenido-tab-2" class="tab-pane active show">
                                                         <div class="panel-body">
                                                             <!-- Contenido de Nested Tab 2 -->
                                                             <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -157,44 +90,10 @@
                                                                             </p>
                                                                         </td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>15/05/2022</td>
-                                                                        <td>1500</td>
-                                                                        <td>530</td>
-                                                                        <td>ALMACEN</td>
-                                                                        <td>0002</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>21/10/2023</td>
-                                                                        <td>2300</td>
-                                                                        <td>700</td>
-                                                                        <td>ALMACEN</td>
-                                                                        <td>0003</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
+                                                                    
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-
-
-
-
-                                                            <br>
                                                             <!--
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
@@ -296,6 +195,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                     <div role="tabpanel" id="contenido-tab-4" class="tab-pane">
                                                         <!-- Título centrado -->
                                                         <h2 style="text-align: center; margin-bottom: 20px;">Creacion de Almacen</h2>
@@ -451,32 +351,14 @@
     //dataTables-example
     $(document).ready(function () {
         // Asegúrate de que el tab esté activo
-        $('#tab-1').addClass('active show');
+        $('#contenido-tab-2').addClass('active show');
 
-        $('.datatables-entrada').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
         $('.datatables-distribucion').DataTable({
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
-        $('.datatables-traslado').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-salida').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });     
     });
 </script>
 

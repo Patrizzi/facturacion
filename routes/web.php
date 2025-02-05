@@ -583,8 +583,12 @@ Route::get("/boleta3","BOLETACONTROLLER@index3")->name('boleta3');
 
 
 //Nuevo inventario
-//Kardex
+//Kardex:
 Route::get("/inventario2","INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
+Route::get('/inventario/distribucion','KardexEntradaDistribucionController@index2')->name('inventario.distribucion');
+Route::get('/inventario/traslado','KardexEntradaTrasladoAlmacenController@index2')->name('inventario.traslado');
+Route::get('/inventario/salida','KardexSalidaController@index2')->name('inventario.salida');
+
 Route::get("/inventario/consultas", 'PeriodoConsultaController@index2')->name('inventario.consultas');
 Route::get('/inventario/cierre','CierrePeriodoController@index2')->name('inventario.cierre');
 Route::get('/inventario/movimiento','Consulta_MovimientoController@index2') ->name('inventario.movimiento');
