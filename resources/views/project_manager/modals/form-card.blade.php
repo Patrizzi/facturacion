@@ -9,7 +9,7 @@
                 <div class="col-md-6">
                     <div class="form-group d-flex align-items-center"> 
                         {{ html()->label('Responsable')->class('label-custom me-2') }}
-                        {{ html()->select('responsable_id', $modalData['users']->pluck('name', 'id'))->class('form-control')->value(old('responsable_id', $model->responsable_id ?? '')) }}
+                        {{ html()->select('responsable_id', $modalData['users'])->class('form-control')->value(old('responsable_id', $model->responsable_id ?? '')) }}
                     </div>
                 </div>
                 <div class="col-md-6">

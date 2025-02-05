@@ -7,11 +7,21 @@ use App\User;
 use App\ProjectManager;
 use App\Activity;
 
-class ActivityController extends Controller
-{
-    public function getModalData(){
+class ActivityController extends Controller {
+    public function getModalData() {
+        $users = User::all()->mapWithKeys(function ($item) {
+            $value = $item->nombre ?? $item->name;
+            return [$item->id => $value];
+        });
+
+        $dataUsers = [];
+
+        foreach ($users as $clave => $nombre) {
+            $dataUsers[$clave] = $nombre;
+        }
+
         return [
-            'users' => User::select('id', 'name')->get(),
+            'users' => $dataUsers,
             'estados' => Activity::getStatuses()
         ];
     }
@@ -53,8 +63,8 @@ class ActivityController extends Controller
             'estado' => $request->estado,
             'color' => $request->color,
         ]);
-    
-        if ($request->hasfile('foto')){
+
+        if ($request->hasfile('foto')) {
             $image1 = $request->file('foto');
             $name = time() . $image1->getClientOriginalName();
             $destinationPath = public_path('/archivos/imagenes/project_manager/');
@@ -85,7 +95,7 @@ class ActivityController extends Controller
         ]);
     }
 
-    public function update(Request $request, $project_id, $id){
+    public function update(Request $request, $project_id, $id) {
         $request->validate([
             'nombre' => 'required|string|max:255',
             'contenido' => 'required|string',
@@ -96,7 +106,7 @@ class ActivityController extends Controller
         ]);
 
         $activity = Activity::findOrFail($id);
-        
+
         $name = $activity->foto;
 
         if ($request->hasfile('foto')) {
@@ -116,14 +126,14 @@ class ActivityController extends Controller
             'color' => $request->color,
             'foto' => $name
         ]);
-        
+
         return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarjeta actualizada exitosamente');
     }
 
-    public function destroy($project_id, $id){
+    public function destroy($project_id, $id) {
         $activity = Activity::where('id', $id)->where('proyecto_id', $project_id)->firstOrFail();
 
-        if ($activity->delete()){
+        if ($activity->delete()) {
             return redirect()->route('project_managers.show', $project_id)->with('success', 'Tarjeta eliminada correctamente');
         } else {
             return redirect()->route('project_managers.show', $project_id)->with('error', 'Error al eliminar la tarjeta');

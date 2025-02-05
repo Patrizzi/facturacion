@@ -21,7 +21,7 @@ class ProjectManagerController extends Controller {
     {
         $this->users=$users::all()->mapWithKeys(function ($item) {
             $value = $item->nombre ?? $item->name;
-            return [$item-> id => $value];
+            return [$item->id => $value];
         });
         $this->responsables=$this->users;
         $this->servicios=$servicios::pluck('nombre','id');
