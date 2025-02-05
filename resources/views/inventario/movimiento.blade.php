@@ -16,13 +16,20 @@
                                 </ul>
                                 <div class="tab-content">
                                     <!-- Contenido de Tab 1 -->
-                                    <div role="tabpanel" id="tab-1" class="tab-pane ">
-                                        
+                                    <div role="tabpanel" id="tab-1" class="tab-pane active">
                                     </div>
 
                                     <!-- Contenido de Tab 2 -->
-                                    <div role="tabpanel" id="tab-2" class="tab-pane active show">
+                                    <div role="tabpanel" id="tab-2" class="tab-pane">
+                                    </div>
+                                    <!-- Contenido de Tab 3 -->
+                                    <div role="tabpanel" id="tab-3" class="tab-pane">
+
+                                    </div>
+                                    <!-- Contenido de Tab 4 -->
+                                    <div role="tabpanel" id="tab-4" class="tab-pane">
                                         <div class="panel-body">
+                                            <!-- CONTENIDO DENTRO DEL TAB 4 -->
                                             <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                                                 <!-- Calendario -->
                                                 <div id="reportrange1" class="form-control">
@@ -54,97 +61,111 @@
                                             </div>
                                             <br>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
+                                                <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-hover text-center datatables-compras">
+                                                <table class="table table-striped table-hover text-center datatables-compra-producto">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>Nombre de Producto</th>
-                                                        <th>Cant.Inicial</th>
-                                                        <th>Precio nacional</th>
-                                                        <th>Precio extranjero</th>
+                                                        <th>Fecha</th>
+                                                        <th>N° Ruc</th>
+                                                        <th>Proveedor</th>
+                                                        <th>Ruc</th>
+                                                        <th>N° Doc. Proveedor</th>
+                                                        <th>Sub total</th>
+                                                        <th>IGV</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     <tr>
                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>LAPTOP</td>
-                                                        <td>1200</td>
-                                                        <td>S/ 600</td>
-                                                        <td>$ 200</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>monitor</td>
-                                                        <td>100</td>
-                                                        <td>S/ 8000</td>
-                                                        <td>$ 3000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>p. termica</td>
-                                                        <td>10</td>
-                                                        <td>S/ 500</td>
-                                                        <td>$ 126</td>
+                                                        <td>23/10/2024</td>
+                                                        <td>20601381461</td>
+                                                        <td>IMPACTO</td>
+                                                        <td>26958463245</td>
+                                                        <td>72846344</td>
+                                                        <td>S/ 1200</td>
+                                                        <td>S/ 216</td>
+                                                        <td>S/ 1416</td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <br>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">VENTAS</h3> <!-- Título más prominente -->
+                                                <h3 class="text-center">FACTURAS</h3> <!-- Título más prominente -->
                                                 <br>
-                                                <table class="table table-striped table-hover text-center datatables-ventas">
+                                                <table class="table table-striped table-hover text-center datatables-facturas">
                                                     <thead>
                                                     <tr>
 
                                                         <th></th>
-                                                        <th>Tipo</th>
-                                                        <th>Nombre de Producto</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio nacional</th>
-                                                        <th>Precio extranjero</th>
+                                                        <th>Fecha</th>
+                                                        <th>N° Ruc</th>
+                                                        <th>Proveedor</th>
+                                                        <th>Ruc</th>
+                                                        <th>N° Doc</th>
+                                                        <th>Moneda</th>
+                                                        <th>Sub total</th>
+                                                        <th>IGV</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     <tr>
-                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
-                                                        <td>Laptop</td>
-                                                        <td>4 Unid</td>
-                                                        <td>S/ 600</td>
-                                                        <td>$ 200</td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>23/10/2024</td>
+                                                        <td>20956328574</td>
+                                                        <td>LOGISTICA FERRE</td>
+                                                        <td>20635894521</td>
+                                                        <td>84526955</td>
+                                                        <td>PEN</td>
+                                                        <td>s/ 1200</td>
+                                                        <td>S/ 216</td>
+                                                        <td>S/ 1416</td>
                                                     </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br>
+                                            <div class="table-responsive">
+                                                <h3 class="text-center">BOLETAS</h3> <!-- Título más prominente -->
+                                                <br>
+                                                <table class="table table-striped table-hover text-center datatables-boletas">
+                                                    <thead>
                                                     <tr>
-                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
-                                                        <td>teclados</td>
-                                                        <td>60 Unid</td>
-                                                        <td>S/ 1200</td>
-                                                        <td>$ 400</td>
+
+                                                        <th></th>
+                                                        <th>Fecha</th>
+                                                        <th>N° Doc</th>
+                                                        <th>Cliente</th>
+                                                        <th>Ruc</th>
+                                                        <th>N° Doc</th>
+                                                        <th>Moneda</th>
+                                                        <th>Sub total</th>
+                                                        <th>IGV</th>
+                                                        <th>Total</th>
                                                     </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     <tr>
-                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
-                                                        <td>placa madre</td>
-                                                        <td>50 Unid</td>
-                                                        <td>S/ 3000</td>
-                                                        <td>$ 260</td>
+                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
+                                                        <td>23/10/2024</td>
+                                                        <td>20956328574</td>
+                                                        <td>LOGISTICA FERRE</td>
+                                                        <td>20635894521</td>
+                                                        <td>84526955</td>
+                                                        <td>PEN</td>
+                                                        <td>s/ 1200</td>
+                                                        <td>S/ 216</td>
+                                                        <td>S/ 1416</td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Contenido de Tab 3 -->
-                                    <div role="tabpanel" id="tab-3" class="tab-pane">
-
-                                    </div>
-                                    <!-- Contenido de Tab 4 -->
-                                    <div role="tabpanel" id="tab-4" class="tab-pane">
-
                                     </div>
                                 </div>
                             </div>
@@ -199,27 +220,73 @@
 </style>
 
 <script>
-    $(document).ready(function () {
-        // Asegúrate de que el tab esté activo
-        $('#tab-2').addClass('active show');
-
-        $('.datatables-compras').DataTable({
+    //dataTables-example
+    $(document).ready(function(){
+        $('.datatables-entrada').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-distribucion').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-traslado').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-salida').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        
+        $('.datatables-cierre').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-compra-producto').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-facturas').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+        $('.datatables-boletas').DataTable({
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
 
-        $('.datatables-ventas').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-    });
+</script>
+
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<script>
+    document.getElementById("btn-agregar-EP").onclick = function() {
+        document.getElementById("formulario-agregar-producto").style.display = "block";
+    };
+
+    function cerrarFormulario() {
+        document.getElementById("formulario-agregar-producto").style.display = "none";
+    }
 </script>
 
 
+<!-- scrip para los calendarios -->
 <script>
     $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 

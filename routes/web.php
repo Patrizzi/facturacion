@@ -585,7 +585,6 @@ Route::get("/boleta3","BOLETACONTROLLER@index3")->name('boleta3');
 //Nuevo inventario
 //Kardex
 Route::get("/inventario2","INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
-
 Route::get("/inventario/consultas", 'PeriodoConsultaController@index2')->name('inventario.consultas');
 
 

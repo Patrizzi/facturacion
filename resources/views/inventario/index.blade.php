@@ -25,7 +25,7 @@
                                                 </ul>
 
                                                 <div class="tab-content">
-                                                    <div role="tabpanel" id="contenido-tab-1" class="tab-pane active">
+                                                    <div role="tabpanel" id="contenido-tab-1" class="tab-pane active show">
                                                         <!-- Título centrado -->
                                                         <h2 style="text-align: center; margin-bottom: 20px;">Almacen Principal - Oficina Arequipa</h2>
                                                         <div class="panel-body">
@@ -387,349 +387,13 @@
                                     </div>
 
                                     <!-- Contenido de Tab 2 -->
-                                    <div role="tabpanel" id="tab-2" class="tab-pane">
-
-                                        <div class="panel-body">
-                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                                <!-- Calendario -->
-                                                <div id="reportrange1" class="form-control">
-                                                    <i class="fa fa-calendar"></i>
-                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                                </div>
-
-                                                <!-- Botones -->
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <div style="display: flex; gap: 10px;">
-                                                        <div style="position: relative;">
-                                                            <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-cloud-download"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                            <a class="dropdown-item" href="#">Print</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-compras">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Nombre de Producto</th>
-                                                        <th>Cant.Inicial</th>
-                                                        <th>Precio nacional</th>
-                                                        <th>Precio extranjero</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>LAPTOP</td>
-                                                        <td>1200</td>
-                                                        <td>S/ 600</td>
-                                                        <td>$ 200</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>monitor</td>
-                                                        <td>100</td>
-                                                        <td>S/ 8000</td>
-                                                        <td>$ 3000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>p. termica</td>
-                                                        <td>10</td>
-                                                        <td>S/ 500</td>
-                                                        <td>$ 126</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">VENTAS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-ventas">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Tipo</th>
-                                                        <th>Nombre de Producto</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio nacional</th>
-                                                        <th>Precio extranjero</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
-                                                        <td>Laptop</td>
-                                                        <td>4 Unid</td>
-                                                        <td>S/ 600</td>
-                                                        <td>$ 200</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
-                                                        <td>teclados</td>
-                                                        <td>60 Unid</td>
-                                                        <td>S/ 1200</td>
-                                                        <td>$ 400</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
-                                                        <td>placa madre</td>
-                                                        <td>50 Unid</td>
-                                                        <td>S/ 3000</td>
-                                                        <td>$ 260</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                    <div role="tabpanel" id="tab-2" class="tab-pane"> 
                                     </div>
                                     <!-- Contenido de Tab 3 -->
                                     <div role="tabpanel" id="tab-3" class="tab-pane">
-                                        <div class="panel-body">
-                                            <!-- CONTENIDO DENTRO DEL TAB 3 -->
-                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                <div style="flex-grow: 1;">
-                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                </div>
-
-                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                <div>
-                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                    <!-- Botón de Descarga con menú desplegable -->
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-cloud-download"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                            <a class="dropdown-item" href="#">Print</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <table class="table table-striped table-hover text-center datatables-cierre">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>ID</th>
-                                                        <th>Mes</th>
-                                                        <th>Año</th>
-                                                        <th>Visualizar</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>01</td>
-                                                        <td>OCTUBRE</td>
-                                                        <td>2021</td>
-                                                        <td>
-                                                            <p>
-                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>02</td>
-                                                        <td>NOVIEMBRE</td>
-                                                        <td>2022</td>
-                                                        <td>
-                                                            <p>
-                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>03</td>
-                                                        <td>FEBRERO</td>
-                                                        <td>2025</td>
-                                                        <td>
-                                                            <p>
-                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-
-
-                                        </div>
                                     </div>
                                     <!-- Contenido de Tab 4 -->
                                     <div role="tabpanel" id="tab-4" class="tab-pane">
-                                        <div class="panel-body">
-                                            <!-- CONTENIDO DENTRO DEL TAB 4 -->
-                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                                <!-- Calendario -->
-                                                <div id="reportrange1" class="form-control">
-                                                    <i class="fa fa-calendar"></i>
-                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                                </div>
-
-                                                <!-- Botones -->
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <div style="display: flex; gap: 10px;">
-                                                        <div style="position: relative;">
-                                                            <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-cloud-download"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                            <a class="dropdown-item" href="#">Print</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-compra-producto">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Fecha</th>
-                                                        <th>N° Ruc</th>
-                                                        <th>Proveedor</th>
-                                                        <th>Ruc</th>
-                                                        <th>N° Doc. Proveedor</th>
-                                                        <th>Sub total</th>
-                                                        <th>IGV</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20601381461</td>
-                                                        <td>IMPACTO</td>
-                                                        <td>26958463245</td>
-                                                        <td>72846344</td>
-                                                        <td>S/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">FACTURAS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-facturas">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Fecha</th>
-                                                        <th>N° Ruc</th>
-                                                        <th>Proveedor</th>
-                                                        <th>Ruc</th>
-                                                        <th>N° Doc</th>
-                                                        <th>Moneda</th>
-                                                        <th>Sub total</th>
-                                                        <th>IGV</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20956328574</td>
-                                                        <td>LOGISTICA FERRE</td>
-                                                        <td>20635894521</td>
-                                                        <td>84526955</td>
-                                                        <td>PEN</td>
-                                                        <td>s/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">BOLETAS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-boletas">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Fecha</th>
-                                                        <th>N° Doc</th>
-                                                        <th>Cliente</th>
-                                                        <th>Ruc</th>
-                                                        <th>N° Doc</th>
-                                                        <th>Moneda</th>
-                                                        <th>Sub total</th>
-                                                        <th>IGV</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20956328574</td>
-                                                        <td>LOGISTICA FERRE</td>
-                                                        <td>20635894521</td>
-                                                        <td>84526955</td>
-                                                        <td>PEN</td>
-                                                        <td>s/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -785,7 +449,10 @@
 
 <script>
     //dataTables-example
-    $(document).ready(function(){
+    $(document).ready(function () {
+        // Asegúrate de que el tab esté activo
+        $('#tab-1').addClass('active show');
+
         $('.datatables-entrada').DataTable({
             pageLength: 25,
             responsive: true,
@@ -846,7 +513,7 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
-
+    });
 </script>
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
