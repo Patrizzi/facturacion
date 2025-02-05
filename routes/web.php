@@ -579,8 +579,14 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get("/boleta3","BOLETACONTROLLER@index3")->name('boleta3');
+
+
+
+//Nuevo inventario
+//Kardex
 Route::get("/inventario2","INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
 
+Route::get('/inventario/consultas', 'PeriodoConsultaController@index2')->name('inventario.consultas');
 
 
 
