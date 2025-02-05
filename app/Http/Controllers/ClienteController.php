@@ -106,8 +106,11 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-      $cliente_rete=ClienteRetenedores::where('cliente_id',$id)->first();
       $cliente_show=Cliente::find($id);
+      if (request()->wantsJson()) {
+        return response()->json($cliente_show);
+      }
+      $cliente_rete=ClienteRetenedores::where('cliente_id',$id)->first();
       $cliente_sucursal=Cliente_sucursal::where('cliente_id',$id)->get();
       $contacto_show=Contacto::where('clientes_id','=',$id)->orderBy('primer_contacto','DESC')->get();
       $contacto_cantidad=Contacto::where('clientes_id',$id)->count();

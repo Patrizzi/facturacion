@@ -4,35 +4,36 @@ namespace App\Http\Controllers;
 
 use App\ProjectManager;
 use App\Cliente;
-use App\ProjectService;
 use App\User;
 use App\Activity;
+use App\Servicios;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller {
     private $responsables;
-    private $projectServices;
+    private $servicios;
     private $administradores;
     private $priorities;
 
-    public function __construct(Cliente $responsable,ProjectService $projectService,User $administrador,ProjectManager $priority)
+    public function __construct(Cliente $responsable,Servicios $servicios,User $administrador,ProjectManager $priority)
     {
         $this->responsables=$responsable::pluck('nombre','id');
-        $this->projectServices=$projectService::pluck('nombre','id');
+        $this->servicios=$servicios::pluck('nombre','id');
         $this->administradores=$administrador::pluck('name','id');
         $this->priorities=$priority::getPriorities();
     }
 
-    private function getDataForm($id = null) {
-        $dataResponsable = [];
-        $dataProjectService = [];
-        $dataAdministrador = [];
+    public function getDataForm($id = null)
+    {
+        $dataResponsable=[];
+        $dataServicios = [];
+        $dataAdministrador=[];
 
         foreach ($this->responsables as $clave => $nombre) {
             $dataResponsable[$clave] = $nombre;
         }
-        foreach ($this->projectServices as $clave => $nombre) {
-            $dataProjectService[$clave] = $nombre;
+        foreach ($this->servicios as $clave =>$nombre){
+            $dataServicios[$clave]=$nombre;
         }
         foreach ($this->administradores as $clave => $nombre) {
             $dataAdministrador[$clave] = $nombre;
@@ -40,7 +41,7 @@ class ProjectManagerController extends Controller {
 
         $dataForm=[
             'responsables'   => $dataResponsable,
-            'projectServices'   => $dataProjectService,
+            'servicios'   => $dataServicios,
             'administradores'  => $dataAdministrador,
             'priorities' => $this->priorities,
         ];
@@ -77,20 +78,22 @@ class ProjectManagerController extends Controller {
         return view('project_manager.create', $this->getDataForm());
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $numbers = ['required', 'integer', 'min:1'];
         $request->validate([
-            'nombre', 'required',
+            'nombre' => 'required',
             'ruc' => 'required',
             'administrador_id' => $numbers,
             'responsable_id' => $numbers,
-            'project_service_id' => $numbers,
+            'service_id' => $numbers,
             'cliente_id' => $numbers,
             'fecha_inicio' => 'required',
             'fecha_cierre' => 'required',
             'prioridad' => $numbers,
             'centro_costo' => 'required'
         ]);
+        
         ProjectManager::create($request->all());
         return redirect()->route('project_managers.index')->with('success', 'Creado exitosamente');
     }
