@@ -76,13 +76,20 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                @include('facturacion_electronica.factura.shared.tabs')
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-success" type="button">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                </ul>
-                                
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                    @include('facturacion_electronica.factura.shared.tabs')
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
+                                        <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle"> <i class="fa fa-download"></i></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">XML</a></li>
+                                                <li><a class="dropdown-item" href="#">CDR</a></li>
+                                                <li class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="#" onclick="download_pdf_select()">PDF</a></li>
+                                            </ul>
+                                        </div>
+                                    </ul>
+                                </ul>    
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
@@ -130,7 +137,7 @@
                                     <table class="table table-striped dataTables-fact_enviadas">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks-facturas_env" name="input[]">
+                                                <th><input type="checkbox" class="i-checks-facturas_env_all" name="input[]">
                                                 </th>
                                                 <th>Item</th>
                                                 <th>Código</th>
@@ -477,6 +484,13 @@
         #alert_one_factura {
             margin-bottom: 0px !important;
         }
+        .nav-tabs .dropdown-menu{
+            padding-top: 5px !important;
+            padding-bottom: 5px !important;
+        }
+        .td_status{
+            text-align: center;
+        }
     </style>
 
     <!-- scripts -->
@@ -517,6 +531,11 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE FACTURAS "
             $('#tab_fact_env').addClass('active');
+            // CHEK
+            $('.i-checks-facturas_env_all').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
 
             // {{-- Datatable Facturas Enviadas  --}}
             var table_factura_enviada = $('.dataTables-fact_enviadas').DataTable({
@@ -544,7 +563,7 @@
                         'orderable': false, // Deshabilitar ordenación en esta columna
                         'render': function(data, type, full, meta) {
                             // Renderizar el checkbox en la primera columna
-                            return '<input type="checkbox" name="select_row" value="' + full[0] +
+                            return '<input type="checkbox" name="select_row" value="' + full[2] +
                                 '" class="i-checks-facturas_env">';
                         }
                     },
@@ -555,6 +574,7 @@
                     {
                         'targets': [7], // Estado
                         'orderable': false,
+                        'className': 'td_status',
                         'render': function(data, type, full, meta) {
                             var end = ``;
                             if (full[7] == 1) {
@@ -918,25 +938,26 @@
     </script>
     <script>
         // CHECKS FACTURAS
-        $('thead input[class="i-checks-facturas"]').on('ifChecked ifUnchecked', function(event) {
+        $('thead input[class="i-checks-facturas_env_all"]').on('ifChecked ifUnchecked', function(event) {
+            
             var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
             if (event.type === 'ifChecked') {
                 // Selecciona 
-                table.find('tbody input[class="i-checks-facturas"]').iCheck('check');
+                table.find('tbody input[class="i-checks-facturas_env"]').iCheck('check');
             } else {
                 // Deselecciona 
-                table.find('tbody input[class="i-checks-facturas"]').iCheck('uncheck');
+                table.find('tbody input[class="i-checks-facturas_env"]').iCheck('uncheck');
             }
         });
 
         // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-        $('tbody input[class="i-checks-facturas"]').on('ifChanged', function(event) {
+        $('tbody input[class="i-checks-facturas_env "]').on('ifChanged', function(event) {
             var table = $(this).closest('table'); // Limita el control a la tabla visible
-            if (table.find('tbody input[class="i-checks-facturas"]').filter(':checked').length === table.find(
-                    'tbody input[class="i-checks-facturas"]').length) {
-                table.find('thead input[class="i-checks-facturas"]').iCheck('check');
+            if (table.find('tbody input[class="i-checks-facturas_env    "]').filter(':checked').length === table.find(
+                    'tbody input[class="i-checks-facturas_env   "]').length) {
+                table.find('thead input[class=i-checks-facturas_env_all"]').iCheck('check');
             } else {
-                table.find('thead input[class="i-checks-facturas"]').iCheck('uncheck');
+                table.find('thead input[class=i-checks-facturas_env_all"]').iCheck('uncheck');
             }
         });
 
@@ -1251,6 +1272,16 @@
             location.reload();
         });
         // Mensaje para que cierre x
+
+        function download_pdf_select(){
+            var checks = $('input[class=i-checks-facturas_env]:checkbox:checked');
+            // var checks_all = checks.concat(checks_m, checks_d);
+            checks.each(function() {
+                var codigo = $(this).val();
+                console.log(codigo);    
+            });
+                    
+        }
     </script>
 
 

@@ -29,4 +29,4 @@
             {{-- link del tab 2 --}}
         </a>
     </li>
-</ul>
+</div>
