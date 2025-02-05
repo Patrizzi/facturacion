@@ -15,7 +15,7 @@
                 </div>
                 <div class="p-card-action-icons">
                     <a href="#" class="fa fa-plus" data-toggle="modal" data-target="#formModal"
-                        data-url="{{ $url_buttons['create_task'] }}"></a>
+                        data-url="{{ $url_buttons['create_task'] }}"> {{ $card->tasks()->count() }}</a>
                     @if ($responsable_id == auth()->id())
                         <a href="#" class="fa fa-trash" onclick="deleteItem('{{ $id }}')"></a>
                         <form action="{{ $url_buttons['delete_card'] }}" method="POST" style="display: none;"
