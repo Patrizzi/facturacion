@@ -24,7 +24,7 @@ class ProjectManager extends Model {
         'administrador_id',
         'responsable_id',
         'cliente_id',
-        'project_service_id',
+        'service_id',
         'fecha_inicio',
         'fecha_cierre',
         'prioridad'
@@ -44,8 +44,8 @@ class ProjectManager extends Model {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    public function project_service() {
-        return $this->belongsTo(ProjectService::class, 'project_service_id');
+    public function servicio() {
+        return $this->belongsTo(Servicios::class, 'service_id');
     }
 
     public function activities() {
