@@ -16,7 +16,7 @@
 </div>
 <div class="form-group col-lg-6">
     {{ html()->label('Cliente') }}
-    {{ html()->select('cliente_id', $responsables)->placeholder('Ingrese al Cliente')->class('form-control select client')->value(old('cliente_id', $project_manager->cliente_id ?? '')) }}
+    {{ html()->select('cliente_id', $clients)->placeholder('Ingrese al Cliente')->class('form-control select client')->value(old('cliente_id', $project_manager->cliente_id ?? '')) }}
 </div>
 <div class="form-group col-lg-6">
     {{ html()->label('Administrador') }}
