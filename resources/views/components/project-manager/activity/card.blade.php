@@ -52,8 +52,8 @@
             </div>
             <div class="p-card-buttons">
                 <button>
-                    <a href="#" class="fa fa-comment" data-toggle="modal" data-target="#chatModal"
-                        data-url="{{ $url_buttons['tasks_card'] }}"></a>
+                    <a href="#" class="fa fa-check-square-o" data-toggle="modal" data-target="#chatModal"
+                        data-url="{{ $url_buttons['tasks_card'] }}"> Tareas</a>
                 </button>
                 {{-- <button>
                     <a href="#" class="fa fa-comment" data-toggle="modal" data-target="#chatModal" data-url="{{ $url_buttons['tasks_card'] }}"></a>
