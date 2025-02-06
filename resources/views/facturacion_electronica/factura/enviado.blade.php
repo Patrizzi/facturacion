@@ -904,11 +904,11 @@
         }
         // Facturas Enviadas
         function limpiar_select_fact_env() {
-            table_fact_enviada.column(5).search("").draw();
+            table_factura_enviada.column(5).search("").draw();
         }
 
         function revert_select_fact_env() {
-            table_fact_enviada.column(5).search(`{{ date('m-Y') }}`).draw();
+            table_factura_enviada.column(5).search(`{{ date('m-Y') }}`).draw();
         }
         // Factuas Manuales
         function limpiar_select_fact_manual() {
