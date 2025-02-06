@@ -223,8 +223,8 @@ class ServiciosController extends Controller
     }
 
     public function index2(){
-        $servicios2=Servicios::all();
+        $servicios=Servicios::all();
         $familias=Familia::all();
-        return view('producto_servicios.servicios.index2',compact('servicios2','familias'));
+        return view('producto_servicios.servicios.index2',compact('servicios','familias'));
     }
 }

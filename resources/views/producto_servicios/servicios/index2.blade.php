@@ -1,5 +1,5 @@
 @extends('layout')
-@section('atributo_actu', 'hidden')
+{{-- @section('atributo_actu', 'hidden') --}}
 @section('title', 'Servicios')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('servicios.create'))
