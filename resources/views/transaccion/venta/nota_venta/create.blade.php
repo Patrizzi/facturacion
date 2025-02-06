@@ -339,7 +339,7 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <div>
-                            <button class="btn btn-success" type="submit">
+                            <button class="btn btn-success" type="button" style="background-color:blue; border-color:blue;">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>

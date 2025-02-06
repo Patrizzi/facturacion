@@ -5,9 +5,9 @@
  @section('atributo_1', 'hidden')
 
  @section('content')
- 
+
  @php
-use App\Categoria; 
+use App\Categoria;
 $categorias = Categoria::get();
 
 use App\Familia;
@@ -200,10 +200,10 @@ $validez=Validez::get();
                             </select>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -216,23 +216,22 @@ $validez=Validez::get();
                 </div>
                 <hr>
                 <!--Buscar y tabla-->
-                <div class="col-12">
+                <div class="col-12 mb-3">
                     <div class=" input-group row">
-                        <input class="form-control" type="text" name="daterangecambio"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                        </div>
+                        <input class="form-control" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                <i class="fa fa-history"></i>
+                            </button>
+                        </span>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
+                                <i class="fa fa-eraser"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive p-2">
                     <!--Tabla-->
                     <table class="table table-striped text-md-center dataTables-cambio12">
                         <thead>
@@ -243,7 +242,7 @@ $validez=Validez::get();
                                 <th>Fecha Actualización</th>
                             </tr>
                         </thead>
-                        <tbody> 
+                        <tbody>
                             @foreach($tipo_cambio as $tipo_cambios)
                             <tr>
                                 <td>{{$tipo_cambios->compra}}</td>
@@ -251,7 +250,7 @@ $validez=Validez::get();
                                 <td>{{$tipo_cambios->paralelo}}</td>
                                 <td>{{$tipo_cambios->created_at}}</td>
                             </tr>
-                            @endforeach  
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -286,10 +285,10 @@ $validez=Validez::get();
                             <input type="text" placeholder="Símbolo: BOL" class="form-control m-b">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -310,7 +309,7 @@ $validez=Validez::get();
                             </button>
                         </span>
                         <span class="input-group-append">
-                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                            <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
                                 <i class="fa fa-eraser"></i>
                             </button>
                         </span>
@@ -345,7 +344,7 @@ $validez=Validez::get();
                                 <td>{{$u_medida->created_at}}</td>
                                 <td>{{$u_medida->updated_at}}</td>
                             </tr>
-                            @endforeach 
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -356,8 +355,8 @@ $validez=Validez::get();
 
 <!-- modal - Motivos -->
 <div id="modal-forms3" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel3">Motivos</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -371,10 +370,10 @@ $validez=Validez::get();
                         <div class="col-10">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -406,7 +405,7 @@ $validez=Validez::get();
                         <!-- Tablas y su contenido -->
                         <div class="tab-content" >
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body table-responsive"> 
+                                <div class="panel-body table-responsive">
 
                                     <div class="col-12 input-group row">
                                         <input class="col-lg-12 form-control" type="text" name="daterangemotivos1" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
@@ -416,7 +415,7 @@ $validez=Validez::get();
                                             </button>
                                         </span>
                                         <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                        <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
                                             <i class="fa fa-eraser"></i>
                                             </button>
                                         </span>
@@ -430,14 +429,14 @@ $validez=Validez::get();
                                                 <th>Fecha de Modificación</th>
                                             </tr>
                                         </thead>
-                                        
+
                                         <tbody>
                                         @foreach ($motivos_compra as $m_compras)
                                             <tr>
                                             <td>{{$m_compras->nombre}}</td>
                                             <td>{{ \Carbon\Carbon::parse($m_compras->updated_at)->format('d/m/Y H:i:s')}}</td>
                                             </tr>
-                                        @endforeach   
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -453,7 +452,7 @@ $validez=Validez::get();
                                             </button>
                                         </span>
                                         <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                        <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
                                             <i class="fa fa-eraser"></i>
                                             </button>
                                         </span>
@@ -473,7 +472,7 @@ $validez=Validez::get();
                                             <td>{{$m_devol->nombre}}</td>
                                             <td>{{ \Carbon\Carbon::parse($m_devol->updated_at)->format('d/m/Y H:i:s')}}</td>
                                             </tr>
-                                        @endforeach    
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -500,6 +499,16 @@ $validez=Validez::get();
             <div class="modal-body">
                 <!--Contenido de modal-->
                 <div class="row">
+                    <div class="col-12 row mb-3">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
+                        </div>
+                    </div>
                     <div class="col-6">
                         <select class="form-control" name="account">
                             <option>Extendida</option>
@@ -510,16 +519,6 @@ $validez=Validez::get();
                     <div class="col-6">
                         <input type="text" placeholder="Duración: 3 meses" class="form-control m-b">
                     </div>
-                    <div class="col-12 row">
-                        <div class="col-10">
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
-                        </div>
-                    </div>
                 </div>
                 <hr>
                 <!--Buscar y tabla-->
@@ -529,7 +528,7 @@ $validez=Validez::get();
                         <input type="text" class="form-control col-md-9 col-sm-8">
                     </div>
                 </div>
-                <div class="row bg-light table-responsive">
+                <div class="row bg-light table-responsive pt-3">
                     <table class="col-12 table table-striped text-md-center dataTables-garantia">
                         <thead>
                             <tr>
@@ -570,7 +569,7 @@ $validez=Validez::get();
                         <select class="form-control" name="account">
                             <option>Servicios</option>
                             <option>Productos</option>
-                            <option>Ventas</option>   
+                            <option>Ventas</option>
                         </select>
                     </div>
                     <div class="col-6">
@@ -581,10 +580,10 @@ $validez=Validez::get();
                             <input type="text" placeholder="Descripción:" class="form-control">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                 </div>
@@ -610,7 +609,7 @@ $validez=Validez::get();
                                 <td>{{$categoria->codigo}}</td>
                                 <td>{{$categoria->descripcion}}</td>
                             </tr>
-                            @endforeach                       
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -640,10 +639,10 @@ $validez=Validez::get();
                             <input type="text" placeholder="Padre: Utencilios" class="form-control m-b">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                     <div class="col-4">
@@ -682,7 +681,7 @@ $validez=Validez::get();
                             </tr>
                         </thead>
                         <tbody>
-                            @php 
+                            @php
                             use App\Subfamilia;
                             @endphp
                             <span hidden="hidden">{{$i=1}}</span>
@@ -703,9 +702,9 @@ $validez=Validez::get();
                             </a>
                             </td>
                             </tr>
-                            @endforeach                          
+                            @endforeach
                         </tbody>
-                    </table>        
+                    </table>
                 </div>
             </div>
         </div>
@@ -739,10 +738,10 @@ $validez=Validez::get();
                             <input type="text" placeholder="Descripción: Empresa especializada en la creación de..." class="form-control m-b">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -804,7 +803,7 @@ $validez=Validez::get();
                                 @endif
                                 </td>
                                 <td>{{$marca->descripcion}}</td>
-                                <td> 
+                                <td>
                                 @if(isset($marca->imagen))
                                 <img name="imagen" src="{{asset('archivos/imagenes/marcas/'.$marca->imagen)}}" width="80px" height="80px"   />
                                 @else
@@ -822,7 +821,7 @@ $validez=Validez::get();
 
 <!-- modal - Validez -->
 <div id="modal-forms8" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel7">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> 
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel7">Validez</h3>
@@ -834,20 +833,20 @@ $validez=Validez::get();
                 <!--Contenido de modal-->
                 <div class="row">
                     <div class="col-12 row">
-                        <div class="col-8">
+                        <div class="col-10">
                             <input type="text" placeholder="Descripción: Tiempo ..." class="form-control m-b">
                         </div>
-                        <div class="col-2">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                        <div class="col-1">
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
-                        <div class="col-2">
-                            <button class="btn btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
+                        <div class="col-1">
+                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                 </div>
                 <hr>
                 <!--Fecha, Buscar y tabla-->
-                <div class="row mb-3 mx-1">
+                <div class="row mb-3">
                     <div class="col-12 input-group">
                         <label class="col-sm-2 col-form-label">Buscar:</label>
                         <input class="form-control col-sm-8" type="text" name="">
@@ -1085,7 +1084,7 @@ $validez=Validez::get();
 
         });
         $('input[name="daterangemotivos1"]').daterangepicker({
-            
+
                     "locale": {
                         "separator": " | ",
                         "applyLabel": "Guardar",
@@ -1172,7 +1171,7 @@ $validez=Validez::get();
 
         });
         $('input[name="daterangemotivos2"]').daterangepicker({
-            
+
                     "locale": {
                         "separator": " | ",
                         "applyLabel": "Guardar",
@@ -1259,7 +1258,7 @@ $validez=Validez::get();
 
         });
         $('input[name="daterangecambio"]').daterangepicker({
-            
+
                     "locale": {
                         "separator": " | ",
                         "applyLabel": "Guardar",
@@ -1312,7 +1311,7 @@ $validez=Validez::get();
                 }
             );
     });
-        
+
         function limpiar_select(){
             table3.column(5).search("").draw();
         }
@@ -1347,7 +1346,7 @@ $validez=Validez::get();
 
         });
         $('input[name="daterangemedida"]').daterangepicker({
-            
+
                     "locale": {
                         "separator": " | ",
                         "applyLabel": "Guardar",

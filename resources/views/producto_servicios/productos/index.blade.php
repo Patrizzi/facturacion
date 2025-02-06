@@ -125,7 +125,7 @@
                             </li>
                             <li class="ml-auto align-content-center">
                                 <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                                     <ul class="dropdown-menu">
                                         <p class="pl-3"><b>Almacenes:</b></p>
                                         <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
@@ -190,7 +190,7 @@
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        
+
                                     </table>
                                 </div>
                             </div>
@@ -204,8 +204,8 @@
                                                 <th>Item</th>
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
-                                                <th>Código original</th> 
-                                                <th>Familia</th>                
+                                                <th>Código original</th>
+                                                <th>Familia</th>
                                                 <th>Marca</th>
                                                 <th>Afectación</th>
                                                 <th>Acciones</th>
@@ -243,7 +243,16 @@
         </div>
     </div>
 </div>
-
+<!-- Creación Sencilla
+- Crear otra vista, se añade la estructura
+- se hace el tabs.blade.php
+- ProductosCrontoller -> Se va al último apartado
+- movimiento -> se crea un index2, se retorna la vista, se pone la ruta de productos
+se añade el compact (back)
+- en web, se hace por medio del get (llamado para una creación), el post se hace para un después, se hace un nuevo cambio, para resources para una api, ajax, etc.
+Se crea la ruta y el cambio de nombre de la vista, url. todo el mismo nombre. del archivo creado.
+Poner route en los tabs, no olvidar.
+-->
 <style>
     .circle-size{
         min-height: 40px;
@@ -471,7 +480,7 @@
             ]
         });
 
-        
+
     });
 
 </script>
@@ -540,7 +549,7 @@
             ]
         });
 
-        
+
     });
 
 </script>
@@ -568,7 +577,7 @@
                 render: function (data) {
                     var actions = '';
 
-                    
+
                         // Botón de "Ver producto"
                         actions += '<a  class="px-3" href="{{ route('productos.show',':id') }}" target="_blank">' +
                                 '<button type="button" class="btn btn-success">' +
@@ -608,7 +617,7 @@
             ]
         });
 
-        
+
     });
 
 </script>

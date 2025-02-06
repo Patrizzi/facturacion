@@ -581,6 +581,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/facturacion3','facturacioncontroller@index3')->name('facturacion3');
 
+Route::get('/servicios/index2','ServiciosController@index2')->name('servicios.index2');
 
 
 

@@ -356,7 +356,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button type="button" class="addmore btn btn-success">
+                                            <button type="button" class="addmore btn btn-success" style="background-color:blue; border-color:blue;">
                                                 <i class="fa fa-plus-square" aria-hidden="true"></i>
                                             </button>
                                         </td>

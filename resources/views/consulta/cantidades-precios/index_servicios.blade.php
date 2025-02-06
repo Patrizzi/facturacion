@@ -44,21 +44,8 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#"><span style="color: white; background-color: red;" class="px-1">34</span> Productos
+                        @include('consulta\cantidades-precios\tabs')
 
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-2"><span style="color: white; background-color: orange;" class="px-1">27</span> Servicios
-
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-3"><span style="color: white; background-color: blue;" class="px-1">40</span> Garantías
-
-                                </a>
-                            </li>
                         </ul>
 
                         <!-- Buscar -->
@@ -69,7 +56,7 @@
                             <div class="col-5 input-group">
                                 <input type="text" id="inputBuscar" class="form-control" >
                                 <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                    <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
                                 </span>
                             </div>
                         </div>
@@ -78,34 +65,7 @@
                         <div class="tab-content">
 
                             <div role="tabpanel" id="tab-1" class="tab-pane">
-                                <div class="panel-body table-responsive">
-                                    <!-- CONTENIDO DENTRO DEL TAB - Productos -->
-                                    <table class="table table-striped text-md-center dataTables-productos">
-                                        <thead>
-                                            <tr>
-                                                <th >Nombre</th>
-                                                <th >Còdigo</th>
-                                                <th >UdM</th>
-                                                <th >Stock</th>
-                                                <th>Stock mín.</th>
-                                                <th>Stock máx.</th>
-                                                <th>Precio Nac. Venta</th>
-                                                <th>/IGV nac.</th>
-                                                <th>Precio Ext. Venta</th>
-                                                <th>/IGV ext.</th>
-                                                <th>Garantía</th>
-                                                <th>Marca</th>
-                                                <th>Entradas</th>
-                                                <th>Salidas</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            s
-                                        </tbody>
-                                    </table>
 
-                                </div>
                             </div>
                             <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
@@ -142,98 +102,7 @@
                             </div>
 
                             <div role="tabpanel" id="tab-3" class="tab-pane">
-                                <div class="panel-body table-responsive">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 - Garantía-->
-                                    <table class="table table-striped text-md-center">
-                                        <thead>
-                                            <tr>
-                                                <th >Nombre</th>
-                                                <th >Còdigo</th>
-                                                <th >UdM</th>
-                                                <th >Stock</th>
-                                                <th>Stock mín.</th>
-                                                <th>Stock máx.</th>
-                                                <th>Precio Nac. Venta</th>
-                                                <th>/IGV nac.</th>
-                                                <th>Precio Ext. Venta</th>
-                                                <th>/IGV ext.</th>
-                                                <th>Entradas</th>
-                                                <th>Salidas</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Caddy slim 2.9</td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Caddy slim 2.9</td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Caddy slim 2.9</td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Caddy slim 2.9</td>
-                                                <td>BA00-00000001</td>
-                                                <td>UN</td>
-                                                <td>150</td>
-                                                <td>13</td>
-                                                <td>145</td>
-                                                <td>S/5.2</td>
-                                                <td>S/6.4</td>
-                                                <td>$1.4</td>
-                                                <td>$1.65</td>
-                                                <td>39</td>
-                                                <td>47</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check-circle"></i></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+
                             </div>
                         </div>
                     </div>
