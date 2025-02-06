@@ -519,8 +519,9 @@ class KardexEntradaTrasladoAlmacenController extends Controller
 
     public function index2()
     {
-
-    	return view('inventario.traslado');
+        $almacen=Almacen::where('estado',0)->where('id','!=',1)->get();
+    	$kardex_distribucion=Kardex_entrada::where('tipo_registro_id',2)->get();
+    	return view('inventario.traslado',compact('kardex_distribucion','almacen'));
     }
 
 

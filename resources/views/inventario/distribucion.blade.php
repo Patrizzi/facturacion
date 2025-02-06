@@ -30,24 +30,33 @@
 
                                                     <div role="tabpanel" id="contenido-tab-2" class="tab-pane active show">
                                                         <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 2 -->
-                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                                <div style="flex-grow: 1;">
-                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                        <div class="row align-items-center">
+                                                                <div class="col-md-5 mb-2">
+                                                                <div class="input-group">
+                                                                    <input type="search" id="search" class="form-control" placeholder="Buscar...">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-primary" type="button" style="background-color: blue; border-color:blue;">Buscar</button>
+                                                                    </div>
                                                                 </div>
-
-                                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                                <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                </div>
+                                                                <div class="col-md-5 mb-2">
+                                                                    <div class="input-group">
+                                                                    <input type="text" id="daterange" name="daterange" class="form-control"value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                <i class="fa fa-history"></i>
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary" style="background-color: blue; border-color:blue;"   onclick="limpiar_select()">
+                                                                                <i class="fa fa-eraser"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 mb-2 d-flex justify-content-end">
+                                                                    <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                                                                     <div class="btn-group">
-                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-cloud-download"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cloud-download"></i></button>
+                                                                        <div class="dropdown-menu dropdown-menu-right">
                                                                             <a class="dropdown-item" href="#">Copy</a>
                                                                             <a class="dropdown-item" href="#">CSV</a>
                                                                             <a class="dropdown-item" href="#">Excel</a>
@@ -57,7 +66,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <br>
+
                                                             <div class="table-responsive">
                                                                 <table class="table table-striped table-hover text-center datatables-distribucion">
                                                                     <thead>
@@ -75,210 +84,33 @@
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
+                                                                    <span hidden="hidden">{{$i=1}}</span>
+                                                                    @foreach($kardex_distribucion as $index => $kardex_distribuciones)
                                                                     <tr>
                                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>10/01/2022</td>
-                                                                        <td>1000</td>
-                                                                        <td>250</td>
-                                                                        <td>ALMACEN</td>
-                                                                        <td>0001</td>
+                                                                        <td> {{$i++}}</td>
+                                                                        <td>{{$kardex_distribuciones->codigo_guia}}</td>
+                                                                        <td>{{$kardex_distribuciones->created_at->format('d/m/Y')}}</td>
+                                                                        <td>{{$cantidad_prod[$index]}} @if($cantidad_prod[$index] > 1 ) productos @else producto @endif</td>
+                                                                        <td>{{$cantidad_tot[$index]}} items </td>
+                                                                        <td>{{$kardex_distribuciones->almacen->nombre}}</td>
+                                                                        <td>{{$kardex_distribuciones->cod_guia_remisio}}</td>
                                                                         <td>
-                                                                            <p>
+                                                                            <a href="{{ route('kardex-entrada-Distribucion.show', $kardex_distribuciones->id) }}">
                                                                                 <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
+                                                                            </a>
                                                                         </td>
                                                                     </tr>
-                                                                    
+                                                                    @endforeach
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                            <!--
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-left"></i></button>
-                                                                <button class="btn btn-white">1</button>
-                                                                <button class="btn btn-white  active">2</button>
-                                                                <button class="btn btn-white">3</button>
-                                                                <button class="btn btn-white">4</button>
-                                                                <button type="button" class="btn btn-white"><i class="fa fa-chevron-right"></i> </button>
-                                                            </div>
-                                                            -->
-
                                                         </div>
                                                     </div>
                                                     <div role="tabpanel" id="contenido-tab-3" class="tab-pane">
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 3 -->
-                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                                <div style="flex-grow: 1;">
-                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                                </div>
-
-                                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                                <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                                    <!-- Botón de Descarga con menú desplegable -->
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-cloud-download"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu">
-                                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                                            <a class="dropdown-item" href="#">Print</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-hover text-center datatables-traslado">
-                                                                    <thead>
-                                                                    <tr>
-
-                                                                        <th></th>
-                                                                        <th>ID </th>
-                                                                        <th>Código</th>
-                                                                        <th>Almacén - Emisor</th>
-                                                                        <th>Almacén - Receptor</th>
-                                                                        <th>Acciones</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>CENTRAL</td>
-                                                                        <td>MIRAFLORES</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                                <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                                        <td>02</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>MIRAFLORE</td>
-                                                                        <td>WILSON</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                                <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                                        <td>03</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>WILSON</td>
-                                                                        <td>CENTRAL</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                                <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
                                                     </div>
 
-                                                    <div role="tabpanel" id="contenido-tab-4" class="tab-pane">
-                                                        <!-- Título centrado -->
-                                                        <h2 style="text-align: center; margin-bottom: 20px;">Creacion de Almacen</h2>
-                                                        <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 4 -->
-                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                                <div style="flex-grow: 1;">
-                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                                                </div>
-
-                                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                                <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                                    <!-- Botón de Descarga con menú desplegable -->
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-cloud-download"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu">
-                                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                                            <a class="dropdown-item" href="#">Print</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-hover text-center datatables-salida">
-                                                                    <thead>
-                                                                    <tr>
-
-                                                                        <th></th>
-                                                                        <th>ID </th>
-                                                                        <th>Motivo</th>
-                                                                        <th>Información</th>
-                                                                        <th>Ver</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>DEVOLUCION CLIENTE</td>
-                                                                        <td>SALIDA</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                                        <td>02</td>
-                                                                        <td>DEVOLUCION CLIENTE</td>
-                                                                        <td>SALIDA</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                                        <td>03</td>
-                                                                        <td>DEVOLUCION CLIENTE</td>
-                                                                        <td>SALIDA</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <br>
-                                                        </div>
+                                                    <div role="tabpanel" id="contenido-tab-4" class="tab-pane">                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -359,7 +191,67 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
-    });
+        $('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+
+        function limpiar_select() {
+            table.column(4).search("").draw();
+        }
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
+
 </script>
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
@@ -371,141 +263,6 @@
     function cerrarFormulario() {
         document.getElementById("formulario-agregar-producto").style.display = "none";
     }
-</script>
-
-
-<!-- scrip para los calendarios -->
-<script>
-    $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
-<script>
-    $('#reportrange1 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange1').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange1 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
-<script>
-    $('#reportrange2 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange2').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange2 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
 </script>
 
 @endsection

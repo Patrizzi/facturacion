@@ -33,24 +33,20 @@
 
                                                     <div role="tabpanel" id="contenido-tab-3" class="tab-pane active show">
                                                         <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 3 -->
-                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                                <div style="flex-grow: 1;">
-                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                        <div class="row align-items-center">
+                                                                <div class="col-md-10 mb-2">
+                                                                <div class="input-group">
+                                                                    <input type="search" id="search" class="form-control" placeholder="Buscar...">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-primary" type="button" style="background-color: blue; border-color:blue;">Buscar</button>
+                                                                    </div>
                                                                 </div>
-
-                                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                                <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                </div>
+                                                                <div class="col-md-2 mb-2 d-flex justify-content-end">
+                                                                    <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                                                                     <div class="btn-group">
-                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-cloud-download"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cloud-download"></i></button>
+                                                                        <div class="dropdown-menu dropdown-menu-right">
                                                                             <a class="dropdown-item" href="#">Copy</a>
                                                                             <a class="dropdown-item" href="#">CSV</a>
                                                                             <a class="dropdown-item" href="#">Excel</a>
@@ -60,13 +56,12 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <br>
+                                                    
                                                             <div class="table-responsive">
                                                                 <table class="table table-striped table-hover text-center datatables-traslado">
                                                                     <thead>
                                                                     <tr>
-
-                                                                        <th></th>
+                                                                        <th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
                                                                         <th>ID </th>
                                                                         <th>Código</th>
                                                                         <th>Almacén - Emisor</th>
@@ -74,21 +69,21 @@
                                                                         <th>Acciones</th>
                                                                     </tr>
                                                                     </thead>
-                                                                    <tbody>
+                                                                    <tbody><span hidden="hidden">{{$i=0}}</span>
+                                                                    @foreach($kardex_distribucion as $kardex_distribuciones)
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>GE001-00000001</td>
-                                                                        <td>CENTRAL</td>
-                                                                        <td>MIRAFLORES</td>
+                                                                        <td> {{$i=$i+1}}</td>
+                                                                        <td>{{$kardex_distribuciones->codigo_guia}}</td>
+                                                                        <td>{{$kardex_distribuciones->almacen_emisor->nombre}}</td>
+                                                                        <td>{{$kardex_distribuciones->almacen_receptor->nombre}}</td>
                                                                         <td>
-                                                                            <p>
+                                                                            <a href="{{ route('kardex-entrada-Traslado-almacen.show', $kardex_distribuciones->id) }}">
                                                                                 <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
+                                                                            </a>
                                                                                 <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                                            </p>
                                                                         </td>
                                                                     </tr>
-                                                                    
+                                                                    @endforeach
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -175,10 +170,71 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
+        });    
+        $('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
         });
-   
-    });
-</script>
+
+        function limpiar_select() {
+            table.column(4).search("").draw();
+        }
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
+
+    </script>
+
+
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 <script>
@@ -191,139 +247,5 @@
     }
 </script>
 
-
-<!-- scrip para los calendarios -->
-<script>
-    $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
-<script>
-    $('#reportrange1 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange1').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange1 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
-<script>
-    $('#reportrange2 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange2').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange2 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
 
 @endsection

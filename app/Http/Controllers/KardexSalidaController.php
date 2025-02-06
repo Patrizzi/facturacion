@@ -326,6 +326,13 @@ class KardexSalidaController extends Controller
 
     public function index2()
     {
-        return view('inventario.salida');
+
+        $kardex_salidas=kardex_salida::all();
+        $user_login =auth()->user();
+        $conteo_almacen=Almacen::where('estado',0)->count();
+        $almacen=Almacen::where('estado',0)->get();
+        $almacen_primero=Almacen::where('estado',0)->first();
+
+        return view('inventario.salida',compact('kardex_salidas','user_login','conteo_almacen','almacen','almacen_primero'));
     }
 }

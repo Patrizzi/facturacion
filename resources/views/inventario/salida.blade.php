@@ -36,27 +36,23 @@
                                                     </div>
                                                     
                                                     <div role="tabpanel" id="contenido-tab-4" class="tab-pane active show">
-                                                        <!-- Título centrado -->
-                                                        <h2 style="text-align: center; margin-bottom: 20px;">Creacion de Almacen</h2>
+                                                        <!-- Título centrado 
+                                                        <h2 style="text-align: center; margin-bottom: 20px;">Creacion de Almacen</h2>-->
                                                         <div class="panel-body">
-                                                            <!-- Contenido de Nested Tab 4 -->
-                                                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                                                <!-- Barra de búsqueda y botón Buscar -->
-                                                                <div style="flex-grow: 1;">
-                                                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                        <div class="row align-items-center">
+                                                                <div class="col-md-10 mb-2">
+                                                                <div class="input-group">
+                                                                    <input type="search" id="search" class="form-control" placeholder="Buscar...">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-primary" type="button" style="background-color: blue; border-color:blue;">Buscar</button>
+                                                                    </div>
                                                                 </div>
-
-                                                                <!-- Botones Agregar, Actualizar y Descarga -->
-                                                                <div>
-                                                                    <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-
-                                                                    <!-- Botón de Descarga con menú desplegable -->
+                                                                </div>
+                                                                <div class="col-md-2 mb-2 d-flex justify-content-end">
+                                                                    <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                                                                     <div class="btn-group">
-                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-cloud-download"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cloud-download"></i></button>
+                                                                        <div class="dropdown-menu dropdown-menu-right">
                                                                             <a class="dropdown-item" href="#">Copy</a>
                                                                             <a class="dropdown-item" href="#">CSV</a>
                                                                             <a class="dropdown-item" href="#">Excel</a>
@@ -66,13 +62,10 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <br>
                                                             <div class="table-responsive">
                                                                 <table class="table table-striped table-hover text-center datatables-salida">
                                                                     <thead>
                                                                     <tr>
-
-                                                                        <th></th>
                                                                         <th>ID </th>
                                                                         <th>Motivo</th>
                                                                         <th>Información</th>
@@ -80,18 +73,18 @@
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
+                                                                    @foreach($kardex_salidas as $kardex_salida)
                                                                     <tr>
-                                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                                        <td>01</td>
-                                                                        <td>DEVOLUCION CLIENTE</td>
-                                                                        <td>SALIDA</td>
+                                                                        <td>{{$kardex_salida->id}}</td>
+                                                                        <td>{{$kardex_salida->motivos->nombre}}</td>
+                                                                        <td>{{$kardex_salida->informacion}}</td>
                                                                         <td>
-                                                                            <p>
+                                                                            <a  href="{{ route('kardex-salida.show', $kardex_salida->id) }}">
                                                                                 <button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button>
-                                                                            </p>
+                                                                            </a>
                                                                         </td>
                                                                     </tr>
-                                                                    
+                                                                    @endforeach
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -177,8 +170,68 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });     
-    });
-</script>
+        $('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+
+        function limpiar_select() {
+            table.column(4).search("").draw();
+        }
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
+
+    </script>
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 <script>
