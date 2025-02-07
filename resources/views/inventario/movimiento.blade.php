@@ -30,44 +30,50 @@
                                     <div role="tabpanel" id="tab-4" class="tab-pane active show">
                                         <div class="panel-body">
                                             <!-- CONTENIDO DENTRO DEL TAB 4 -->
-                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                                <!-- Calendario -->
-                                                <div id="reportrange1" class="form-control">
-                                                    <i class="fa fa-calendar"></i>
-                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                                </div>
+                                            <div class="row align-items-center">
+                                                                <div class="col-md-6 mb-2">
+                                                                <div class="input-group">
+                                                                    <input type="search" id="botonBuscar" name="botonBuscar" class="form-control" placeholder="Buscar...">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-primary" type="button" style="background-color: blue; border-color:blue;">Buscar</button>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                                <div class="col-md-5 mb-2">
+                                                                    <div class="input-group">
+                                                                    <input type="text" id="daterange" name="daterange" class="form-control"value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                <i class="fa fa-history"></i>
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary" style="background-color: blue; border-color:blue;"   onclick="limpiar_select()">
+                                                                                <i class="fa fa-eraser"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 mb-1 d-flex justify-content-end">
+                                                                    
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cloud-download"></i></button>
+                                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                                            <a class="dropdown-item" href="#">Print</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-                                                <!-- Botones -->
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <div style="display: flex; gap: 10px;">
-                                                        <div style="position: relative;">
-                                                            <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-cloud-download"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                            <a class="dropdown-item" href="#">Print</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
+                                            <div class="ibox-title" style="text-align: center;">
+                                            <h5>Compras Productos</h5>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-compra-producto">
+                                                <table id="tablacompra" class="table table-striped table-hover text-center datatables-compra">
                                                     <thead>
                                                     <tr>
-
-                                                        <th></th>
+                                                        <th><input type="checkbox"  checked class="i-checks" name="input[]"></th>
                                                         <th>Fecha</th>
                                                         <th>N° Ruc</th>
                                                         <th>Proveedor</th>
@@ -81,22 +87,23 @@
                                                     <tbody>
                                                     <tr>
                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20601381461</td>
-                                                        <td>IMPACTO</td>
-                                                        <td>26958463245</td>
-                                                        <td>72846344</td>
-                                                        <td>S/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <br>
+                                        </div>
+
+                                            <div class="ibox-title" style="text-align: center;">
+                                                <h5>Facturas</h5>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">FACTURAS</h3> <!-- Título más prominente -->
-                                                <br>
                                                 <table class="table table-striped table-hover text-center datatables-facturas">
                                                     <thead>
                                                     <tr>
@@ -129,10 +136,11 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <br>
+                                            </div>
+
+                                            <div class="ibox-title" style="text-align: center;">
+                                                <h5>Boletas</h5>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">BOLETAS</h3> <!-- Título más prominente -->
-                                                <br>
                                                 <table class="table table-striped table-hover text-center datatables-boletas">
                                                     <thead>
                                                     <tr>
@@ -164,6 +172,7 @@
                                                     </tr>
                                                     </tbody>
                                                 </table>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -214,182 +223,158 @@
     #DataTables_Table_0_filter{
         display: none;
     }
+    #DataTables_Table_1_length{
+        display:none;
+    }
+    #DataTables_Table_1_filter{
+        display: none;
+    }
+    #DataTables_Table_2_length{
+        display:none;
+    }
+    #DataTables_Table_2_filter{
+        display: none;
+    }
     div.dt-buttons{
         display: none;
     }
 </style>
 
 <script>
-    //dataTables-example
-    $(document).ready(function(){
-        // Asegúrate de que el tab esté activo
+    $(document).ready(function(e) {
         $('#tab-4').addClass('active show');
-        $('.datatables-compra-producto').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-facturas').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.datatables-boletas').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-    });
+        
+        $('#botonBuscar').on('click', function() {
+                    $.ajax({
+                    method: "POST",
+                    url: "{{ route('ajax_movimiento') }}",
+                    data:$("#formulario").serialize()
+                }).done(function(res){
+                    $('#tablacompra').dataTable().fnDestroy();
+                    var data=JSON.parse(res);
+                    $('#tablacompra').dataTable({
+                            pageLength: 25,
+                            responsive: true,
+                            dom: '<"html5buttons"B>lTfgitp',
+                            buttons: [],
+                        "aaData": data,
+                        "columns": [
+                            { "data": "fecha_compra" },
+                            { "data": "codigo_guia" },
+                            { "data": "provedor.empresa" , "defaultContent": ""},
+                            { "data": "provedor.ruc" , "defaultContent": ""},
+                            { "data": "factura" },
+                            { "data": "subtotal"},
+                            { "data": "igv" },
+                            { "data": "precio_nacional_total" }
+                        ]
+                    });
 
-</script>
-
-<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-<script>
-    document.getElementById("btn-agregar-EP").onclick = function() {
-        document.getElementById("formulario-agregar-producto").style.display = "block";
-    };
-
-    function cerrarFormulario() {
-        document.getElementById("formulario-agregar-producto").style.display = "none";
-    }
-</script>
+                });
 
 
-<!-- scrip para los calendarios -->
-<script>
-    $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-    $('#reportrange').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
-<script>
-    $('#reportrange1 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+                $('#tbody_venta tr').slice(1).remove();
+                $.ajax({
+                    method: "POST",
+                    url: "{{ route('ajax_movimiento_ventas') }}",
+                    data:$("#formulario").serialize()
+                }).done(function(res){
+                    $('#tablaid_venta').dataTable().fnDestroy();
+                    var data=JSON.parse(res);
+                    $('#tablaid_venta').dataTable({
+                            pageLength: 25,
+                            responsive: true,
+                            dom: '<"html5buttons"B>lTfgitp',
+                            buttons: [
+                                {extend: 'copy'},
+                                {extend: 'csv'},
+                                {extend: 'excel', title: 'ExampleFile'},
+                                {extend: 'pdf', title: 'ExampleFile'},
+                                {extend: 'print',
+                                    customize: function (win){
+                                            $(win.document.body).addClass('white-bg');
+                                            $(win.document.body).css('font-size', '10px');
 
-    $('#reportrange1').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange1 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                                            $(win.document.body).find('table')
+                                                    .addClass('compact')
+                                                    .css('font-size', 'inherit');
+                                    }
+                                }
+                            ],
+                        "aaData": data,
+                        "columns": [
+                            { "data": "fecha_emision" , "defaultContent": "" },
+                            { "data": "codigo_fac" },
+                            { "data": "cliente.nombre" , "defaultContent": ""},
+                            { "data": "cliente.numero_documento" , "defaultContent": ""},
+                            { "data": "codigo_fac" },
+                            { "data": "moneda.nombre","defaultContent": "" },
+                            { "data": "subtotal"},
+                            { "data": "igv" },
+                            { "data": "precio" }
+                        ]
+                    })
+                });
+
+                $('#tbody_venta_b tr').slice(1).remove();
+                $.ajax({
+                    method: "POST",
+                    url: "{{ route('ajax_movimiento_ventas_b') }}",
+                    data:$("#formulario").serialize()
+                }).done(function(res){
+                    $('#tablaid_venta_b').dataTable().fnDestroy();
+                    var data=JSON.parse(res);
+                    $('#tablaid_venta_b').dataTable({
+                            pageLength: 25,
+                            responsive: true,
+                            dom: '<"html5buttons"B>lTfgitp',
+                            buttons: [
+                                {extend: 'copy'},
+                                {extend: 'csv'},
+                                {extend: 'excel', title: 'ExampleFile'},
+                                {extend: 'pdf', title: 'ExampleFile'},
+                                {extend: 'print',
+                                    customize: function (win){
+                                            $(win.document.body).addClass('white-bg');
+                                            $(win.document.body).css('font-size', '10px');
+
+                                            $(win.document.body).find('table')
+                                                    .addClass('compact')
+                                                    .css('font-size', 'inherit');
+                                    }
+                                }
+                            ],
+                        "aaData": data,
+                        "columns": [
+                            { "data": "fecha_emision" , "defaultContent": "" },
+                            { "data": "codigo_boleta" },
+                            { "data": "cliente.nombre" , "defaultContent": ""},
+                            { "data": "cliente.numero_documento" , "defaultContent": ""},
+                            { "data": "codigo_boleta" },
+                            { "data": "moneda.nombre","defaultContent": "" },
+                            { "data": "subtotal"},
+                            { "data": "igv" },
+                            { "data": "precio" }
+                        ]
+                    })
+                });
+		});
     });
 </script>
-<script>
-    $('#reportrange2 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-    $('#reportrange2').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange2 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
+<script>
+        function valida(f) {
+            var botonBuscar=document.getElementById("botonBuscar");
+            var completo = true;
+            var incompleto = false;
+            if( f.elements[0].value == "" )
+               { alert(incompleto); }
+           else{botonBuscar.type = 'button';}
+       }
 </script>
+
+
+
 
 @endsection

@@ -23,30 +23,42 @@
                                     <!-- Contenido de Tab 2 -->
                                     <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                         <div class="panel-body">
-                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                                <!-- Calendario -->
-                                                <div id="reportrange1" class="form-control">
-                                                    <i class="fa fa-calendar"></i>
-                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                                </div>
-
-                                                <!-- Botones -->
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-cloud-download"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                            <a class="dropdown-item" href="#">Print</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
+                                        <div class="row align-items-center">
+                                                                <div class="col-md-6 mb-2">
+                                                                <div class="input-group">
+                                                                    <input type="search" id="search" class="form-control" placeholder="Buscar...">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-primary" type="button" style="background-color: blue; border-color:blue;">Buscar</button>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                                <div class="col-md-5 mb-2">
+                                                                    <div class="input-group">
+                                                                    <input type="text" id="daterange" name="daterange" class="form-control"value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}">
+                                                                        <div class="input-group-append">
+                                                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                                                <i class="fa fa-history"></i>
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary" style="background-color: blue; border-color:blue;"   onclick="limpiar_select()">
+                                                                                <i class="fa fa-eraser"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 mb-2 d-flex justify-content-end">
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cloud-download"></i></button>
+                                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                                            <a class="dropdown-item" href="#">Copy</a>
+                                                                            <a class="dropdown-item" href="#">CSV</a>
+                                                                            <a class="dropdown-item" href="#">Excel</a>
+                                                                            <a class="dropdown-item" href="#">PDF</a>
+                                                                            <a class="dropdown-item" href="#">Print</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br>
                                             <div class="table-responsive">
                                                 <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
                                                 <br>
