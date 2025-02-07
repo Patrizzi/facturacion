@@ -4,60 +4,6 @@
 @section('atributo_actu', 'hidden')
 @section('content')
 
-    <!-- Modal para Mesajen  Factura  -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="exampleModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Enviando Facturas a Sunat</h5>
-                </div>
-                <div class="modal-body">
-                    <div id="msg_c_bol">
-                        {{-- Contenido del ajax --}}
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: none;">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            *En caso de algún error al enviar la Factura, por favor comunicarse de manera inmediata.
-                        </div>
-                        <div class="col-sm-6" style="padding-right: 30px;text-align: right">
-                            <button type="button" class="btn btn-primary" id="cerrar_factura">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Factura Manual -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="exampleModalManual">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Enviando Facturas Manuales a Sunat</h5>
-                </div>
-                <div class="modal-body">
-                    <div id="msg_c_fac_m">
-                        {{-- Contenido del ajax --}}
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: none;">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            *En caso de algún error al enviar la Factura, por favor comunicarse de manera inmediata.
-                        </div>
-                        <div class="col-sm-6" style="padding-right: 30px;text-align: right">
-                            <button type="button" class="btn btn-primary" id="cerrar_factura_m">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -69,7 +15,6 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
 
-            <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             {{-- CONTENIDO DE TABS --}}
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -95,9 +40,14 @@
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             {{-- TAB 5 PARA LA FACTURAS NORMALES --}}
-
                             <div role="tabpanel" id="tab-6" class="tab-pane active">
                                 <div class="panel-body ">
+                                    <div class="row">
+                                        <div class="col-lg-12" id="alert_factura">
+
+                                        </div>
+                                    </div>
+                                    <hr />
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
@@ -190,88 +140,7 @@
                                 </div>
                             </div>
 
-                            {{-- <div role="tabpanel" id="tab-7" class="tab-pane">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange4"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary"
-                                                onclick="revert_select_fact_manual()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary"
-                                                onclick="limpiar_select_fact_manual()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                    <div class="row g-3 col-md-5">
-                                        <div class="col-auto">
-                                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <input type="text" id="inputBuscar" class="form-control"
-                                                aria-describedby="passwordHelpInline">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-fact_manual">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                <th>Item</th>
-                                                <th>Código</th>
-                                                <th>Cliente</th>
-                                                <th>N° Doc</th>
-                                                <th>Fecha de Vencimiento</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
-                                                    class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
-                                                        width="15px">SUNAT
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <span hidden>{{ $a = 1 }}</span>
-                                            @foreach ($facturacion_m as $facturaciones_m)
-                                                <tr>
-                                                    <th><input type="checkbox" class="i-checks" name="input[]"
-                                                            value="{{ $facturaciones_m->codigo_fac }}"></th>
-                                                    <td>{{ $a++ }}</td>
-                                                    <td>{{ $facturaciones_m->codigo_fac }}</td>
-                                                    @if (isset($facturaciones_m->cliente_id))
-                                                        <!-- Nombre del cliente -->
-                                                        <td>{{ $facturaciones_m->cliente->nombre }}</td>
-                                                        <td>{{ $facturaciones_m->cliente->numero_documento }}</td>
-                                                    @else
-                                                        <td>{{ $facturaciones_m->cotizacion->cliente->nombre }}</td>
-                                                        <td>{{ $facturaciones_m->cotizacion->cliente->numero_documento }}
-                                                        </td>
-                                                    @endif
-                                                    <td>{{ $facturaciones_m->fecha_vencimiento }}</td>
-                                                    <td><button type="button"
-                                                            class="btn btn-success btn-circle btn-ls factura_ind"
-                                                            id="factura_ind" value="{{ $facturaciones_m->codigo_fac }}"
-                                                            onclick="envio_factura_manual(this)"><i
-                                                                class="fa fa-check-circle"></i></button></td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="fac_m_elec_all">Enviar</button></td>
-                                        </tfooter>
-                                    </table>
-                                </div>
-                            </div> --}}
+                          
 
                             {{-- <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
@@ -510,22 +379,6 @@
 
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
-
-    {{-- <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script> --}}
-
-
-    {{-- <script src="{{ asset('js/icheck.min.js') }}"></script> --}}
-
-    <!-- Seleccionar todos los check -->
-    {{-- 
-    <script>
-        $('')
-    </script> --}}
 
     <script>
         $(document).ready(function() {

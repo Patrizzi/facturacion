@@ -85,24 +85,36 @@ class FacturacionElectronicaController extends Controller
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }
 
-        $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
-        $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
+        // $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
+        // $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
         
-        $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
+        // $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
         // return $detraccion_facturacion;
         
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_m','facturacion_enviada_m','empresa','detraccion_facturas'));
+        return view('facturacion_electronica.factura.index',compact('facturacion','empresa'));
     }
 
     public function facturas_enviadas(){
         // $facturas_enviadas=Facturacion::select('id','codigo_fac','cliente_id', 'fecha_emision','fecha_vencimiento','created_at')->where('f_electronica',1)->get();
         $empresa=Empresa::first();
 
-        $facturas_enviadas=Facturacion::where('f_electronica',1)->get();
+        // $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
         // return $facturas_enviadas;
-        return view('facturacion_electronica.factura.enviado',compact('facturas_enviadas','empresa'));
+        return view('facturacion_electronica.factura.enviado',compact('empresa'));
     }
 
+    public function index_facturas_manual(){
+        $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $facturas_manual=Facturacion_m::where('f_electronica', 0)->get();
+        foreach ($facturas_manual as $factura) {
+            $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
+        }
+
+          
+        return view('facturacion_electronica.factura.index_manual',compact('facturas_manual','empresa'));
+    }
 
     public function index_boleta(){
 

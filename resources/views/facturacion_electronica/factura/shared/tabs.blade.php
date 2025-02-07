@@ -1,7 +1,7 @@
 
 <div class="nav">
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('facturacion_electronica.facturas_enviadas_list') }}" id="tab_factura"><span style="color: green;">&#9632; </span>
+        <a class="nav-link" href="{{ route('facturacion_electronica.index') }}" id="tab_factura"><span style="color: green;">&#9632; </span>
             Facturas
             {{-- link del tab 1 --}}
         </a>
@@ -13,7 +13,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#tab-7"><span style="color: rgb(0, 255, 72);">&#9632;</span>
+        <a class="nav-link" href="{{ route('facturacion_electronica.index_facturas_manual') }}" id="tab_fact_m" ><span style="color: rgb(0, 255, 72);">&#9632;</span>
             Factura Manual
             {{-- link del tab 2 --}}
         </a>

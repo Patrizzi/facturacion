@@ -76,21 +76,23 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                @include('facturacion_electronica.factura.shared.tabs')
-                            </div>
-                            {{-- <div> <!-- Botón de descarga -->
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
-                                        <i class="fa fa-cloud-download"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">WORD</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                        <li><a class="dropdown-item" href="#">EXCEL</a></li>
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                    @include('facturacion_electronica.factura.shared.tabs')
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
+                                        <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                                <i class="fa fa-download"></i></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">XML</a></li>
+                                                <li><a class="dropdown-item" href="#">CDR</a></li>
+                                                <li class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="#"
+                                                        onclick="download_pdf_select()">PDF</a></li>
+                                            </ul>
+                                        </div>
                                     </ul>
-                                </div>
-                            </div> --}}
+                                </ul>
+                            </div>
                         </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
@@ -131,7 +133,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            {{-- <button class="btn btn-primary  btn-block">Buscar</button> --}}
+                                            <button class="btn btn-primary  btn-block">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -189,184 +191,8 @@
                                 </div>
                             </div>
 
-                            <div role="tabpanel" id="tab-6" class="tab-pane">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura_env">
-
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="input-group">
-                                                <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                                <input class="form-control" type="text" name="daterange-factura_env"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        onclick="revert_select_fact_env()">
-                                                        <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select_fact_env()">
-                                                        <i class="fa fa-eraser"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5 ">
-                                            <div class="input-group">
-                                                <label for="inputBuscar"
-                                                    class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
-                                                <input type="text" id="inputBuscar" class="form-control"
-                                                    aria-describedby="passwordHelpInline">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {{-- <button class="btn btn-primary  btn-block">Buscar</button> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-fact_enviadas">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                <th>Item</th>
-                                                <th>Código</th>
-                                                <th>Cliente</th>
-                                                <th>N° Doc</th>
-                                                <th>Fecha de emisión</th>
-                                                <th style="text-align:center;color: #0073c1"><img
-                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
-                                                <th>XML</th>
-                                                <th>ZIP</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <span hidden>{{ $a = 1 }}</span>
-                                            @foreach ($facturas_enviadas as $factura_enviada)
-                                                <tr>
-                                                    <td><input type="checkbox" class="" name="input[]"></td>
-                                                    <td>{{ $a++ }}</td>
-                                                    <td>{{ $factura_enviada->codigo_fac }}</td>
-                                                    @if (isset($factura_enviada->cliente_id))
-                                                        <!-- Nombre del cliente -->
-                                                        <td>{{ $factura_enviada->cliente->nombre }}</td>
-                                                        <td>{{ $factura_enviada->cliente->numero_documento }}</td>
-                                                    @else
-                                                        <td>{{ $factura_enviada->cotizacion->cliente->nombre }}</td>
-                                                        <td>{{ $factura_enviada->cotizacion->cliente->numero_documento }}
-                                                        </td>
-                                                    @endif
-                                                    <td>{{ $factura_enviada->created_at }}</td>
-
-                                                    <td style="align: center"><button type="button"
-                                                            class="btn btn-info btn-circle btn-ls"><i
-                                                                class="fa fa-check-circle"></i></button></td>
-                                                    <td style="align: center">
-                                                        <a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-{{ $factura_enviada->codigo_fac }}.xml"
-                                                            download><img src="{{ asset('xml.png') }}"
-                                                                width="25px"></a>
-                                                    </td>
-                                                    <td style="align: center">
-                                                        <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-{{ $factura_enviada->codigo_fac }}.zip"
-                                                            download><img src="{{ asset('zip.png') }}"
-                                                                width="25px"></a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div> --}}
-                            </div>
-
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange4"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary"
-                                                onclick="revert_select_fact_manual()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary"
-                                                onclick="limpiar_select_fact_manual()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                    <div class="row g-3 col-md-5">
-                                        <div class="col-auto">
-                                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <input type="text" id="inputBuscar" class="form-control"
-                                                aria-describedby="passwordHelpInline">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-fact_manual">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                <th>Item</th>
-                                                <th>Código</th>
-                                                <th>Cliente</th>
-                                                <th>N° Doc</th>
-                                                <th>Fecha de Vencimiento</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
-                                                    class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
-                                                        width="15px">SUNAT
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <span hidden>{{ $a = 1 }}</span>
-                                            @foreach ($facturacion_m as $facturaciones_m)
-                                                <tr>
-                                                    <th><input type="checkbox" class="i-checks" name="input[]"
-                                                            value="{{ $facturaciones_m->codigo_fac }}"></th>
-                                                    <td>{{ $a++ }}</td>
-                                                    <td>{{ $facturaciones_m->codigo_fac }}</td>
-                                                    @if (isset($facturaciones_m->cliente_id))
-                                                        <!-- Nombre del cliente -->
-                                                        <td>{{ $facturaciones_m->cliente->nombre }}</td>
-                                                        <td>{{ $facturaciones_m->cliente->numero_documento }}</td>
-                                                    @else
-                                                        <td>{{ $facturaciones_m->cotizacion->cliente->nombre }}</td>
-                                                        <td>{{ $facturaciones_m->cotizacion->cliente->numero_documento }}
-                                                        </td>
-                                                    @endif
-                                                    <td>{{ $facturaciones_m->fecha_vencimiento }}</td>
-                                                    <td><button type="button"
-                                                            class="btn btn-success btn-circle btn-ls factura_ind"
-                                                            id="factura_ind" value="{{ $facturaciones_m->codigo_fac }}"
-                                                            onclick="envio_factura_manual(this)"><i
-                                                                class="fa fa-check-circle"></i></button></td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="fac_m_elec_all">Enviar</button></td>
-                                        </tfooter>
-                                    </table>
-                                </div>
-                            </div>
+                             
+ 
 
                             <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
@@ -421,7 +247,7 @@
                                         </thead>
                                         <tbody>
                                             <span hidden>{{ $a = 1 }}</span>
-                                            @foreach ($facturacion_enviada_m as $facturaciones_m)
+                                            {{-- @foreach ($facturacion_enviada_m as $facturaciones_m)
                                                 <tr>
                                                     <td><input type="checkbox" class="i-checks" name="input[]"></td>
                                                     <td>{{ $a++ }}</td>
@@ -451,7 +277,7 @@
                                                                 width="25px"></a>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -502,7 +328,7 @@
                                                 <th>Acción</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        {{-- <tbody>
                                             @foreach ($detraccion_facturas as $fact_det)
                                                 <tr>
                                                     <td></td>
@@ -537,7 +363,7 @@
                                                     @endif
                                                 </tr>
                                             @endforeach
-                                        </tbody>
+                                        </tbody> --}}
                                     </table>
                                 </div>
                             </div>
@@ -551,9 +377,9 @@
 
     <style>
         /*.ibox-content{
-                                            padding: 0px;
-                                            border: none;
-                                        }*/
+                                                padding: 0px;
+                                                border: none;
+                                            }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -599,23 +425,10 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-
-    {{-- <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script> --}}
-
-
-    {{-- <script src="{{ asset('js/icheck.min.js') }}"></script> --}}
-
-    <!-- Seleccionar todos los check -->
-
-
-
     <script>
         $(document).ready(function() {
             $('#tab_factura').addClass('active');
+
             $('.i-checks-facturas').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
