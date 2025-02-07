@@ -87,7 +87,8 @@
                                     <table class="table table-striped dataTables-fact_manual">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th><input type="checkbox" class="i-checks-facturas"
+                                                    name="input_facturas[]"></th>
                                                 <th>Item</th>
                                                 <th>Código</th>
                                                 <th>Cliente</th>
@@ -101,12 +102,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <span hidden>{{ $a = 1 }}</span>
-                                            @foreach ($facturas_manual as $facturaciones_m)
+                                            {{-- <span hidden>{{ $a = 1 }}</span> --}}
+                                            @foreach ($facturas_manual as $index => $facturaciones_m)
                                                 <tr @if ($facturaciones_m->diff_day > 3) style="color: red" @endif>
-                                                    <th><input type="checkbox" class="i-checks" name="input[]"
-                                                            value="{{ $facturaciones_m->codigo_fac }}"></th>
-                                                    <td>{{ $a++ }}</td>
+                                                    <td><input type="checkbox" class="i-checks-facturas" name="input[]"
+                                                        value="{{ $facturaciones_m->codigo_fac }}"></td>
+                                                    <td>{{ $index+1 }}</td>
                                                     <td>{{ $facturaciones_m->codigo_fac }}</td>
                                                     @if (isset($facturaciones_m->cliente_id))
                                                         <!-- Nombre del cliente -->
@@ -118,11 +119,11 @@
                                                         </td>
                                                     @endif
                                                     <td>{{ $facturaciones_m->fecha_vencimiento }}</td>
-                                                    <td><button type="button"
+                                                    <td style="text-align: center"><button type="button"
                                                             class="btn btn-success btn-circle btn-ls factura_ind"
                                                             id="factura_ind" value="{{ $facturaciones_m->codigo_fac }}"
                                                             onclick="envio_factura_manual(this)"><i
-                                                                class="fa fa-check-circle"></i></button></td>
+                                                                class="fa fa-cloud-upload"></i></button></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -142,9 +143,9 @@
     </div>
     <style>
         /*.ibox-content{
-                                                                        padding: 0px;
-                                                                        border: none;
-                                                                    }*/
+                                                padding: 0px;
+                                                border: none;
+                                            }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -193,6 +194,77 @@
     <script>
         $(document).ready(function() {
             $('#tab_fact_m').addClass('active');
+            $('.i-checks-facturas').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+            // {{-- Datatable Facturas --}}
+            table_factura = $('.dataTables-fact_manual').DataTable({
+                pageLength: 15,
+                order: [
+                    [0, "desc"]
+                ],
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                aoColumnDefs: [{
+                    'bSortable': false,
+                    'aTargets': [0]
+                }]
+            });
+            $('input[name="dateranger_factura"]').daterangepicker({
+
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table_factura.column(5).search(dateRangeString, true, false).draw();
+                }
+            );
         });
     </script>
     <script>
@@ -213,54 +285,10 @@
             $('[data-toggle="popover"]').popover();
             $('#cerrar_popup').trigger('click');
         }
-        // ENVIO DE FACTURA INDIVIDUAL
-        // function envio_factura(codigo) {
-        //     // console.log(codigo.val());
-        //     $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-        //     $('.nav-link').addClass('disabled');
-        //     var value_check = codigo.value;
-        //     console.log(value_check);
-        //     $.ajax({
-        //         type: "post",
-        //         url: "{{ route('facturacion_electronica.factura_elec_all') }}",
-        //         data: {
-        //             '_token': $('input[name=_token]').val(),
-        //             'codigo_fac': value_check,
-        //         },
-        //         success: function(response) {
-        //             var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-        //             var result = salt.substr(0, 13);
-        //             // console.log(result);
-        //             if (result == "Codigo Error:") {
-        //                 var data = `
-    //                 <div id="alert_one_factura" class="alert alert-danger">
-    //                     <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a>
-    //                     <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-        //                     response + `</span>
-    //                 </div>
-    //             `;
-        //                 codigo.prop('disabled', true);
-        //                 $(`input[value="${value_check}"]`).prop('disabled', true);
-        //             } else {
-        //                 var data = `
-    //                 <div id="alert_one_factura" class=" alert alert-success" >
-    //                     <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-    //                     <a class="close" data-dismiss="alert">&times;</a>
-    //                     <span class="alert-link" id="` + value_check + `">` + response + `</span>
-    //                 </div>
-    //             `;
-        //             }
-        //             // revision(value_check, response, 'factura');
-        //             // inv_close();
-        //             $('#alert_factura').append(data);
-        //             // $("#success-alert").show();
-        //         }
-        //     });
-        // }
 
         function envio_factura_manual(codigo) {
-            // console.log(codigo.val());
-            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+            console.log(codigo);
+            // $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
             $('.nav-link').addClass('disabled');
             var value_check = codigo.value;
             console.log(value_check);

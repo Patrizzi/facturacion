@@ -191,8 +191,8 @@
                                 </div>
                             </div>
 
-                             
- 
+
+
 
                             <div role="tabpanel" id="tab-8" class="tab-pane">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
@@ -377,9 +377,9 @@
 
     <style>
         /*.ibox-content{
-                                                padding: 0px;
-                                                border: none;
-                                            }*/
+                                                        padding: 0px;
+                                                        border: none;
+                                                    }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -817,26 +817,34 @@
     <script>
         // CHECKS FACTURAS
         $('thead input[class="i-checks-facturas"]').on('ifChecked ifUnchecked', function(event) {
-            var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+            var table = $(this).closest('table'); 
             if (event.type === 'ifChecked') {
                 // Selecciona 
-                table.find('tbody input[class="i-checks-facturas"]').iCheck('check');
+                table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('check');
             } else {
                 // Deselecciona 
-                table.find('tbody input[class="i-checks-facturas"]').iCheck('uncheck');
+                table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('uncheck');
             }
         });
 
-        // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-        $('tbody input[class="i-checks-facturas"]').on('ifChanged', function(event) {
+        $('tbody input.i-checks-facturas').on('ifChanged', function(event) {
+            if ($(this).prop('disabled')) {
+                return; // Si el checkbox está deshabilitado, no hace nada
+            }
+
             var table = $(this).closest('table'); // Limita el control a la tabla visible
-            if (table.find('tbody input[class="i-checks-facturas"]').filter(':checked').length === table.find(
-                    'tbody input[class="i-checks-facturas"]').length) {
-                table.find('thead input[class="i-checks-facturas"]').iCheck('check');
+
+            var checkboxesHabilitados = table.find('tbody input.i-checks-facturas').not(':disabled');
+            var checkboxesMarcados = checkboxesHabilitados.filter(':checked');
+
+            // Si todos los checkboxes habilitados están marcados, marcar el de <thead>
+            if (checkboxesMarcados.length === checkboxesHabilitados.length) {
+                table.find('thead input.i-checks-facturas').iCheck('check');
             } else {
-                table.find('thead input[class="i-checks-facturas"]').iCheck('uncheck');
+                table.find('thead input.i-checks-facturas').iCheck('uncheck');
             }
         });
+
 
         // $(document).ready(function() {
         //     $('.i-checks').iCheck({
@@ -908,10 +916,12 @@
         // ENVIO DE FACTURA INDIVIDUAL
         function envio_factura(codigo) {
             // console.log(codigo.val());
-            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            // $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
             $('.nav-link').addClass('disabled');
             var value_check = codigo.value;
-            console.log(value_check);
+            $(codigo).closest('tr').find('input[type="checkbox"]').prop('disabled', 'disabled');
+            $('')
+            // console.log($(this));
             $.ajax({
                 type: "post",
                 url: "{{ route('facturacion_electronica.factura_elec_all') }}",
@@ -992,18 +1002,18 @@
             });
         }
         //  FUNCION PARASELECCION MUILTIPLE
-        function select_all_fact() {
-            $('input[class=case]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
-            });
-        }
+        // function select_all_fact() {
+        //     $('input[class=case]:checkbox').each(function() {
+        //         // console.log($('input[class=check_all]:checkbox:checked'));
+        //         if ($('input[class=check_all]:checkbox:checked').length == 0) {
+        //             // console.log("a");
+        //             $(this).prop("checked", false);
+        //         } else {
+        //             // console.log("b");
+        //             $(this).prop("checked", true);
+        //         }
+        //     });
+        // }
         //Facturas masivas
         function submit_factura_click(repetir, maximo) {
             if (repetir < maximo) {

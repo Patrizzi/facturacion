@@ -217,7 +217,7 @@ class FacturacionElectronicaController extends Controller
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
         $factura=Facturacion::where('f_electronica',0)->where('codigo_fac',$factura_codigo)->first();
-        return "suceess";
+        // return "suceess";
         $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
         if($factura->guia_remision=="0"){
             $guia=0;
