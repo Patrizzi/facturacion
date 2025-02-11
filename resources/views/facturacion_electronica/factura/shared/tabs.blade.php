@@ -19,7 +19,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#tab-8"><span style="color: red;">&#9632;</span> Enviados
+        <a class="nav-link" href="{{ route('facturacion_electronica.facturas_manual_enviadas_list') }}"><span style="color: red;">&#9632;</span> Enviados
             {{-- link del tab 2 --}} 
         </a>
     </li>
