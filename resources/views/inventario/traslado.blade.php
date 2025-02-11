@@ -160,92 +160,17 @@
 </style>
 
 <script>
-    //dataTables-example
     $(document).ready(function () {
-        // Asegúrate de que el tab esté activo
-        $('#contenido-tab-3').addClass('active show');
+        $('#trasladotab').addClass('active show');
 
         $('.datatables-traslado').DataTable({
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
-        });    
-        $('input[name="daterange"]').daterangepicker({
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
-
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table.column(4).search(dateRangeString, true, false).draw();
-                }
-            );
-        });
-
-        function limpiar_select() {
-            table.column(4).search("").draw();
-        }
-        function revert_select() {
-            table.column(4).search(`{{ date('m-Y') }}`).draw();
-        }
+        });  
+    });  
 
     </script>
-
-
-
-<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-<script>
-    document.getElementById("btn-agregar-EP").onclick = function() {
-        document.getElementById("formulario-agregar-producto").style.display = "block";
-    };
-
-    function cerrarFormulario() {
-        document.getElementById("formulario-agregar-producto").style.display = "none";
-    }
-</script>
-
 
 @endsection

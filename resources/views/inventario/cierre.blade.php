@@ -30,7 +30,7 @@
                                                 <!-- Barra de búsqueda y botón Buscar -->
                                                 <div style="flex-grow: 1;">
                                                     <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
+                                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px; background-color: blue; border-color:blue;">Buscar</button>
                                                 </div>
 
 
@@ -83,142 +83,6 @@
                                     <!-- Contenido de Tab 4 -->
                                     <div role="tabpanel" id="tab-4" class="tab-pane">
                                         <div class="panel-body">
-                                            <!-- CONTENIDO DENTRO DEL TAB 4 -->
-                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                                <!-- Calendario -->
-                                                <div id="reportrange1" class="form-control">
-                                                    <i class="fa fa-calendar"></i>
-                                                    <span>October 22, 2024 - November 20, 2024</span> <b class="caret"></b>
-                                                </div>
-
-                                                <!-- Botones -->
-                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                    <div style="display: flex; gap: 10px;">
-                                                        <div style="position: relative;">
-                                                            <button class="btn btn-success" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-cloud-download"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">Copy</a>
-                                                            <a class="dropdown-item" href="#">CSV</a>
-                                                            <a class="dropdown-item" href="#">Excel</a>
-                                                            <a class="dropdown-item" href="#">PDF</a>
-                                                            <a class="dropdown-item" href="#">Print</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">COMPRAS PRODUCTOS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-compra-producto">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Fecha</th>
-                                                        <th>N° Ruc</th>
-                                                        <th>Proveedor</th>
-                                                        <th>Ruc</th>
-                                                        <th>N° Doc. Proveedor</th>
-                                                        <th>Sub total</th>
-                                                        <th>IGV</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20601381461</td>
-                                                        <td>IMPACTO</td>
-                                                        <td>26958463245</td>
-                                                        <td>72846344</td>
-                                                        <td>S/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">FACTURAS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-facturas">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Fecha</th>
-                                                        <th>N° Ruc</th>
-                                                        <th>Proveedor</th>
-                                                        <th>Ruc</th>
-                                                        <th>N° Doc</th>
-                                                        <th>Moneda</th>
-                                                        <th>Sub total</th>
-                                                        <th>IGV</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20956328574</td>
-                                                        <td>LOGISTICA FERRE</td>
-                                                        <td>20635894521</td>
-                                                        <td>84526955</td>
-                                                        <td>PEN</td>
-                                                        <td>s/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <br>
-                                            <div class="table-responsive">
-                                                <h3 class="text-center">BOLETAS</h3> <!-- Título más prominente -->
-                                                <br>
-                                                <table class="table table-striped table-hover text-center datatables-boletas">
-                                                    <thead>
-                                                    <tr>
-
-                                                        <th></th>
-                                                        <th>Fecha</th>
-                                                        <th>N° Doc</th>
-                                                        <th>Cliente</th>
-                                                        <th>Ruc</th>
-                                                        <th>N° Doc</th>
-                                                        <th>Moneda</th>
-                                                        <th>Sub total</th>
-                                                        <th>IGV</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                        <td>23/10/2024</td>
-                                                        <td>20956328574</td>
-                                                        <td>LOGISTICA FERRE</td>
-                                                        <td>20635894521</td>
-                                                        <td>84526955</td>
-                                                        <td>PEN</td>
-                                                        <td>s/ 1200</td>
-                                                        <td>S/ 216</td>
-                                                        <td>S/ 1416</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -276,7 +140,7 @@
 <script>
     //dataTables-example
     $(document).ready(function(){
-        $('#tab-3').addClass('active show');
+        $('#cierretab').addClass('active show');
         
         $('.datatables-cierre').DataTable({
             pageLength: 25,

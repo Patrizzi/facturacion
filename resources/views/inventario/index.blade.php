@@ -16,7 +16,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     <!-- Contenido de Tab 1 -->
-                                    <div role="tabpanel" id="tab-1" class="tab-pane active">
+                                    <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                         <div class="panel-body">
                                             <div class="tabs-container">
                                                 <ul class="nav nav-tabs" role="tablist">
@@ -63,7 +63,7 @@
                                                                 </div>
                                                             </div>
                                                             <!-- Tabla de datos -->
-                                                            <div class="table-responsive mt-3">
+                                                            <div class="table-responsive ">
                                                                 <table class="table table-striped table-hover text-center datatables-entrada">
                                                                 <thead>
                                                                     <tr>
@@ -90,6 +90,7 @@
                                                                     <td>{{$primer_registro->codigo_guia}}</td>
                                                                     <td>{{$primer_registro->codigo_guia}}</td>
                                                                     <td><a href="{{ route('kardex-entrada.show', $primer_registro->id) }}"><button type="button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></button></a></td>
+                                                                    </tr>
                                                                     @endif
 
                                                                     @foreach($kardex_entradas as $value => $kardex_entrada)
@@ -233,10 +234,8 @@
 </style>
 
 <script>
-    //dataTables-example
     $(document).ready(function () {
-        // Asegúrate de que el tab esté activo
-        $('#tab-1').addClass('active show');
+        $('#indextab').addClass('active show');
 
         $('.datatables-entrada').DataTable({
             pageLength: 25,
@@ -318,8 +317,5 @@
         document.getElementById("formulario-agregar-producto").style.display = "none";
     }
 </script>
-
-
-
 
 @endsection

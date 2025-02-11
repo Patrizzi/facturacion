@@ -183,7 +183,7 @@
     //dataTables-example
     $(document).ready(function () {
         // Asegúrate de que el tab esté activo
-        $('#contenido-tab-2').addClass('active show');
+        $('#distribuciontab').addClass('active show');
 
         $('.datatables-distribucion').DataTable({
             pageLength: 25,

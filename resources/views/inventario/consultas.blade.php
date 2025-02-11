@@ -60,7 +60,7 @@
                                                             </div>
                                                             <br>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">COMPRAS</h3> <!-- Título más prominente -->
+                                                <h3 class="text-center">Compras</h3> 
                                                 <br>
                                                 <table class="table table-striped table-hover text-center datatables-compras">
                                                     <thead>
@@ -74,6 +74,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
+                                                        <!--Desarrollo para Daniel sobre elaborar al nuevo formato-->
                                                     <tr>
                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>LAPTOP</td>
@@ -100,7 +101,7 @@
                                             </div>
                                             <br>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">VENTAS</h3> <!-- Título más prominente -->
+                                                <h3 class="text-center">Ventas</h3> 
                                                 <br>
                                                 <table class="table table-striped table-hover text-center datatables-ventas">
                                                     <thead>
@@ -115,6 +116,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
+                                                         <!--Desarrollo para Daniel sobre elaborar al nuevo formato-->
                                                     <tr>
                                                         <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
                                                         <td>Electronica</td>
@@ -212,8 +214,7 @@
 
 <script>
     $(document).ready(function () {
-        // Asegúrate de que el tab esté activo
-        $('#tab-2').addClass('active show');
+        $('#consultastab').addClass('active show');
 
         $('.datatables-compras').DataTable({
             pageLength: 25,
@@ -221,148 +222,141 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
+  
+        $('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
 
-        $('.datatables-ventas').DataTable({
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
+        });
+
+        function limpiar_select() {
+            table.column(4).search("").draw();
+        }
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
+        }
+       
+</script>
+
+
+
+<script>
+
+   $('.datatables-ventas').DataTable({
             pageLength: 25,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
+
+        $('input[name="daterange"]').daterangepicker({
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                },
+                function(start, end, label) {
+                    var dates = [];
+                    var currentDate = new Date(start);
+                    while (currentDate <= end) {
+                        var day = ('0' + currentDate.getDate()).slice(-2);
+                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                        var year = currentDate.getFullYear();
+
+                        var formattedDate = day + '-' + month + '-' + year;
+                        dates.push(formattedDate);
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    var dateRangeString = dates.join('|');
+                    console.log(dateRangeString);
+                    table.column(4).search(dateRangeString, true, false).draw();
+                }
+            );
         });
-    });
-</script>
 
-
-<script>
-    $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
+        function limpiar_select() {
+            table.column(4).search("").draw();
         }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
-<script>
-    $('#reportrange1 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-    $('#reportrange1').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
+        function revert_select() {
+            table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange1 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
 </script>
-<script>
-    $('#reportrange2 span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-    $('#reportrange2').daterangepicker({
-        format: 'MM/DD/YYYY',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            cancelLabel: 'Cancel',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-        }
-    }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange2 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    });
-</script>
 
 @endsection

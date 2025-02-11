@@ -121,6 +121,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
+                                                         <!--Desarrollo para Daniel sobre elaborar al nuevo formato-->
                                                     <tr>
                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>23/10/2024</td>
@@ -158,6 +159,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
+                                                         <!--Desarrollo para Daniel sobre elaborar al nuevo formato-->
                                                     <tr>
                                                         <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
                                                         <td>23/10/2024</td>
@@ -242,7 +244,7 @@
 
 <script>
     $(document).ready(function(e) {
-        $('#tab-4').addClass('active show');
+        $('#movimientotab').addClass('active show');
         
         $('#botonBuscar').on('click', function() {
                     $.ajax({
