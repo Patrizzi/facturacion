@@ -25,7 +25,10 @@ use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\config_acc_guia;
 use App\Detracciones;
+use App\Igv;
+use App\Moneda;
 use Carbon\Carbon;
+
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +64,7 @@ use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
 
 use Greenter\Api;
+use Illuminate\Support\Carbon as SupportCarbon;
 use PhpParser\Node\Stmt\Return_;
 
 class FacturacionElectronicaController extends Controller
@@ -74,15 +78,42 @@ class FacturacionElectronicaController extends Controller
     public function index()
     {
         $empresa=Empresa::first();
-        $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
+        $fecha_hoy = Carbon::now();
+
         $facturacion=Facturacion::where('f_electronica',0)->get();
+        foreach ($facturacion as $factura) {
+            $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
+        }
 
-        $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
-        $facturacion_enviada=Facturacion::where('f_electronica',1)->get();
-
-        $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
+        // $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
+        // $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
+        
+        // $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
         // return $detraccion_facturacion;
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m','facturacion_enviada_m','empresa','detraccion_facturas'));
+        
+        return view('facturacion_electronica.factura.index',compact('facturacion','empresa'));
+    }
+
+    public function facturas_enviadas(){
+        // $facturas_enviadas=Facturacion::select('id','codigo_fac','cliente_id', 'fecha_emision','fecha_vencimiento','created_at')->where('f_electronica',1)->get();
+        $empresa=Empresa::first();
+
+        // $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
+        // return $facturas_enviadas;
+        return view('facturacion_electronica.factura.enviado',compact('empresa'));
+    }
+
+    public function index_facturas_manual(){
+        $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $facturas_manual=Facturacion_m::where('f_electronica', 0)->get();
+        foreach ($facturas_manual as $factura) {
+            $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
+        }
+
+          
+        return view('facturacion_electronica.factura.index_manual',compact('facturas_manual','empresa'));
     }
 
     public function index_boleta(){
@@ -186,6 +217,7 @@ class FacturacionElectronicaController extends Controller
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
         $factura=Facturacion::where('f_electronica',0)->where('codigo_fac',$factura_codigo)->first();
+        // return "suceess";
         $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
         if($factura->guia_remision=="0"){
             $guia=0;
@@ -1255,5 +1287,91 @@ class FacturacionElectronicaController extends Controller
         //
     }
 
+    public function list_facturas_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_fac',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Facturacion::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $facturacion = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $facturacion->transform(function ($facturas) use ($igv){
+            $subtotal = $facturas->op_gravada + $facturas->op_inafecta + $facturas->op_exonerada;
+
+            $total = round($subtotal + ($facturas->op_gravada * $igv) / 100, 2);
+
+            $facturas->emision = Carbon::parse($facturas->created_at)->format('d-m-Y');
+            $facturas->total = $facturas->moneda->simbolo.' '. number_format($total,2);
+            return $facturas;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($facturacion as $facturas) {
+            $json['data'][] = [
+                $facturas->id,
+                $facturas->id,
+                $facturas->codigo_fac,
+                $facturas->cliente->numero_documento,
+                $facturas->cliente->nombre,
+                $facturas->fecha_emision,
+                $facturas->total,
+                $facturas->f_electronica,
+                $facturas->id,
+                $facturas->nota_credito,
+                $facturas->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
 
 }
