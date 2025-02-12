@@ -992,8 +992,12 @@
 
         function applyMenuBehavior() {
             if (window.matchMedia("(min-width: 768px)").matches) {
-                $('body').addClass('mini-navbar');
+
+
+                 /*decoracion de la principal*/ /*cerrar automaticamente*/
+
                 $('.navbar-minimalize').off('click');
+
 
                 $('.navbar-static-side').hover(
                     function() {

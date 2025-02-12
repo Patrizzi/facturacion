@@ -873,7 +873,7 @@ h5 {
 }
 .navbar-default .nav > li > a:hover,
 .navbar-default .nav > li > a:focus {
-  background-color: #09267B;
+  background-color: red;
   color: white;
 }
 .nav .open > a,
@@ -881,10 +881,7 @@ h5 {
 .nav .open > a:focus {
   background: #fff;
 }
-.nav.navbar-top-links > li > a:hover,
-.nav.navbar-top-links > li > a:focus {
-  background-color: transparent;
-}
+
 .nav > li > a i {
   margin-right: 6px;
 }
@@ -1122,7 +1119,7 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav li:hover > .nav-seco
 .mini-navbar .nav li:focus > .nav-second-level {
   display: block;
   border-radius: 0 2px 2px 0;
-  min-width: 160px;
+  min-width: 660px;
   height: auto;
 }
 body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
@@ -9475,20 +9472,20 @@ body.md-skin {
 .custom-container {
   display: flex;
   align-items: center;
-  border-radius: 12px; 
+  border-radius: 12px;
   overflow: hidden;
-  width: 300px; 
+  width: 300px;
   height: 50px;
-  border: 3px solid #2641f8; 
+  border: 3px solid #2641f8;
 }
 
 .left-side {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2641f8; 
-  color: white; 
-  width: 50%; 
+  background-color: #2641f8;
+  color: white;
+  width: 50%;
   height: 100%;
 }
 
@@ -9498,18 +9495,18 @@ body.md-skin {
   justify-content: center;
   background-color: white;
   color: #2641f8;
-  width: 50%; 
-  height: 100%; 
+  width: 50%;
+  height: 100%;
 }
 
 .link {
-  color: #2641f8; 
+  color: #2641f8;
   font-weight: bold;
   text-decoration: none;
 }
 
 .link:hover {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .logout-btn {
@@ -9706,17 +9703,17 @@ body.md-skin {
 }
 @media (max-width: 1250px) {
   .mensajes2{
-      display: none; 
+      display: none;
   }
 }
 @media (max-width: 1000px) {
   .start-header{
-      display: none; 
+      display: none;
   }
 }
 @media (max-width: 700px) {
   .calendar-none{
-      display: none; 
+      display: none;
   }
 }
 @media (max-width: 860px) {
