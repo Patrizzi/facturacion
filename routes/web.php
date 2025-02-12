@@ -611,9 +611,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 
+route::view('/guiasalida_prueba', 'SrvicioController@')->name('guiasalida_prueba');
 
 
-
+Route::get('/prueba_guiasalida', ['ServicioController@prueba'])->name('prueba');
 
 
 
