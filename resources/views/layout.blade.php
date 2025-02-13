@@ -239,13 +239,9 @@
     li::marker {
         content: none;
     }
-
-    .rounded-circle {
-        display: flex;
-        text-align: center;
-        align-items: center;
-        margin: auto;
-    }
+.navbar-default:hover .first-element, .navbar-default:hover .nav-last-footer{
+    width: 10px !important;
+}
 
     .head-nav-logo {
         display: flex !important;
@@ -286,7 +282,7 @@
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu"
-                    style="height:90vh !important; overflow-y: auto; position: fixed; display: block; top: 0px">
+                    style="height:90vh !important; overflow-y: auto;  display: block; top: 0px">
                     {{-- <div style="position: fixed; z-index: 9999;"> --}}
                     <li class="first-element" style="background-color: white;width: 70px;">
                         {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
@@ -994,9 +990,12 @@
             if (window.matchMedia("(min-width: 768px)").matches) {
 
 
-                 /*decoracion de la principal*/ /*cerrar automaticamente*/
 
+
+                $('body').addClass('mini-navbar');
                 $('.navbar-minimalize').off('click');
+
+
 
 
                 $('.navbar-static-side').hover(
