@@ -13,7 +13,7 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{route('servicio.informe_tecnico')}}" id="tab-3-tab" style="color :gray">
-            <span class="badge badge-success"></span> Informe Tecnico
+            <span class="badge badge-success"></span> Informes Tecnicos
         </a>
     </li>
     <li class="nav-item">

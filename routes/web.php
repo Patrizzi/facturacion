@@ -578,6 +578,7 @@ Route::group(
 		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
 
 
+
 	});
 
 Auth::routes([
@@ -610,8 +611,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 
+        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 
+        Route::get('/servicio/guiasalida', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
 
 
