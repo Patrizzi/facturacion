@@ -616,7 +616,7 @@ Route::get('/home', 'HomeController@index')->name('home');
         Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 
-        Route::get('/servicio/guiasalida', 'ServicioController@guiasalida')->name('servicio.guiasalida');
+        Route::get('/servicio/guiaentrada', 'ServicioController@guiaentrada')->name('servicio.guiaentrada');
 
 
 
