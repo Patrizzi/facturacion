@@ -9,9 +9,10 @@
             <span class="badge badge-success" style="background-color: orange;">2</span> Servicios
         </a>
     </li>
+    <!--
     <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#tab-4">
             <span class="badge badge-success" style="background-color: blue;">5</span> Garantias
         </a>
-    </li>
+    </li>-->
 </div>
