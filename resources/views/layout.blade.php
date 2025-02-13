@@ -685,14 +685,18 @@
 
                     {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
-
-                <div style="position: fixed; bottom: 0px; background-color:#143593; height: 10vh;" class="nav-last-footer">
+                <style>
+                    .nav-last-footer:active img {
+                      transform: translateY(-20px);
+                    }
+                  </style>
+                <div style="padding:15px; position: fixed; bottom: 0px; height: 10vh;" class="nav-last-footer">
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;" class="nav-footer-user">
                         <a class="nav-label" style="display: flex; align-items: center;"
                             {{-- href="{{route('usuario.index')}}" --}}>
                             <img alt="image" class="rounded-circle"
-                                src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                                style="width: 60px; height: 60px; border: 3px solid black;" />
+                            src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
+                            style="width: 46px; height: 46px; border: 3px solid black;" />
                             <div class="nav-label" style="margin-left: 20px;">
                                 <span class="block m-t-xs font-bold spans" style="font-size: 14px;">{{ auth()->user()->name }}</span>
                                 <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
