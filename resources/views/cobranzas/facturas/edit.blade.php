@@ -101,7 +101,7 @@
                                                     <div class="col-sm-7"> {{-- SUMA DE MONTO + ADELANTE --}}
                                                         <p class="form-control">{{ $factura->moneda->simbolo }}
                                                             @if($factura->estado_pago ==  2) {{--  PAGO TOTAL --}}
-                                                                {{ $pago_total = number_format($fact_cuotas->sum('montos'),2)}}
+                                                                {{ $tot_pagar = number_format($fact_cuotas->sum('montos'),2)}}
                                                             @else {{--  PARCIAL O SIN PAGO  --}}
                                                                 @php
                                                                     $precio_adel = 0.00;
@@ -109,8 +109,8 @@
                                                                         $precio_adel = $adelantos->precio_adelanto;
                                                                     }
                                                                 @endphp
-                                                                <span hidden>{{ $pago_total = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
-                                                                {{number_format( $pago_total ,2)}}
+                                                                <span hidden>{{ $tot_pagar = $fact_cuotas->where('estado', 2)->sum('monto') + $precio_adel }}</span>
+                                                                {{number_format( $tot_pagar,2)}}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -119,7 +119,7 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $pago_total,2) }}</p>
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $tot_pagar,2) }}</p>
                                                     </div>
                                                 </div>
                                             </div>

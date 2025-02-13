@@ -49,6 +49,16 @@ Route::group(
 
 		Route::resource('/registros','Ventas_registroController');
 
+		// COTIZACIONES - ajax para el llamado de datos
+		Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
+		Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
+		Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
+		Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
+
+
+		Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
+		Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
+
 		Route::post('/cliente/contac','ClienteController@storecontact')->name('cliente.storecontact');
 		Route::resource('/cliente','ClienteController');
 		Route::resource('/cliente_sucursal','ClienteSucursalController')->except('[store]');
@@ -126,7 +136,7 @@ Route::group(
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
 		Route::post('/nota_venta/precio_sugerido' , 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
-		
+
 
 //NOTA VENTA
 
@@ -156,11 +166,11 @@ Route::group(
 		//  CONSULTA CDR??
 		Route::post('/f_e_consulta_guia','FacturacionElectronicaController@valid_cdr')->name('facturacion_electronica.valid_cdr');
 		Route::post('/f_e_consulta_guia_manual','FacturacionElectronicaController@valid_cdr_manual')->name('facturacion_electronica.valid_cdr_manual');
-		
+
 		//guia remision baja
 		Route::post('/facturacion_electronica_guia_remision_baja_prueba','FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
 		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_baja_sunat');
-		
+
 		//Nota Credito
 		Route::get('/facturacion_electronica_nota_credito','FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
 		Route::post('/facturacion_electronica_nota_credito','FacturacionElectronicaController@nota_credito')->name('facturacion_electronica.nota_credito');
@@ -171,13 +181,13 @@ Route::group(
 		Route::post('/facturacion_electronica_nota_debito','FacturacionElectronicaController@nota_debito')->name('facturacion_electronica.nota_debito');
 		Route::post('/facturacion_electronica_nota_debito_boleta','FacturacionElectronicaController@nota_debito_boleta')->name('facturacion_electronica.nota_debito_bol');
 
-		
-		
-		
+
+
+
 
 		Route::resource('/facturacion_electronica','FacturacionElectronicaController');
-		
-		
+
+
 
 		//NOTA DE CREDITO
 		Route::post('/nota-credito/motivo','NotaCreditoController@motivo')->name('nota-credito.motivo');
@@ -199,10 +209,10 @@ Route::group(
 
 		Route::post('/nota_debito_store_factura/{id}','NotaDebitoController@store')->name('nota-debito.nota_debito_store_factura');
 		Route::post('/nota_debito_store_boleta/{id}','NotaDebitoController@store_boleta')->name('nota-debito.nota_debito_bol');
-		
+
 		Route::get('/nota-debito/create_boleta','NotaDebitoController@create_boleta')->name('nota-debito.create_boleta');
 		Route::resource('/nota-debito','NotaDebitoController');
-		
+
 		Route::resource('/debito','DebitoController');
 		Route::resource('/documento','DocumentoController');
 		Route::resource('/empresa','EmpresaController')->only(['index','update','store']);
@@ -229,7 +239,7 @@ Route::group(
 		//->Vista para facturacion manual próximamente...
 		Route::get('/facturacion_manual/print/{id}','FacturacionMController@print')->name('facturacion_manual.print');
 		Route::get('/facturacion_manual/ticket/{id}','FacturacionMController@ticket')->name('facturacion_manual.ticket');
-		
+
 		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
 		Route::resource('facturacion_manual','FacturacionMController');
 		Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
@@ -239,7 +249,7 @@ Route::group(
 		Route::post('/boleta_manual/codigo','BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
 		Route::get('/boleta_manual/print/{id}','BoletaMController@print')->name('boleta_manual.print');
 		Route::get('/boleta_manual/ticket/{id}','BoletaMController@ticket')->name('boleta_manual.ticket');
-		
+
 
 		Route::post('/boleta/create_ms','BoletaController@create_ms')->name('boleta.create_ms');
 		Route::get('/boleta/print/{id}','BoletaController@print')->name('boleta.print');
@@ -261,7 +271,7 @@ Route::group(
 		// Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
 		Route::post('/guia_remision_manual/peso','GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
 		Route::post('/guia_remision_manual/almacen_guia','GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
-		
+
 		Route::get('/guia_remision_manual/print/{id}','GuiaRemisionManualController@print')->name('remision_m.print');
 
 
@@ -269,7 +279,7 @@ Route::group(
 		Route::post('stock_ajax_distribucion', 'KardexEntradaDistribucionController@stock_ajax_distribucion')->name('stock_ajax_distribucion');
 		Route::get('/guia_distribucion', 'KardexEntradaDistribucionController@guia_interna')->name('guia_interna');
 		Route::post('ajax_direccion_almacen', 'KardexEntradaDistribucionController@ajax_direccion_almacen')->name('ajax_direccion_almacen');
-		
+
 		Route::post('stock_ajax_traslado', 'KardexEntradaTrasladoAlmacenController@stock_ajax_traslado')->name('stock_ajax_traslado');
 
 		//Llamada general de los parámetros requeridos por el articulo (producto-servicio), por medio de ajax (parameter_call)
@@ -299,7 +309,7 @@ Route::group(
 		Route::get('/guias_remision/creates/{id}' , 'GuiaRemisionController@cotizacion')->name('guias_remision.create');
 		// Route::get('/guia_remision/print/{id}' , 'GuiaRemisionController@print')->name('guias_remision.print');
 
-		
+
 		Route::resource('/vehiculo','VehiculoController');
 		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
@@ -327,7 +337,7 @@ Route::group(
 		Route::resource('/borradores_email','EmailBorradoresController');
 		// * MailBox Bandeja y Papelera
 		Route::resource('/email','EmailBandejaEnviosController');
-		
+
 		Route::post('email/delete','EmailBandejaEnviosController@delete')->name('email.delete');
 		Route::get('/trash','EmailBandejaEnviosController@trash')->name('email.trash');
 		// Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
@@ -350,7 +360,7 @@ Route::group(
 		Route::post('/email/guia_egreso/{id}','EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
 		Route::post('/email/informe_tecnico/{id}','EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
 		Route::post('/email/guia_remision_m/{id}','EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
-		
+
 		//Garantias
 		Route::get('contacto_cliente','GarantiaGuiaIngresoController@contacto_cliente');
 		Route::get('contacto_cliente_actualizar','GarantiaGuiaIngresoController@contacto_cliente_actualizar');
@@ -422,7 +432,7 @@ Route::group(
 		Route::get('/cierre-periodo/pdf/{id}','CierrePeriodoController@pdf')->name('cierre-periodo.pdf');
 
 		//Fin de inventarios
-		
+
 		Route::resource('/motivo','MotivoController');
 		Route::resource('/marca','MarcaController');
 		Route::resource('/moneda','MonedaController');
@@ -432,7 +442,7 @@ Route::group(
 		Route::post('/adelantos/lista_ajax_fact', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
 		Route::post('/adelantos/lista_ajax_fact_m', 'CreditosAdelantosController@ajax_fact_m')->name('adelantos.ajax_fact_m');
 		Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
-		
+
 		// BOLETA
 		Route::post('/adelantos/lista_ajax_bol', 'CreditosAdelantosController@ajax_bol')->name('adelantos.ajax_bol');
 		Route::post('/adelantos/lista_ajax_bol_m', 'CreditosAdelantosController@ajax_bol_m')->name('adelantos.ajax_bol_m');
@@ -441,7 +451,7 @@ Route::group(
 		// NOTA VENTA
 		Route::post('/adelantos/store_nota_venta', 'CreditosAdelantosController@store_nota_venta')->name('adelantos.store_nota_venta');
 
-		
+
 
 		Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
 		Route::get('/adelantos/comprobantes_pdf/{id}','CreditosAdelantosController@comprobantes_pdf')->name('adelantos.comprobantes_pdf');
@@ -459,9 +469,9 @@ Route::group(
 		Route::post('/pagados/lista_ajax_fact_m','PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
 		Route::get('/pagos/facturas_m/{id}','PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
 		Route::get('/pagos/facturas_m/cliente/{ruc}','PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
-		// PAGADOS BOLETAS 
+		// PAGADOS BOLETAS
 		Route::post('/pagados/store_boleta','PagadosController@store_boleta')->name('pagos.store_boleta');
-		
+
 		Route::get('/pagos/boletas','PagadosController@view_boletas')->name('pagos.view_boletas');
 		Route::post('/pagados/lista_ajax_boletas','PagadosController@lista_ajax_boleta')->name('pagos.lista_ajax_boletas');
 		Route::get('/pagos/boletas/{id}','PagadosController@show_boletas')->name('pagos.show_boletas');
@@ -536,18 +546,39 @@ Route::group(
 		Route::resource('/eventos', 'EventosController');
 		// Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
 		Route::get('/mis_eventos', 'EventosController@evento_user')->name('eventos.user_indes');
-		
+
 		Route::resource('/categorias_eventos', 'CategoriasEventosController')->except('update');
-		
+
 		Route::post('/categories/update', 'CategoriasEventosController@update')->name('category.update');
 		Route::post('/eventos/call', 'EventosController@eventos_show')->name('eventos.call');
 		Route::post('/eventos/user_call', 'EventosController@eventos_show_user')->name('eventos.call_user');
 
-		
+
         Route::post('/categories/select_color', 'ParameterCallController@color_set')->name('category.color');
 		Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
+
+        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+        Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
+        Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
+        Route::get('/estadisticas/clientes', 'EstadisticasController@clientes')->name('estadisticas.clientes');
+        Route::get('/estadisticas/empleados', 'EstadisticasController@empleados')->name('estadisticas.empleados');
+
+		// NUEVAS RUTAS EN VENTAS (cotizacion, cotizacion_manua, nota_venta)
+		Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
+		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
+		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
+
+		Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
+		Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
+		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
+
+
 	});
 
 Auth::routes([
@@ -580,8 +611,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
 Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
-
-
 
 
 

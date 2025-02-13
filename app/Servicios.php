@@ -18,8 +18,8 @@ class Servicios extends Model
     }
     public function subfamilia_i_serv(){
         return $this->belongsTo(Subfamilia::class,'subfamilia_id');
-    } 
-     public function marca(){
+    }
+    public function marca(){
         return $this->belongsTo(Marca::class,'marca_id');
     }
     public function tipo_afec_i_serv(){
