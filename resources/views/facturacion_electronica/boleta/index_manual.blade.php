@@ -332,150 +332,13 @@
                  </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-5" class="tab-pane active show">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange2"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-    
-                                <div class="row g-3 col-md-5">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-example2">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
-                                                <th >Item</th>
-                                                <th >Código de Boleta</th>
-                                                <th >Cliente</th>
-                                                <th>RUC / DNI</th>
-                                                <th>Fecha de vencimiento</th>
-                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
-                                            </tr>
-                                        </thead>
-                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
-                                        <tbody>
-                                            <span hidden>{{$i=1}}</span>
-                                            @foreach($boletas as $boleta)
-                                        <tr>
-                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>                                            
-                                            <td>{{$i++}}</td>
-                                            <td>{{$boleta->codigo_boleta}}</td>
-                                            @if(isset($boleta->cliente_id)) <!-- Nombre del cliente -->
-                                            <td>{{$boleta->cliente->nombre}}</td>
-                                            <td>{{$boleta->cliente->numero_documento}}</td>
-                                            @else
-                                            <td>{{$boleta->cotizacion->cliente->nombre}}</td>
-                                            <td>{{$boleta->cotizacion->cliente->numero_documento}}</td>
-                                            @endif
-                                            <td>{{$boleta->fecha_vencimiento }}</td>
-                                            <td> {{-- <form action="{{route('facturacion_electronica.boleta_sunat')}}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="boleta_id" value="{{$boleta->id}}">
-                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                </form> --}}
-                                                <button type="button" class="btn btn-success btn-circle btn-ls boleta_ind" id="boleta_ind" value="{{$boleta->codigo_boleta}}" onclick="envio_boleta(this)"><i class="fa fa-check" ></i></button>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                    <tfooter>
-                                        <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                        <td align="center"><button type="button" class="btn btn-primary" id="boleta_elec_all">Enviar</button></td>
-                                    </tfooter>
-                                </table>
-                                </div>
+                            <div role="tabpanel" id="tab-5" class="tab-pane ">
                             </div>
-                            <div role="tabpanel" id="tab-6" class="tab-pane">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange3"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-    
-                                <div class="row g-3 col-md-5">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-example3">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
-                                                <th >Item</th>
-                                                <th >Código de Boleta</th>
-                                                <th >Cliente</th>
-                                                <th>RUC /DNI</th>
-                                                <th>Fecha de emisión</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
-                                                <th >XML</th>
-                                                <th>ZIP</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <span hidden>{{$i=1}}</span>
-                                            @foreach($boletas_enviadas as $boleta_env)
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
-                                                <td>{{$i++}}</td>
-                                                <td>{{$boleta_env->codigo_boleta}}</td>
-                                                @if(isset($boleta_env->cliente_id)) <!-- Nombre del cliente -->
-                                                <td>{{$boleta_env->cliente->nombre}}</td>
-                                                <td>{{$boleta_env->cliente->numero_documento}}</td>
-                                                @else
-                                                <td>{{$boleta_env->cotizacion->cliente->nombre}}</td>
-                                                <td>{{$boleta_env->cotizacion->cliente->numero_documento}}</td>
-                                                @endif
-                                                <td>{{$boleta_env->fecha_vencimiento }}</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-03-{{$boleta_env->codigo_boleta}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
-                                                <td>
-                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-03-{{$boleta_env->codigo_boleta}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                            
+                            <div role="tabpanel" id="tab-6" class="tab-pane ">
                             </div>
 
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
@@ -544,69 +407,9 @@
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-8" class="tab-pane">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange5"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-    
-                                <div class="row g-3 col-md-5">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-example5">
-                                        <thead>
-                                        <tr>
-                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
-                                                <th>Item</th>
-                                                <th>Código de Boleta Manual</th>
-                                                <th>Cliente</th>
-                                                <th>RUC /DNI</th>
-                                                <th>Fecha de emisión</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
-                                                <th >XML</th>
-                                                <th>ZIP</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <span hidden>{{$i=1}}</span>
-                                            @foreach($boletas_enviadas_m as $boleta_env_m)
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
-                                                <td>{{$i++}}</td>
-                                                <td>{{$boleta_env_m->codigo_boleta}}</td>
-                                                <td>{{$boleta_env_m->cliente->nombre}}</td>
-                                                <td>{{$boleta_env_m->cliente->numero_documento}}</td>
-                                                <td>{{$boleta_env_m->fecha_vencimiento }}</td>
-                                                <td><button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button></td>
-                                                <td><a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-03-{{$boleta_env_m->codigo_boleta}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
-                                                <td>
-                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-03-{{$boleta_env_m->codigo_boleta}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                               
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -697,94 +500,6 @@
         });
     </script>
 <!-- Page-Level Scripts -->
-<script>
-    $(document).ready(function(){
-        table = $('.dataTables-example2').DataTable({
-            pageLength: 12,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: [
-                { extend: 'copy'},
-                {extend: 'csv'},
-                {extend: 'excel', title: 'ExampleFile'},
-                {extend: 'pdf', title: 'ExampleFile'},
-
-                {extend: 'print',
-                 customize: function (win){
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-
-                        $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                }
-                }
-            ]
-
-        });
-        $('input[name="daterange2"]').daterangepicker({
-            
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
-
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table.column(5).search(dateRangeString, true, false).draw();
-                }
-            );
-        });
-        function limpiar_select(){
-            table.column(5).search("").draw();
-        }
-        function revert_select() {
-            table.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
-    </script>
-
-<script>
     $(document).ready(function(){
         table3 =$('.dataTables-example3').DataTable({
             pageLength: 12,
@@ -958,7 +673,7 @@
         }
     </script>
 
-<script>
+
     $(document).ready(function(){
         table =$('.dataTables-example5').DataTable({
             pageLength: 12,
