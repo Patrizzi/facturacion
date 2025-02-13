@@ -27,12 +27,6 @@
                             <h4 class="text-warning">Servicios: 27</h4>
                             <p>Activos: 23<br>Inactivos: 4</p>
                         </div>
-                        <div class="col-auto">
-                            <div><span id="sparkline7"></span></div>
-                            <br><br>
-                            <h4 class="text-success">Garantías: 40</h4>
-                            <p>Activos: 23<br>Inactivos: 17</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -50,23 +44,42 @@
                             @include('consulta\cantidades-precios\tabs')
                         </ul>
 
-                        <!-- Buscar -->
-                        <div class="d-flex justify-content-end row pt-3 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
-                            <div class="col-auto">
-                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                            </div>
-                            <div class="col-5 input-group">
-                                <input type="text" id="inputBuscar" class="form-control" >
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
-                                </span>
-                            </div>
-                        </div>
+
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
+                                    
+                                    <!-- Buscar -->
+                                    <div class="row">
+                                        <div class="col-6 input-group row">
+                                            <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                    <i class="fa fa-history"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                        <div class="col-6 d-flex justify-content-end row pt-3 " >
+                                            <div class="col-auto">
+                                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                            </div>
+                                            <div class="col-5 input-group">
+                                                <input type="text" id="inputBuscar" class="form-control" >
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- CONTENIDO DENTRO DEL TAB - Productos -->
                                     <table class="table table-striped text-md-center dataTables-productos">
                                         <thead>
@@ -117,10 +130,6 @@
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-2" class="tab-pane">
-
-                            </div>
-
-                            <div role="tabpanel" id="tab-3" class="tab-pane">
 
                             </div>
 
@@ -491,7 +500,7 @@
                 height: '175px',
                 sliceColors: ['#f2d8a0', '#d19d54']});
 
-            $("#sparkline7").sparkline([5, 12, 7], {
+            $("#sparkline7").sparkline([23, 17, 8], {
                 type: 'pie',
                 height: '175px',
                 sliceColors: ['#1ab394', '#b8c2d4', '#e4f0fb']});
