@@ -49,17 +49,10 @@
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox">
-                <!--
-                <div class="ibox-title">
-                    <h4>Productos</h4>
-                </div>-->
                 <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between text-center">
+                    <div class="row d-flex justify-content-around text-center">
 
-                        <div class="col-6"><!--
-                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
-                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div>-->
+                        <div class="col-6 pie-md">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie"></div><!--Azul, plomo y blanco-->
                             </div>
@@ -68,7 +61,7 @@
                             <p class="text-danger"><b>Total</b></p>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-6 pie-md">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie2"></div>
                             </div>
@@ -80,21 +73,6 @@
                 </div>
             </div>
         </div>
-        <!--Producto más vendido
-        <div class="col-lg-4">
-            <div class="ibox">
-                <div class="ibox-content align-content-center cont-size">
-                    <div class="row mx-xl-1">
-                        <div class="col-md-5 bg-success rounded-left border border-end d-flex justify-content-center align-items-center p-4">
-                           <h4 class="text-center">PRODUCTO MÁS PEDIDO</h4>
-                        </div>
-                        <div class="col-md-7 bg-success rounded-right border border-start d-flex justify-content-center align-items-center p-4">
-                            <img src="..." class="rounded-4 img-size" alt="Router">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </div>
 </div>
 
@@ -143,31 +121,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <!--
-                            <li>
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm mx-3"><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu p-1">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">Excel</a></li>
-                                        <li><a class="dropdown-item" href="#">Word</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                    </ul>
-                                </div>
-                            </li>-->
                         </ul>
-
-                        <!-- Buscar
-                        <div class="py-2 d-flex align-items-center row-cols-12 pt-4 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
-                            <div class="col-md-7 d-flex justify-content-md-start row-cols-12 py-2">
-                                <div class="col-md-auto">
-                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                </div>
-                            </div>
-                        </div>-->
 
 
                         <!-- Tablas y su contenido -->
@@ -243,30 +197,11 @@
         </div>
     </div>
 </div>
-<!-- Creación Sencilla
-- Crear otra vista, se añade la estructura
-- se hace el tabs.blade.php
-- ProductosCrontoller -> Se va al último apartado
-- movimiento -> se crea un index2, se retorna la vista, se pone la ruta de productos
-se añade el compact (back)
-- en web, se hace por medio del get (llamado para una creación), el post se hace para un después, se hace un nuevo cambio, para resources para una api, ajax, etc.
-Se crea la ruta y el cambio de nombre de la vista, url. todo el mismo nombre. del archivo creado.
-Poner route en los tabs, no olvidar.
--->
+
 <style>
-    .circle-size{
-        min-height: 40px;
-        min-width: 40px;
-    }
-    .cont-size{
-        min-height: 320px;
-    }
-
-    @media (max-width: 768px){
-        .cont-size{
-            min-height: 200px;
-        }
-
+    .pie-md{
+        max-width: 17%; //270
+        max-height: 50%; //400
     }
 </style>
 <!--Fin código actual-->
@@ -401,13 +336,11 @@ Poner route en los tabs, no olvidar.
             data:{
                 columns: [
                     ['Activos', 60],
-                    ['Inactivos', 80],
-                    ['data3', 80]
+                    ['Inactivos', 80]
                 ],
                 colors:{
                     Activos: '#1ab394',
-                    Inactivos: '#BABABA',
-                    data3: '#b4e5de'
+                    Inactivos: '#b4e5de'
                 },
                 type : 'pie'
             }

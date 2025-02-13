@@ -11,7 +11,7 @@
 		<div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <div class="row pt-3 d-flex justify-content-around justify-content-between align-content-center text-center">
+                    <div class="row pt-3 d-flex justify-content-around align-content-center text-center">
                         <div class="col-auto">
                             <div><span id="sparkline5"></span></div>
                             <br><br>
@@ -44,8 +44,7 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                        @include('consulta\cantidades-precios\tabs')
-
+                            @include('consulta\cantidades-precios\tabs')
                         </ul>
 
                         <!-- Buscar -->
@@ -63,10 +62,9 @@
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-
                             <div role="tabpanel" id="tab-1" class="tab-pane">
-
                             </div>
+
                             <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 - Servicios -->
@@ -102,7 +100,6 @@
                             </div>
 
                             <div role="tabpanel" id="tab-3" class="tab-pane">
-
                             </div>
                         </div>
                     </div>
@@ -176,7 +173,6 @@
         </div>
     </div>
 </div>
-
 
 <style>
     #DataTables_Table_0_filter{
@@ -254,6 +250,8 @@
 
 <script>
     $(document).ready(function(){
+        $('#tab-2-tab').addClass('active show');
+
         $('.dataTables-servicios').DataTable({
             pageLength: 15,
             responsive: true,
@@ -264,17 +262,17 @@
         //
         $("#sparkline5").sparkline([10, 21, 3], {
             type: 'pie',
-            height: '150px',
+            height: '175px',
             sliceColors: ['#a14832', '#d4afa7', '#ffedab']});
 
         $("#sparkline6").sparkline([23, 4], {
             type: 'pie',
-            height: '150px',
+            height: '175px',
             sliceColors: ['#f2d8a0', '#d19d54']});
 
         $("#sparkline7").sparkline([5, 12, 7], {
             type: 'pie',
-            height: '150px',
+            height: '175px',
             sliceColors: ['#1ab394', '#b8c2d4', '#e4f0fb']});
     });
 </script>
