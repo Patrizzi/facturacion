@@ -507,93 +507,10 @@
                 </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-6" class="tab-pane active show">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange2"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-    
-                                <div class="row g-3 col-md-5">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-example2">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                <th>ID</th>
-                                                <th>Código de Guía</th>
-                                                <th>Fecha de emisión</th>
-                                                <th>Fecha de entrega</th>
-                                                <th>Tipo Transporte</th>
-                                                <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
-                                                </tr>
-                                        </thead>
-                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
-                                        <tbody>
-                                        @foreach($guia_remisiones as $guia_remision)
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" class="i-checks" name="input[] ">
-                                            </td>                                            
-                                            zz<td>{{$a++}}</td>
-                                                <td>{{$guia_remision->cod_guia}}</td>
-                                                <td>{{$guia_remision->fecha_emision}}</td>
-                                                <td>{{$guia_remision->fecha_entrega}}</td>
-    
-                                                @if($guia_remision->tipo_transporte==0)
-                                                <td>Sin Trasporte</td>
-                                                @elseif($guia_remision->tipo_transporte==1)
-                                                <td>Trasporte Publico</td>
-                                                @else
-                                                <td>Trasporte Privado</td>
-                                                @endif
-                                            <td>
-                                                {{-- <form action="{{route('facturacion_electronica.guia_remision_sunat')}}" method="POST">
-                                                 @csrf
-                                                    <input type="hidden" name="factura_id" value="{{$guia_remision->id}}"> --}}
-                                                    {{-- <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button> --}}
-                                                    {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
-                                                    <i class="fa fa-cloud-upload"></i>
-                                                    </span> --}}
-                                                    {{-- </form> --}}
-                                                    <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$guia_remision->cod_guia}}" onclick="envio_guia(this)"><i class="fa fa-cloud-upload" ></i></button></td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfooter >
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center">
-                                                <button type="submit" class="btn btn-primary" id="remision_elec_all">Enviar</button>
-                                                {{-- <span class="btn btn-primary btn-ls disabled"> --}}
-                                                    {{-- Enviar
-                                                </span> --}}
-                                            </td>
-                                        </tfooter>
-                                </table>
-                                </div>
+                            <div role="tabpanel" id="tab-6" class="tab-pane ">
                             </div>
 
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
@@ -697,184 +614,12 @@
                                 </div>
                             </div>
 
-                            <div role="tabpanel" id="tab-8" class="tab-pane">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange4"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-    
-                                <div class="row g-3 col-md-5">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-example4">
-                                        <thead>
-                                        <tr>
-                                            <th><input type="checkbox" class="i-checks" name="input[] "></th>                                                
-                                            <th >ID</th>
-                                                <th >Código de Guia</th>
-                                                <th >Fecha emision</th>
-                                                <th>Fecha entrega</th>
-                                                <th>Tipo Transporte</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($guia_remision_anulado as $guia_remision)
-                                            <tr>
-                                                <td>
-                                                <input type="checkbox" class="i-checks" name="input[] ">
-                                                </td>
-                                                <td>{{$o++}}</td>
-                                                <td>{{$guia_remision->cod_guia}}</td>
-                                                <td>{{$guia_remision->fecha_emision}}</td>
-                                                <td>{{$guia_remision->fecha_entrega}}</td>
-                                                @if($guia_remision->tipo_transporte==0)
-                                                <td>Sin Trasporte</td>
-                                                @elseif($guia_remision->tipo_transporte==1)
-                                                <td>Trasporte Publico</td>
-                                                @else
-                                                <td>Trasporte Privado</td>
-                                                @endif
-                                                <td>
-                                                <button type="button" class="btn btn-success btn-circle btn-ls factura_ind" id="guia_remi_ind" value="{{$remision_manuals->cod_guia}}" onclick="envio_guia_manual(this)"><i class="fa fa-cloud-upload" ></i></button>
-
-                                                {{-- <form action="{{route('facturacion_electronica.guia_remision_m_sunat')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="remision_id" value="{{$remision_manuals->id}}">
-                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                    {{-- <span class="btn btn-secondary btn-circle btn-ls disabled">
-                                                        <i class="fa fa-cloud-upload"></i>
-                                                    </span>
-                                                </form> --}}
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                                <td align="center">
-                                                    <button type="submit" class="btn btn-primary" id="remision_m_elec_all">Enviar</button>
-                                                    {{-- <span class="btn btn-primary btn-ls disabled">
-                                                        Enviar
-                                                    </span> --}}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div role="tabpanel" id="tab-8" class="tab-pane">   
                             </div>
 
                             <div role="tabpanel" id="tab-9" class="tab-pane">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange5"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-    
-                                <div class="row g-3 col-md-5">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <div class="alert alert-warning">
-                                        <span>Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol.</span>
-                                    </div>
-                                    <table class="table table-striped text-md-center dataTables-example5">
-                                        <thead>
-                                        <tr>
-                                            <th><input type="checkbox" class="i-checks" name="input[] "></th>
-                                                <th >ID</th>
-                                                <th >Código de Guia</th>
-                                                <th >Fecha emision</th>
-                                                <th>Fecha entrega</th>
-                                                <th>Tipo Transporte</th>
-                                                <th >XML</th>
-                                                <th>ZIP</th>
-                                                <th>Nª de Ticket</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($remision_m_enviados as $guia_remision_m)
-                                            <tr>
-                                                <td>
-                                                <input type="checkbox" class="i-checks" name="input[] ">
-                                                </td>                                                                                                
-                                                <td>{{$y++}}</td>
-                                                <td>{{$guia_remision_m->cod_guia}}</td>
-                                                <td>{{$guia_remision_m->fecha_emision}}</td>
-                                                <td>{{$guia_remision_m->fecha_entrega}}</td>
-
-                                                @if($guia_remision_m->tipo_transporte==0)
-                                                <td>Sin Trasporte</td>
-                                                @elseif($guia_remision_m->tipo_transporte==1)
-                                                <td>Trasporte Publico</td>
-                                                @else
-                                                <td>Trasporte Privado</td>
-                                                @endif
-
-                                                <td> <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a></td>
-                                                <td>
-                                                @if ( !isset($guia_remision_m->ticket_guia_remi_m_sunat) ||  $guia_remision_m->estado_ticket_guia_m == 1 )
-                                                    <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
-                                                @else
-                                                    <div id="div_btn_app_man">
-                                                        <button type="button" class="btn" id="guia_remi_ind_man" value="{{$guia_remision_m->id}}" onclick="valid_cdr_manual(this)"><img src="{{asset('zip.png')}}" width="25px"></button>
-                                                    </div>
-                                                    <div style="display: none;" id="div_dw_non_man">
-                                                        <a id="download_cdr_post" href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-09-{{$guia_remision_m->cod_guia}}.zip" download ><img src="{{asset('zip.png')}}" width="25px"></a>   
-                                                    </div>
-                                                @endif
-                                                </td>
-                                                <td> @if ($guia_remision_m->ticket_guia_remi_m_sunat == null)
-                                                    <span style="font-style: italic"> Sin Ticket | Enviado con la version antigua de las Guia de Remision</span>
-                                                @else   
-                                                    <strong>{{$guia_remision_m->ticket_guia_remi_m_sunat}}</strong>
-                                                @endif</td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -967,7 +712,7 @@
         });
     </script>
 <!-- Page-Level Scripts -->
-<script>
+
     $(document).ready(function(){
         table2 = $('.dataTables-example2').DataTable({
             pageLength: 12,
@@ -1141,7 +886,7 @@
         }
     </script>
 
-<script>
+
     $(document).ready(function(){
         table4 =$('.dataTables-example4').DataTable({
             pageLength: 12,
@@ -1228,7 +973,7 @@
         }
     </script>
 
-<script>
+
     $(document).ready(function(){
         table5 =$('.dataTables-example5').DataTable({
             pageLength: 12,
