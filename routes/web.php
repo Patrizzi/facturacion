@@ -12,6 +12,7 @@
 // });
 
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -558,10 +559,7 @@ Route::group(
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 
-        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+       
 
         Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
         Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
@@ -611,12 +609,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 
-route::view('/guiasalida_prueba', 'SrvicioController@')->name('guiasalida_prueba');
+Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-
-Route::get('/prueba_guiasalida', ['ServicioController@prueba'])->name('prueba');
-
-
+Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
 
 
