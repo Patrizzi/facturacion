@@ -268,11 +268,15 @@
 
                         <!-- Tablas y su contenido -->
                     <div class="tab-content">
-                        <div role="tabpanel" id="tab-6" class="tab-pane active show">
+                    <div role="tabpanel" id="tab-6" class="tab-pane ">
+                            
+                        </div>
+
+                        <div role="tabpanel" id="tab-7" class="tab-pane active show">
                             <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange2"
+                                        <input class="form-control" type="text" name="daterange3"
                                             value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
@@ -296,96 +300,78 @@
                                 </div>
                                 </div>
                                 <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
+                                    <table class="table table-striped dataTables-example3">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                <th >Item</th>
-                                                <th >Código de NC</th>
+                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>                                                
+                                                <th>Item</th>
+                                                <th>Código de NC</th>
                                                 <th>Tipo</th>
-                                                <th >N° de Doc.</th>
+                                                <th>N° de Doc.</th>
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
-                                                <th>Fecha Emisión</th>
+                                                <th>Fech Emisión</th>
+                                                <th>XML</th>
+                                                <th>ZIP</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_1" rowspan="1" colspan="1" aria-label="SUNAT: activate to sort column ascending"><img src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
-                                                </tr>
+                                            </tr>
                                         </thead>
-                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
-                                            <span hidden>{{$i=1}}</span>
-                                            @foreach($n_creditos as $n_credito)
-                                        <tr>
-                                            <td><input type="checkbox" class="i-checks" name="input[]" value="{{$n_credito->codigo_n_c}}"></td>                                            
-                                            <td>{{$i++}}</td>
-                                                @if($n_credito->facturacion_id !=NULL)
-                                                    <td>{{$n_credito->codigo_n_c}}</td>
-                                                    <td>Factura</td>
-                                                    <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito->nota_i_facturacion->id)}}">{{$n_credito->nota_i_facturacion->codigo_fac}}</a></td>
-                                                    <td>{{$n_credito->nota_i_facturacion->cliente->nombre}}</td>
-                                                    <td>{{$n_credito->nota_i_facturacion->cliente->numero_documento}}</td>
-                                                    <td>{{$n_credito->nota_i_facturacion->created_at}}</td>
-                                                    <td> <form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
-                                                        @csrf
-                                                            <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                            <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                        </form>
-                                                    </td>
-                                                @elseif($n_credito->boleta_id !=NULL)
-                                                    <td>{{$n_credito->codigo_n_c}}</td>
-                                                    <td>Boleta</td>
-                                                    <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito->nota_i_boleta->id)}}">{{$n_credito->nota_i_boleta->codigo_boleta}}</a></td>
-                                                    <td>{{$n_credito->nota_i_boleta->cliente->nombre}}</td>
-                                                    <td>{{$n_credito->nota_i_boleta->cliente->numero_documento}}</td>
-                                                    <td>{{$n_credito->nota_i_boleta->created_at}}</td>
-                                                    <td><form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                    </form>
-                                                    </td>
-                                                @elseif($n_credito->boleta_m_id !=NULL)
-                                                    <td>{{$n_credito->codigo_n_c}}</td>
-                                                    <td>Boleta Manual</td>
-                                                    <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito->nota_i_boleta_manual->id)}}">{{$n_credito->nota_i_boleta_manual->codigo_boleta}}</td>
-                                                    <td>{{$n_credito->nota_i_boleta_manual->cliente->nombre}}</td>
-                                                    <td>{{$n_credito->nota_i_boleta_manual->cliente->numero_documento}}</td>
-                                                    <td>{{$n_credito->nota_i_boleta_manual->created_at}}</td>
-                                                    <td><form action="{{route('facturacion_electronica.nota_credito_bol')}}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                    </form>
-                                                    </td>
-                                                @else
-                                                    <td>{{$n_credito->codigo_n_c}}</td>
-                                                    <td>Factura Manual</td>
-                                                    <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito->nota_i_fac_manual->id)}}">{{$n_credito->nota_i_fac_manual->codigo_fac}}</td>
-                                                    <td>{{$n_credito->nota_i_fac_manual->cliente->nombre}}</td>
-                                                    <td>{{$n_credito->nota_i_fac_manual->cliente->numero_documento}}</td>
-                                                    <td>{{$n_credito->nota_i_fac_manual->created_at}}</td>
-                                                    <td><form action="{{route('facturacion_electronica.nota_credito')}}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{$n_credito->id}}">
-                                                        <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                    </form>
-                                                    </td>
-                                                @endif
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfooter >
-                                        <td colspan="8" align="right" style="padding-right: 2em"></td>
-                                        <td align="center"><button type="button" class="btn btn-primary" id="nota_credito_elec_all">Enviar</button></td>
-                                    </tfooter>
-                                </table>
+                                            <span hidden>{{$q=1}}</span>
+                                            @foreach($n_creditos_enviados as $n_credito_enviado)
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="i-checks" name="input[]">
+                                                </td>                                                
+                                                <td>{{$q++}}</td>
+                                            @if($n_credito_enviado->facturacion_id !=NULL)
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Factura</td>
+                                                <td><a class="link_tds" target="_blank" href="{{route('facturacion.show',$n_credito_enviado->nota_i_facturacion->id)}}">{{$n_credito_enviado->nota_i_facturacion->codigo_fac}}</a></td>
+                                                <td>{{$n_credito_enviado->nota_i_facturacion->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_facturacion->created_at}}</td>
+
+                                            @elseif($n_credito_enviado->boleta_id !=NULL)
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Boleta</td>  
+                                                <td><a class="link_tds" target="_blank" href="{{route('boleta.show',$n_credito_enviado->nota_i_boleta->id)}}">{{$n_credito_enviado->nota_i_boleta->codigo_boleta}}</a></td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta->created_at}}</td>
+                                            
+                                            @elseif($n_credito_enviado->boleta_m_id !=NULL)
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Boleta Manual</td>
+                                                <td><a class="link_tds" target="_blank" href="{{route('boleta_manual.show',$n_credito_enviado->nota_i_boleta_manual->id)}}">{{$n_credito_enviado->nota_i_boleta_manual->codigo_boleta}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_boleta_manual->created_at}}</td>
+                                                
+                                            @else
+                                                <td>{{$n_credito_enviado->codigo_n_c}}</td>
+                                                <td>Factura Manual</td>
+                                                <td><a class="link_tds" target="_blank" href="{{route('facturacion_manual.show',$n_credito_enviado->nota_i_fac_manual->id)}}">{{$n_credito_enviado->nota_i_fac_manual->codigo_fac}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->nombre}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_credito_enviado->nota_i_fac_manual->created_at}}</td>
+                                            @endif
+
+                                            <td>
+                                                <a href="{{ asset('facturas_electronicas/')}}/{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.xml" download><img src="{{asset('xml.png')}}" width="25px"></a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ asset('facturas_electronicas/')}}/R-{{$empresa->ruc}}-07-{{$n_credito_enviado->codigo_n_c}}.zip" download><img src="{{asset('zip.png')}}" width="25px"></a>
+                                            </td>
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
-                        <div role="tabpanel" id="tab-7" class="tab-pane">
-                            
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -478,7 +464,7 @@
 
 <script>
     $(document).ready(function(){
-        table = $('.dataTables-example2').DataTable({
+        table3 =$('.dataTables-example3').DataTable({
             pageLength: 12,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
@@ -501,7 +487,7 @@
             ]
 
         });
-        $('input[name="daterange2"]').daterangepicker({
+        $('input[name="daterange3"]').daterangepicker({
             
                     "locale": {
                         "separator": " | ",
@@ -551,19 +537,17 @@
                     }
                     var dateRangeString = dates.join('|');
                     console.log(dateRangeString);
-                    table2.column(7).search(dateRangeString, true, false).draw();
+                    table3.column(7).search(dateRangeString, true, false).draw();
                 }
             );
         });
         function limpiar_select(){
-            table2.column(7).search("").draw();
+            table3.column(7).search("").draw();
         }
         function revert_select() {
-            table2.column(7).search(`{{ date('m-Y') }}`).draw();
+            table3.column(7).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
-
-
 
 <!-- Page Scripts -->
 <script>
