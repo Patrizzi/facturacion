@@ -24,12 +24,6 @@
                             <h4 class="text-warning">Servicios: 27</h4>
                             <p>Activos: 23<br>Inactivos: 4</p>
                         </div>
-                        <div class="col-auto">
-                            <div><span id="sparkline7"></span></div>
-                            <br><br>
-                            <h4 class="text-success">Garantías: 40</h4>
-                            <p>Activos: 23<br>Inactivos: 17</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -47,7 +41,7 @@
                             @include('consulta\cantidades-precios\tabs')
                         </ul>
 
-                        <!-- Buscar -->
+                        <!-- Buscar 1
                         <div class="d-flex justify-content-end row pt-3 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
                             <div class="col-auto">
                                 <label for="inputBuscar" class="col-form-label">Buscar:</label>
@@ -58,7 +52,7 @@
                                     <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
                                 </span>
                             </div>
-                        </div>
+                        </div>-->
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
@@ -67,6 +61,36 @@
 
                             <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
+
+                                    <!-- Buscar -->
+                                    <div class="row pt-3 pb-4 ">
+                                        <div class="col-5 input-group ml-3">
+                                            <input class="form-control" type="text" name="daterange" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                    <i class="fa fa-history"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                        <div class="col-7 d-flex justify-content-end row">
+                                            <div class="col-auto">
+                                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                            </div>
+                                            <div class="col-8 input-group">
+                                                <input type="text" id="inputBuscar" class="form-control" >
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- CONTENIDO DENTRO DEL TAB  2 - Servicios -->
                                     <table class="table table-striped text-md-center dataTables-servicios">
                                         <thead>
@@ -230,6 +254,10 @@
 <script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -237,6 +265,8 @@
 <!-- Sparkline -->
 <script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js')}}"></script>
 
+<!-- Data picker -->
+<script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
 
 <script>
     $(document).ready(function() {
@@ -245,6 +275,119 @@
         $('.footable3').footable();
 
     });
+
+</script>
+
+<script>
+    $(document).ready(function() {
+        table = $('.dataTables-example-facturacion').DataTable({
+            pageLength: 10,
+            order: [
+                [0, "desc"]
+            ],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            footerCallback: function(tr, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column(5)
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total filtered rows on the selected column (code part added)
+                var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                    intVal(b), 0);
+
+                // Update footer
+                $(api.column(5).footer()).html(
+                    'S/ ' + Math.round(sumCol4Filtered * 100) / 100
+                );
+            },
+            buttons: []
+        });
+
+        revert_select();
+
+        $(document).on('change', '#select_tipo_coti', function(event) {
+            var nombre = $("#select_tipo_coti option:selected").val();
+            // console.log(nombre);
+            table.column(11).search(nombre).draw();
+        });
+        $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            },
+            function(start, end, label) {
+                var dates = [];
+                var currentDate = new Date(start);
+                while (currentDate <= end) {
+                    var day = ('0' + currentDate.getDate()).slice(-2);
+                    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                    var year = currentDate.getFullYear();
+
+                    var formattedDate = day + '-' + month + '-' + year;
+                    dates.push(formattedDate);
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                var dateRangeString = dates.join('|');
+                console.log(dateRangeString);
+                table.column(4).search(dateRangeString, true, false).draw();
+            }
+        );
+    });
+
+    function limpiar_select() {
+        table.column(4).search("").draw();
+    }
+
+    function revert_select() {
+        table.column(4).search(`02-2025`).draw();
+    }
+
 
 </script>
 

@@ -1405,7 +1405,7 @@ $validez=Validez::get();
         function revert_select() {
             table4.column(5).search(`{{ date('m-Y') }}`).draw();
         }
-    </script>
+</script>
 
 <script>
     $(document).ready(function(){

@@ -141,26 +141,6 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             @include('producto_servicios\tabs')
-                            <li class="ml-auto align-content-center">
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <p class="pl-3"><b>Almacenes:</b></p>
-                                        <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
-                                        <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="col-md-12 d-flex justify-content-md-start align-content-center row-cols-12">
-                                    <div class="col-md-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                            </li>
                         </ul>
 
                         <!-- Tablas y su contenido -->

@@ -139,8 +139,7 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                                @include('producto_servicios\tabs')
-
+                            @include('producto_servicios\tabs')
                         </ul>
 
                         <!-- Tablas y su contenido -->

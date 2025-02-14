@@ -1,6 +1,6 @@
 <div class="nav">
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('productos.index') }}" id="tab-1-tab" class="tab-pane active show">
+        <a class="nav-link" href="{{ route('productos.index') }}" id="tab-1-tab">
             <span style="color: white; background-color: blue;" class="px-1">2</span>
             Activos
         </a>

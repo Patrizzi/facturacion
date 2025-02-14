@@ -6,44 +6,6 @@
 @section('content')
 
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    @if (session('anulacion'))
-    <div class="alert alert-danger">
-        {{ session('anulacion') }}
-    </div>
-    @endif
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example " id="table_prod">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Nombre</th>
-                                    <th>Código Producto</th>
-                                    <th>Código Original</th>
-                                    {{-- <th>Familia</th> --}}
-                                    <th>Marca</th>
-                                    <th>Estado</th>
-                                    <th>Afectación</th>
-                                    <th>Foto</th>
-                                    <th>Ver</th>
-                                    <th>Anular</th>
-                                </tr>
-                            </thead>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
 <!--Código actual 14/11/2024-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
@@ -171,24 +133,46 @@
         </div>
     </div>
 </div>
+<!--Fin código-->
 
-<style>
-    .circle-size{
-        min-height: 40px;
-        min-width: 40px;
-    }
-    .cont-size{
-        min-height: 320px;
-    }
 
-    @media (max-width: 768px){
-        .cont-size{
-            min-height: 200px;
-        }
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (session('anulacion'))
+    <div class="alert alert-danger">
+        {{ session('anulacion') }}
+    </div>
+    @endif
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example " id="table_prod">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Nombre</th>
+                                    <th>Código Producto</th>
+                                    <th>Código Original</th>
+                                    {{-- <th>Familia</th> --}}
+                                    <th>Marca</th>
+                                    <th>Estado</th>
+                                    <th>Afectación</th>
+                                    <th>Foto</th>
+                                    <th>Ver</th>
+                                    <th>Anular</th>
+                                </tr>
+                            </thead>
 
-    }
-</style>
-<!--Fin código actual-->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 <style>
     /* OCULTANDO LO DE ORGANIZAR*/
@@ -406,6 +390,8 @@
 
 <script>
     $(document).ready(function(){
+        $('#tab-2-tab').addClass('active show');
+
         $('#table_prodin').DataTable({
             "serverSide":true,
             "ajax":"{{url('api/productos-inactivo')}}",

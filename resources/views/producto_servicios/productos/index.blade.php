@@ -5,45 +5,6 @@
 @section('href_accion', route('productos.create'))
 @section('content')
 
-
-<div class="wrapper wrapper-content animated fadeInRight">
-    @if (session('anulacion'))
-    <div class="alert alert-danger">
-        {{ session('anulacion') }}
-    </div>
-    @endif
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example " id="table_prod">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Nombre</th>
-                                    <th>Código Producto</th>
-                                    <th>Código Original</th>
-                                    {{-- <th>Familia</th> --}}
-                                    <th>Marca</th>
-                                    <th>Estado</th>
-                                    <th>Afectación</th>
-                                    <th>Foto</th>
-                                    <th>Ver</th>
-                                    <th>Anular</th>
-                                </tr>
-                            </thead>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
 <!--Código actual 14/11/2024-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
@@ -52,7 +13,7 @@
                 <div class="ibox-content align-content-center">
                     <div class="row d-flex justify-content-around text-center">
 
-                        <div class="col-6 pie-md">
+                        <div class="col-6">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie"></div><!--Azul, plomo y blanco-->
                             </div>
@@ -61,7 +22,7 @@
                             <p class="text-danger"><b>Total</b></p>
                         </div>
 
-                        <div class="col-6 pie-md">
+                        <div class="col-6">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie2"></div>
                             </div>
@@ -131,14 +92,46 @@
         </div>
     </div>
 </div>
+<!--/ Código Gaby-->
 
-<style>
-    .pie-md{
-        max-width: 17%; //270
-        max-height: 50%; //400
-    }
-</style>
-<!--Fin código actual-->
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (session('anulacion'))
+    <div class="alert alert-danger">
+        {{ session('anulacion') }}
+    </div>
+    @endif
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example " id="table_prod">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Nombre</th>
+                                    <th>Código Producto</th>
+                                    <th>Código Original</th>
+                                    {{-- <th>Familia</th> --}}
+                                    <th>Marca</th>
+                                    <th>Estado</th>
+                                    <th>Afectación</th>
+                                    <th>Foto</th>
+                                    <th>Ver</th>
+                                    <th>Anular</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 <style>
     /* OCULTANDO LO DE ORGANIZAR*/
@@ -285,6 +278,8 @@
 
 <script>
     $(document).ready(function(){
+        $('#tab-1-tab').addClass('active show');
+
         $('#table_prodac').DataTable({
             "serverSide":true,
             "ajax":"{{url('api/productos')}}",
