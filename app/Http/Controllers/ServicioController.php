@@ -23,4 +23,8 @@ class ServicioController extends Controller
         return view('servicio.solicitud_servicio');
     }
 
+    public function guiaentrada (){
+        return view('servicio.guiaentrada');
+    }
+
 }
