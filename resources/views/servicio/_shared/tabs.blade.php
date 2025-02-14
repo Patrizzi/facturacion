@@ -6,7 +6,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{route('servicio.guia_salida')}}" id="tab-2-tab" style="color :gray">
+        <a class="nav-link" href="{{route('servicio.guiasalida')}}" id="tab-2-tab" style="color :gray">
             <span class="badge badge-success"></span>
             Guia Salida
         </a>
@@ -18,7 +18,12 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{route('servicio.solicitud_servicio')}}" id="tab-4-tab" style="color :gray">
-            <span class="badge badge-success"></span> Solicitud de Servicios
+            <span class="badge badge-success"></span> Solic
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{route('servicio.clientes')}}" id="tab-4-tab" style="color :gray">
+            <span class="badge badge-success"></span> Clientes
         </a>
     </li>
 </div>
@@ -26,6 +31,6 @@
 <style>
 
     .nav{
-        color:
+        color:aquamarine;
     }
 </style>
