@@ -239,13 +239,9 @@
     li::marker {
         content: none;
     }
-
-    .rounded-circle {
-        display: flex;
-        text-align: center;
-        align-items: center;
-        margin: auto;
-    }
+.navbar-default:hover .first-element, .navbar-default:hover .nav-last-footer{
+    width: 10px !important;
+}
 
     .head-nav-logo {
         display: flex !important;
@@ -286,7 +282,7 @@
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu"
-                    style="height:90vh !important; overflow-y: auto; position: fixed; display: block; top: 0px">
+                    style="height:90vh !important; overflow-y: auto;  display: block; top: 0px">
                     {{-- <div style="position: fixed; z-index: 9999;"> --}}
                     <li class="first-element" style="background-color: white;width: 70px;">
                         {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
@@ -689,14 +685,18 @@
 
                     {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
-
-                <div style="position: fixed; bottom: 0px; background-color:#143593; height: 10vh;" class="nav-last-footer">
+                <style>
+                    .nav-last-footer:active img {
+                      transform: translateY(-20px);
+                    }
+                  </style>
+                <div style="padding:15px; position: fixed; bottom: 0px; height: 10vh;" class="nav-last-footer">
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;" class="nav-footer-user">
                         <a class="nav-label" style="display: flex; align-items: center;"
                             {{-- href="{{route('usuario.index')}}" --}}>
                             <img alt="image" class="rounded-circle"
-                                src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                                style="width: 60px; height: 60px; border: 3px solid black;" />
+                            src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
+                            style="width: 46px; height: 46px; border: 3px solid black;" />
                             <div class="nav-label" style="margin-left: 20px;">
                                 <span class="block m-t-xs font-bold spans" style="font-size: 14px;">{{ auth()->user()->name }}</span>
                                 <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
@@ -992,8 +992,15 @@
 
         function applyMenuBehavior() {
             if (window.matchMedia("(min-width: 768px)").matches) {
+
+
+
+
                 $('body').addClass('mini-navbar');
                 $('.navbar-minimalize').off('click');
+
+
+
 
                 $('.navbar-static-side').hover(
                     function() {

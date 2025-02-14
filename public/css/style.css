@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
 /*
@@ -873,7 +880,7 @@ h5 {
 }
 .navbar-default .nav > li > a:hover,
 .navbar-default .nav > li > a:focus {
-  background-color: #09267B;
+  background-color: #09267b;
   color: white;
 }
 .nav .open > a,
@@ -881,10 +888,7 @@ h5 {
 .nav .open > a:focus {
   background: #fff;
 }
-.nav.navbar-top-links > li > a:hover,
-.nav.navbar-top-links > li > a:focus {
-  background-color: transparent;
-}
+
 .nav > li > a i {
   margin-right: 6px;
 }
@@ -1122,7 +1126,7 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav li:hover > .nav-seco
 .mini-navbar .nav li:focus > .nav-second-level {
   display: block;
   border-radius: 0 2px 2px 0;
-  min-width: 160px;
+  min-width: 660px;
   height: auto;
 }
 body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
@@ -1187,6 +1191,7 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
 .footer {
   transition: margin 0s;
 }
+/*error de transicion */
 .pace-done .navbar-static-side,
 .pace-done .nav-header,
 .pace-done li.active,
@@ -9306,16 +9311,6 @@ body.md-skin {
 .md-skin .canvas-menu.mini-navbar .nav-second-level {
   background: inherit;
 }
-.md-skin .pace-done .navbar-static-side,
-.md-skin .pace-done .nav-header,
-.md-skin .pace-done li.active,
-.md-skin .pace-done #page-wrapper,
-.md-skin .pace-done .footer {
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  -o-.navbar-static-sidetion: all 0.4s;
-  transition: all 0.4s;
-}
 .md-skin .navbar-fixed-top {
   background: #fff;
   transition-duration: 0.4s;
@@ -9475,20 +9470,20 @@ body.md-skin {
 .custom-container {
   display: flex;
   align-items: center;
-  border-radius: 12px; 
+  border-radius: 12px;
   overflow: hidden;
-  width: 300px; 
+  width: 300px;
   height: 50px;
-  border: 3px solid #2641f8; 
+  border: 3px solid #2641f8;
 }
 
 .left-side {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2641f8; 
-  color: white; 
-  width: 50%; 
+  background-color: #2641f8;
+  color: white;
+  width: 50%;
   height: 100%;
 }
 
@@ -9498,18 +9493,18 @@ body.md-skin {
   justify-content: center;
   background-color: white;
   color: #2641f8;
-  width: 50%; 
-  height: 100%; 
+  width: 50%;
+  height: 100%;
 }
 
 .link {
-  color: #2641f8; 
+  color: #2641f8;
   font-weight: bold;
   text-decoration: none;
 }
 
 .link:hover {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .logout-btn {
@@ -9706,17 +9701,17 @@ body.md-skin {
 }
 @media (max-width: 1250px) {
   .mensajes2{
-      display: none; 
+      display: none;
   }
 }
 @media (max-width: 1000px) {
   .start-header{
-      display: none; 
+      display: none;
   }
 }
 @media (max-width: 700px) {
   .calendar-none{
-      display: none; 
+      display: none;
   }
 }
 @media (max-width: 860px) {
