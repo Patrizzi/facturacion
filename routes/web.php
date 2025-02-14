@@ -620,6 +620,7 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
         Route::get('/servicio/guiaentrada', 'ServicioController@guiaentrada')->name('servicio.guiaentrada');
+        Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 
 
 
