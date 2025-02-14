@@ -102,17 +102,10 @@
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox">
-                <!--
-                <div class="ibox-title">
-                    <h4>Servicios</h4>
-                </div>-->
                 <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between text-center">
+                    <div class="row d-flex justify-content-around text-center">
 
-                        <div class="col-6"><!--
-                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
-                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div>-->
+                        <div class="col-6 pie-md">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie"></div><!--Azul, plomo y blanco-->
                             </div>
@@ -121,7 +114,7 @@
                             <p class="text-danger"><b>Total</b></p>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-6 pie-md">
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie2"></div>
                             </div>
@@ -133,21 +126,6 @@
                 </div>
             </div>
         </div>
-        <!--Servicio más pedido
-        <div class="col-xl-4 col-lg-5">
-            <div class="ibox">
-                <div class="ibox-content  align-content-center cont-size">
-                    <div class="row mx-md-1">
-                        <div class="col-md-5 bg-success rounded-left border border-end d-flex justify-content-center align-items-center p-4">
-                           <h3 class="text-center fs-4">SERVICIO MÁS PEDIDO</h3>
-                        </div>
-                        <div class="col-md-7 bg-success rounded-right border border-start d-flex justify-content-center align-items-center p-4">
-                            <img src="..." class="rounded-4 img-size" alt="Router">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </div>
 </div>
 
@@ -162,7 +140,7 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                                 @include('producto_servicios\tabs')
-                            
+
                         </ul>
 
                         <!-- Tablas y su contenido -->
@@ -222,39 +200,9 @@
 </div>
 
 <style>
-    .cont-size{
-        min-height: 320px;
-    }
-
-    .img-size{
-        min-height: 200px;
-        min-width: 200px;
-        max-height: 200px;
-        max-width: 200px;
-    }
-    @media (max-width: 1440px){
-        .img-size{
-            min-height: 200px;
-            min-width: 200px;
-            max-height: 200px;
-            max-width: 200px;
-        }
-        .cont-size{
-            min-height: 320px;
-        }
-    }
-    @media (max-width: 1024px){
-        .img-size{
-            min-height: 120px;
-            min-width: 120px;
-            max-height: 120px;
-            max-width: 120px;
-        }
-    }
-    @media (max-width: 768px){
-        .cont-size{
-            min-height: 200px;
-        }
+    .pie-md{
+        max-width: 17%; //270
+        max-height: 50%; //400
     }
 
 </style>
@@ -311,13 +259,11 @@
             data:{
                 columns: [
                     ['Activos', 60],
-                    ['Inactivos', 80],
-                    ['data3', 80]
+                    ['Inactivos', 80]
                 ],
                 colors:{
                     Activos: '#1ab394',
-                    Inactivos: '#BABABA',
-                    data3: '#b4e5de'
+                    Inactivos: '#b4e5de'
                 },
                 type : 'pie'
             }
@@ -360,6 +306,8 @@
 
 <script>
     $(document).ready(function(){
+        $('#tab-2').addClass('active show');
+
         $('.dataTables-servicios2').DataTable({
             pageLength: 15,
             responsive: true,

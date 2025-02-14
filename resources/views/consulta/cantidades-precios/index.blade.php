@@ -14,7 +14,7 @@
 		<div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <div class="row pt-3 d-flex justify-content-around justify-content-between align-content-center text-center">
+                    <div class="row pt-3 d-flex justify-content-around align-content-center text-center">
                         <div class="col-auto">
                             <div><span id="sparkline5"></span></div>
                             <br><br>
@@ -26,12 +26,6 @@
                             <br><br>
                             <h4 class="text-warning">Servicios: 27</h4>
                             <p>Activos: 23<br>Inactivos: 4</p>
-                        </div>
-                        <div class="col-auto">
-                            <div><span id="sparkline7"></span></div>
-                            <br><br>
-                            <h4 class="text-success">Garantías: 40</h4>
-                            <p>Activos: 23<br>Inactivos: 17</p>
                         </div>
                     </div>
                 </div>
@@ -47,27 +41,45 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                        @include('consulta\cantidades-precios\tabs')
+                            @include('consulta\cantidades-precios\tabs')
                         </ul>
 
-                        <!-- Buscar -->
-                        <div class="d-flex justify-content-end row pt-3 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
-                            <div class="col-auto">
-                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                            </div>
-                            <div class="col-5 input-group">
-                                <input type="text" id="inputBuscar" class="form-control" >
-                                <span class="input-group-append">
-                                    <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
-                                </span>
-                            </div>
-                        </div>
+
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-
                             <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
+                                    
+                                    <!-- Buscar -->
+                                    <div class="row">
+                                        <div class="col-6 input-group row">
+                                            <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                            <span class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                                    <i class="fa fa-history"></i>
+                                                </button>
+                                            </span>
+                                            <span class="input-group-append">
+                                            <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
+                                                <i class="fa fa-eraser"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                        <div class="col-6 d-flex justify-content-end row pt-3 " >
+                                            <div class="col-auto">
+                                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                            </div>
+                                            <div class="col-5 input-group">
+                                                <input type="text" id="inputBuscar" class="form-control" >
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- CONTENIDO DENTRO DEL TAB - Productos -->
                                     <table class="table table-striped text-md-center dataTables-productos">
                                         <thead>
@@ -108,21 +120,19 @@
                                                 <td>47</td>
                                                 <td class="tooltip-demo">
                                                     <a href="#" data-toggle="tooltip" data-placement="left" title="Stock mínimo"><i class="fa fa-caret-square-o-down text-danger"></i></a>
+                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock promedio"><i class="fa fa-window-minimize text-primary"></i></a>
+                                                    <a href="#" data-toggle="tooltip" data-placement="left" title="Stock máximo"><i class="fa fa-caret-square-o-up text-warning"></i></a>
                                                 </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-
                                 </div>
                             </div>
                             <div role="tabpanel" id="tab-2" class="tab-pane">
 
                             </div>
 
-                            <div role="tabpanel" id="tab-3" class="tab-pane">
-
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -315,6 +325,7 @@
 </div>
 </div>
 
+
 <style>
     #DataTables_Table_0_filter{
         display:none;
@@ -481,17 +492,17 @@
             //
             $("#sparkline5").sparkline([10, 21, 3], {
             type: 'pie',
-            height: '150px',
+            height: '175px',
             sliceColors: ['#a14832', '#d4afa7', '#ffedab']});
 
             $("#sparkline6").sparkline([23, 4], {
                 type: 'pie',
-                height: '150px',
+                height: '175px',
                 sliceColors: ['#f2d8a0', '#d19d54']});
 
-            $("#sparkline7").sparkline([5, 12, 7], {
+            $("#sparkline7").sparkline([23, 17, 8], {
                 type: 'pie',
-                height: '150px',
+                height: '175px',
                 sliceColors: ['#1ab394', '#b8c2d4', '#e4f0fb']});
 
         });
@@ -534,15 +545,13 @@
 
     }
 </script>
+
+
 <script>
     $(document).ready(function(){
+        $('#tab-1-tab').addClass('active show');
+
         $('.dataTables-productos').DataTable({
-            pageLength: 15,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-        $('.dataTables-servicios').DataTable({
             pageLength: 15,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
