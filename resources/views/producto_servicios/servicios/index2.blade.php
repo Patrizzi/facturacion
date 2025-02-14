@@ -161,54 +161,9 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li class="ml-auto align-content-center">
                                 @include('producto_servicios\tabs')
-                            <li>
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
-                                    <ul class="dropdown-menu">
-                                        <p class="pl-3"><b>Almacenes:</b></p>
-                                        <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
-                                        <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="col-md-12 d-flex justify-content-md-start align-content-center row-cols-12">
-                                    <div class="col-md-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                </div>
-                            </li>
-                            <!--
-                            <li>
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm mx-3"><i class="fa fa-cloud-download"></i></button>
-                                    <ul class="dropdown-menu p-1">
-                                        <li><a class="dropdown-item" href="#">PDF</a></li>
-                                        <li><a class="dropdown-item" href="#">Excel</a></li>
-                                        <li><a class="dropdown-item" href="#">Word</a></li>
-                                        <li><a class="dropdown-item" href="#">CSV</a></li>
-                                    </ul>
-                                </div>
-                            </li>-->
+                            
                         </ul>
-
-                        <!-- Buscar
-                        <div class="py-2 d-flex align-items-center row-cols-12 pt-4 border-left border-right border-secondary-subtle" style="margin-left: 0.1px; margin-right: 0.1px;">
-                            <div class="col-md-7 d-flex justify-content-md-start row-cols-12 py-2">
-                                <div class="col-md-auto">
-                                    <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                </div>
-                                <div class="col-md-7">
-                                    <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                </div>
-                            </div>
-                        </div>-->
-
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">

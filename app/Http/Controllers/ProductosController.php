@@ -61,7 +61,7 @@ class ProductosController extends Controller
      */
     public function store(Request $request )
     {
-        
+
         // return $request;
         $this->validate($request,[
             'codigo_original' => ['unique:productos,codigo_original'],
@@ -105,7 +105,7 @@ class ProductosController extends Controller
         $peso=$request->get('peso');
         $simbolo=$request->get('simbolo');
 
-        
+
 
         $producto=new Producto;
         $producto->codigo_producto=$codigo;
@@ -161,7 +161,7 @@ class ProductosController extends Controller
        $moneda_principal=Moneda::where('principal',1)->first();
        $familias=Familia::all();
        $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->where('estado',0)->get();
-    
+
        $marcas=Marca::all();
        $estados=Estado::all();
        $categorias=Categoria::all();
@@ -194,7 +194,7 @@ class ProductosController extends Controller
         // $moneda_principal=Moneda::where('principal',1)->first();
         // $familias=Familia::all();
         // $subfamilias=Subfamilia::where('familia_id',$producto->familia_id)->first();
-        
+
         // $marcas=Marca::all();
         // $estados=Estado::all();
         // $categorias=Categoria::all();
@@ -313,5 +313,11 @@ class ProductosController extends Controller
             // return '0';
         }
 
+    }
+    public function index2(){
+        return view('producto_servicios.productos.index2');
+    }
+    public function index3(){
+        return view('producto_servicios.productos.index3');
     }
 }

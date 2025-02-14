@@ -111,17 +111,23 @@
                             @include('producto_servicios\tabs2')
                         </ul>
 
-
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
 
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-1" class="tab-pane">
+
+                            </div>
+
+                            <div role="tabpanel" id="tab-2" class="tab-pane">
+
+                            </div>
+
+                            <div role="tabpanel" id="tab-3" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
-                                    <!-- CONTENIDO DENTRO DEL TAB -->
-                                    <table class="table table-striped text-md-center dataTables-example2" id="table_prodac" style="width: 100%">
+                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
+                                    <table class="table table-striped text-md-center dataTables-example4" id="table_prodan" style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
                                                 <th>Item</th>
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
@@ -132,17 +138,8 @@
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-
                                     </table>
                                 </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
-
-                            </div>
-
-                            <div role="tabpanel" id="tab-3" class="tab-pane">
-
                             </div>
 
                         </div>
