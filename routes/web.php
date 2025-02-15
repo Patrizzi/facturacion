@@ -559,7 +559,7 @@ Route::group(
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 
-       
+
 
         Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
         Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
@@ -586,7 +586,10 @@ Auth::routes([
 
 Route::post('sunat_cambio','TipoCambioController@sunat_cambio');
 Route::resource('/tipo_cambio','TipoCambioController')->middleware('auth');
+
 Route::get('garantia_guia_ingreso/pdf/{id}' , 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');
+
+
 Route::get('garantia_guia_egreso/pdf/{id}' , 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
 Route::get('garantia_informe_tecnico/pdf/{id}' , 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
 Route::get('cotizacion/pdf/{id}' , 'CotizacionController@pdf')->name('pdf_cotizacion');
@@ -618,6 +621,7 @@ Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
 
+Route::get('/servicio/guia_ingreso', 'ServicioController@guia_ingreso')->name('servicio.guia_ingreso');
 
 
 

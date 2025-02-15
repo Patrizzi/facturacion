@@ -32,4 +32,9 @@ class ServicioController extends Controller
         $clientes = Cliente::all();
         return view('servicio.clientes', compact('clientes'));
     }
+    public function guia_ingreso()
+    {
+        return view('servicio.guia_ingreso');
+    }
 }
+
