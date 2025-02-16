@@ -24,15 +24,6 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($clientes as $cliente)
-                <tr>
-                    <td>{{ $cliente->id }}</td>
-                    <td>{{ $cliente->nombre }}</td>
-                    <td>{{ $cliente->empresa }}</td>
-                    <td>{{ $cliente->ubigeo ?? 'No especificado' }}</td>
-                    <td><button>Ver estado</button></td>
-                </tr>
-            @endforeach
             <tr>
                 <td>01</td>
                 <td>#0012</td>

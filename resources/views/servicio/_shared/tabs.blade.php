@@ -1,5 +1,10 @@
 <div class="nav" id="tablas">
     <li class="nav-item">
+        <a class="nav-link" href="{{route('servicio.clientes')}}" id="tab-4-tab" style="color :gray">
+            <span class="badge badge-success"></span> Clientes
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="{{route('servicio.index')}}" id="tab-1-tab" style="color :gray">
             <span class="badge badge-success"></span>
             Guia Ingreso
@@ -13,21 +18,11 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{route('servicio.informe_tecnico')}}" id="tab-3-tab" style="color :gray">
-            <span class="badge badge-success"></span> Informe Tecnico
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{route('servicio.solicitud_servicio')}}" id="tab-4-tab" style="color :gray">
-            <span class="badge badge-success"></span> Solic
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{route('servicio.clientes')}}" id="tab-4-tab" style="color :gray">
-            <span class="badge badge-success"></span> Clientes
+            <span class="badge badge-success"></span>
+            Informe Tecnico
         </a>
     </li>
 </div>
-
 <style>
 
     .nav{
