@@ -623,6 +623,7 @@ Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servici
 
 
 Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
+
 Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
