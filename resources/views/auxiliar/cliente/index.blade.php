@@ -70,6 +70,33 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div class="btn-group mx-2" style="display: flex; align-items: center;">
+                            <input type="text" id="inputBuscar" class="form-control" style="width: 400px; margin-right: 10px;" placeholder="Buscar">
+                            <button style="background-color: #210abb; color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
+                                Buscar
+                            </button>
+                        </div>
+                    
+                        <div style="display: flex; align-items: center;">
+                            <button type="button" class="btn btn-default btn-sm" style="background-color: #210abb; color: white; font-size: 11px; padding: 8px 20px; margin-right: 5px;" data-toggle="modal" data-target="#myModal">Agregar</button>
+                    
+                            <button data-toggle="dropdown" class="btn btn-default btn-sm" style="background-color: #210abb; color: white; padding: 10px 16px; font-size: 13px; border-radius: 5px; margin-right: 5px;">
+                                <i class="fa fa-plus-square"></i>
+                            </button>
+                    
+                            <div class="dropdown">
+                                <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #808080; color: white; font-size: 13px; padding: 5px 10px;">
+                                    <i class="fa fa-download"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">PDF</a>
+                                    <a class="dropdown-item" href="#">XML</a>
+                                    <a class="dropdown-item" href="#">Excel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
@@ -77,43 +104,255 @@
                                     {{-- link del tab 1 --}}
                                 </a>
                             </li>
-                            <li class="ml-auto">
-                                <div class="btn-group mx-2">
-                                    <div class="col-auto">
-                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-                                    </div>
-                                    <!-- Botón para abrir el modal -->
-                                    <div class="btn-group mx-0"> <!-- Cambia mx-2 a mx-0 -->
-                                        <button type="button" class="btn btn-default btn-sm bg-primary" style="color: white;" data-toggle="modal" data-target="#myModal">Agregar</button></div>
-                                </div>
-                            </li>
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="myModalLabel"  style="color: blue; font-size: 18px; font-weight: bold;">Agregar nueva categoría</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col-md-12 mb-3">
-                            <div style="display: flex; justify-content: center; align-items: center;">
-                                <img src="http://127.0.0.1:8000/img/logos/categoria.svg" width="100px" style="margin-right: 10px;">
-                                <label for="descripcion" class="form-label" style="color: rgb(0, 0, 0); font-size: 18px; font-weight: bold;">Descripción:</label>
-                            </div>
-                            <textarea class="form-control" id="descripcion" rows="1" style="margin-top: 10px;"></textarea> <!-- Agrega margen superior -->
-                        </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Guardar cambios</button>
-                    </div>
+<!-- Modal CREAR ALMACEN -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- Added 'modal-lg' for a larger size -->
+        <div class="modal-content">
+            <!-- Formulario de Almacén -->
+            <form enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel" style="color: blue; font-size: 20px;">
+                        <b>AGREGAR NUEVO CLIENTE</b>
+                    </h5>                    
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1" role="tab"
+                            aria-controls="tab1" aria-selected="true">1. Datos Personales</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab"
+                            aria-controls="tab2" aria-selected="false">2. Información</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab"
+                            aria-controls="tab3" aria-selected="false">3. Contacto</a>
+                        </li>
+                    </ul>
+                    <!-- Tab content -->
+                    <div class="tab-content mt-3" id="myTabContent">
+                        <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                            <!-- Aquí se agrega el contenido del modal -->
+                            <div class="col-md-12 mb-3">
+                                <!-- Título con ícono -->
+                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+                                    <label for="search" style="color: rgb(0, 0, 0); font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+                                        Consultar (RUC - DNI)
+                                    </label>
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="text" id="search" name="search" placeholder="Ingrese RUC o DNI" style="padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 30px; width: 300px; outline: none;">
+                                        <button style="background-color: #210abb; color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
+                                            Buscar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <!-- DOCUMENTO IDENTIFICACION -->
+                                    <div class="col-md-6">
+                                        <label for="responsable" class="form-label"><b>Documento Identificación</b></label>
+                                        <select name="responsable" required class="form-control m-b select2-responsable"
+                                                autocomplete="off" required="required" style="margin-bottom: 0px;">
+                                            <option value=""></option>
+                                            <option value="1">RUC</option>
+                                            <option value="2">DNI</option>
+                                            <option value="3">Pasaporte</option>
+                                        </select>
+                                    </div>
+                                    <!-- NUMERO DE DOCUMENTO -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label"><b>Número de Documento</b></label>
+                                        <input type="tel" list="browserdoc" class="fast_add form-control m-b-0" name="numero_documento" id="numero_ruc_cli" required="" autocomplete="off" maxlength="11" onkeypress="return valideKey(event);" aria-required="true">
+                                    </div>
+                                    
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- NOMBRE -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label"><b>Nombre:</b></label>
+                                        <input type="text" class="form-control" placeholder=""
+                                            name="direccion" autocomplete="off" required="required">
+                                    </div>
+                                    <!-- DIRECCION -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label"><b>Dirección:</b></label>
+                                        <input type="text" value="Lima" class="fast_add form-control" name="direccion" id="direccion_cli" required="required" aria-required="true">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- CORREO -->
+                                    <div class="col-md-6">
+                                        <label for="correo" class="form-label"> <b>Correo:</b></label>
+                                        <input value="sincorreo@gmail.com" input type="text" class="form-control" placeholder=""
+                                        name="direccion" autocomplete="off" required="required">
+                                    </div>
+                                    <!-- DISTRITO -->
+                                    <div class="col-md-6">
+                                        <label for="distrito" class="form-label">
+                                            <b>Distrito:</b>
+                                        </label>
+                                        <input type="text" value="Lima" class="fast_add form-control" name="ciudad" id="distrito_cli" required="required" aria-required="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                            <!-- Sección de codificación de documentos -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+                                        <label for="search" style="color: rgb(0, 0, 0); font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+                                            Consultar (RUC - DNI)
+                                        </label>
+                                        <div style="display: flex; align-items: center;">
+                                            <input type="text" id="search" name="search" placeholder="Ingrese RUC o DNI" style="padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 30px; width: 300px; outline: none;">
+                                            <button style="background-color: #210abb; color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
+                                                Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                            <!-- Aquí se agrega el contenido del modal -->
+                            <div class="col-md-12 mb-3">
+                                <div class="row mb-3">
+                                    <!-- TELEFONO -->
+                                    <div class="col-md-6">
+                                        <label for="responsable" class="form-label"><b>Teléfono</b></label>
+                                        <input value="00000" type="number" class="fast_add form-control valid" name="telefono" aria-invalid="false">
+                                    </div>
+                                    
+                                    <!-- CELULAR -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label"><b>Celular</b></label>
+                                        <input value="0000000" type="number" class="fast_add form-control valid" name="celular">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- CODIGO UBIGEO -->
+                                    <div class="col-md-6">
+                                        <label for="codigoUbigeo" class="form-label">
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"
+                                            target="_blank" style="text-decoration: none;">
+                                                <i class="fa fa-podcast" aria-hidden="true"></i>
+                                            </a>
+                                            <b>Cod. Ubigeo:</b>
+                                        </label>
+                                        <div class="input-group">
+                                            <input value="150101" input type="text" class="form-control" name="ubigeo" autocomplete="off"
+                                                required="required" placeholder="" minlength="6" maxlength="6">
+                                        </div>
+                                    </div>
+                                    <!-- APARTAMENTO -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label"><b>Departamento:</b></label>
+                                        <input value="Lima" type="text" class="fast_add form-control valid" name="departamento" id="provincia_cli" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- CODDIGO SUNAT-->
+                                    <div class="col-md-6">
+                                        <label for="codigoSunat" class="form-label"> <b>País:</b></label>
+                                        <input value="Perú" type="text" class="fast_add form-control valid" name="pais" aria-invalid="false">
+                                    </div>
+                                    <!-- COD. UBIGEO -->
+                                    <div class="col-md-6">
+                                        <label for="codigoUbigeo" class="form-label">
+                                            <b>Aniversario:</b>
+                                        </label>
+                                        <input value="2025-02-15" type="date" class="fast_add form-control valid" name="aniversario">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- FECHA REGISTRO -->
+                                    <div class="col-md-6">
+                                        <label for="aniversario" class="form-label"> <b>Fecha Registro:</b></label>
+                                        <input value="2025-02-15" type="date" class="fast_add form-control valid" name="aniversario">
+                                    </div>
+                                    <!-- TIPO CLIENTE -->
+                                    <div class="col-md-6">
+                                        <label for="tipocliente" class="form-label"><b>Tipo Cliente:</b></label>
+                                        <select name="responsable" required class="form-control m-b select2-responsable"
+                                                autocomplete="off" required="required" style="margin-bottom: 0px;">
+                                            <option value=""></option>
+                                            <option value="1">Cliente Frecuente</option>
+                                            <option value="2">Cliente Revendedor</option>
+                                            <option value="3">Cliente Vip</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+                            <!-- Sección de codificación de documentos -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+                                        <label for="search" style="color: rgb(0, 0, 0); font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+                                            Consultar (RUC - DNI)
+                                        </label>
+                                        <div style="display: flex; align-items: center;">
+                                            <input type="text" id="search" name="search" placeholder="Ingrese RUC o DNI" style="padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 30px; width: 300px; outline: none;">
+                                            <button style="background-color: #210abb; color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
+                                                Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Aquí se agrega el contenido del modal -->
+                            <div class="col-md-12 mb-3">
+                                <div class="row mb-3">
+                                    <!-- NOMBRE -->
+                                    <div class="col-md-6">
+                                        <label for="Contacto" class="form-label"><b>Nombre:</b></label>
+                                        <input value="Contacto" input id="name" name="nombre_contacto" type="text" class="fast_add form-control required valid" value="Contacto" aria-required="true" aria-invalid="false">
+                                    </div>
+                                    
+                                    <!-- CARGO -->
+                                    <div class="col-md-6">
+                                        <label for="cargo" class="form-label"><b>Cargo:</b></label>
+                                        <input id="surname" name="cargo_contacto" type="text" class="fast_add form-control required" value="Cargo" aria-required="true">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- TELEFONO -->
+                                    <div class="col-md-6">
+                                        <label for="responsable" class="form-label"><b>Teléfono</b></label>
+                                        <input name="telefono_contacto" type="text" class="fast_add form-control required" value="0050000" aria-required="true">
+                                    </div>
+                                    <!-- CELULAR -->
+                                        <div class="col-md-6">
+                                            <label for="direccion" class="form-label"><b>Celular</b></label>
+                                            <input id="address" name="celular_contacto" type="text" class="fast_add form-control required valid" value="951000000" aria-required="true" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <!-- CORREO-->
+                                <div class="col-md-12">
+                                    <label for="correo" class="form-label"> <b>Correo:</b></label>
+                                    <input value="sincorreo@gmail.com" input type="text" class="form-control" placeholder=""
+                                    name="direccion" autocomplete="off" required="required">
+                                </div>
+                            </div>
+                        </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+
+
 <!-- Bootstrap CSS y JS -->
 </li>
 </ul>
@@ -160,37 +399,6 @@
                             <i class="fa fa-check" style="color:white;"></i>
                         </button></div>
                     </td>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="modaluno" tabindex="-1" aria-labelledby="modalunoLabel" aria-hidden="true"> <!-- Cambiado a modaluno -->
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalunoLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar Categoría</h5> <!-- Cambiado a "Editar Categoría" -->
-                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="col-md-12 mb-3">
-                                        <div style="display: flex; justify-content: center; align-items: center;">
-                                            <img src="http://127.0.0.1:8000/img/logos/categoria.svg" width="100px" style="margin-right: 10px;">
-                                            <label for="descripcion" class="form-label" style="color: rgb(0, 0, 0); font-size: 18px; font-weight: bold;">Descripción:</label>
-                                        </div>
-                                        <textarea class="form-control" id="descripcion" rows="1" style="margin-top: 10px;"></textarea> <!-- Agrega margen superior -->
-                                    </div>
-                                    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="position: relative;">
-                                            <label>
-                                                <input type="checkbox" id="toggleSwitch">
-                                                Activar/Desactivar
-                                            </label>
-                                        </div>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                        <button type="button" class="btn btn-primary">Guardar cambios</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
             </td>
         </tr>
     <tr>
@@ -216,36 +424,6 @@
                             <i class="fa fa-check" style="color:white;"></i>
                         </button></div>
                     </td>
-                    <!-- Modal -->
-                    <div class="modal fade" id="modaldos" tabindex="-1" aria-labelledby="modaldosLabel" aria-hidden="true"> <!-- Cambiado a modaldos -->
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modaldosLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar Categoría</h5>
-                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="col-md-12 mb-3">
-                                        <div style="display: flex; justify-content: center; align-items: center;">
-                                            <img src="http://127.0.0.1:8000/img/logos/categoria.svg" width="100px" style="margin-right: 10px;">
-                                            <label for="descripcion" class="form-label" style="color: rgb(0, 0, 0); font-size: 18px; font-weight: bold;">Descripción:</label>
-                                        </div>
-                                        <textarea class="form-control" id="descripcion" rows="1" style="margin-top: 10px;"></textarea> <!-- Agrega margen superior -->
-                                    </div>
-                                    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="position: relative;">
-                                            <label>
-                                                <input type="checkbox" id="toggleSwitch">
-                                                Activar/Desactivar
-                                            </label>
-                                        </div>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                        <button type="button" class="btn btn-primary">Guardar cambios</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </tr>
                     <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
                     <td>3</td>
@@ -269,36 +447,6 @@
                             <i class="fa fa-arrows-alt" style="color:white;"></i>
                         </button></div>
                     </td>
-                    <!-- Modal -->
-                    <div class="modal fade" id="modaltres" tabindex="-1" aria-labelledby="modaltresLabel" aria-hidden="true"> <!-- Cambiado a modaltres -->
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modaltresLabel" style="color: blue; font-size: 18px; font-weight: bold;">Editar categoría</h5> <!-- Cambiado a "Editar categoría" -->
-                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="col-md-12 mb-3">
-                                        <div style="display: flex; justify-content: center; align-items: center;">
-                                            <img src="http://127.0.0.1:8000/img/logos/categoria.svg" width="100px" style="margin-right: 10px;">
-                                            <label for="descripcion" class="form-label" style="color: rgb(0, 0, 0); font-size: 18px; font-weight: bold;">Descripción:</label>
-                                        </div>
-                                        <textarea class="form-control" id="descripcion" rows="1" style="margin-top: 10px;"></textarea> <!-- Agrega margen superior -->
-                                    </div>
-                                    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="position: relative;">
-                                            <label>
-                                                <input type="checkbox" id="toggleSwitch">
-                                                Activar/Desactivar
-                                            </label>
-                                        </div>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                        <button type="button" class="btn btn-primary">Guardar cambios</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
             </tbody>
         </table>
 </div>
