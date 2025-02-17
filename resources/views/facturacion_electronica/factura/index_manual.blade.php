@@ -4,6 +4,33 @@
 @section('atributo_actu', 'hidden')
 @section('content')
 
+    <!-- Modal para Factura Manual -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="exampleModalManual">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Enviando Facturas Manuales a Sunat</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="msg_c_fac_m">
+                        {{-- Contenido del ajax --}}
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            *En caso de algún error al enviar la Factura, por favor comunicarse de manera inmediata.
+                        </div>
+                        <div class="col-sm-6" style="padding-right: 30px;text-align: right">
+                            <button type="button" class="btn btn-primary" id="cerrar_factura_m">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -87,8 +114,8 @@
                                     <table class="table table-striped dataTables-fact_manual">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks-facturas"
-                                                    name="input_facturas[]"></th>
+                                                <th><input type="checkbox" class="i-checks-facturas-man"
+                                                        name="input_facturas[]"></th>
                                                 <th>Item</th>
                                                 <th>Código</th>
                                                 <th>Cliente</th>
@@ -105,9 +132,10 @@
                                             {{-- <span hidden>{{ $a = 1 }}</span> --}}
                                             @foreach ($facturas_manual as $index => $facturaciones_m)
                                                 <tr @if ($facturaciones_m->diff_day > 3) style="color: red" @endif>
-                                                    <td><input type="checkbox" class="i-checks-facturas" name="input[]"
-                                                        value="{{ $facturaciones_m->codigo_fac }}"></td>
-                                                    <td>{{ $index+1 }}</td>
+                                                    <td><input type="checkbox" class="i-checks-facturas-man"
+                                                            name="input[]" value="{{ $facturaciones_m->codigo_fac }}">
+                                                    </td>
+                                                    <td>{{ $index + 1 }}</td>
                                                     <td>{{ $facturaciones_m->codigo_fac }}</td>
                                                     @if (isset($facturaciones_m->cliente_id))
                                                         <!-- Nombre del cliente -->
@@ -142,10 +170,6 @@
         </div>
     </div>
     <style>
-        /*.ibox-content{
-                                                padding: 0px;
-                                                border: none;
-                                            }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -194,7 +218,7 @@
     <script>
         $(document).ready(function() {
             $('#tab_fact_m').addClass('active');
-            $('.i-checks-facturas').iCheck({
+            $('.i-checks-facturas-man').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
@@ -266,6 +290,45 @@
                 }
             );
         });
+        // Factuas Manuales
+        function limpiar_select_fact_manual() {
+            table_fact_manual.column(5).search("").draw();
+        }
+
+        function revert_select_fact_manual() {
+            table_fact_manual.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+    </script>
+    <script>
+        // CHECKS FACTURAS
+        $('thead input[class="i-checks-facturas-man"]').on('ifChecked ifUnchecked', function(event) {
+            var table = $(this).closest('table');
+            if (event.type === 'ifChecked') {
+                // Selecciona 
+                table.find('tbody input.i-checks-facturas-man').not(':disabled').iCheck('check');
+            } else {
+                // Deselecciona 
+                table.find('tbody input.i-checks-facturas-man').not(':disabled').iCheck('uncheck');
+            }
+        });
+
+        $('tbody input.i-checks-facturas-man').on('ifChanged', function(event) {
+            if ($(this).prop('disabled')) {
+                return; // Si el checkbox está deshabilitado, no hace nada
+            }
+
+            var table = $(this).closest('table'); // Limita el control a la tabla visible
+
+            var checkboxesHabilitados = table.find('tbody input.i-checks-facturas-man').not(':disabled');
+            var checkboxesMarcados = checkboxesHabilitados.filter(':checked');
+
+            // Si todos los checkboxes habilitados están marcados, marcar el de <thead>
+            if (checkboxesMarcados.length === checkboxesHabilitados.length) {
+                table.find('thead input.i-checks-facturas-man').iCheck('check');
+            } else {
+                table.find('thead input.i-checks-facturas-man').iCheck('uncheck');
+            }
+        });
     </script>
     <script>
         //FUNCIONES PARA FACTURA NORMAL
@@ -291,7 +354,9 @@
             // $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
             $('.nav-link').addClass('disabled');
             var value_check = codigo.value;
-            console.log(value_check);
+            $(codigo).closest('tr').find('input[type="checkbox"]').prop('disabled', 'disabled');
+            $(codigo).prop('disabled', 'disabled');
+
             $.ajax({
                 type: "post",
                 url: "{{ route('facturacion_electronica.fac_elec_man_all') }}",
@@ -321,7 +386,10 @@
                     `;
                     }
                     revision(value_check, response, 'factura_manual');
-                    inv_close();
+                    $('#cerrar_solo').on('click', function() {
+                        console.log('cerrar');
+                        location.reload();
+                    });
                     $('#msg_individual').append(data);
                     $("#success-alert").show();
                 }
@@ -343,7 +411,7 @@
         //Facturas masivas
         function submit_factura_click(repetir, maximo) {
             if (repetir < maximo) {
-                var value_check = $('input[class=i-checks-facturas]:checkbox:checked')[repetir].value;
+                var value_check = $('input[class=i-checks-facturas-man]:checkbox:checked')[repetir].value;
                 $.ajax({
                     type: "post",
                     url: "{{ route('facturacion_electronica.factura_elec_all') }}",
@@ -429,7 +497,8 @@
 
         function submit_factura_manual_click(repetir, maximo) {
             if (repetir < maximo) {
-                var value_check = $('input[class=case_m]:checkbox:checked')[repetir].value;
+                var value_check = $('input[class=i-checks-facturas-man]:checkbox:checked')[repetir].value;
+                console.log(value_check);
                 $.ajax({
                     type: "post",
                     url: "{{ route('facturacion_electronica.fac_elec_man_all') }}",
@@ -460,23 +529,18 @@
                         submit_factura_manual_click(repetir, maximo);
                     }
                 });
+                $('#exampleModalManual').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             } else {
                 $('.modal-footer').removeAttr('style');
             }
         }
         $('#fac_m_elec_all').on('click', function() {
-            var cant_checks = $('input[class=case_m]:checkbox:checked').length;
-            console.log(cant_checks)
-            // var max_menos = cant_checks -1;
-            if (cant_checks == 0) {
-                console.log("ninguno marcado");
-            } else {
-                $('#exampleModalManual').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $("#exampleModalManual").modal("show");
-                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            var cant_checks = $('input[class=i-checks-facturas-man]:checkbox:checked').length;
+            if (cant_checks != 0) {
+                // $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
                 submit_factura_manual_click(0, cant_checks);
             }
 
@@ -487,7 +551,7 @@
         // Mensaje para que cierre x
 
         function download_pdf_select() {
-            var checks = $('input[class=i-checks-facturas_env]:checkbox:checked');
+            var checks = $('input[class=i-checks-facturas-man]:checkbox:checked');
             // var checks_all = checks.concat(checks_m, checks_d);
             checks.each(function() {
                 var codigo = $(this).val();

@@ -84,22 +84,14 @@ class FacturacionElectronicaController extends Controller
         foreach ($facturacion as $factura) {
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }
-
-        // $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
-        // $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
-        
-        // $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
-        // return $detraccion_facturacion;
         
         return view('facturacion_electronica.factura.index',compact('facturacion','empresa'));
     }
 
     public function facturas_enviadas(){
-        // $facturas_enviadas=Facturacion::select('id','codigo_fac','cliente_id', 'fecha_emision','fecha_vencimiento','created_at')->where('f_electronica',1)->get();
+        
         $empresa=Empresa::first();
 
-        // $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
-        // return $facturas_enviadas;
         return view('facturacion_electronica.factura.enviado',compact('empresa'));
     }
 
@@ -122,7 +114,8 @@ class FacturacionElectronicaController extends Controller
 
     public function facturas_detracciones(){
         $empresa=Empresa::first();
-        return view('facturacion_electronica.factura.enviado_manual', compact('empresa'));
+        $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
+        return view('facturacion_electronica.factura.detracciones', compact('empresa','detraccion_facturas'));
     }
 
     public function index_boleta(){

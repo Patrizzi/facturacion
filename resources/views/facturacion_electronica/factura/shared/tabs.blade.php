@@ -24,7 +24,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#tab-9"><span style="color: rgb(14, 14, 194);">&#9632;</span>
+        <a class="nav-link" href="{{route('facturacion_electronica.facturas_detracciones')}}" id="tab_factura_detraccion" ><span style="color: rgb(14, 14, 194);">&#9632;</span>
             Detracciones
             {{-- link del tab 2 --}}
         </a>

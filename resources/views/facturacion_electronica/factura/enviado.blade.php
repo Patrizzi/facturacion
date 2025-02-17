@@ -98,7 +98,7 @@
                                                 <th style="text-align:center;color: #0073c1"><img
                                                         src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
                                                 <th>XML</th>
-                                                <th>ZIP</th>
+                                                <th>CDR</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -476,7 +476,7 @@
                         'render': function(data, type, full, meta) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.zip`;
-                            return `<a href="${url}" download ><img src="{{ asset('zip.png') }}" width="25px"></i></a>`;
+                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         }
                     }
                 ],
@@ -492,269 +492,46 @@
 
 
             
-            // $('input[name="daterange3"]').daterangepicker({
+            $('input[name="daterange-factura_env"]').daterangepicker({
 
-            //         "locale": {
-            //             "separator": " | ",
-            //             "applyLabel": "Guardar",
-            //             "cancelLabel": "Cancelar",
-            //             "fromLabel": "Desde",
-            //             "toLabel": "Hasta",
-            //             "customRangeLabel": "Custom",
-            //             "daysOfWeek": [
-            //                 "Do",
-            //                 "Lu",
-            //                 "Ma",
-            //                 "Mi",
-            //                 "Ju",
-            //                 "Vi",
-            //                 "Sa"
-            //             ],
-            //             "monthNames": [
-            //                 "Enero",
-            //                 "Febrero",
-            //                 "Marzo",
-            //                 "Abril",
-            //                 "Mayo",
-            //                 "Junio",
-            //                 "Julio",
-            //                 "Agosto",
-            //                 "Septiembre",
-            //                 "Octubre",
-            //                 "Noviembre",
-            //                 "Diciembre"
-            //             ],
-            //             "firstDay": 1
-            //         }
-            //     },
-            //     function(start, end, label) {
-            //         var dates = [];
-            //         var currentDate = new Date(start);
-            //         while (currentDate <= end) {
-            //             var day = ('0' + currentDate.getDate()).slice(-2);
-            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-            //             var year = currentDate.getFullYear();
-
-            //             var formattedDate = day + '-' + month + '-' + year;
-            //             dates.push(formattedDate);
-
-            //             currentDate.setDate(currentDate.getDate() + 1);
-            //         }
-            //         var dateRangeString = dates.join('|');
-            //         console.log(dateRangeString);
-            //         table_factura_enviada.column(5).search(dateRangeString, true, false).draw();
-            //     }
-            // );
-            // {{-- Datatable Facturas Enviadas --}}
-            table_fact_manual = $('.dataTables-fact_manual').DataTable({
-                pageLength: 15,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
-            });
-            // $('input[name="daterange4"]').daterangepicker({
-            //         "locale": {
-            //             "separator": " | ",
-            //             "applyLabel": "Guardar",
-            //             "cancelLabel": "Cancelar",
-            //             "fromLabel": "Desde",
-            //             "toLabel": "Hasta",
-            //             "customRangeLabel": "Custom",
-            //             "daysOfWeek": [
-            //                 "Do",
-            //                 "Lu",
-            //                 "Ma",
-            //                 "Mi",
-            //                 "Ju",
-            //                 "Vi",
-            //                 "Sa"
-            //             ],
-            //             "monthNames": [
-            //                 "Enero",
-            //                 "Febrero",
-            //                 "Marzo",
-            //                 "Abril",
-            //                 "Mayo",
-            //                 "Junio",
-            //                 "Julio",
-            //                 "Agosto",
-            //                 "Septiembre",
-            //                 "Octubre",
-            //                 "Noviembre",
-            //                 "Diciembre"
-            //             ],
-            //             "firstDay": 1
-            //         }
-            //     },
-            //     function(start, end, label) {
-            //         var dates = [];
-            //         var currentDate = new Date(start);
-            //         while (currentDate <= end) {
-            //             var day = ('0' + currentDate.getDate()).slice(-2);
-            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-            //             var year = currentDate.getFullYear();
-
-            //             var formattedDate = day + '-' + month + '-' + year;
-            //             dates.push(formattedDate);
-
-            //             currentDate.setDate(currentDate.getDate() + 1);
-            //         }
-            //         var dateRangeString = dates.join('|');
-            //         console.log(dateRangeString);
-            //         table_fact_manual.column(5).search(dateRangeString, true, false).draw();
-            //     }
-            // );
-            // {{-- Datatable Facturas Manual --}}
-            table_fact_manual_env = $('.dataTables-factura_m_env').DataTable({
-                pageLength: 15,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
-            });
-            // $('input[name="daterange5"]').daterangepicker({
-
-            //         "locale": {
-            //             "separator": " | ",
-            //             "applyLabel": "Guardar",
-            //             "cancelLabel": "Cancelar",
-            //             "fromLabel": "Desde",
-            //             "toLabel": "Hasta",
-            //             "customRangeLabel": "Custom",
-            //             "daysOfWeek": [
-            //                 "Do",
-            //                 "Lu",
-            //                 "Ma",
-            //                 "Mi",
-            //                 "Ju",
-            //                 "Vi",
-            //                 "Sa"
-            //             ],
-            //             "monthNames": [
-            //                 "Enero",
-            //                 "Febrero",
-            //                 "Marzo",
-            //                 "Abril",
-            //                 "Mayo",
-            //                 "Junio",
-            //                 "Julio",
-            //                 "Agosto",
-            //                 "Septiembre",
-            //                 "Octubre",
-            //                 "Noviembre",
-            //                 "Diciembre"
-            //             ],
-            //             "firstDay": 1
-            //         }
-            //     },
-            //     function(start, end, label) {
-            //         var dates = [];
-            //         var currentDate = new Date(start);
-            //         while (currentDate <= end) {
-            //             var day = ('0' + currentDate.getDate()).slice(-2);
-            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-            //             var year = currentDate.getFullYear();
-
-            //             var formattedDate = day + '-' + month + '-' + year;
-            //             dates.push(formattedDate);
-
-            //             currentDate.setDate(currentDate.getDate() + 1);
-            //         }
-            //         var dateRangeString = dates.join('|');
-            //         console.log(dateRangeString);
-            //         table_fact_manual_env.column(5).search(dateRangeString, true, false).draw();
-            //     }
-            // );
-            // {{-- Datatable Facturas Manual Enviadas --}}
-            table_detraccion = $('.dataTables-detraccion').DataTable({
-                pageLength: 15,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
-            });
-            // $('input[name="daterange6"]').daterangepicker({
-            //         "locale": {
-            //             "separator": " | ",
-            //             "applyLabel": "Guardar",
-            //             "cancelLabel": "Cancelar",
-            //             "fromLabel": "Desde",
-            //             "toLabel": "Hasta",
-            //             "customRangeLabel": "Custom",
-            //             "daysOfWeek": [
-            //                 "Do",
-            //                 "Lu",
-            //                 "Ma",
-            //                 "Mi",
-            //                 "Ju",
-            //                 "Vi",
-            //                 "Sa"
-            //             ],
-            //             "monthNames": [
-            //                 "Enero",
-            //                 "Febrero",
-            //                 "Marzo",
-            //                 "Abril",
-            //                 "Mayo",
-            //                 "Junio",
-            //                 "Julio",
-            //                 "Agosto",
-            //                 "Septiembre",
-            //                 "Octubre",
-            //                 "Noviembre",
-            //                 "Diciembre"
-            //             ],
-            //             "firstDay": 1
-            //         }
-            //     },
-            //     function(start, end, label) {
-            //         var dates = [];
-            //         var currentDate = new Date(start);
-            //         while (currentDate <= end) {
-            //             var day = ('0' + currentDate.getDate()).slice(-2);
-            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-            //             var year = currentDate.getFullYear();
-
-            //             var formattedDate = day + '-' + month + '-' + year;
-            //             dates.push(formattedDate);
-
-            //             currentDate.setDate(currentDate.getDate() + 1);
-            //         }
-            //         var dateRangeString = dates.join('|');
-            //         console.log(dateRangeString);
-            //         table_detraccion.column(4).search(dateRangeString, true, false).draw();
-            //     }
-            // );
-
+                    "locale": {
+                        "separator": " | ",
+                        "applyLabel": "Guardar",
+                        "cancelLabel": "Cancelar",
+                        "fromLabel": "Desde",
+                        "toLabel": "Hasta",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    }
+                }
+                
+            );
         });
 
-        // Facturas
-        function limpiar_select_factura() {
-            table_factura.column(5).search("").draw();
-        }
 
-        function revert_select_factura() {
-            table_factura.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
         // Facturas Enviadas
         function limpiar_select_fact_env() {
             table_factura_enviada.column(5).search("").draw();
@@ -762,31 +539,6 @@
 
         function revert_select_fact_env() {
             table_factura_enviada.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
-        // Factuas Manuales
-        function limpiar_select_fact_manual() {
-            table_fact_manual.column(5).search("").draw();
-        }
-
-        function revert_select_fact_manual() {
-            table_fact_manual.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
-
-        // Manual Enviados 
-        function limpiar_select_fact_manual_env() {
-            table_fact_manual_env.column(5).search("").draw();
-        }
-
-        function revert_select_fact_manual_env() {
-            table_fact_manual_env.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
-        // Detraccion 
-        function limpiar_select_detraccion() {
-            table_detraccion.column(4).search("").draw();
-        }
-
-        function revert_select_detraccion() {
-            table_detraccion.column(4).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
     <script>
@@ -814,55 +566,9 @@
             }
         });
 
-        // $(document).ready(function() {
-        //     $('.i-checks').iCheck({
-        //         checkboxClass: 'icheckbox_square-green',
-        //         radioClass: 'iradio_square-green',
-        //     });
-
-        //     // Controlar el checkbox del thead 
-        //     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        //         var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-        //         if (event.type === 'ifChecked') {
-        //             // Selecciona 
-        //             table.find('tbody input[type="checkbox"]').iCheck('check');
-        //         } else {
-        //             // Deselecciona 
-        //             table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-        //         }
-        //     });
-
-        //     // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-        //     $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-        //         var table = $(this).closest('table'); // Limita el control a la tabla visible
-        //         if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-        //                 'tbody input[type="checkbox"]').length) {
-        //             table.find('thead input[type="checkbox"]').iCheck('check');
-        //         } else {
-        //             table.find('thead input[type="checkbox"]').iCheck('uncheck');
-        //         }
-        //     });
-
-        //     // Detectar cuando se cambia de tab 
-        //     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-        //         // Restablecer el estado de los checkboxes 
-        //         var activeTab = $(e.target).attr('href'); // ID del tab activo
-        //         $(activeTab).find('.i-checks').iCheck('update');
-        //     });
-        // });
     </script>
     <!-- Page Scripts -->
-    <script>
-        // $(function() {
-        //     $('[data-toggle="popover"]').popover()
-        // })
 
-        // function toggle() {
-        //     $(function() {
-        //         $('[data-toggle="popover"]').popover()
-        //     })
-        // }
-    </script>
     <script>
         //FUNCIONES PARA FACTURA NORMAL
         //FACTURAS INDIVIVUALES

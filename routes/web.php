@@ -137,7 +137,7 @@ Route::group(
 		Route::get('/facturas_m_elecronicas','FacturacionElectronicaController@index_facturas_manual')->name('facturacion_electronica.index_facturas_manual');
 		Route::get('/facturas_m_elecronicas/enviadas','FacturacionElectronicaController@facturas_manual_enviadas')->name('facturacion_electronica.facturas_manual_enviadas');
 
-		Route::get('/facturas_m_elecronicas/detracciones','FacturacionElectronicaController@facturas_detracciones')->name('facturacion_electronica.facturas_manual_detracciones');
+		Route::get('/facturas_elecronicas/detracciones','FacturacionElectronicaController@facturas_detracciones')->name('facturacion_electronica.facturas_detracciones');
 
 		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
 		Route::post('/facturacion_electronica/validacion','FacturacionElectronicaController@validacion_sunat')->name('facturacion_electronica.validacion_sunat');
