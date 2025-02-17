@@ -254,7 +254,7 @@ class FacturacionElectronicaController extends Controller
         //     $retorno = $msg;
         // }
         //cambio de factura electronica - en caso sea todo exitoso
-        // $factura->f_electronica=1;
+        $factura->f_electronica=1;
         $factura->save();
         //
         // $array = explode(" ",$msg);

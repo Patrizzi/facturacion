@@ -114,7 +114,7 @@
                                     <table class="table table-striped dataTables-fact_manual">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks-facturas-man"
+                                                <th><input type="checkbox" class="i-checks-facturas-man-head"
                                                         name="input_facturas[]"></th>
                                                 <th>Item</th>
                                                 <th>Código</th>
@@ -222,6 +222,10 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+            $('.i-checks-facturas-man-head').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
             // {{-- Datatable Facturas --}}
             table_factura = $('.dataTables-fact_manual').DataTable({
                 pageLength: 15,
@@ -301,7 +305,7 @@
     </script>
     <script>
         // CHECKS FACTURAS
-        $('thead input[class="i-checks-facturas-man"]').on('ifChecked ifUnchecked', function(event) {
+        $('thead input[class="i-checks-facturas-man-head"]').on('ifChecked ifUnchecked', function(event) {
             var table = $(this).closest('table');
             if (event.type === 'ifChecked') {
                 // Selecciona 
@@ -370,28 +374,25 @@
                     // console.log(result);
                     if (result == "Codigo Error:") {
                         var data = `
-                        <div id="myAlert" class="alert alert-danger">
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                            response + `</span>
-                        </div>
-                    `;
+                            <div id="alert_one_factura" class="alert alert-danger">
+                                <button class="close close_mini" id="cerrar_solo">&times;</button>
+                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
+                                response + `</span>
+                            </div>
+                        `;
                     } else {
                         var data = `
-                        <div id="myAlert" class=" alert alert-success" >
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
+                            <div id="alert_one_factura" class=" alert alert-success" >
+                                <button class="close close_mini" id="cerrar_solo">&times;</button>
+                                <span class="alert-link clos_mini" id="` + value_check + `">` + response + `</span>
+                            </div>
+                        `;
                     }
                     revision(value_check, response, 'factura_manual');
+                    $('#alert_factura').append(data);
                     $('#cerrar_solo').on('click', function() {
-                        console.log('cerrar');
                         location.reload();
                     });
-                    $('#msg_individual').append(data);
-                    $("#success-alert").show();
                 }
             });
         }
@@ -408,59 +409,7 @@
                 }
             });
         }
-        //Facturas masivas
-        function submit_factura_click(repetir, maximo) {
-            if (repetir < maximo) {
-                var value_check = $('input[class=i-checks-facturas-man]:checkbox:checked')[repetir].value;
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('facturacion_electronica.factura_elec_all') }}",
-                    data: {
-                        '_token': $('input[name=_token]').val(),
-                        'codigo_fac': value_check,
-                    },
-                    success: function(response) {
-                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                        var result = salt.substr(0, 13);
-                        // console.log(result);
-                        if (result == "Codigo Error:") {
-                            var data = `
-                            <div class="alert alert-danger">
-                                <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
-                                ' <br> ' + response + `</a>
-                            </div>`;
-                        } else {
-                            var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
-                            </div>`;
-                        }
-                        revision(value_check, response, 'factura');
-                        $('#msg_c_bol').append(data);
-                        repetir++;
-                        submit_factura_click(repetir, maximo);
-                    }
-                });
-                $('#exampleModal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-            } else {
-                $('.modal-footer').removeAttr('style');
-            }
-        }
 
-        $('#fac_elec_all').on('click', function() {
-            var cant_checks = $('input[class=i-checks-facturas]:checkbox:checked').length;
-            if (cant_checks != 0) {
-                // $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                submit_factura_click(0, cant_checks);
-            }
-        });
-
-        $('#cerrar_factura').on('click', function() {
-            location.reload();
-        });
 
         function revision(codigo, msg, tipo) {
             $.ajax({

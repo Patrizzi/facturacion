@@ -114,7 +114,7 @@
                                     <table class="table table-striped table-hover dataTables-factura">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks-facturas"
+                                                <th><input type="checkbox" class="i-checks-facturas-head"
                                                         name="input_facturas[]"></th>
                                                 <th>Item</th>
                                                 <th>Código</th>
@@ -224,6 +224,10 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+            $('.i-checks-facturas-head').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
             // {{-- Datatable Facturas --}}
             table_factura = $('.dataTables-factura').DataTable({
                 pageLength: 15,
@@ -313,21 +317,21 @@
 
         // Facturas
         function limpiar_select_factura() {
-            table_factura.column(5).search("").draw();
+            table_factura.column(5).search("").draw();  
         }
 
         function revert_select_factura() {
             table_factura.column(5).search(`{{ date('m-Y') }}`).draw();
         }
-        
+
     </script>
     <script>
         // CHECKS FACTURAS
-        $('thead input[class="i-checks-facturas"]').on('ifChecked ifUnchecked', function(event) {
+        $('thead input[class="i-checks-facturas-head"]').on('ifChecked ifUnchecked', function(event) {
             var table = $(this).closest('table'); 
             if (event.type === 'ifChecked') {
                 // Selecciona 
-                table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('check');
+                table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('check');                
             } else {
                 // Deselecciona 
                 table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('uncheck');
@@ -390,11 +394,11 @@
                     // console.log(result);
                     if (result == "Codigo Error:") {
                         var data = `
-                        <div id="alert_one_factura" class="alert alert-danger">
-                            <button class="close close_mini" id="cerrar_solo">&times;</button>
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                            response + `</span>
-                        </div>
+                            <div id="alert_one_factura" class="alert alert-danger">
+                                <button class="close close_mini" id="cerrar_solo">&times;</button>
+                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
+                                response + `</span>
+                            </div>
                     `;
                     } else {
                         var data = `
@@ -408,7 +412,6 @@
                     // cerrar_only_send();
                     $('#alert_factura').append(data);
                     $('#cerrar_solo').on('click', function() {
-                        console.log('cerrar');	
                         location.reload();
                     });
                 }
@@ -417,7 +420,7 @@
         //Facturas masivas
         function submit_factura_click(repetir, maximo) {
             if (repetir < maximo) {
-                var value_check = $('input[class=i-checks-facturas]:checkbox:checked')[repetir].value;
+                var value_check = $('tbody input[class=i-checks-facturas]:checkbox:checked')[repetir].value;
                 $.ajax({
                     type: "post",
                     url: "{{ route('facturacion_electronica.factura_elec_all') }}",
