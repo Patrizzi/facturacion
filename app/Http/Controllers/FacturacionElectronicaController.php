@@ -261,7 +261,7 @@ class FacturacionElectronicaController extends Controller
         //     $retorno = $msg;
         // }
         //cambio de factura electronica - en caso sea todo exitoso
-        $factura->f_electronica=1;
+        // $factura->f_electronica=1;
         $factura->save();
         //
         // $array = explode(" ",$msg);
@@ -1470,4 +1470,179 @@ class FacturacionElectronicaController extends Controller
         return response()->json($json);
     }
 
+    // BOLETAS
+    
+    public function list_boletas_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_boleta',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Boleta::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_boleta', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $boletas = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $boletas->transform(function ($boletas) use ($igv){
+            $subtotal = $boletas->op_gravada + $boletas->op_inafecta + $boletas->op_exonerada;
+
+            $total = round($subtotal + ($boletas->op_gravada * $igv) / 100, 2);
+
+            $boletas->emision = Carbon::parse($boletas->created_at)->format('d-m-Y');
+            $boletas->total = $boletas->moneda->simbolo.' '. number_format($total,2);
+            return $boletas;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($boletas as $boleta) {
+            $json['data'][] = [
+                $boleta->id,
+                $boleta->id,
+                $boleta->codigo_boleta,
+                $boleta->cliente->numero_documento,
+                $boleta->cliente->nombre,
+                $boleta->fecha_emision,
+                $boleta->total,
+                $boleta->f_electronica,
+                $boleta->id,
+                $boleta->nota_credito,
+                $boleta->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_boeltas_m_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_fac',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Boleta_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $boletas_m = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $boletas_m->transform(function ($boleta_m) use ($igv){
+            $subtotal = $boleta_m->op_gravada + $boleta_m->op_inafecta + $boleta_m->op_exonerada;
+
+            $total = round($subtotal + ($boleta_m->op_gravada * $igv) / 100, 2);
+
+            $boleta_m->emision = Carbon::parse($boleta_m->created_at)->format('d-m-Y');
+            $boleta_m->total = $boleta_m->moneda->simbolo.' '. number_format($total,2);
+            return $boleta_m;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($boletas_m as $bole_m) {
+            $json['data'][] = [
+                $bole_m->id,
+                $bole_m->id,
+                $bole_m->codigo_fac,
+                $bole_m->cliente->numero_documento,
+                $bole_m->cliente->nombre,
+                $bole_m->fecha_emision,
+                $bole_m->total,
+                $bole_m->f_electronica,
+                $bole_m->id,
+                $bole_m->nota_credito,
+                $bole_m->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
 }
