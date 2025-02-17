@@ -8,45 +8,22 @@
 @include('servicio\_shared\tabs')
 
 <style>
-.wrapper {
+.wrappercontenedor {
     display: flex;
-    align-items: flex-start;
-    margin: 10px;
-    gap: 15px;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
 }
 
-.container {
-    width: 100%;
-    max-width: 500px;
-    padding: 5px;
+.containercontenedor {
+    border: 2px solid #000;
+    color: black;
     border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.container-title {
-    font-size: 1.2em;
-    margin-bottom: 15px;
-}
 
-.input-group {
-    gap: 6px;
-    margin-bottom: 5px;
-}
-
-.input-label {
-    font-size: 0.85em;
-    padding-right: 3px;
-}
-
-.input-field {
-    font-size: 0.85em;
-    padding: 6px;
-    border-radius: 3px;
-}
-
-.full-width {
-    width: 100%;
-}
 .button-container {
     display: flex;
     justify-content: flex-end;
@@ -70,55 +47,55 @@
 }
 </style>
 
-<div class="wrapper">
-<!-- Contenedor izquierdo -->
-<div class="container" style="align-self: flex-start;">
-    <h2 class="container-title">Datos del Cliente</h2>
+<div class="wrappercontenedor">
+    <!-- Contenedor izquierdo -->
+    <div class="containercontenedor" style="align-self: flex-start;">
+        <h2 class="container-titlecontenedor">Datos del Cliente</h2>
 
-    <div class="input-group">
-        <label for="dni" class="input-label">DNI/RUC:</label>
-        <input type="number" id="dni" name="dni" class="input-field" placeholder="Ingrese DNI/RUC" required>
-        <label for="nombre" class="input-label">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" class="input-field" placeholder="Ingrese Nombre" required>
+        <div class="input-groupcontenedor">
+            <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
+            <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
+            <label for="nombre" class="input-labelcontenedor">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
+        </div>
+
+        <div class="input-groupcontenedor full-widthcontenedor">
+            <label for="direccion" class="input-labelcontenedor">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
+        </div>
+
+        <div class="input-groupcontenedor">
+            <label for="contacto" class="input-labelcontenedor">Contacto:</label>
+            <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+            <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
+            <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
+        </div>
+
+        <div class="input-groupcontenedor full-widthcontenedor">
+            <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
+            <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
+        </div>
     </div>
 
-    <div class="input-group full-width">
-        <label for="direccion" class="input-label">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" class="input-field full-width" placeholder="Ingrese Dirección" required>
-    </div>
+    <!-- Contenedor derecho -->
+    <div class="containercontenedor" style="align-self: flex-end;">
+        <h2 class="container-titlecontenedor">Datos del Servicio</h2>
 
-    <div class="input-group">
-        <label for="contacto" class="input-label">Contacto:</label>
-        <input type="text" id="contacto" name="contacto" class="input-field" placeholder="Ingrese Contacto" required>
-        <label for="telefono" class="input-label">Teléfono:</label>
-        <input type="number" id="telefono" name="telefono" class="input-field" placeholder="Ingrese Teléfono" required>
-    </div>
+        <div class="input-groupcontenedor">
+            <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+            <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
+            <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+            <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
+        </div>
 
-    <div class="input-group full-width">
-        <label for="sucursal" class="input-label">Sucursal:</label>
-        <input type="text" id="sucursal" name="sucursal" class="input-field full-width" placeholder="Ingrese Sucursal" required>
+        <div class="input-groupcontenedor">
+            <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+            <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
+            <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
+            <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
+        </div>
     </div>
-</div>
-
-<!-- Contenedor derecho -->
-<div class="container" style="align-self: flex-end;">
-    <h2 class="container-title">Datos del Servicio</h2>
-
-    <div class="input-group">
-        <label for="recepcionista" class="input-label">Recepcionista:</label>
-        <input type="text" id="recepcionista" name="recepcionista" class="input-field" placeholder="Ingrese Recepcionista" required>
-        <label for="fecha_ingreso" class="input-label">Fecha Ingreso:</label>
-        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-field" required>
     </div>
-
-    <div class="input-group">
-        <label for="orden_servicio" class="input-label">Orden de servicio:</label>
-        <input type="text" id="orden_servicio" name="orden_servicio" class="input-field" placeholder="Ingrese Orden" required>
-        <label for="fecha_estimada" class="input-label">Fecha Estimada:</label>
-        <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-field" required>
-    </div>
-</div>
-</div>
 
 <div class="button-container">
     <button class="action-button">Editar</button>
