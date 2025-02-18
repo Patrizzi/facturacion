@@ -91,7 +91,6 @@ class FacturacionElectronicaController extends Controller
     public function facturas_enviadas(){
         
         $empresa=Empresa::first();
-
         return view('facturacion_electronica.factura.enviado',compact('empresa'));
     }
 
@@ -121,13 +120,25 @@ class FacturacionElectronicaController extends Controller
     public function index_boleta(){
 
         $empresa=Empresa::first();
-        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
+        $fecha_hoy = Carbon::now();
+
         $boletas=Boleta::where('b_electronica',0)->get();
+        foreach ($boletas as $boleta) {
+            $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
+        }
+        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
+        
 
         $boletas_enviadas_m=Boleta_m::where('b_electronica',1)->get();
         $boletas_m=Boleta_m::where('b_electronica',0)->get();
         return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas','boletas_m','boletas_enviadas_m','empresa'));
     }
+
+    public function boletas_enviadas(){
+        $empresa=Empresa::first();
+        return view('facturacion_electronica.boleta.enviado',compact('empresa'));
+    }
+
 
     public function index_guia_remision(){
 

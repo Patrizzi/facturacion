@@ -40,7 +40,6 @@
     </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
-
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             {{-- CONTENIDO DE TABS --}}
             <div class="col-lg-12">

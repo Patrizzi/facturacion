@@ -134,25 +134,30 @@ Route::group(
 		Route::post('/facturas_elecronicas','FacturacionElectronicaController@factura')->name('facturacion_electronica.index');
 		Route::get('/facturas_elecronicas/enviadas','FacturacionElectronicaController@facturas_enviadas')->name('facturacion_electronica.facturas_enviadas_list');
 
-		Route::get('/facturas_m_elecronicas','FacturacionElectronicaController@index_facturas_manual')->name('facturacion_electronica.index_facturas_manual');
-		Route::get('/facturas_m_elecronicas/enviadas','FacturacionElectronicaController@facturas_manual_enviadas')->name('facturacion_electronica.facturas_manual_enviadas');
-
-		Route::get('/facturas_elecronicas/detracciones','FacturacionElectronicaController@facturas_detracciones')->name('facturacion_electronica.facturas_detracciones');
-
 		Route::post('/facturacion_electronica/send_all','FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
 		Route::post('/facturacion_electronica/validacion','FacturacionElectronicaController@validacion_sunat')->name('facturacion_electronica.validacion_sunat');
 
 		Route::get('facturas_electronicas/enviadas/list', 'FacturacionElectronicaController@list_facturas_env')->name('facturas_electronicas.enviadas_lst');
+
+		//DETRACCIONES
+		Route::get('/facturas_elecronicas/detracciones','FacturacionElectronicaController@facturas_detracciones')->name('facturacion_electronica.facturas_detracciones');
 		
 		//factura manual
 		Route::post('/facturacion_electronica_factura_m','FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
 		Route::post('/facturacion_electronica_factura_m/send_all','FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');
 
+		Route::get('/facturas_m_elecronicas','FacturacionElectronicaController@index_facturas_manual')->name('facturacion_electronica.index_facturas_manual');
+		Route::get('/facturas_m_elecronicas/enviadas','FacturacionElectronicaController@facturas_manual_enviadas')->name('facturacion_electronica.facturas_manual_enviadas');
+
 		Route::get('facturas_m_elecronicas/enviadas/list', 'FacturacionElectronicaController@list_facturas_m_env')->name('facturacion_electronica.list_facturas_m_env');
 
 		//boleta
 		Route::get('/boletas_electronicas','FacturacionElectronicaController@index_boleta')->name('facturacion_electronica.index_boleta');
+		Route::get('/boletas_electronicas/enviadas','FacturacionElectronicaController@boletas_enviadas')->name('facturacion_electronica.boletas_enviadas_list');
+
+
 		Route::post('/boletas_electronicas','FacturacionElectronicaController@boleta')->name('facturacion_electronica.boleta_sunat');
+
 		Route::post('/boletas_electronicas/send_all','FacturacionElectronicaController@boleta_elec_all')->name('facturacion_electronica.boleta_elec_all');
 		Route::post('/boletas_electronicas/validacion_boleta','FacturacionElectronicaController@validacion_sunat_boleta')->name('facturacion_electronica.validacion_sunat_boleta');
 

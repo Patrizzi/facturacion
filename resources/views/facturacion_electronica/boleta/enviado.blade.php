@@ -463,6 +463,8 @@
     <!-- Seleccionar todos los check -->
     <script>
         $(document).ready(function() {
+            $('#boleta_enviado').addClass('active');
+
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
