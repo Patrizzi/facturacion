@@ -87,7 +87,7 @@ class GarantiaGuiaIngresoController extends Controller
       // Cod-Guia
 
       $productos = Producto::where('estado_anular',1)->where('marca_id',$marca_t->id)->get();
-      //SERVIOS ANULAR ESTA AL REVEZ 0 = SIN ANULAR / 1 = ANULADO 
+      //SERVIOS ANULAR ESTA AL REVEZ 0 = SIN ANULAR / 1 = ANULADO
       $servicios = Servicios::where('estado_anular',0)->get();
       if(count($productos) == 0){
         return redirect()->route('garantia_guia_ingreso.index')->with('repite', 'La marca escogida no cuenta con productos relacionados');
@@ -383,77 +383,78 @@ class GarantiaGuiaIngresoController extends Controller
           return redirect()->route('garantia_guia_ingreso.index');
         }
         return "Something went wrong :(";
-      }
-
-      public function ticket_guia_ingreso(Request $request){
-        $ids = $request->get('id');
-        // $facturacion=Facturacion::find($ids);
-        $garantia_ingreso = GarantiaGuiaIngreso::find($ids);
-        $empresa=Empresa::first();
-
-        $nombre_impresora = "EPSONTICKET";
-
-        $connector = new WindowsPrintConnector($nombre_impresora);
-        $printer = new Printer($connector);
-        #Mando un numero de respuesta para saber que se conecto correctamente.
-        echo 1;
-
-         //EMPRESA
-        $empresa=Empresa::first();
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->setEmphasis(true);
-        $printer->text("GUIA DE INGRESO\n");
-        $printer->text($garantia_ingreso->orden_servicio."\n");
-        $printer->text("===============================\n");
-        $printer->text($garantia_ingreso->created_at."\n");
-        $printer->text($empresa->nombre."\n");
-        $printer->setEmphasis(true);
-        $printer->text("RUC: ".$empresa->ruc."\n");
-        // $printer->setEmphasis(false);
-        $printer->text($empresa->calle." - ".$empresa->ciudad." - ".$empresa->region_provincia."\n");
-        $printer->text("Telefono: ".$empresa->telefono);
-        $printer->setEmphasis(false);
-        $printer->text("\n===============================\n");
-        //CLIENTE
-        $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $garantia_ingreso->clientes_i->nombre);
-        $printer->text($cliente_dato."\n");
-        $cliente_id= sprintf('%-15.20s %-2.2s %-21.21s', $garantia_ingreso->clientes_i->documento_identificacion, ':', $garantia_ingreso->clientes_i->numero_documento);
-        $printer->text($cliente_id);
-        $printer->text("\n===============================\n");
-        //TRABAJADOR
-        $trabajador_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Ing. Asignado", ':', $garantia_ingreso->personal_laborales->nombres);
-        $printer->text($trabajador_dato."\n");
-        $motivo= sprintf('%-15.15s %-2.2s %-21.21s', "Motivo", ':', $garantia_ingreso->motivo);
-        $printer->text($motivo."\n");
-        $marca= sprintf('%-15.15s %-2.2s %-21.21s', "Marca", ':', $garantia_ingreso->marcas_i->nombre);
-        $printer->text($marca."\n");
-        $asunto= sprintf('%-15.15s %-2.2s %-21.21s', "Asunto", ':', $garantia_ingreso->asunto);
-        $printer->text($asunto);
-        $printer->text("\n===============================\n");
-        //DATOS DEL EQUIPO
-        $modelo= sprintf('%-15.15s %-2.2s %-21.21s', "Modelo", ':', $garantia_ingreso->nombre_equipo);
-        $printer->text($modelo."\n");
-        $n_serie= sprintf('%-15.15s %-2.2s %-21.21s', "Nro.  Serie", ':', $garantia_ingreso->numero_serie);
-        $printer->text($n_serie."\n");
-        $codigo_int= sprintf('%-15.15s %-2.2s %-21.21s', "Codigo Interno", ':', $garantia_ingreso->codigo_interno);
-        $printer->text($codigo_int."\n");
-        $fecha_compra= sprintf('%-15.15s %-2.2s %-21.21s', "Fecha Compra", ':', $garantia_ingreso->fecha_compra);
-        $printer->text($fecha_compra);
-
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text("\n===============================\n");
-
-
-        $printer->feed(3);
-        $printer->cut();
-        $printer->pulse();
-        $printer->close();
-      }
-      public function index2(){
-      $garantias_guias_ingresos=GarantiaGuiaIngreso::all();
-      $garantias_guias_egresos=GarantiaGuiaEgreso::all();
-      $garantias_informe_tecnicos=GarantiaInformeTecnico::all();
-      return view('transaccion.garantias.index',compact('garantias_guias_ingresos','garantias_guias_egresos','garantias_informe_tecnicos'));
-  
-      }
     }
+
+    public function ticket_guia_ingreso(Request $request){
+    $ids = $request->get('id');
+    // $facturacion=Facturacion::find($ids);
+    $garantia_ingreso = GarantiaGuiaIngreso::find($ids);
+    $empresa=Empresa::first();
+
+    $nombre_impresora = "EPSONTICKET";
+
+    $connector = new WindowsPrintConnector($nombre_impresora);
+    $printer = new Printer($connector);
+    #Mando un numero de respuesta para saber que se conecto correctamente.
+    echo 1;
+
+        //EMPRESA
+    $empresa=Empresa::first();
+    $printer->setJustification(Printer::JUSTIFY_CENTER);
+    $printer->setEmphasis(true);
+    $printer->text("GUIA DE INGRESO\n");
+    $printer->text($garantia_ingreso->orden_servicio."\n");
+    $printer->text("===============================\n");
+    $printer->text($garantia_ingreso->created_at."\n");
+    $printer->text($empresa->nombre."\n");
+    $printer->setEmphasis(true);
+    $printer->text("RUC: ".$empresa->ruc."\n");
+    // $printer->setEmphasis(false);
+    $printer->text($empresa->calle." - ".$empresa->ciudad." - ".$empresa->region_provincia."\n");
+    $printer->text("Telefono: ".$empresa->telefono);
+    $printer->setEmphasis(false);
+    $printer->text("\n===============================\n");
+    //CLIENTE
+    $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $garantia_ingreso->clientes_i->nombre);
+    $printer->text($cliente_dato."\n");
+    $cliente_id= sprintf('%-15.20s %-2.2s %-21.21s', $garantia_ingreso->clientes_i->documento_identificacion, ':', $garantia_ingreso->clientes_i->numero_documento);
+    $printer->text($cliente_id);
+    $printer->text("\n===============================\n");
+    //TRABAJADOR
+    $trabajador_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Ing. Asignado", ':', $garantia_ingreso->personal_laborales->nombres);
+    $printer->text($trabajador_dato."\n");
+    $motivo= sprintf('%-15.15s %-2.2s %-21.21s', "Motivo", ':', $garantia_ingreso->motivo);
+    $printer->text($motivo."\n");
+    $marca= sprintf('%-15.15s %-2.2s %-21.21s', "Marca", ':', $garantia_ingreso->marcas_i->nombre);
+    $printer->text($marca."\n");
+    $asunto= sprintf('%-15.15s %-2.2s %-21.21s', "Asunto", ':', $garantia_ingreso->asunto);
+    $printer->text($asunto);
+    $printer->text("\n===============================\n");
+    //DATOS DEL EQUIPO
+    $modelo= sprintf('%-15.15s %-2.2s %-21.21s', "Modelo", ':', $garantia_ingreso->nombre_equipo);
+    $printer->text($modelo."\n");
+    $n_serie= sprintf('%-15.15s %-2.2s %-21.21s', "Nro.  Serie", ':', $garantia_ingreso->numero_serie);
+    $printer->text($n_serie."\n");
+    $codigo_int= sprintf('%-15.15s %-2.2s %-21.21s', "Codigo Interno", ':', $garantia_ingreso->codigo_interno);
+    $printer->text($codigo_int."\n");
+    $fecha_compra= sprintf('%-15.15s %-2.2s %-21.21s', "Fecha Compra", ':', $garantia_ingreso->fecha_compra);
+    $printer->text($fecha_compra);
+
+    $printer->setJustification(Printer::JUSTIFY_CENTER);
+    $printer->text("\n===============================\n");
+
+
+    $printer->feed(3);
+    $printer->cut();
+    $printer->pulse();
+    $printer->close();
+    }
+    
+    public function index2(){
+    $garantias_guias_ingresos=GarantiaGuiaIngreso::all();
+    $garantias_guias_egresos=GarantiaGuiaEgreso::all();
+    $garantias_informe_tecnicos=GarantiaInformeTecnico::all();
+    return view('transaccion.garantias.index',compact('garantias_guias_ingresos','garantias_guias_egresos','garantias_informe_tecnicos'));
+
+    }
+}
