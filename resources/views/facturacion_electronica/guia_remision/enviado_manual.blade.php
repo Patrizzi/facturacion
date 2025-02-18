@@ -513,10 +513,10 @@
                             <div role="tabpanel" id="tab-7" class="tab-pane ">
                             </div>
 
-                            <div role="tabpanel" id="tab-8" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-8" class="tab-pane ">
                             </div>
 
-                            <div role="tabpanel" id="tab-9" class="tab-pane">
+                            <div role="tabpanel" id="tab-9" class="tab-pane active show">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
