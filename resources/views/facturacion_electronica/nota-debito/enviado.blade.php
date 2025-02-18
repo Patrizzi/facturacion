@@ -200,11 +200,14 @@
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-6" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-6" class="tab-pane">
+                            </div>
+                            
+                            <div role="tabpanel" id="tab-7" class="tab-pane">
                             <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange2"
+                                        <input class="form-control" type="text" name="daterange3"
                                             value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
@@ -228,8 +231,8 @@
                                 </div>
                                 </div>
                                 <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
+                                    <table class="table table-striped dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>
@@ -240,80 +243,47 @@
                                                 <th>Ruc/DNI</th>
                                                 <th>Fecha Emisión</th>
                                                 <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
-                                                </tr>
+                                            </tr>
                                         </thead>
-                                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                                         <tbody>
-                                            <span hidden>{{$i=1}}</span>
-                                            @foreach ($n_debitos as $nota_d)
-                                        <tr>
-                                            <td><input type="checkbox" class="i-checks" name="input[]"></td>                                            
-                                            <td>{{$i++}}</td>
-                                            <td>{{$nota_d->codigo_n_d}}</td>
-                                        @if($nota_d->facturacion_id !=NULL)
-                                            <td>Factura</td>
-                                            <td>{{$nota_d->nota_i_facturacion->cliente->nombre}}</td>
-                                            <td>{{$nota_d->nota_i_facturacion->cliente->numero_documento}}</td>
-                                            <td>{{$nota_d->nota_i_facturacion->created_at}}</td>
-                                            <td style="text-align: center">
-                                                <form action="{{route('facturacion_electronica.nota_debito')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
-                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                </form>
-                                            </td>
+                                            <span hidden>{{$h=1}}</span>
+                                            @foreach ($n_debitos_enviados as $n_d_env)
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>                                                
+                                                <td>{{$h}}</td>
+                                                <td>{{$n_d_env->codigo_n_d}}</td>
 
-                                        @elseif($nota_d->boleta_id !=NULL)
-                                            <td>Boleta</td>
-                                            <td>{{$nota_d->nota_i_boleta->cliente->nombre}}</td>
-                                            <td>{{$nota_d->nota_i_boleta->cliente->numero_documento}}</td>
-                                            <td>{{$nota_d->nota_i_boleta->created_at}}</td>
-                                            <td style="text-align: center">
-                                                <form action="{{route('facturacion_electronica.nota_debito_bol')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
-                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                </form>
-                                            </td>
+                                            @if(isset($n_d_env->facturacion_id))
+                                                <td>Factura</td>
+                                                <td>{{$n_d_env->nota_i_facturacion->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_facturacion->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_facturacion->created_at}}</td>
+                                            
+                                            @elseif(isset($n_d_env->boleta_id))
+                                                <td>Boleta</td>
+                                                <td>{{$n_d_env->nota_i_boleta->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta->created_at}}</td>
 
-                                        @elseif($nota_d->boleta_m_id !=NULL)
-                                            <td>Boleta Manual</td>
-                                            <td>{{$nota_d->nota_i_boleta_manual->cliente->nombre}}</td>
-                                            <td>{{$nota_d->nota_i_boleta_manual->cliente->numero_documento}}</td>
-                                            <td>{{$nota_d->nota_i_boleta_manual->created_at}}</td>
-                                            <td style="text-align: center">
-                                                <form action="{{route('facturacion_electronica.nota_debito_bol')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
-                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                </form>
-                                            </td>
-                                        
-                                        @else
-                                            <td>Factura Manual</td>
-                                            <td>{{$nota_d->nota_i_fac_manual->cliente->nombre}}</td>
-                                            <td>{{$nota_d->nota_i_fac_manual->cliente->numero_documento}}</td>
-                                            <td>{{$nota_d->nota_i_fac_manual->created_at}}</td>
-                                            <td style="text-align: center">
-                                                <form action="{{route('facturacion_electronica.nota_debito')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id" value="{{$nota_d->id}}">
-                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                </form>
-                                            </td>
-                                        @endif
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfooter>
-                                        <td colspan="7" align="right" style="padding-right: 2em"></td>
-                                        <td align="center"><button type="button" class="btn btn-primary" id="nota_debito_elec_all">Enviar</button></td>
-                                    </tfooter>
-                                </table>
+                                            @elseif(isset($n_d_env->boleta_m_id))
+                                                <td>Boleta Manual</td>
+                                                <td>{{$n_d_env->nota_i_boleta_manual->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_boleta_manual->created_at}}</td>
+
+                                            @else
+                                                <td>Facturacion Manual</td>
+                                                <td>{{$n_d_env->nota_i_fac_manual->cliente->nombre}}</td>
+                                                <td>{{$n_d_env->nota_i_fac_manual->cliente->numero_documento}}</td>
+                                                <td>{{$n_d_env->nota_i_fac_manual->created_at}}</td>
+                                            @endif    
+                                            
+                                            <td><button type="button" class="btn btn-info btn-circle btn-ls" ><i class="fa fa-check-circle"></i></button></td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
                             </div>
                         </div>
                     </div>
@@ -408,7 +378,7 @@
 <!-- Page-Level Scripts -->
 <script>
     $(document).ready(function(){
-        $('.dataTables-example2').DataTable({
+        $('.dataTables-example3').DataTable({
             pageLength: 12,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
