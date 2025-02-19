@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Cliente;
 
 class ServicioController extends Controller
 {
@@ -22,8 +23,18 @@ class ServicioController extends Controller
     {
         return view('servicio.solicitud_servicio');
     }
+
+    public function guiasalida(){
+        return view('servicio.guiasalida');
+    }
+
+    public function clientes(){
+        $clientes = Cliente::all();
+        return view('servicio.clientes', compact('clientes'));
+    }
     public function guia_ingreso()
     {
         return view('servicio.guia_ingreso');
     }
 }
+

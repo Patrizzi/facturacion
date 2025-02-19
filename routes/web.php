@@ -12,6 +12,7 @@
 // });
 
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -558,10 +559,7 @@ Route::group(
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 
-        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
         Route::get('/servicio/guia_ingreso', 'ServicioController@guia_ingreso')->name('servicio.guia_ingreso');
 
 
@@ -593,7 +591,10 @@ Auth::routes([
 
 Route::post('sunat_cambio','TipoCambioController@sunat_cambio');
 Route::resource('/tipo_cambio','TipoCambioController')->middleware('auth');
+
 Route::get('garantia_guia_ingreso/pdf/{id}' , 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');
+
+
 Route::get('garantia_guia_egreso/pdf/{id}' , 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
 Route::get('garantia_informe_tecnico/pdf/{id}' , 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
 Route::get('cotizacion/pdf/{id}' , 'CotizacionController@pdf')->name('pdf_cotizacion');
@@ -617,13 +618,21 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 
+Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
 
-
-
-
-
-
+Route::get('/servicio/guia_ingreso', 'ServicioController@guia_ingreso')->name('servicio.guia_ingreso');
 
 
 
