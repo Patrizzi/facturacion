@@ -37,169 +37,6 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
-                <div class="ibox ">
-                    @if (Session::has('successMsg'))
-                        <div class="alert alert-success">
-                            <a class="alert-link" href="#">{{ session('successMsg') }}</a>.
-                        </div>
-                    @endif
-                    {{-- MENSAJE DEL AJAX PARA LAS FACTURAS INDIVIDUALES --}}
-                    <div id="msg_individual" class="">
-
-                    </div>
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li><a class="nav-link active show" data-toggle="tab" href="#tab-1">Boletas</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Enviados</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">Boleta Manual</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Enviados</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-3" class="tab-pane show">
-                                <div class="panel-body">
-                                    <div class="table-responsive" id="ibox2">
-                                        <div class="ibox-content">
-                                            <div class="sk-spinner sk-spinner-double-bounce">
-                                                <div class="sk-double-bounce1"></div>
-                                                <div class="sk-double-bounce2"></div>
-                                            </div>
-                                            <table
-                                                class="table table-striped table-bordered table-hover dataTables-example">
-                                                <thead>
-                                                    <tr>
-                                                        <th><input class='check_all_boleta_m' type='checkbox'
-                                                                onclick="select_all_boleta_m()" /></th>
-                                                        <th>Item</th>
-                                                        <th>Codigo de Boleta</th>
-                                                        <th>Cliente</th>
-                                                        <th>Ruc/DNI</th>
-                                                        <th>Fecha Vencimiento</th>
-                                                        <th style="text-align:center;color: #0073c1"><img
-                                                                src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
-                                                    </tr>
-                                                </thead>
-                                                <input type="hidden" name="_token" id="token"
-                                                    value="{{ csrf_token() }}">
-                                                <tbody>
-                                                    <span hidden>{{ $i = 1 }}</span>
-                                                    @foreach ($boletas_m as $boleta_m)
-                                                        <tr class="gradeX">
-                                                            <td><input type='checkbox' class='case2'
-                                                                    value="{{ $boleta_m->codigo_boleta }}" /></td>
-                                                            <td>{{ $i++ }}</td>
-                                                            <td>{{ $boleta_m->codigo_boleta }}</td>
-                                                            <td>{{ $boleta_m->cliente->nombre }}</td>
-                                                            <td>{{ $boleta_m->cliente->numero_documento }}</td>
-                                                            <td>{{ $boleta_m->fecha_vencimiento }}</td>
-                                                            <td>
-                                                                <center>
-                                                                    {{-- <form action="{{route('facturacion_electronica.boleta_m_e')}}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="boleta_id" value="{{$boleta_m->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form> --}}
-                                                                    <button type="button"
-                                                                        class="btn btn-success btn-circle btn-ls boleta_ind"
-                                                                        id="boleta_ind"
-                                                                        value="{{ $boleta_m->codigo_boleta }}"
-                                                                        onclick="envio_boleta_m(this)"><i
-                                                                            class="fa fa-cloud-upload"></i></button>
-
-                                                                </center>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                                <tfooter>
-                                                    <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                                    <td align="center"><button type="button" class="btn btn-primary"
-                                                            id="boleta_elec_all_m">Enviar</button></td>
-                                                </tfooter>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para BOLETA  -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="exampleModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Enviando Boletas a Sunat</h5>
-                </div>
-                <div class="modal-body">
-                    <div id="msg_bole_el">
-                        {{-- Contenido del ajax --}}
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: none;">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            *En caso de algún error al enviar la Factura, por favor comunicarse de manera inmediata.
-                        </div>
-                        <div class="col-sm-6" style="padding-right: 30px;text-align: right">
-                            <button type="button" class="btn btn-primary" id="cerrar_modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para BOLETA MANUAL  -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="exampleModal2">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Enviando Boletas a Sunat</h5>
-                </div>
-                <div class="modal-body">
-                    <div id="msg_bole_el_man">
-                        {{-- Contenido del ajax --}}
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: none;">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            *En caso de algún error al enviar la Factura, por favor comunicarse de manera inmediata.
-                        </div>
-                        <div class="col-sm-6" style="padding-right: 30px;text-align: right">
-                            <button type="button" class="btn btn-primary" id="cerrar_modal2">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- ESTILOS --}}
-    <style type="text/css">
-        .a {
-            width: 200px
-        }
-
-        /* .ibox-content{
-            padding: 0px;
-            border: none;
-        }*/
-        .model-footer {
-            > :not(:last-child) {
-                margin-right: .0rem;
-            }
-        }
-    </style>
-
-
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
                 @include('facturacion_electronica.boleta.stadistics')
             </div>
         </div>
@@ -218,8 +55,7 @@
                             </div>
                             <div> <!-- Botón de descarga -->
                                 <div class="btn-group">
-                                    <button data-toggle="dropdown" type="button"
-                                        class="btn btn-success dropdown-toggle ">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-success dropdown-toggle ">
                                         <i class="fa fa-cloud-download"></i>
                                     </button>
                                     <ul class="dropdown-menu">
@@ -233,17 +69,11 @@
                         </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-5" class="tab-pane ">
-                            </div>
-
-                            <div role="tabpanel" id="tab-6" class="tab-pane ">
-                            </div>
-
                             <div role="tabpanel" id="tab-7" class="tab-pane active show">
                                 <div class="d-flex justify-content-md-start row mx-3 mt-4">
                                     <div class="input-group col-md-4 mx-5">
                                         <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange4"
+                                        <input class="form-control" type="text" name="daterange-boleta_m"
                                             value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
@@ -272,41 +102,42 @@
                                     <table class="table table-striped dataTables-example4">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th><input type="checkbox" class="i-checks-boletas-head"
+                                                        name="input_boletas[]"></th>
                                                 <th>Item</th>
-                                                <th>Código de Boleta Manual</th>
+                                                <th>Código de Boleta</th>
                                                 <th>Cliente</th>
-                                                <th>RUC / DNI</th>
-                                                <th>Fecha de vencimiento</th>
+                                                <th>N° de Documento</th>
+                                                <th>Fecha de Creación</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"
-                                                    aria-label="SUNAT: activate to sort column ascending"><img
-                                                        src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
+                                                        width="15px">SUNAT
+                                                </th>
                                             </tr>
                                         </thead>
-                                        <input type="hidden" name="_token" id="token"
-                                            value="{{ csrf_token() }}">
                                         <tbody>
-                                            <span hidden>{{ $i = 1 }}</span>
-                                            @foreach ($boletas_m as $boleta_m)
-                                                <tr>
-                                                    <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                    <td>{{ $i++ }}</td>
-                                                    <td>{{ $boleta_m->codigo_boleta }}</td>
-                                                    <td>{{ $boleta_m->cliente->nombre }}</td>
-                                                    <td>{{ $boleta_m->cliente->numero_documento }}</td>
-                                                    <td>{{ $boleta_m->fecha_vencimiento }}</td>
-                                                    {{-- <form action="{{route('facturacion_electronica.boleta_m_e')}}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="boleta_id" value="{{$boleta_m->id}}">
-                                                    <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                    </form> --}}
-                                                    <button type="button"
-                                                        class="btn btn-success btn-circle btn-ls boleta_ind"
-                                                        id="boleta_ind" value="{{ $boleta_m->codigo_boleta }}"
-                                                        onclick="envio_boleta_m(this)"><i
-                                                            class="fa fa-cloud-upload"></i></button>
+                                            @foreach ($boletas_m as $index => $boleta)
+                                                <tr @if ($boleta->diff_day > 3) style="color: red" @endif>
+                                                    <td><input type="checkbox" class="i-checks-boletas"
+                                                            name="input_boleta[]" value="{{ $boleta->codigo_boleta }}">
+                                                    </td>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $boleta->codigo_boleta }}</td>
+                                                    @if (isset($boleta->cliente_id))
+                                                        <!-- Nombre del cliente -->
+                                                        <td>{{ $boleta->cliente->nombre }}</td>
+                                                        <td>{{ $boleta->cliente->numero_documento }}</td>
+                                                    @else
+                                                        <td>{{ $boleta->cotizacion->cliente->nombre }}</td>
+                                                        <td>{{ $boleta->cotizacion->cliente->numero_documento }}</td>
+                                                    @endif
+                                                    <td>{{ $boleta->fecha_emision }}</td>
+                                                    <td style="text-align: center"><button type="button"
+                                                            class="btn btn-success btn-circle btn-ls"
+                                                            value="{{ $boleta->codigo_boleta }}"
+                                                            onclick="envio_boleta(this)"><i
+                                                                class="fa fa-cloud-upload"></i></button></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -318,38 +149,12 @@
                                     </table>
                                 </div>
                             </div>
-                            <div role="tabpanel" id="tab-8" class="tab-pane">
-
-                            </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-
-    <!-- scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
-
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
@@ -367,18 +172,120 @@
             display: none;
         }
     </style>
+    <!-- scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
+
     <!-- Seleccionar todos los check -->
     <script>
         $(document).ready(function() {
-            $('.i-checks').iCheck({
+            $('#index_boleta_manual').addClass('active');
+
+            $('.i-checks-boletas').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+            $('.i-checks-boletas-head').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            })
+
+            // {{-- Datatable Facturas --}}
+            table_boleta_m = $('.dataTables-fact_manual').DataTable({
+                pageLength: 15,
+                order: [
+                    [0, "desc"]
+                ],
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                aoColumnDefs: [{
+                    'bSortable': false,
+                    'aTargets': [0]
+                }]
+
+                $('input[name="daterange-boleta_m"]').daterangepicker({
+
+                        "locale": {
+                            "separator": " | ",
+                            "applyLabel": "Guardar",
+                            "cancelLabel": "Cancelar",
+                            "fromLabel": "Desde",
+                            "toLabel": "Hasta",
+                            "customRangeLabel": "Custom",
+                            "daysOfWeek": [
+                                "Do",
+                                "Lu",
+                                "Ma",
+                                "Mi",
+                                "Ju",
+                                "Vi",
+                                "Sa"
+                            ],
+                            "monthNames": [
+                                "Enero",
+                                "Febrero",
+                                "Marzo",
+                                "Abril",
+                                "Mayo",
+                                "Junio",
+                                "Julio",
+                                "Agosto",
+                                "Septiembre",
+                                "Octubre",
+                                "Noviembre",
+                                "Diciembre"
+                            ],
+                            "firstDay": 1
+                        }
+                    },
+                    function(start, end, label) {
+                        var dates = [];
+                        var currentDate = new Date(start);
+                        while (currentDate <= end) {
+                            var day = ('0' + currentDate.getDate()).slice(-2);
+                            var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                            var year = currentDate.getFullYear();
+
+                            var formattedDate = day + '-' + month + '-' + year;
+                            dates.push(formattedDate);
+
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+                        var dateRangeString = dates.join('|');
+                        console.log(dateRangeString);
+                        table_factura.column(5).search(dateRangeString, true, false).draw();
+                    }
+                );
+            });
+            // Factuas Manuales
+            function limpiar_select_fact_manual() {
+                table_boleta_m.column(5).search("").draw();
+            }
+
+            function revert_select_fact_manual() {
+                table_boleta_m.column(5).search(`{{ date('m-Y') }}`).draw();
+            }
 
             // Controlar el checkbox del thead 
             $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
@@ -411,515 +318,272 @@
             });
         });
     </script>
-    <!-- Page-Level Scripts -->
-    $(document).ready(function(){
-    table3 =$('.dataTables-example3').DataTable({
-    pageLength: 12,
-    responsive: true,
-    dom: '<"html5buttons"B>lTfgitp',
-        buttons: [
-        { extend: 'copy'},
-        {extend: 'csv'},
-        {extend: 'excel', title: 'ExampleFile'},
-        {extend: 'pdf', title: 'ExampleFile'},
+    <!-- Page Scripts -->
+    <script>
+        $(document).ready(function() {
+            $('.dataTables-example').DataTable({
+                pageLength: 20,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+        });
 
-        {extend: 'print',
-        customize: function (win){
-        $(win.document.body).addClass('white-bg');
-        $(win.document.body).css('font-size', '10px');
+        function select_all_boleta() {
+            $('input[class=case]:checkbox').each(function() {
+                if ($('input[class=check_all_boleta]:checkbox:checked').length == 0) {
+                    $(this).prop("checked", false);
+                } else {
+                    $(this).prop("checked", true);
+                }
+            });
+        }
 
-        $(win.document.body).find('table')
-        .addClass('compact')
-        .css('font-size', 'inherit');
+        function select_all_boleta_m() {
+            $('input[class=case2]:checkbox').each(function() {
+                if ($('input[class=check_all_boleta_m]:checkbox:checked').length == 0) {
+                    $(this).prop("checked", false);
+                } else {
+                    $(this).prop("checked", true);
+                }
+            });
         }
+        // BOlETA ENVIO
+        function envio_boleta(codigo) {
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            $('.nav-link').addClass('disabled');
+            var value_check = codigo.value;
+            $.ajax({
+                type: "post",
+                url: "{{ route('facturacion_electronica.boleta_elec_all') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'codigo_bol': value_check,
+                },
+                success: function(response) {
+                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
+                    var result = salt.substr(0, 13);
+                    // console.log(result);
+                    if (result == "Codigo Error:") {
+                        var data = `
+                        <div id="myAlert" class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación">&times;</a>
+                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
+                            response + `</span>
+                        </div>
+                    `;
+                    } else {
+                        var data = `
+                        <div id="myAlert" class=" alert alert-success" >
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
+                        </div>
+                    `;
+                    }
+                    revision(value_check, response, 'boleta');
+                    inv_close();
+                    $('#msg_individual').append(data);
+                    $("#success-alert").show();
+                }
+            });
         }
-        ]
+        $('#boleta_elec_all').on('click', function() {
+            var cant_checks = $('input[class=case]:checkbox:checked').length;
+            if (cant_checks == 0) {
+                console.log("ninguno marcado");
+            } else {
+                $('#exampleModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $("#exampleModal").modal("show");
+                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+                submit_boleta_click(0, cant_checks);
+            }
 
         });
-        $('input[name="daterange3"]').daterangepicker({
 
-        "locale": {
-        "separator": " | ",
-        "applyLabel": "Guardar",
-        "cancelLabel": "Cancelar",
-        "fromLabel": "Desde",
-        "toLabel": "Hasta",
-        "customRangeLabel": "Custom",
-        "daysOfWeek": [
-        "Do",
-        "Lu",
-        "Ma",
-        "Mi",
-        "Ju",
-        "Vi",
-        "Sa"
-        ],
-        "monthNames": [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre"
-        ],
-        "firstDay": 1
+        function submit_boleta_click(repetir, maximo) {
+            if (repetir < maximo) {
+                var value_check = $('input[class=case]:checkbox:checked')[repetir].value;
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('facturacion_electronica.boleta_elec_all') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'codigo_bol': value_check,
+                    },
+                    success: function(response) {
+                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
+                        var result = salt.substr(0, 13);
+                        // console.log(result);
+                        if (result == "Codigo Error:") {
+                            var data = `
+                            <div class="alert alert-danger">
+                                <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
+                                ' <br> ' + response + `</a>
+                            </div>
+                        `;
+                        } else {
+                            var data = `
+                            <div class="alert alert-success">
+                                <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
+                            </div>
+                        `;
+                        }
+                        console.log('b');
+                        revision(value_check, response, 'boleta');
+                        $('#msg_bole_el').append(data);
+                        repetir++;
+                        submit_boleta_click(repetir, maximo);
+                    }
+                });
+            } else {
+                $('.modal-footer').removeAttr('style');
+            }
         }
-        },
-        function(start, end, label) {
-        var dates = [];
-        var currentDate = new Date(start);
-        while (currentDate <= end) { var day=('0' + currentDate.getDate()).slice(-2); var month=('0' +
-            (currentDate.getMonth() + 1)).slice(-2); var year=currentDate.getFullYear(); var formattedDate=day + '-' + month
-            + '-' + year; dates.push(formattedDate); currentDate.setDate(currentDate.getDate() + 1); } var
-            dateRangeString=dates.join('|'); console.log(dateRangeString); table3.column(5).search(dateRangeString, true,
-            false).draw(); } ); }); function limpiar_select(){ table3.column(5).search("").draw(); } function
-            revert_select() { table3.column(5).search(`{{ date('m-Y') }}`).draw(); } </script>
 
-            <script>
-                $(document).ready(function() {
-                    table4 = $('.dataTables-example4').DataTable({
-                        pageLength: 12,
-                        responsive: true,
-                        dom: '<"html5buttons"B>lTfgitp',
-                        buttons: [{
-                                extend: 'copy'
-                            },
-                            {
-                                extend: 'csv'
-                            },
-                            {
-                                extend: 'excel',
-                                title: 'ExampleFile'
-                            },
-                            {
-                                extend: 'pdf',
-                                title: 'ExampleFile'
-                            },
-
-                            {
-                                extend: 'print',
-                                customize: function(win) {
-                                    $(win.document.body).addClass('white-bg');
-                                    $(win.document.body).css('font-size', '10px');
-
-                                    $(win.document.body).find('table')
-                                        .addClass('compact')
-                                        .css('font-size', 'inherit');
-                                }
-                            }
-                        ]
-
-                    });
-                    $('input[name="daterange4"]').daterangepicker({
-
-                            "locale": {
-                                "separator": " | ",
-                                "applyLabel": "Guardar",
-                                "cancelLabel": "Cancelar",
-                                "fromLabel": "Desde",
-                                "toLabel": "Hasta",
-                                "customRangeLabel": "Custom",
-                                "daysOfWeek": [
-                                    "Do",
-                                    "Lu",
-                                    "Ma",
-                                    "Mi",
-                                    "Ju",
-                                    "Vi",
-                                    "Sa"
-                                ],
-                                "monthNames": [
-                                    "Enero",
-                                    "Febrero",
-                                    "Marzo",
-                                    "Abril",
-                                    "Mayo",
-                                    "Junio",
-                                    "Julio",
-                                    "Agosto",
-                                    "Septiembre",
-                                    "Octubre",
-                                    "Noviembre",
-                                    "Diciembre"
-                                ],
-                                "firstDay": 1
-                            }
-                        },
-                        function(start, end, label) {
-                            var dates = [];
-                            var currentDate = new Date(start);
-                            while (currentDate <= end) {
-                                var day = ('0' + currentDate.getDate()).slice(-2);
-                                var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                                var year = currentDate.getFullYear();
-
-                                var formattedDate = day + '-' + month + '-' + year;
-                                dates.push(formattedDate);
-
-                                currentDate.setDate(currentDate.getDate() + 1);
-                            }
-                            var dateRangeString = dates.join('|');
-                            console.log(dateRangeString);
-                            table4.column(5).search(dateRangeString, true, false).draw();
-                        }
-                    );
-                });
-
-                function limpiar_select() {
-                    table4.column(5).search("").draw();
-                }
-
-                function revert_select() {
-                    table4.column(5).search(`{{ date('m-Y') }}`).draw();
-                }
-            </script>
-
-
-            $(document).ready(function(){
-            table =$('.dataTables-example5').DataTable({
-            pageLength: 12,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                { extend: 'copy'},
-                {extend: 'csv'},
-                {extend: 'excel', title: 'ExampleFile'},
-                {extend: 'pdf', title: 'ExampleFile'},
-
-                {extend: 'print',
-                customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-                }
-                }
-                ]
-
-                });
-                $('input[name="daterange5"]').daterangepicker({
-
-                "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                "Do",
-                "Lu",
-                "Ma",
-                "Mi",
-                "Ju",
-                "Vi",
-                "Sa"
-                ],
-                "monthNames": [
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Agosto",
-                "Septiembre",
-                "Octubre",
-                "Noviembre",
-                "Diciembre"
-                ],
-                "firstDay": 1
-                }
+        function revision(codigo, msg, tipo) {
+            console.log('a');
+            $.ajax({
+                type: "post",
+                url: "{{ route('facturacion_electronica.validacion_sunat_boleta') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'tipo': tipo,
+                    'codigo_bol': codigo,
+                    'msg': msg,
                 },
-                function(start, end, label) {
-                var dates = [];
-                var currentDate = new Date(start);
-                while (currentDate <= end) { var day=('0' + currentDate.getDate()).slice(-2); var month=('0' +
-                    (currentDate.getMonth() + 1)).slice(-2); var year=currentDate.getFullYear(); var formattedDate=day + '-'
-                    + month + '-' + year; dates.push(formattedDate); currentDate.setDate(currentDate.getDate() + 1); } var
-                    dateRangeString=dates.join('|'); console.log(dateRangeString); table.column(5).search(dateRangeString,
-                    true, false).draw(); } ); }); function limpiar_select(){ table.column(5).search("").draw(); } function
-                    revert_select() { table.column(5).search(`{{ date('m-Y') }}`).draw(); } </script>
+                success: function(response) {
+                    var data2 = `<p style="margin-bottom: 0px">` + response + `</p>`
+                    $(`#` + codigo + ``).append(data2);
+                }
+            });
+        }
 
+        function inv_close() {
+            $(document).ready(function() {
+                $("#myAlert").bind('closed.bs.alert', function() {
+                    location.reload();
+                })
+            });
+            $('[data-toggle="popover"]').popover();
+            const myTimeout = setTimeout(click, 5000);
+        }
 
+        function click() {
+            console.log("click");
+            $('[data-toggle="popover"]').popover();
+            $('#cerrar_popup').trigger('click');
+        }
 
-
-
-                    <!-- Page Scripts -->
-                    <script>
-                        $(document).ready(function() {
-                            $('.dataTables-example').DataTable({
-                                pageLength: 20,
-                                responsive: true,
-                                dom: '<"html5buttons"B>lTfgitp',
-                                buttons: []
-                            });
-                        });
-
-                        function select_all_boleta() {
-                            $('input[class=case]:checkbox').each(function() {
-                                if ($('input[class=check_all_boleta]:checkbox:checked').length == 0) {
-                                    $(this).prop("checked", false);
-                                } else {
-                                    $(this).prop("checked", true);
-                                }
-                            });
-                        }
-
-                        function select_all_boleta_m() {
-                            $('input[class=case2]:checkbox').each(function() {
-                                if ($('input[class=check_all_boleta_m]:checkbox:checked').length == 0) {
-                                    $(this).prop("checked", false);
-                                } else {
-                                    $(this).prop("checked", true);
-                                }
-                            });
-                        }
-                        // BOlETA ENVIO
-                        function envio_boleta(codigo) {
-                            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                            $('.nav-link').addClass('disabled');
-                            var value_check = codigo.value;
-                            $.ajax({
-                                type: "post",
-                                url: "{{ route('facturacion_electronica.boleta_elec_all') }}",
-                                data: {
-                                    '_token': $('input[name=_token]').val(),
-                                    'codigo_bol': value_check,
-                                },
-                                success: function(response) {
-                                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                                    var result = salt.substr(0, 13);
-                                    // console.log(result);
-                                    if (result == "Codigo Error:") {
-                                        var data = `
+        //BOLETA MANUAL
+        function envio_boleta_m(codigo) {
+            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+            $('.nav-link').addClass('disabled');
+            var value_check = codigo.value;
+            $.ajax({
+                type: "post",
+                url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'codigo_bol': value_check,
+                },
+                success: function(response) {
+                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
+                    var result = salt.substr(0, 13);
+                    // console.log(result);
+                    if (result == "Codigo Error:") {
+                        var data = `
                         <div id="myAlert" class="alert alert-danger">
                             <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación">&times;</a>
                             <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                                            response + `</span>
+                            response + `</span>
                         </div>
                     `;
-                                    } else {
-                                        var data = `
+                    } else {
+                        var data = `
                         <div id="myAlert" class=" alert alert-success" >
                             <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
                             <a class="close" data-dismiss="alert">&times;</a>
                             <span class="alert-link" id="` + value_check + `">` + response + `</span>
                         </div>
                     `;
-                                    }
-                                    revision(value_check, response, 'boleta');
-                                    inv_close();
-                                    $('#msg_individual').append(data);
-                                    $("#success-alert").show();
-                                }
-                            });
-                        }
-                        $('#boleta_elec_all').on('click', function() {
-                            var cant_checks = $('input[class=case]:checkbox:checked').length;
-                            if (cant_checks == 0) {
-                                console.log("ninguno marcado");
-                            } else {
-                                $('#exampleModal').modal({
-                                    backdrop: 'static',
-                                    keyboard: false
-                                });
-                                $("#exampleModal").modal("show");
-                                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                                submit_boleta_click(0, cant_checks);
-                            }
+                    }
+                    revision(value_check, response, 'boleta_manual');
+                    inv_close();
+                    $('#msg_individual').append(data);
+                    $("#success-alert").show();
+                }
+            });
+        }
 
-                        });
-
-                        function submit_boleta_click(repetir, maximo) {
-                            if (repetir < maximo) {
-                                var value_check = $('input[class=case]:checkbox:checked')[repetir].value;
-                                $.ajax({
-                                    type: "post",
-                                    url: "{{ route('facturacion_electronica.boleta_elec_all') }}",
-                                    data: {
-                                        '_token': $('input[name=_token]').val(),
-                                        'codigo_bol': value_check,
-                                    },
-                                    success: function(response) {
-                                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                                        var result = salt.substr(0, 13);
-                                        // console.log(result);
-                                        if (result == "Codigo Error:") {
-                                            var data = `
+        function submit_boleta_click_manual(repetir, maximo) {
+            if (repetir < maximo) {
+                var value_check = $('input[class=case2]:checkbox:checked')[repetir].value;
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'codigo_bol': value_check,
+                    },
+                    success: function(response) {
+                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
+                        var result = salt.substr(0, 13);
+                        // console.log(result);
+                        if (result == "Codigo Error:") {
+                            var data = `
                             <div class="alert alert-danger">
                                 <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
-                                                ' <br> ' + response + `</a>
+                                ' <br> ' + response + `</a>
                             </div>
                         `;
-                                        } else {
-                                            var data = `
+                        } else {
+                            var data = `
                             <div class="alert alert-success">
                                 <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
                             </div>
                         `;
-                                        }
-                                        console.log('b');
-                                        revision(value_check, response, 'boleta');
-                                        $('#msg_bole_el').append(data);
-                                        repetir++;
-                                        submit_boleta_click(repetir, maximo);
-                                    }
-                                });
-                            } else {
-                                $('.modal-footer').removeAttr('style');
-                            }
                         }
+                        console.log('b');
+                        revision(value_check, response, 'boleta_manual');
+                        $('#msg_bole_el_man').append(data);
+                        repetir++;
+                        submit_boleta_click_manual(repetir, maximo);
+                    }
+                });
+            } else {
+                $('.modal-footer').removeAttr('style');
+            }
+        }
+        $('#boleta_elec_all_m').on('click', function() {
+            var cant_checks = $('input[class=case2]:checkbox:checked').length;
+            if (cant_checks == 0) {
+                console.log("ninguno marcado");
+            } else {
+                $('#exampleModal2').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $("#exampleModal2").modal("show");
+                $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+                submit_boleta_click_manual(0, cant_checks);
+            }
 
-                        function revision(codigo, msg, tipo) {
-                            console.log('a');
-                            $.ajax({
-                                type: "post",
-                                url: "{{ route('facturacion_electronica.validacion_sunat_boleta') }}",
-                                data: {
-                                    '_token': $('input[name=_token]').val(),
-                                    'tipo': tipo,
-                                    'codigo_bol': codigo,
-                                    'msg': msg,
-                                },
-                                success: function(response) {
-                                    var data2 = `<p style="margin-bottom: 0px">` + response + `</p>`
-                                    $(`#` + codigo + ``).append(data2);
-                                }
-                            });
-                        }
+        });
 
-                        function inv_close() {
-                            $(document).ready(function() {
-                                $("#myAlert").bind('closed.bs.alert', function() {
-                                    location.reload();
-                                })
-                            });
-                            $('[data-toggle="popover"]').popover();
-                            const myTimeout = setTimeout(click, 5000);
-                        }
-
-                        function click() {
-                            console.log("click");
-                            $('[data-toggle="popover"]').popover();
-                            $('#cerrar_popup').trigger('click');
-                        }
-
-                        //BOLETA MANUAL
-                        function envio_boleta_m(codigo) {
-                            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-                            $('.nav-link').addClass('disabled');
-                            var value_check = codigo.value;
-                            $.ajax({
-                                type: "post",
-                                url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
-                                data: {
-                                    '_token': $('input[name=_token]').val(),
-                                    'codigo_bol': value_check,
-                                },
-                                success: function(response) {
-                                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                                    var result = salt.substr(0, 13);
-                                    // console.log(result);
-                                    if (result == "Codigo Error:") {
-                                        var data = `
-                        <div id="myAlert" class="alert alert-danger">
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                                            response + `</span>
-                        </div>
-                    `;
-                                    } else {
-                                        var data = `
-                        <div id="myAlert" class=" alert alert-success" >
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
-                                    }
-                                    revision(value_check, response, 'boleta_manual');
-                                    inv_close();
-                                    $('#msg_individual').append(data);
-                                    $("#success-alert").show();
-                                }
-                            });
-                        }
-
-                        function submit_boleta_click_manual(repetir, maximo) {
-                            if (repetir < maximo) {
-                                var value_check = $('input[class=case2]:checkbox:checked')[repetir].value;
-                                $.ajax({
-                                    type: "post",
-                                    url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
-                                    data: {
-                                        '_token': $('input[name=_token]').val(),
-                                        'codigo_bol': value_check,
-                                    },
-                                    success: function(response) {
-                                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                                        var result = salt.substr(0, 13);
-                                        // console.log(result);
-                                        if (result == "Codigo Error:") {
-                                            var data = `
-                            <div class="alert alert-danger">
-                                <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
-                                                ' <br> ' + response + `</a>
-                            </div>
-                        `;
-                                        } else {
-                                            var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
-                            </div>
-                        `;
-                                        }
-                                        console.log('b');
-                                        revision(value_check, response, 'boleta_manual');
-                                        $('#msg_bole_el_man').append(data);
-                                        repetir++;
-                                        submit_boleta_click_manual(repetir, maximo);
-                                    }
-                                });
-                            } else {
-                                $('.modal-footer').removeAttr('style');
-                            }
-                        }
-                        $('#boleta_elec_all_m').on('click', function() {
-                            var cant_checks = $('input[class=case2]:checkbox:checked').length;
-                            if (cant_checks == 0) {
-                                console.log("ninguno marcado");
-                            } else {
-                                $('#exampleModal2').modal({
-                                    backdrop: 'static',
-                                    keyboard: false
-                                });
-                                $("#exampleModal2").modal("show");
-                                $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-                                submit_boleta_click_manual(0, cant_checks);
-                            }
-
-                        });
-
-                        function click() {
-                            console.log("click");
-                            $('[data-toggle="popover"]').popover();
-                            $('#cerrar_popup').trigger('click');
-                        }
-                        $('#cerrar_modal').on('click', function() {
-                            location.reload();
-                        });
-                        $('#cerrar_modal2').on('click', function() {
-                            location.reload();
-                        });
-                    </script>
-                @endsection
+        function click() {
+            console.log("click");
+            $('[data-toggle="popover"]').popover();
+            $('#cerrar_popup').trigger('click');
+        }
+        $('#cerrar_modal').on('click', function() {
+            location.reload();
+        });
+        $('#cerrar_modal2').on('click', function() {
+            location.reload();
+        });
+    </script>
+@endsection

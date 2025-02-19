@@ -126,12 +126,8 @@ class FacturacionElectronicaController extends Controller
         foreach ($boletas as $boleta) {
             $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
         }
-        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
         
-
-        $boletas_enviadas_m=Boleta_m::where('b_electronica',1)->get();
-        $boletas_m=Boleta_m::where('b_electronica',0)->get();
-        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas','boletas_m','boletas_enviadas_m','empresa'));
+        return view('facturacion_electronica.boleta.index',compact('boletas','empresa'));
     }
 
     public function boletas_enviadas(){
@@ -139,6 +135,17 @@ class FacturacionElectronicaController extends Controller
         return view('facturacion_electronica.boleta.enviado',compact('empresa'));
     }
 
+    public function index_boleta_manual(){
+        $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $boletas_m=Boleta_m::where('b_electronica',0)->get();
+        foreach ($boletas_m as $boleta) {
+            $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
+        }    
+        
+        return view('facturacion_electronica.boleta.index_manual',compact('boletas_m','empresa'));
+    }
 
     public function index_guia_remision(){
 
@@ -1505,7 +1512,7 @@ class FacturacionElectronicaController extends Controller
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
-        $query = Boleta::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        $query = Boleta::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
         
         if(empty($filter)){
             $query->where(function($q) use ($filter){
@@ -1544,6 +1551,7 @@ class FacturacionElectronicaController extends Controller
             $boletas->total = $boletas->moneda->simbolo.' '. number_format($total,2);
             return $boletas;
         });
+        // return $boletas;
         // Bucle de llamada para el llenado del datatable
         foreach ($boletas as $boleta) {
             $json['data'][] = [
@@ -1554,7 +1562,7 @@ class FacturacionElectronicaController extends Controller
                 $boleta->cliente->nombre,
                 $boleta->fecha_emision,
                 $boleta->total,
-                $boleta->f_electronica,
+                $boleta->b_electronica,
                 $boleta->id,
                 $boleta->nota_credito,
                 $boleta->nota_debito
@@ -1592,7 +1600,7 @@ class FacturacionElectronicaController extends Controller
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
-        $query = Boleta_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        $query = Boleta_m::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
         
         if(empty($filter)){
             $query->where(function($q) use ($filter){
@@ -1641,7 +1649,7 @@ class FacturacionElectronicaController extends Controller
                 $bole_m->cliente->nombre,
                 $bole_m->fecha_emision,
                 $bole_m->total,
-                $bole_m->f_electronica,
+                $bole_m->b_electronica,
                 $bole_m->id,
                 $bole_m->nota_credito,
                 $bole_m->nota_debito

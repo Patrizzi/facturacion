@@ -130,7 +130,7 @@
                                         <tbody>
                                             @foreach ($facturacion as $index => $facturaciones)
                                                 <tr @if ($facturaciones->diff_day > 3) style="color: red" @endif>
-                                                    <td><input type="checkbox" class="i-checks-facturas" name="input[]"
+                                                    <td><input type="checkbox" class="i-checks-facturas" name="input_factura[]"
                                                             value="{{ $facturaciones->codigo_fac }}"></td>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $facturaciones->codigo_fac }}</td>
@@ -294,24 +294,6 @@
                     table_factura.column(5).search(dateRangeString, true, false).draw();
                 }
             );
-
-
-
-            // {{-- Datatable Facturas Enviadas  --}}
-            table_factura_enviada = $('.dataTables-fact_enviadas').DataTable({
-                pageLength: 15,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
-            });
-           
         });
 
         // Facturas
@@ -357,23 +339,6 @@
 
     </script>
     <script>
-        //FUNCIONES PARA FACTURA NORMAL
-        //FACTURAS INDIVIVUALES
-        function inv_close() {
-            $(document).ready(function() {
-                $("#myAlert").bind('closed.bs.alert', function() {
-                    location.reload();
-                })
-            });
-            $('[data-toggle="popover"]').popover();
-            const myTimeout = setTimeout(click, 5000);
-        }
-
-        function click() {
-            console.log("click");
-            $('[data-toggle="popover"]').popover();
-            $('#cerrar_popup').trigger('click');
-        }
         // ENVIO DE FACTURA INDIVIDUAL
         function envio_factura(codigo) {
             $('.nav-link').addClass('disabled');
@@ -398,7 +363,7 @@
                                 <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
                                 response + `</span>
                             </div>
-                    `;
+                        `;
                     } else {
                         var data = `
                         <div id="alert_one_factura" class=" alert alert-success" >
@@ -407,7 +372,7 @@
                         </div>
                     `;
                     }
-                    // revision(value_check, response, 'factura');
+                    revision(value_check, response, 'factura');
                     // cerrar_only_send();
                     $('#alert_factura').append(data);
                     $('#cerrar_solo').on('click', function() {
