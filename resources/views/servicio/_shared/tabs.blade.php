@@ -1,6 +1,6 @@
 <div class="nav" id="tablas">
     <li class="nav-item">
-        <a class="nav-link" href="{{route('servicio.index')}}" id="tab-1-tab" style="color :gray">
+        <a class="nav-link" href="{{route('servicio.index')}}" id="tab-1-tab" style="color :blue">
             <span class="badge badge-success"></span>
             Guia Ingreso
         </a>
