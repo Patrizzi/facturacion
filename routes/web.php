@@ -562,6 +562,8 @@ Route::group(
         Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
         Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
         Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+        Route::get('/servicio/guia_ingreso', 'ServicioController@guia_ingreso')->name('servicio.guia_ingreso');
+
 
         Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
         Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
@@ -578,7 +580,10 @@ Route::group(
 		Route::get('/creditos_show_FoB/{id}','CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
 
 
+
+
 	});
+
 
 Auth::routes([
 		'register' => false, // Registration
