@@ -309,7 +309,7 @@ class Config_fe extends Model
         }
     }
 
-    public static function factura_detraccion($factura, $facturas_registros, $guia, $facturacion_manual = 0)
+    public static function factura_detraccion($factura, $facturas_registros, $guia, $facturacion_manual)
     {
 
         if ($facturacion_manual == 1) {
@@ -345,9 +345,9 @@ class Config_fe extends Model
             }
         }
         if ($facturacion_manual == 0) {
-            $detraccion = Detracciones::where('factura_m_id', $factura->id)->first();
-        }else{
             $detraccion = Detracciones::where('factura_id', $factura->id)->first();
+        }else{
+            $detraccion = Detracciones::where('factura_m_id', $factura->id)->first();
         }
         $empresa = Empresa::first();
         $igv = Igv::first();
@@ -532,7 +532,7 @@ class Config_fe extends Model
                     ->setMonto($cuota->monto)
                     ->setFechaPago(new DateTime($cuota->fecha_pago));
             }
-            $detraccion = Detracciones::where('factura_id', $factura->id)->first();
+            // $detraccion = Detracciones::where('factura_id', $factura->id)->first();
             $bancos = BancoRegistro::where('estado_detraccion', 0)->first();
             $invoice = (new Invoice())
                 ->setUblVersion('2.1')

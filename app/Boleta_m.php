@@ -63,7 +63,7 @@ class Boleta_m extends Model
             }else{
                 $precio = ($bol_m_r->precio * $bol_m_r->cantidad ) + $precio;
             }
-            $total = $igv_f + $precio;
+            $total = round(($igv_f + $precio), 2);
         }
         // return $total;
         //VALORES DE LSO 3
@@ -78,14 +78,18 @@ class Boleta_m extends Model
                 //cambio de la ultima cuota en centesimas para 2 decimales
                 $cuotas_cre = Cuotas_credito::where('boleta_m_id', $id)->latest()->first();
                 
-                $cuotas_cre->monto = $cuotas_cre->monto + round($diferencia_2, 2);
-                $cuotas_cre->save();
+                $nuevoMonto = $cuotas_cre->monto + round($diferencia_2, 2);
+                $cuotas_cre->update([
+                    'monto' => $nuevoMonto
+                ]);
             }else{
                 $diferencia =  $cuota_sum - $total;
                 $diferencia_2 = round($diferencia, 3);
                 $cuotas_cre = Cuotas_credito::where('boleta_m_id', $id)->latest()->first();
-                $cuotas_cre->monto = $cuotas_cre->monto - round($diferencia_2, 2);
-                $cuotas_cre->save();
+                $nuevoMonto = $cuotas_cre->monto - round($diferencia_2, 2);
+                $cuotas_cre->update([
+                    'monto' => $nuevoMonto
+                ]);
             }
 
         }

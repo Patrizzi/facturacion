@@ -18,8 +18,17 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{route('servicio.informe_tecnico')}}" id="tab-3-tab" style="color :gray">
-            <span class="badge badge-success"></span>
-            Informe Tecnico
+            <span class="badge badge-success"></span> Informes Tecnicos
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{route('servicio.solicitud_servicio')}}" id="tab-4-tab" style="color :gray">
+            <span class="badge badge-success"></span> Solic
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{route('servicio.clientes')}}" id="tab-4-tab" style="color :gray">
+            <span class="badge badge-success"></span> Clientes
         </a>
     </li>
 </div>
