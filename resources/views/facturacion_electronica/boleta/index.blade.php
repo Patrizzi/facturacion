@@ -130,7 +130,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                            {{-- <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-hover dataTables-example">
@@ -225,11 +225,6 @@
                                                             <td>{{ $boleta_m->fecha_vencimiento }}</td>
                                                             <td>
                                                                 <center>
-                                                                    {{-- <form action="{{route('facturacion_electronica.boleta_m_e')}}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="boleta_id" value="{{$boleta_m->id}}">
-                                                                <button type="submit" class="btn btn-success btn-circle btn-ls" ><i class="fa fa-cloud-upload"></i></button>
-                                                            </form> --}}
                                                                     <button type="button"
                                                                         class="btn btn-success btn-circle btn-ls boleta_ind"
                                                                         id="boleta_ind"
@@ -301,7 +296,7 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
