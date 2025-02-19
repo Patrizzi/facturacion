@@ -19,9 +19,9 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 100%;
     }
-    @page { 
-        size: A4; 
-        font-size: 60% !important;    
+    @page {
+        size: A4;
+        font-size: 60% !important;
     }
 </style>
 <body class="white-bg">
@@ -76,7 +76,7 @@
         <br>
         <table style="width: 100%;border-collapse:separate">
             <tr>
-                <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 100%;">    
+                <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 100%;">
                     <table style="border-color: white;">
                         <tr>
                             <td colspan="2" style="border-color: white;padding: 0px">
@@ -175,7 +175,7 @@
             background-color: transparent;
             border-top-width: 0px;
         }
-    </style>    
+    </style>
 </body>
 </html>
 
