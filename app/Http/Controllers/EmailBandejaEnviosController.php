@@ -544,5 +544,15 @@ class EmailBandejaEnviosController extends Controller
         $configmail->save();
         return redirect()->route('email.index');
     }
+
+    public function index2(){
+
+      return view('mailbox.nuevo.enviado');
+    }
+
+    public function index3(){
+
+      return view('mailbox.nuevo.papelera');
+    }
 }
 

@@ -593,9 +593,11 @@ Route::get("/inventario/consultas", 'PeriodoConsultaController@index2')->name('i
 Route::get('/inventario/cierre','CierrePeriodoController@index2')->name('inventario.cierre');
 Route::get('/inventario/movimiento','Consulta_MovimientoController@index2') ->name('inventario.movimiento');
 
-
-
-
+//Correo:
+Route::get('/mailbox/nuevo/enviado','EmailBandejaEnviosController@index2')->name('correo.enviado');
+Route::get('/mailbox/nuevo/configuracion','EmailConfiguracionesController@index2')->name('correo.configuracion');
+Route::get('/mailbox/nuevo/borrador','EmailBorradoresController@index2')->name('correo.borradores');
+Route::get('/mailbox/nuevo/papelera','EmailBandejaEnviosController@index3')->name('correo.papelera');
 
 
 

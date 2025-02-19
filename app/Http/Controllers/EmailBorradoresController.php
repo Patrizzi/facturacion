@@ -120,4 +120,9 @@ class EmailBorradoresController extends Controller
     {
         //
     }
+
+    public function index2()
+    {
+        return view('mailbox.nuevo.borrador');
+    }
 }

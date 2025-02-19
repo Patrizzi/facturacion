@@ -233,4 +233,10 @@ class EmailConfiguracionesController extends Controller
     {
         //
     }
+
+    public function index2()
+    {
+        return view('mailbox.nuevo.configuracion');
+
+    }
 }
