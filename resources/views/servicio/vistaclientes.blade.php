@@ -6,6 +6,12 @@
 
 @section('content')
 @include('servicio\_shared\tabs')
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
 
 <style>
     .table thead {
@@ -41,7 +47,6 @@
         background-color: black;
     }
 </style>
-
 <h2>CLIENTES</h2>
 <table class="table table-striped table-bordered table-hover dataTables-example">
     <thead>
