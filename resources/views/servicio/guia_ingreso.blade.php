@@ -95,36 +95,45 @@
 
 
     <style>
-        .tabla-container {
+        .table-container {
             margin-top: 40px; /* Baja la tabla 40px */
         }
+        .table thead {
+        background-color: white;
+        color: #15338a;
+        text-align: center;
+    }
 
-        .tabla {
-            border-collapse: collapse;
-            width: 100%;
-        }
+    .table {
+        border: 2px solid black;
+    }
 
-        .tabla, .tabla th, .tabla td {
-            border: 2px solid black;
-        }
+    .table th, .table td {
+        border: 1px solid black !important;
+        padding: 10px;
+        text-align: center;
+    }
 
-        .tabla th, .tabla td {
-            padding: 8px;
-            text-align: left;
-        }
+    .table tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-        .tabla th {
-            text-align: center; /* Centra el texto en los encabezados */
-            font-weight: bold;  /* Negrita */
-        }
-        button{
-            color: white;
-            background-color: blue;
-        }
+    .btn-estado {
+        background-color: #15338a;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .btn-estado:hover {
+        background-color: black;
+    }
     </style>
 
-    <div class="tabla-container">
-        <table class="tabla">
+    <div class="table-container table-striped table-bordered table-hover dataTables-example">
+        <table class="table">
             <thead>
                 <tr>
                     <th>ITEM</th>
@@ -146,7 +155,7 @@
                     <td>Juana</td>
                     <td>10/10/23</td>
                     <td>Disco duro roto</td>
-                    <td><button>Aceptado</button></td>
+                    <td><button class="btn-estado">Aceptado</button></td>
                 </tr>
                 <tr>
                     <td>02</td>
@@ -156,7 +165,7 @@
                     <td>Angel</td>
                     <td>10/10/23</td>
                     <td>Falta de refrigeranción</td>
-                    <td><button>Aceptado</button></td>
+                    <td><button class="btn-estado">Aceptado</button></td>
                 </tr>
             </tbody>
         </table>

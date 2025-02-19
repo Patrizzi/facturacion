@@ -157,7 +157,7 @@ class FacturacionElectronicaController extends Controller
         //invoce - detraccion
         if($det !== null){
             // return "c";
-            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia,$facturacion_manual);
         }else{
             // return "b";
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
@@ -201,7 +201,7 @@ class FacturacionElectronicaController extends Controller
         //invoce - detraccion
         if($det !== null){
             // return "c";
-            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia,$facturacion_manual);
         }else{
             // return "b";
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
@@ -255,7 +255,7 @@ class FacturacionElectronicaController extends Controller
         //invoce - detraccion
         if($det !== null){
             // return "c";
-            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia,$facturacion_manual);
         }else{
             // return "b";
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
@@ -302,7 +302,7 @@ class FacturacionElectronicaController extends Controller
         
         if($det !== null){
             //invoce - detraccion
-            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia);
+            $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia,$facturacion_manual);
         }else{
             //invoce
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);

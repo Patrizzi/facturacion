@@ -461,8 +461,10 @@ class FacturacionMController extends Controller
             }// Final de bucle para registro de productos o servicios 
 
         } // Final de registro de artículos
+        if($facturacion->forma_pago_id == 2){
+            Facturacion_m::revision_cuotas($facturacion->id);
+        }
         
-        Facturacion_m::revision_cuotas($facturacion->id);
         
 
         return redirect()->route('facturacion_manual.show',$facturacion->id);

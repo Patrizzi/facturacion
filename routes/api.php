@@ -47,3 +47,5 @@ Route::group([ 'middleware' => 'api.validate'], function () {
     Route::get('clientes',[ApiController::class, 'getClientes']);
 });
 //TIPO DE CAMBIO
+
+
