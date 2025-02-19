@@ -18,11 +18,11 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{route('servicio.solicitud_servicio')}}" id="tab-4-tab" style="color :gray">
-            <span class="badge badge-success"></span> Solic
+            <span class="badge badge-success"></span> Solicitud servicio
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{route('servicio.clientes')}}" id="tab-4-tab" style="color :gray">
+        <a class="nav-link" href="{{route('servicio.vistaclientes')}}" id="tab-4-tab" style="color :gray">
             <span class="badge badge-success"></span> Clientes
         </a>
     </li>

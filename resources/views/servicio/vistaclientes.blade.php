@@ -6,6 +6,8 @@
 
 @section('content')
 @include('servicio\_shared\tabs')
+
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -52,6 +54,8 @@
         background-color: black;
     }
 </style>
+
+
 <h2>CLIENTES</h2>
 <table class="table table-striped table-bordered table-hover dataTables-example">
     <thead>
