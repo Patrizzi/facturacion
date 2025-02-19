@@ -1,7 +1,11 @@
 @extends('layout')
 
 @section('content')
-
+{{-- <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script> --}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="tabs-container">
         @include('servicio._shared.tabs')
@@ -10,60 +14,60 @@
             <!-- CLIENTES -->
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card p-3 mb-4">
+                    <div class="card p-2 mb-4">
                         <h3 class="mb-3">CLIENTES</h3>
                         <form>
                             <div class="row mb-2">
                                 <div class="col-md-6 d-flex align-items-center">
                                     <label class="form-label me-2" style="width: 80px;">DNI/RUC:</label>
-                                    <input type="text" class="form-control" value="93949494939">
+                                    <input type="text" class="form-control" value="{{ $cliente->numero_documento }}" readonly>
                                 </div>
                                 <div class="col-md-6 d-flex align-items-center">
                                     <label class="form-label me-2" style="width: 80px;">Nombre:</label>
-                                    <input type="text" class="form-control" value="Juana">
+                                    <input type="text" class="form-control" value="{{ $cliente->nombre }}" readonly>
                                 </div>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 100px;">Dirección:</label>
-                                <input type="text" class="form-control" value="..........">
+                                <input type="text" class="form-control" value="{{ $cliente->direccion }}" readonly>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-6 d-flex align-items-center">
                                     <label class="form-label me-2" style="width: 80px;">Contacto:</label>
-                                    <input type="text" class="form-control" value="juana@gmail.com">
+                                    <input type="text" class="form-control" value="{{ $cliente->email }}" readonly>
                                 </div>
                                 <div class="col-md-6 d-flex align-items-center">
                                     <label class="form-label me-2" style="width: 80px;">Teléfono:</label>
-                                    <input type="text" class="form-control" value="989678569">
+                                    <input type="text" class="form-control" value="{{ $cliente->celular }}" readonly>
                                 </div>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 100px;">Sucursal:</label>
-                                <input type="text" class="form-control" value=".........">
+                                <label class="form-label me-2" style="width: 100px;">Ciudad:</label>
+                                <input type="text" class="form-control" value="{{ $cliente->ciudad }}" readonly>
                             </div>
                         </form>
                     </div>
                 </div>
                 <!-- DATOS GENERALES -->
                 <div class="col-md-6">
-                    <div class="card p-3 mb-4">
+                    <div class="card p-2 mb-4">
                         <h3 class="mb-3">DATOS GENERALES</h3>
                         <form>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Recepcionista:</label>
-                                <input type="text" class="form-control" value="Julio">
+                                <input type="text" class="form-control" value="{{ $personal->nombres }} {{ $personal->apellidos }}" readonly>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Fecha de ingreso:</label>
-                                <input type="date" class="form-control" value="2022-02-16" readonly>
+                                <input type="date" class="form-control" value="{{ $datos_ingreso->created_at->format('Y-m-d') }}" readonly>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Orden de servicio:</label>
-                                <input type="text" class="form-control" value="EP-00000001">
+                                <input type="text" class="form-control" value="{{ $datos_ingreso->orden_servicio }}" readonly>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Fecha estimada:</label>
-                                <input type="date" class="form-control" value="2025-02-22" readonly>
+                                <input type="date" class="form-control" value="{{ $datos_ingreso->updated_at->format('Y-m-d') }}" readonly>
                             </div>
                         </form>
                     </div>
@@ -88,22 +92,49 @@
                     <table class="table table-striped table-bordered text-center table-hover shadow-sm rounded w-100">
                         <thead class="text-black">
                             <tr>
-                                <th>ITEM</th>
+                                +<th>ITEM</th>
                                 <th>SERIE</th>
-                                <th>DESCRIPCIÓN</th>
+                                +<th>DESCRIPCIÓN</th>
                                 <th>OBSERVACIÓN</th>
-                                <th>TÉCNICO DE DIAGNÓSTICO</th>
-                                <th>FECHA</th>
-                                <th>DIAGNÓSTICO</th>
-                                <th>ESTADO DE APROBACIÓN</th>
+                                ++<th>TÉCNICO DE DIAGNÓSTICO</th>
+                                +<th>FECHA</th>
+                                +<th>DIAGNÓSTICO</th>
+                                +<th>ESTADO DE APROBACIÓN</th>
                                 <th>TÉCNICO DE REPARACIÓN</th>
-                                <th>ESTADO DE REPARACIÓN</th>
-                                <th>RECOMENDACIONES</th>
+                                +<th>ESTADO DE REPARACIÓN</th>
+                                +<th>RECOMENDACIONES</th>
                                 <th>AÑADIR IMAGEN</th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- @foreach($recipes as $recipe)
+                                <tr>
+                                    <td>{{ $recipe->id }}</td>
+                                    <td>{{ $recipe->serial }}</td>
+                                    <td>{{ $recipe->name }}</td>
+                                    <td>{{ $recipe->issue_summary }}</td>
+                                    <td>{{ $recipe->reporter }}</td>
+                                    <td>{{ $recipe->reported_date }}</td>
+                                    <td>{{ $recipe->issue_detail }}</td>
+                                    <td class="fw-bold text-success">{{ $recipe->approval_status }}</td>
+                                    <td>{{ $recipe->technician }}</td>
+                                    <td class="fw-bold text-success">{{ $recipe->repair_status }}</td>
+                                    <td>{{ $recipe->repair_description }}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="bi bi-upload"></i> Subir
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <select class="form-select form-select-sm">
+                                            <option value="view">Ver</option>
+                                            <option value="delete">Eliminar</option>
+                                            <option value="edit">Editar</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            @endforeach --}}
                             <tr>
                                 <td>001</td>
                                 <td>SN-2024X001</td>
