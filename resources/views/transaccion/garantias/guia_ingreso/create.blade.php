@@ -253,7 +253,7 @@
 					return {
 						_token: "{{ csrf_token() }}",
 						search: params.term, // search term
-						tipo_coti: tipo_coti    
+						tipo_coti: tipo_coti
 					};
 				},
 				processResults: function (data) {
@@ -287,7 +287,7 @@
 				prod.required = false;
 				var father = prod.closest("div");
 				father.style.display = 'none';
-				
+
 				//cambio de estado parqa servicios
 				var ser = document.getElementById("servicio_t");
 				ser.setAttribute('name' , 'nombre_equipos');
