@@ -13,10 +13,14 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<!-- Custom and plugin javascript -->
+
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+
+
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <style>
 .boton-container {
     display: flex;
@@ -191,10 +195,19 @@
 
 
             <style>
-                .table-container {
-                    margin-top: 40px; /* Baja la tabla 40px */
-                }
-                .table thead {
+            .search-container{
+                justify-content: center;
+                display:flex;
+            }
+            .custom-search {
+                max-width: 500px; /* Puedes ajustar el tamaño aquí */
+                width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
+            }
+
+            .table-container {
+                margin-top: 40px; /* Baja la tabla 40px */
+            }
+            .table thead {
                 background-color: white;
                 color: #15338a;
                 text-align: center;
@@ -223,6 +236,17 @@
                 border-radius: 5px;
             }
             </style>
+
+            <div class="search-container mt-4">
+                <form class="d-flex" role="search" action="index.php?ruta=store/buscar_productos" method="POST">
+                    <div class="input-group">
+                        <input type="search" class="form-control custom-search" name="search" placeholder="Buscar Producto" required>
+                        <button class="btn btn-primary" type="submit">
+                            Buscarㅤ<i class="bx bx-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
 
             <div class="table-container table-bordered dataTables-example">
                 <table class="table">
@@ -267,101 +291,87 @@
 <!-- Sección 2 - Guía de Salida -->
 <div id="seccion2" class="contenido">
     <div class="container mt-4">
-        <h2 class="text-center mb-4">GUÍA DE SALIDA</h2>
         <!-- CLIENTES -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card p-2 mb-4">
-                    <h3 class="mb-3">CLIENTES</h3>
-                    <form>
-                        <div class="row mb-2">
-                            <div class="col-md-6 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 80px;">DNI/RUC:</label>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-6 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 80px;">Nombre:</label>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label class="form-label me-2" style="width: 100px;">Dirección:</label>
-                            <input type="text" class="form-control" readonly>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-6 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 80px;">Contacto:</label>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-6 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 80px;">Teléfono:</label>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label class="form-label me-2" style="width: 100px;">Ciudad:</label>
-                            <input type="text" class="form-control" readonly>
-                        </div>
-                    </form>
+        <div class="wrappercontenedor">
+            <!-- Contenedor izquierdo -->
+            <div class="containercontenedor" style="align-self: flex-start;">
+                <h2 class="container-titlecontenedor">Cliente</h2>
+
+                <div class="input-groupcontenedor">
+                    <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
+                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
+                    <label for="nombre" class="input-labelcontenedor">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
+                </div>
+
+                <div class="input-groupcontenedor full-widthcontenedor">
+                    <label for="direccion" class="input-labelcontenedor">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
+                </div>
+
+                <div class="input-groupcontenedor">
+                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
+                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+                    <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
+                </div>
+
+                <div class="input-groupcontenedor full-widthcontenedor">
+                    <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
+                    <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
                 </div>
             </div>
-            <!-- DATOS GENERALES -->
-            <div class="col-md-6">
-                <div class="card p-2 mb-4">
-                    <h3 class="mb-3">DATOS GENERALES</h3>
-                    <form>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label class="form-label me-2" style="width: 150px;">Recepcionista:</label>
-                            <input type="text" class="form-control" readonly>
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label class="form-label me-2" style="width: 150px;">Fecha de ingreso:</label>
-                            <input type="date" class="form-control" readonly>
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label class="form-label me-2" style="width: 150px;">Orden de servicio:</label>
-                            <input type="text" class="form-control" readonly>
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <label class="form-label me-2" style="width: 150px;">Fecha estimada:</label>
-                            <input type="date" class="form-control" readonly>
-                        </div>
-                    </form>
+
+            <!-- Contenedor derecho -->
+            <div class="containercontenedor" style="align-self: flex-end;">
+                <h2 class="container-titlecontenedor">Datos Generales</h2>
+
+                <div class="input-groupcontenedor">
+                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                    <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
+                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                    <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
                 </div>
+
+                <div class="input-groupcontenedor">
+                    <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                    <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
+                    <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
+                    <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
+                </div>
+            </div>
             </div>
         </div>
 
         <!-- BÚSQUEDA DE PRODUCTOS -->
-        <div class="card shadow-sm p-3 mt-4">
+        <div class="search-container mt-4">
             <form class="d-flex" role="search" action="index.php?ruta=store/buscar_productos" method="POST">
                 <div class="input-group">
-                    <input type="search" class="form-control" name="search" placeholder="Buscar Producto"required>
+                    <input type="search" class="form-control custom-search" name="search" placeholder="Buscar Producto" required>
                     <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-search"></i> Buscar
+                        Buscarㅤ<i class="bx bx-search"></i>
                     </button>
                 </div>
             </form>
         </div>
 
 
-
         <!-- TABLA DE REGISTROS -->
-        <div class="card shadow-sm p-3 mt-4">
-            <div class="table-responsive mt-1">
-                <table class="table table-striped table-bordered text-center table-hover shadow-sm rounded w-100">
+            <div class="table-container table-bordered dataTables-example">
+            <table class="table">
                     <thead class="text-black">
                         <tr>
-                            +<th>ITEM</th>
+                            <th>ITEM</th>
                             <th>SERIE</th>
-                            +<th>DESCRIPCIÓN</th>
+                            <th>DESCRIPCIÓN</th>
                             <th>OBSERVACIÓN</th>
-                            ++<th>TÉCNICO DE DIAGNÓSTICO</th>
-                            +<th>FECHA</th>
-                            +<th>DIAGNÓSTICO</th>
-                            +<th>ESTADO DE APROBACIÓN</th>
+                            <th>TÉCNICO DE DIAGNÓSTICO</th>
+                            <th>FECHA</th>
+                            <th>DIAGNÓSTICO</th>
+                            <th>ESTADO DE APROBACIÓN</th>
                             <th>TÉCNICO DE REPARACIÓN</th>
-                            +<th>ESTADO DE REPARACIÓN</th>
-                            +<th>RECOMENDACIONES</th>
+                            <th>ESTADO DE REPARACIÓN</th>
+                            <th>RECOMENDACIONES</th>
                             <th>AÑADIR IMAGEN</th>
                             <th>ACCIONES</th>
                         </tr>
@@ -381,17 +391,18 @@
                             <td class="fw-bold text-success">Reparado</td>
                             <td>Reemplazo del cable flex y prueba de estabilidad</td>
                             <td><button class="btn btn-primary btn-sm">
-                                <i class="bi bi-upload"></i> Subir</button></td>
+                                <i class='bx bxs-cloud-upload'></i> Subir</button></td>
                             <td>
                                 <select class="form-select form-select-sm">
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <td>003</td>
+                            <td>002</td>
                             <td>SN-2024X003</td>
                             <td>Monitor Samsung 24"</td>
                             <td>No enciende</td>
@@ -402,17 +413,18 @@
                             <td>—</td>
                             <td>—</td>
                             <td>—</td>
-                            <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
                             <td>
                                 <select class="form-select form-select-sm">
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <td>002</td>
+                            <td>004</td>
                             <td>SN-2024X002</td>
                             <td>Impresora HP LaserJet Pro</td>
                             <td>Atasco de papel frecuente</td>
@@ -423,12 +435,13 @@
                             <td>José Martínez</td>
                             <td>En revisión</td>
                             <td>—</td>
-                            <td><button></i> Subir</button></td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
                             <td>
-                            <select ">
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+                            <select>
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                             </select>
                             </td>
                         </tr>
@@ -444,12 +457,13 @@
                             <td>—</td>
                             <td>—</td>
                             <td>—</td>
-                            <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
                             <td>
                                 <select>
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                                 </select>
                             </td>
                         </tr>
@@ -458,7 +472,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <!-- Sección3  - informe tecnico -->
 <div id="seccion3" class="contenido">
