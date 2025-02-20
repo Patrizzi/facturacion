@@ -24,7 +24,7 @@
 }
 
 .boton {
-    padding: 10px 20px;
+    padding: 8px 11px;
     border: 2px solid black; /* Borde negro en todos los lados */
     border-bottom: 1px solid black; /* Línea inferior más delgada */
     background-color: white;
@@ -61,6 +61,17 @@
         line-height: 20px;
         border-radius: 3px;
     }
+    .numero3 {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+    color: black;
+    background-color: rgb(13, 184, 127);
+    text-align: center;
+    line-height: 20px;
+    border-radius: 3px;
+    }
 
     .contenido {
         display: none;
@@ -86,6 +97,9 @@
     <button class="boton" onclick="mostrarSeccion('seccion2', this)">
         <span class="numero2">2</span> Guía de Salida
     </button>
+    <button class="boton" onclick="mostrarSeccion('seccion3', this)">
+        <span class="numero3">3</span> Informe tecnico
+    </button>
 </div>
 
 
@@ -94,6 +108,7 @@
 <div id="seccion1" class="contenido activo">
     <style>
         .wrappercontenedor {
+
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -255,6 +270,11 @@
     <p>Aquí va la información de la guía de salida...</p>
 </div>
 
+<!-- Sección 2 - Guía de Salida -->
+<div id="seccion3" class="contenido">
+    <h2>Informe tecnico</h2>
+    <p>Aquí va la información informe tecnico...</p>
+</div>
 
 <script>
     function mostrarSeccion(id, boton) {
