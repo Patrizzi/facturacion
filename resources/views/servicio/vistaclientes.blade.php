@@ -45,7 +45,9 @@
         border-radius: 5px;
     }
 
-
+    .btn-estado:hover {
+        background-color: black;
+    }
 </style>
 
 
