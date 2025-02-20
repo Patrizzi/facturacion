@@ -637,6 +637,8 @@ Route::get('/guia-ingreso', function () {
 Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
+Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+
 
 Route::get('/servicio/guia_ingreso', 'ServicioController@guia_ingreso')->name('servicio.guia_ingreso');
 
