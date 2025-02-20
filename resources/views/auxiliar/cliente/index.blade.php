@@ -421,7 +421,8 @@
                                                                         <a class="nav-link" id="sucursal-tab" data-toggle="tab" href="#sucursal" role="tab" aria-controls="sucursal" aria-selected="false">Sucursal</a>
                                                                     </li>
                                                                 </ul>
-                                                                <button type="button" class="btn btn-primary" style="line-height: normal;">
+                                                                <!-- Boton con el modal de Editar Cliente -->
+                                                                <button type="button" class="btn btn-primary" style="line-height: normal;" data-toggle="modal" data-target="#editarClienteModal">
                                                                     <i class="fa fa-pencil-square-o" style="color: white;"></i>
                                                                 </button>
                                                             </div>
@@ -434,6 +435,7 @@
                                                                                 <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
                                                                             </div>
                                                                         </div>
+                                                                         <!-- Boton con el modal de Agregar Contacto -->
                                                                         <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
                                                                             <i class="fa fa-plus-square" style="color: white;"></i>
                                                                         </button>
@@ -442,32 +444,40 @@
                                                                     <table class="table table-striped table-hover mt-2">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Tipo Documento</th>
-                                                                                <th>Nro Documento</th>
+                                                                                <th>Nombre</th>
+                                                                                <th>Cargo</th>
                                                                                 <th>Correo</th>
                                                                                 <th>Celular</th>
-                                                                                <th>Estado</th>
+                                                                                <th>Acciones</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td>DNI</td>
+                                                                                <td>Hola</td>
+                                                                                <td>...</td>
                                                                                 <td>71483609</td>
                                                                                 <td>julioflores@srsc.com</td>
                                                                                 <td>998321228</td>
                                                                                 <td>
-                                                                                    <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
+                                                                                    <button type="button" class="btn btn-success">
+                                                                                        <i class="fa fa-pencil-square-o" ></i>
+                                                                                    </button>
+                                                                                    <button  type="button" class="btn btn-info"style="background-color:green; border-color:green;">
                                                                                         <i class="fa fa-check" style="color:white;"></i>
                                                                                     </button>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td>Pasaporte</td>
+                                                                                <td>Flavia</td>
+                                                                                <td>wwe</td>
                                                                                 <td>35483610</td>
                                                                                 <td>Flav@sewqe.com</td>
                                                                                 <td>986790521</td>
                                                                                 <td>
-                                                                                    <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
+                                                                                    <button type="button" class="btn btn-success">
+                                                                                        <i class="fa fa-pencil-square-o" ></i>
+                                                                                    </button>
+                                                                                    <button type="button" class="btn btn-danger">
                                                                                         <i class="fa fa-arrows-alt" style="color:white;"></i>
                                                                                     </button>
                                                                                 </td>
@@ -483,7 +493,7 @@
                                                                                 <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
                                                                             </div>
                                                                         </div>
-                                                                        
+                                                                        <!-- Boton con el modal de Agregar Sucursal -->
                                                                         <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
                                                                             <i class="fa fa-plus-square" style="color: white;"></i>
                                                                         </button>
@@ -492,7 +502,7 @@
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Nombre</th>
-                                                                                <th>Cargo</th>
+                                                                                <th>Distrito</th>
                                                                                 <th>Dirección</th>
                                                                                 <th>Código Ubigeo</th>
                                                                                 <th>Acciones</th>
@@ -501,7 +511,7 @@
                                                                         <tbody>
                                                                             <tr>
                                                                                 <td>MELINA</td>
-                                                                                <td>Sucursal</td>
+                                                                                <td>Lima</td>
                                                                                 <td>mz c</td>
                                                                                 <td>1652</td>
                                                                                 <td>
@@ -515,7 +525,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
-                                                                                <td>Secretaria</td>
+                                                                                <td>Lima</td>
                                                                                 <td>mc b</td>
                                                                                 <td>98736</td>
                                                                                 <td>
@@ -547,6 +557,237 @@
     </div>
 </div>
 
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">  
+                    <div class="container text-center mt-5">
+                        <div class="d-flex justify-content-center gap-3">
+                            <!-- Botón para abrir modal Contactos -->
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#contactosModal">
+                                <i class="fa fa-user-plus"></i>
+                            </button>
+                            <!-- Botón para abrir modal Editar Cliente -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editarClienteModal">
+                                <i class="fa fa-user-md"></i>
+                            </button>
+                            <!-- Botón para abrir modal Sucursales -->
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sucursalesModal">
+                                <i class="fa fa-map-marker"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+                <!-- Modal Contactos -->
+                <div class="modal fade" id="contactosModal" tabindex="-1" aria-labelledby="contactosModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="contactosModalLabel"><strong style="font-size: 1.5em;">Agregar Contacto</strong></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formularioContacto">
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Nombre de Contacto:</strong></label>
+                                        <input type="text" class="form-control" id="nombreContacto" placeholder="Ingrese nombre" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Teléfono:</strong></label>
+                                            <input type="text" class="form-control" id="telefonoContacto" placeholder="Teléfono" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Celular:</strong></label>
+                                            <input type="text" class="form-control" id="celularContacto" placeholder="Celular" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label"><strong>Cargo:</strong></label>
+                                        <input type="text" class="form-control" id="cargoContacto" placeholder="Cargo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Email:</strong></label>
+                                        <input type="email" class="form-control" id="emailContacto" placeholder="Ingrese email" required>
+                                    </div>
+                                    <div class="modal-footer mt-3">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-success">Guardar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Editar Cliente -->
+                <div class="modal fade" id="editarClienteModal" tabindex="-1" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editarClienteModalLabel"><strong style="font-size: 1.5em;">Editar Cliente</strong></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formularioCliente">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>DNI/RUC:</strong></label>
+                                            <select id="tipoDocumento" class="form-control" required>
+                                                <option value="">Seleccione</option>
+                                                <option value="DNI">DNI</option>
+                                                <option value="RUC">RUC</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Número:</strong></label>
+                                            <input type="text" class="form-control" id="numeroDocumento" placeholder="Ingrese número" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Nombre:</strong></label>
+                                            <input type="text" class="form-control" id="nombre" placeholder="Ingrese nombre" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Apellidos:</strong></label>
+                                            <input type="text" class="form-control" id="apellidos" placeholder="Ingrese apellidos" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Departamento:</strong></label>
+                                            <select id="departamentoCliente" class="form-control"required>
+                                                <option value="">Seleccione un departamento:</option>
+                                                <option value="Amazonas">Amazonas</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Distrito:</strong></label>
+                                            <select id="distritoCliente" class="form-control" required>
+                                                <option value="">Seleccione un distrito</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Dirección:</strong></label>
+                                            <input type="text" class="form-control" id="direccion" placeholder="Ingrese dirección" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Celular:</strong></label>
+                                            <input type="text" class="form-control" id="celular" placeholder="Ingrese celular" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Teléfono:</strong></label>
+                                            <input type="text" class="form-control" id="telefono" placeholder="Ingrese teléfono" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Email:</strong></label>
+                                            <input type="email" class="form-control" id="email" placeholder="Ingrese email" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Tipo:</strong></label>
+                                            <select id="tipo" class="form-control" required>
+                                                <option value="">Seleccione un tipo</option>
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Porcentaje:</strong></label>
+                                            <input type="number" class="form-control" id="porcentaje" placeholder="Ingrese porcentaje" min="0" max="100" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Fecha de nacimiento:</strong></label>
+                                            <input type="date" class="form-control" id="fechaNacimiento" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Fecha de registro:</strong></label>
+                                            <input type="date" class="form-control" id="fechaRegistro" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer mt-4">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Sucursales -->
+                <div class="modal fade" id="sucursalesModal" tabindex="-1" aria-labelledby="sucursalesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="sucursalesModalLabel"><strong style="font-size: 1.5em;">Agregar Sucursal</strong></h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formularioSucursal">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Nombre:</strong></label>
+                                            <input type="text" class="form-control" id="nombreSucursal" placeholder="Ingrese nombre de la sucursal" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Dirección:</strong></label>
+                                            <input type="text" class="form-control" id="direccionSucursal" placeholder="Ingrese dirección" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Departamento:</strong></label>
+                                            <select type="text" class="form-control" id="departamentoSucursal" placeholder="Ingrese departamento" required>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Provincia:</strong></label>
+                                            <input type="text" class="form-control" id="provinciaSucursal" placeholder="Ingrese provincia" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Distrito:</strong></label>
+                                            <input type="text" class="form-control" id="distritoSucursal" placeholder="Ingrese distrito" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>País:</strong></label>
+                                            <input type="text" class="form-control" id="paisSucursal" value="Perú" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Código de Ubigeo:</strong></label>
+                                            <input type="text" class="form-control" id="codigoUbigeo" placeholder="Código de ubigeo" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"><strong>Teléfono:</strong></label>
+                                            <input type="text" class="form-control" id="telefonoSucursal" placeholder="Teléfono" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer mt-3">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-success">Guardar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
