@@ -19,7 +19,7 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('boletas_electronicas.boletas_enviadas_m') }}"
-            id=""><span style="color: red;">&#9632;</span> Enviados
+            id="boeltas_m_enviados"><span style="color: red;">&#9632;</span> Enviados
             {{-- link del tab 2 --}}
         </a>
     </li>

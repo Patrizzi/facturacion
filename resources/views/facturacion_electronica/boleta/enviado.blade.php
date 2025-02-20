@@ -101,33 +101,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- <span hidden>{{ $i = 1 }}</span>
-                                            @foreach ($boletas_enviadas as $boleta_env)
-                                                <tr>
-                                                    <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                    <td>{{ $i++ }}</td>
-                                                    <td>{{ $boleta_env->codigo_boleta }}</td>
-                                                    @if (isset($boleta_env->cliente_id))
-                                                        <!-- Nombre del cliente -->
-                                                        <td>{{ $boleta_env->cliente->nombre }}</td>
-                                                        <td>{{ $boleta_env->cliente->numero_documento }}</td>
-                                                    @else
-                                                        <td>{{ $boleta_env->cotizacion->cliente->nombre }}</td>
-                                                        <td>{{ $boleta_env->cotizacion->cliente->numero_documento }}</td>
-                                                    @endif
-                                                    <td>{{ $boleta_env->fecha_vencimiento }}</td>
-                                                    <td><button type="button" class="btn btn-info btn-circle btn-ls"><i
-                                                                class="fa fa-check-circle"></i></button></td>
-                                                    <td><a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-{{ $boleta_env->codigo_boleta }}.xml"
-                                                            download><img src="{{ asset('xml.png') }}"
-                                                                width="25px"></a></td>
-                                                    <td>
-                                                        <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-03-{{ $boleta_env->codigo_boleta }}.zip"
-                                                            download><img src="{{ asset('zip.png') }}"
-                                                                width="25px"></a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>

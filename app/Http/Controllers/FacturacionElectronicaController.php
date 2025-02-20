@@ -149,7 +149,7 @@ class FacturacionElectronicaController extends Controller
 
     public function boletas_enviadas_m(){
         $empresa=Empresa::first();
-        return view('facturacion_electronica.boleta.enviado',compact('empresa'));
+        return view('facturacion_electronica.boleta.enviado_manual',compact('empresa'));
     }
 
 
