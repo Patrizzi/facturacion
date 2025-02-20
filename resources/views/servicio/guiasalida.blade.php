@@ -1,11 +1,10 @@
 @extends('layout')
-
-@section('content')
-{{-- <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script> --}}
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+@section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="tabs-container">
         @include('servicio._shared.tabs')
@@ -55,6 +54,7 @@
                         <form>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Recepcionista:</label>
+<<<<<<< HEAD
                                 <input type="text" class="form-control" readonly>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
@@ -68,6 +68,21 @@
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Fecha estimada:</label>
                                 <input type="date" class="form-control" readonly>
+=======
+                                <input type="text" class="form-control" value="{{ optional($personal->first())->nombres }} {{ optional($personal->first())->apellidos }}" readonly>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <label class="form-label me-2" style="width: 150px;">Fecha de ingreso:</label>
+                                <input type="date" class="form-control" value="{{ optional($datos_ingreso->first())->created_at?->format('Y-m-d') }}" readonly>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <label class="form-label me-2" style="width: 150px;">Orden de servicio:</label>
+                                <input type="text" class="form-control" value="{{ optional($datos_ingreso->first())->orden_servicio }}" readonly>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <label class="form-label me-2" style="width: 150px;">Fecha estimada:</label>
+                                <input type="date" class="form-control" value="{{ optional($datos_ingreso->first())->updated_at?->format('Y-m-d') }}" readonly>
+>>>>>>> 39fcd56b (Vita conexion de la tabla con base de datos)
                             </div>
                         </form>
                     </div>
@@ -108,19 +123,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach($recipes as $recipe)
+
+                            @foreach($registros as $recipe)
+                                @if (empty($recipe->egreso_id))
+                                    @continue
+                                @endif
                                 <tr>
-                                    <td>{{ $recipe->id }}</td>
-                                    <td>{{ $recipe->serial }}</td>
-                                    <td>{{ $recipe->name }}</td>
-                                    <td>{{ $recipe->issue_summary }}</td>
-                                    <td>{{ $recipe->reporter }}</td>
-                                    <td>{{ $recipe->reported_date }}</td>
-                                    <td>{{ $recipe->issue_detail }}</td>
-                                    <td class="fw-bold text-success">{{ $recipe->approval_status }}</td>
-                                    <td>{{ $recipe->technician }}</td>
-                                    <td class="fw-bold text-success">{{ $recipe->repair_status }}</td>
-                                    <td>{{ $recipe->repair_description }}</td>
+                                    <td>{{ $recipe->egreso_id ?? '-' }}</td>
+                                    <td>-</td>
+                                    <td>{{ $recipe->descripcion_problema ?? '-' }}</td>
+                                    <td>{{ $recipe->revision_diagnostico ?? '-' }}</td>
+                                    <td>{{ $recipe->tecnico_nombre ?? '-' }}</td>
+                                    <td>{{ $recipe->fecha ?? '-' }}</td>
+                                    <td>{{ $recipe->diagnostico_solucion ?? '-' }}</td>
+                                    <td class="fw-bold 
+                                        @if($recipe->estado = 1) text-success 
+                                        @else text-danger 
+                                        @endif">
+                                        {{ $recipe->estado = 1 ? 'Aprobado' : 'Rechazado' }}
+                                    </td>                         
+                                    <td>{{ $recipe->tecnico_nombre ?? '-' }}</td>
+                                    <td class="fw-bold 
+                                        @if($recipe->estado = 1) text-success 
+                                        @else text-danger 
+                                        @endif">
+                                        {{ $recipe->estado = 1 ? 'Aprobado' : 'Rechazado' }}
+                                    </td>                                    
+                                    <td>{{ $recipe->recomendaciones ?? '-' }}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm">
                                             <i class="bi bi-upload"></i> Subir
@@ -133,9 +162,9 @@
                                             <option value="edit">Editar</option>
                                         </select>
                                     </td>
-                                </tr>
-                            @endforeach --}}
-                            <tr>
+                                </tr>                            
+                            @endforeach
+                            {{-- <tr>
                                 <td>001</td>
                                 <td>SN-2024X001</td>
                                 <td>Laptop Dell Inspiron 15</td>
@@ -156,70 +185,7 @@
                                         <option>Editar</option>
                                     </select>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>003</td>
-                                <td>SN-2024X003</td>
-                                <td>Monitor Samsung 24"</td>
-                                <td>No enciende</td>
-                                <td>Carlos Ramírez</td>
-                                <td>2025-02-16</td>
-                                <td>Fuente de poder dañada</td>
-                                <td class="fw-bold text-danger">Rechazado</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
-                                <td>
-                                    <select class="form-select form-select-sm">
-                                        <option>Ver</option>
-                                        <option>Eliminar</option>
-                                        <option>Editar</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>002</td>
-                                <td>SN-2024X002</td>
-                                <td>Impresora HP LaserJet Pro</td>
-                                <td>Atasco de papel frecuente</td>
-                                <td>María González</td>
-                                <td>2025-02-14</td>
-                                <td>Rodillos de alimentación desgastados</td>
-                                <td class="fw-bold text-success">Aprobado</td>
-                                <td>José Martínez</td>
-                                <td class="fw-bold text-warning">En revisión</td>
-                                <td>—</td>
-                                <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
-                                <td>
-                                    <select class="form-select form-select-sm">
-                                        <option>Ver</option>
-                                        <option>Eliminar</option>
-                                        <option>Editar</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>004</td>
-                                <td>SN-2024X004</td>
-                                <td>Router TP-Link AC1750</td>
-                                <td>Interrupciones constantes en la conexión</td>
-                                <td>Ana López</td>
-                                <td>2025-02-18</td>
-                                <td>Falla en el firmware</td>
-                                <td class="fw-bold text-danger">Rechazado</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
-                                <td>
-                                    <select class="form-select form-select-sm">
-                                        <option>Ver</option>
-                                        <option>Eliminar</option>
-                                        <option>Editar</option>
-                                    </select>
-                                </td>
-                            </tr>
+                            </tr> --}}
                         </tbody>
                     </table>
                 </div>
