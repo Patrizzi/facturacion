@@ -119,7 +119,6 @@
                                                                     </button>
                                                                 </div>
                                                             </div>
-                                                            
                                                             <div class="row mb-3">
                                                                 <!-- DOCUMENTO IDENTIFICACION -->
                                                                 <div class="col-md-6">
@@ -186,7 +185,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>                            
-                                                        <!-- Aquí se agrega el contenido del modal -->
+                                                        <!-- MODAL -->
                                                         <div class="col-md-12 mb-3">
                                                             <div class="row mb-3">
                                                                 <!-- TELEFONO -->
@@ -216,19 +215,19 @@
                                                                             required="required" placeholder="" minlength="6" maxlength="6">
                                                                     </div>
                                                                 </div>
-                                                                <!-- APARTAMENTO -->
+                                                                <!-- DEPARTAMENTO -->
                                                                 <div class="col-md-6">
                                                                     <label for="abreviatura" class="form-label"><b>Departamento:</b></label>
                                                                     <input value="Lima" type="text" class="fast_add form-control valid" name="departamento" id="provincia_cli" aria-invalid="false">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
-                                                                <!-- CODDIGO SUNAT-->
+                                                                <!-- PAIS-->
                                                                 <div class="col-md-6">
                                                                     <label for="codigoSunat" class="form-label"> <b>País:</b></label>
                                                                     <input value="Perú" type="text" class="fast_add form-control valid" name="pais" aria-invalid="false">
                                                                 </div>
-                                                                <!-- COD. UBIGEO -->
+                                                                <!-- ANIVERSARIO -->
                                                                 <div class="col-md-6">
                                                                     <label for="codigoUbigeo" class="form-label">
                                                                         <b>Aniversario:</b>
@@ -273,7 +272,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
                                                         <!-- Aquí se agrega el contenido del modal -->
                                                         <div class="col-md-12 mb-3">
                                                             <div class="row mb-3">
@@ -282,7 +280,6 @@
                                                                     <label for="Contacto" class="form-label"><b>Nombre:</b></label>
                                                                     <input value="Contacto" input id="name" name="nombre_contacto" type="text" class="fast_add form-control required valid" value="Contacto" aria-required="true" aria-invalid="false">
                                                                 </div>
-                                                                
                                                                 <!-- CARGO -->
                                                                 <div class="col-md-6">
                                                                     <label for="cargo" class="form-label"><b>Cargo:</b></label>
@@ -383,7 +380,7 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                    tr>
+                                                    <tr>
                                                         <td><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></td>
                                                         <td>2</td>
                                                         <td>Flaviaaaa</td>
@@ -405,15 +402,15 @@
                                             </table>
                                             <!-- Modal de Ver (Contacto y Sucursal)-->
                                             <div class="modal fade" id="verModal" tabindex="-1" role="dialog" aria-labelledby="verModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg" role="document" style="max-width: 50%; height: auto;">
-                                                    <div class="modal-content">
+                                                <div class="modal-dialog modal-xl" role="document" style="max-width: 90%; max-height: 90%; margin: 1rem auto;">
+                                                    <div class="modal-content" style="height: auto; display: flex; flex-direction: column;">
                                                         <div class="modal-header" style="background-color: #0d47a1; color: white;">
                                                             <h5 class="modal-title" id="verModalLabel" style="text-align: center; font-size: 1rem;">Ver de Daniel Roman</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true" style="color: white; font-size: 1.5rem;">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <div class="modal-body" style="padding: 30px;">
+                                                        <div class="modal-body" style="padding: 30px; flex: 1;">
                                                             <!-- Pestañas -->
                                                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                                                 <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0;">
@@ -431,80 +428,107 @@
                                                             <div class="tab-content mt-2" id="myTabContent">
                                                                 <div class="tab-pane fade show active" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
                                                                     <div style="display: flex; align-items: center;">
-                                                                        <label for="buscar-contacto" style="margin-right: 10px;">Buscar:</label>
-                                                                        <input type="text" id="buscar-contacto" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                                                                        <div class="input-group" style="max-width: 1200px;">
+                                                                            <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;"> 
+                                                                            <div class="input-group-append">
+                                                                                <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
+                                                                            </div>
+                                                                        </div>
                                                                         <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
                                                                             <i class="fa fa-plus-square" style="color: white;"></i>
                                                                         </button>
                                                                     </div>
                                                                     <!-- Tabla Contactos -->
-                                                                    <table class="table mt-2">
+                                                                    <table class="table table-striped table-hover mt-2">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th><i class="fa fa-user"></i> Nombre</th>
-                                                                                <th>Cargo</th>
-                                                                                <th><i class="fa fa-envelope-o"></i> Email</th>
-                                                                                <th><i class="fa fa-phone"></i> Teléfono</th>
+                                                                                <th>Tipo Documento</th>
+                                                                                <th>Nro Documento</th>
+                                                                                <th>Correo</th>
+                                                                                <th>Celular</th>
                                                                                 <th>Estado</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td>MELINA</td>
-                                                                                <td>Secretaria</td>
-                                                                                <td>secretaria@dreysac.com</td>
+                                                                                <td>DNI</td>
+                                                                                <td>71483609</td>
+                                                                                <td>julioflores@srsc.com</td>
                                                                                 <td>998321228</td>
-                                                                                <td><span class="badge badge-success">Activo</span></td>
+                                                                                <td>
+                                                                                    <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
+                                                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                                                    </button>
+                                                                                </td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
-                                                                                <td>Empleado</td>
-                                                                                <td>sincorreo@gmail.com</td>
-                                                                                <td>000000</td>
-                                                                                <td><span class="badge badge-success">Activo</span></td>
+                                                                                <td>Pasaporte</td>
+                                                                                <td>35483610</td>
+                                                                                <td>Flav@sewqe.com</td>
+                                                                                <td>986790521</td>
+                                                                                <td>
+                                                                                    <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
+                                                                                        <i class="fa fa-arrows-alt" style="color:white;"></i>
+                                                                                    </button>
+                                                                                </td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
                                                                 </div>
                                                                 <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
                                                                     <div style="display: flex; align-items: center;">
-                                                                        <label for="buscar-sucursal" style="margin-right: 10px;">Buscar:</label>
-                                                                        <input type="text" id="buscar-sucursal" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                                                                        <div class="input-group" style="max-width: 1200px;">
+                                                                            <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;"> 
+                                                                            <div class="input-group-append">
+                                                                                <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        
                                                                         <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
                                                                             <i class="fa fa-plus-square" style="color: white;"></i>
                                                                         </button>
                                                                     </div>                       
-                                                                    <table class="table mt-2">
+                                                                    <table class="table table-striped table-hover mt-2">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th><i class="fa fa-user"></i> Nombre</th>
+                                                                                <th>Nombre</th>
+                                                                                <th>Cargo</th>
                                                                                 <th>Dirección</th>
                                                                                 <th>Código Ubigeo</th>
-                                                                                <th>Editar</th>
-                                                                                <th>Estado</th>
+                                                                                <th>Acciones</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr>
                                                                                 <td>MELINA</td>
+                                                                                <td>Sucursal</td>
                                                                                 <td>mz c</td>
                                                                                 <td>1652</td>
-                                                                                <td><button type="button" class="btn btn-primary" style="line-height: normal;">
-                                                                                    <i class="fa fa-pencil-square-o" style="color: white;"></i>
-                                                                                </button></td>
-                                                                                <td><span class="badge badge-success">Activo</span></td>
+                                                                                <td>
+                                                                                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                                                                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                                                                    </button>
+                                                                                    <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
+                                                                                        <i class="fa fa-check" style="color:white;"></i>
+                                                                                    </button>
+                                                                                </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                                                                <td>Secretaria</td>
                                                                                 <td>mc b</td>
                                                                                 <td>98736</td>
-                                                                                <td><button type="button" class="btn btn-primary" style="line-height: normal;">
-                                                                                    <i class="fa fa-pencil-square-o" style="color: white;"></i>
-                                                                                </button></td>
-                                                                                <td><span class="badge badge-success">Activo</span></td>
+                                                                                <td>
+                                                                                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                                                                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                                                                    </button>
+                                                                                    <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
+                                                                                        <i class="fa fa-arrows-alt" style="color:white;"></i>
+                                                                                    </button>
+                                                                                </td>
                                                                             </tr>
                                                                         </tbody>
-                                                                    </table>
+                                                                    </table>                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
