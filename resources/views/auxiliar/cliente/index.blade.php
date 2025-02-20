@@ -69,34 +69,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <div class="btn-group mx-2" style="display: flex; align-items: center;">
-                            <input type="text" id="inputBuscar" class="form-control" style="width: 400px; margin-right: 10px;" placeholder="Buscar">
-                            <button style="background-color: #210abb; color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer;">
-                                Buscar
-                            </button>
-                        </div>
-                    
-                        <div style="display: flex; align-items: center;">
-                            <button type="button" class="btn btn-default btn-sm" style="background-color: #210abb; color: white; font-size: 11px; padding: 8px 20px; margin-right: 5px;" data-toggle="modal" data-target="#myModal">Agregar</button>
-                    
-                            <button data-toggle="dropdown" class="btn btn-default btn-sm" style="background-color: #210abb; color: white; padding: 10px 16px; font-size: 13px; border-radius: 5px; margin-right: 5px;">
-                                <i class="fa fa-plus-square"></i>
-                            </button>
-                    
-                            <div class="dropdown">
-                                <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #808080; color: white; font-size: 13px; padding: 5px 10px;">
-                                    <i class="fa fa-download"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">PDF</a>
-                                    <a class="dropdown-item" href="#">XML</a>
-                                    <a class="dropdown-item" href="#">Excel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
+                <div class="ibox-content">          
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
@@ -350,14 +323,40 @@
         </div>
     </div>
 </div>
-
-
-
-<!-- Bootstrap CSS y JS -->
 </li>
 </ul>
 <!-- Tablas y su contenido -->
 <div class="tab-content">
+<!-- BUSCAR SON SUS BOTONES -->
+<div role="tabpanel" id="tab-1" class="tab-pane active show">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-9 mb-2">
+                <div class="input-group">
+                    <input type="search" id="search" class="form-control" placeholder="Buscar...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" style="background-color: blue; border-color:blue;">Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-2 d-flex justify-content-end">
+                <button type="button" class="btn btn-default btn-sm" style="background-color: #210abb; color: white; padding: 10px 16px; font-size: 13px; border-radius: 5px; margin-right: 5px;" data-toggle="modal" data-target="#myModal">
+                    <i class="fa fa-plus-square"></i>
+                </button>
+                
+                <div class="dropdown">
+                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #808080; color: white; font-size: 13px; padding: 5px 10px;">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">PDF</a>
+                        <a class="dropdown-item" href="#">XML</a>
+                        <a class="dropdown-item" href="#">Excel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div role="tabpanel" id="tab-1" class="tab-pane active show">
         <div class="panel-body">
             <!-- CONTENIDO DENTRO DEL TAB  -->
@@ -384,11 +383,123 @@
                     <td>julioflores@srsc.com</td>
                     <td>946201443</td>
                     <td>
-                        <!-- Botón para abrir el modal -->
                     <div>
-                        <button style="display:inline-block; padding:10px; background-color:green; border-radius:5px; margin-right:2px; border:none;">
-                            <i class="fa fa-eye" style="color:white;"></i>
-                        </button>
+<!-- Botón para abrir el modal -->
+<button style="display:inline-block; padding:10px; background-color:green; border-radius:5px; margin-right:2px; border:none;" data-toggle="modal" data-target="#verModal">
+    <i class="fa fa-eye" style="color:white;"></i>
+</button>
+<!-- Modal -->
+<div class="modal fade" id="verModal" tabindex="-1" role="dialog" aria-labelledby="verModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document" style="max-width: 50%; height: auto;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0d47a1; color: white;">
+                <h5 class="modal-title" id="verModalLabel" style="text-align: center; font-size: 1rem;">Ver de Daniel Roman</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white; font-size: 1.5rem;">&times;</span>
+                </button>
+                
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <!-- Pestañas -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0;">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="contacto-tab" data-toggle="tab" href="#contacto" role="tab" aria-controls="contacto" aria-selected="true">Contacto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="sucursal-tab" data-toggle="tab" href="#sucursal" role="tab" aria-controls="sucursal" aria-selected="false">Sucursal</a>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                    </button>
+                </div>
+                <div class="tab-content mt-2" id="myTabContent">
+                    <div class="tab-pane fade show active" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
+                        <div style="display: flex; align-items: center;">
+                            <label for="buscar" style="margin-right: 10px;">Buscar:</label>
+                            <input type="text" id="buscar" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                            <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
+                                <i class="fa fa-plus-square" style="color: white;"></i>
+                            </button>
+                        </div>
+                        <!-- Tabla -->
+                        <table class="table mt-2">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-user"></i> Nombre</th>
+                                    <th>Cargo</th>
+                                    <th><i class="fa fa-envelope-o"></i> Email</th>
+                                    <th><i class="fa fa-phone"></i> Teléfono</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MELINA</td>
+                                    <td>Secretaria</td>
+                                    <td>secretaria@dreysac.com</td>
+                                    <td>998321228</td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                    <td>Empleado</td>
+                                    <td>sincorreo@gmail.com</td>
+                                    <td>000000</td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
+                        <div style="display: flex; align-items: center;">
+                            <label for="buscar" style="margin-right: 10px;">Buscar:</label>
+                            <input type="text" id="buscar" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                            <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
+                                <i class="fa fa-plus-square" style="color: white;"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Tabla 2-->
+                        <table class="table mt-2">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-user"></i> Nombre</th>
+                                    <th>Dirección</th>
+                                    <th>Código Ubigeo</th>
+                                    <th>Editar</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MELINA</td>
+                                    <td>mz c</td>
+                                    <td>1652</td>
+                                    <td><button type="button" class="btn btn-primary" style="line-height: normal;">
+                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                    </button></td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                    <td>mc b</td>
+                                    <td>98736</td>
+                                    <td><button type="button" class="btn btn-primary" style="line-height: normal;">
+                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                    </button></td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                         <a href="#"
                         style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
                         data-toggle="modal"
@@ -411,20 +522,133 @@
                     <td>987789985</td>
                     <td>
                         <div>
-                            <button style="display:inline-block; padding:10px; background-color:green; border-radius:5px; margin-right:2px; border:none;">
-                                <i class="fa fa-eye" style="color:white;"></i>
+                            <!-- Botón para abrir el modal -->
+<button style="display:inline-block; padding:10px; background-color:green; border-radius:5px; margin-right:2px; border:none;" data-toggle="modal" data-target="#verModal">
+    <i class="fa fa-eye" style="color:white;"></i>
+</button>
+<!-- Modal -->
+<div class="modal fade" id="verModal" tabindex="-1" role="dialog" aria-labelledby="verModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document" style="max-width: 50%; height: auto;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0d47a1; color: white;">
+                <h5 class="modal-title" id="verModalLabel" style="text-align: center; font-size: 1rem;">Ver de Daniel Roman</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white; font-size: 1.5rem;">&times;</span>
+                </button>
+                
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <!-- Pestañas -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0;">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="contacto-tab" data-toggle="tab" href="#contacto" role="tab" aria-controls="contacto" aria-selected="true">Contacto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="sucursal-tab" data-toggle="tab" href="#sucursal" role="tab" aria-controls="sucursal" aria-selected="false">Sucursal</a>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                    </button>
+                </div>
+                <div class="tab-content mt-2" id="myTabContent">
+                    <div class="tab-pane fade show active" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
+                        <div style="display: flex; align-items: center;">
+                            <label for="buscar" style="margin-right: 10px;">Buscar:</label>
+                            <input type="text" id="buscar" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                            <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
+                                <i class="fa fa-plus-square" style="color: white;"></i>
                             </button>
-                            <a href="#"
+                        </div>
+                        <!-- Tabla -->
+                        <table class="table mt-2">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-user"></i> Nombre</th>
+                                    <th>Cargo</th>
+                                    <th><i class="fa fa-envelope-o"></i> Email</th>
+                                    <th><i class="fa fa-phone"></i> Teléfono</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MELINA</td>
+                                    <td>Secretaria</td>
+                                    <td>secretaria@dreysac.com</td>
+                                    <td>998321228</td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                    <td>Empleado</td>
+                                    <td>sincorreo@gmail.com</td>
+                                    <td>000000</td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
+                        <div style="display: flex; align-items: center;">
+                            <label for="buscar" style="margin-right: 10px;">Buscar:</label>
+                            <input type="text" id="buscar" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                            <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
+                                <i class="fa fa-plus-square" style="color: white;"></i>
+                            </button>
+                        </div>
+                        <!-- Tabla 2-->
+                        <table class="table mt-2">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-user"></i> Nombre</th>
+                                    <th>Dirección</th>
+                                    <th>Código Ubigeo</th>
+                                    <th>Editar</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MELINA</td>
+                                    <td>mz c</td>
+                                    <td>1652</td>
+                                    <td><button type="button" class="btn btn-primary" style="line-height: normal;">
+                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                    </button></td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                    <td>mc b</td>
+                                    <td>98736</td>
+                                    <td><button type="button" class="btn btn-primary" style="line-height: normal;">
+                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                    </button></td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        <a href="#"
                         style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
                         data-toggle="modal"
-                        data-target="#modaldos"> <!-- Cambiado a modaldos -->
+                        data-target="#modaluno"> <!-- Cambiado a modaluno -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
                         <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
                             <i class="fa fa-check" style="color:white;"></i>
                         </button></div>
                     </td>
-                </tr>
+            </td>
+        </tr>
+    <tr>
                     <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
                     <td>3</td>
                     <td>Kepler Ramirez</td>
@@ -434,18 +658,131 @@
                     <td>994170533</td>
                     <td>
                         <div>
-                            <button style="display:inline-block; padding:10px; background-color:green; border-radius:5px; margin-right:2px; border:none;">
-                                <i class="fa fa-eye" style="color:white;"></i>
+                            <!-- Botón para abrir el modal -->
+<button style="display:inline-block; padding:10px; background-color:green; border-radius:5px; margin-right:2px; border:none;" data-toggle="modal" data-target="#verModal">
+    <i class="fa fa-eye" style="color:white;"></i>
+</button>
+<!-- Modal -->
+<div class="modal fade" id="verModal" tabindex="-1" role="dialog" aria-labelledby="verModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document" style="max-width: 50%; height: auto;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0d47a1; color: white;">
+                <h5 class="modal-title" id="verModalLabel" style="text-align: center; font-size: 1rem;">Ver de Daniel Roman</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white; font-size: 1.5rem;">&times;</span>
+                </button>
+                
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <!-- Pestañas -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0;">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="contacto-tab" data-toggle="tab" href="#contacto" role="tab" aria-controls="contacto" aria-selected="true">Contacto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="sucursal-tab" data-toggle="tab" href="#sucursal" role="tab" aria-controls="sucursal" aria-selected="false">Sucursal</a>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                    </button>
+                </div>
+                <div class="tab-content mt-2" id="myTabContent">
+                    <div class="tab-pane fade show active" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
+                        <div style="display: flex; align-items: center;">
+                            <label for="buscar" style="margin-right: 10px;">Buscar:</label>
+                            <input type="text" id="buscar" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                            <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
+                                <i class="fa fa-plus-square" style="color: white;"></i>
                             </button>
-                            <a href="#"
+                        </div>
+                        <!-- Tabla -->
+                        <table class="table mt-2">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-user"></i> Nombre</th>
+                                    <th>Cargo</th>
+                                    <th><i class="fa fa-envelope-o"></i> Email</th>
+                                    <th><i class="fa fa-phone"></i> Teléfono</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MELINA</td>
+                                    <td>Secretaria</td>
+                                    <td>secretaria@dreysac.com</td>
+                                    <td>998321228</td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                    <td>Empleado</td>
+                                    <td>sincorreo@gmail.com</td>
+                                    <td>000000</td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
+                        <div style="display: flex; align-items: center;">
+                            <label for="buscar" style="margin-right: 10px;">Buscar:</label>
+                            <input type="text" id="buscar" class="form-control mb-3 w-auto" placeholder="Buscar..." style="width: auto; max-width: 200px;">
+                            <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
+                                <i class="fa fa-plus-square" style="color: white;"></i>
+                            </button>
+                        </div>
+                        <!-- Tabla 2-->
+                        <table class="table mt-2">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-user"></i> Nombre</th>
+                                    <th>Dirección</th>
+                                    <th>Código Ubigeo</th>
+                                    <th>Editar</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MELINA</td>
+                                    <td>mz c</td>
+                                    <td>1652</td>
+                                    <td><button type="button" class="btn btn-primary" style="line-height: normal;">
+                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                    </button></td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ANTIVIRUS BITDEFENDER TOTAL SECURITY 1PC</td>
+                                    <td>mc b</td>
+                                    <td>98736</td>
+                                    <td><button type="button" class="btn btn-primary" style="line-height: normal;">
+                                        <i class="fa fa-pencil-square-o" style="color: white;"></i>
+                                    </button></td>
+                                    <td><span class="badge badge-success">Activo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        <a href="#"
                         style="display:inline-block; padding:10px; background-color:blue; border-radius:5px; margin-right:2px;"
                         data-toggle="modal"
-                        data-target="#modaldos"> <!-- Cambiado a modaldos -->
+                        data-target="#modaluno"> <!-- Cambiado a modaluno -->
                             <i class="fa fa-edit" style="color:white;"></i>
                         </a>
-                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
-                            <i class="fa fa-arrows-alt" style="color:white;"></i>
-                        </button></div>
+                        <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;"> <i class="fa fa-arrows-alt" style="color:white;"></i></div>
+                    </td>
+            </td>
+        </tr>
+    <tr>
                     </td>
             </tbody>
         </table>
