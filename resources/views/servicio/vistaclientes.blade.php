@@ -73,7 +73,7 @@
             <td>936292675</td>
             <td>danielrberru@gmail.com</td>
             <td>
-                <a href="{{ route('guia.ingreso') }}" class="btn-estado">Guia</a>
+                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
             </td>
         </tr>
         <tr>
@@ -84,7 +84,7 @@
             <td>934361536</td>
             <td>christojhg@gmail.com</td>
             <td>
-                <a href="{{ route('guia.ingreso') }}" class="btn-estado">Guia</a>
+                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
             </td>
         </tr>
         <tr>
@@ -95,7 +95,7 @@
             <td>963784109</td>
             <td>marisandrag@gmail.com</td>
             <td>
-                <a href="{{ route('guia.ingreso') }}" class="btn-estado">Guia</a>
+                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
             </td>
         </tr>
         <tr>
@@ -106,7 +106,7 @@
             <td>950314752</td>
             <td>dosantosj@gmail.com</td>
             <td>
-                <a href="{{ route('guia.ingreso') }}" class="btn-estado">Guia</a>
+                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
             </td>
         </tr>
     </tbody>

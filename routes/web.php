@@ -630,9 +630,9 @@ Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servici
 
 Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
 
-Route::get('/guia-ingreso', function () {
-    return view('servicio.guia_ingreso');
-})->name('guia.ingreso');
+Route::get('/guia', function () {
+    return view('servicio.guia');
+})->name('guia');
 
 Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
@@ -640,7 +640,7 @@ Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name(
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
 
 
-Route::get('/servicio/guia_ingreso', 'ServicioController@guia_ingreso')->name('servicio.guia_ingreso');
+Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
 

@@ -112,87 +112,162 @@
 <div id="seccion1" class="contenido activo">
     <style>
         .wrappercontenedor {
-
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px; /* Bajé el margen superior para acercar el título */
+            gap: 80px; /* Mayor separación entre los contenedores */
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .containercontenedor {
             border: 2px solid #000;
-            color: black;
+            border-radius: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 620px; /* Aumenté el ancho para mejor visualización */
+            height: 220px; /* Un poco más alto para mayor comodidad */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .containercontenedor2 {
+            border: 2px solid #000;
             border-radius: 10px;
             padding: 20px;
             box-sizing: border-box;
+            background-color: #f9f9f9;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 620px; /* Aumenté el ancho para mejor visualización */
+            height: 210px; /* Un poco más alto para mayor comodidad */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-top: -140px;
+            transform: translateY(-30px)
+        }
+        .containercontenedor1 {
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 620px; /* Aumenté el ancho para mejor visualización */
+            height: 280px; /* Un poco más alto para mayor comodidad */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
+
         .container-titlecontenedor {
-            transform: translateY(-20px);
             text-align: center;
             font-weight: bold;
-            font-size: 26px; /* Subí un poco el tamaño del título */
-            margin-bottom: 20px; /* Reduje la separación del título */
+            font-size: 25px;
+            margin-bottom: 2px;
+            color: #333;
+            border-bottom: 2px solid #000;
+            padding-bottom: 3px;
+        }
+
+        .input-groupcontenedor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px; /* Más espacio entre filas */
+            width: 100%;
         }
 
         .input-labelcontenedor {
-            font-weight: bold; /* Ahora los textos están en negrita */
+            font-weight: bold;
+            font-size: 14px; /* Aumenté el tamaño para mejor lectura */
+            color: #444;
+            padding: 5px;
         }
 
+        .input-fieldcontenedor {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-size: 11px;
+            width: 35%;
+        }
 
+        .input-fieldcontenedor.full-widthcontenedor {
+            width: 100%;
+        }
 
-        </style>
+        .input-fieldcontenedor:focus {
+            border-color: #000;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 
-        <div class="wrappercontenedor">
-            <!-- Contenedor izquierdo -->
-            <div class="containercontenedor" style="align-self: flex-start;">
-                <h2 class="container-titlecontenedor">Cliente</h2>
+    <div class="wrappercontenedor">
 
-                <div class="input-groupcontenedor">
-                    <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
-                    <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
-                </div>
+        <!-- Contenedor izquierdo -->
+        <div class="containercontenedor">
 
-                <div class="input-groupcontenedor full-widthcontenedor">
-                    <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
-                </div>
+            <h2 class="container-titlecontenedor">Cliente</h2>
 
-                <div class="input-groupcontenedor">
-                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
-                    <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
-                </div>
+            <div class="input-groupcontenedor">
+                <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
+                <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
 
-                <div class="input-groupcontenedor full-widthcontenedor">
-                    <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
-                    <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
-                </div>
+                <label for="nombre" class="input-labelcontenedor">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
             </div>
 
-            <!-- Contenedor derecho -->
-            <div class="containercontenedor" style="align-self: flex-end;">
-                <h2 class="container-titlecontenedor">Datos Generales</h2>
-
-                <div class="input-groupcontenedor">
-                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                    <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
-                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                    <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
-                </div>
-
-                <div class="input-groupcontenedor">
-                    <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                    <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
-                    <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
-                    <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
-                </div>
-            </div>
+            <div class="input-groupcontenedor">
+                <label for="direccion" class="input-labelcontenedor">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
             </div>
 
+            <div class="input-groupcontenedor">
+                <label for="contacto" class="input-labelcontenedor">Contacto:</label>
+                <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+
+                <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
+                <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
+            </div>
+        </div>
+
+        <!-- Contenedor derecho -->
+        <div class="containercontenedor">
+            <h2 class="container-titlecontenedor">Datos Generales</h2>
+
+            <div class="input-groupcontenedor">
+                <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
+
+                <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
+            </div>
+
+            <div class="input-groupcontenedor">
+                <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
+
+                <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
+                <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="search-container">
+        <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+            <div class="input-group">
+                <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
+                <button class="btn btn-primary search-btn" type="submit">
+                    <i class="bi bi-search">Buscar</i>
+                </button>
+            </div>
+        </form>
+    </div>
 
             <style>
             .search-container{
@@ -237,17 +312,6 @@
             }
             </style>
 
-            <div class="search-container mt-4">
-                <form class="d-flex" role="search" action="index.php?ruta=store/buscar_productos" method="POST">
-                    <div class="input-group">
-                        <input type="search" class="form-control custom-search" name="search" placeholder="Buscar Producto" required>
-                        <button class="btn btn-primary" type="submit">
-                            Buscarㅤ<i class="bx bx-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
             <div class="table-container table-bordered dataTables-example">
                 <table class="table">
                     <thead>
@@ -256,10 +320,6 @@
                             <th>Serie</th>
                             <th>Descripción</th>
                             <th>Observación</th>
-                            <th>Tecnico de diagnostico</th>
-                            <th>Fecha</th>
-                            <th>Diagnostico</th>
-                            <th>Estado de Aprobacion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -268,33 +328,26 @@
                             <td>LKDO</td>
                             <td>laptop ph con lentitud</td>
                             <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                            <td>Juana</td>
-                            <td>10/10/23</td>
-                            <td>Disco duro roto</td>
-                            <td><button class="btn-estado">Aceptado</button></td>
                         </tr>
                         <tr>
                             <td>02</td>
                             <td>L10L</td>
                             <td>impresora epson no imprime</td>
                             <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                            <td>Angel</td>
-                            <td>10/10/23</td>
-                            <td>Falta de refrigeranción</td>
-                            <td><button class="btn-estado">Aceptado</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 </div>
 
+
 <!-- Sección 2 - Guía de Salida -->
 <div id="seccion2" class="contenido">
-    <div class="container mt-4">
+    <div >
         <!-- CLIENTES -->
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
-            <div class="containercontenedor" style="align-self: flex-start;">
+            <div class="containercontenedor1" style="align-self: flex-start;">
                 <h2 class="container-titlecontenedor">Cliente</h2>
 
                 <div class="input-groupcontenedor">
@@ -323,7 +376,7 @@
             </div>
 
             <!-- Contenedor derecho -->
-            <div class="containercontenedor" style="align-self: flex-end;">
+            <div class="containercontenedor2" style="align-self: flex-end;">
                 <h2 class="container-titlecontenedor">Datos Generales</h2>
 
                 <div class="input-groupcontenedor">
@@ -341,19 +394,60 @@
                 </div>
             </div>
             </div>
-        </div>
 
-        <!-- BÚSQUEDA DE PRODUCTOS -->
-        <div class="search-container mt-4">
-            <form class="d-flex" role="search" action="index.php?ruta=store/buscar_productos" method="POST">
-                <div class="input-group">
-                    <input type="search" class="form-control custom-search" name="search" placeholder="Buscar Producto" required>
-                    <button class="btn btn-primary" type="submit">
-                        Buscarㅤ<i class="bx bx-search"></i>
-                    </button>
-                </div>
-            </form>
+<!-- BÚSQUEDA DE PRODUCTOS -->
+<div class="search-container">
+    <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+        <div class="input-group">
+            <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
+            <button class="btn btn-primary search-btn" type="submit">
+                <i class="bi bi-search">Buscar</i>
+            </button>
         </div>
+    </form>
+</div>
+
+<style>
+/* Contenedor para alinear a la izquierda */
+.search-container {
+    display: flex;
+    justify-content: center; /* Alineado a la izquierda */
+    margin: 15px 0;
+}
+
+/* Formulario compacto y estilizado */
+.search-form {
+    width: 580px; /* Ancho controlado para que no sea muy grande */
+}
+
+/* Campo de búsqueda con diseño atractivo */
+.search-input {
+    border-radius: 20px 0 0 20px;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de búsqueda compacto y elegante */
+.search-btn {
+    border-radius: 0 20px 20px 0;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajuste para icono de búsqueda */
+.search-btn i {
+    font-size: 16px;
+}
+</style>
+
+
+
 
 
         <!-- TABLA DE REGISTROS -->
@@ -386,9 +480,9 @@
                             <td>Juan Pérez</td>
                             <td>2025-02-12</td>
                             <td>Falla en la conexión del cable flex de la pantalla</td>
-                            <td class="fw-bold text-success">Aprobado</td>
+                            <td>Aprobado</td>
                             <td>Pedro Gómez</td>
-                            <td class="fw-bold text-success">Reparado</td>
+                            <td>Reparado</td>
                             <td>Reemplazo del cable flex y prueba de estabilidad</td>
                             <td><button class="btn btn-primary btn-sm">
                                 <i class='bx bxs-cloud-upload'></i> Subir</button></td>
@@ -453,7 +547,7 @@
                             <td>Ana López</td>
                             <td>2025-02-18</td>
                             <td>Falla en el firmware</td>
-                            <td class="fw-bold text-danger">Rechazado</td>
+                            <td >Rechazado</td>
                             <td>—</td>
                             <td>—</td>
                             <td>—</td>
