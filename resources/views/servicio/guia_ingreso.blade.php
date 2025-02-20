@@ -5,7 +5,6 @@
 @section('atributo_actu', 'hidden')
 
 @section('content')
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -19,29 +18,22 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <style>
-    .boton-container {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        margin: 10px;
-    }
+.boton-container {
+    display: flex;
+    border-bottom: 2px solid black; /* Línea horizontal larga */
+}
 
-    .boton {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        color: grey;
-        background-color: transparent;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-    }
-
+.boton {
+    padding: 10px 20px;
+    border: 2px solid black; /* Borde negro en todos los lados */
+    border-bottom: 1px solid black; /* Línea inferior más delgada */
+    background-color: white;
+    color: gray;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    position: relative; /* Para controlar la línea de abajo */
+}
     .boton:hover {
        color: black;
     }
@@ -77,18 +69,25 @@
     .contenido.activo {
         display: block;
     }
+.boton.activo {
+    color: black; /* Texto negro cuando está activo */
+    border-bottom: 2px solid white; /* Hace que parezca que no tiene borde abajo */
+    font-weight: bold;
+    margin-bottom: -2px; /* Para pegarlo a la línea negra */
+}
+
 </style>
 
 <div class="boton-container">
-    <button class="boton" onclick="mostrarSeccion('seccion1')">
+    <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
         <span class="numero1">1</span> Guía de Ingreso
     </button>
 
-    <button class="boton" onclick="mostrarSeccion('seccion2')">
+    <button class="boton" onclick="mostrarSeccion('seccion2', this)">
         <span class="numero2">2</span> Guía de Salida
     </button>
-
 </div>
+
 
 
 <!-- Sección 1 - Guía de Ingreso -->
@@ -98,7 +97,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 30px;
+            margin-top: 20px; /* Bajé el margen superior para acercar el título */
         }
 
         .containercontenedor {
@@ -110,10 +109,17 @@
         }
 
         .container-titlecontenedor {
-            padding: 0px;
+            transform: translateY(-20px);
             text-align: center;
             font-weight: bold;
+            font-size: 26px; /* Subí un poco el tamaño del título */
+            margin-bottom: 20px; /* Reduje la separación del título */
         }
+
+        .input-labelcontenedor {
+            font-weight: bold; /* Ahora los textos están en negrita */
+        }
+
 
 
         </style>
@@ -201,13 +207,9 @@
                 cursor: pointer;
                 border-radius: 5px;
             }
-
-            .btn-estado:hover {
-                background-color: black;
-            }
             </style>
 
-            <div class="table-container table-striped table-bordered table-hover dataTables-example">
+            <div class="table-container table-bordered dataTables-example">
                 <table class="table">
                     <thead>
                         <tr>
@@ -255,15 +257,25 @@
 
 
 <script>
-    function mostrarSeccion(id) {
-        // Ocultar todas las secciones
+    function mostrarSeccion(id, boton) {
         document.querySelectorAll('.contenido').forEach(seccion => {
             seccion.classList.remove('activo');
         });
 
-        // Mostrar la sección seleccionada
         document.getElementById(id).classList.add('activo');
+
+        document.querySelectorAll('.boton').forEach(b => {
+            b.classList.remove('activo');
+        });
+
+        boton.classList.add('activo');
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector(".boton").classList.add("activo");
+    });
+
 </script>
+
 
 @endsection
