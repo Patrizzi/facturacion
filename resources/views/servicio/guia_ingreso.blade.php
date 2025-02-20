@@ -110,7 +110,7 @@
         .wrappercontenedor {
             display: flex;
             justify-content: center;
-            gap: 30px; /* Mayor separación entre los contenedores */
+            gap: 80px; /* Mayor separación entre los contenedores */
             margin-top: 30px;
             flex-wrap: wrap;
         }
@@ -122,7 +122,7 @@
             box-sizing: border-box;
             background-color: #f9f9f9;
             box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-            width: 520px; /* Aumenté el ancho para mejor visualización */
+            width: 620px; /* Aumenté el ancho para mejor visualización */
             height: 220px; /* Un poco más alto para mayor comodidad */
             display: flex;
             flex-direction: column;
@@ -135,7 +135,7 @@
             box-sizing: border-box;
             background-color: #f9f9f9;
             box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-            width: 520px; /* Aumenté el ancho para mejor visualización */
+            width: 620px; /* Aumenté el ancho para mejor visualización */
             height: 210px; /* Un poco más alto para mayor comodidad */
             display: flex;
             flex-direction: column;
@@ -150,7 +150,7 @@
             box-sizing: border-box;
             background-color: #f9f9f9;
             box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-            width: 520px; /* Aumenté el ancho para mejor visualización */
+            width: 620px; /* Aumenté el ancho para mejor visualización */
             height: 280px; /* Un poco más alto para mayor comodidad */
             display: flex;
             flex-direction: column;
@@ -253,6 +253,17 @@
         </div>
     </div>
 
+
+    <div class="search-container">
+        <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+            <div class="input-group">
+                <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
+                <button class="btn btn-primary search-btn" type="submit">
+                    <i class="bi bi-search">Buscar</i>
+                </button>
+            </div>
+        </form>
+    </div>
 
             <style>
                 .table-container {
@@ -382,18 +393,58 @@
                 </div>
             </div>
             </div>
-            
-        <!-- BÚSQUEDA DE PRODUCTOS -->
-        <div>
-            <form class="d-flex" role="search" action="index.php?ruta=store/buscar_productos" method="POST">
-                <div class="input-group">
-                    <input type="search" class="form-control" name="search" placeholder="Buscar Producto"required>
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-search"></i> Buscar
-                    </button>
-                </div>
-            </form>
+
+<!-- BÚSQUEDA DE PRODUCTOS -->
+<div class="search-container">
+    <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+        <div class="input-group">
+            <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
+            <button class="btn btn-primary search-btn" type="submit">
+                <i class="bi bi-search">Buscar</i>
+            </button>
         </div>
+    </form>
+</div>
+
+<style>
+/* Contenedor para alinear a la izquierda */
+.search-container {
+    display: flex;
+    justify-content: center; /* Alineado a la izquierda */
+    margin: 15px 0;
+}
+
+/* Formulario compacto y estilizado */
+.search-form {
+    width: 580px; /* Ancho controlado para que no sea muy grande */
+}
+
+/* Campo de búsqueda con diseño atractivo */
+.search-input {
+    border-radius: 20px 0 0 20px;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de búsqueda compacto y elegante */
+.search-btn {
+    border-radius: 0 20px 20px 0;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajuste para icono de búsqueda */
+.search-btn i {
+    font-size: 16px;
+}
+</style>
+
 
 
 
