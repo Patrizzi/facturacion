@@ -24,7 +24,7 @@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-4">Enviados</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-1" class="tab-pane">
                                 <div class="panel-body">
                                     <div class="table-responsive" id="ibox1">
                                         <div class="ibox-content">

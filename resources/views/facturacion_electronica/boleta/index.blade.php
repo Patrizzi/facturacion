@@ -400,8 +400,9 @@
                         var data = `
                             <div id="alert_one_boleta" class="alert alert-danger">
                                 <button class="close close_mini" id="cerrar_solo">&times;</button>
-                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                                response + `</span>
+                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check +
+                            ' <br> ' +
+                            response + `</span>
                             </div>
                     `;
                     } else {
@@ -412,15 +413,16 @@
                             </div>
                         `;
                     }
-                    revision(value_check, response, 'boleta');
                     // inv_close();
                     $('#alert_boleta').append(data);
+                    revision(value_check, response, 'boleta');
                     $('#cerrar_solo').on('click', function() {
                         location.reload();
                     });
                 }
             });
         }
+
         function submit_boleta_click(repetir, maximo) {
             if (repetir < maximo) {
                 var value_check = $('input[class=i-checks-boletas]:checkbox:checked')[repetir].value;
@@ -437,24 +439,27 @@
                         // console.log(result);
                         if (result == "Codigo Error:") {
                             var data = `
-                            <div class="alert alert-danger">
-                                <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
+                                <div class="alert alert-danger">
+                                    <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
                                 ' <br> ' + response + `</a>
-                            </div>
-                        `;
+                                </div>
+                            `;
                         } else {
                             var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
-                            </div>
-                        `;
+                                <div class="alert alert-success">
+                                    <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
+                                </div>
+                            `;
                         }
-                        console.log('b');
                         revision(value_check, response, 'boleta');
                         $('#msg_bole_el').append(data);
                         repetir++;
                         submit_boleta_click(repetir, maximo);
                     }
+                });
+                $('#exampleModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
                 });
             } else {
                 $('.modal-footer').removeAttr('style');
@@ -464,12 +469,11 @@
             var cant_checks = $('input[class=i-checks-boletas]:checkbox:checked').length;
             if (cant_checks != 0) {
                 // $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                submit_factura_click(0, cant_checks);
+                submit_boleta_click(0, cant_checks);
             }
         });
 
         function revision(codigo, msg, tipo) {
-            console.log('a');
             $.ajax({
                 type: "post",
                 url: "{{ route('facturacion_electronica.validacion_sunat_boleta') }}",
@@ -485,120 +489,14 @@
                 }
             });
         }
-        function download_pdf_select(){
+
+        function download_pdf_select() {
             var checks = $('input[class=i-checks-facturas_env]:checkbox:checked');
             // var checks_all = checks.concat(checks_m, checks_d);
             checks.each(function() {
                 var codigo = $(this).val();
-                console.log(codigo);    
+                console.log(codigo);
             });
         }
-        // //BOLETA MANUAL
-        // function envio_boleta_m(codigo) {
-        //     $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-        //     $('.nav-link').addClass('disabled');
-        //     var value_check = codigo.value;
-        //     $.ajax({
-        //         type: "post",
-        //         url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
-        //         data: {
-        //             '_token': $('input[name=_token]').val(),
-        //             'codigo_bol': value_check,
-        //         },
-        //         success: function(response) {
-        //             var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-        //             var result = salt.substr(0, 13);
-        //             // console.log(result);
-        //             if (result == "Codigo Error:") {
-        //                 var data = `
-        //                 <div id="myAlert" class="alert alert-danger">
-        //                     <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación">&times;</a>
-        //                     <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-        //                     response + `</span>
-        //                 </div>
-        //             `;
-        //             } else {
-        //                 var data = `
-        //                 <div id="myAlert" class=" alert alert-success" >
-        //                     <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-        //                     <a class="close" data-dismiss="alert">&times;</a>
-        //                     <span class="alert-link" id="` + value_check + `">` + response + `</span>
-        //                 </div>
-        //             `;
-        //             }
-        //             revision(value_check, response, 'boleta_manual');
-        //             inv_close();
-        //             $('#msg_individual').append(data);
-        //             $("#success-alert").show();
-        //         }
-        //     });
-        // }
-
-        // function submit_boleta_click_manual(repetir, maximo) {
-        //     if (repetir < maximo) {
-        //         var value_check = $('input[class=case2]:checkbox:checked')[repetir].value;
-        //         $.ajax({
-        //             type: "post",
-        //             url: "{{ route('facturacion_electronica.boleta_m_e_all') }}",
-        //             data: {
-        //                 '_token': $('input[name=_token]').val(),
-        //                 'codigo_bol': value_check,
-        //             },
-        //             success: function(response) {
-        //                 var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-        //                 var result = salt.substr(0, 13);
-        //                 // console.log(result);
-        //                 if (result == "Codigo Error:") {
-        //                     var data = `
-        //                     <div class="alert alert-danger">
-        //                         <a class="alert-link" href="#" id="` + value_check + `">Error N°  ` + value_check +
-        //                         ' <br> ' + response + `</a>
-        //                     </div>
-        //                 `;
-        //                 } else {
-        //                     var data = `
-        //                     <div class="alert alert-success">
-        //                         <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
-        //                     </div>
-        //                 `;
-        //                 }
-        //                 console.log('b');
-        //                 revision(value_check, response, 'boleta_manual');
-        //                 $('#msg_bole_el_man').append(data);
-        //                 repetir++;
-        //                 submit_boleta_click_manual(repetir, maximo);
-        //             }
-        //         });
-        //     } else {
-        //         $('.modal-footer').removeAttr('style');
-        //     }
-        // }
-        // $('#boleta_elec_all_m').on('click', function() {
-        //     var cant_checks = $('input[class=case2]:checkbox:checked').length;
-        //     if (cant_checks == 0) {
-        //         console.log("ninguno marcado");
-        //     } else {
-        //         $('#exampleModal2').modal({
-        //             backdrop: 'static',
-        //             keyboard: false
-        //         });
-        //         $("#exampleModal2").modal("show");
-        //         $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-        //         submit_boleta_click_manual(0, cant_checks);
-        //     }
-
-        // });
-
-        // function click() {
-        //     console.log("click");
-        //     $('[data-toggle="popover"]').popover();
-        //     $('#cerrar_popup').trigger('click');
-        // }
-        // $('#cerrar_modal').on('click', function() {
-        //     location.reload();
-        // });
-        // $('#cerrar_modal2').on('click', function() {
-        //     location.reload();
-        // });
     </script>
 @endsection

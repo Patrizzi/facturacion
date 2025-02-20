@@ -166,14 +166,13 @@ Route::group(
 
 		//boleta manual
 		Route::get('/boletas_m_electronicas','FacturacionElectronicaController@index_boleta_manual')->name('boletas_electronicas.index_boleta_manual');
-		Route::get('/boletas_electronicas/enviadas','FacturacionElectronicaController@boletas_enviadas')->name('boletas_electronicas.boletas_enviadas_list');
+		Route::get('/boletas_m_electronicas/enviadas','FacturacionElectronicaController@boletas_enviadas_m')->name('boletas_electronicas.boletas_enviadas_m');
 
 		Route::post('/facturacion_electronica_boleta_m','FacturacionElectronicaController@boleta_m_e')->name('facturacion_electronica.boleta_m_e');
 		Route::post('/facturacion_electronica_boleta_m/send_all','FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
 
-
-
 		Route::get('boletas_m_electronicas/enviadas/list', 'FacturacionElectronicaController@list_boeltas_m_env')->name('boletas_electronicas.list_boeltas_m_env');
+		
 		//guia remision
 		Route::get('/facturacion_electronica_guia_remision','FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
 		Route::post('/facturacion_electronica_guia_remision_prueba','FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
