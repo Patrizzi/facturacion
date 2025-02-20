@@ -307,10 +307,6 @@
                             <th>Serie</th>
                             <th>Descripción</th>
                             <th>Observación</th>
-                            <th>Tecnico de diagnostico</th>
-                            <th>Fecha</th>
-                            <th>Diagnostico</th>
-                            <th>Estado de Aprobacion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -319,20 +315,12 @@
                             <td>LKDO</td>
                             <td>laptop ph con lentitud</td>
                             <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                            <td>Juana</td>
-                            <td>10/10/23</td>
-                            <td>Disco duro roto</td>
-                            <td><button class="btn-estado">Aceptado</button></td>
                         </tr>
                         <tr>
                             <td>02</td>
                             <td>L10L</td>
                             <td>impresora epson no imprime</td>
                             <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                            <td>Angel</td>
-                            <td>10/10/23</td>
-                            <td>Falta de refrigeranción</td>
-                            <td><button class="btn-estado">Aceptado</button></td>
                         </tr>
                     </tbody>
                 </table>
