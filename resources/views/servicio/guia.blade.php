@@ -13,10 +13,14 @@
 
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<!-- Custom and plugin javascript -->
+
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+
+
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <style>
 .boton-container {
     display: flex;
@@ -266,10 +270,19 @@
     </div>
 
             <style>
-                .table-container {
-                    margin-top: 40px; /* Baja la tabla 40px */
-                }
-                .table thead {
+            .search-container{
+                justify-content: center;
+                display:flex;
+            }
+            .custom-search {
+                max-width: 500px; /* Puedes ajustar el tamaño aquí */
+                width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
+            }
+
+            .table-container {
+                margin-top: 40px; /* Baja la tabla 40px */
+            }
+            .table thead {
                 background-color: white;
                 color: #15338a;
                 text-align: center;
@@ -438,9 +451,9 @@
 
 
         <!-- TABLA DE REGISTROS -->
-        <div class="table-container table-bordered dataTables-example">
-                <table class="table">
-                    <thead>
+            <div class="table-container table-bordered dataTables-example">
+            <table class="table">
+                    <thead class="text-black">
                         <tr>
                             <th>ITEM</th>
                             <th>SERIE</th>
@@ -471,18 +484,41 @@
                             <td>Pedro Gómez</td>
                             <td>Reparado</td>
                             <td>Reemplazo del cable flex y prueba de estabilidad</td>
-                            <td><button  class="btn-estado">
-                                <i ></i> Subir</button></td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i> Subir</button></td>
                             <td>
-                                <select>
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+                                <select class="form-select form-select-sm">
+
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td>002</td>
+                            <td>SN-2024X003</td>
+                            <td>Monitor Samsung 24"</td>
+                            <td>No enciende</td>
+                            <td>Carlos Ramírez</td>
+                            <td>2025-02-16</td>
+                            <td>Fuente de poder dañada</td>
+                            <td class="fw-bold text-danger">Rechazado</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
+                            <td>
+                                <select class="form-select form-select-sm">
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>004</td>
                             <td>SN-2024X002</td>
                             <td>Impresora HP LaserJet Pro</td>
                             <td>Atasco de papel frecuente</td>
@@ -493,34 +529,14 @@
                             <td>José Martínez</td>
                             <td>En revisión</td>
                             <td>—</td>
-                            <td><button  class="btn-estado"></i> Subir</button></td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
                             <td>
-                            <select ">
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+                            <select>
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                             </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>SN-2024X003</td>
-                            <td>Monitor Samsung 24"</td>
-                            <td>No enciende</td>
-                            <td>Carlos Ramírez</td>
-                            <td>2025-02-16</td>
-                            <td>Fuente de poder dañada</td>
-                            <td>Rechazado</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td><button  class="btn-estado"><i></i> Subir</button></td>
-                            <td>
-                                <select>
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
-                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -535,20 +551,21 @@
                             <td>—</td>
                             <td>—</td>
                             <td>—</td>
-                            <td><button  class="btn-estado"><i ></i> Subir</button></td>
+                            <td><button class="btn btn-primary btn-sm">
+                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
                             <td>
-                                <select >
-                                    <option>Ver</option>
-                                    <option>Eliminar</option>
-                                    <option>Editar</option>
+                                <select>
+                                    <option>👁️ Ver</option>
+                                    <option>🗑️ Eliminar</option>
+                                    <option>✏️​ Editar</option>
                                 </select>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
         </div>
     </div>
-</div>-
 
 <!-- Sección3  - informe tecnico -->
 <div id="seccion3" class="contenido">
