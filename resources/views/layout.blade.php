@@ -294,7 +294,7 @@
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
+                        <li><a href="{{route('boletas_electronicas.index_boleta')}}"><span>Boletas</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
@@ -430,7 +430,7 @@
                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                    <a href="{{route('boletas_electronicas.index_boleta')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>

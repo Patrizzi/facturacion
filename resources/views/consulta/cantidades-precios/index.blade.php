@@ -157,7 +157,7 @@
                                         <td style="color: red">SIN STOCK</td>
 
                                     @endif
-                                    
+
                                     <td>{{$moneda_nacional->simbolo}}. {{$precio_nacional[$index] }}</td>
                                     <td>{{$moneda_nacional->simbolo}}. {{round($precio_nacional[$index] + ($precio_nacional[$index] * ($igv->igv_total/100)),2)}}</td>
                                     <td>{{$moneda_extranjera->simbolo}}. {{$precio_extranjero[$index] }}</td>
@@ -166,7 +166,7 @@
                                     <td>{{$stock_productos->producto->descripcion}} </td>
                                     <td>{{$stock_productos->producto->garantia}} </td>
                                     <td>{{$stock_productos->producto->marcas_i_producto->nombre}}</td>
-                                    
+
                                     {{-- data-all --}}
 
                                 </tr>
@@ -189,6 +189,7 @@
     </div>
 </div>
 </div>
+
 <style type="text/css">
     .footable > thead > tr > th.null > span.footable-sort-indicator{
         display: none;
