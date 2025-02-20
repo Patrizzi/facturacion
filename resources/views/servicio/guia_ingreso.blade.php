@@ -343,6 +343,8 @@
             </form>
         </div>
 
+
+
         <!-- TABLA DE REGISTROS -->
         <div class="card shadow-sm p-3 mt-4">
             <div class="table-responsive mt-1">
@@ -417,17 +419,17 @@
                             <td>María González</td>
                             <td>2025-02-14</td>
                             <td>Rodillos de alimentación desgastados</td>
-                            <td class="fw-bold text-success">Aprobado</td>
+                            <td>Aprobado</td>
                             <td>José Martínez</td>
-                            <td class="fw-bold text-warning">En revisión</td>
+                            <td>En revisión</td>
                             <td>—</td>
-                            <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
+                            <td><button></i> Subir</button></td>
                             <td>
-                                <select class="form-select form-select-sm">
+                            <select ">
                                     <option>Ver</option>
                                     <option>Eliminar</option>
                                     <option>Editar</option>
-                                </select>
+                            </select>
                             </td>
                         </tr>
                         <tr>
@@ -444,7 +446,7 @@
                             <td>—</td>
                             <td><button class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Subir</button></td>
                             <td>
-                                <select class="form-select form-select-sm">
+                                <select>
                                     <option>Ver</option>
                                     <option>Eliminar</option>
                                     <option>Editar</option>
@@ -458,7 +460,7 @@
     </div>
 </div>
 
-<!-- Sección 2 - Guía de Salida -->
+<!-- Sección3  - informe tecnico -->
 <div id="seccion3" class="contenido">
     <h2>Informe tecnico</h2>
     <p>Aquí va la información informe tecnico...</p>
