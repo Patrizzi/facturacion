@@ -5,7 +5,6 @@
 @section('atributo_actu', 'hidden')
 
 @section('content')
-@include('servicio\_shared\tabs')
 
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -37,10 +36,6 @@
         text-align: center;
     }
 
-    .table tbody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
     .btn-estado {
         background-color: #15338a;
         color: white;
@@ -50,14 +45,12 @@
         border-radius: 5px;
     }
 
-    .btn-estado:hover {
-        background-color: black;
-    }
+
 </style>
 
 
 <h2>CLIENTES</h2>
-<table class="table table-striped table-bordered table-hover dataTables-example">
+<table class="table table-bordered dataTables-example">
     <thead>
         <tr>
             <th>ID</th>
