@@ -8,6 +8,26 @@ class GarantiaGuiaIngreso extends Model
 {
     protected $table = 'garantia_guia_ingreso';
 
+    protected $fillable = [
+        'motivo',
+        'fecha',
+        'orden_servicio',
+        'estado',
+        'egresado',
+        'asunto',
+        'nombre_equipo',
+        'numero_serie',
+        'codigo_interno',
+        'fecha_compra',
+        'descripcion_problema',
+        'revision_diagnostico',
+        'estetica',
+        'marca_id',
+        'personal_lab_id',
+        'cliente_id',
+        'contacto_cliente_id',
+    ];
+    
     protected $guarded = [];
 
     public function marcas_i(){
