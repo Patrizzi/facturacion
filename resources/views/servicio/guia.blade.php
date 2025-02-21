@@ -418,17 +418,10 @@
                                         <td>laptop ph con lentitud</td>
                                         <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
                                     </tr>
-                                    <tr>
-                                        <td>02</td>
-                                        <td>L10L</td>
-                                        <td>impresora epson no imprime</td>
-                                        <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                 </div>
-
             </div>
           </div>
         </div>
@@ -444,7 +437,36 @@
               </h2>
               <div id="flush-collapseOne2" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
                 <div class="accordion-body">
-                  hola
+                    <div class="search-container">
+                        <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+                            <div class="input-group">
+                                <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
+                                <button class="btn btn-primary search-btn" type="submit">
+                                    <i class="bi bi-search">Buscar</i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-container table-bordered dataTables-example">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ITEM</th>
+                                <th>Serie</th>
+                                <th>Descripción</th>
+                                <th>Observación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>02</td>
+                                <td>L10L</td>
+                                <td>impresora epson no imprime</td>
+                                <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 </div>
               </div>
             </div>
@@ -615,7 +637,7 @@
 
         <!-- TABLA DE REGISTROS -->
             <div class="table-container table-bordered dataTables-example">
-            <table class="table">
+                <table class="table">
                     <thead class="text-black">
                         <tr>
                             <th>ITEM</th>
@@ -648,74 +670,11 @@
                             <td><button class="btn btn-primary btn-sm">
                                 <i class='bx bxs-cloud-upload'></i> Subir</button></td>
                             <td>
-                                <select class="form-select form-select-sm">
-
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>SN-2024X003</td>
-                            <td>Monitor Samsung 24</td>
-                            <td>No enciende</td>
-                            <td>2025-02-16</td>
-                            <td>Fuente de poder dañada</td>
-                            <td class="fw-bold text-danger">Rechazado</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td><button class="btn btn-primary btn-sm">
-                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
-                            <td>
-                                <select class="form-select form-select-sm">
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>004</td>
-                            <td>SN-2024X002</td>
-                            <td>Impresora HP LaserJet Pro</td>
-                            <td>Atasco de papel frecuente</td>
-                            <td>2025-02-14</td>
-                            <td>Rodillos de alimentación desgastados</td>
-                            <td>Aprobado</td>
-                            <td>José Martínez</td>
-                            <td>En revisión</td>
-                            <td>—</td>
-                            <td><button class="btn btn-primary btn-sm">
-                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
-                            <td>
-                            <select>
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
-                            </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>004</td>
-                            <td>SN-2024X004</td>
-                            <td>Router TP-Link AC1750</td>
-                            <td>Interrupciones constantes en la conexión</td>
-                            <td>2025-02-18</td>
-                            <td>Falla en el firmware</td>
-                            <td >Rechazado</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td><button class="btn btn-primary btn-sm">
-                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
-                            <td>
-                                <select>
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
+                                <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
+                                    <option selected disabled>Seleccione</option>
+                                    <option value="ver">👁️ Ver</option>
+                                    <option value="eliminar">🗑️ Eliminar</option>
+                                    <option value="editar">✏️ Editar</option>
                                 </select>
                             </td>
                         </tr>
@@ -728,7 +687,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- Sección3  - informe tecnico -->
 <div id="seccion3" class="contenido">
@@ -878,74 +836,11 @@
                             <td><button class="btn btn-primary btn-sm">
                                 <i class='bx bxs-cloud-upload'></i> Subir</button></td>
                             <td>
-                                <select class="form-select form-select-sm">
-
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>SN-2024X003</td>
-                            <td>Monitor Samsung 24</td>
-                            <td>No enciende</td>
-                            <td>2025-02-16</td>
-                            <td>Fuente de poder dañada</td>
-                            <td class="fw-bold text-danger">Rechazado</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td><button class="btn btn-primary btn-sm">
-                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
-                            <td>
-                                <select class="form-select form-select-sm">
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>004</td>
-                            <td>SN-2024X002</td>
-                            <td>Impresora HP LaserJet Pro</td>
-                            <td>Atasco de papel frecuente</td>
-                            <td>2025-02-14</td>
-                            <td>Rodillos de alimentación desgastados</td>
-                            <td>Aprobado</td>
-                            <td>José Martínez</td>
-                            <td>En revisión</td>
-                            <td>—</td>
-                            <td><button class="btn btn-primary btn-sm">
-                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
-                            <td>
-                            <select>
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
-                            </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>004</td>
-                            <td>SN-2024X004</td>
-                            <td>Router TP-Link AC1750</td>
-                            <td>Interrupciones constantes en la conexión</td>
-                            <td>2025-02-18</td>
-                            <td>Falla en el firmware</td>
-                            <td >Rechazado</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td><button class="btn btn-primary btn-sm">
-                                <i class='bx bxs-cloud-upload'></i></i> Subir</button></td>
-                            <td>
-                                <select>
-                                    <option>👁️ Ver</option>
-                                    <option>🗑️ Eliminar</option>
-                                    <option>✏️​ Editar</option>
+                                <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
+                                    <option selected disabled>Seleccione</option>
+                                    <option value="ver">👁️ Ver</option>
+                                    <option value="eliminar">🗑️ Eliminar</option>
+                                    <option value="editar">✏️ Editar</option>
                                 </select>
                             </td>
                         </tr>
@@ -957,6 +852,41 @@
       </div>
     </div>
   </div>
+</div>
+
+{{-- Modal al seleccionar la opcion de editar en accione --}}
+
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarLabel">Editar Registro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Estado de aprobacion</th>
+                            <th>Técnico de reparacion</th>
+                            <th>Estado de reparacion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" value=""></td>
+                            <td><input type="text" class="form-control" value=""></td>
+                            <td><input type="text" class="form-control" value=""></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -977,6 +907,14 @@
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".boton").classList.add("activo");
     });
+
+    function mostrarModalEditar(select) {
+        if (select.value === "editar") {
+            var modal = new bootstrap.Modal(document.getElementById('modalEditar'));
+            modal.show();
+            select.value = "Seleccione"; // Reiniciar el select después de abrir el modal
+        }
+    }
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
