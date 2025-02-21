@@ -13,9 +13,8 @@
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-size: 18px">Facturas</h5>
-                    <p class="card-text" style="font-size: 14px">5 Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last
-                            updated 3 mins ago</small></p>
+                    <p class="card-text" style="font-size: 14px">{{$resumen_mes['facturas']}} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización {{$resumen_mes['factura_last_update']}}</small></p>
                 </div>
             </div>
             <div class="card p-3" style="border: none;">
@@ -27,9 +26,8 @@
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-size: 18px">Facturación Manual</h5>
-                    <p class="card-text" style="font-size: 14px">3 Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last
-                            updated 3 mins ago</small></p>
+                    <p class="card-text" style="font-size: 14px">{{$resumen_mes['factura_m']}} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización {{$resumen_mes['factura_m_last_update']}}</small></p>
                 </div>
             </div>
             <div class="card p-3" style="border: none;">
@@ -41,9 +39,8 @@
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-size: 18px">Detracciones</h5>
-                    <p class="card-text" style="font-size: 14px">8 Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last
-                            updated 3 mins ago</small></p>
+                    <p class="card-text" style="font-size: 14px">{{$resumen_mes['detracciones']}}  Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización {{$resumen_mes['d_last_update']}}</small></p>
                 </div>
             </div>
         </div>

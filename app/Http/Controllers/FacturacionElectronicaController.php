@@ -25,6 +25,7 @@ use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\config_acc_guia;
 use App\Detracciones;
+use App\FacturacionElectronica;
 use App\Igv;
 use App\Moneda;
 use Carbon\Carbon;
@@ -84,14 +85,15 @@ class FacturacionElectronicaController extends Controller
         foreach ($facturacion as $factura) {
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }
-        
-        return view('facturacion_electronica.factura.index',compact('facturacion','empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+    return view('facturacion_electronica.factura.index',compact('facturacion','empresa','resumen_mes'));
     }
 
     public function facturas_enviadas(){
         
         $empresa=Empresa::first();
-        return view('facturacion_electronica.factura.enviado',compact('empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.enviado',compact('empresa','resumen_mes'));
     }
 
     public function index_facturas_manual(){
@@ -102,19 +104,21 @@ class FacturacionElectronicaController extends Controller
         foreach ($facturas_manual as $factura) {
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }
-
-        return view('facturacion_electronica.factura.index_manual',compact('facturas_manual','empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.index_manual',compact('facturas_manual','empresa','resumen_mes'));
     }
 
     public function facturas_manual_enviadas(){
         $empresa=Empresa::first();
-        return view('facturacion_electronica.factura.enviado_manual', compact('empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.enviado_manual', compact('empresa','resumen_mes'));
     }
 
     public function facturas_detracciones(){
         $empresa=Empresa::first();
         $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
-        return view('facturacion_electronica.factura.detracciones', compact('empresa','detraccion_facturas'));
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.detracciones', compact('empresa','detraccion_facturas','resumen_mes'));
     }
 
     public function index_boleta(){
